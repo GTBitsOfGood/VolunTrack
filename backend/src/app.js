@@ -5,6 +5,7 @@ const addRequestId = require('express-request-id')();
 const mongoose = require('mongoose');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const MongoStore = require('connect-mongo')(session);
 
 // const auth = require('./auth');
 // const api = require('./routes');
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SECRET,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     resave: true,
     saveUninitialized: false
   })
