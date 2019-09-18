@@ -84,6 +84,22 @@ router.get('/', (req, res, next) => {
       res.status(400).json({ error: 'Invalid status param' });
     }
   }
+  if (req.query.role) {
+    try {
+      // Each role is sent as an object key
+      // For mongo '$or' query, these keys need to be reduced to an array
+      const roleFilter = Object.keys(JSON.parse(req.query.role)).reduce(
+        (query, key) => [...query, { role: key }],
+        []
+      );
+      if (!roleFilter.length) {
+        res.status(400).json({ error: 'Invalid role param' });
+      }
+      filter.$or = roleFilter;
+    } catch (e) {
+      res.status(400).json({ error: 'Invalid role param' });
+    }
+  }
   if (req.query.date) {
     try {
       const dates = JSON.parse(req.query.date).reduce(
