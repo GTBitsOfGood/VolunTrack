@@ -30,6 +30,14 @@ const defaultValues = {
       return obj;
     }, {})
   },
+  role: {
+    label: 'Role',
+    values: {
+      admin: false,
+      volunteer: false,
+      manager: false
+    }
+  },
   availability: {
     label: 'Availability',
     values: {

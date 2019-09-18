@@ -196,14 +196,6 @@ class UserTable extends React.Component {
           </Form>
         </Modal>
         );
-        {/* export default Filters;
-
-Filters.propTypes = {
-  show: PropTypes.bool.isRequired,
-  toggleCallback: PropTypes.func.isRequired,
-  submitCallback: PropTypes.func.isRequired,
-  appliedFilters: PropTypes.object
-}; */}
       </Styled.Container>
     );
   }
