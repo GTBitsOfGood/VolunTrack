@@ -1,0 +1,94 @@
+{
+  "bio": {
+    "first_name": "Rheal",
+    "last_name": "Cool",
+    "email": "rheal@gmail.com",
+    "phone_number": "(320) 984-3239",
+    "date_of_birth": "2019-02-02T22:16:48.646Z",
+    "street_address": "123 Maple St",
+    "city": "Atlanta",
+    "state": "GA",
+    "zip_code": "30333"
+  },
+  "status": "responded_to_email",
+  "role": "volunteer",
+  "availability": {
+    "weekday_mornings": false,
+    "weekday_afternoons": false,
+    "weekday_evenings": false,
+    "weekend_mornings": false,
+    "weekend_afternoons": true,
+    "weekend_evenings": false
+  },
+  "skills_interests": {
+    "admin_office": true,
+    "admin_virtual": false,
+    "atlanta_shelter": false,
+    "orlando_shelter": false,
+    "graphic_web_design": false,
+    "special_events": false,
+    "grant_writing": false,
+    "writing_editing": false,
+    "social_media": false,
+    "fundraising": false,
+    "finance": false,
+    "office_maintenance_housekeeping": false,
+    "international_projects": false,
+    "volunteer_coordination": false,
+    "outreach": false,
+    "languages": "Italian",
+    "skills_qualifications": "no thanks"
+  },
+  "history": {
+    "volunteer_interest_cause": "good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause ",
+    "volunteer_support": "good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause ",
+    "volunteer_commitment": "good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause ",
+    "previous_volunteer_experience": "good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause good cause "
+  },
+  "referral": {
+    "friend": true,
+    "newsletter": false,
+    "event": false,
+    "volunteer_match": false,
+    "internet": false,
+    "social_media": false
+  },
+  "employment": {
+    "name": "Ga Tech",
+    "position": "Student",
+    "duration": "2 yr",
+    "location": "Atlanta, GA",
+    "previous_name": "",
+    "previous_location": "",
+    "previous_reason_for_leaving": ""
+  },
+  "reference": {
+    "name": "John Snow",
+    "phone_number": "(333) 333-3333",
+    "email": "john.snow@aldkfj.org",
+    "relationship": "Past",
+    "duration": "1m"
+  },
+  "ice": {
+    "name": "John Doe",
+    "phone_number": "(333) 322-2232",
+    "email": "john.doe@real.person",
+    "relationship": "Person",
+    "address": "123"
+  },
+  "criminal": {
+    "felony": false,
+    "sexual_violent": false,
+    "drugs": false,
+    "driving": false,
+    "none": true,
+    "explanation": ""
+  },
+  "permissions": {
+    "comments": "",
+    "reference": true,
+    "personal_image": true,
+    "email_list": true,
+    "signature": "Ben Holmes"
+  }
+}

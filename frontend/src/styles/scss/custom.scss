@@ -1,0 +1,15 @@
+// Your variable overrides
+// $body-bg: #000;
+$body-bg: rgb(194, 239, 255);
+$navbar-dark-color: #C2EFFF;
+$navbar-dark-hover-color: #F79A0E;
+$dark: rgba(35, 35, 35, 0.62);
+$primary: #f79a0d;
+$secondary: #efefef;
+$success: #b35fd0;
+$info: #626262;
+$warning: #eff214;
+$danger: #ff6261;
+// $body-color: #dc3545;
+// Bootstrap and its default variables
+@import "../../../node_modules/bootstrap/scss/bootstrap";
