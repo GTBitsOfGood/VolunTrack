@@ -18,7 +18,7 @@ import {
   Container
 } from 'reactstrap';
 
-import logo from '../images/drawchange_logo_white.png';
+import logo from '../images/bog_logo.png';
 
 const Styled = {
   NavItem: styled(NavItem)`
@@ -115,7 +115,7 @@ class Header extends Component {
         <Navbar color="dark" dark expand="md">
           <Container>
             <NavbarBrand tag={Link} to="/">
-              <img style={{ width: '175px' }} alt="drawchange logo" src={logo} />
+              <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
 
             <NavbarToggler onClick={this.toggle} />
