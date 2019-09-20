@@ -38,6 +38,16 @@ const theme = {
   default: {
     base: 'hsl(0, 0%, 90%)',
     text: 'hsl(0, 0%, 30%)'
+  },
+  color: {
+    bodyBg: 'rgb(194, 239, 255);',
+    dark: 'rgba(35, 35, 35, 0.62);',
+    secondary: '#efefef;',
+    success: '#b35fd0;',
+    info: '#626262;',
+    warning: '#eff214;',
+    primary: '#f79a0d;',
+    danger: '#ff6261;'
   }
 };
 
