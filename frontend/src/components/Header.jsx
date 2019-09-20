@@ -34,7 +34,7 @@ const Styled = {
     min-width: 7rem;
   `,
   NavLabel: styled.p`
-    color: white;
+    color: #969696;
     margin: auto;
     margin-left: 2rem;
     flex: 1;
@@ -55,7 +55,6 @@ const Styled = {
       position: absolute;
       border-radius: 0.5rem;
       left: ${props => (props.currPathName === '/applicant-viewer' ? '-1rem' : '8.5rem')};
-      background: white;
       z-index: 0;
       transition: all 0.3s;
     }
@@ -65,7 +64,7 @@ const Styled = {
     z-index: 1;
 
     :hover {
-      color: white;
+      color: #969696;
       text-decoration: none;
     }
     ${props =>
@@ -79,7 +78,7 @@ const Styled = {
       }
     `
         : `
-      color: white;
+      color: #969696;
     `}
   `,
   FlexContainer: styled.ul`
@@ -112,7 +111,7 @@ class Header extends Component {
     const { onLogout, loggedIn, role } = this.props;
     return (
       <div>
-        <Navbar color="dark" dark expand="md">
+        <Navbar color="light" light expand="md">
           <Container>
             <NavbarBrand tag={Link} to="/">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
@@ -137,6 +136,21 @@ class Header extends Component {
                         User Manager
                       </Styled.PageLink>
                     )}
+                    <Styled.PageLink
+                      to=""
+                    > 
+                      Volunteers 
+                    </Styled.PageLink>
+                    <Styled.PageLink
+                      to=""
+                    > 
+                      Events
+                    </Styled.PageLink>
+                    <Styled.PageLink
+                      to=""
+                    > 
+                      Settings
+                    </Styled.PageLink>
                   </Styled.PageSwitch>
                   <Styled.NavItem>
                     <NavLink href="http://www.drawchange.org">Back to Main Site</NavLink>
