@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { Provider as ReduxProvider } from 'react-redux';
+import { defaultTheme } from './styles';
 import configureStore from './store/store';
 
 import './index.css';
@@ -10,9 +12,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <Provider store={configureStore()}>
-    <App />
-  </Provider>,
+  <ReduxProvider store={configureStore()}>
+    <ThemeProvider theme={defaultTheme}>
+      <App />
+    </ThemeProvider>
+  </ReduxProvider>,
   document.getElementById('root')
 );
 
