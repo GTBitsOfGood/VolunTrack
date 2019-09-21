@@ -1,18 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
-
-const GlobalStyle = createGlobalStyle`
-  html: {
-    font-size: 16px;
-  }
-  * {
-    box-sizing: border-box;
-  }
-  body: {
-    margin: 0;
-  }
-`;
+import { ThemeProvider } from 'styled-components';
 
 const theme = {
   primary: '#b35fd0',
@@ -53,7 +41,6 @@ const theme = {
 
 const StyleWrapper = ({ children }) => (
   <React.Fragment>
-    <GlobalStyle />
     <ThemeProvider theme={theme}>{children}</ThemeProvider>
   </React.Fragment>
 );
