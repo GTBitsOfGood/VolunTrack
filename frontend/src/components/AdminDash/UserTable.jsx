@@ -195,7 +195,6 @@ class UserTable extends React.Component {
             </ModalFooter>
           </Form>
         </Modal>
-        );
       </Styled.Container>
     );
   }
