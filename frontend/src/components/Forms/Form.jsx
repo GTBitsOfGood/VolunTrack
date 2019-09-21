@@ -1,10 +1,15 @@
 import React from 'react';
-import { Formik, Form as FForm } from 'formik';
-import styles from '../../styles/Form.module.css';
+import { Formik, Form as FFForm } from 'formik';
+import styled from 'styled-components';
+
+const FForm = styled(FFForm)`
+  display: flex;
+  flex-direction: column;
+`;
 
 const Form = props => (
   <Formik {...props}>
-    <FForm className={styles.form}>{props.children}</FForm>
+    <FForm>{props.children}</FForm>
   </Formik>
 );
 
