@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 // import { GoogleLogout } from 'react-google-login';
 
@@ -20,18 +20,29 @@ import {
 
 import logo from '../images/drawchange_logo_white.png';
 
-const pageSwitchMeasurements = {
-  '/applicant-viewer': {
-    width: '10rem',
-    left: '-1rem'
-  },
-  '/user-manager': {
-    width: '9rem',
-    left: '8.5rem'
-  },
-  '/events': {
-    width: '5.2rem',
-    left: '17rem'
+const pageSwitchWidth = currPath => {
+  switch (currPath) {
+    case '/applicant-viewer':
+      return '10rem';
+    case '/user-manager':
+      return '9rem';
+    case '/events':
+      return '5.2rem';
+    default:
+      return '0';
+  }
+};
+
+const pageSwitchLeft = currPath => {
+  switch (currPath) {
+    case '/applicant-viewer':
+      return '-1rem';
+    case '/user-manager':
+      return '8.5rem';
+    case '/events':
+      return '17rem';
+    default:
+      return '0';
   }
 };
 
@@ -65,11 +76,11 @@ const Styled = {
 
     :before {
       content: '';
-      width: ${props => pageSwitchMeasurements[props.currPathName].width};
+      width: ${props => pageSwitchWidth(props.currPathName)};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
-      left: ${props => pageSwitchMeasurements[props.currPathName].left};
+      left: ${props => pageSwitchLeft(props.currPathName)};
       background: white;
       z-index: 0;
       transition: all 0.3s;
@@ -121,10 +132,10 @@ class Header extends Component {
     console.log(window.location.pathname);
   };
 
-  currPageMatches = page => window.location.pathname === page;
+  currPageMatches = page => this.props.location.pathname === page;
 
   render() {
-    const { onLogout, loggedIn, role } = this.props;
+    const { onLogout, loggedIn, location } = this.props;
     return (
       <div>
         <Navbar color="dark" dark expand="md">
@@ -137,7 +148,7 @@ class Header extends Component {
             <Collapse isOpen={this.state.isOpen} navbar>
               {loggedIn ? (
                 <Styled.FlexContainer className="navbar-nav">
-                  <Styled.PageSwitch currPathName={window.location.pathname}>
+                  <Styled.PageSwitch currPathName={location.pathname}>
                     <Styled.PageLink
                       to="/applicant-viewer"
                       selected={this.currPageMatches('/applicant-viewer')}
@@ -232,4 +243,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);
