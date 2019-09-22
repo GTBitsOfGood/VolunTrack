@@ -20,6 +20,21 @@ import {
 
 import logo from '../images/drawchange_logo_white.png';
 
+const pageSwitchMeasurements = {
+  '/applicant-viewer': {
+    width: '10rem',
+    left: '-1rem'
+  },
+  '/user-manager': {
+    width: '9rem',
+    left: '8.5rem'
+  },
+  '/events': {
+    width: '5.2rem',
+    left: '17rem'
+  }
+};
+
 const Styled = {
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
@@ -50,11 +65,11 @@ const Styled = {
 
     :before {
       content: '';
-      width: ${props => (props.currPathName === '/applicant-viewer' ? '10rem' : '9rem')};
+      width: ${props => pageSwitchMeasurements[props.currPathName].width};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
-      left: ${props => (props.currPathName === '/applicant-viewer' ? '-1rem' : '8.5rem')};
+      left: ${props => pageSwitchMeasurements[props.currPathName].left};
       background: white;
       z-index: 0;
       transition: all 0.3s;
@@ -129,14 +144,15 @@ class Header extends Component {
                     >
                       Applicant Viewer
                     </Styled.PageLink>
-                    {role === 'admin' && (
-                      <Styled.PageLink
-                        to="/user-manager"
-                        selected={this.currPageMatches('/user-manager')}
-                      >
-                        User Manager
-                      </Styled.PageLink>
-                    )}
+                    <Styled.PageLink
+                      to="/user-manager"
+                      selected={this.currPageMatches('/user-manager')}
+                    >
+                      User Manager
+                    </Styled.PageLink>
+                    <Styled.PageLink to="/events" selected={this.currPageMatches('/events')}>
+                      Events
+                    </Styled.PageLink>
                   </Styled.PageSwitch>
                   <Styled.NavItem>
                     <NavLink href="http://www.drawchange.org">Back to Main Site</NavLink>
