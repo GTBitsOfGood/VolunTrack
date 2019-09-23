@@ -2,8 +2,7 @@
   "name": "bog-vms",
   "version": "0.0.1",
   "description": "Bits Of Good's Volunteer Management System",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gtbitsOfGood/bog-vms.git"

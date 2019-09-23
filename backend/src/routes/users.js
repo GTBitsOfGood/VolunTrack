@@ -10,6 +10,8 @@ const { SendEmailError, EmailInUseError } = require('../util/errors');
 const UserData = require('../models/userData');
 const { USER_DATA_VALIDATOR } = require('../util/validators');
 const DEFAULT_PAGE_SIZE = 10;
+//events
+
 
 router.post('/', USER_DATA_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
