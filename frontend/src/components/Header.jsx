@@ -113,7 +113,7 @@ class Header extends Component {
       <div>
         <Navbar color="light" light expand="md">
           <Container>
-            <NavbarBrand tag={Link} to="/">
+            <NavbarBrand tag={Link} to="/applicant-viewer">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
 
