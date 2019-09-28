@@ -137,17 +137,20 @@ class Header extends Component {
                       </Styled.PageLink>
                     )}
                     <Styled.PageLink
-                      to=""
+                      to="/volunteers"
+                      selected={this.currPageMatches('/volunteers')}
                     > 
                       Volunteers 
                     </Styled.PageLink>
                     <Styled.PageLink
-                      to=""
+                      to="/events"
+                      selected={this.currPageMatches('/events')}
                     > 
                       Events
                     </Styled.PageLink>
                     <Styled.PageLink
-                      to=""
+                      to="/settings"
+                      selected={this.currPageMatches('/settings')}
                     > 
                       Settings
                     </Styled.PageLink>
