@@ -90,7 +90,7 @@ const Styled = {
     display: flex;
     justify-content: space-between;
     list-style: none;
-    margin: 0;
+    padding-left: 150px;
   `
 };
 
@@ -116,7 +116,7 @@ class Header extends Component {
     return (
       <div>
         <Styled.Navbar light expand="md">
-          <Container>
+          <Container style={{marginLeft: '0px'}}>
             <NavbarBrand tag={Link} to="/applicant-viewer">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
