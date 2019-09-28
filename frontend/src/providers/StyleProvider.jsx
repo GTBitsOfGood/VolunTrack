@@ -1,18 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
-
-const GlobalStyle = createGlobalStyle`
-  html: {
-    font-size: 16px;
-  }
-  * {
-    box-sizing: border-box;
-  }
-  body: {
-    margin: 0;
-  }
-`;
+import { ThemeProvider } from 'styled-components';
 
 const theme = {
   primary: '#b35fd0',
@@ -38,12 +26,21 @@ const theme = {
   default: {
     base: 'hsl(0, 0%, 90%)',
     text: 'hsl(0, 0%, 30%)'
+  },
+  color: {
+    bodyBg: 'rgb(194, 239, 255);',
+    dark: 'rgba(35, 35, 35, 0.62);',
+    secondary: '#efefef;',
+    success: '#b35fd0;',
+    info: '#626262;',
+    warning: '#eff214;',
+    primary: '#f79a0d;',
+    danger: '#ff6261;'
   }
 };
 
 const StyleWrapper = ({ children }) => (
   <React.Fragment>
-    <GlobalStyle />
     <ThemeProvider theme={theme}>{children}</ThemeProvider>
   </React.Fragment>
 );
