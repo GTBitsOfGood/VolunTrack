@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 import { Header, Authenticated, Splash } from './components';
-import { StyleWrapper, RequestProvider } from './components/Shared';
+import { StyleProvider, RequestProvider } from './providers';
 
 const Styled = {
   Container: styled.div`
@@ -38,7 +38,7 @@ class App extends Component {
     const { isAuthenticated, user } = this.state;
     return (
       <Router>
-        <StyleWrapper>
+        <StyleProvider>
           <RequestProvider>
             <Styled.Container>
               <Header
@@ -51,7 +51,7 @@ class App extends Component {
               </Styled.Content>
             </Styled.Container>
           </RequestProvider>
-        </StyleWrapper>
+        </StyleProvider>
       </Router>
     );
   }

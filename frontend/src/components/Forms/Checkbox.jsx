@@ -1,14 +1,22 @@
 import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 import { FormGroup, CustomInput } from 'reactstrap';
+import styled from 'styled-components';
 
-import styles from '../../styles/Form.module.css';
+const ErrorMsg = styled(ErrorMessage)`
+  color: red;
+`;
+const styleFlexField = {
+  flexDirection: 'column',
+  display: 'flex',
+  margin: '5px'
+};
 
 const Checkbox = props => (
-  <div className={styles.flex_field}>
+  <div style={styleFlexField}>
     <Field name={props.name}>
       {({ field, form }) => (
-        <FormGroup className={styles.flex_field} check>
+        <FormGroup style={styleFlexField} check>
           <CustomInput
             type="checkbox"
             id={props.name}
@@ -19,7 +27,7 @@ const Checkbox = props => (
         </FormGroup>
       )}
     </Field>
-    <ErrorMessage component="div" className={styles.error} name={props.name} />
+    <ErrorMsg component="div" name={props.name} />
   </div>
 );
 

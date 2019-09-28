@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Loading from './Loading';
+import Loading from '../components/Shared/Loading';
 
 const Container = styled.div`
   width: 100%;

@@ -5,7 +5,7 @@ import { getStatusColor, statuses, roles } from './applicantInfoHelpers';
 import DropdownSelect from './DropdownSelect';
 import { updateApplicantStatus, updateApplicantRole } from './queries';
 import styled, { withTheme } from 'styled-components';
-import { RequestContext } from '../Shared/RequestResult';
+import { RequestContext } from '../../providers/RequestProvider';
 import _ from 'lodash';
 
 const getLabelsFromDays = (availability, type) => {
@@ -167,9 +167,7 @@ class ApplicantInfo extends Component {
               <SubSection>
                 <h5>Address</h5>
                 <p>
-                  {`${applicant.bio.street_address} ${applicant.bio.city}, ${applicant.bio.state} ${
-                    applicant.bio.zip_code
-                  }`}
+                  {`${applicant.bio.street_address} ${applicant.bio.city}, ${applicant.bio.state} ${applicant.bio.zip_code}`}
                 </p>
               </SubSection>
             </Section>
