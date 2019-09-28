@@ -68,7 +68,7 @@ const Styled = {
     z-index: 1;
 
     :hover {
-      color: #969696;
+      color: #707070;
       text-decoration: none;
     }
     ${props =>
