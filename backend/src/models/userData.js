@@ -11,12 +11,7 @@ const userDataSchema = new mongoose.Schema(
     status: {
       type: String,
       default: 'new',
-      enum: [
-        'accepted',
-        'denied',
-        'has_volunteered',
-        'new'
-      ]
+      enum: ['accepted', 'denied', 'has_volunteered', 'new']
     },
     bio: {
       first_name: { type: String },
@@ -30,20 +25,19 @@ const userDataSchema = new mongoose.Schema(
       zip_code: { type: String }
     },
     history: { type: String },
-    skills_interests: {type: String
+    skills_interests: {
+      type: String
       //list[] skills
     },
     employment: {
-      industry: {type: String},
-        occupation: {type: [String]
-    },
-    admin_comments: { type: String }
-
-    // events: {
-    //   type: Array, // array of event objects
-    //   default: []
-    // }
-    { timestamps: true }
+      industry: { type: String },
+      occupation: { type: [String] },
+      admin_comments: { type: String }
+    }
+  },
+  {
+    timestamps: true
+  }
 );
 
 userDataSchema.virtual('name').get(function() {
