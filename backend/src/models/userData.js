@@ -34,10 +34,12 @@ const userDataSchema = new mongoose.Schema(
       //list[] skills
     },
     employment: {
-      industry: {type: String},
-        occupation: {type: [String]
+        industry: {type: String},
+        occupation: {
+            type: [String]
+        },
+        admin_comments: {type: String}
     },
-    admin_comments: { type: String }
 
     // events: {
     //   type: Array, // array of event objects
