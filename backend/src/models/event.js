@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const UserData = require('./userData');
+const UserDataSchema = require('./userData').UserDataSchema;
 
 // define schema
 const eventSchema = new mongoose.Schema(
@@ -30,7 +30,7 @@ const eventSchema = new mongoose.Schema(
       required: false
     },
     volunteers: {
-      type: [UserData],
+      type: [UserDataSchema],
       default: []
     },
     max_volunteers: {
