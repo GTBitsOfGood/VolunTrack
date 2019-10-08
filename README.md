@@ -33,4 +33,4 @@ A browser window should open http://localhost:3000/
 
 ## IMPORTANT DEVELOPMENT INFORMATION
 
--
+-   Authentication is disabled when the `NODE_ENV` environment variable is set to `development`. You can configure this in the `backend/.env` file.
