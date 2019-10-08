@@ -38,6 +38,7 @@ const eventSchema = new mongoose.Schema(
     },
     external_links: {
       type: [String],
+      default: [],
       required: false
     }
   },
