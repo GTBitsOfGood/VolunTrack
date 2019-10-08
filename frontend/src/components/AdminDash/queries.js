@@ -40,3 +40,5 @@ export const searchApplicants = (textinput, searchType) => {
     params: { searchquery: textinput, searchtype: searchType }
   });
 };
+
+export const fetchEvents = () => axios.get('/api/events');

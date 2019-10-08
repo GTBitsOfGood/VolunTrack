@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import * as Table from '../shared/tableStyles';
 import Loading from 'components/Shared/Loading';
 
-const EventTable = ({ events }) => {
+const EventTable = ({ events, loading }) => {
   return (
     <Table.Container>
       <Table.Table>
@@ -16,7 +17,7 @@ const EventTable = ({ events }) => {
           </tr>
         </thead>
         <tbody>
-          {events &&
+          {!loading &&
             events.map((event, idx) => (
               <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
                 <td>{event.name}</td>
@@ -27,9 +28,13 @@ const EventTable = ({ events }) => {
             ))}
         </tbody>
       </Table.Table>
-      {!events && <Loading />}
+      {loading && <Loading />}
     </Table.Container>
   );
+};
+EventTable.propTypes = {
+  loading: PropTypes.bool,
+  events: PropTypes.array
 };
 
 export default EventTable;
