@@ -192,7 +192,13 @@ const EVENT_VALIDATOR = [
     .isAscii()
     .trim()
     .escape(),
-  check('contact')
+  check('contact_phone')
+    .optional()
+    .isAscii()
+    .trim()
+    .escape(),
+  check('contact_email')
+    .optional()
     .isAscii()
     .trim()
     .escape(),
@@ -202,11 +208,15 @@ const EVENT_VALIDATOR = [
     .isAscii()
     .trim()
     .escape(),
-  check('additional_background_check')
+  check('volunteers')
     .optional()
-    .isAscii()
+    .isArray()
     .trim()
-    .escape()
+    .escape(),
+  check('external_links')
+    .optional()
+    .isArray()
+    .trim()
   // check('volunteers').custom(value => {
   //   if ()
   // })
