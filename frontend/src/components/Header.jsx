@@ -166,9 +166,6 @@ class Header extends Component {
                     </Styled.PageLink>
                   </Styled.PageSwitch>
                   <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org">Back to Main Site</NavLink>
-                  </Styled.NavItem>
-                  <Styled.NavItem>
                     <NavLink onClick={onLogout} href="/">
                       Logout
                     </NavLink>
