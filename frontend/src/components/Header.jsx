@@ -23,11 +23,11 @@ import logo from '../images/drawchange_logo_white.png';
 const pageSwitchWidth = currPath => {
   switch (currPath) {
     case '/applicant-viewer':
-      return '10rem';
+      return '9.6rem';
     case '/user-manager':
-      return '9rem';
+      return '8.6rem';
     case '/events':
-      return '5.2rem';
+      return '4.8rem';
     default:
       return '0';
   }
@@ -38,9 +38,9 @@ const pageSwitchLeft = currPath => {
     case '/applicant-viewer':
       return '-1rem';
     case '/user-manager':
-      return '8.5rem';
+      return '8.3rem';
     case '/events':
-      return '17rem';
+      return '16.9rem';
     default:
       return '0';
   }
