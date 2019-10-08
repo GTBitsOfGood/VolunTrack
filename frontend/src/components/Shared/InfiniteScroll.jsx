@@ -29,7 +29,7 @@ class InfiniteScroll extends React.Component {
           },
           () => {
             setTimeout(() => {
-              if (this.containerRef) {
+              if (this.containerRef.current) {
                 let currScrollTop = this.containerRef.current.scrollTop;
                 console.log(scrollHeight - clientHeight - currScrollTop);
                 if (scrollHeight - clientHeight - currScrollTop <= 0) {

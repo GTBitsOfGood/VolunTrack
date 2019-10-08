@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Route, Redirect } from 'react-router-dom';
 import ApplicantViewer from './ApplicantViewer';
 import UserManager from './UserManager';
+import EventsManager from './EventsManager';
 
 const Container = styled.div`
   background: white;
@@ -30,6 +31,7 @@ class AdminDash extends React.Component {
         {this.renderRedirect()}
         <Route path="/applicant-viewer" component={ApplicantViewer} />
         <Route path="/user-manager" component={UserManager} />
+        <Route path="/events" component={EventsManager} />
       </Container>
     );
   }
