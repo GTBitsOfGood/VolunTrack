@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Button } from 'reactstrap';
+import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
 
@@ -12,6 +14,17 @@ const Styled = {
     display: flex;
     flex-direction: column;
     align-items: center;
+  `,
+  HeaderContainer: styled.div`
+    width: 95%;
+    max-width: 80rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  `,
+  Button: styled(Button)`
+    background: white;
+    border: none;
   `
 };
 
@@ -37,6 +50,12 @@ const EventManager = () => {
 
   return (
     <Styled.Container>
+      <Styled.HeaderContainer>
+        <Styled.Button onClick={onRefresh}>
+          <Icon color="grey3" name="refresh" />
+          <span> Refresh</span>
+        </Styled.Button>
+      </Styled.HeaderContainer>
       <EventTable events={events} loading={loading}></EventTable>
     </Styled.Container>
   );
