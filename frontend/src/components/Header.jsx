@@ -19,6 +19,7 @@ import {
 } from 'reactstrap';
 
 import logo from '../images/bog_logo.png';
+import avatar from '../images/default_avatar.png';
 
 const Styled = {
   Navbar: styled(Navbar)`
@@ -32,8 +33,6 @@ const Styled = {
     min-width: 7rem;
   `,
   Dropdown: styled(UncontrolledDropdown)`
-    margin-left: 0.3rem;
-    margin-right: 0.3rem;
     text-align: center;
     min-width: 7rem;
   `,
@@ -153,11 +152,16 @@ class Header extends Component {
                       Settings
                     </Styled.PageLink>
                   </Styled.PageSwitch>
-                  <Styled.NavItem>
-                    <NavLink onClick={onLogout} href="/">
-                      Logout
-                    </NavLink>
-                  </Styled.NavItem>
+                  <NavbarBrand>
+                      <img width="25" height="25" alt="default_avatar" src={avatar} className="d-inline-block" />
+                    </NavbarBrand>
+                    <Styled.Dropdown nav inNavbar>
+                      <DropdownToggle split variant = "true" nav>Insert Name</DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem>My Profile</DropdownItem>
+                        <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
+                      </DropdownMenu>
+                    </Styled.Dropdown>
                 </Styled.FlexContainer>
               ) : (
                 <Nav navbar>
