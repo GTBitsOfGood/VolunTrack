@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
+const UserDataSchema = require('./userData').UserDataSchema;
 
 // define schema
-const eventSchema = mongoose.Schema(
+const eventSchema = new mongoose.Schema(
   {
+    // add event id field
     name: {
       type: String,
       required: true
@@ -19,24 +21,24 @@ const eventSchema = mongoose.Schema(
       type: String,
       required: true
     },
-    contact: {
+    contact_phone: {
       type: String,
-      required: true
+      require: false
+    },
+    contact_email: {
+      type: String,
+      required: false
     },
     volunteers: {
-      type: Array, // array of user objects
+      type: [UserDataSchema],
       default: []
     },
     max_volunteers: {
       type: Number,
       required: true
     },
-    link: {
-      type: String,
-      required: false
-    },
-    additional_background_check: {
-      type: String,
+    external_links: {
+      type: [String],
       required: false
     }
   },

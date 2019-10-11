@@ -43,11 +43,6 @@ const userDataSchema = new mongoose.Schema(
         }
     },
 
-    // events: {
-    //   type: Array, // array of event objects
-    //   default: []
-    // }
-    { timestamps: true }
 );
 
 userDataSchema.virtual('name').get(function() {
@@ -61,3 +56,4 @@ userDataSchema.virtual('age').get(function() {
 
 // export user model to app
 module.exports = mongoose.model('UserData', userDataSchema);
+module.exports.UserDataSchema = userDataSchema;
