@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { FormGroup as BFormGroup, Input, Label as BLabel } from 'reactstrap';
 
 const Container = styled.div`
   background: white;
@@ -31,28 +30,5 @@ const LoadingBody = styled.div`
   display: flex;
   align-items: center;
 `;
-const TextBox = styled(Input)`
-  border: 1px solid ${props => props.theme.grey8};
-  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
-  margin-bottom: 1rem;
-  margin-top: 0.1rem;
-`;
 
-const Label = styled(BLabel)`
-  padding-left: 0.2rem;
-  font-weight: bold;
-  color: ${props => props.theme.primaryGrey};
-`;
-
-const FormGroup = styled(BFormGroup)`
-  width: 80%;
-`;
-
-const Dropdown = styled(Input)`
-  border: 1px solid ${props => props.theme.grey8};
-  border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
-  margin-bottom: 0.5rem;
-  padding-left: 0.5rem;
-`;
-
-export { Container, Table, Row, LoadingBody, Label, FormGroup, Dropdown, TextBox };
+export { Container, Table, Row, LoadingBody };

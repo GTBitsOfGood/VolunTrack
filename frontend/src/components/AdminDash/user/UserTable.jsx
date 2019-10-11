@@ -1,10 +1,10 @@
 import React from 'react';
 import { roles, statuses } from '../applicantInfoHelpers';
 import { Button, ModalHeader, ModalBody, ModalFooter, Modal } from 'reactstrap';
-import { Form } from '../../Forms';
 import Loading from '../../Shared/Loading';
 import PropTypes from 'prop-types';
 import * as Table from '../shared/tableStyles';
+import * as Form from '../shared/formStyles';
 
 const keyToValue = key => {
   key = key.replace(/_/g, ' ');
@@ -68,31 +68,27 @@ class UserTable extends React.Component {
         {loading && <Loading />}
         <Modal isOpen={this.state.userSelectedForEdit} onClose={null}>
           <ModalHeader>Edit User</ModalHeader>
-          <Form>
-            {/* onSubmit=
-            {values => {
-              this.onModalClose(values);
-            }} */}
-            <ModalBody>
-              <Table.FormGroup>
-                <Table.Label>Name</Table.Label>
-                <Table.TextBox
+          <ModalBody>
+            <form>
+              <Form.FormGroup>
+                <Form.Label>Name</Form.Label>
+                <Form.Input
                   defaultValue={
                     this.state.userSelectedForEdit ? this.state.userSelectedForEdit.name : ''
                   }
                   type="text"
                   name="Name"
                 />
-                <Table.Label>Email</Table.Label>
-                <Table.TextBox
+                <Form.Label>Email</Form.Label>
+                <Form.Input
                   defaultValue={
                     this.state.userSelectedForEdit ? this.state.userSelectedForEdit.email : ''
                   }
                   type="text"
                   name="Email"
                 />
-                <Table.Label>Role</Table.Label>
-                <Table.Dropdown
+                <Form.Label>Role</Form.Label>
+                <Form.Dropdown
                   defaultValue={
                     this.state.userSelectedForEdit ? this.state.userSelectedForEdit.role : ''
                   }
@@ -102,9 +98,9 @@ class UserTable extends React.Component {
                   {Object.keys(roles).map((t, i) => (
                     <option value={t}>{keyToValue(t)}</option>
                   ))}
-                </Table.Dropdown>
-                <Table.Label>Status</Table.Label>
-                <Table.Dropdown
+                </Form.Dropdown>
+                <Form.Label>Status</Form.Label>
+                <Form.Dropdown
                   defaultValue={
                     this.state.userSelectedForEdit ? this.state.userSelectedForEdit.status : ''
                   }
@@ -114,21 +110,21 @@ class UserTable extends React.Component {
                   {Object.keys(statuses).map((t, i) => (
                     <option value={t}>{keyToValue(t)}</option>
                   ))}
-                </Table.Dropdown>
-              </Table.FormGroup>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="secondary" onClick={this.onModalClose}>
-                Cancel
-              </Button>
-              <Button color="primary" onClick={this.onModalClose}>
-                Submit
-              </Button>
-              {/* <Button color="primary" type="submit">
+                </Form.Dropdown>
+              </Form.FormGroup>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.onModalClose}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={this.onModalClose}>
+              Submit
+            </Button>
+            {/* <Button color="primary" type="submit">
                 Submit
               </Button> */}
-            </ModalFooter>
-          </Form>
+          </ModalFooter>
         </Modal>
       </Table.Container>
     );

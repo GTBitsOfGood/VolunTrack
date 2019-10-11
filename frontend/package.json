@@ -14,11 +14,12 @@
   "dependencies": {
     "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
-    "formik": "^1.4.1",
+    "formik": "1.5.8",
     "history": "^4.7.2",
     "node-sass": "^4.11.0",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
+    "react-day-picker": "^7.3.2",
     "react-dom": "^16.6.3",
     "react-google-button": "^0.5.3",
     "react-google-login": "^4.0.1",

@@ -4,6 +4,7 @@ import { Button } from 'reactstrap';
 import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
+import EventCreateModal from './EventCreateModal';
 
 const Styled = {
   Container: styled.div`
@@ -31,6 +32,7 @@ const Styled = {
 const EventManager = () => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const onRefresh = () => {
     setLoading(true);
@@ -44,6 +46,12 @@ const EventManager = () => {
         setLoading(false);
       });
   };
+  const onCreateClicked = () => {
+    setShowCreateModal(true);
+  };
+  const toggleCreateModal = () => {
+    setShowCreateModal(prev => !prev);
+  };
   useEffect(() => {
     onRefresh();
   }, []);
@@ -51,12 +59,17 @@ const EventManager = () => {
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
+        <Styled.Button onClick={onCreateClicked}>
+          <Icon color="grey3" name="add" />
+          <span>Create</span>
+        </Styled.Button>
         <Styled.Button onClick={onRefresh}>
           <Icon color="grey3" name="refresh" />
           <span> Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
       <EventTable events={events} loading={loading}></EventTable>
+      <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
     </Styled.Container>
   );
 };
