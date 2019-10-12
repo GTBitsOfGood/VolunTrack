@@ -12,6 +12,7 @@ const Label = styled(BLabel)`
   padding-left: 0.2rem;
   font-weight: bold;
   color: ${props => props.theme.primaryGrey};
+  margin-right: 0.5rem;
 `;
 
 const FormGroup = styled(BFormGroup)`
