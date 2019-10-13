@@ -37,6 +37,9 @@ const EventValidator = object().shape({
   contact_email: string()
     .email()
     .trim(),
+  external_links: string()
+    .url()
+    .trim(),
   max_volunteers: number()
     .positive()
     .required()
@@ -61,7 +64,8 @@ const EventCreateModal = ({ open, toggle }) => {
           const event = {
             ...values,
             contact_phone: values.contact_phone || undefined,
-            contact_email: values.contact_email || undefined
+            contact_email: values.contact_email || undefined,
+            external_links: values.external_links ? [values.external_links] : undefined
           };
           setSubmitting(true);
           createEvent(event)
@@ -100,6 +104,11 @@ const EventCreateModal = ({ open, toggle }) => {
                   <Styled.ErrorMessage name="contact_email" />
                   <Field name="contact_email">
                     {({ field }) => <SForm.Input {...field} type="email" />}
+                  </Field>
+                  <SForm.Label>External Link</SForm.Label>
+                  <Styled.ErrorMessage name="external_links" />
+                  <Field name="external_links">
+                    {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
                   <SForm.Label>Max # of Volunteers</SForm.Label>
                   <Styled.ErrorMessage name="max_volunteers" />

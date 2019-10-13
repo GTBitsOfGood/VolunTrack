@@ -181,38 +181,27 @@ const USER_DATA_VALIDATOR = [
 const EVENT_VALIDATOR = [
   check('name')
     .isAscii()
-    .trim()
-    .escape(),
+    .trim(),
   check('date').exists(),
   check('location')
     .isAscii()
-    .trim()
-    .escape(),
+    .trim(),
   check('description')
     .isAscii()
-    .trim()
-    .escape(),
+    .trim(),
   check('contact_phone')
     .optional()
     .isAscii()
-    .trim()
-    .escape(),
+    .trim(),
   check('contact_email')
     .optional()
     .isAscii()
-    .trim()
-    .escape(),
+    .trim(),
   check('max_volunteers').isNumeric(),
-  check('link')
-    .optional()
-    .isAscii()
-    .trim()
-    .escape(),
   check('volunteers')
     .optional()
     .isArray()
-    .trim()
-    .escape(),
+    .trim(),
   check('external_links')
     .optional()
     .isArray()
