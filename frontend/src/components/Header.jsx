@@ -172,65 +172,7 @@ class Header extends Component {
                   </Styled.NavItem>
                 </Styled.FlexContainer>
               ) : (
-                <Nav navbar>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org">Home</NavLink>
-                  </Styled.NavItem>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>About Us</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="http://www.drawchange.org/faqs">FAQs</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/foundersstory">
-                        Founder's Story
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/curriculum-blueprint">
-                        Curriculum & Blueprint
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/friends-partners">
-                        Our Friends & Partners
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/store">Store</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/press-kit">
-                        Press Kit
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>Contribute</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="https://secure.donationpay.org/drawchange/">
-                        Donate
-                      </DropdownItem>
-                      <DropdownItem href="/">Volunteer With Us</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/wishlist">
-                        Wish List
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown>
-                    <NavLink href="http://www.drawchange.org/blog">News</NavLink>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>Activities</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="https://www.drawchange.org/usprograms">
-                        U.S. Programs
-                      </DropdownItem>
-                      <DropdownItem href="https://www.drawchange.org/costarica">
-                        Costa Rica
-                      </DropdownItem>
-                      <DropdownItem href="https://www.drawchange.org/ethiopia">
-                        Ethipoia
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org/contactus">Contact</NavLink>
-                  </Styled.NavItem>
-                  <Styled.Dropdown>
-                    <NavLink href="https://secure.donationpay.org/drawchange/">Donate</NavLink>
-                  </Styled.Dropdown>
-                </Nav>
+                <Nav navbar></Nav>
               )}
             </Collapse>
           </Container>
