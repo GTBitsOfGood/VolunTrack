@@ -5,17 +5,10 @@ import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { string, object, number, date } from 'yup';
+import { createEvent } from '../queries';
 
 const Styled = {
   Form: styled(FForm)``,
-  DayPickerWrapper: styled.div`
-    .DayPickerInput input {
-      border: 1px solid ${props => props.theme.grey8};
-      border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
-      margin-bottom: 1rem;
-      margin-top: 0.1rem;
-    }
-  `,
   ErrorMessage: styled(ErrorMessage).attrs({
     component: 'span'
   })`
@@ -50,8 +43,6 @@ const EventValidator = object().shape({
 });
 
 const EventCreateModal = ({ open, toggle }) => {
-  const handleSubmit = () => {};
-
   return (
     <Modal isOpen={open} toggle={toggle}>
       <ModalHeader toggle={toggle}>Create Event</ModalHeader>
@@ -66,11 +57,20 @@ const EventCreateModal = ({ open, toggle }) => {
           max_volunteers: 0,
           external_links: []
         }}
-        onSubmit={() => {
-          console.log('submit');
+        onSubmit={(values, { setSubmitting }) => {
+          const event = {
+            ...values,
+            contact_phone: values.contact_phone || undefined,
+            contact_email: values.contact_email || undefined
+          };
+          setSubmitting(true);
+          createEvent(event)
+            .then(() => toggle())
+            .catch(console.log)
+            .finally(() => setSubmitting(false));
         }}
         validationSchema={EventValidator}
-        render={({ handleSubmit, isValid, errors, values, setFieldValue, handleBlur }) => (
+        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
           <React.Fragment>
             <ModalBody>
               <Styled.Form>
@@ -123,7 +123,7 @@ const EventCreateModal = ({ open, toggle }) => {
               <Button color="secondary" onClick={toggle}>
                 Cancel
               </Button>
-              <Button color="primary" onClick={handleSubmit} disabled={!isValid}>
+              <Button color="primary" onClick={handleSubmit} disabled={!isValid || isSubmitting}>
                 Submit
               </Button>
             </ModalFooter>
