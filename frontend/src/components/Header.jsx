@@ -165,26 +165,17 @@ class Header extends Component {
                     </Styled.PageLink>
                   </Styled.PageSwitch>
                   <Styled.Dropdown nav inNavbar>
-                    <Styled.Toggle color="white">
-                      {/* <CardGroup style={{}}>
-                        <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
-                          <img width="25" height="25" src={avatar}/>
-                        </Card>
-                        <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
-                          <CardText style={{fontSize: '0.8rem'}}>Firstname Lastname</CardText>
-                            <CardText style={{fontSize: '0.8rem'}}>Role</CardText>
-                        </Card>
-                      </CardGroup> */}
+                    <Styled.Toggle color="white"> 
+                      {/* need to consider how this would get affected when changing color schemes */}
                       <Row>
                         <Col md="auto" style={{}}>
                           <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
-                            <img width="50" height="50" src={avatar}/>
+                            <img width="34px" height="34px" src={avatar} alt="icon"/>
                           </Card>
                         </Col>
                         <Col md="auto" style={{padding: '0px'}}>
                           <Card body className="text-left" style={{padding: '0rem', border: 'none'}}>
-                            <CardText style={{fontSize: '0.8rem', padding: '0.5px'}}>Firstname Lastname</CardText>
-                            <CardText style={{fontSize: '0.8rem', padding: '0.5px'}}>Role</CardText>
+                            <CardText style={{fontSize: '16px'}}>Firstname Lastname <br></br> Role</CardText>
                           </Card>
                         </Col>
                       </Row>
