@@ -15,7 +15,16 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Container
+  Container, 
+  Button, 
+  Card, 
+  CardImg,
+  CardTitle,
+  CardText,
+  CardGroup,
+  CardBody,
+  Row,
+  Col
 } from 'reactstrap';
 
 import logo from '../images/bog_logo.png';
@@ -35,6 +44,9 @@ const Styled = {
   Dropdown: styled(UncontrolledDropdown)`
     text-align: center;
     min-width: 7rem;
+  `,
+  Toggle: styled(DropdownToggle)`
+    text-align: left;
   `,
   NavLabel: styled.p`
     color: #969696;
@@ -152,16 +164,36 @@ class Header extends Component {
                       Settings
                     </Styled.PageLink>
                   </Styled.PageSwitch>
-                  <NavbarBrand>
-                      <img width="25" height="25" alt="default_avatar" src={avatar} className="d-inline-block" />
-                    </NavbarBrand>
-                    <Styled.Dropdown nav inNavbar>
-                      <DropdownToggle split variant = "true" nav>Insert Name</DropdownToggle>
-                      <DropdownMenu>
-                        <DropdownItem>My Profile</DropdownItem>
-                        <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
-                      </DropdownMenu>
-                    </Styled.Dropdown>
+                  <Styled.Dropdown nav inNavbar>
+                    <Styled.Toggle color="white">
+                      {/* <CardGroup style={{}}>
+                        <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
+                          <img width="25" height="25" src={avatar}/>
+                        </Card>
+                        <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
+                          <CardText style={{fontSize: '0.8rem'}}>Firstname Lastname</CardText>
+                            <CardText style={{fontSize: '0.8rem'}}>Role</CardText>
+                        </Card>
+                      </CardGroup> */}
+                      <Row>
+                        <Col md="auto" style={{}}>
+                          <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
+                            <img width="50" height="50" src={avatar}/>
+                          </Card>
+                        </Col>
+                        <Col md="auto" style={{padding: '0px'}}>
+                          <Card body className="text-left" style={{padding: '0rem', border: 'none'}}>
+                            <CardText style={{fontSize: '0.8rem', padding: '0.5px'}}>Firstname Lastname</CardText>
+                            <CardText style={{fontSize: '0.8rem', padding: '0.5px'}}>Role</CardText>
+                          </Card>
+                        </Col>
+                      </Row>
+                    </Styled.Toggle>
+                    <DropdownMenu>
+                      <DropdownItem>My Profile</DropdownItem>
+                      <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
+                    </DropdownMenu>
+                  </Styled.Dropdown>
                 </Styled.FlexContainer>
               ) : (
                 <Nav navbar>
