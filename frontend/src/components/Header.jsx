@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Icon } from './Shared';
 // import { GoogleLogout } from 'react-google-login';
 
 import {
@@ -15,20 +16,11 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Container, 
-  Button, 
-  Card, 
-  CardImg,
-  CardTitle,
-  CardText,
-  CardGroup,
-  CardBody,
-  Row,
-  Col
+  Container
 } from 'reactstrap';
 
 import logo from '../images/bog_logo.png';
-import avatar from '../images/default_avatar.png';
+import avatar from '../images/test.jpg';
 
 const Styled = {
   Navbar: styled(Navbar)`
@@ -96,6 +88,34 @@ const Styled = {
       color: #969696;
     `}
   `,
+  TestContainer: styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `,
+  UserIcon: styled.img`
+    border-radius: 50%;
+    width: 34px;
+    height: 34px
+  `,
+  ImgContainer: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 10px;
+    padding-left: 10px;
+  `,
+  TxtContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    ${props =>
+     `
+      color: ${props.theme.primaryGrey};
+      font-size: 16px;
+    `}
+  `,
   FlexContainer: styled.ul`
     width: 100%;
     display: flex;
@@ -127,7 +147,7 @@ class Header extends Component {
     return (
       <div>
         <Styled.Navbar light expand="md">
-          <Container style={{marginLeft: '0px'}}>
+          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '1300px'}}>
             <NavbarBrand tag={Link} to="/applicant-viewer">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
@@ -166,24 +186,25 @@ class Header extends Component {
                   </Styled.PageSwitch>
                   <Styled.Dropdown nav inNavbar>
                     <Styled.Toggle color="white"> 
-                      {/* need to consider how this would get affected when changing color schemes */}
-                      <Row>
-                        <Col md="auto" style={{}}>
-                          <Card body className="text-center" style={{padding: '0rem', border: 'none'}}>
-                            <img width="34px" height="34px" src={avatar} alt="icon"/>
-                          </Card>
-                        </Col>
-                        <Col md="auto" style={{padding: '0px'}}>
-                          <Card body className="text-left" style={{padding: '0rem', border: 'none'}}>
-                            <CardText style={{fontSize: '16px'}}>Firstname Lastname <br></br> Role</CardText>
-                          </Card>
-                        </Col>
-                      </Row>
+                      <Styled.TestContainer>
+                        <Styled.TestContainer>
+                          <Styled.ImgContainer style={{paddingLeft: '0px'}}>
+                            <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
+                          </Styled.ImgContainer>
+                          <Styled.TxtContainer>
+                            <p style={{margin: '0px', maxWidth: '200px'}}>Firstname Lastname</p>
+                            <p style={{margin: '0px'}}>Role</p>
+                          </Styled.TxtContainer>
+                          <Styled.ImgContainer style={{paddingRight: '0px'}}>
+                            <Icon name="dropdown-arrow" size="1.5rem"/>
+                          </Styled.ImgContainer>
+                        </Styled.TestContainer>
+                      </Styled.TestContainer>
+                      <DropdownMenu style={{width: '250px'}}>
+                        <DropdownItem>My Profile</DropdownItem>
+                        <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
+                      </DropdownMenu>
                     </Styled.Toggle>
-                    <DropdownMenu>
-                      <DropdownItem>My Profile</DropdownItem>
-                      <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
-                    </DropdownMenu>
                   </Styled.Dropdown>
                 </Styled.FlexContainer>
               ) : (
