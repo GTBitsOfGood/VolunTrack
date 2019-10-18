@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const UserDataSchema = require('./userData').UserDataSchema;
 
 // define schema
 const eventSchema = new mongoose.Schema(
@@ -30,7 +29,7 @@ const eventSchema = new mongoose.Schema(
       required: false
     },
     volunteers: {
-      type: [UserDataSchema],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserData' }],
       default: []
     },
     max_volunteers: {
@@ -39,6 +38,7 @@ const eventSchema = new mongoose.Schema(
     },
     external_links: {
       type: [String],
+      default: [],
       required: false
     }
   },

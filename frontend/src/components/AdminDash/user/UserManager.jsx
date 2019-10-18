@@ -1,11 +1,11 @@
 import React from 'react';
 import UserTable from './UserTable';
 import styled from 'styled-components';
-import { fetchUserManagementData, fetchUserCount } from './queries';
+import { fetchUserManagementData, fetchUserCount } from '../queries';
 import { Button } from 'reactstrap';
 // import { Button, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 // import { Form, Checkbox } from '../Forms';
-import { Icon } from '../Shared';
+import { Icon } from '../../Shared';
 
 const PAGE_SIZE = 10;
 

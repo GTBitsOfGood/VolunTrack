@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 // import { GoogleLogout } from 'react-google-login';
 
@@ -19,6 +19,32 @@ import {
 } from 'reactstrap';
 
 import logo from '../images/drawchange_logo_white.png';
+
+const pageSwitchWidth = currPath => {
+  switch (currPath) {
+    case '/applicant-viewer':
+      return '9.6rem';
+    case '/user-manager':
+      return '8.6rem';
+    case '/events':
+      return '4.8rem';
+    default:
+      return '0';
+  }
+};
+
+const pageSwitchLeft = currPath => {
+  switch (currPath) {
+    case '/applicant-viewer':
+      return '-1rem';
+    case '/user-manager':
+      return '8.3rem';
+    case '/events':
+      return '16.9rem';
+    default:
+      return '0';
+  }
+};
 
 const Styled = {
   NavItem: styled(NavItem)`
@@ -50,11 +76,11 @@ const Styled = {
 
     :before {
       content: '';
-      width: ${props => (props.currPathName === '/applicant-viewer' ? '10rem' : '9rem')};
+      width: ${props => pageSwitchWidth(props.currPathName)};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
-      left: ${props => (props.currPathName === '/applicant-viewer' ? '-1rem' : '8.5rem')};
+      left: ${props => pageSwitchLeft(props.currPathName)};
       background: white;
       z-index: 0;
       transition: all 0.3s;
@@ -106,10 +132,10 @@ class Header extends Component {
     console.log(window.location.pathname);
   };
 
-  currPageMatches = page => window.location.pathname === page;
+  currPageMatches = page => this.props.location.pathname === page;
 
   render() {
-    const { onLogout, loggedIn, role } = this.props;
+    const { onLogout, loggedIn, location } = this.props;
     return (
       <div>
         <Navbar color="dark" dark expand="md">
@@ -122,25 +148,23 @@ class Header extends Component {
             <Collapse isOpen={this.state.isOpen} navbar>
               {loggedIn ? (
                 <Styled.FlexContainer className="navbar-nav">
-                  <Styled.PageSwitch currPathName={window.location.pathname}>
+                  <Styled.PageSwitch currPathName={location.pathname}>
                     <Styled.PageLink
                       to="/applicant-viewer"
                       selected={this.currPageMatches('/applicant-viewer')}
                     >
                       Applicant Viewer
                     </Styled.PageLink>
-                    {role === 'admin' && (
-                      <Styled.PageLink
-                        to="/user-manager"
-                        selected={this.currPageMatches('/user-manager')}
-                      >
-                        User Manager
-                      </Styled.PageLink>
-                    )}
+                    <Styled.PageLink
+                      to="/user-manager"
+                      selected={this.currPageMatches('/user-manager')}
+                    >
+                      User Manager
+                    </Styled.PageLink>
+                    <Styled.PageLink to="/events" selected={this.currPageMatches('/events')}>
+                      Events
+                    </Styled.PageLink>
                   </Styled.PageSwitch>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org">Back to Main Site</NavLink>
-                  </Styled.NavItem>
                   <Styled.NavItem>
                     <NavLink onClick={onLogout} href="/">
                       Logout
@@ -148,65 +172,7 @@ class Header extends Component {
                   </Styled.NavItem>
                 </Styled.FlexContainer>
               ) : (
-                <Nav navbar>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org">Home</NavLink>
-                  </Styled.NavItem>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>About Us</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="http://www.drawchange.org/faqs">FAQs</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/foundersstory">
-                        Founder's Story
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/curriculum-blueprint">
-                        Curriculum & Blueprint
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/friends-partners">
-                        Our Friends & Partners
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/store">Store</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/press-kit">
-                        Press Kit
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>Contribute</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="https://secure.donationpay.org/drawchange/">
-                        Donate
-                      </DropdownItem>
-                      <DropdownItem href="/">Volunteer With Us</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/wishlist">
-                        Wish List
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown>
-                    <NavLink href="http://www.drawchange.org/blog">News</NavLink>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>Activities</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="https://www.drawchange.org/usprograms">
-                        U.S. Programs
-                      </DropdownItem>
-                      <DropdownItem href="https://www.drawchange.org/costarica">
-                        Costa Rica
-                      </DropdownItem>
-                      <DropdownItem href="https://www.drawchange.org/ethiopia">
-                        Ethipoia
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org/contactus">Contact</NavLink>
-                  </Styled.NavItem>
-                  <Styled.Dropdown>
-                    <NavLink href="https://secure.donationpay.org/drawchange/">Donate</NavLink>
-                  </Styled.Dropdown>
-                </Nav>
+                <Nav navbar></Nav>
               )}
             </Collapse>
           </Container>
@@ -216,4 +182,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);
