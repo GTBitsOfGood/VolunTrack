@@ -36,6 +36,7 @@ const Styled = {
   Dropdown: styled(UncontrolledDropdown)`
     text-align: center;
     min-width: 7rem;
+    width: fit-content;
   `,
   Toggle: styled(DropdownToggle)`
     text-align: left;
@@ -88,8 +89,7 @@ const Styled = {
       color: #969696;
     `}
   `,
-  TestContainer: styled.div`
-    width: 100%;
+  UserContainer: styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -184,10 +184,10 @@ class Header extends Component {
                       Settings
                     </Styled.PageLink>
                   </Styled.PageSwitch>
-                  <Styled.Dropdown nav inNavbar>
+                  <Styled.Dropdown nav inNavbar className="navbar-nav">
                     <Styled.Toggle color="white"> 
-                      <Styled.TestContainer>
-                        <Styled.TestContainer>
+                      <Styled.UserContainer>
+                        <Styled.UserContainer>
                           <Styled.ImgContainer style={{paddingLeft: '0px'}}>
                             <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
                           </Styled.ImgContainer>
@@ -198,13 +198,17 @@ class Header extends Component {
                           <Styled.ImgContainer style={{paddingRight: '0px'}}>
                             <Icon name="dropdown-arrow" size="1.5rem"/>
                           </Styled.ImgContainer>
-                        </Styled.TestContainer>
-                      </Styled.TestContainer>
-                      <DropdownMenu style={{width: '250px'}}>
+                        </Styled.UserContainer>
+                      </Styled.UserContainer>
+                      {/* <DropdownMenu style={{width: '250px'}}>
                         <DropdownItem>My Profile</DropdownItem>
                         <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
-                      </DropdownMenu>
+                      </DropdownMenu> */}
                     </Styled.Toggle>
+                    <DropdownMenu style={{width: '250px'}}>
+                      <DropdownItem>My Profile</DropdownItem>
+                      <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
+                    </DropdownMenu>
                   </Styled.Dropdown>
                 </Styled.FlexContainer>
               ) : (
