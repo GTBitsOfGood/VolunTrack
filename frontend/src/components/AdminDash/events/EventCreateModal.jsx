@@ -47,7 +47,7 @@ const EventValidator = object().shape({
 
 const EventCreateModal = ({ open, toggle }) => {
   return (
-    <Modal isOpen={open} toggle={toggle}>
+    <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Create Event</ModalHeader>
       <Formik
         initialValues={{
