@@ -68,6 +68,7 @@ const Styled = {
     }
   `,
   PageLink: styled(Link)`
+    margin-left: 2rem;
     margin-right: 2rem;
     z-index: 1;
 
@@ -122,7 +123,7 @@ const Styled = {
     display: flex;
     justify-content: space-between;
     list-style: none;
-    padding-left: 150px;
+    padding-left: 80px;
   `
 };
 
