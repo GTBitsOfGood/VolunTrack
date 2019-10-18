@@ -76,6 +76,9 @@ module.exports = {
    * Express middleware to check if current user is authenticated.
    */
   isAuthenticated: (req, res, next) => {
+    if (process.env.NODE_ENV === 'development') {
+      return next();
+    }
     // return next();
     return req.user
       ? next()
