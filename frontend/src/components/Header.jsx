@@ -117,6 +117,7 @@ const Styled = {
      `
       color: ${props.theme.primaryGrey};
       font-size: 16px;
+      white-space: nowrap;
     `}
   `,
   FlexContainer: styled.ul`
@@ -203,12 +204,8 @@ class Header extends Component {
                           </Styled.ImgContainer>
                         </Styled.UserContainer>
                       </Styled.UserContainer>
-                      {/* <DropdownMenu style={{width: '250px'}}>
-                        <DropdownItem>My Profile</DropdownItem>
-                        <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
-                      </DropdownMenu> */}
                     </Styled.Toggle>
-                    <DropdownMenu style={{width: '250px'}}>
+                    <DropdownMenu style={{width: '100%'}}>
                       <DropdownItem>My Profile</DropdownItem>
                       <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
                     </DropdownMenu>
