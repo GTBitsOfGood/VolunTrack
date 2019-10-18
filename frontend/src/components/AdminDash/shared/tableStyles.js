@@ -21,8 +21,9 @@ const Table = styled.table`
   }
 `;
 const Row = styled.tr`
-  ${props => props.evenIndex && 'background: #F7F7F7'};
+  ${props => props.evenIndex && 'background: #FFFFFF'};
   cursor: pointer;
+  border-bottom: 2px solid #F0F0F0
 `;
 const LoadingBody = styled.div`
   height: 39rem;
