@@ -114,6 +114,7 @@ const Styled = {
      `
       color: ${props.theme.primaryGrey};
       font-size: 16px;
+      white-space: nowrap;
     `}
   `,
   FlexContainer: styled.ul`
@@ -147,7 +148,7 @@ class Header extends Component {
     return (
       <div>
         <Styled.Navbar light expand="md">
-          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '1300px'}}>
+          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '100%'}}>
             <NavbarBrand tag={Link} to="/applicant-viewer">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
@@ -192,7 +193,7 @@ class Header extends Component {
                             <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
                           </Styled.ImgContainer>
                           <Styled.TxtContainer>
-                            <p style={{margin: '0px', maxWidth: '200px'}}>Firstname Lastname</p>
+                            <p style={{margin: '0px'}}>Firstname Lastname</p>
                             <p style={{margin: '0px'}}>Role</p>
                           </Styled.TxtContainer>
                           <Styled.ImgContainer style={{paddingRight: '0px'}}>
@@ -200,12 +201,8 @@ class Header extends Component {
                           </Styled.ImgContainer>
                         </Styled.UserContainer>
                       </Styled.UserContainer>
-                      {/* <DropdownMenu style={{width: '250px'}}>
-                        <DropdownItem>My Profile</DropdownItem>
-                        <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
-                      </DropdownMenu> */}
                     </Styled.Toggle>
-                    <DropdownMenu style={{width: '250px'}}>
+                    <DropdownMenu style={{width: '100%'}}>
                       <DropdownItem>My Profile</DropdownItem>
                       <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
                     </DropdownMenu>
