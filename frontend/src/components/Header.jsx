@@ -94,6 +94,8 @@ const Styled = {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 220px;
   `,
   UserIcon: styled.img`
     border-radius: 50%;
@@ -111,6 +113,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-wrap: nowrap;
     ${props =>
      `
       color: ${props.theme.primaryGrey};
