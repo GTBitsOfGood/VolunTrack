@@ -93,6 +93,8 @@ const Styled = {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 220px;
   `,
   UserIcon: styled.img`
     border-radius: 50%;
@@ -110,6 +112,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-wrap: nowrap;
     ${props =>
      `
       color: ${props.theme.primaryGrey};
@@ -147,7 +150,7 @@ class Header extends Component {
     return (
       <div>
         <Styled.Navbar light expand="md">
-          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '1300px'}}>
+          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '100%'}}>
             <NavbarBrand tag={Link} to="/applicant-viewer">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
@@ -192,7 +195,7 @@ class Header extends Component {
                             <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
                           </Styled.ImgContainer>
                           <Styled.TxtContainer>
-                            <p style={{margin: '0px', maxWidth: '200px'}}>Firstname Lastname</p>
+                            <p style={{margin: '0px'}}>Firstname Lastname</p>
                             <p style={{margin: '0px'}}>Role</p>
                           </Styled.TxtContainer>
                           <Styled.ImgContainer style={{paddingRight: '0px'}}>
