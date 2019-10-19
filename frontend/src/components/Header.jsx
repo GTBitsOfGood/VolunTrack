@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
+import { Icon } from './Shared';
 // import { GoogleLogout } from 'react-google-login';
 
 import {
@@ -18,9 +19,40 @@ import {
   Container
 } from 'reactstrap';
 
-import logo from '../images/drawchange_logo_white.png';
+import logo from '../images/bog_logo.png';
+import avatar from '../images/test.jpg';
+
+const pageSwitchWidth = currPath => {
+  switch (currPath) {
+    case '/applicant-viewer':
+      return '9.6rem';
+    case '/user-manager':
+      return '8.6rem';
+    case '/events':
+      return '4.8rem';
+    default:
+      return '0';
+  }
+};
+
+const pageSwitchLeft = currPath => {
+  switch (currPath) {
+    case '/applicant-viewer':
+      return '-1rem';
+    case '/user-manager':
+      return '8.3rem';
+    case '/events':
+      return '16.9rem';
+    default:
+      return '0';
+  }
+};
 
 const Styled = {
+  Navbar: styled(Navbar)`
+    background-color: #ffffff;
+    min-height: 6rem;
+  `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
     margin-right: 0.3rem;
@@ -28,13 +60,15 @@ const Styled = {
     min-width: 7rem;
   `,
   Dropdown: styled(UncontrolledDropdown)`
-    margin-left: 0.3rem;
-    margin-right: 0.3rem;
     text-align: center;
     min-width: 7rem;
+    width: fit-content;
+  `,
+  Toggle: styled(DropdownToggle)`
+    text-align: left;
   `,
   NavLabel: styled.p`
-    color: white;
+    color: #969696;
     margin: auto;
     margin-left: 2rem;
     flex: 1;
@@ -50,22 +84,23 @@ const Styled = {
 
     :before {
       content: '';
-      width: ${props => (props.currPathName === '/applicant-viewer' ? '10rem' : '9rem')};
+      width: ${props => pageSwitchWidth(props.currPathName)};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
-      left: ${props => (props.currPathName === '/applicant-viewer' ? '-1rem' : '8.5rem')};
+      left: ${props => pageSwitchLeft(props.currPathName)};
       background: white;
       z-index: 0;
       transition: all 0.3s;
     }
   `,
   PageLink: styled(Link)`
+    margin-left: 2rem;
     margin-right: 2rem;
     z-index: 1;
 
     :hover {
-      color: white;
+      color: #707070;
       text-decoration: none;
     }
     ${props =>
@@ -79,7 +114,38 @@ const Styled = {
       }
     `
         : `
-      color: white;
+      color: #969696;
+    `}
+  `,
+  UserContainer: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 220px;
+  `,
+  UserIcon: styled.img`
+    border-radius: 50%;
+    width: 34px;
+    height: 34px
+  `,
+  ImgContainer: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 10px;
+    padding-left: 10px;
+  `,
+  TxtContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: nowrap;
+    ${props =>
+     `
+      color: ${props.theme.primaryGrey};
+      font-size: 16px;
+      white-space: nowrap;
     `}
   `,
   FlexContainer: styled.ul`
@@ -87,7 +153,7 @@ const Styled = {
     display: flex;
     justify-content: space-between;
     list-style: none;
-    margin: 0;
+    padding-left: 80px;
   `
 };
 
@@ -106,23 +172,23 @@ class Header extends Component {
     console.log(window.location.pathname);
   };
 
-  currPageMatches = page => window.location.pathname === page;
+  currPageMatches = page => this.props.location.pathname === page;
 
   render() {
-    const { onLogout, loggedIn, role } = this.props;
+    const { onLogout, loggedIn, location } = this.props;
     return (
       <div>
-        <Navbar color="dark" dark expand="md">
-          <Container>
-            <NavbarBrand tag={Link} to="/">
-              <img style={{ width: '175px' }} alt="drawchange logo" src={logo} />
+        <Styled.Navbar light expand="md">
+          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '100%'}}>
+            <NavbarBrand tag={Link} to="/applicant-viewer">
+              <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
 
             <NavbarToggler onClick={this.toggle} />
             <Collapse isOpen={this.state.isOpen} navbar>
               {loggedIn ? (
                 <Styled.FlexContainer className="navbar-nav">
-                  <Styled.PageSwitch currPathName={window.location.pathname}>
+                  <Styled.PageSwitch currPathName={location.pathname}>
                     <Styled.PageLink
                       to="/applicant-viewer"
                       selected={this.currPageMatches('/applicant-viewer')}
@@ -137,83 +203,52 @@ class Header extends Component {
                         User Manager
                       </Styled.PageLink>
                     )}
+                    <Styled.PageLink
+                      to="/events"
+                      selected={this.currPageMatches('/events')}
+                    > 
+                      Events
+                    </Styled.PageLink>
+                    <Styled.PageLink
+                      to="/settings"
+                      selected={this.currPageMatches('/settings')}
+                    > 
+                      Settings
+                    </Styled.PageLink>
                   </Styled.PageSwitch>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org">Back to Main Site</NavLink>
-                  </Styled.NavItem>
-                  <Styled.NavItem>
-                    <NavLink onClick={onLogout} href="/">
-                      Logout
-                    </NavLink>
-                  </Styled.NavItem>
+                  <Styled.Dropdown nav inNavbar className="navbar-nav">
+                    <Styled.Toggle color="white"> 
+                      <Styled.UserContainer>
+                        <Styled.UserContainer>
+                          <Styled.ImgContainer style={{paddingLeft: '0px'}}>
+                            <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
+                          </Styled.ImgContainer>
+                          <Styled.TxtContainer>
+                            <p style={{margin: '0px'}}>Firstname Lastname</p>
+                            <p style={{margin: '0px'}}>Role</p>
+                          </Styled.TxtContainer>
+                          <Styled.ImgContainer style={{paddingRight: '0px'}}>
+                            <Icon name="dropdown-arrow" size="1.5rem"/>
+                          </Styled.ImgContainer>
+                        </Styled.UserContainer>
+                      </Styled.UserContainer>
+                    </Styled.Toggle>
+                    <DropdownMenu style={{width: '100%'}}>
+                      <DropdownItem>My Profile</DropdownItem>
+                      <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
+                    </DropdownMenu>
+                  </Styled.Dropdown>
                 </Styled.FlexContainer>
               ) : (
                 <Nav navbar>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org">Home</NavLink>
-                  </Styled.NavItem>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>About Us</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="http://www.drawchange.org/faqs">FAQs</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/foundersstory">
-                        Founder's Story
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/curriculum-blueprint">
-                        Curriculum & Blueprint
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/friends-partners">
-                        Our Friends & Partners
-                      </DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/store">Store</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/press-kit">
-                        Press Kit
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>Contribute</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="https://secure.donationpay.org/drawchange/">
-                        Donate
-                      </DropdownItem>
-                      <DropdownItem href="/">Volunteer With Us</DropdownItem>
-                      <DropdownItem href="http://www.drawchange.org/wishlist">
-                        Wish List
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown>
-                    <NavLink href="http://www.drawchange.org/blog">News</NavLink>
-                  </Styled.Dropdown>
-                  <Styled.Dropdown nav inNavbar>
-                    <DropdownToggle nav>Activities</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem href="https://www.drawchange.org/usprograms">
-                        U.S. Programs
-                      </DropdownItem>
-                      <DropdownItem href="https://www.drawchange.org/costarica">
-                        Costa Rica
-                      </DropdownItem>
-                      <DropdownItem href="https://www.drawchange.org/ethiopia">
-                        Ethipoia
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                  <Styled.NavItem>
-                    <NavLink href="http://www.drawchange.org/contactus">Contact</NavLink>
-                  </Styled.NavItem>
-                  <Styled.Dropdown>
-                    <NavLink href="https://secure.donationpay.org/drawchange/">Donate</NavLink>
-                  </Styled.Dropdown>
                 </Nav>
               )}
             </Collapse>
           </Container>
-        </Navbar>
+        </Styled.Navbar>
       </div>
     );
   }
 }
 
-export default Header;
+export default withRouter(Header);

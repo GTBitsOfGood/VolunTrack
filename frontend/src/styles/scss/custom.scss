@@ -1,6 +1,6 @@
 // Your variable overrides
 // $body-bg: #000;
-$body-bg: rgb(194, 239, 255);
+$body-bg: hsl(0, 0%, 95%);
 $navbar-dark-color: #c2efff;
 $navbar-dark-hover-color: #f79a0e;
 $dark: rgba(35, 35, 35, 0.62);
@@ -13,7 +13,6 @@ $danger: #ff6261;
 // $body-color: #dc3545;
 // Bootstrap and its default variables
 @import '../../../node_modules/bootstrap/scss/bootstrap';
-@import url('https://use.typekit.net/bgw3nnz.css');
 
 h1,
 h2,
@@ -21,5 +20,5 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: 'Poppins';
+  font-family: 'Overpass', sans-serif;
 }
