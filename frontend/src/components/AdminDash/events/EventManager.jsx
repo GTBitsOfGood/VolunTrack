@@ -47,9 +47,22 @@ const EventManager = () => {
         setLoading(false);
       });
   };
+
+  const onEditClicked = () => {
+    setShowEditModal(true);
+  }
+
   const onCreateClicked = () => {
     setShowCreateModal(true);
   };
+
+  const toggleEditModal = () => {
+    setShowEditModal(prev => !prev);
+  };
+  useEffect(() => {
+    onRefresh();
+  }, []);
+
   const toggleCreateModal = () => {
     setShowCreateModal(prev => !prev);
   };
