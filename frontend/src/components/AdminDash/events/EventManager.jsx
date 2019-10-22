@@ -5,6 +5,7 @@ import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
 import EventCreateModal from './EventCreateModal';
+import EventEditModal from './EventEditModal';
 
 const Styled = {
   Container: styled.div`
@@ -81,9 +82,14 @@ const EventManager = () => {
           <Icon color="grey3" name="refresh" />
           <span> Refresh</span>
         </Styled.Button>
+        <Styled.Button onClick={onEditClicked}>
+          <Icon color="grey3" name="create" />
+          <span>Edit</span>
+        </Styled.Button>
       </Styled.HeaderContainer>
       <EventTable events={events} loading={loading}></EventTable>
       <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
+      <EventEditModal open={showEditModal} toggle={toggleEditModal} />
     </Styled.Container>
   );
 };
