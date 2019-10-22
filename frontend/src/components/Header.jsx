@@ -121,7 +121,7 @@ const Styled = {
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
-    width: 220px;
+    width: 200px;
   `,
   UserIcon: styled.img`
     border-radius: 50%;
@@ -132,14 +132,14 @@ const Styled = {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-right: 10px;
+    padding-right: 0px;
     padding-left: 10px;
   `,
   TxtContainer: styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     ${props =>
       `
       color: ${props.theme.primaryGrey};
@@ -217,8 +217,8 @@ class Header extends Component {
                             <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
                           </Styled.ImgContainer>
                           <Styled.TxtContainer>
-                            <p style={{ margin: '0px' }}>Firstname Lastname</p>
-                            <p style={{ margin: '0px' }}>Role</p>
+                            <p style={{ margin: '0px' }}>James Wang</p>
+                            <p style={{ margin: '0px' }}>Admin</p>
                           </Styled.TxtContainer>
                           <Styled.ImgContainer style={{ paddingRight: '0px' }}>
                             <Icon name="dropdown-arrow" size="1.5rem" />

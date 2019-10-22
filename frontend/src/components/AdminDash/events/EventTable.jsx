@@ -2,6 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as Table from '../shared/tableStyles';
 import Loading from 'components/Shared/Loading';
+import { Icon } from 'components/Shared';
+import styled from 'styled-components';
+import { Button } from 'reactstrap';
+
+const Styled = {
+  Button: styled(Button)`
+    background: white;
+    border: none; `
+};
 
 const EventTable = ({ events, loading }) => {
   return (
@@ -33,6 +42,9 @@ const EventTable = ({ events, loading }) => {
                   )}
                 </td>
                 <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
+                <Styled.Button>
+                  <Icon color="grey3" name="create" />
+                </Styled.Button>
               </Table.Row>
             ))}
         </tbody>
