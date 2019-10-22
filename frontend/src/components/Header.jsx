@@ -155,6 +155,14 @@ class Header extends Component {
                     >
                       Applicant Viewer
                     </Styled.PageLink>
+                    
+                      <Styled.PageLink
+                        to="/user-manager"
+                        selected={this.currPageMatches('/user-manager')}
+                      >
+                        User Manager
+                      </Styled.PageLink>
+                    
                     <Styled.PageLink
                       to="/user-manager"
                       selected={this.currPageMatches('/user-manager')}
