@@ -11,7 +11,6 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
@@ -127,7 +126,7 @@ const Styled = {
   UserIcon: styled.img`
     border-radius: 50%;
     width: 34px;
-    height: 34px
+    height: 34px;
   `,
   ImgContainer: styled.div`
     display: flex;
@@ -142,7 +141,7 @@ const Styled = {
     justify-content: center;
     flex-wrap: nowrap;
     ${props =>
-     `
+      `
       color: ${props.theme.primaryGrey};
       font-size: 16px;
       white-space: nowrap;
@@ -175,11 +174,11 @@ class Header extends Component {
   currPageMatches = page => this.props.location.pathname === page;
 
   render() {
-    const { onLogout, loggedIn, location } = this.props;
+    const { onLogout, loggedIn, location, role } = this.props;
     return (
       <div>
         <Styled.Navbar light expand="md">
-          <Container style={{marginLeft: '0px', marginRight: '0px', maxWidth: '100%'}}>
+          <Container style={{ marginLeft: '0px', marginRight: '0px', maxWidth: '100%' }}>
             <NavbarBrand tag={Link} to="/applicant-viewer">
               <img style={{ width: '175px' }} alt="bog logo" src={logo} />
             </NavbarBrand>
@@ -203,45 +202,41 @@ class Header extends Component {
                         User Manager
                       </Styled.PageLink>
                     )}
-                    <Styled.PageLink
-                      to="/events"
-                      selected={this.currPageMatches('/events')}
-                    > 
+                    <Styled.PageLink to="/events" selected={this.currPageMatches('/events')}>
                       Events
                     </Styled.PageLink>
-                    <Styled.PageLink
-                      to="/settings"
-                      selected={this.currPageMatches('/settings')}
-                    > 
+                    <Styled.PageLink to="/settings" selected={this.currPageMatches('/settings')}>
                       Settings
                     </Styled.PageLink>
                   </Styled.PageSwitch>
                   <Styled.Dropdown nav inNavbar className="navbar-nav">
-                    <Styled.Toggle color="white"> 
+                    <Styled.Toggle color="white">
                       <Styled.UserContainer>
                         <Styled.UserContainer>
-                          <Styled.ImgContainer style={{paddingLeft: '0px'}}>
+                          <Styled.ImgContainer style={{ paddingLeft: '0px' }}>
                             <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
                           </Styled.ImgContainer>
                           <Styled.TxtContainer>
-                            <p style={{margin: '0px'}}>Firstname Lastname</p>
-                            <p style={{margin: '0px'}}>Role</p>
+                            <p style={{ margin: '0px' }}>Firstname Lastname</p>
+                            <p style={{ margin: '0px' }}>Role</p>
                           </Styled.TxtContainer>
-                          <Styled.ImgContainer style={{paddingRight: '0px'}}>
-                            <Icon name="dropdown-arrow" size="1.5rem"/>
+                          <Styled.ImgContainer style={{ paddingRight: '0px' }}>
+                            <Icon name="dropdown-arrow" size="1.5rem" />
                           </Styled.ImgContainer>
                         </Styled.UserContainer>
                       </Styled.UserContainer>
                     </Styled.Toggle>
-                    <DropdownMenu style={{width: '100%'}}>
+                    <DropdownMenu style={{ width: '100%' }}>
                       <DropdownItem>My Profile</DropdownItem>
-                      <DropdownItem onClick={onLogout} href="/"> Logout </DropdownItem>
+                      <DropdownItem onClick={onLogout} href="/">
+                        {' '}
+                        Logout{' '}
+                      </DropdownItem>
                     </DropdownMenu>
                   </Styled.Dropdown>
                 </Styled.FlexContainer>
               ) : (
-                <Nav navbar>
-                </Nav>
+                <Nav navbar></Nav>
               )}
             </Collapse>
           </Container>
