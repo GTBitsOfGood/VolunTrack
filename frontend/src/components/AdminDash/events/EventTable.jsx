@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as Table from '../shared/tableStyles';
 import Loading from 'components/Shared/Loading';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
+import EventEditModal from './EventEditModal';
+import { fetchEvents } from 'components/AdminDash/queries';
 
 const Styled = {
   Button: styled(Button)`
@@ -13,6 +15,18 @@ const Styled = {
 };
 
 const EventTable = ({ events, loading }) => {
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const onEditClicked = () => {
+    setShowEditModal(true);
+  };
+  const toggleEditModal = () => {
+    setShowEditModal(prev => !prev);
+  };
+  // useEffect(() => {
+  //   onRefresh();
+  // }, []);
+
   return (
     <Table.Container>
       <Table.Table>
@@ -42,14 +56,17 @@ const EventTable = ({ events, loading }) => {
                   )}
                 </td>
                 <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
-                <Styled.Button>
-                  <Icon color="grey3" name="create" />
-                </Styled.Button>
+                <td>
+                  <Styled.Button onClick={onEditClicked}>
+                    <Icon color="grey3" name="create" />
+                  </Styled.Button>
+                </td>
               </Table.Row>
             ))}
         </tbody>
       </Table.Table>
       {loading && <Loading />}
+      <EventEditModal open={showEditModal} toggle={toggleEditModal} />
     </Table.Container>
   );
 };
