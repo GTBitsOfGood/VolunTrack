@@ -47,20 +47,21 @@ const EventValidator = object().shape({
     .required()
 });
 
-const EventEditModal = ({ open, toggle }) => {
+const EventEditModal = ({ open, toggle, event }) => {
+  console.log(event);
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
       <Formik
         initialValues={{
-          name: '',
-          date: '',
-          location: '',
-          description: '',
-          contact_phone: '',
-          contact_email: '',
-          max_volunteers: 0,
-          external_links: []
+          name: (event) ? event.name: '',
+          date: (event) ? event.date: '',
+          location: (event) ? event.location: '',
+          description: (event) ? event.description: '',
+          contact_phone: (event) ? event.contact_phone: '',
+          contact_email: (event) ? event.email: '',
+          max_volunteers: (event) ? event.max_volunteers: 0,
+          external_links: (event) ? event.external_links: []
         }}
         onSubmit={(values, { setSubmitting }) => {
           const event = {
