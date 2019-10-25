@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { string, object, number, date } from 'yup';
 
 /**this probably needs to change */
-import { createEvent } from '../queries';
+import { editEvent } from '../queries';
 
 const Styled = {
   Form: styled(FForm)``,
@@ -70,10 +70,10 @@ const EventEditModal = ({ open, toggle }) => {
             external_links: values.external_links ? [values.external_links] : undefined
           };
           setSubmitting(true);
-          // editEvent(event)
-          //   .then(() => toggle())
-          //   .catch(console.log)
-          //   .finally(() => setSubmitting(false));
+          editEvent(event)
+            .then(() => toggle())
+            .catch(console.log)
+            .finally(() => setSubmitting(false));
         }}
         validationSchema={EventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (

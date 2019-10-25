@@ -23,6 +23,9 @@ const EventTable = ({ events, loading }) => {
   const toggleEditModal = () => {
     setShowEditModal(prev => !prev);
   };
+  const onDeleteClicked = () => {
+
+  };
   // useEffect(() => {
   //   onRefresh();
   // }, []);
@@ -60,6 +63,11 @@ const EventTable = ({ events, loading }) => {
                   <Styled.Button onClick={onEditClicked}>
                     <Icon color="grey3" name="create" />
                   </Styled.Button>
+                </td>
+                <td>
+                    <Styled.Button onClick={onDeleteClicked}>
+                        <Icon color="grey3" name="delete" />
+                    </Styled.Button>
                 </td>
               </Table.Row>
             ))}
