@@ -6,6 +6,7 @@ import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
 import EventEditModal from './EventEditModal';
+import EventDeleteModal from './EventDeleteModal';
 import { fetchEvents } from 'components/AdminDash/queries';
 
 const Styled = {
@@ -16,7 +17,8 @@ const Styled = {
 
 const EventTable = ({ events, loading }) => {
   const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null)
+  const [currEvent, setCurrEvent] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const onEditClicked = (event) => {
     setShowEditModal(true);
@@ -25,8 +27,12 @@ const EventTable = ({ events, loading }) => {
   const toggleEditModal = () => {
     setShowEditModal(prev => !prev);
   };
-  const onDeleteClicked = () => {
-
+  const onDeleteClicked = (event) => {
+    setShowDeleteModal(true);
+    setCurrEvent(event);
+  };
+  const toggleDeleteModal = () => {
+    setShowDeleteModal(prev => !prev);
   };
   // useEffect(() => {
   //   onRefresh();
@@ -67,7 +73,7 @@ const EventTable = ({ events, loading }) => {
                   </Styled.Button>
                 </td>
                 <td>
-                    <Styled.Button onClick={onDeleteClicked}>
+                    <Styled.Button onClick={() => onDeleteClicked(event)}>
                         <Icon color="grey3" name="delete" />
                     </Styled.Button>
                 </td>
@@ -77,6 +83,7 @@ const EventTable = ({ events, loading }) => {
       </Table.Table>
       {loading && <Loading />}
       <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent}/>
+      <EventDeleteModal open={showDeleteModal} toggle = {toggleDeleteModal} event={currEvent} />
     </Table.Container>
   );
 };

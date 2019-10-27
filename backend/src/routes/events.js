@@ -5,7 +5,7 @@ const { matchedData } = require('express-validator/filter');
 const EventData = require('../models/event');
 const { EVENT_VALIDATOR } = require('../util/validators');
 
-router.post('/addEvents', EVENT_VALIDATOR, (req, res, next) => {
+router.post('/', EVENT_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.mapped() });
@@ -42,7 +42,9 @@ router.delete('/', EVENT_VALIDATOR, (req, res, next) => {
     }
     let event = new EventData(matchedData(req));
     EventData.findOneAndDelete(
-        {"_id" : event._id}
+        {name : event.name}
+    ).then(
+        console.log
     );
 });
 
@@ -52,12 +54,13 @@ router.put('/', EVENT_VALIDATOR, (req, res, next) => {
         return res.status(400).json({ errors: errors.mapped() });
     }
     const updateEventData = matchedData(req);
+    const editEvent = new EventData(updateEventData);
     EventData.findOneAndUpdate(
-        {"_id" : event._id},
+        {name : editEvent.name},
         updateEventData,
-        {
-            new: true
-        }
+        {new : true},
+    ).then(
+        console.log("Update")
     );
 });
 
