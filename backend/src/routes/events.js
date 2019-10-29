@@ -43,7 +43,7 @@ router.delete('/', EVENT_VALIDATOR, (req, res, next) => {
     let event = new EventData(matchedData(req));
     EventData.findOneAndDelete(
         {name : event.name}
-    ).then(
+    ).then(()=>
         console.log
     );
 });
@@ -59,8 +59,8 @@ router.put('/', EVENT_VALIDATOR, (req, res, next) => {
         {name : editEvent.name},
         updateEventData,
         {new : true},
-    ).then(
-        console.log("Update")
+    ).then(()=>
+        console.log
     );
 });
 
