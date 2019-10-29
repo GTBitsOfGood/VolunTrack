@@ -48,14 +48,13 @@ const EventValidator = object().shape({
 });
 
 const EventEditModal = ({ open, toggle, event }) => {
-  console.log(event);
   return (
-    <Modal isOpen={open} toggle={toggle} backdrop="static">
+    <Modal isOpen={open} toggle={toggle}>
       <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
       <Formik
         initialValues={{
           name: (event) ? event.name: '',
-          date: (event) ? event.date: '',
+          date: (event) ? event.date.split("T")[0] : '',
           location: (event) ? event.location: '',
           description: (event) ? event.description: '',
           contact_phone: (event) ? event.contact_phone: '',
@@ -71,13 +70,15 @@ const EventEditModal = ({ open, toggle, event }) => {
             external_links: values.external_links ? [values.external_links] : undefined
           };
           setSubmitting(true);
-          editEvent(event)
-            .then(() => toggle())
-            .catch(console.log)
-            .finally(() => setSubmitting(false));
+          editEvent(event);
+            // .then(() => toggle())
+            //   .then(open => !open || console.log("here"))
+            // .catch(console.log)
+            // .finally(() => setSubmitting(false) || con1sole.log("abc"));
+            toggle();
         }}
         validationSchema={EventValidator}
-        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
+        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur}) => (
           <React.Fragment>
             <ModalBody>
               <Styled.Form>

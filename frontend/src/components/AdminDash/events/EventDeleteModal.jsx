@@ -66,10 +66,11 @@ const EventDeleteModal = ({ open, toggle, event }) => {
                         ...values
                     };
                     setSubmitting(true);
-                    deleteEvent(event)
-                        .then(() => toggle())
-                        .catch(console.log)
-                        .finally(() => setSubmitting(false));
+                    deleteEvent(event);
+                    toggle();
+                        // .then(() => toggle())
+                        // .catch(console.log)
+                        // .finally(() => setSubmitting(false));
                 }}
                 validationSchema={EventValidator}
                 render={({ handleSubmit, isValid, isSubmitting,values, setFieldValue}) => (

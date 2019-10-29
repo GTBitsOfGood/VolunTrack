@@ -15,25 +15,25 @@ const Styled = {
     border: none; `
 };
 
-const EventTable = ({ events, loading }) => {
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const onEditClicked = (event) => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
-  const toggleEditModal = () => {
-    setShowEditModal(prev => !prev);
-  };
-  const onDeleteClicked = (event) => {
-    setShowDeleteModal(true);
-    setCurrEvent(event);
-  };
-  const toggleDeleteModal = () => {
-    setShowDeleteModal(prev => !prev);
-  };
+const EventTable = ({ events, loading,onEditClicked, onDeleteClicked}) => {
+  // const [showEditModal, setShowEditModal] = useState(false);
+  // const [currEvent, setCurrEvent] = useState(null);
+  // const [showDeleteModal, setShowDeleteModal] = useState(false);
+  //
+  // const onEditClicked = (event) => {
+  //   setShowEditModal(true);
+  //   setCurrEvent(event);
+  // };
+  // const toggleEditModal = () => {
+  //   setShowEditModal(prev => !prev);
+  // };
+  // const onDeleteClicked = (event) => {
+  //   setShowDeleteModal(true);
+  //   setCurrEvent(event);
+  // };
+  // const toggleDeleteModal = () => {
+  //   setShowDeleteModal(prev => !prev);
+  // };
   // useEffect(() => {
   //   onRefresh();
   // }, []);
@@ -82,14 +82,16 @@ const EventTable = ({ events, loading }) => {
         </tbody>
       </Table.Table>
       {loading && <Loading />}
-      <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent}/>
-      <EventDeleteModal open={showDeleteModal} toggle = {toggleDeleteModal} event={currEvent} />
+      {/*<EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent}/>*/}
+      {/*<EventDeleteModal open={showDeleteModal} toggle = {toggleDeleteModal} event={currEvent} />*/}
     </Table.Container>
   );
 };
 EventTable.propTypes = {
   loading: PropTypes.bool,
-  events: PropTypes.array
+  events: PropTypes.array,
+    onEditClicked: PropTypes.func,
+    onDeleteClicked: PropTypes.func
 };
 
 export default EventTable;
