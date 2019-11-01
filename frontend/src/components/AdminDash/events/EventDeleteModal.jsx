@@ -82,7 +82,7 @@ const EventDeleteModal = ({ open, toggle, event }) => {
                                 <SForm.FormGroup>
                                     <SForm.Label>Name</SForm.Label>
                                     <Styled.ErrorMessage name="name" />
-                                    <Field name="name">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                                    <Field name="name">{({ field }) => <SForm.Input {...field} type="text" disabled/>}</Field>
                                 </SForm.FormGroup>
                             </Styled.Form>
                         </ModalBody>
