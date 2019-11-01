@@ -178,9 +178,8 @@ const USER_DATA_VALIDATOR = [
 ];
 
 // TODO Add validations for volunteers Array
-const EVENT_VALIDATOR = [
-    check('id')
-        .optional(),
+const CREATE_EVENT_VALIDATOR = [
+  check('_id').optional(),
   check('name')
     .isAscii()
     .trim(),
@@ -213,7 +212,12 @@ const EVENT_VALIDATOR = [
   // })
 ];
 
+const OBJECT_ID_REGEX = new RegExp('^[0-9a-fA-F]{24}$');
+
+const isValidObjectID = id => OBJECT_ID_REGEX.test(id);
+
 module.exports = {
   USER_DATA_VALIDATOR,
-  EVENT_VALIDATOR
+  CREATE_EVENT_VALIDATOR,
+  isValidObjectID
 };

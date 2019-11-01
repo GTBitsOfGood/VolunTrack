@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { check, oneOf, validationResult } = require('express-validator/check');
+const { validationResult } = require('express-validator/check');
 const { matchedData } = require('express-validator/filter');
 const EventData = require('../models/event');
-const { EVENT_VALIDATOR } = require('../util/validators');
+const {
+  CREATE_EVENT_VALIDATOR,
+  isValidObjectID
+} = require('../util/validators');
 
-router.post('/', EVENT_VALIDATOR, (req, res, next) => {
+router.post('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.mapped() });
@@ -36,28 +39,28 @@ router.get('/', (req, res, next) => {
 });
 // add search route with filter parms
 
-router.delete('/', EVENT_VALIDATOR, (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.mapped() });
+router.delete('/:id', (req, res, next) => {
+  const id = req.params.id;
+  if (!isValidObjectID(id)) {
+    return res.status(400).json({ error: 'Object ID not valid' });
   }
-  let event = new EventData(matchedData(req));
-  EventData.findOneAndDelete({ _id: event._id }).then(() => {
-    res.json({
-      message: 'Event successfully deleted!'
-    });
-  });
+  EventData.findOneAndDelete({ _id: id })
+    .then(() => {
+      res.json({
+        message: 'Event successfully deleted!'
+      });
+    })
+    .catch(next);
 });
 
-router.put('/', EVENT_VALIDATOR, (req, res, next) => {
+router.put('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.mapped() });
   }
-  // console.log(req);
   const updateEventData = matchedData(req);
-  const editEvent = new EventData(updateEventData);
-  EventData.findOneAndUpdate({ _id: editEvent.id }, updateEventData, {
+  console.log(updateEventData);
+  EventData.findOneAndUpdate({ _id: updateEventData._id }, updateEventData, {
     new: true
   })
     .then(event => {

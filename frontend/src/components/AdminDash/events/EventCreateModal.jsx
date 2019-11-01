@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
-import { string, object, number, date } from 'yup';
+import { eventValidator } from './eventHelpers';
 import { createEvent } from '../queries';
 
 const Styled = {
@@ -21,29 +21,6 @@ const Styled = {
     display: inline-block;
   `
 };
-
-const EventValidator = object().shape({
-  name: string()
-    .trim()
-    .required(),
-  date: date().required(),
-  location: string()
-    .trim()
-    .required(),
-  description: string()
-    .trim()
-    .required(),
-  contact_phone: string().trim(),
-  contact_email: string()
-    .email()
-    .trim(),
-  external_links: string()
-    .url()
-    .trim(),
-  max_volunteers: number()
-    .positive()
-    .required()
-});
 
 const EventCreateModal = ({ open, toggle }) => {
   return (
@@ -73,7 +50,7 @@ const EventCreateModal = ({ open, toggle }) => {
             .catch(console.log)
             .finally(() => setSubmitting(false));
         }}
-        validationSchema={EventValidator}
+        validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
           <React.Fragment>
             <ModalBody>

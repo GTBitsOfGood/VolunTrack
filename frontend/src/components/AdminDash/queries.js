@@ -47,6 +47,4 @@ export const createEvent = event => axios.post('/api/events', event);
 
 export const editEvent = event => axios.put('/api/events', event);
 
-export const deleteEvent = event => axios.delete('/api/events', {
-  data: event
-});
+export const deleteEvent = _id => axios.delete('/api/events/' + _id);

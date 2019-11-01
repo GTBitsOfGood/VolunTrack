@@ -3,10 +3,6 @@ const mongoose = require('mongoose');
 // define schema
 const eventSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: false
-    },
     name: {
       type: String,
       required: true

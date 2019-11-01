@@ -5,9 +5,9 @@ import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
 import EventCreateModal from './EventCreateModal';
-import EventEditModal from "./EventEditModal";
-import EventDeleteModal from "./EventDeleteModal";
-import * as Table from "../shared/tableStyles";
+import EventEditModal from './EventEditModal';
+import EventDeleteModal from './EventDeleteModal';
+import * as Table from '../shared/tableStyles';
 
 const Styled = {
   Container: styled.div`
@@ -62,28 +62,26 @@ const EventManager = () => {
     onRefresh();
   }, []);
 
-
   const [showEditModal, setShowEditModal] = useState(false);
   const [currEvent, setCurrEvent] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const onEditClicked = (event) => {
-      setShowEditModal(true);
-      setCurrEvent(event);
+  const onEditClicked = event => {
+    setShowEditModal(true);
+    setCurrEvent(event);
   };
   const toggleEditModal = () => {
-      setShowEditModal(prev => !prev);
-      onRefresh();
+    setShowEditModal(prev => !prev);
+    onRefresh();
   };
-  const onDeleteClicked = (event) => {
-      setShowDeleteModal(true);
-      setCurrEvent(event);
+  const onDeleteClicked = event => {
+    setShowDeleteModal(true);
+    setCurrEvent(event);
   };
   const toggleDeleteModal = () => {
-      setShowDeleteModal(prev => !prev);
-      onRefresh();
+    setShowDeleteModal(prev => !prev);
+    onRefresh();
   };
-
 
   return (
     <Styled.Container>
@@ -97,15 +95,19 @@ const EventManager = () => {
           <span> Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
-      <EventTable events={events} loading={loading} onEditClicked={onEditClicked} onDeleteClicked={onDeleteClicked}> </EventTable>
+      <EventTable
+        events={events}
+        loading={loading}
+        onEditClicked={onEditClicked}
+        onDeleteClicked={onDeleteClicked}
+      >
+        {' '}
+      </EventTable>
       <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-      <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent}/>
-      <EventDeleteModal open={showDeleteModal} toggle = {toggleDeleteModal} event={currEvent} />
+      <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent} />
+      <EventDeleteModal open={showDeleteModal} toggle={toggleDeleteModal} event={currEvent} />
     </Styled.Container>
   );
 };
 
 export default EventManager;
-
-//onEditClicked={onEditClicked} toggleEditModal={toggleEditModal}
-//                   onDeleteClicked={onDeleteClicked} toggleDeleteModal={toggleDeleteModal}

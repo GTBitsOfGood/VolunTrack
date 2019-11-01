@@ -12,32 +12,11 @@ import { fetchEvents } from 'components/AdminDash/queries';
 const Styled = {
   Button: styled(Button)`
     background: white;
-    border: none; `
+    border: none;
+  `
 };
 
-const EventTable = ({ events, loading,onEditClicked, onDeleteClicked}) => {
-  // const [showEditModal, setShowEditModal] = useState(false);
-  // const [currEvent, setCurrEvent] = useState(null);
-  // const [showDeleteModal, setShowDeleteModal] = useState(false);
-  //
-  // const onEditClicked = (event) => {
-  //   setShowEditModal(true);
-  //   setCurrEvent(event);
-  // };
-  // const toggleEditModal = () => {
-  //   setShowEditModal(prev => !prev);
-  // };
-  // const onDeleteClicked = (event) => {
-  //   setShowDeleteModal(true);
-  //   setCurrEvent(event);
-  // };
-  // const toggleDeleteModal = () => {
-  //   setShowDeleteModal(prev => !prev);
-  // };
-  // useEffect(() => {
-  //   onRefresh();
-  // }, []);
-
+const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
   return (
     <Table.Container>
       <Table.Table>
@@ -73,9 +52,9 @@ const EventTable = ({ events, loading,onEditClicked, onDeleteClicked}) => {
                   </Styled.Button>
                 </td>
                 <td>
-                    <Styled.Button onClick={() => onDeleteClicked(event)}>
-                        <Icon color="grey3" name="delete" />
-                    </Styled.Button>
+                  <Styled.Button onClick={() => onDeleteClicked(event)}>
+                    <Icon color="grey3" name="delete" />
+                  </Styled.Button>
                 </td>
               </Table.Row>
             ))}
@@ -90,8 +69,8 @@ const EventTable = ({ events, loading,onEditClicked, onDeleteClicked}) => {
 EventTable.propTypes = {
   loading: PropTypes.bool,
   events: PropTypes.array,
-    onEditClicked: PropTypes.func,
-    onDeleteClicked: PropTypes.func
+  onEditClicked: PropTypes.func,
+  onDeleteClicked: PropTypes.func
 };
 
 export default EventTable;

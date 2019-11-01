@@ -4,9 +4,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
-import { string, object, number, date } from 'yup';
-
-/**this probably needs to change */
+import { eventValidator } from './eventHelpers';
 import { editEvent } from '../queries';
 
 const Styled = {
@@ -24,64 +22,35 @@ const Styled = {
   `
 };
 
-const EventValidator = object().shape({
-  name: string()
-    .trim()
-    .required(),
-  date: date().required(),
-  location: string()
-    .trim()
-    .required(),
-  description: string()
-    .trim()
-    .required(),
-  contact_phone: string().trim(),
-  contact_email: string()
-    .email()
-    .trim(),
-  external_links: string()
-    .url()
-    .trim(),
-  max_volunteers: number()
-    .positive()
-    .required()
-});
-
 const EventEditModal = ({ open, toggle, event }) => {
-  let id = event ? event.id : "";
   return (
     <Modal isOpen={open} toggle={toggle}>
       <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
       <Formik
         initialValues={{
-          name: (event) ? event.name: '',
-          date: (event) ? event.date.split("T")[0] : '',
-          location: (event) ? event.location: '',
-          description: (event) ? event.description: '',
-          contact_phone: (event) ? event.contact_phone: '',
-          contact_email: (event) ? event.email: '',
-          max_volunteers: (event) ? event.max_volunteers: 0,
-          external_links: (event) ? event.external_links: []
+          name: event ? event.name : '',
+          date: event ? event.date.split('T')[0] : '', // strips timestamp
+          location: event ? event.location : '',
+          description: event ? event.description : '',
+          contact_phone: event ? event.contact_phone : '',
+          contact_email: event ? event.email : '',
+          max_volunteers: event ? event.max_volunteers : 0,
+          external_links: event ? event.external_links : []
         }}
         onSubmit={(values, { setSubmitting }) => {
-          values.id = id;
-          const event = {
+          const editedEvent = {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links ? [values.external_links] : undefined
+            external_links: values.external_links ? [values.external_links] : undefined,
+            _id: event._id
           };
-          console.log(event);
           setSubmitting(true);
-          editEvent(event);
-            // .then(() => toggle())
-            //   .then(open => !open || console.log("here"))
-            // .catch(console.log)
-            // .finally(() => setSubmitting(false) || con1sole.log("abc"));
-            toggle();
+          editEvent(editedEvent);
+          toggle();
         }}
-        validationSchema={EventValidator}
-        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur}) => (
+        validationSchema={eventValidator}
+        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
           <React.Fragment>
             <ModalBody>
               <Styled.Form>
