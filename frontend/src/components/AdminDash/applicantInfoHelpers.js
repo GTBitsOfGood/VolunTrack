@@ -1,9 +1,7 @@
 export const statusToColorMap = {
   accepted: 'success',
-  got_initial_email: 'warning',
   has_volunteered: 'warning',
   new: 'default',
-  no_response: 'warning',
   denied: 'danger'
 };
 
@@ -23,9 +21,7 @@ export const statuses = new Proxy(
   {
     accepted: 'Accepted',
     denied: 'Denied',
-    got_initial_email: 'Got Initial Email',
     has_volunteered: 'Has Volunteered',
-    no_response: 'No Response',
     new: 'New'
   },
   defaultStatus

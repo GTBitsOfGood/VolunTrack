@@ -38,17 +38,6 @@ const defaultValues = {
       manager: false
     }
   },
-  availability: {
-    label: 'Availability',
-    values: {
-      weekday_mornings: false,
-      weekday_afternoons: false,
-      weekday_evenings: false,
-      weekend_mornings: false,
-      weekend_afternoons: false,
-      weekend_evenings: false
-    }
-  },
   skills_interests: {
     label: 'Skills and Interests',
     values: {

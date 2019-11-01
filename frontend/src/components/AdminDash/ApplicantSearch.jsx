@@ -110,7 +110,6 @@ class ApplicantSearch extends React.Component {
             <DropdownItem onClick={this.selectSearchOption}>Bio</DropdownItem>
             <DropdownItem onClick={this.selectSearchOption}>Email</DropdownItem>
             <DropdownItem onClick={this.selectSearchOption}>Phone Number</DropdownItem>
-            <DropdownItem onClick={this.selectSearchOption}>Comments</DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
         <Button onClick={this.onShowFilterModal}>Filter</Button>

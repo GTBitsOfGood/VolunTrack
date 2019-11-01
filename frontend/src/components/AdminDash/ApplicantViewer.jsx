@@ -109,18 +109,6 @@ class AdminDash extends Component {
     );
   };
 
-  onChangeComment = comment => {
-    const index = this.state.selectedApplicantIndex;
-    let applicants = this.state.applicants;
-    if (!applicants[index].comments) {
-      applicants[index].comments = [];
-    }
-    applicants[index].comments.push(comment);
-    this.setState({
-      applicants
-    });
-  };
-
   onApplyFilters = filters => {
     filterApplicants(filters).then(response =>
       this.setState({
@@ -164,7 +152,6 @@ class AdminDash extends Component {
             {applicants && applicants.length ? (
               <ApplicantInfo
                 applicant={applicants[selectedApplicantIndex]}
-                onChangeComment={this.onChangeComment}
                 updateStatusCallback={this.onUpdateApplicantStatus}
                 updateRoleCallback={this.onUpdateApplicantRole}
               />
