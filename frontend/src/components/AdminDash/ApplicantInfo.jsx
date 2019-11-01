@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { OptionsSelected, Tag, Icon } from '../Shared';
+import { Tag, Icon } from '../Shared';
 import { getStatusColor, statuses, roles } from './applicantInfoHelpers';
 import DropdownSelect from './DropdownSelect';
 import { updateApplicantStatus, updateApplicantRole } from './queries';
 import styled, { withTheme } from 'styled-components';
 import { RequestContext } from '../../providers/RequestProvider';
-import _ from 'lodash';
 
 const Heading = styled.div`
   display: flex;
