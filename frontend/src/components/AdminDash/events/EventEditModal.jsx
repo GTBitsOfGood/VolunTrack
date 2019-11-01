@@ -48,6 +48,7 @@ const EventValidator = object().shape({
 });
 
 const EventEditModal = ({ open, toggle, event }) => {
+  let id = event ? event.id : "";
   return (
     <Modal isOpen={open} toggle={toggle}>
       <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
@@ -63,12 +64,14 @@ const EventEditModal = ({ open, toggle, event }) => {
           external_links: (event) ? event.external_links: []
         }}
         onSubmit={(values, { setSubmitting }) => {
+          values.id = id;
           const event = {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
             external_links: values.external_links ? [values.external_links] : undefined
           };
+          console.log(event);
           setSubmitting(true);
           editEvent(event);
             // .then(() => toggle())

@@ -47,6 +47,7 @@ const EventValidator = object().shape({
 });
 
 const EventDeleteModal = ({ open, toggle, event }) => {
+    let id = event ? event.id : "";
     return (
         <Modal isOpen={open} toggle={toggle} backdrop="static">
             <ModalHeader toggle={toggle}>Delete Event</ModalHeader>
@@ -62,6 +63,7 @@ const EventDeleteModal = ({ open, toggle, event }) => {
                     external_links: (event) ? event.external_links: []
                 }}
                 onSubmit={(values, { setSubmitting }) => {
+                    values.id = id;
                     const event = {
                         ...values
                     };

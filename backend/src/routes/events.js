@@ -12,6 +12,8 @@ router.post('/', EVENT_VALIDATOR, (req, res, next) => {
   }
   const newEventData = matchedData(req);
   const newEvent = new EventData(newEventData);
+  newEvent.id = newEvent._id.toString();
+  // console.log(newEvent.id);
   newEvent
     .save()
     .then(() => {
@@ -42,7 +44,7 @@ router.delete('/', EVENT_VALIDATOR, (req, res, next) => {
     }
     let event = new EventData(matchedData(req));
     EventData.findOneAndDelete(
-        {name : event.name}
+        {id : event.id}
     ).then(()=>
         console.log
     );
@@ -53,15 +55,18 @@ router.put('/', EVENT_VALIDATOR, (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.mapped() });
     }
+    // console.log(req);
     const updateEventData = matchedData(req);
     const editEvent = new EventData(updateEventData);
     EventData.findOneAndUpdate(
-        {name : editEvent.name},
+        {id : editEvent.id},
         updateEventData,
         {new : true},
     ).then(()=>
         console.log
-    );
+    ).catch(err => {
+        next(err)
+    });
 });
 
 module.exports = router;

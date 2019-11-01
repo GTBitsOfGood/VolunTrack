@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 const eventSchema = new mongoose.Schema(
   {
     // add event id field
+      //
+    id: {
+        type: String,
+        required: false
+    },
     name: {
       type: String,
       required: true

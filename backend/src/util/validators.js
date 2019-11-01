@@ -179,6 +179,8 @@ const USER_DATA_VALIDATOR = [
 
 // TODO Add validations for volunteers Array
 const EVENT_VALIDATOR = [
+    check('id')
+        .optional(),
   check('name')
     .isAscii()
     .trim(),
