@@ -12,7 +12,6 @@ const { USER_DATA_VALIDATOR } = require('../util/validators');
 const DEFAULT_PAGE_SIZE = 10;
 //events
 
-
 router.post('/', USER_DATA_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -204,10 +203,7 @@ router.get('/searchByContent', (req, res, next) => {
   switch (searchType) {
     case 'All':
       filter.$or = [
-        { 'history.volunteer_interest_cause': regexquery },
-        { 'history.volunteer_support': regexquery },
-        { 'history.volunteer_commitment': regexquery },
-        { 'history.previous_volunteer_experience': regexquery },
+        { history: regexquery },
         { 'bio.street_address': regexquery },
         { 'bio.city': regexquery },
         { 'bio.state': regexquery },
@@ -255,16 +251,6 @@ router.get('/searchByContent', (req, res, next) => {
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
       break;
-    case 'Comments':
-      filter.$or = [{ comments: regexquery }];
-      UserData.aggregate([
-        { $sort: { _id: -1 } },
-        { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
-      ])
-        .then(users => res.status(200).json({ users }))
-        .catch(err => next(err));
-      break;
     case 'Name':
       filter.$or = [
         { 'bio.first_name': regexquery },
@@ -286,20 +272,6 @@ router.get('/searchByContent', (req, res, next) => {
           { 'history.volunteer_commitment': regexquery },
           { 'history.previous_volunteer_experience': regexquery }
         ]
-      })
-        .then(users => res.status(200).json({ users }))
-        .catch(err => next(err));
-      break;
-    case 'Comments':
-      UserData.find({
-        $or: [{ comments: regexquery }]
-      })
-        .then(users => res.status(200).json({ users }))
-        .catch(err => next(err));
-      break;
-    case 'Name':
-      UserData.find({
-        $or: [{ 'bio.first_name': regexquery }, { 'bio.last_name': regexquery }]
       })
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
@@ -364,22 +336,6 @@ router.post('/updateStatus', (req, res, next) => {
       res.sendStatus(200);
     }
   );
-});
-
-router.post('/updateComments', (req, res, next) => {
-  if (!req.query.email || !req.query.comments)
-    res.status(400).json({ error: 'Invalid email or comment sent' });
-  const { email, comments } = req.query;
-  UserData.updateOne(
-    { 'bio.email': email },
-    { $set: { comments: comments } }
-  ).then(result => {
-    if (!result.nModified)
-      res.status(400).json({
-        error: 'Email requested for update was invalid. 0 items changed.'
-      });
-    res.sendStatus(200);
-  });
 });
 
 router.post('/updateRole', (req, res, next) => {

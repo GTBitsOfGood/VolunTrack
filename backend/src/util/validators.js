@@ -165,9 +165,6 @@ const USER_DATA_VALIDATOR = [
     .isAscii()
     .trim()
     .escape(),
-  check('permissions.comments')
-    .trim()
-    .escape(),
   check('permissions.reference').isBoolean(),
   check('permissions.personal_image').isBoolean(),
   check('permissions.email_list').isBoolean(),

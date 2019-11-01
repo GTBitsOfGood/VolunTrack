@@ -31,8 +31,7 @@ const userDataSchema = new mongoose.Schema(
     },
     employment: {
       industry: { type: String },
-      occupation: { type: [String] },
-      admin_comments: { type: String }
+      occupation: { type: [String] }
     }
   },
   {
