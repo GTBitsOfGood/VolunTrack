@@ -61,8 +61,6 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
         </tbody>
       </Table.Table>
       {loading && <Loading />}
-      {/*<EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent}/>*/}
-      {/*<EventDeleteModal open={showDeleteModal} toggle = {toggleDeleteModal} event={currEvent} />*/}
     </Table.Container>
   );
 };
