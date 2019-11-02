@@ -5,9 +5,6 @@ import Loading from 'components/Shared/Loading';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import EventEditModal from './EventEditModal';
-import EventDeleteModal from './EventDeleteModal';
-import { fetchEvents } from 'components/AdminDash/queries';
 
 const Styled = {
   Button: styled(Button)`
