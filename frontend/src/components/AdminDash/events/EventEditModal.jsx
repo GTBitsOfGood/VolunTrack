@@ -5,7 +5,7 @@ import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './eventHelpers';
-import { createEvent } from '../queries';
+import { editEvent } from '../queries';
 
 const Styled = {
   Form: styled(FForm)``,
@@ -22,33 +22,32 @@ const Styled = {
   `
 };
 
-const EventCreateModal = ({ open, toggle }) => {
+const EventEditModal = ({ open, toggle, event }) => {
   return (
-    <Modal isOpen={open} toggle={toggle} backdrop="static">
-      <ModalHeader toggle={toggle}>Create Event</ModalHeader>
+    <Modal isOpen={open} toggle={toggle}>
+      <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
       <Formik
         initialValues={{
-          name: '',
-          date: '',
-          location: '',
-          description: '',
-          contact_phone: '',
-          contact_email: '',
-          max_volunteers: 0,
-          external_links: []
+          name: event ? event.name : '',
+          date: event ? event.date.split('T')[0] : '', // strips timestamp
+          location: event ? event.location : '',
+          description: event ? event.description : '',
+          contact_phone: event ? event.contact_phone : '',
+          contact_email: event ? event.email : '',
+          max_volunteers: event ? event.max_volunteers : 0,
+          external_links: event ? event.external_links : []
         }}
         onSubmit={(values, { setSubmitting }) => {
-          const event = {
+          const editedEvent = {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links ? [values.external_links] : undefined
+            external_links: values.external_links ? [values.external_links] : undefined,
+            _id: event._id
           };
           setSubmitting(true);
-          createEvent(event)
-            .then(() => toggle())
-            .catch(console.log)
-            .finally(() => setSubmitting(false));
+          editEvent(editedEvent);
+          toggle();
         }}
         validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
@@ -119,9 +118,9 @@ const EventCreateModal = ({ open, toggle }) => {
     </Modal>
   );
 };
-EventCreateModal.propTypes = {
+EventEditModal.propTypes = {
   open: PropTypes.bool,
   toggle: PropTypes.func
 };
 
-export default EventCreateModal;
+export default EventEditModal;

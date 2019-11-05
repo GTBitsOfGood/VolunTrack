@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as Table from '../shared/tableStyles';
 import Loading from 'components/Shared/Loading';
+import { Icon } from 'components/Shared';
+import styled from 'styled-components';
+import { Button } from 'reactstrap';
 
-const EventTable = ({ events, loading }) => {
+const Styled = {
+  Button: styled(Button)`
+    background: white;
+    border: none;
+  `
+};
+
+const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
   return (
     <Table.Container>
       <Table.Table>
@@ -33,6 +43,16 @@ const EventTable = ({ events, loading }) => {
                   )}
                 </td>
                 <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
+                <td>
+                  <Styled.Button onClick={() => onEditClicked(event)}>
+                    <Icon color="grey3" name="create" />
+                  </Styled.Button>
+                </td>
+                <td>
+                  <Styled.Button onClick={() => onDeleteClicked(event)}>
+                    <Icon color="grey3" name="delete" />
+                  </Styled.Button>
+                </td>
               </Table.Row>
             ))}
         </tbody>
@@ -43,7 +63,9 @@ const EventTable = ({ events, loading }) => {
 };
 EventTable.propTypes = {
   loading: PropTypes.bool,
-  events: PropTypes.array
+  events: PropTypes.array,
+  onEditClicked: PropTypes.func,
+  onDeleteClicked: PropTypes.func
 };
 
 export default EventTable;

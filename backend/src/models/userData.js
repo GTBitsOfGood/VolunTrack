@@ -5,7 +5,7 @@ const userDataSchema = new mongoose.Schema(
   {
     role: {
       type: String,
-      default: 'new',
+      default: 'volunteer',
       enum: ['admin', 'volunteer', 'manager']
     },
     status: {
