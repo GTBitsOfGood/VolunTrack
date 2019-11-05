@@ -42,7 +42,35 @@ const userDataSchema = new mongoose.Schema(
             admin_comments: {type: String}
         }
     },
-
+    status: {
+      type: String,
+      default: 'new',
+      enum: ['accepted', 'denied', 'has_volunteered', 'new']
+    },
+    bio: {
+      first_name: { type: String },
+      last_name: { type: String },
+      phone_number: { type: String },
+      email: { type: String, index: true, unique: true },
+      date_of_birth: { type: Date },
+      street_address: { type: String },
+      city: { type: String },
+      state: { type: String },
+      zip_code: { type: String }
+    },
+    history: { type: String },
+    skills_interests: {
+      type: String
+      //list[] skills
+    },
+    employment: {
+      industry: { type: String },
+      occupation: { type: [String] }
+    }
+  },
+  {
+    timestamps: true
+  }
 );
 
 userDataSchema.virtual('name').get(function() {

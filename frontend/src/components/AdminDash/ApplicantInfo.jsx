@@ -1,27 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { OptionsSelected, Tag, Icon } from '../Shared';
+import { Tag, Icon } from '../Shared';
 import { getStatusColor, statuses, roles } from './applicantInfoHelpers';
 import DropdownSelect from './DropdownSelect';
 import { updateApplicantStatus, updateApplicantRole } from './queries';
 import styled, { withTheme } from 'styled-components';
 import { RequestContext } from '../../providers/RequestProvider';
-import _ from 'lodash';
-
-const getLabelsFromDays = (availability, type) => {
-  return Object.keys(availability)
-    .filter(day => day.includes(type))
-    .map(day => {
-      if (day.includes('mornings')) return 'Mornings';
-      else if (day.includes('afternoons')) return 'Afternoons';
-      else if (day.includes('evenings')) return 'Evenings';
-      return '';
-    });
-};
-
-const getSelectedFromDays = (availability, type) => {
-  return getLabelsFromDays(_.pickBy(availability, (value, key) => value), type);
-};
 
 const Heading = styled.div`
   display: flex;
@@ -87,8 +71,7 @@ class ApplicantInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editingMode: false,
-      commentText: ''
+      editingMode: false
     };
   }
 
@@ -174,33 +157,9 @@ class ApplicantInfo extends Component {
             {applicant.history && (
               <Section>
                 <h4>History</h4>
-                <h5>Volunteer Interest Cause</h5>
-                <p>{applicant.history.volunteer_interest_cause}</p>
-                <h5>Volunteer Support</h5>
-                <p>{applicant.history.volunteer_interest_cause}</p>
-                <h5>Volunteer Commitment</h5>
-                <p>{applicant.history.volunteer_commitment}</p>
-                <h5>Previous Experience</h5>
-                <p>{applicant.history.previous_volunteer_experience}</p>
+                <p>{applicant.history}</p>
               </Section>
             )}
-            <Section>
-              <h4>Availability</h4>
-              <SubSection minWidth="20rem">
-                <h5>Weekdays</h5>
-                <OptionsSelected
-                  options={getLabelsFromDays(applicant.availability, 'weekday')}
-                  selected={getSelectedFromDays(applicant.availability, 'weekday')}
-                />
-              </SubSection>
-              <SubSection minWidth="20rem">
-                <h5>Weekends</h5>
-                <OptionsSelected
-                  options={getLabelsFromDays(applicant.availability, 'weekend')}
-                  selected={getSelectedFromDays(applicant.availability, 'weekend')}
-                />
-              </SubSection>
-            </Section>
           </Container>
         )}
       </div>
