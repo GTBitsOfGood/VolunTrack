@@ -137,7 +137,7 @@ router.get('/', (req, res, next) => {
   UserData.aggregate([
     { $sort: { _id: -1 } },
     { $match: filter },
-    { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+    { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
   ])
     .then(users => {
       res.status(200).json({ users });
@@ -169,7 +169,7 @@ router.get('/managementData', (req, res, next) => {
   UserData.aggregate([
     { $sort: { _id: -1 } },
     { $match: filter },
-    { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE },
+    { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
     {
       $project: {
         name: { $concat: ['$bio.first_name', ' ', '$bio.last_name'] },
@@ -216,7 +216,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
@@ -231,7 +231,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
@@ -246,7 +246,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
@@ -259,7 +259,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
@@ -281,7 +281,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => {
           res.status(200).json({ users });
@@ -293,7 +293,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));
@@ -316,7 +316,7 @@ router.get('/searchByContent', (req, res, next) => {
       UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: req.query.pageSize || DEFAULT_PAGE_SIZE }
+        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
       ])
         .then(users => res.status(200).json({ users }))
         .catch(err => next(err));

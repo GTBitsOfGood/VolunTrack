@@ -157,7 +157,7 @@ class ApplicantInfo extends Component {
             {applicant.history && (
               <Section>
                 <h4>History</h4>
-                <p>{applicant.history}</p>
+                <p>{applicant.history + ''}</p>
               </Section>
             )}
           </Container>
