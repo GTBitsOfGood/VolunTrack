@@ -1,12 +1,17 @@
 {
-  "name": "bog-vms",
+  "name": "helping-mamas",
   "version": "0.0.1",
-  "description": "Bits Of Good's Volunteer Management System",
+  "description": "Bits Of Good's Helping Mamas VMS",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gtbitsOfGood/bog-vms.git"
+    "url": "git+https://github.com/GTBitsOfGood/helping-mamas.git"
   },
   "license": "MIT",
-  "homepage": "https://github.com/gtbitsOfGood/bog-vms#readme"
+  "homepage": "https://github.com/GTBitsOfGood/helping-mamas#readme",
+  "devDependencies": {
+    "@bitwarden/cli": "^1.18.0",
+    "cross-env": "^7.0.3",
+    "fx": "^20.0.2"
+  }
 }
