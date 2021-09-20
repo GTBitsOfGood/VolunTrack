@@ -1,8 +1,6 @@
 export const statusToColorMap = {
-  accepted: 'success',
   has_volunteered: 'warning',
-  new: 'default',
-  denied: 'danger'
+  new: 'default'
 };
 
 const defaultStatus = {

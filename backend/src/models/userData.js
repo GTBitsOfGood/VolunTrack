@@ -11,7 +11,7 @@ const userDataSchema = new mongoose.Schema(
     status: {
       type: String,
       default: 'new',
-      enum: ['accepted', 'denied', 'has_volunteered', 'new']
+      enum: ['has_volunteered', 'new']
     },
     bio: {
       first_name: { type: String },
