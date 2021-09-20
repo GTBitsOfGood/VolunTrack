@@ -19,8 +19,6 @@ const defaultRole = {
 
 export const statuses = new Proxy(
   {
-    accepted: 'Accepted',
-    denied: 'Denied',
     has_volunteered: 'Has Volunteered',
     new: 'New'
   },
