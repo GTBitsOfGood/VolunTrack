@@ -38,10 +38,6 @@ const USER_DATA_VALIDATOR = [
     .isAscii()
     .trim()
     .escape(),
-  check('skills_interests.languages')
-    .isAscii()
-    .trim()
-    .escape(),
   check('history.volunteer_interest_cause')
     .isAscii()
     .trim()
@@ -51,10 +47,6 @@ const USER_DATA_VALIDATOR = [
     .trim()
     .escape(),
   check('history.volunteer_commitment')
-    .isAscii()
-    .trim()
-    .escape(),
-  check('skills_interests.skills_qualifications')
     .isAscii()
     .trim()
     .escape(),
@@ -68,21 +60,6 @@ const USER_DATA_VALIDATOR = [
   check('availability.weekend_mornings').isBoolean(),
   check('availability.weekend_afternoons').isBoolean(),
   check('availability.weekend_evenings').isBoolean(),
-  check('skills_interests.admin_office').isBoolean(),
-  check('skills_interests.admin_virtual').isBoolean(),
-  check('skills_interests.atlanta_shelter').isBoolean(),
-  check('skills_interests.orlando_shelter').isBoolean(),
-  check('skills_interests.graphic_web_design').isBoolean(),
-  check('skills_interests.special_events').isBoolean(),
-  check('skills_interests.grant_writing').isBoolean(),
-  check('skills_interests.writing_editing').isBoolean(),
-  check('skills_interests.social_media').isBoolean(),
-  check('skills_interests.fundraising').isBoolean(),
-  check('skills_interests.finance').isBoolean(),
-  check('skills_interests.office_maintenance_housekeeping').isBoolean(),
-  check('skills_interests.international_projects').isBoolean(),
-  check('skills_interests.volunteer_coordination').isBoolean(),
-  check('skills_interests.outreach').isBoolean(),
   check('referral.friend').isBoolean(),
   check('referral.newsletter').isBoolean(),
   check('referral.event').isBoolean(),

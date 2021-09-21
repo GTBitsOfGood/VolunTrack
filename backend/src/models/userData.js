@@ -25,10 +25,6 @@ const userDataSchema = new mongoose.Schema(
       zip_code: { type: String }
     },
     history: { type: String },
-    skills_interests: {
-      type: String
-      //list[] skills
-    },
     employment: {
       industry: { type: String },
       occupation: { type: [String] }

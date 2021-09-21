@@ -123,13 +123,6 @@ router.get('/', (req, res, next) => {
       res.status(400).json({ error: 'Invalid availability param' });
     }
   }
-  if (req.query.skills_interests) {
-    try {
-      filter.skills_interests = JSON.parse(req.query.skills_interests);
-    } catch (e) {
-      res.status(400).json({ error: 'Invalid skills_interests param' });
-    }
-  }
   if (req.query.lastPaginationId) {
     filter._id = { $lt: mongoose.Types.ObjectId(req.query.lastPaginationId) };
   }
