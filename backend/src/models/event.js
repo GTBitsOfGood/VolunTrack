@@ -31,9 +31,9 @@ const eventSchema = new mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserData' }],
       default: []
     },
-    max_volunteers: {
-      type: Number,
-      required: true
+    shifts: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }],
+      default: []
     },
     external_links: {
       type: [String],

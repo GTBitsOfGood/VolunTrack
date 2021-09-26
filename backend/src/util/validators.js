@@ -172,7 +172,10 @@ const CREATE_EVENT_VALIDATOR = [
     .optional()
     .isAscii()
     .trim(),
-  check('max_volunteers').isNumeric(),
+  check('shifts')
+    .optional()
+    .isArray()
+    .trim(),
   check('volunteers')
     .optional()
     .isArray()

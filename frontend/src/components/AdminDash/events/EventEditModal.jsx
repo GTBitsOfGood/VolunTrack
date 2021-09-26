@@ -34,6 +34,7 @@ const EventEditModal = ({ open, toggle, event }) => {
           description: event ? event.description : '',
           contact_phone: event ? event.contact_phone : '',
           contact_email: event ? event.email : '',
+          shifts: event ? event.shifts : [],
           max_volunteers: event ? event.max_volunteers : 0,
           external_links: event ? event.external_links : []
         }}
