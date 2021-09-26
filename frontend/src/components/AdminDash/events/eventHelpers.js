@@ -17,8 +17,5 @@ export const eventValidator = object().shape({
     .trim(),
   external_links: string()
     .url()
-    .trim(),
-  max_volunteers: number()
-    .positive()
-    .required()
+    .trim()
 });

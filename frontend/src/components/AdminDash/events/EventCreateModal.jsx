@@ -34,7 +34,8 @@ const EventCreateModal = ({ open, toggle }) => {
           description: '',
           contact_phone: '',
           contact_email: '',
-          max_volunteers: 0,
+          shifts: [],
+          num_shifts: 1,
           external_links: []
         }}
         onSubmit={(values, { setSubmitting }) => {
@@ -87,18 +88,21 @@ const EventCreateModal = ({ open, toggle }) => {
                   <Field name="external_links">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
-                  <SForm.Label>Max # of Volunteers</SForm.Label>
-                  <Styled.ErrorMessage name="max_volunteers" />
+                  <SForm.Label>Number of Shifts</SForm.Label>
+                  <Styled.ErrorMessage name="num_shifts" />
                   <SForm.Input
                     type="number"
-                    name="max_volunteers"
-                    value={values.max_volunteers}
+                    name="num_shifts"
+                    value={values.num_shifts}
                     onBlur={handleBlur}
                     onChange={e => {
-                      if (e.target.value && !isNaN(parseInt(e.target.value, 10))) {
-                        setFieldValue('max_volunteers', parseInt(e.target.value, 10));
+                      if (
+                        e.target.value &&
+                        !isNaN(parseInt(e.target.value, 10) && e.target.value > 0)
+                      ) {
+                        setFieldValue('num_shifts', parseInt(e.target.value, 10));
                       } else {
-                        setFieldValue('max_volunteers', e.target.value);
+                        setFieldValue('num_shifts', 1);
                       }
                     }}
                   />
