@@ -34,8 +34,7 @@ const EventCreateModal = ({ open, toggle }) => {
           description: '',
           contact_phone: '',
           contact_email: '',
-          shifts: [],
-          num_shifts: 1,
+          max_shifts: 1,
           external_links: []
         }}
         onSubmit={(values, { setSubmitting }) => {
@@ -43,7 +42,8 @@ const EventCreateModal = ({ open, toggle }) => {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links ? [values.external_links] : undefined
+            external_links: values.external_links ? [values.external_links] : undefined,
+            max_shifts: values.max_shifts || 1
           };
           setSubmitting(true);
           createEvent(event)
@@ -89,20 +89,20 @@ const EventCreateModal = ({ open, toggle }) => {
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
                   <SForm.Label>Number of Shifts</SForm.Label>
-                  <Styled.ErrorMessage name="num_shifts" />
+                  <Styled.ErrorMessage name="max_shifts" />
                   <SForm.Input
                     type="number"
-                    name="num_shifts"
-                    value={values.num_shifts}
+                    name="max_shifts"
+                    value={values.max_shifts}
                     onBlur={handleBlur}
                     onChange={e => {
                       if (
                         e.target.value &&
                         !isNaN(parseInt(e.target.value, 10) && e.target.value > 0)
                       ) {
-                        setFieldValue('num_shifts', parseInt(e.target.value, 10));
+                        setFieldValue('max_shifts', parseInt(e.target.value, 10));
                       } else {
-                        setFieldValue('num_shifts', 1);
+                        setFieldValue('max_shifts', 1);
                       }
                     }}
                   />

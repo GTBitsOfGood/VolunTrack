@@ -23,7 +23,7 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
             <th>Date</th>
             <th>Location</th>
             <th>Website</th>
-            <th># of Volunteers</th>
+            <th># of Shifts</th>
           </tr>
         </thead>
         <tbody>
@@ -42,7 +42,7 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
                     'N/A'
                   )}
                 </td>
-                <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
+                <td>{event.shifts.length + ' / ' + event.max_shifts}</td>
                 <td>
                   <Styled.Button onClick={() => onEditClicked(event)}>
                     <Icon color="grey3" name="create" />
