@@ -31,6 +31,11 @@ const eventSchema = new mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'UserData' }],
       default: []
     },
+    external_links: {
+      type: [String],
+      default: [],
+      required: false
+    },
     max_shifts: {
       type: Number,
       required: false
@@ -38,11 +43,6 @@ const eventSchema = new mongoose.Schema(
     shifts: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }],
       default: []
-    },
-    external_links: {
-      type: [String],
-      default: [],
-      required: false
     }
   },
   { timestamps: true }

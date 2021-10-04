@@ -15,10 +15,10 @@ export const eventValidator = object().shape({
   contact_email: string()
     .email()
     .trim(),
-  max_shifts: number()
-    .positive()
-    .required(),
   external_links: string()
     .url()
-    .trim()
+    .trim(),
+  max_shifts: number()
+    .positive()
+    .required()
 });
