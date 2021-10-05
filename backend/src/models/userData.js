@@ -17,9 +17,7 @@ const userDataSchema = new mongoose.Schema(
       first_name: { type: String },
       last_name: { type: String },
       phone_number: { type: String },
-      email: { type: String, index: true, unique: true },
-      date_of_birth: { type: Date },
-      street_address: { type: String },
+      email: { type: String, index: true, unique: true },,
       city: { type: String },
       state: { type: String },
       zip_code: { type: String }
