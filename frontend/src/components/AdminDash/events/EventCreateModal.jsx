@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Icon } from 'components/Shared';
 import * as Table from '../shared/tableStyles';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
+import { Formik, Form as FForm, Field, FieldArray, ErrorMessage } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './eventHelpers';
@@ -25,14 +25,14 @@ const Styled = {
 };
 
 const EventCreateModal = ({ open, toggle }) => {
-  const [numShifts, setNumShifts] = useState(0);
+  const [numShifts, setNumShifts] = useState(1);
 
   const onClickAddShifts = () => {
     setNumShifts(numShifts + 1);
   };
 
   const onDeleteShift = () => {
-    setNumShifts(numShifts - 1);
+    if (numShifts - 1 >= 1) setNumShifts(numShifts - 1);
   };
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
@@ -45,7 +45,6 @@ const EventCreateModal = ({ open, toggle }) => {
           description: '',
           contact_phone: '',
           contact_email: '',
-          max_shifts: 1,
           external_links: [],
           shifts: []
         }}
@@ -54,7 +53,8 @@ const EventCreateModal = ({ open, toggle }) => {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links ? [values.external_links] : undefined
+            external_links: values.external_links ? [values.external_links] : undefined,
+            shifts: values.shifts ? values.shifts : undefined
           };
           setSubmitting(true);
           createEvent(event)
@@ -99,29 +99,41 @@ const EventCreateModal = ({ open, toggle }) => {
                   <Field name="external_links">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
-
-                  {[...Array(numShifts)].map((e, i) => (
-                    <div key={i}>
-                      <Table.Container>
-                        <Table.Table>
-                          <thead>
-                            <tr>
-                              <SForm.Label>Start Time</SForm.Label>
-                              <SForm.Input type="time" name="start_time" />
-                              <SForm.Label> End Time</SForm.Label>
-                              <SForm.Input type="time" name="end_time" />
-                              <SForm.Label>Max Volunteers</SForm.Label>
-                              <SForm.Input type="number" name="max_volunteers" />
-
+                  <FieldArray
+                    name="shifts"
+                    render={() =>
+                      [...Array(numShifts)].map((e, i) => (
+                        <div key={i}>
+                          <Table.Container>
+                            <Table.Table>
+                              <thead>
+                                <tr>
+                                  <SForm.Label>Start Time</SForm.Label>
+                                  <Styled.ErrorMessage name={`shifts.${i}.start_time`} />
+                                  <Field name={`shifts.${i}.start_time`}>
+                                    {({ field }) => <SForm.Input {...field} type="time" />}
+                                  </Field>
+                                  <SForm.Label>End Time</SForm.Label>
+                                  <Styled.ErrorMessage name={`shifts.${i}.end_time`} />
+                                  <Field name={`shifts.${i}.end_time`}>
+                                    {({ field }) => <SForm.Input {...field} type="time" />}
+                                  </Field>
+                                  <SForm.Label>Max Volunteers</SForm.Label>
+                                  <Styled.ErrorMessage name={`shifts.${i}.max_volunteers`} />
+                                  <Field name={`shifts.${i}.max_volunteers`}>
+                                    {({ field }) => <SForm.Input {...field} type="number" />}
+                                  </Field>
+                                </tr>
+                              </thead>
                               <Button onClick={onDeleteShift}>
                                 <Icon color="grey3" name="delete" />
                               </Button>
-                            </tr>
-                          </thead>
-                        </Table.Table>
-                      </Table.Container>
-                    </div>
-                  ))}
+                            </Table.Table>
+                          </Table.Container>
+                        </div>
+                      ))
+                    }
+                  />
                   <Button onClick={onClickAddShifts}> Add Shift </Button>
                   <Styled.ErrorMessage name="max_shifts" />
                 </SForm.FormGroup>

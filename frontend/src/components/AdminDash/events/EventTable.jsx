@@ -42,7 +42,8 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
                     'N/A'
                   )}
                 </td>
-                <td>{event.shifts.length + ' / ' + event.max_shifts}</td>
+                <td>{event.shifts.length}</td>
+
                 <td>
                   <Styled.Button onClick={() => onEditClicked(event)}>
                     <Icon color="grey3" name="create" />
@@ -52,6 +53,16 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
                   <Styled.Button onClick={() => onDeleteClicked(event)}>
                     <Icon color="grey3" name="delete" />
                   </Styled.Button>
+                </td>
+                <td>
+                  {event.shifts.map((shift, idx) => (
+                    <div>
+                      <td> Shift {idx + 1} </td>
+                      <td>Start Time: {shift.start_time}</td>
+                      <td>End Time: {shift.end_time}</td>
+                      <td>Max Volunteers: {shift.max_volunteers}</td>
+                    </div>
+                  ))}
                 </td>
               </Table.Row>
             ))}
