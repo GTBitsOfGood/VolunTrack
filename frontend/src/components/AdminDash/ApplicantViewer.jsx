@@ -136,15 +136,6 @@ class AdminDash extends Component {
                   <Icon color="grey3" name="refresh" />
                   <span>Refresh</span>
                 </Button>
-                <Button
-                  href={`mailto:${applicants &&
-                    applicants.reduce((acc, curr) => {
-                      return acc.concat(curr.bio.email);
-                    }, [])}`}
-                >
-                  <Icon color="grey3" name="mail" />
-                  <span>Send Mass Email</span>
-                </Button>
               </Styled.SecondaryOptions>
             </ApplicantList>
           </InfiniteScroll>
