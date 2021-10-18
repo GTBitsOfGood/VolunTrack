@@ -181,8 +181,7 @@ const CREATE_EVENT_VALIDATOR = [
     .optional()
     .isArray()
     .trim(),
-  check('max_shifts')
-    .optional()
+  check('shifts.*.start_time')
     .isAscii()
     .trim(),
   check('shifts')
