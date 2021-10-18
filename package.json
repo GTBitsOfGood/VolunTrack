@@ -2,7 +2,9 @@
   "name": "helping-mamas",
   "version": "0.0.1",
   "description": "Bits Of Good's Helping Mamas VMS",
-  "scripts": {},
+  "scripts": {
+    "start": "concurrently \"cd backend && yarn install && yarn dev\" \"cd frontend && yarn install && yarn start\""
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GTBitsOfGood/helping-mamas.git"
@@ -13,5 +15,8 @@
     "@bitwarden/cli": "^1.18.0",
     "cross-env": "^7.0.3",
     "fx": "^20.0.2"
+  },
+  "dependencies": {
+    "concurrently": "^6.3.0"
   }
 }
