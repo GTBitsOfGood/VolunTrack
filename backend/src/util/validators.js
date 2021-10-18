@@ -180,17 +180,15 @@ const CREATE_EVENT_VALIDATOR = [
     .optional()
     .isArray()
     .trim(),
-  check('max_shifts')
-    .optional()
+  check('shifts.*.start_time')
     .isAscii()
     .trim(),
-  check('shifts')
-    .optional()
-    .isArray()
+  check('shifts.*.end_time')
+    .isAscii()
+    .trim(),
+  check('shifts.*.max_volunteers')
+    .isAscii()
     .trim()
-  // check('volunteers').custom(value => {
-  //   if ()
-  // })
 ];
 
 const OBJECT_ID_REGEX = new RegExp('^[0-9a-fA-F]{24}$');

@@ -36,13 +36,16 @@ const eventSchema = new mongoose.Schema(
       default: [],
       required: false
     },
-    max_shifts: {
-      type: Number,
-      required: false
-    },
     shifts: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }],
-      default: []
+      type: [
+        {
+          start_time: String,
+          end_time: String,
+          max_volunteers: Number
+        }
+      ],
+      default: [],
+      required: true
     }
   },
   { timestamps: true }
