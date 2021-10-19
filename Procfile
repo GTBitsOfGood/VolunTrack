@@ -1,1 +1,1 @@
-web: yarn install concurrently && yarn start
+web: yarn add concurrently && yarn start
