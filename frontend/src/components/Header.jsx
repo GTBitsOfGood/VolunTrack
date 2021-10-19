@@ -27,6 +27,8 @@ const pageSwitchWidth = currPath => {
       return '9.6rem';
     case '/user-manager':
       return '8.6rem';
+    case '/settings':
+      return '8.6rem';      
     case '/events':
       return '4.8rem';
     default:
@@ -39,6 +41,8 @@ const pageSwitchLeft = currPath => {
     case '/applicant-viewer':
       return '-1rem';
     case '/user-manager':
+      return '8.3rem';
+    case '/settings':
       return '8.3rem';
     case '/events':
       return '16.9rem';
@@ -202,11 +206,17 @@ class Header extends Component {
                         User Manager
                       </Styled.PageLink>
                     )}
+                    {role === 'admin' && (
+                      <Styled.PageLink 
+                        to="/settings" 
+                        selected={this.currPageMatches('/settings')}
+                      >
+                        Settings
+                      </Styled.PageLink>
+                    )}
+                    
                     <Styled.PageLink to="/events" selected={this.currPageMatches('/events')}>
                       Events
-                    </Styled.PageLink>
-                    <Styled.PageLink to="/settings" selected={this.currPageMatches('/settings')}>
-                      Settings
                     </Styled.PageLink>
                   </Styled.PageSwitch>
                   <Styled.Dropdown nav inNavbar className="navbar-nav">
