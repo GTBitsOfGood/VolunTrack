@@ -21,9 +21,9 @@ export const eventValidator = object().shape({
   shifts: array()
     .of(
       object().shape({
-        start_time: string(),
-        end_time: string(),
-        max_volunteers: number()
+        start_time: string().required(),
+        end_time: string().required(),
+        max_volunteers: number().required()
       })
     )
     .required()
