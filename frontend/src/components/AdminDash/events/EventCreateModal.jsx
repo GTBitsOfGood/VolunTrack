@@ -25,15 +25,24 @@ const Styled = {
 };
 
 const EventCreateModal = ({ open, toggle }) => {
-  const [numShifts, setNumShifts] = useState(1);
+  const [shiftElements, setShiftElements] = useState([]);
 
   const onClickAddShifts = () => {
-    setNumShifts(numShifts + 1);
+    setShiftElements([...shiftElements, { start_time: 0, end_time: 0, max_volunteers: 0 }]);
   };
 
-  const onDeleteShift = () => {
-    if (numShifts - 1 >= 1) setNumShifts(numShifts - 1);
+  const onDeleteShift = index => () => {
+    if (shiftElements.length > 1) {
+      let newArray = [];
+      for (let i = 0; i < shiftElements.length; i++) {
+        if (i != index) {
+          newArray.push(shiftElements[i]);
+        }
+      }
+      setShiftElements(newArray);
+    }
   };
+
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Create Event</ModalHeader>
@@ -54,13 +63,14 @@ const EventCreateModal = ({ open, toggle }) => {
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
             external_links: values.external_links ? [values.external_links] : undefined,
-            shifts: values.shifts ? values.shifts : undefined
+            shifts: values.shifts ? shiftElements : undefined
           };
           setSubmitting(true);
           createEvent(event)
             .then(() => toggle())
             .catch(console.log)
             .finally(() => setSubmitting(false));
+          setShiftElements([]);
         }}
         validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
@@ -102,30 +112,58 @@ const EventCreateModal = ({ open, toggle }) => {
                   <FieldArray
                     name="shifts"
                     render={() =>
-                      [...Array(numShifts)].map((e, i) => (
-                        <div key={i}>
+                      shiftElements.map((item, index) => (
+                        <div key={index}>
                           <Table.Container>
                             <Table.Table>
                               <thead>
                                 <tr>
                                   <SForm.Label>Start Time</SForm.Label>
-                                  <Styled.ErrorMessage name={`shifts.${i}.start_time`} />
-                                  <Field name={`shifts.${i}.start_time`}>
-                                    {({ field }) => <SForm.Input {...field} type="time" />}
+                                  <Styled.ErrorMessage name={`Start Time`} />
+                                  <Field name={`shifts.${index}.start_time`}>
+                                    {({ field }) => (
+                                      <SForm.Input
+                                        {...field}
+                                        type="time"
+                                        onInput={e =>
+                                          (shiftElements[index].start_time = e.target.value)
+                                        }
+                                        value={shiftElements[index].start_time}
+                                      />
+                                    )}
                                   </Field>
                                   <SForm.Label>End Time</SForm.Label>
-                                  <Styled.ErrorMessage name={`shifts.${i}.end_time`} />
-                                  <Field name={`shifts.${i}.end_time`}>
-                                    {({ field }) => <SForm.Input {...field} type="time" />}
+                                  <Styled.ErrorMessage name={`End Time`} />
+                                  <Field name={`shifts.${index}.end_time`}>
+                                    {({ field }) => (
+                                      <SForm.Input
+                                        {...field}
+                                        type="time"
+                                        onInput={e =>
+                                          (shiftElements[index].end_time = e.target.value)
+                                        }
+                                        value={shiftElements[index].end_time}
+                                      />
+                                    )}
                                   </Field>
                                   <SForm.Label>Max Volunteers</SForm.Label>
-                                  <Styled.ErrorMessage name={`shifts.${i}.max_volunteers`} />
-                                  <Field name={`shifts.${i}.max_volunteers`}>
-                                    {({ field }) => <SForm.Input {...field} type="number" />}
+                                  <Styled.ErrorMessage name={`Max Volunteers`} />
+                                  <Field name={`shifts.${index}.max_volunteers`}>
+                                    {({ field }) => (
+                                      <SForm.Input
+                                        {...field}
+                                        type="number"
+                                        onInput={e =>
+                                          (shiftElements[index].max_volunteers = e.target.value)
+                                        }
+                                        value={shiftElements[index].max_volunteers}
+                                        min="0"
+                                      />
+                                    )}
                                   </Field>
                                 </tr>
                               </thead>
-                              <Button onClick={onDeleteShift}>
+                              <Button onClick={onDeleteShift(index)}>
                                 <Icon color="grey3" name="delete" />
                               </Button>
                             </Table.Table>
