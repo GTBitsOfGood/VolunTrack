@@ -28,14 +28,14 @@ const EventCreateModal = ({ open, toggle }) => {
   const [shiftElements, setShiftElements] = useState([]);
 
   const onClickAddShifts = () => {
-    setShiftElements([...shiftElements, { start_time: 0, end_time: 0, max_volunteers: 0 }]);
+    setShiftElements([...shiftElements, { start_time: '', end_time: '', max_volunteers: '' }]);
   };
 
   const onDeleteShift = index => () => {
     if (shiftElements.length > 1) {
       let newArray = [];
       for (let i = 0; i < shiftElements.length; i++) {
-        if (i != index) {
+        if (i !== index) {
           newArray.push(shiftElements[i]);
         }
       }
