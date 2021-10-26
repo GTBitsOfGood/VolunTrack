@@ -27,6 +27,8 @@ export const fetchUserManagementData = lastPaginationId =>
     `/api/users/managementData?${lastPaginationId ? 'lastPaginationId=' + lastPaginationId : ''}`
   );
 
+export const getCurrentUser = () => axios.get('/api/users/current');
+
 export const fetchUserCount = () => axios.get('/api/users/count');
 
 export const updateApplicantStatus = (email, status) =>

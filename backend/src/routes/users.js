@@ -139,6 +139,13 @@ router.get('/', (req, res, next) => {
       res.status(400).json({ error: 'Invalid availability param' });
     }
   }
+  if (req.query.email) {
+    try {
+      filter.availability = JSON.parse(req.query.availability);
+    } catch (e) {
+      res.status(400).json({ error: 'Invalid availability param' });
+    }
+  }
   if (req.query.lastPaginationId) {
     filter._id = { $lt: mongoose.Types.ObjectId(req.query.lastPaginationId) };
   }
@@ -153,6 +160,7 @@ router.get('/', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
 
 router.get('/managementData', (req, res, next) => {
   const filter = {};
@@ -199,6 +207,14 @@ router.get('/count', (req, res, next) => {
     .exec()
     .then(count => {
       res.status(200).json({ count });
+    })
+    .catch(err => next(err));
+});
+
+router.get('/current', (req, res, next) => {
+  UserData.find({"bio.email": "david@davidwong.com"})
+    .then(users => {
+      res.status(200).json({ users });
     })
     .catch(err => next(err));
 });
