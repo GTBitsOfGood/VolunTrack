@@ -14,6 +14,24 @@ const Styled = {
 };
 
 const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
+  //const array = new Array(events.length).fill(false);
+  const [showVolunteers, setShowVolunteers] = useState(new Array(events.length).fill(false));
+  //console.log(showVolunteers);
+
+  //console.log(array);
+  const updateDropdown = index => () => {
+    showVolunteers[index] = !showVolunteers[index];
+    //setShowVolunteers(showVolunteers);
+    //array[index] = !array[index];
+    //console.log(array);
+    console.log(showVolunteers);
+  };
+  // function getName(index) {
+  //   console.log('GET NAME: ' + showVolunteers[index]);
+  //   return showVolunteers[index] ? 'dropdown-arrow' : 'right-chevron';
+  //   //return array[index] ? 'dropdown-arrow' : 'right-chevron';
+  // }
+
   return (
     <Table.Container>
       <Table.Table>
@@ -30,6 +48,15 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
           {!loading &&
             events.map((event, idx) => (
               <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
+                <td>
+                  <Styled.Button onClick={updateDropdown(idx)}>
+                    <Icon
+                      color="grey3"
+                      name={showVolunteers[idx] ? 'dropdown-arrow' : 'right-chevron'}
+                      target={console.log('Value: ' + showVolunteers[idx])}
+                    />
+                  </Styled.Button>
+                </td>
                 <td>{event.name}</td>
                 <td>{event.date}</td>
                 <td>{event.location}</td>
@@ -53,6 +80,7 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
                     <Icon color="grey3" name="delete" />
                   </Styled.Button>
                 </td>
+                <td>{event.volunteers}</td>
               </Table.Row>
             ))}
         </tbody>
