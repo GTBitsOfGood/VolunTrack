@@ -5,6 +5,8 @@ import Loading from 'components/Shared/Loading';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
+import EventCreateModal from './EventCreateModal';
+import EventTableRow from './EventTableRow';
 
 const Styled = {
   Button: styled(Button)`
@@ -14,23 +16,15 @@ const Styled = {
 };
 
 const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
-  //const array = new Array(events.length).fill(false);
   const [showVolunteers, setShowVolunteers] = useState(new Array(events.length).fill(false));
-  //console.log(showVolunteers);
 
-  //console.log(array);
-  const updateDropdown = index => () => {
-    showVolunteers[index] = !showVolunteers[index];
-    //setShowVolunteers(showVolunteers);
-    //array[index] = !array[index];
-    //console.log(array);
-    console.log(showVolunteers);
+  const updateDropdown = idx => () => {
+    setShowVolunteers(volunteers => {
+      const newShowVolunteers = volunteers.slice(0);
+      newShowVolunteers[idx] = !newShowVolunteers[idx];
+      return newShowVolunteers;
+    });
   };
-  // function getName(index) {
-  //   console.log('GET NAME: ' + showVolunteers[index]);
-  //   return showVolunteers[index] ? 'dropdown-arrow' : 'right-chevron';
-  //   //return array[index] ? 'dropdown-arrow' : 'right-chevron';
-  // }
 
   return (
     <Table.Container>
@@ -47,41 +41,11 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
         <tbody>
           {!loading &&
             events.map((event, idx) => (
-              <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
-                <td>
-                  <Styled.Button onClick={updateDropdown(idx)}>
-                    <Icon
-                      color="grey3"
-                      name={showVolunteers[idx] ? 'dropdown-arrow' : 'right-chevron'}
-                      target={console.log('Value: ' + showVolunteers[idx])}
-                    />
-                  </Styled.Button>
-                </td>
-                <td>{event.name}</td>
-                <td>{event.date}</td>
-                <td>{event.location}</td>
-                <td>
-                  {event.external_links && event.external_links.length ? (
-                    <a href={event.external_links[0]} target="_blank" rel="noopener noreferrer">
-                      {event.external_links[0]}
-                    </a>
-                  ) : (
-                    'N/A'
-                  )}
-                </td>
-                <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
-                <td>
-                  <Styled.Button onClick={() => onEditClicked(event)}>
-                    <Icon color="grey3" name="create" />
-                  </Styled.Button>
-                </td>
-                <td>
-                  <Styled.Button onClick={() => onDeleteClicked(event)}>
-                    <Icon color="grey3" name="delete" />
-                  </Styled.Button>
-                </td>
-                <td>{event.volunteers}</td>
-              </Table.Row>
+              <EventTableRow
+                event={event}
+                onEditClicked={onEditClicked}
+                onDeleteClicked={onDeleteClicked}
+              />
             ))}
         </tbody>
       </Table.Table>
