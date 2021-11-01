@@ -21,12 +21,17 @@ const Styled = {
   `
 };
 
+const handleChange = (event) => {
+  
+}
+
 const SettingsEditModal = ({ open, toggle }) => {
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Edit Information</ModalHeader>
 
       <Formik
+      /* set these initial values to the current user data */
         initialValues={{
           firstName: '',
           lastName: '',
@@ -48,39 +53,33 @@ const SettingsEditModal = ({ open, toggle }) => {
 
                   <SForm.Label>First name</SForm.Label>
                   <Styled.ErrorMessage name="firstName" />
-                  <Field name="firstName">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                  <Field name="firstName" onChange={handleChange}>{({ field }) => <SForm.Input {...field} type="text" />}</Field>
 
                   <SForm.Label>Last name</SForm.Label>
                   <Styled.ErrorMessage name="lastName" />
-                  <Field name="lastName">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                  <Field name="lastName" onChange={handleChange}>{({ field }) => <SForm.Input {...field} type="text" />}</Field>
                   
                   <SForm.Label>Phone number</SForm.Label>
                   <Styled.ErrorMessage name="phoneNumber" />
-                  <Field name="phoneNumber">
+                  <Field name="phoneNumber" onChange={handleChange}>
                     {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-
-                  <SForm.Label>Email</SForm.Label>
-                  <Styled.ErrorMessage name="email" />
-                  <Field name="email">
-                    {({ field }) => <SForm.Input {...field} type="email" />}
                   </Field>
 
                   <SForm.Label>City</SForm.Label>
                   <Styled.ErrorMessage name="city" />
-                  <Field name="city">
+                  <Field name="city" onChange={handleChange}>
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
                   <SForm.Label>State</SForm.Label>
                   <Styled.ErrorMessage name="state" />
-                  <Field name="state">
+                  <Field name="state" onChange={handleChange}>
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
                   <SForm.Label>Zip Code</SForm.Label>
                   <Styled.ErrorMessage name="zip_code" />
-                  <Field name="zip_code">
+                  <Field name="zip_code" onChange={handleChange}>
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
                 </SForm.FormGroup>
