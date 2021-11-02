@@ -31,7 +31,9 @@ const Styled = {
   `
 };
 
-console.log(getCurrentUser());
+getCurrentUser().then(result => {
+  console.log(result.data.users[0].bio.first_name)
+});
 
 const SettingsManager = () => {
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ const SettingsManager = () => {
     getCurrentUser()
       .then(result => {
         if (result) {
-          setUserData(result.users);
+          setUserData(result.data.users[0]);
         }
       })
       .finally(() => {

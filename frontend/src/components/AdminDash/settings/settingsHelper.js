@@ -10,6 +10,8 @@ export const eventValidator = object().shape({
     email: string()
         .email()
         .trim(),
+    street_address: string()
+        .trim(),
     city: string()
         .trim(),
     state: string()

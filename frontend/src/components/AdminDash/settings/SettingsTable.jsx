@@ -23,6 +23,7 @@ const SettingsTable = ({ user, loading }) => {
             <th>First Name</th>
             <th>Last Name</th>
             <th>Phone Number</th>
+            <th>Street Address</th>
             <th>City</th>
             <th>State</th>
             <th>Zip Code</th>
@@ -30,9 +31,14 @@ const SettingsTable = ({ user, loading }) => {
         </thead>
         <tbody>
             {!loading &&
-              <Table.Row key={user.first_name}>
+              <Table.Row key={user.bio.first_name}>
                 <td>{user.bio.first_name}</td>
-                <td>{user}</td>
+                <td>{user.bio.last_name}</td>
+                <td>{user.bio.phone_number}</td>
+                <td>{user.bio.street_address}</td>
+                <td>{user.bio.city}</td>
+                <td>{user.bio.state}</td>
+                <td>{user.bio.zip_code}</td>
               </Table.Row>
             }
         </tbody>
