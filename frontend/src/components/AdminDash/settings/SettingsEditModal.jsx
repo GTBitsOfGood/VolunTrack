@@ -23,6 +23,10 @@ const Styled = {
   `
 };
 
+const handleChange = (event) => {
+
+}
+
 const SettingsEditModal = ({ open, toggle }) => {
 
   return (
@@ -61,6 +65,14 @@ const SettingsEditModal = ({ open, toggle }) => {
                   <Field name="phoneNumber">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
+
+                  <SForm.Label>Waiver</SForm.Label>
+                  <Styled.ErrorMessage name="waivers" />
+                  <Field name="waiverss" onChange={handleChange}>
+                    {({ field }) => <SForm.Input {...field} type="file" />}
+                  </Field>
+                  
+
                 </SForm.FormGroup>
               </Styled.Form>
             </ModalBody>
