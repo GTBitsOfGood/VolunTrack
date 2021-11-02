@@ -57,8 +57,10 @@ const SettingsManager = () => {
 
   const toggleEditModal = () => {
     setShowEditModal(prev => !prev);
+    onRefresh();
   };
   useEffect(() => {
+    onRefresh();
   }, []);
 
   return (
