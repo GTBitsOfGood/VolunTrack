@@ -68,8 +68,8 @@ const SettingsEditModal = ({ open, toggle }) => {
 
                   <SForm.Label>Waiver</SForm.Label>
                   <Styled.ErrorMessage name="waivers" />
-                  <Field name="waiverss" onChange={handleChange}>
-                    {({ field }) => <SForm.Input {...field} type="file" />}
+                  <Field name="waivers" onChange={handleChange}>
+                    {({ field }) => <SForm.Input {...field} type="file" accept="image/*,.pdf" multiple />}
                   </Field>
                   
 
