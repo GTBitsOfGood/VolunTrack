@@ -1,26 +1,19 @@
-import { string, object, number, date } from 'yup';
+import { string, object, number } from 'yup';
 
 export const eventValidator = object().shape({
     firstName: string()
-        .trim()
-        .required(),
+        .trim(),
     LastName: string()
-        .trim()
-        .required(),
+        .trim(),
     phoneNumber: string()
-        .trim()
-        .required(),
+        .trim(),
     email: string()
         .email()
-        .required()
         .trim(),
     city: string()
-        .trim()
-        .required(),
+        .trim(),
     state: string()
-        .trim()
-        .required(),
+        .trim(),
     zip_code: number()
         .positive()
-        .required()
 });

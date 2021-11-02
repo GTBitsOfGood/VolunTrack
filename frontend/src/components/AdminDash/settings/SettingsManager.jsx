@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
 import { Icon } from 'components/Shared';
-import { fetchEvents } from 'components/AdminDash/queries';
+import { getCurrentUser } from 'components/AdminDash/queries';
 import SettingsEditModal from './SettingsEditModal';
+import SettingsTable from './SettingsTable';
 
 import * as Table from '../shared/tableStyles';
 
@@ -30,17 +31,19 @@ const Styled = {
   `
 };
 
+console.log(getCurrentUser());
+
 const SettingsManager = () => {
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents()
+    getCurrentUser()
       .then(result => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
+        if (result) {
+          setUserData(result.users);
         }
       })
       .finally(() => {
@@ -54,10 +57,8 @@ const SettingsManager = () => {
 
   const toggleEditModal = () => {
     setShowEditModal(prev => !prev);
-    onRefresh();
   };
   useEffect(() => {
-    onRefresh();
   }, []);
 
   return (
@@ -68,6 +69,12 @@ const SettingsManager = () => {
           <span>Edit</span>
         </Styled.Button>
       </Styled.HeaderContainer>
+      <SettingsTable
+        user={userData}
+        loading={loading}
+      >
+        {' '}
+      </SettingsTable>
       <SettingsEditModal open={showEditModal} toggle={toggleEditModal} /> 
     </Styled.Container>
   );
