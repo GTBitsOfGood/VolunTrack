@@ -67,12 +67,6 @@ const SettingsEditModal = ({ open, toggle }) => {
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
-                  <SForm.Label>Street Address</SForm.Label>
-                  <Styled.ErrorMessage name="street_address" />
-                  <Field name="street_address">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-
                   <SForm.Label>City</SForm.Label>
                   <Styled.ErrorMessage name="city" />
                   <Field name="city">
