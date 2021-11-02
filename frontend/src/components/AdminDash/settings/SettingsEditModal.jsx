@@ -1,10 +1,12 @@
 import React from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Formik, Form as FForm, Field, ErrorMessage, useFormik } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './settingsHelper';
+import { getCurrentUser } from 'components/AdminDash/queries';
 
 const Styled = {
   Form: styled(FForm)``,
@@ -26,6 +28,7 @@ const handleChange = (event) => {
 }
 
 const SettingsEditModal = ({ open, toggle }) => {
+
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Edit Information</ModalHeader>
@@ -36,7 +39,6 @@ const SettingsEditModal = ({ open, toggle }) => {
           firstName: '',
           lastName: '',
           phoneNumber: '',
-          email: '',
           city: '',
           state: '',
           zip_code: '',
