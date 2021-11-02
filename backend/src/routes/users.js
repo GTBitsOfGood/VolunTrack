@@ -398,16 +398,6 @@ router.post('/updateUser', (req, res, next) => {
       }
     );
   }
-  if (req.query.street_address) {
-    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.street_address": req.query.street_address } }).then(
-      result => {
-        if (!result.nModified)
-          res.status(400).json({
-            error: 'Email requested for update was invalid. 0 items changed.'
-          });
-      }
-    );
-  }
   if (req.query.phone_number) {
     UserData.updateOne({ 'bio.email': email }, { $set: { "bio.phone_number": req.query.phone_number } }).then(
       result => {
@@ -427,9 +417,6 @@ router.post('/updateUser', (req, res, next) => {
           });
       }
     );
-    res.json({
-      message: 'ha yeet'
-    });
   }
   if (req.query.last_name) {
     UserData.updateOne({ 'bio.email': email }, { $set: { "bio.last_name": req.query.last_name } }).then(
