@@ -362,7 +362,7 @@ router.post('/updateStatus', (req, res, next) => {
     }
   );
 });
-router.post('/updateCurrentUser', (req, res, next) => {
+router.post('/updateUser', (req, res, next) => {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   if (!req.query.email)
     res.status(400).json({ error: 'Invalid email sent' });
@@ -427,7 +427,9 @@ router.post('/updateCurrentUser', (req, res, next) => {
           });
       }
     );
-    
+    res.json({
+      message: 'ha yeet'
+    });
   }
   if (req.query.last_name) {
     UserData.updateOne({ 'bio.email': email }, { $set: { "bio.last_name": req.query.last_name } }).then(
