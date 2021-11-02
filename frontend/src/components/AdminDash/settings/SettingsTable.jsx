@@ -6,6 +6,7 @@ import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
 import { bindActionCreators } from 'redux';
+import { getCurrentUser } from 'components/AdminDash/queries';
 
 const Styled = {
   Button: styled(Button)`
@@ -13,6 +14,15 @@ const Styled = {
     border: none;
   `
 };
+
+const adminUser = () => {
+    getCurrentUser().then(result => {
+      if (result.data.users[0].bio.first_name === "admin") { 
+          return true 
+    }
+      return false;
+    });
+  }
 
 const SettingsTable = ({ user, loading }) => {
   return (
@@ -27,6 +37,9 @@ const SettingsTable = ({ user, loading }) => {
             <th>City</th>
             <th>State</th>
             <th>Zip Code</th>
+            {adminUser() &&
+            <th>Waivers</th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -39,6 +52,9 @@ const SettingsTable = ({ user, loading }) => {
                 <td>{user.bio.city}</td>
                 <td>{user.bio.state}</td>
                 <td>{user.bio.zip_code}</td>
+                {adminUser() &&
+                <td>Show file names</td>
+                }
               </Table.Row>
             }
         </tbody>
