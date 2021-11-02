@@ -378,6 +378,16 @@ router.post('/updateCurrentUser', (req, res, next) => {
       }
     );
   }
+  if (req.query.state) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.state": req.query.state } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
   if (req.query.zip_code) {
     UserData.updateOne({ 'bio.email': email }, { $set: { "bio.zip_code": req.query.zip_code } }).then(
       result => {

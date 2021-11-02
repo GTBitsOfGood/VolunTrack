@@ -6,7 +6,7 @@ import { Formik, Form as FForm, Field, ErrorMessage, useFormik } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './settingsHelper';
-import { getCurrentUser } from 'components/AdminDash/queries';
+import { updateUser } from 'components/AdminDash/queries';
 
 const Styled = {
   Form: styled(FForm)``,
@@ -22,10 +22,6 @@ const Styled = {
     display: inline-block;
   `
 };
-
-const handleChange = (event) => {
-  
-}
 
 const SettingsEditModal = ({ open, toggle }) => {
 
@@ -44,7 +40,12 @@ const SettingsEditModal = ({ open, toggle }) => {
           zip_code: '',
         }}
         onSubmit={(values, { setSubmitting }) => {
-          {/*CHANGE DATABASE HERE*/}
+          console.log(values)
+          setSubmitting(true);
+          updateUser("david@davidwong.com", values.firstName, values.lastName, values.city, values.zip_code, values.street_address, values.state, values.phoneNumber)
+            .then(() => toggle())
+            .catch(console.log)
+            .finally(() => setSubmitting(false));
         }}
         validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
