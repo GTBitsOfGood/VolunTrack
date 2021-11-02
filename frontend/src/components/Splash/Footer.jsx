@@ -13,7 +13,9 @@ class Footer extends Component {
       cache: 'default'
     };
     fetch('/auth/google', options).then(r => {
-      r.json().then(user => this.props.onAuth(user));
+      r.json().then(user => {
+        return this.props.onAuth(user);
+      });
     });
   };
 

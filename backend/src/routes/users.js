@@ -346,6 +346,22 @@ router.post('/updateRole', (req, res, next) => {
   );
 });
 
+// router.put('/:id/updateProfile', async (req, res, next) => {
+//   const id = req.params.id;
+//   if (!id) {
+//     return res.status(400).send('No Id supplied');
+//   }
+
+//   const oldUser = UserData.findById(id)
+//     .then(user => {
+//       if (!user) {
+//         return res.status(400).json({ errors: `No user found with id: ${id}` });
+//       }
+//       res.status(200).json({ user });
+//     })
+//     .catch(err => next(err));
+// });
+
 router
   .route('/:id')
   .get([check('id').isMongoId()], (req, res, next) => {
@@ -404,6 +420,7 @@ router
           return res.status(200).json({ user });
         })
         .catch(err => {
+          console.log(err);
           if (err instanceof SendEmailError) {
             return res.status(400).json({
               error: err.message,
