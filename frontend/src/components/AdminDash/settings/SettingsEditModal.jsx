@@ -26,7 +26,7 @@ const Styled = {
 //???????????????
 const adminUser = () => {
   getCurrentUser().then(result => {
-    if (result.data.users[0].bio.first_name === "admin") { return true }
+    if (result.data.users[0].role === "admin") { return true }
     return false;
   });
 }
@@ -99,11 +99,11 @@ const SettingsEditModal = ({ open, toggle }) => {
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
-                  {adminUser() &&
+                  {adminUser &&
                   <>
-                  <SForm.Label>Zip Code</SForm.Label>
+                  <SForm.Label>Waivers</SForm.Label>
                   <Styled.ErrorMessage name="waivers" />
-                  <Field name="waiverss" onChange={handleChange}>
+                  <Field name="waivers" onChange={handleChange}>
                     {({ field }) => <SForm.Input {...field} type="file" />}
                   </Field>
                   </>

@@ -17,7 +17,8 @@ const Styled = {
 
 const adminUser = () => {
     getCurrentUser().then(result => {
-      if (result.data.users[0].bio.first_name === "admin") { 
+      if (result.data.users[0].role === "admin") { 
+          console.log("HERE");
           return true 
     }
       return false;
@@ -53,7 +54,7 @@ const SettingsTable = ({ user, loading }) => {
                 <td>{user.bio.state}</td>
                 <td>{user.bio.zip_code}</td>
                 {adminUser() &&
-                <td>Show file names</td>
+                <td>Show file names</td >
                 }
               </Table.Row>
             }
