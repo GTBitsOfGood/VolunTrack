@@ -4,6 +4,7 @@ import { Route, Redirect } from 'react-router-dom';
 import ApplicantViewer from './ApplicantViewer';
 import UserManager from './user/UserManager';
 import EventManager from './events/EventManager';
+import Profile from '../Shared/Profile';
 
 const Container = styled.div`
   background: white;
@@ -12,9 +13,12 @@ const Container = styled.div`
 `;
 
 class AdminDash extends React.Component {
-  state = {
-    redirectToViewer: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      redirectToViewer: false
+    };
+  }
   componentDidMount = () => {
     if (window.location.pathname === '/') {
       this.setState({ redirectToViewer: true });
@@ -32,6 +36,7 @@ class AdminDash extends React.Component {
         <Route path="/applicant-viewer" component={ApplicantViewer} />
         <Route path="/user-manager" component={UserManager} />
         <Route path="/events" component={EventManager} />
+        <Route path="/profile" render={() => <Profile user={this.props.user} />} />
       </Container>
     );
   }

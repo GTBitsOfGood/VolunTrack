@@ -57,7 +57,7 @@ function initAuth(app) {
   );
 
   // Logout Route
-  app.get('/auth/logout', (req, res, next) => {
+  app.post('/auth/logout', (req, res, next) => {
     req.logout();
     req.session.destroy(err => {
       if (err) {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Icon } from './Shared';
@@ -20,6 +20,7 @@ import {
 
 import logo from '../images/bog_logo.png';
 import avatar from '../images/test.jpg';
+import { capitalizeFirstLetter } from './Shared/helpers';
 
 const pageSwitchWidth = currPath => {
   switch (currPath) {
@@ -116,6 +117,9 @@ const Styled = {
       color: #969696;
     `}
   `,
+  ProfileLink: styled(Link)`
+    color: black;
+  `,
   UserContainer: styled.div`
     display: flex;
     align-items: center;
@@ -156,94 +160,85 @@ const Styled = {
   `
 };
 
-class Header extends Component {
-  state = {
-    isOpen: false
+const Header = ({ onLogout, user }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => {
+    setIsOpen(!isOpen);
   };
 
-  toggle = _ => {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  };
+  const currPageMatches = page => window.location.pathname === page;
 
-  componentDidMount = () => {
-    console.log(window.location.pathname);
-  };
+  return (
+    <Styled.Navbar light expand="md">
+      <Container style={{ marginLeft: '0px', marginRight: '0px', maxWidth: '100%' }}>
+        <NavbarBrand tag={Link} to="/applicant-viewer">
+          <img style={{ width: '175px' }} alt="bog logo" src={logo} />
+        </NavbarBrand>
 
-  currPageMatches = page => this.props.location.pathname === page;
-
-  render() {
-    const { onLogout, loggedIn, location, role } = this.props;
-    return (
-      <div>
-        <Styled.Navbar light expand="md">
-          <Container style={{ marginLeft: '0px', marginRight: '0px', maxWidth: '100%' }}>
-            <NavbarBrand tag={Link} to="/applicant-viewer">
-              <img style={{ width: '175px' }} alt="bog logo" src={logo} />
-            </NavbarBrand>
-
-            <NavbarToggler onClick={this.toggle} />
-            <Collapse isOpen={this.state.isOpen} navbar>
-              {loggedIn ? (
-                <Styled.FlexContainer className="navbar-nav">
-                  <Styled.PageSwitch currPathName={location.pathname}>
-                    <Styled.PageLink
-                      to="/applicant-viewer"
-                      selected={this.currPageMatches('/applicant-viewer')}
-                    >
-                      Applicant Viewer
-                    </Styled.PageLink>
-                    {role === 'admin' && (
-                      <Styled.PageLink
-                        to="/user-manager"
-                        selected={this.currPageMatches('/user-manager')}
-                      >
-                        User Manager
-                      </Styled.PageLink>
-                    )}
-                    <Styled.PageLink to="/events" selected={this.currPageMatches('/events')}>
-                      Events
-                    </Styled.PageLink>
-                    <Styled.PageLink to="/settings" selected={this.currPageMatches('/settings')}>
-                      Settings
-                    </Styled.PageLink>
-                  </Styled.PageSwitch>
-                  <Styled.Dropdown nav inNavbar className="navbar-nav">
-                    <Styled.Toggle color="white">
-                      <Styled.UserContainer>
-                        <Styled.UserContainer>
-                          <Styled.ImgContainer style={{ paddingLeft: '0px' }}>
-                            <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
-                          </Styled.ImgContainer>
-                          <Styled.TxtContainer>
-                            <p style={{ margin: '0px' }}>James Wang</p>
-                            <p style={{ margin: '0px' }}>Admin</p>
-                          </Styled.TxtContainer>
-                          <Styled.ImgContainer style={{ paddingRight: '0px' }}>
-                            <Icon name="dropdown-arrow" size="1.5rem" />
-                          </Styled.ImgContainer>
-                        </Styled.UserContainer>
-                      </Styled.UserContainer>
-                    </Styled.Toggle>
-                    <DropdownMenu style={{ width: '100%' }}>
-                      <DropdownItem>My Profile</DropdownItem>
-                      <DropdownItem onClick={onLogout} href="/">
-                        {' '}
-                        Logout{' '}
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                </Styled.FlexContainer>
-              ) : (
-                <Nav navbar></Nav>
+        <NavbarToggler onClick={toggle} />
+        <Collapse isOpen={isOpen} navbar>
+          <Styled.FlexContainer className="navbar-nav">
+            <Styled.PageSwitch currPathName={window.location.pathname}>
+              {user.role === 'admin' && (
+                <Styled.PageLink
+                  to="/applicant-viewer"
+                  selected={currPageMatches('/applicant-viewer')}
+                >
+                  Applicant Viewer
+                </Styled.PageLink>
               )}
-            </Collapse>
-          </Container>
-        </Styled.Navbar>
-      </div>
-    );
-  }
-}
+              {user.role === 'admin' && (
+                <Styled.PageLink to="/user-manager" selected={currPageMatches('/user-manager')}>
+                  User Manager
+                </Styled.PageLink>
+              )}
+              <Styled.PageLink to="/events" selected={currPageMatches('/events')}>
+                Events
+              </Styled.PageLink>
+              {user.role === 'admin' && (
+                <Styled.PageLink to="/settings" selected={currPageMatches('/settings')}>
+                  Settings
+                </Styled.PageLink>
+              )}
+            </Styled.PageSwitch>
+            <Styled.Dropdown nav inNavbar className="navbar-nav">
+              <Styled.Toggle color="white">
+                <Styled.UserContainer>
+                  <Styled.UserContainer>
+                    <Styled.ImgContainer style={{ paddingLeft: '0px' }}>
+                      <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
+                    </Styled.ImgContainer>
+                    <Styled.TxtContainer>
+                      <p
+                        style={{ margin: '0px' }}
+                      >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                      <p style={{ margin: '0px' }}>{`${capitalizeFirstLetter(user.role ?? '')}`}</p>
+                    </Styled.TxtContainer>
+                    <Styled.ImgContainer style={{ paddingRight: '0px' }}>
+                      <Icon name="dropdown-arrow" size="1.5rem" />
+                    </Styled.ImgContainer>
+                  </Styled.UserContainer>
+                </Styled.UserContainer>
+              </Styled.Toggle>
+              <DropdownMenu style={{ width: '100%' }}>
+                <DropdownItem>
+                  <Styled.ProfileLink to="/profile" selected={currPageMatches('/profile')}>
+                    Profile
+                  </Styled.ProfileLink>
+                </DropdownItem>
+                <DropdownItem onClick={onLogout} href="/">
+                  {' '}
+                  Logout{' '}
+                </DropdownItem>
+              </DropdownMenu>
+            </Styled.Dropdown>
+          </Styled.FlexContainer>
+          <Nav navbar></Nav>
+        </Collapse>
+      </Container>
+    </Styled.Navbar>
+  );
+};
 
 export default withRouter(Header);

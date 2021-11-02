@@ -49,4 +49,4 @@ export const editEvent = event => axios.put('/api/events', event);
 
 export const deleteEvent = _id => axios.delete('/api/events/' + _id);
 
-export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
+export const editProfile = (id, user) => axios.put(`/api/users/${id}/updateProfile`, user);

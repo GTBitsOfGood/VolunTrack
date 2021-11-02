@@ -120,6 +120,7 @@ const USER_DATA_VALIDATOR = [
   check('criminal.driving').isBoolean(),
   check('criminal.none').isBoolean(),
   check('criminal.explanation')
+    .isAscii()
     .trim()
     .escape(),
   check('ice.name')
