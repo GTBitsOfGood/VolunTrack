@@ -44,9 +44,7 @@ const SettingsEditModal = ({ open, toggle }) => {
           console.log(typeof(values.city))
           setSubmitting(true);
           updateUser("david@davidwong.com", values.firstName, values.lastName, values.city, values.zip_code, values.street_address, values.state, values.phoneNumber)
-            .then(() => toggle())
-            .catch(console.log)
-            .finally(() => setSubmitting(false));
+          window.location.reload()
         }}
         validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (

@@ -59,7 +59,7 @@ export const updateUser = (email, first, last, city, zip, address, state, number
   }
   if (query.length > 0) {
     query = query.slice(0,-1)
-    axios.post(`/api/users/updateCurrentUser?email=${email}&${query}`);
+    axios.post(`/api/users/updateUser?email=${email}&${query}`);
   }
 }
 
