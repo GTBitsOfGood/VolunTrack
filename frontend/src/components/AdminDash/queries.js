@@ -34,6 +34,34 @@ export const fetchUserCount = () => axios.get('/api/users/count');
 export const updateApplicantStatus = (email, status) =>
   axios.post(`/api/users/updateStatus?email=${email}&status=${status}`);
 
+export const updateCurrentUser = (email, city, zip, address, number, first, last) => {
+  query = ''
+  if (city.length != 0) {
+    query+="city=" + city + "&"
+  }
+  if (zip.length != 0) {
+    query+="zip_code=" + zip + "&"
+  }
+  if (address.length != 0) {
+    query+="street_address=" + address + "&"
+  }
+  if (number.length != 0) {
+    query+="phone_number=" + number + "&"
+  }
+  if (first.length != 0) {
+    query+="first_name=" + first + "&"
+  }
+  if (last.length != 0) {
+    query+="last_name=" + last + "&"
+  }
+  if (query.length > 0) {
+    query = query.slice(0,-1)
+    axios.post(`/api/users/updateCurrentUser?email=${email}&${query}`);
+  }
+}
+
+
+
 export const updateApplicantRole = (email, role) =>
   axios.post(`/api/users/updateRole?email=${email}&role=${role}`);
 
