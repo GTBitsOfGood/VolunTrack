@@ -14,9 +14,9 @@ const DEFAULT_PAGE_SIZE = 10;
 
 router.post('/', USER_DATA_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ errors: errors.mapped() });
-  // }
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.mapped() });
+  }
   const newUserData = matchedData(req);
   let userData = null;
   UserData.findOne({ 'bio.email': newUserData.bio.email })

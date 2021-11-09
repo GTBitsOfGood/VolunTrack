@@ -34,7 +34,7 @@ export const fetchUserCount = () => axios.get('/api/users/count');
 export const updateApplicantStatus = (email, status) =>
   axios.post(`/api/users/updateStatus?email=${email}&status=${status}`);
 
-export const updateUser = (email, first, last, city, zip, address, number) => {
+export const updateUser = (email, first, last, city, zip, address, state, number) => {
   var query = ''
   if (first.length != 0) {
     query+="first_name=" + first + "&"
@@ -44,6 +44,9 @@ export const updateUser = (email, first, last, city, zip, address, number) => {
   }
   if (city.length != 0) {
     query+="city=" + city + "&"
+  }
+  if (state.length != 0) {
+    query+="state=" + state + "&"
   }
   if (zip.length != 0) {
     query+="zip_code=" + zip + "&"
