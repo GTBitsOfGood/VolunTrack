@@ -7,6 +7,7 @@ import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './settingsHelper';
 import { updateUser } from 'components/AdminDash/queries';
+import { getCurrentUser } from 'components/AdminDash/queries';
 
 const Styled = {
   Form: styled(FForm)``,
