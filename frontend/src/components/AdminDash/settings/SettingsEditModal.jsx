@@ -24,7 +24,7 @@ const Styled = {
   `
 };
 
-//???????????????
+/* Determines whether the current user is an admin */
 const adminUser = () => {
   getCurrentUser().then(result => {
     if (result.data.users[0].role === "admin") { return true }
@@ -98,12 +98,13 @@ const SettingsEditModal = ({ open, toggle }) => {
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
+                  {/* only allow the user to upload waivers if they are an admin */}
                   {adminUser &&
                   <>
                   <SForm.Label>Waivers</SForm.Label>
                   <Styled.ErrorMessage name="waivers" />
                   <Field name="waivers" onChange={handleChange}>
-                    {({ field }) => <SForm.Input {...field} type="file" />}
+                    {({ field }) => <SForm.Input {...field} type="file" accept="image/*,.pdf" multiple />}
                   </Field>
                   </>
                   }

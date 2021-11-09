@@ -15,12 +15,10 @@ const Styled = {
   `
 };
 
-const adminUser = () => {
+/* Determines whether the current user is an admin */
+  const adminUser = () => {
     getCurrentUser().then(result => {
-      if (result.data.users[0].role === "admin") { 
-          console.log("HERE");
-          return true 
-    }
+      if (result.data.users[0].role === "admin") { return true }
       return false;
     });
   }
@@ -37,7 +35,7 @@ const SettingsTable = ({ user, loading }) => {
             <th>City</th>
             <th>State</th>
             <th>Zip Code</th>
-            {adminUser() &&
+            {adminUser &&
             <th>Waivers</th>
             }
           </tr>
@@ -51,7 +49,8 @@ const SettingsTable = ({ user, loading }) => {
                 <td>{user.bio.city}</td>
                 <td>{user.bio.state}</td>
                 <td>{user.bio.zip_code}</td>
-                {adminUser() &&
+                {/* only display waivers if the current user is an admin */}
+                {adminUser &&
                 <td>Show file names</td >
                 }
               </Table.Row>
