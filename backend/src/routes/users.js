@@ -14,9 +14,9 @@ const DEFAULT_PAGE_SIZE = 10;
 
 router.post('/', USER_DATA_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   return res.status(400).json({ errors: errors.mapped() });
-  // }
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.mapped() });
+  }
   const newUserData = matchedData(req);
   let userData = null;
   UserData.findOne({ 'bio.email': newUserData.bio.email })
@@ -196,7 +196,7 @@ router.get('/count', (req, res, next) => {
 });
 
 router.get('/current', (req, res, next) => {
-  UserData.find({"bio.email": "david@davidwong.com"})
+  UserData.find({ "bio.email": "james@jameswang.com" })
     .then(users => {
       res.status(200).json({ users });
     })
@@ -345,6 +345,74 @@ router.post('/updateStatus', (req, res, next) => {
       res.sendStatus(200);
     }
   );
+});
+router.post('/updateUser', (req, res, next) => {
+  //This command only works if a user with the email "david@davidwong.com currently exists in the db"
+  if (!req.query.email)
+    res.status(400).json({ error: 'Invalid email sent' });
+  email = req.query.email
+
+  if (req.query.city) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.city": req.query.city } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.state) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.state": req.query.state } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.zip_code) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.zip_code": req.query.zip_code } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.phone_number) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.phone_number": req.query.phone_number } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.first_name) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { 'bio.first_name': req.query.first_name } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.last_name) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.last_name": req.query.last_name } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  res.sendStatus(200);
 });
 
 router.post('/updateRole', (req, res, next) => {

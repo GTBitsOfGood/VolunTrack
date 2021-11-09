@@ -6,7 +6,7 @@ import { Formik, Form as FForm, Field, ErrorMessage, useFormik } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './settingsHelper';
-import { getCurrentUser } from 'components/AdminDash/queries';
+import { updateUser } from 'components/AdminDash/queries';
 
 const Styled = {
   Form: styled(FForm)``,
@@ -47,12 +47,16 @@ const SettingsEditModal = ({ open, toggle }) => {
           firstName: '',
           lastName: '',
           phoneNumber: '',
+          street_address: '',
           city: '',
           state: '',
           zip_code: '',
         }}
         onSubmit={(values, { setSubmitting }) => {
-          {/*CHANGE DATABASE HERE*/}
+          console.log(typeof(values.city))
+          setSubmitting(true);
+          updateUser("james@jameswang.com", values.firstName, values.lastName, values.city, values.zip_code, values.street_address, values.state, values.phoneNumber)
+          window.location.reload()
         }}
         validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
@@ -63,39 +67,33 @@ const SettingsEditModal = ({ open, toggle }) => {
 
                   <SForm.Label>First name</SForm.Label>
                   <Styled.ErrorMessage name="firstName" />
-                  <Field name="firstName" onChange={handleChange}>{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                  <Field name="firstName">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
 
                   <SForm.Label>Last name</SForm.Label>
                   <Styled.ErrorMessage name="lastName" />
-                  <Field name="lastName" onChange={handleChange}>{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                  <Field name="lastName" >{({ field }) => <SForm.Input {...field} type="text" />}</Field>
                   
                   <SForm.Label>Phone number</SForm.Label>
                   <Styled.ErrorMessage name="phoneNumber" />
-                  <Field name="phoneNumber" onChange={handleChange}>
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-
-                  <SForm.Label>Street Address</SForm.Label>
-                  <Styled.ErrorMessage name="street_address" />
-                  <Field name="street_address" onChange={handleChange}>
+                  <Field name="phoneNumber">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
                   <SForm.Label>City</SForm.Label>
                   <Styled.ErrorMessage name="city" />
-                  <Field name="city" onChange={handleChange}>
+                  <Field name="city">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
                   <SForm.Label>State</SForm.Label>
                   <Styled.ErrorMessage name="state" />
-                  <Field name="state" onChange={handleChange}>
+                  <Field name="state">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
                   <SForm.Label>Zip Code</SForm.Label>
                   <Styled.ErrorMessage name="zip_code" />
-                  <Field name="zip_code" onChange={handleChange}>
+                  <Field name="zip_code">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
 
