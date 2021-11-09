@@ -15,12 +15,10 @@ const Styled = {
   `
 };
 
-const adminUser = () => {
+/* Determines whether the current user is an admin */
+  const adminUser = () => {
     getCurrentUser().then(result => {
-      if (result.data.users[0].role === "admin") { 
-          console.log("HERE");
-          return true 
-    }
+      if (result.data.users[0].role === "admin") { return true }
       return false;
     });
   }
