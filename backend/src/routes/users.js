@@ -212,7 +212,7 @@ router.get('/count', (req, res, next) => {
 });
 
 router.get('/current', (req, res, next) => {
-  UserData.find({ "bio.email": "david@davidwong.com" })
+  UserData.find({ "bio.email": "james@jameswang.com" })
     .then(users => {
       res.status(200).json({ users });
     })

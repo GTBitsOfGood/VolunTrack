@@ -43,7 +43,7 @@ const SettingsEditModal = ({ open, toggle }) => {
         onSubmit={(values, { setSubmitting }) => {
           console.log(typeof(values.city))
           setSubmitting(true);
-          updateUser("david@davidwong.com", values.firstName, values.lastName, values.city, values.zip_code, values.street_address, values.state, values.phoneNumber)
+          updateUser("james@jameswang.com", values.firstName, values.lastName, values.city, values.zip_code, values.street_address, values.state, values.phoneNumber)
           window.location.reload()
         }}
         validationSchema={eventValidator}
