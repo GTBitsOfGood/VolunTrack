@@ -34,7 +34,6 @@ const SettingsTable = ({ user, loading }) => {
             <th>First Name</th>
             <th>Last Name</th>
             <th>Phone Number</th>
-            <th>Street Address</th>
             <th>City</th>
             <th>State</th>
             <th>Zip Code</th>
@@ -49,7 +48,6 @@ const SettingsTable = ({ user, loading }) => {
                 <td>{user.bio.first_name}</td>
                 <td>{user.bio.last_name}</td>
                 <td>{user.bio.phone_number}</td>
-                <td>{user.bio.street_address}</td>
                 <td>{user.bio.city}</td>
                 <td>{user.bio.state}</td>
                 <td>{user.bio.zip_code}</td>

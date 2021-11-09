@@ -31,9 +31,9 @@ const Styled = {
   `
 };
 
-// getCurrentUser().then(result => {
-//   console.log(result.data.users[0].bio.first_name)
-// });
+getCurrentUser().then(result => {
+  // console.log(result.data.users[0].bio.first_name)
+});
 
 const SettingsManager = () => {
   const [loading, setLoading] = useState(true);
