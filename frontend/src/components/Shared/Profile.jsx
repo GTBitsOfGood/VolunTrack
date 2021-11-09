@@ -43,17 +43,7 @@ const Styled = {
 const Profile = ({ user }) => {
   const [successText, setSuccessText] = useState('');
 
-  const {
-    first_name = '',
-    last_name = '',
-    email = '',
-    phone_number = '',
-    date_of_birth = '',
-    street_address = '',
-    city = '',
-    state = '',
-    zip_code = ''
-  } = user?.bio ?? {};
+  const { first_name = '', last_name = '', email = '', phone_number = '' } = user?.bio ?? {};
 
   return (
     <Styled.Container>
@@ -63,12 +53,7 @@ const Profile = ({ user }) => {
           first_name,
           last_name,
           email,
-          phone_number,
-          date_of_birth,
-          street_address,
-          city,
-          state,
-          zip_code
+          phone_number
         }}
         onSubmit={(values, { setSubmitting }) => {
           const profileData = { bio: values };
@@ -109,32 +94,6 @@ const Profile = ({ user }) => {
                 <SForm.Label>Phone Number</SForm.Label>
                 <Styled.ErrorMessage name="phone_number" />
                 <Field name="phone_number">
-                  {({ field }) => <SForm.Input {...field} type="text" />}
-                </Field>
-
-                <SForm.Label>Birthday</SForm.Label>
-                <Styled.ErrorMessage name="date_of_birth" />
-                <Field name="date_of_birth">
-                  {({ field }) => <SForm.Input {...field} type="date" />}
-                </Field>
-
-                <SForm.Label>Street Address</SForm.Label>
-                <Styled.ErrorMessage name="street_address" />
-                <Field name="street_address">
-                  {({ field }) => <SForm.Input {...field} type="text" />}
-                </Field>
-
-                <SForm.Label>City</SForm.Label>
-                <Styled.ErrorMessage name="city" />
-                <Field name="city">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
-
-                <SForm.Label>State</SForm.Label>
-                <Styled.ErrorMessage name="state" />
-                <Field name="state">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
-
-                <SForm.Label>Zip Code</SForm.Label>
-                <Styled.ErrorMessage name="zip_code" />
-                <Field name="zip_code">
                   {({ field }) => <SForm.Input {...field} type="text" />}
                 </Field>
               </SForm.FormGroup>
