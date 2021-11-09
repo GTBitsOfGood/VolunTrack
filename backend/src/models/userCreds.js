@@ -35,11 +35,11 @@ userCredsSchema.statics.findOrCreate = function(
       if (!user) {
         const { email, given_name, family_name } = profile._json;
         const newUserData = new UserData({
-          role: 'new',
           bio: { email, first_name: given_name, last_name: family_name }
         });
 
         newUserData.save((err1, savedUserData) => {
+          if (err1) return console.error(err1);
           const newUser = new that({
             googleId: profile.id,
             accessToken,

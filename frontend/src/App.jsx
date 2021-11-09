@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -20,41 +20,45 @@ const Styled = {
   `
 };
 
-class App extends Component {
-  state = { isAuthenticated: true, user: { role: 'admin' }, token: '' };
+const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({});
 
-  fakeAuth = _ => this.setState({ user: { role: null } });
+  const login = user => {
+    setIsAuthenticated(true);
+    setUser(user);
+  };
 
-  logout = e => {
+  const logout = e => {
     e.preventDefault();
-    this.setState({ isAuthenticated: false, user: null });
-    axios.get('/auth/logout');
-  };
-  auth = user => {
-    this.setState({ isAuthenticated: true, user });
+    setIsAuthenticated(false);
+    setUser({});
+    axios.post('/auth/logout');
   };
 
-  render() {
-    const { isAuthenticated, user } = this.state;
-    return (
-      <Router>
-        <StyleProvider>
-          <RequestProvider>
-            <Styled.Container>
-              <Header
-                onLogout={this.logout}
-                loggedIn={isAuthenticated}
-                role={user ? user.role : null}
-              />
-              <Styled.Content>
-                {user ? <Authenticated user={user} /> : <Splash onAuth={this.fakeAuth} />}
-              </Styled.Content>
-            </Styled.Container>
-          </RequestProvider>
-        </StyleProvider>
-      </Router>
-    );
-  }
-}
+  return (
+    <Router>
+      <StyleProvider>
+        <RequestProvider>
+          <Styled.Container>
+            {isAuthenticated ? (
+              <>
+                <Header onLogout={logout} loggedIn={isAuthenticated} user={user} />
+                <Styled.Content>
+                  <Authenticated user={user} /> :
+                </Styled.Content>
+              </>
+            ) : (
+              <>
+                {window.location.pathname !== '/' && <Redirect to="/" />}
+                <Splash onAuth={login} />
+              </>
+            )}
+          </Styled.Container>
+        </RequestProvider>
+      </StyleProvider>
+    </Router>
+  );
+};
 
 export default App;
