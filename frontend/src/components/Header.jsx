@@ -172,7 +172,7 @@ const Header = ({ onLogout, user }) => {
   return (
     <Styled.Navbar light expand="md">
       <Container style={{ marginLeft: '0px', marginRight: '0px', maxWidth: '100%' }}>
-        <NavbarBrand tag={Link} to="/applicant-viewer">
+        <NavbarBrand tag={props => <Link {...props} />} to="/applicant-viewer">
           <img style={{ width: '175px' }} alt="bog logo" src={logo} />
         </NavbarBrand>
 
