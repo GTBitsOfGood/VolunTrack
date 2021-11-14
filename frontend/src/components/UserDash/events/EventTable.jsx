@@ -13,7 +13,7 @@ const Styled = {
   `
 };
 
-const EventTable = ({ events, loading, onSignup }) => {
+const EventTable = ({ events, loading, onSignup, user }) => {
   return (
     <Table.Container>
       <Table.Table>
@@ -44,10 +44,16 @@ const EventTable = ({ events, loading, onSignup }) => {
                 </td>
                 <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
                 <td>
-                  <Styled.Button onClick={() => onSignup(event._id)}>
-                    <Icon color="grey3" name="add" />
-                    <span>Sign up</span>
-                  </Styled.Button>
+                  {console.log(user._id)}
+                  {console.log()}
+                  {event.volunteers.includes(user._id) ? (
+                    <span>Signed Up!</span>
+                  ) : (
+                    <Styled.Button onClick={() => onSignup(event._id)}>
+                      <Icon color="grey3" name="add" />
+                      <span>Sign up</span>
+                    </Styled.Button>
+                  )}
                 </td>
               </Table.Row>
             ))}

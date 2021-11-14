@@ -29,7 +29,7 @@ const Styled = {
   `
 };
 
-const EventManager = () => {
+const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
 
@@ -63,7 +63,7 @@ const EventManager = () => {
           <span>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
-      <EventTable events={events} loading={loading} onSignup={onSignup}>
+      <EventTable events={events} loading={loading} onSignup={onSignup} user={user}>
         {' '}
       </EventTable>
     </Styled.Container>

@@ -12,7 +12,7 @@ const Container = styled.div`
 
 const UserDash = ({ user }) => (
   <Container>
-    <Route path="/events" component={EventManager} />
+    <Route path="/events" component={() => <EventManager user={user} />} />
     <Route path="/profile" render={() => <Profile user={user} />} />
     <Route exact path="/">
       <Redirect to="/events" />
