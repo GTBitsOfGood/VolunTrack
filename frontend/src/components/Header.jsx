@@ -226,8 +226,8 @@ const Header = ({ onLogout, user }) => {
                 </Styled.UserContainer>
               </Styled.Toggle>
               <DropdownMenu style={{ width: '100%' }}>
-                <DropdownItem href="/profile">
-                  <Styled.DropdownLink to="/profile">Profile</Styled.DropdownLink>
+                <DropdownItem tag={props => <Link {...props} />} to="/profile">
+                  Profile
                 </DropdownItem>
                 <DropdownItem onClick={onLogout} href="/">
                   {' '}
