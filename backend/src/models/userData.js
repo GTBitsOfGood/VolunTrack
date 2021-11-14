@@ -13,6 +13,15 @@ const userDataSchema = new mongoose.Schema(
       default: 'new',
       enum: ['has_volunteered', 'new']
     },
+    mandated: {
+      type: String,
+      default: 'not_mandated',
+      enum: ['is_mandated', 'not_mandated']
+    },
+    mandatedHours: {
+      type: Number,
+      default: 0
+    },
     bio: {
       first_name: { type: String },
       last_name: { type: String },
