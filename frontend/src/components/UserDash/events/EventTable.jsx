@@ -44,8 +44,6 @@ const EventTable = ({ events, loading, onSignup, user }) => {
                 </td>
                 <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
                 <td>
-                  {console.log(user._id)}
-                  {console.log()}
                   {event.volunteers.includes(user._id) ? (
                     <span>Signed Up!</span>
                   ) : (
