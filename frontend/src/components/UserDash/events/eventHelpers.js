@@ -1,4 +1,5 @@
 import { string, object, number, date } from 'yup';
+import axios from 'axios';
 
 export const eventValidator = object().shape({
   name: string()
@@ -22,3 +23,6 @@ export const eventValidator = object().shape({
     .positive()
     .required()
 });
+
+export const addVolunteerToEvent = async (eventId, userId) =>
+  axios.post(`/api/events/addVolunteer/${eventId}`, userId);

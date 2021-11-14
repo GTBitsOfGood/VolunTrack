@@ -13,7 +13,7 @@ const Styled = {
   `
 };
 
-const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
+const EventTable = ({ events, loading, onSignup }) => {
   return (
     <Table.Container>
       <Table.Table>
@@ -44,13 +44,9 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
                 </td>
                 <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
                 <td>
-                  <Styled.Button onClick={() => onEditClicked(event)}>
-                    <Icon color="grey3" name="create" />
-                  </Styled.Button>
-                </td>
-                <td>
-                  <Styled.Button onClick={() => onDeleteClicked(event)}>
-                    <Icon color="grey3" name="delete" />
+                  <Styled.Button onClick={() => onSignup(event._id)}>
+                    <Icon color="grey3" name="add" />
+                    <span>Sign up</span>
                   </Styled.Button>
                 </td>
               </Table.Row>

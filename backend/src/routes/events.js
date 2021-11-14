@@ -53,6 +53,19 @@ router.delete('/:id', (req, res, next) => {
     .catch(next);
 });
 
+// takes in eventId, adds
+router.post('/addVolunteer/:id', async (req, res, next) => {
+  const eventId = req.params.id;
+  const volunteerId = req.user._id;
+
+  const event = await EventData.findById(eventId).exec();
+
+  event.volunteers.push(volunteerId);
+  const savedEvent = await event.save();
+
+  res.json(savedEvent);
+});
+
 router.put('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

@@ -4,9 +4,7 @@ import { Button } from 'reactstrap';
 import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
-import EventCreateModal from './EventCreateModal';
-import EventEditModal from './EventEditModal';
-import EventDeleteModal from './EventDeleteModal';
+import { addVolunteerToEvent } from './eventHelpers';
 
 const Styled = {
   Container: styled.div`
@@ -22,7 +20,7 @@ const Styled = {
     width: 95%;
     max-width: 80rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     margin-bottom: 1rem;
   `,
   Button: styled(Button)`
@@ -34,7 +32,10 @@ const Styled = {
 const EventManager = () => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
   const onRefresh = () => {
     setLoading(true);
@@ -49,62 +50,22 @@ const EventManager = () => {
       });
   };
 
-  const onCreateClicked = () => {
-    setShowCreateModal(true);
-  };
-
-  const toggleCreateModal = () => {
-    setShowCreateModal(prev => !prev);
-    onRefresh();
-  };
-  useEffect(() => {
-    onRefresh();
-  }, []);
-
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const onEditClicked = event => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
-  const toggleEditModal = () => {
-    setShowEditModal(prev => !prev);
-    onRefresh();
-  };
-  const onDeleteClicked = event => {
-    setShowDeleteModal(true);
-    setCurrEvent(event);
-  };
-  const toggleDeleteModal = () => {
-    setShowDeleteModal(prev => !prev);
+  const onSignup = eventId => {
+    addVolunteerToEvent(eventId);
     onRefresh();
   };
 
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
-        <Styled.Button onClick={onCreateClicked}>
-          <Icon color="grey3" name="add" />
-          <span>Create</span>
-        </Styled.Button>
         <Styled.Button onClick={onRefresh}>
           <Icon color="grey3" name="refresh" />
-          <span> Refresh</span>
+          <span>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
-      <EventTable
-        events={events}
-        loading={loading}
-        onEditClicked={onEditClicked}
-        onDeleteClicked={onDeleteClicked}
-      >
+      <EventTable events={events} loading={loading} onSignup={onSignup}>
         {' '}
       </EventTable>
-      <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-      <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent} />
-      <EventDeleteModal open={showDeleteModal} toggle={toggleDeleteModal} event={currEvent} />
     </Styled.Container>
   );
 };
