@@ -117,8 +117,12 @@ const Styled = {
       color: #969696;
     `}
   `,
-  ProfileLink: styled(Link)`
+  DropdownLink: styled(Link)`
     color: black;
+    :hover {
+      color: black;
+      text-decoration: none;
+    }
   `,
   UserContainer: styled.div`
     display: flex;
@@ -222,10 +226,8 @@ const Header = ({ onLogout, user }) => {
                 </Styled.UserContainer>
               </Styled.Toggle>
               <DropdownMenu style={{ width: '100%' }}>
-                <DropdownItem>
-                  <Styled.ProfileLink to="/profile" selected={currPageMatches('/profile')}>
-                    Profile
-                  </Styled.ProfileLink>
+                <DropdownItem href="/profile">
+                  <Styled.DropdownLink to="/profile">Profile</Styled.DropdownLink>
                 </DropdownItem>
                 <DropdownItem onClick={onLogout} href="/">
                   {' '}
