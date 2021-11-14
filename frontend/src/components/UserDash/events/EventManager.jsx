@@ -4,7 +4,7 @@ import { Button } from 'reactstrap';
 import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
-import { addVolunteerToEvent } from './eventHelpers';
+import { updateEvent } from './eventHelpers';
 
 const Styled = {
   Container: styled.div`
@@ -50,8 +50,12 @@ const EventManager = ({ user }) => {
       });
   };
 
-  const onSignup = eventId => {
-    addVolunteerToEvent(eventId);
+  const onSignup = async event => {
+    const changedEvent = { ...event, volunteers: event.volunteers.concat(user._id) };
+    const updatedEvent = await updateEvent(changedEvent);
+
+    setEvents(events.map(e => (e._id === event._id ? updatedEvent : e)));
+
     onRefresh();
   };
 

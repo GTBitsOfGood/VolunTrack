@@ -53,6 +53,19 @@ router.delete('/:id', (req, res, next) => {
     .catch(next);
 });
 
+// creates/updates an event with the given id
+router.put('/:id', async (req, res, next) => {
+  const eventId = req.params.id;
+  const event = req.body;
+
+  const updatedEvent = await EventData.findByIdAndUpdate(eventId, event, {
+    new: true,
+    useFindAndModify: true
+  });
+
+  res.json(updatedEvent.toJSON());
+});
+
 // takes in eventId, adds
 router.post('/addVolunteer/:id', async (req, res, next) => {
   const eventId = req.params.id;

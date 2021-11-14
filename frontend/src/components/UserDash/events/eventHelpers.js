@@ -24,5 +24,4 @@ export const eventValidator = object().shape({
     .required()
 });
 
-export const addVolunteerToEvent = async (eventId, userId) =>
-  axios.post(`/api/events/addVolunteer/${eventId}`, userId);
+export const updateEvent = async event => (await axios.put(`/api/events/${event._id}`, event)).data;

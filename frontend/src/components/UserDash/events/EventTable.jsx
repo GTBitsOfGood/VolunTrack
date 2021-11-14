@@ -47,7 +47,7 @@ const EventTable = ({ events, loading, onSignup, user }) => {
                   {event.volunteers.includes(user._id) ? (
                     <span>Signed Up!</span>
                   ) : (
-                    <Styled.Button onClick={() => onSignup(event._id)}>
+                    <Styled.Button onClick={() => onSignup(event)}>
                       <Icon color="grey3" name="add" />
                       <span>Sign up</span>
                     </Styled.Button>
