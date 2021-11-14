@@ -50,10 +50,21 @@ const EventManager = ({ user }) => {
       });
   };
 
-  const onSignup = async event => {
+  const onRegister = async event => {
     const changedEvent = { ...event, volunteers: event.volunteers.concat(user._id) };
     const updatedEvent = await updateEvent(changedEvent);
+    setEvents(events.map(e => (e._id === event._id ? updatedEvent : e)));
 
+    onRefresh();
+  };
+
+  const onUnregister = async event => {
+    const changedEvent = {
+      ...event,
+      volunteers: event.volunteers.filter(volunteer => volunteer !== user._id)
+    };
+    console.log(changedEvent);
+    const updatedEvent = await updateEvent(changedEvent);
     setEvents(events.map(e => (e._id === event._id ? updatedEvent : e)));
 
     onRefresh();
@@ -67,7 +78,13 @@ const EventManager = ({ user }) => {
           <span>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
-      <EventTable events={events} loading={loading} onSignup={onSignup} user={user}>
+      <EventTable
+        events={events}
+        loading={loading}
+        onRegister={onRegister}
+        onUnregister={onUnregister}
+        user={user}
+      >
         {' '}
       </EventTable>
     </Styled.Container>
