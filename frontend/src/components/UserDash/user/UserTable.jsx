@@ -1,5 +1,5 @@
 import React from 'react';
-import { roles, statuses, mandated } from '../applicantInfoHelpers';
+import { roles, statuses } from '../applicantInfoHelpers';
 import { Button, ModalHeader, ModalBody, ModalFooter, Modal } from 'reactstrap';
 import Loading from '../../Shared/Loading';
 import PropTypes from 'prop-types';
@@ -49,7 +49,6 @@ class UserTable extends React.Component {
               <th>Email</th>
               <th>Role</th>
               <th>Status</th>
-              <th>Mandated</th>
             </tr>
             {!loading &&
               users.map((user, index) => (
@@ -62,7 +61,6 @@ class UserTable extends React.Component {
                   <td>{user.email}</td>
                   <td>{roles[user.role]}</td>
                   <td>{statuses[user.status]}</td>
-                  <td>{mandated[user.mandated]}</td>
                 </Table.Row>
               ))}
           </tbody>
@@ -113,26 +111,6 @@ class UserTable extends React.Component {
                     <option value={t}>{keyToValue(t)}</option>
                   ))}
                 </Form.Dropdown>
-                <Form.Label>Mandated Hours</Form.Label>
-                <Form.Dropdown
-                  defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.mandated : ''
-                  }
-                  type="select"
-                  name="mandatedSelected"
-                >
-                  {Object.keys(mandated).map((t, i) => (
-                    <option value={t}>{keyToValue(t)}</option>
-                  ))}
-                </Form.Dropdown>
-                <Form.Label>Number of Mandated Hours</Form.Label>
-                <Form.Input
-                  defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.mandatedHours : ''
-                  }
-                  type="text"
-                  name="mandatedHours"
-                />
               </Form.FormGroup>
             </form>
           </ModalBody>

@@ -15,6 +15,12 @@ const defaultRole = {
   }
 };
 
+const defaultMandatedHours = {
+  get: function(target, name) {
+    return target.hasOwnProperty(name) ? target[name] : 'Not Mandated';
+  }
+};
+
 export const statuses = new Proxy(
   {
     has_volunteered: 'Has Volunteered',
@@ -30,6 +36,14 @@ export const roles = new Proxy(
     volunteer: 'Volunteer'
   },
   defaultRole
+);
+
+export const mandated = new Proxy(
+  {
+    is_mandated: 'Mandated Hours',
+    not_mandated: 'Not Mandated'
+  },
+  defaultMandatedHours
 );
 
 export const getStatusColor = status => statusToColorMap[status] || 'default';
