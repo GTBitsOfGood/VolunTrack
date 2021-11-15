@@ -57,7 +57,7 @@ const Container = styled.div`
 export const RequestContext = React.createContext();
 
 const initialState = {
-  loading: false,
+  isLoading: false,
   success: false,
   failed: false,
   isHidden: true,
@@ -79,10 +79,10 @@ class RequestProvider extends React.Component {
       <RequestContext.Provider
         value={{
           state: this.state,
-          startLoading: () => this.setState({ ...initialState, loading: true, isHidden: false }),
+          startLoading: () => this.setState({ ...initialState, isLoading: true, isHidden: false }),
           success: text => {
             this.setState({
-              loading: false,
+              isLoading: false,
               success: true,
               failed: false,
               text: text
@@ -91,7 +91,7 @@ class RequestProvider extends React.Component {
           },
           failed: text =>
             this.setState({
-              loading: false,
+              isLoading: false,
               success: false,
               failed: true,
               text: text
@@ -101,7 +101,7 @@ class RequestProvider extends React.Component {
         {this.props.children}
         <Container {...this.state}>
           <div className="banner">
-            {this.state.loading ? (
+            {this.state.isLoading ? (
               <Loading size="0.5rem" />
             ) : (
               <React.Fragment>

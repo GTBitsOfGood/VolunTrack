@@ -117,8 +117,12 @@ const Styled = {
       color: #969696;
     `}
   `,
-  ProfileLink: styled(Link)`
+  DropdownLink: styled(Link)`
     color: black;
+    :hover {
+      color: black;
+      text-decoration: none;
+    }
   `,
   UserContainer: styled.div`
     display: flex;
@@ -172,7 +176,7 @@ const Header = ({ onLogout, user }) => {
   return (
     <Styled.Navbar light expand="md">
       <Container style={{ marginLeft: '0px', marginRight: '0px', maxWidth: '100%' }}>
-        <NavbarBrand tag={Link} to="/applicant-viewer">
+        <NavbarBrand tag={props => <Link {...props} />} to="/events">
           <img style={{ width: '175px' }} alt="bog logo" src={logo} />
         </NavbarBrand>
 
@@ -222,10 +226,8 @@ const Header = ({ onLogout, user }) => {
                 </Styled.UserContainer>
               </Styled.Toggle>
               <DropdownMenu style={{ width: '100%' }}>
-                <DropdownItem>
-                  <Styled.ProfileLink to="/profile" selected={currPageMatches('/profile')}>
-                    Profile
-                  </Styled.ProfileLink>
+                <DropdownItem tag={props => <Link {...props} />} to="/profile">
+                  Profile
                 </DropdownItem>
                 <DropdownItem onClick={onLogout} href="/">
                   {' '}

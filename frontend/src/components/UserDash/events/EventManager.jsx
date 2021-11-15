@@ -4,9 +4,7 @@ import { Button } from 'reactstrap';
 import { Icon } from 'components/Shared';
 import EventTable from './EventTable';
 import { fetchEvents } from 'components/AdminDash/queries';
-import EventCreateModal from './EventCreateModal';
-import EventEditModal from './EventEditModal';
-import EventDeleteModal from './EventDeleteModal';
+import { updateEvent } from './eventHelpers';
 
 const Styled = {
   Container: styled.div`
@@ -22,7 +20,7 @@ const Styled = {
     width: 95%;
     max-width: 80rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     margin-bottom: 1rem;
   `,
   Button: styled(Button)`
@@ -31,10 +29,13 @@ const Styled = {
   `
 };
 
-const EventManager = () => {
+const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
+
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
   const onRefresh = () => {
     setLoading(true);
@@ -49,62 +50,43 @@ const EventManager = () => {
       });
   };
 
-  const onCreateClicked = () => {
-    setShowCreateModal(true);
-  };
+  const onRegister = async event => {
+    const changedEvent = { ...event, volunteers: event.volunteers.concat(user._id) }; // adds userId to event
+    const updatedEvent = await updateEvent(changedEvent); // updates event in backend
+    setEvents(events.map(e => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
 
-  const toggleCreateModal = () => {
-    setShowCreateModal(prev => !prev);
     onRefresh();
   };
-  useEffect(() => {
-    onRefresh();
-  }, []);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const onUnregister = async event => {
+    const changedEvent = {
+      // remove current user id from event volunteers
+      ...event,
+      volunteers: event.volunteers.filter(volunteer => volunteer !== user._id)
+    };
+    const updatedEvent = await updateEvent(changedEvent);
+    setEvents(events.map(e => (e._id === event._id ? updatedEvent : e)));
 
-  const onEditClicked = event => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
-  const toggleEditModal = () => {
-    setShowEditModal(prev => !prev);
-    onRefresh();
-  };
-  const onDeleteClicked = event => {
-    setShowDeleteModal(true);
-    setCurrEvent(event);
-  };
-  const toggleDeleteModal = () => {
-    setShowDeleteModal(prev => !prev);
     onRefresh();
   };
 
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
-        <Styled.Button onClick={onCreateClicked}>
-          <Icon color="grey3" name="add" />
-          <span>Create</span>
-        </Styled.Button>
         <Styled.Button onClick={onRefresh}>
           <Icon color="grey3" name="refresh" />
-          <span> Refresh</span>
+          <span>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
       <EventTable
         events={events}
         loading={loading}
-        onEditClicked={onEditClicked}
-        onDeleteClicked={onDeleteClicked}
+        onRegister={onRegister}
+        onUnregister={onUnregister}
+        user={user}
       >
         {' '}
       </EventTable>
-      <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-      <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent} />
-      <EventDeleteModal open={showDeleteModal} toggle={toggleDeleteModal} event={currEvent} />
     </Styled.Container>
   );
 };

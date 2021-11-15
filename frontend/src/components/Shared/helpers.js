@@ -1,4 +1,4 @@
-import { string, object, date } from 'yup';
+import { string, object } from 'yup';
 
 export const capitalizeFirstLetter = s => {
   if (s === '') return s;
