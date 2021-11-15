@@ -128,7 +128,7 @@ class UserTable extends React.Component {
                 <Form.Label>Number of Mandated Hours</Form.Label>
                 <Form.Input
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.mandatedHours : ''
+                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.mandatedHours : '0'
                   }
                   type="text"
                   name="mandatedHours"
