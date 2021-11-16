@@ -16,16 +16,6 @@ const Styled = {
 };
 
 const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
-  const [showVolunteers, setShowVolunteers] = useState(new Array(events.length).fill(false));
-
-  const updateDropdown = idx => () => {
-    setShowVolunteers(volunteers => {
-      const newShowVolunteers = volunteers.slice(0);
-      newShowVolunteers[idx] = !newShowVolunteers[idx];
-      return newShowVolunteers;
-    });
-  };
-
   return (
     <Table.Container>
       <Table.Table>

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import * as Table from '../shared/tableStyles';
-import Loading from 'components/Shared/Loading';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
+import { fetchVolunteer } from '../queries';
 
 const Styled = {
   Button: styled(Button)`
@@ -15,15 +14,28 @@ const Styled = {
 
 const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
   const [showVolunteers, setShowVolunteers] = useState(false);
+  const [currentVolunteers, setCurrentVolunteers] = useState([]);
 
-  const updateDropdown = () => {
+  const handleDropdownClick = () => {
     setShowVolunteers(!showVolunteers);
+
+    event.volunteers.forEach(volunteer => {
+      if (volunteer) {
+        fetchVolunteer(volunteer)
+          .then(result => {
+            if (result && result.data && result.data.user) {
+              setCurrentVolunteers(currentVolunteers => [...currentVolunteers, result.data.user]);
+            }
+          })
+          .finally(() => {});
+      }
+    });
   };
 
   return (
     <Table.Row key={event._id}>
       <td>
-        <Styled.Button onClick={updateDropdown}>
+        <Styled.Button onClick={handleDropdownClick}>
           <Icon color="grey3" name={showVolunteers ? 'dropdown-arrow' : 'right-chevron'} />
         </Styled.Button>
       </td>
@@ -40,6 +52,13 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
         )}
       </td>
       <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
+      {showVolunteers &&
+        currentVolunteers.map((volunteer, idx) => (
+          <td>
+            <td> {volunteer.bio.first_name}</td>
+            <td> {volunteer.bio.last_name}</td>
+          </td>
+        ))}
       <td>
         <Styled.Button onClick={() => onEditClicked(event)}>
           <Icon color="grey3" name="create" />
@@ -50,7 +69,6 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
           <Icon color="grey3" name="delete" />
         </Styled.Button>
       </td>
-      <td>{event.volunteers}</td>
     </Table.Row>
   );
 };
