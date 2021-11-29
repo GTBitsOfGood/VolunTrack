@@ -3,7 +3,7 @@ import * as Table from '../shared/tableStyles';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import { fetchVolunteer } from '../queries';
+import { fetchVolunteers } from '../queries';
 
 const Styled = {
   Button: styled(Button)`
@@ -18,18 +18,13 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
 
   const handleDropdownClick = () => {
     setShowVolunteers(!showVolunteers);
-
-    event.volunteers.forEach(volunteer => {
-      if (volunteer) {
-        fetchVolunteer(volunteer)
-          .then(result => {
-            if (result && result.data && result.data.user) {
-              setCurrentVolunteers(currentVolunteers => [...currentVolunteers, result.data.user]);
-            }
-          })
-          .finally(() => {});
-      }
-    });
+    fetchVolunteers(event.volunteers)
+      .then(result => {
+        if (result && result.data && result.data.users) {
+          setCurrentVolunteers(result.data.users);
+        }
+      })
+      .finally(() => {});
   };
 
   return (
