@@ -17,16 +17,17 @@ const Styled = {
 
 const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
   return (
-    <Table.Container>
+      <Table.Container>
       <Table.Table>
         <thead>
           <tr>
-            <th></th>
+          <th></th>
             <th>Name</th>
             <th>Date</th>
             <th>Location</th>
             <th>Website</th>
             <th># of Volunteers</th>
+            <th># of Shifts</th>
             <th id="volunteerHeader">Volunteers</th>
           </tr>
         </thead>
@@ -37,6 +38,7 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
                 event={event}
                 onEditClicked={onEditClicked}
                 onDeleteClicked={onDeleteClicked}
+                idx={idx}
               />
             ))}
         </tbody>
