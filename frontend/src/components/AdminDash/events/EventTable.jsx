@@ -5,8 +5,6 @@ import Loading from 'components/Shared/Loading';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import EventCreateModal from './EventCreateModal';
-import EventTableRow from './EventTableRow';
 
 const Styled = {
   Button: styled(Button)`

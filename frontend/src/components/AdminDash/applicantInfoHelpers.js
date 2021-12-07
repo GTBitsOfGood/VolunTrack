@@ -1,6 +1,8 @@
 export const statusToColorMap = {
+  accepted: 'success',
   has_volunteered: 'warning',
-  new: 'default'
+  new: 'default',
+  denied: 'danger'
 };
 
 const defaultStatus = {
@@ -17,6 +19,8 @@ const defaultRole = {
 
 export const statuses = new Proxy(
   {
+    accepted: 'Accepted',
+    denied: 'Denied',
     has_volunteered: 'Has Volunteered',
     new: 'New'
   },
