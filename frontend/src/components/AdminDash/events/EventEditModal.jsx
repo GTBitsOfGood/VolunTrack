@@ -35,7 +35,6 @@ const EventEditModal = ({ open, toggle, event }) => {
           contact_phone: event ? event.contact_phone : '',
           contact_email: event ? event.email : '',
           shifts: event ? event.shifts : [],
-          max_shifts: event ? event.max_shifts : 0,
           external_links: event ? event.external_links : []
         }}
         onSubmit={(values, { setSubmitting }) => {
@@ -87,25 +86,6 @@ const EventEditModal = ({ open, toggle, event }) => {
                   <Field name="external_links">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
-                  <SForm.Label>Max # of Shifts</SForm.Label>
-                  <Styled.ErrorMessage name="max_shifts" />
-                  <SForm.Input
-                    type="number"
-                    name="max_shifts"
-                    value={values.max_shifts}
-                    onBlur={handleBlur}
-                    onChange={e => {
-                      if (
-                        e.target.value &&
-                        !isNaN(parseInt(e.target.value, 10)) &&
-                        e.target.value > 0
-                      ) {
-                        setFieldValue('max_shifts', parseInt(e.target.value, 10));
-                      } else {
-                        setFieldValue('max_shifts', 1);
-                      }
-                    }}
-                  />
                 </SForm.FormGroup>
               </Styled.Form>
             </ModalBody>

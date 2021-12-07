@@ -173,7 +173,6 @@ const EventCreateModal = ({ open, toggle }) => {
                     }
                   />
                   <Button onClick={onClickAddShifts}> Add Shift </Button>
-                  <Styled.ErrorMessage name="max_shifts" />
                 </SForm.FormGroup>
               </Styled.Form>
             </ModalBody>
