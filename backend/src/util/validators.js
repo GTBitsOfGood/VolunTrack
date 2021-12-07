@@ -173,15 +173,19 @@ const CREATE_EVENT_VALIDATOR = [
     .optional()
     .isAscii()
     .trim(),
-  check('shifts')
-    .optional()
-    .isArray()
-    .trim(),
   check('volunteers')
     .optional()
     .isArray()
     .trim(),
   check('external_links')
+    .optional()
+    .isArray()
+    .trim(),
+  check('max_shifts')
+    .optional()
+    .isAscii()
+    .trim(),
+  check('shifts')
     .optional()
     .isArray()
     .trim(),
