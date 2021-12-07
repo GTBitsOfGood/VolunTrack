@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Icon } from 'components/Shared';
+import * as Table from '../shared/tableStyles';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
+import { Formik, Form as FForm, Field, FieldArray, ErrorMessage } from 'formik';
 import * as SForm from '../shared/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './eventHelpers';
@@ -23,6 +25,24 @@ const Styled = {
 };
 
 const EventCreateModal = ({ open, toggle }) => {
+  const [shiftElements, setShiftElements] = useState([]);
+
+  const onClickAddShifts = () => {
+    setShiftElements([...shiftElements, { start_time: '', end_time: '', max_volunteers: '' }]);
+  };
+
+  const onDeleteShift = index => () => {
+    if (shiftElements.length > 1) {
+      let newArray = [];
+      for (let i = 0; i < shiftElements.length; i++) {
+        if (i !== index) {
+          newArray.push(shiftElements[i]);
+        }
+      }
+      setShiftElements(newArray);
+    }
+  };
+
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Create Event</ModalHeader>
@@ -34,8 +54,8 @@ const EventCreateModal = ({ open, toggle }) => {
           description: '',
           contact_phone: '',
           contact_email: '',
-          max_shifts: 1,
-          external_links: []
+          external_links: [],
+          shifts: []
         }}
         onSubmit={(values, { setSubmitting }) => {
           const event = {
@@ -43,13 +63,14 @@ const EventCreateModal = ({ open, toggle }) => {
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
             external_links: values.external_links ? [values.external_links] : undefined,
-            max_shifts: values.max_shifts || 1
+            shifts: values.shifts ? shiftElements : undefined
           };
           setSubmitting(true);
           createEvent(event)
             .then(() => toggle())
             .catch(console.log)
             .finally(() => setSubmitting(false));
+          setShiftElements([]);
         }}
         validationSchema={eventValidator}
         render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
@@ -88,24 +109,71 @@ const EventCreateModal = ({ open, toggle }) => {
                   <Field name="external_links">
                     {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
-                  <SForm.Label>Number of Shifts</SForm.Label>
-                  <Styled.ErrorMessage name="max_shifts" />
-                  <SForm.Input
-                    type="number"
-                    name="max_shifts"
-                    value={values.max_shifts}
-                    onBlur={handleBlur}
-                    onChange={e => {
-                      if (
-                        e.target.value &&
-                        !isNaN(parseInt(e.target.value, 10) && e.target.value > 0)
-                      ) {
-                        setFieldValue('max_shifts', parseInt(e.target.value, 10));
-                      } else {
-                        setFieldValue('max_shifts', 1);
-                      }
-                    }}
+                  <FieldArray
+                    name="shifts"
+                    render={() =>
+                      shiftElements.map((item, index) => (
+                        <div key={index}>
+                          <Table.Container>
+                            <Table.Table>
+                              <thead>
+                                <tr>
+                                  <SForm.Label>Start Time</SForm.Label>
+                                  <Styled.ErrorMessage name={`Start Time`} />
+                                  <Field name={`shifts.${index}.start_time`}>
+                                    {({ field }) => (
+                                      <SForm.Input
+                                        {...field}
+                                        type="time"
+                                        onInput={e =>
+                                          (shiftElements[index].start_time = e.target.value)
+                                        }
+                                        value={shiftElements[index].start_time}
+                                      />
+                                    )}
+                                  </Field>
+                                  <SForm.Label>End Time</SForm.Label>
+                                  <Styled.ErrorMessage name={`End Time`} />
+                                  <Field name={`shifts.${index}.end_time`}>
+                                    {({ field }) => (
+                                      <SForm.Input
+                                        {...field}
+                                        type="time"
+                                        onInput={e =>
+                                          (shiftElements[index].end_time = e.target.value)
+                                        }
+                                        value={shiftElements[index].end_time}
+                                      />
+                                    )}
+                                  </Field>
+                                  <SForm.Label>Max Volunteers</SForm.Label>
+                                  <Styled.ErrorMessage name={`Max Volunteers`} />
+                                  <Field name={`shifts.${index}.max_volunteers`}>
+                                    {({ field }) => (
+                                      <SForm.Input
+                                        {...field}
+                                        type="number"
+                                        onInput={e =>
+                                          (shiftElements[index].max_volunteers = e.target.value)
+                                        }
+                                        value={shiftElements[index].max_volunteers}
+                                        min="0"
+                                      />
+                                    )}
+                                  </Field>
+                                </tr>
+                              </thead>
+                              <Button onClick={onDeleteShift(index)}>
+                                <Icon color="grey3" name="delete" />
+                              </Button>
+                            </Table.Table>
+                          </Table.Container>
+                        </div>
+                      ))
+                    }
                   />
+                  <Button onClick={onClickAddShifts}> Add Shift </Button>
+                  <Styled.ErrorMessage name="max_shifts" />
                 </SForm.FormGroup>
               </Styled.Form>
             </ModalBody>

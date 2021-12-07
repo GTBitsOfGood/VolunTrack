@@ -1,4 +1,4 @@
-import { string, object, number, date } from 'yup';
+import { string, object, number, date, array } from 'yup';
 
 export const eventValidator = object().shape({
   name: string()
@@ -20,5 +20,14 @@ export const eventValidator = object().shape({
     .required(),
   external_links: string()
     .url()
-    .trim()
+    .trim(),
+  shifts: array()
+    .of(
+      object().shape({
+        start_time: string().required(),
+        end_time: string().required(),
+        max_volunteers: number().required()
+      })
+    )
+    .required()
 });
