@@ -21,11 +21,13 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
       <Table.Table>
         <thead>
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Date</th>
             <th>Location</th>
             <th>Website</th>
             <th># of Volunteers</th>
+            <th id="volunteerHeader">Volunteers</th>
           </tr>
         </thead>
         <tbody>

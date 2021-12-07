@@ -17,6 +17,12 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
   const [currentVolunteers, setCurrentVolunteers] = useState([]);
 
   const handleDropdownClick = () => {
+    if (document.getElementById("volunteerHeader").style.visibility == "visible") {
+      document.getElementById("volunteerHeader").style.visibility = "hidden";
+    } else {
+      document.getElementById("volunteerHeader").style.visibility = "visible"
+    }
+    
     setShowVolunteers(!showVolunteers);
     fetchVolunteers(event.volunteers)
       .then(result => {
@@ -49,10 +55,10 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
       <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
       {showVolunteers &&
         currentVolunteers.map((volunteer, idx) => (
-          <td>
+          <tr>
             <td> {volunteer.bio.first_name}</td>
             <td> {volunteer.bio.last_name}</td>
-          </td>
+          </tr>
         ))}
       <td>
         <Styled.Button onClick={() => onEditClicked(event)}>
