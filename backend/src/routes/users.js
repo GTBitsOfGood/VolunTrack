@@ -62,6 +62,22 @@ router.post('/', USER_DATA_VALIDATOR, (req, res, next) => {
     });
 });
 
+router.get('/eventVolunteers', (req, res, next) => {
+  let parsedVolunteers = JSON.parse(req.query.volunteers);
+  let volunteers = parsedVolunteers.map(mongoose.Types.ObjectId);
+
+  UserData.find({
+    _id: { $in: volunteers }
+  })
+    .then(users => {
+      if (!users) {
+        return res.status(404).json({ errors: `No Users found` });
+      }
+      res.status(200).json({ users });
+    })
+    .catch(err => next(err));
+});
+
 router.get('/', (req, res, next) => {
   const filter = {};
   if (req.query.type) {
@@ -121,13 +137,6 @@ router.get('/', (req, res, next) => {
       filter.availability = JSON.parse(req.query.availability);
     } catch (e) {
       res.status(400).json({ error: 'Invalid availability param' });
-    }
-  }
-  if (req.query.skills_interests) {
-    try {
-      filter.skills_interests = JSON.parse(req.query.skills_interests);
-    } catch (e) {
-      res.status(400).json({ error: 'Invalid skills_interests param' });
     }
   }
   if (req.query.lastPaginationId) {

@@ -7,7 +7,11 @@
     "start": "node ./src/bin/www",
     "dev": "dotenv nodemon ./src/bin/www --watch src",
     "format": "prettier --write '{src,test}/**/*.{js,jsx,json,css}'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "secrets": "npm run secrets:logout && cross-env-shell BW_SESSION=`bw login product@bitsofgood.org --raw` \"npm run secrets:sync\"",
+    "secrets:logout": "(bw logout || exit 0)",
+    "secrets:login": "bw login product@bitsofgood.org",
+    "secrets:sync": "bw sync && bw get item b8594f56-00eb-4bbd-a446-ad9c0149ecc2 | fx .notes > \".env\""
   },
   "dependencies": {
     "connect-mongo": "^3.0.0",
