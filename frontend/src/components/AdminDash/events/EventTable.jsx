@@ -5,8 +5,6 @@ import Loading from 'components/Shared/Loading';
 import { Icon } from 'components/Shared';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import EventCreateModal from './EventCreateModal';
-import EventTableRow from './EventTableRow';
 
 const Styled = {
   Button: styled(Button)`
@@ -21,23 +19,41 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
       <Table.Table>
         <thead>
           <tr>
-            <th></th>
             <th>Name</th>
             <th>Date</th>
             <th>Location</th>
             <th>Website</th>
             <th># of Volunteers</th>
-            <th id="volunteerHeader">Volunteers</th>
           </tr>
         </thead>
         <tbody>
           {!loading &&
             events.map((event, idx) => (
-              <EventTableRow
-                event={event}
-                onEditClicked={onEditClicked}
-                onDeleteClicked={onDeleteClicked}
-              />
+              <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
+                <td>{event.name}</td>
+                <td>{event.date}</td>
+                <td>{event.location}</td>
+                <td>
+                  {event.external_links && event.external_links.length ? (
+                    <a href={event.external_links[0]} target="_blank" rel="noopener noreferrer">
+                      {event.external_links[0]}
+                    </a>
+                  ) : (
+                    'N/A'
+                  )}
+                </td>
+                <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
+                <td>
+                  <Styled.Button onClick={() => onEditClicked(event)}>
+                    <Icon color="grey3" name="create" />
+                  </Styled.Button>
+                </td>
+                <td>
+                  <Styled.Button onClick={() => onDeleteClicked(event)}>
+                    <Icon color="grey3" name="delete" />
+                  </Styled.Button>
+                </td>
+              </Table.Row>
             ))}
         </tbody>
       </Table.Table>
