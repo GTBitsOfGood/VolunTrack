@@ -28,7 +28,7 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
             <th>Website</th>
             <th># of Volunteers</th>
             <th># of Shifts</th>
-            <th id="volunteerHeader">Volunteers</th>
+            <th id="volunteerHeader" style={{visibility:"hidden"}}>Volunteers</th>
           </tr>
         </thead>
         <tbody>

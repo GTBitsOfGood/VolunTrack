@@ -12,7 +12,7 @@ const Styled = {
   `
 };
 
-const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
+const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
   const [showVolunteers, setShowVolunteers] = useState(false);
   const [currentVolunteers, setCurrentVolunteers] = useState([]);
 
@@ -34,7 +34,7 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
   };
 
   return (
-    <Table.Row key={event._id}>
+    <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
       <td>
         <Styled.Button onClick={handleDropdownClick}>
           <Icon color="grey3" name={showVolunteers ? 'dropdown-arrow' : 'right-chevron'} />
@@ -52,6 +52,7 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
           'N/A'
         )}
       </td>
+      <td>{event.shifts.length + ' / ' + event.max_shifts}</td>
       <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
       {showVolunteers &&
         currentVolunteers.map((volunteer, idx) => (
@@ -60,6 +61,17 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
             <td> {volunteer.bio.last_name}</td>
           </tr>
         ))}
+      
+      <tr>
+        {event.shifts.map((shift, idx) => (
+          <div>
+            <td> Shift {idx + 1} </td>
+            <td>Start Time: {shift.start_time}</td>
+            <td>End Time: {shift.end_time}</td>
+            <td>Max Volunteers: {shift.max_volunteers}</td>
+          </div>
+        ))}
+      </tr>
       <td>
         <Styled.Button onClick={() => onEditClicked(event)}>
           <Icon color="grey3" name="create" />
@@ -70,6 +82,7 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked }) => {
           <Icon color="grey3" name="delete" />
         </Styled.Button>
       </td>
+
     </Table.Row>
   );
 };
