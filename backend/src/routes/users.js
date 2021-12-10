@@ -213,29 +213,10 @@ router.get('/searchByContent', (req, res, next) => {
     case 'All':
       filter.$or = [
         { history: regexquery },
-        { 'bio.street_address': regexquery },
-        { 'bio.city': regexquery },
-        { 'bio.state': regexquery },
-        { 'bio.zip_code': regexquery },
         { 'bio.first_name': regexquery },
         { 'bio.last_name': regexquery },
         { 'bio.email': regexquery },
         { 'bio.phone_number': regexquery }
-      ];
-      UserData.aggregate([
-        { $sort: { _id: -1 } },
-        { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
-      ])
-        .then(users => res.status(200).json({ users }))
-        .catch(err => next(err));
-      break;
-    case 'Address':
-      filter.$or = [
-        { 'bio.street_address': regexquery },
-        { 'bio.city': regexquery },
-        { 'bio.state': regexquery },
-        { 'bio.zip_code': regexquery }
       ];
       UserData.aggregate([
         { $sort: { _id: -1 } },
@@ -313,10 +294,6 @@ router.get('/searchByContent', (req, res, next) => {
         { 'history.volunteer_support': regexquery },
         { 'history.volunteer_commitment': regexquery },
         { 'history.previous_volunteer_experience': regexquery },
-        { 'bio.street_address': regexquery },
-        { 'bio.city': regexquery },
-        { 'bio.state': regexquery },
-        { 'bio.zip_code': regexquery },
         { 'bio.first_name': regexquery },
         { 'bio.last_name': regexquery },
         { 'bio.email': regexquery },
@@ -352,36 +329,6 @@ router.post('/updateUser', (req, res, next) => {
     res.status(400).json({ error: 'Invalid email sent' });
   email = req.query.email
 
-  if (req.query.city) {
-    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.city": req.query.city } }).then(
-      result => {
-        if (!result.nModified)
-          res.status(400).json({
-            error: 'Email requested for update was invalid. 0 items changed.'
-          });
-      }
-    );
-  }
-  if (req.query.state) {
-    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.state": req.query.state } }).then(
-      result => {
-        if (!result.nModified)
-          res.status(400).json({
-            error: 'Email requested for update was invalid. 0 items changed.'
-          });
-      }
-    );
-  }
-  if (req.query.zip_code) {
-    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.zip_code": req.query.zip_code } }).then(
-      result => {
-        if (!result.nModified)
-          res.status(400).json({
-            error: 'Email requested for update was invalid. 0 items changed.'
-          });
-      }
-    );
-  }
   if (req.query.phone_number) {
     UserData.updateOne({ 'bio.email': email }, { $set: { "bio.phone_number": req.query.phone_number } }).then(
       result => {
