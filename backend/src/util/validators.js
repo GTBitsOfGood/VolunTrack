@@ -22,22 +22,6 @@ const USER_DATA_VALIDATOR = [
     .exists()
     .trim()
     .escape(),
-  check('bio.street_address')
-    .isAscii()
-    .trim()
-    .escape(),
-  check('bio.city')
-    .isAscii()
-    .trim()
-    .escape(),
-  check('bio.state')
-    .isAlpha()
-    .trim()
-    .escape(),
-  check('bio.zip_code')
-    .isAscii()
-    .trim()
-    .escape(),
   check('history.volunteer_interest_cause')
     .isAscii()
     .trim()

@@ -18,9 +18,6 @@ const userDataSchema = new mongoose.Schema(
       last_name: { type: String },
       phone_number: { type: String },
       email: { type: String, index: true, unique: true },
-      city: { type: String },
-      state: { type: String },
-      zip_code: { type: String }
     },
     history: { type: String },
     employment: {
