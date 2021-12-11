@@ -52,7 +52,6 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
           'N/A'
         )}
       </td>
-      <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
       <td>{event.shifts.length}</td>
       {showVolunteers &&
         currentVolunteers.map((volunteer, idx) => (

@@ -184,10 +184,6 @@ const CREATE_EVENT_VALIDATOR = [
   check('shifts.*.start_time')
     .isAscii()
     .trim(),
-  check('shifts')
-    .optional()
-    .isArray()
-    .trim(),
   check('shifts.*.start_time')
     .isAscii()
     .trim(),
