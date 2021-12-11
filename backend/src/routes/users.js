@@ -139,6 +139,13 @@ router.get('/', (req, res, next) => {
       res.status(400).json({ error: 'Invalid availability param' });
     }
   }
+  if (req.query.email) {
+    try {
+      filter.availability = JSON.parse(req.query.availability);
+    } catch (e) {
+      res.status(400).json({ error: 'Invalid availability param' });
+    }
+  }
   if (req.query.lastPaginationId) {
     filter._id = { $lt: mongoose.Types.ObjectId(req.query.lastPaginationId) };
   }
@@ -153,6 +160,7 @@ router.get('/', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
 
 router.get('/managementData', (req, res, next) => {
   const filter = {};
@@ -203,6 +211,14 @@ router.get('/count', (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.get('/current', (req, res, next) => {
+  UserData.find({ "bio.email": "james@jameswang.com" })
+    .then(users => {
+      res.status(200).json({ users });
+    })
+    .catch(err => next(err));
+});
+
 router.get('/searchByContent', (req, res, next) => {
   const inputText = req.query.searchquery;
   const searchType = req.query.searchtype;
@@ -213,29 +229,10 @@ router.get('/searchByContent', (req, res, next) => {
     case 'All':
       filter.$or = [
         { history: regexquery },
-        { 'bio.street_address': regexquery },
-        { 'bio.city': regexquery },
-        { 'bio.state': regexquery },
-        { 'bio.zip_code': regexquery },
         { 'bio.first_name': regexquery },
         { 'bio.last_name': regexquery },
         { 'bio.email': regexquery },
         { 'bio.phone_number': regexquery }
-      ];
-      UserData.aggregate([
-        { $sort: { _id: -1 } },
-        { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE }
-      ])
-        .then(users => res.status(200).json({ users }))
-        .catch(err => next(err));
-      break;
-    case 'Address':
-      filter.$or = [
-        { 'bio.street_address': regexquery },
-        { 'bio.city': regexquery },
-        { 'bio.state': regexquery },
-        { 'bio.zip_code': regexquery }
       ];
       UserData.aggregate([
         { $sort: { _id: -1 } },
@@ -313,10 +310,6 @@ router.get('/searchByContent', (req, res, next) => {
         { 'history.volunteer_support': regexquery },
         { 'history.volunteer_commitment': regexquery },
         { 'history.previous_volunteer_experience': regexquery },
-        { 'bio.street_address': regexquery },
-        { 'bio.city': regexquery },
-        { 'bio.state': regexquery },
-        { 'bio.zip_code': regexquery },
         { 'bio.first_name': regexquery },
         { 'bio.last_name': regexquery },
         { 'bio.email': regexquery },
@@ -345,6 +338,44 @@ router.post('/updateStatus', (req, res, next) => {
       res.sendStatus(200);
     }
   );
+});
+router.post('/updateUser', (req, res, next) => {
+  //This command only works if a user with the email "david@davidwong.com currently exists in the db"
+  if (!req.query.email)
+    res.status(400).json({ error: 'Invalid email sent' });
+  email = req.query.email
+
+  if (req.query.phone_number) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.phone_number": req.query.phone_number } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.first_name) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { 'bio.first_name': req.query.first_name } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  if (req.query.last_name) {
+    UserData.updateOne({ 'bio.email': email }, { $set: { "bio.last_name": req.query.last_name } }).then(
+      result => {
+        if (!result.nModified)
+          res.status(400).json({
+            error: 'Email requested for update was invalid. 0 items changed.'
+          });
+      }
+    );
+  }
+  res.sendStatus(200);
 });
 
 router.post('/updateRole', (req, res, next) => {

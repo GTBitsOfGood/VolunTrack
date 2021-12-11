@@ -5,6 +5,7 @@ import ApplicantViewer from './ApplicantViewer';
 import UserManager from './user/UserManager';
 import EventManager from './events/EventManager';
 import Profile from '../Shared/Profile';
+import SettingsManager from './settings/SettingsManager';
 
 const Container = styled.div`
   background: white;
@@ -37,6 +38,7 @@ class AdminDash extends React.Component {
         <Route path="/user-manager" component={UserManager} />
         <Route path="/events" component={EventManager} />
         <Route path="/profile" render={() => <Profile user={this.props.user} />} />
+        <Route path="/settings" component={SettingsManager} />
       </Container>
     );
   }

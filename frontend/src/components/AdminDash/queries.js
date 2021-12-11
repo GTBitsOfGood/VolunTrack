@@ -27,10 +27,31 @@ export const fetchUserManagementData = lastPaginationId =>
     `/api/users/managementData?${lastPaginationId ? 'lastPaginationId=' + lastPaginationId : ''}`
   );
 
+export const getCurrentUser = () => axios.get('/api/users/current');
+
 export const fetchUserCount = () => axios.get('/api/users/count');
 
 export const updateApplicantStatus = (email, status) =>
   axios.post(`/api/users/updateStatus?email=${email}&status=${status}`);
+
+export const updateUser = (email, first, last, number) => {
+  var query = ''
+  if (first.length != 0) {
+    query+="first_name=" + first + "&"
+  }
+  if (last.length != 0) {
+    query+="last_name=" + last + "&"
+  }
+  if (number.length != 0) {
+    query+="phone_number=" + number + "&"
+  }
+  if (query.length > 0) {
+    query = query.slice(0,-1)
+    axios.post(`/api/users/updateUser?email=${email}&${query}`);
+  }
+}
+
+
 
 export const updateApplicantRole = (email, role) =>
   axios.post(`/api/users/updateRole?email=${email}&role=${role}`);

@@ -143,16 +143,6 @@ class ApplicantInfo extends Component {
                 <h5>Phone Number</h5>
                 <p>{applicant.bio.phone_number}</p>
               </SubSection>
-              <SubSection>
-                <h5>Birth date</h5>
-                <p>{applicant.bio.date_of_birth}</p>
-              </SubSection>
-              <SubSection>
-                <h5>Address</h5>
-                <p>
-                  {`${applicant.bio.street_address} ${applicant.bio.city}, ${applicant.bio.state} ${applicant.bio.zip_code}`}
-                </p>
-              </SubSection>
             </Section>
             {applicant.history && (
               <Section>
