@@ -173,7 +173,6 @@ const CREATE_EVENT_VALIDATOR = [
     .optional()
     .isAscii()
     .trim(),
-  check('max_volunteers').isNumeric(),
   check('volunteers')
     .optional()
     .isArray()
@@ -181,10 +180,19 @@ const CREATE_EVENT_VALIDATOR = [
   check('external_links')
     .optional()
     .isArray()
+    .trim(),
+  check('shifts.*.start_time')
+    .isAscii()
+    .trim(),
+  check('shifts.*.start_time')
+    .isAscii()
+    .trim(),
+  check('shifts.*.end_time')
+    .isAscii()
+    .trim(),
+  check('shifts.*.max_volunteers')
+    .isAscii()
     .trim()
-  // check('volunteers').custom(value => {
-  //   if ()
-  // })
 ];
 
 const OBJECT_ID_REGEX = new RegExp('^[0-9a-fA-F]{24}$');
