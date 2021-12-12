@@ -15,14 +15,6 @@ const Styled = {
   `
 };
 
-/* Determines whether the current user is an admin */
-  const adminUser = () => {
-    getCurrentUser().then(result => {
-      if (result.data.users[0].role === "admin") { return true }
-      return false;
-    });
-  }
-
 const SettingsTable = ({ user, loading }) => {
   return (
     <Table.Container>
