@@ -20,10 +20,6 @@ const userDataSchema = new mongoose.Schema(
       email: { type: String, index: true, unique: true },
     },
     history: { type: String },
-    skills_interests: {
-      type: String
-      //list[] skills
-    },
     employment: {
       industry: { type: String },
       occupation: { type: [String] }

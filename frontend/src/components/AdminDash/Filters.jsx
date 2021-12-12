@@ -37,26 +37,6 @@ const defaultValues = {
       volunteer: false,
       manager: false
     }
-  },
-  skills_interests: {
-    label: 'Skills and Interests',
-    values: {
-      admin_office: false,
-      admin_virtual: false,
-      atlanta_shelter: false,
-      orlando_shelter: false,
-      graphic_web_design: false,
-      special_events: false,
-      grant_writing: false,
-      writing_editing: false,
-      social_media: false,
-      fundraising: false,
-      finance: false,
-      office_maintenance_housekeeping: false,
-      international_projects: false,
-      volunteer_coordination: false,
-      outreach: false
-    }
   }
 };
 
