@@ -62,6 +62,10 @@ export const searchApplicants = (textinput, searchType) => {
   });
 };
 
+export const fetchVolunteers = eventVolunteers => {
+  return axios.get(`/api/users/eventVolunteers?volunteers=${JSON.stringify(eventVolunteers)}`);
+};
+
 export const fetchEvents = () => axios.get('/api/events');
 
 export const createEvent = event => axios.post('/api/events', event);
