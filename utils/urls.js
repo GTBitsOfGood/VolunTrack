@@ -5,19 +5,19 @@ export default {
   dbUrl: process.env.MONGO_DB ?? "mongodb://localhost:27017",
   pages: {
     index: "/",
-    ssr: "/ssr",
-    login: "/login",
-    app: {
-      home: "/app",
-    },
+    events: "/events",
+    "applicant-view": "/applicant-view",
+    "user-manager": "/user-manager",
   },
   api: {
-    example: "/api/example",
-    user: {
-      signUp: "/api/user/sign-up",
-      login: "/api/user/login",
-      logout: "/api/user/logout",
-      getCurrent: "/api/user/get-current",
+    auth: {
+
     },
+    events: {
+
+    },
+    users: {
+
+    }
   },
 };
