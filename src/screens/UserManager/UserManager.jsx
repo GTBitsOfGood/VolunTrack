@@ -60,6 +60,7 @@ class UserManager extends React.Component {
     currentPage: 0,
     loadingMoreUsers: false
   };
+
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
     this.setState({ loadingMoreUsers: true });

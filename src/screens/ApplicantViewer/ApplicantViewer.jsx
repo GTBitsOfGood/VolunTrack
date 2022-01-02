@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import ApplicantList from './ApplicantList';
 import ApplicantInfo from './ApplicantInfo';
-import InfiniteScroll from '../../components/Shared/InfiniteScroll';
-import { Icon, Loading } from '../../components/Shared';
-import { filterApplicants, fetchMoreApplicants, searchApplicants } from '../../components/AdminDash/queries';
+import InfiniteScroll from '../Shared/InfiniteScroll';
+import { Icon, Loading } from '../Shared';
+import { filterApplicants, fetchMoreApplicants, searchApplicants } from './queries';
 import styled from 'styled-components';
-import ApplicantSearch from '../../components/AdminDash/ApplicantSearch';
+import ApplicantSearch from './ApplicantSearch';
 import { Button } from 'reactstrap';
 
 const Styled = {
@@ -135,15 +135,6 @@ class AdminDash extends Component {
                 <Button onClick={this.onRefreshApplicants}>
                   <Icon color="grey3" name="refresh" />
                   <span>Refresh</span>
-                </Button>
-                <Button
-                  href={`mailto:${applicants &&
-                    applicants.reduce((acc, curr) => {
-                      return acc.concat(curr.bio.email);
-                    }, [])}`}
-                >
-                  <Icon color="grey3" name="mail" />
-                  <span>Send Mass Email</span>
                 </Button>
               </Styled.SecondaryOptions>
             </ApplicantList>

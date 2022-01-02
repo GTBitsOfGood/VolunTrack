@@ -8,6 +8,8 @@ export default {
     events: "/events",
     "applicant-view": "/applicant-view",
     "user-manager": "/user-manager",
+    settings: "/settings",
+    profile: "/profile",
   },
   api: {
     auth: {

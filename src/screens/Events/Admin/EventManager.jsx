@@ -7,7 +7,6 @@ import { fetchEvents } from 'components/AdminDash/queries';
 import EventCreateModal from './EventCreateModal';
 import EventEditModal from './EventEditModal';
 import EventDeleteModal from './EventDeleteModal';
-import * as Table from '../shared/tableStyles';
 
 const Styled = {
   Container: styled.div`
