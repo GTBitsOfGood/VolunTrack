@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as Table from '../tableStyles';
+import * as Table from '../../sharedStyles/tableStyles';
 import Loading from '../../../components/Loading';
 import Icon from '../../../components/Icon';
 import styled from 'styled-components';

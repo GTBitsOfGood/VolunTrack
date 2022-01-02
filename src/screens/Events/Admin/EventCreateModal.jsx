@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Icon from '../../../components/Icon';
-import * as Table from '../tableStyles';
+import * as Table from '../../sharedStyles/tableStyles';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Formik, Form as FForm, Field, FieldArray, ErrorMessage } from 'formik';
-import * as SForm from '../formStyles';
+import * as SForm from '../../sharedStyles/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './eventHelpers';
 import { createEvent } from '../../../actions/queries';

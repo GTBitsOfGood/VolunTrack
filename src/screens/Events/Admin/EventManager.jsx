@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import { Icon } from 'components/Shared';
+import Icon from '../../../components/Icon';
 import EventTable from './EventTable';
-import { fetchEvents } from 'components/AdminDash/queries';
+import { fetchEvents } from '../../../actions/queries';
 import EventCreateModal from './EventCreateModal';
 import EventEditModal from './EventEditModal';
 import EventDeleteModal from './EventDeleteModal';

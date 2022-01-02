@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import * as Table from '../shared/tableStyles';
-import { Icon } from 'components/Shared';
+import React, { useState } from 'react';
+import * as Table from '../../sharedStyles/tableStyles';
+import Icon from '../../../components/Icon';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import { fetchVolunteers } from '../queries';
+import { fetchVolunteers } from '../../../actions/queries';
 
 const Styled = {
   Button: styled(Button)`

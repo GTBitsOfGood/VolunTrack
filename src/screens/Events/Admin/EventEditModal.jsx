@@ -2,10 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
-import * as SForm from '../shared/formStyles';
+import * as SForm from '../../sharedStyles/formStyles';
 import PropTypes from 'prop-types';
 import { eventValidator } from './eventHelpers';
-import { editEvent } from '../queries';
+import { editEvent } from '../../../actions/queries';
 
 const Styled = {
   Form: styled(FForm)``,

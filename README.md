@@ -2,12 +2,13 @@
 
 Refactor list:
 
-- request provider todo: applicantinfo
 - route to correct eventmanager based on auth level
 - figure out a way to make helpers consistent
 - see if anything bled through when converting App.jsx to _app.jsx
+  - make _app.jsx handle less logic.
 - break up actions/queries.js into multple files
 - readd validation back into server actions using next-connect and express-validator
+- I think splash is a weird component to have, just have all of that logic be handled inside of the index page or promote splash to its own screens folder.
 
 migration list:
 
