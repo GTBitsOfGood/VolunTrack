@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Button } from 'reactstrap';
-import { Icon } from 'components/Shared';
-import { getCurrentUser } from 'components/AdminDash/queries';
+import Icon from '../../components/Icon';
+import { getCurrentUser } from '../../actions/queries';
 import SettingsEditModal from './SettingsEditModal';
 import SettingsTable from './SettingsTable';
-
-import * as Table from '../shared/tableStyles';
 
 const Styled = {
   Container: styled.div`

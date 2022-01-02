@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import ApplicantList from './ApplicantList';
 import ApplicantInfo from './ApplicantInfo';
-import InfiniteScroll from '../Shared/InfiniteScroll';
-import { Icon, Loading } from '../Shared';
-import { filterApplicants, fetchMoreApplicants, searchApplicants } from './queries';
+import InfiniteScroll from '../../components/InfiniteScroll';
+import Icon from '../../components/Icon';
+import Loading from '../../components/Loading'
+import { filterApplicants, fetchMoreApplicants, searchApplicants } from '../../actions/queries';
 import styled from 'styled-components';
 import ApplicantSearch from './ApplicantSearch';
 import { Button } from 'reactstrap';

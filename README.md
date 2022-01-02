@@ -1,5 +1,19 @@
 # nextjs-starter
 
+Refactor list:
+
+- request provider todo: applicantinfo
+- route to correct eventmanager based on auth level
+- figure out a way to make helpers consistent
+- see if anything bled through when converting App.jsx to _app.jsx
+- break up actions/queries.js into multple files
+- readd validation back into server actions using next-connect and express-validator
+
+migration list:
+
+- make the api best practices
+- use ssr in place of useeffect
+
 ## Stack
 
 - React.js: Front-end

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
-import * as SForm from '../AdminDash/shared/formStyles';
+import * as SForm from '../sharedStyles/formStyles';
 import { Button } from 'reactstrap';
 import { profileValidator } from './helpers';
-import { editProfile } from '../AdminDash/queries';
+import { editProfile } from '../../actions/queries';
 
 const Styled = {
   Container: styled.div`
