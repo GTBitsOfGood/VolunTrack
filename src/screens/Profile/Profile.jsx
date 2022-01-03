@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
-import * as SForm from '../sharedStyles/formStyles';
-import { Button } from 'reactstrap';
-import { profileValidator } from './helpers';
-import { editProfile } from '../../actions/queries';
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
+import * as SForm from "../sharedStyles/formStyles";
+import { Button } from "reactstrap";
+import { profileValidator } from "./helpers";
+import { editProfile } from "../../actions/queries";
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.grey9};
+    background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -28,22 +28,27 @@ const Styled = {
     width: 50%;
   `,
   ErrorMessage: styled(ErrorMessage).attrs({
-    component: 'span'
+    component: "span",
   })`
     ::before {
-      content: '*';
+      content: "*";
     }
     color: red;
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-  `
+  `,
 };
 
 const Profile = ({ user }) => {
-  const [successText, setSuccessText] = useState('');
+  const [successText, setSuccessText] = useState("");
 
-  const { first_name = '', last_name = '', email = '', phone_number = '' } = user?.bio ?? {};
+  const {
+    first_name = "",
+    last_name = "",
+    email = "",
+    phone_number = "",
+  } = user?.bio ?? {};
 
   return (
     <Styled.Container>
@@ -53,7 +58,7 @@ const Profile = ({ user }) => {
           first_name,
           last_name,
           email,
-          phone_number
+          phone_number,
         }}
         onSubmit={(values, { setSubmitting }) => {
           const profileData = { bio: values };
@@ -63,9 +68,9 @@ const Profile = ({ user }) => {
             .catch(console.log())
             .finally(() => {
               setSubmitting(false);
-              setSuccessText('Profile updated successfully!');
+              setSuccessText("Profile updated successfully!");
               setTimeout(() => {
-                setSuccessText('');
+                setSuccessText("");
               }, 5000);
             });
         }}
@@ -89,7 +94,9 @@ const Profile = ({ user }) => {
 
                 <SForm.Label>Email</SForm.Label>
                 <Styled.ErrorMessage name="email" />
-                <Field name="email">{({ field }) => <SForm.Input {...field} type="email" />}</Field>
+                <Field name="email">
+                  {({ field }) => <SForm.Input {...field} type="email" />}
+                </Field>
 
                 <SForm.Label>Phone Number</SForm.Label>
                 <Styled.ErrorMessage name="phone_number" />
@@ -97,7 +104,11 @@ const Profile = ({ user }) => {
                   {({ field }) => <SForm.Input {...field} type="text" />}
                 </Field>
               </SForm.FormGroup>
-              <Button color="primary" onClick={handleSubmit} disabled={!isValid || isSubmitting}>
+              <Button
+                color="primary"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+              >
                 Submit
               </Button>
             </Styled.Form>

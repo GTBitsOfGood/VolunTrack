@@ -1,60 +1,69 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Form from '../../components/Forms/Form';
-import Checkbox from '../../components/Forms/Checkbox'
-import { statuses } from './applicantInfoHelpers';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import {
+  Button,
+  FormGroup,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+} from "reactstrap";
+import Form from "../../components/Forms/Form";
+import Checkbox from "../../components/Forms/Checkbox";
+import { statuses } from "./applicantInfoHelpers";
+import styled from "styled-components";
 
 const Styled = {
   Label: styled.label`
     font-weight: 600;
-  `
+  `,
 };
 
 const defaultValues = {
   date: {
-    label: 'Date Range',
+    label: "Date Range",
     values: {
       past_6_months: false,
       past_month: false,
       from_current_year: false,
       from_one_year_ago: false,
       from_two_years_ago: false,
-      older: false
-    }
+      older: false,
+    },
   },
   status: {
-    label: 'Status',
+    label: "Status",
     values: Object.keys(statuses).reduce((obj, status) => {
       obj[status] = false;
       return obj;
-    }, {})
+    }, {}),
   },
   role: {
-    label: 'Role',
+    label: "Role",
     values: {
       admin: false,
       volunteer: false,
-      manager: false
-    }
-  }
+      manager: false,
+    },
+  },
 };
 
-const keyToLabel = key => {
-  const words = key.split('_');
-  const capitalizedWords = words.map(word => `${word[0].toUpperCase()}${word.slice(1)}`);
+const keyToLabel = (key) => {
+  const words = key.split("_");
+  const capitalizedWords = words.map(
+    (word) => `${word[0].toUpperCase()}${word.slice(1)}`
+  );
   var d = new Date();
-  if (key === 'from_current_year') {
+  if (key === "from_current_year") {
     return d.getFullYear();
-  } else if (key === 'from_one_year_ago') {
+  } else if (key === "from_one_year_ago") {
     return d.getFullYear() - 1;
-  } else if (key === 'from_two_years_ago') {
+  } else if (key === "from_two_years_ago") {
     return d.getFullYear() - 2;
-  } else if (key === 'older') {
-    return d.getFullYear() - 3 + ' and older';
+  } else if (key === "older") {
+    return d.getFullYear() - 3 + " and older";
   } else {
-    return capitalizedWords.join(' ');
+    return capitalizedWords.join(" ");
   }
 };
 
@@ -63,7 +72,7 @@ const Filters = ({ show, toggleCallback, submitCallback, appliedFilters }) => (
     <ModalHeader toggle={toggleCallback}>Filters</ModalHeader>
     <Form
       initialValues={appliedFilters || defaultValues}
-      onSubmit={values => {
+      onSubmit={(values) => {
         toggleCallback();
         submitCallback(values);
       }}
@@ -103,5 +112,5 @@ Filters.propTypes = {
   show: PropTypes.bool.isRequired,
   toggleCallback: PropTypes.func.isRequired,
   submitCallback: PropTypes.func.isRequired,
-  appliedFilters: PropTypes.object
+  appliedFilters: PropTypes.object,
 };

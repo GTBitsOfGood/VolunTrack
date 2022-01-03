@@ -1,3 +1,3 @@
-import SettingsManager from "./SettingsManager"
+import SettingsManager from "./SettingsManager";
 
-export default SettingsManager
+export default SettingsManager;

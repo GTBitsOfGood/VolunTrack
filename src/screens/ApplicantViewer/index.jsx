@@ -1,3 +1,3 @@
-import ApplicantViewer from './ApplicantViewer'
+import ApplicantViewer from "./ApplicantViewer";
 
-export default ApplicantViewer
+export default ApplicantViewer;

@@ -1,25 +1,25 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Formik, Form as FForm, Field, ErrorMessage } from 'formik';
-import * as SForm from '../../sharedStyles/formStyles';
-import PropTypes from 'prop-types';
-import { eventValidator } from './eventHelpers';
-import { editEvent } from '../../../actions/queries';
+import React from "react";
+import styled from "styled-components";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
+import * as SForm from "../../sharedStyles/formStyles";
+import PropTypes from "prop-types";
+import { eventValidator } from "./eventHelpers";
+import { editEvent } from "../../../actions/queries";
 
 const Styled = {
   Form: styled(FForm)``,
   ErrorMessage: styled(ErrorMessage).attrs({
-    component: 'span'
+    component: "span",
   })`
     ::before {
-      content: '*';
+      content: "*";
     }
     color: red;
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-  `
+  `,
 };
 
 const EventEditModal = ({ open, toggle, event }) => {
@@ -28,39 +28,52 @@ const EventEditModal = ({ open, toggle, event }) => {
       <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
       <Formik
         initialValues={{
-          name: event ? event.name : '',
-          date: event ? event.date.split('T')[0] : '', // strips timestamp
-          location: event ? event.location : '',
-          description: event ? event.description : '',
-          contact_phone: event ? event.contact_phone : '',
-          contact_email: event ? event.email : '',
+          name: event ? event.name : "",
+          date: event ? event.date.split("T")[0] : "", // strips timestamp
+          location: event ? event.location : "",
+          description: event ? event.description : "",
+          contact_phone: event ? event.contact_phone : "",
+          contact_email: event ? event.email : "",
           shifts: event ? event.shifts : [],
-          external_links: event ? event.external_links : []
+          external_links: event ? event.external_links : [],
         }}
         onSubmit={(values, { setSubmitting }) => {
           const editedEvent = {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links ? [values.external_links] : undefined,
-            _id: event._id
+            external_links: values.external_links
+              ? [values.external_links]
+              : undefined,
+            _id: event._id,
           };
           setSubmitting(true);
           editEvent(editedEvent);
           toggle();
         }}
         validationSchema={eventValidator}
-        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
+        render={({
+          handleSubmit,
+          isValid,
+          isSubmitting,
+          values,
+          setFieldValue,
+          handleBlur,
+        }) => (
           <React.Fragment>
             <ModalBody>
               <Styled.Form>
                 <SForm.FormGroup>
                   <SForm.Label>Name</SForm.Label>
                   <Styled.ErrorMessage name="name" />
-                  <Field name="name">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                  <Field name="name">
+                    {({ field }) => <SForm.Input {...field} type="text" />}
+                  </Field>
                   <SForm.Label>Date</SForm.Label>
                   <Styled.ErrorMessage name="date" />
-                  <Field name="date">{({ field }) => <SForm.Input {...field} type="date" />}</Field>
+                  <Field name="date">
+                    {({ field }) => <SForm.Input {...field} type="date" />}
+                  </Field>
                   <SForm.Label>Location</SForm.Label>
                   <Styled.ErrorMessage name="location" />
                   <Field name="location">
@@ -93,7 +106,11 @@ const EventEditModal = ({ open, toggle, event }) => {
               <Button color="secondary" onClick={toggle}>
                 Cancel
               </Button>
-              <Button color="primary" onClick={handleSubmit} disabled={!isValid || isSubmitting}>
+              <Button
+                color="primary"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+              >
                 Submit
               </Button>
             </ModalFooter>
@@ -105,7 +122,7 @@ const EventEditModal = ({ open, toggle, event }) => {
 };
 EventEditModal.propTypes = {
   open: PropTypes.bool,
-  toggle: PropTypes.func
+  toggle: PropTypes.func,
 };
 
 export default EventEditModal;

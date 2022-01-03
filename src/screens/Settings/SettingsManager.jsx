@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Button } from 'reactstrap';
-import Icon from '../../components/Icon';
-import { getCurrentUser } from '../../actions/queries';
-import SettingsEditModal from './SettingsEditModal';
-import SettingsTable from './SettingsTable';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Button } from "reactstrap";
+import Icon from "../../components/Icon";
+import { getCurrentUser } from "../../actions/queries";
+import SettingsEditModal from "./SettingsEditModal";
+import SettingsTable from "./SettingsTable";
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.grey9};
+    background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -26,10 +26,10 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
-  `
+  `,
 };
 
-getCurrentUser().then(result => {
+getCurrentUser().then((result) => {
   // console.log(result.data.users[0].bio.first_name)
 });
 
@@ -41,7 +41,7 @@ const SettingsManager = () => {
   const onRefresh = () => {
     setLoading(true);
     getCurrentUser()
-      .then(result => {
+      .then((result) => {
         if (result) {
           setUserData(result.data.users[0]);
         }
@@ -56,7 +56,7 @@ const SettingsManager = () => {
   };
 
   const toggleEditModal = () => {
-    setShowEditModal(prev => !prev);
+    setShowEditModal((prev) => !prev);
     onRefresh();
   };
   useEffect(() => {
@@ -71,13 +71,10 @@ const SettingsManager = () => {
           <span>Edit</span>
         </Styled.Button>
       </Styled.HeaderContainer>
-      <SettingsTable
-        user={userData}
-        loading={loading}
-      >
-        {' '}
+      <SettingsTable user={userData} loading={loading}>
+        {" "}
       </SettingsTable>
-      <SettingsEditModal open={showEditModal} toggle={toggleEditModal} /> 
+      <SettingsEditModal open={showEditModal} toggle={toggleEditModal} />
     </Styled.Container>
   );
 };

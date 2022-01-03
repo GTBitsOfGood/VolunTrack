@@ -12,14 +12,8 @@ export default {
     profile: "/profile",
   },
   api: {
-    auth: {
-
-    },
-    events: {
-
-    },
-    users: {
-
-    }
+    auth: {},
+    events: {},
+    users: {},
   },
 };

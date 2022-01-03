@@ -5,13 +5,11 @@ import Header from "../components/Header";
 import "focus-visible/dist/focus-visible.min.js";
 import "normalize.css";
 import "../../public/static/styles/App.css";
-import styled from 'styled-components';
-import axios from 'axios';
-
-import Header from '../components/Header';
-import Splash from '../components/Splash'
-import StyleProvider from '../providers/StyleProvider';
-import RequestProvider from '../providers/RequestProvider';
+import styled from "styled-components";
+import axios from "axios";
+import Splash from "../components/Splash";
+import StyleProvider from "../providers/StyleProvider";
+import RequestProvider from "../providers/RequestProvider";
 
 const Styled = {
   Container: styled.div`
@@ -24,7 +22,7 @@ const Styled = {
   Content: styled.main`
     flex: 1;
     overflow-y: scroll;
-  `
+  `,
 };
 
 const MyApp = ({ Component, pageProps, router, currentUser }) => {
@@ -32,30 +30,30 @@ const MyApp = ({ Component, pageProps, router, currentUser }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState({});
 
-  const login = user => {
+  const login = (user) => {
     setIsAuthenticated(true);
     setUser(user);
   };
 
-  const logout = e => {
+  const logout = (e) => {
     e.preventDefault();
     setIsAuthenticated(false);
     setUser({});
-    axios.post('/auth/logout');
+    axios.post("/auth/logout");
   };
 
   return (
-  <>
-    <Head>
-      <title>Helping Mamas App</title>
-    </Head>
-    {/* <div className="App">
+    <>
+      <Head>
+        <title>Helping Mamas App</title>
+      </Head>
+      {/* <div className="App">
       <Header loggedIn={currentUser != null} currentRoute={router.asPath} />
       <div className="Content">
         <Component {...pageProps} currentUser={currentUser} />
       </div>
     </div> */}
-    <StyleProvider>
+      <StyleProvider>
         <RequestProvider>
           <Styled.Container>
             {isAuthenticated ? (
@@ -71,8 +69,9 @@ const MyApp = ({ Component, pageProps, router, currentUser }) => {
           </Styled.Container>
         </RequestProvider>
       </StyleProvider>
-  </>
-)};
+    </>
+  );
+};
 
 // MyApp.getInitialProps = async (appContext) => {
 //   // TODO: THIS AUTH SYSTEM IS NOT BEST PRACTICE:

@@ -1,7 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import StatusBadge from './StatusBadge';
-import styled from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import StatusBadge from "./StatusBadge";
+import styled from "styled-components";
 
 const List = styled.div`
   padding-top: 2rem;
@@ -28,7 +28,7 @@ const ListItem = styled.button`
     color: #777;
   }
 
-  ${props =>
+  ${(props) =>
     props.selected &&
     `
     background-color: #b35fd0;
@@ -48,10 +48,15 @@ const ListItemHeader = styled.h1`
   margin-bottom: 0.3rem;
   font-size: 1.2em;
   font-weight: 700;
-  color: ${props => props.theme.grey1};
+  color: ${(props) => props.theme.grey1};
 `;
 
-const ApplicantList = ({ applicants, selectApplicantCallback, selectedIndex, children }) => (
+const ApplicantList = ({
+  applicants,
+  selectApplicantCallback,
+  selectedIndex,
+  children,
+}) => (
   <List>
     {children}
     {(applicants || []).map(({ bio, status }, index) => (
@@ -60,7 +65,7 @@ const ApplicantList = ({ applicants, selectApplicantCallback, selectedIndex, chi
         onClick={() => selectApplicantCallback(index)}
         selected={selectedIndex === index}
       >
-        <ListItemHeader>{bio.first_name + ' ' + bio.last_name}</ListItemHeader>
+        <ListItemHeader>{bio.first_name + " " + bio.last_name}</ListItemHeader>
         <p>{bio.email}</p>
         <StatusBadge status={status} selected={selectedIndex === index} />
       </ListItem>
@@ -71,7 +76,7 @@ const ApplicantList = ({ applicants, selectApplicantCallback, selectedIndex, chi
 ApplicantList.propTypes = {
   applicants: PropTypes.array.isRequired,
   selectApplicantCallback: PropTypes.func.isRequired,
-  selectedIndex: PropTypes.number.isRequired
+  selectedIndex: PropTypes.number.isRequired,
 };
 
 export default ApplicantList;

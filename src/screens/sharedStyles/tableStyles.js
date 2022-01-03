@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const Container = styled.div`
   background: white;
@@ -6,13 +6,13 @@ const Container = styled.div`
   max-width: 80rem;
   border-radius: 0.5rem;
   padding: 1rem;
-  border: 0.1rem solid ${props => props.theme.grey9};
+  border: 0.1rem solid ${(props) => props.theme.grey9};
 `;
 const Table = styled.table`
   width: 100%;
 
   th {
-    color: ${props => props.theme.primaryGrey};
+    color: ${(props) => props.theme.primaryGrey};
     font-size: 1.2rem;
   }
   th,
@@ -21,9 +21,9 @@ const Table = styled.table`
   }
 `;
 const Row = styled.tr`
-  ${props => props.evenIndex && 'background: #FFFFFF'};
+  ${(props) => props.evenIndex && "background: #FFFFFF"};
   cursor: pointer;
-  border-bottom: 2px solid #F0F0F0
+  border-bottom: 2px solid #f0f0f0;
 `;
 const LoadingBody = styled.div`
   height: 39rem;

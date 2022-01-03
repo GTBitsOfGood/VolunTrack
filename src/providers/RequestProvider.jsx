@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import Loading from '../components/Shared/Loading';
+import React from "react";
+import styled from "styled-components";
+import Loading from "../components/Shared/Loading";
 
 const Container = styled.div`
   width: 100%;
@@ -11,15 +11,16 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   transition: bottom 0.2s;
-  bottom: ${props => (props.isHidden ? '-10rem' : '0')};
+  bottom: ${(props) => (props.isHidden ? "-10rem" : "0")};
   .banner {
     padding: 0.5rem;
-    background: ${props => (props.success ? 'hsla(127, 100%, 32%, 90%)' : props.theme.grey9)};
+    background: ${(props) =>
+      props.success ? "hsla(127, 100%, 32%, 90%)" : props.theme.grey9};
     display: flex;
     align-items: center;
     border-radius: 0.5rem;
     margin: auto;
-    max-width: ${props => (props.success || props.failed ? '15rem' : '5rem')};
+    max-width: ${(props) => (props.success || props.failed ? "15rem" : "5rem")};
     transition: max-width 0.2s;
 
     p {
@@ -33,7 +34,8 @@ const Container = styled.div`
     }
     p.icon {
       font-size: 1.6rem;
-      ${props => (props.success ? 'animation: funBounce 0.5s ease-in forwards;' : '')}
+      ${(props) =>
+        props.success ? "animation: funBounce 0.5s ease-in forwards;" : ""}
       animation-delay: 0.5s;
     }
   }
@@ -61,7 +63,7 @@ const initialState = {
   success: false,
   failed: false,
   isHidden: true,
-  text: ''
+  text: "",
 };
 
 class RequestProvider extends React.Component {
@@ -70,7 +72,7 @@ class RequestProvider extends React.Component {
   delayedFall = () => {
     setTimeout(() => {
       this.setState({
-        isHidden: true
+        isHidden: true,
       });
     }, 2000);
   };
@@ -79,23 +81,28 @@ class RequestProvider extends React.Component {
       <RequestContext.Provider
         value={{
           state: this.state,
-          startLoading: () => this.setState({ ...initialState, isLoading: true, isHidden: false }),
-          success: text => {
+          startLoading: () =>
+            this.setState({
+              ...initialState,
+              isLoading: true,
+              isHidden: false,
+            }),
+          success: (text) => {
             this.setState({
               isLoading: false,
               success: true,
               failed: false,
-              text: text
+              text: text,
             });
             this.delayedFall();
           },
-          failed: text =>
+          failed: (text) =>
             this.setState({
               isLoading: false,
               success: false,
               failed: true,
-              text: text
-            })
+              text: text,
+            }),
         }}
       >
         {this.props.children}

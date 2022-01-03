@@ -1,18 +1,18 @@
-import React from 'react';
-import { Field, ErrorMessage } from 'formik';
-import { FormGroup, CustomInput } from 'reactstrap';
-import styled from 'styled-components';
+import React from "react";
+import { Field, ErrorMessage } from "formik";
+import { FormGroup, CustomInput } from "reactstrap";
+import styled from "styled-components";
 
 const ErrorMsg = styled(ErrorMessage)`
   color: red;
 `;
 const styleFlexField = {
-  flexDirection: 'column',
-  display: 'flex',
-  margin: '5px'
+  flexDirection: "column",
+  display: "flex",
+  margin: "5px",
 };
 
-const Checkbox = props => (
+const Checkbox = (props) => (
   <div style={styleFlexField}>
     <Field name={props.name}>
       {({ field, form }) => (

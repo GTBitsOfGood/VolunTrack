@@ -1,14 +1,11 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { validationResult } = require('express-validator/check');
-const { matchedData } = require('express-validator/filter');
-const EventData = require('../models/event');
-const {
-  CREATE_EVENT_VALIDATOR,
-  isValidObjectID
-} = require('../util/validators');
+const { validationResult } = require("express-validator/check");
+const { matchedData } = require("express-validator/filter");
+const EventData = require("../mongodb/models/event");
+const { CREATE_EVENT_VALIDATOR, isValidObjectID } = require("../validators");
 
-router.post('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
+router.post("/", CREATE_EVENT_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.mapped() });
@@ -20,53 +17,53 @@ router.post('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
     .save()
     .then(() => {
       res.json({
-        message: 'Event successfully created!'
+        message: "Event successfully created!",
       });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 });
 
-router.get('/', (req, res, next) => {
+router.get("/", (req, res, next) => {
   EventData.find({})
-    .then(events => {
+    .then((events) => {
       res.status(200).json({
-        events
+        events,
       });
     })
     .catch(next);
 });
 // add search route with filter parms
 
-router.delete('/:id', (req, res, next) => {
+router.delete("/:id", (req, res, next) => {
   const id = req.params.id;
   if (!isValidObjectID(id)) {
-    return res.status(400).json({ error: 'Object ID not valid' });
+    return res.status(400).json({ error: "Object ID not valid" });
   }
   EventData.findOneAndDelete({ _id: id })
     .then(() => {
       res.json({
-        message: 'Event successfully deleted!'
+        message: "Event successfully deleted!",
       });
     })
     .catch(next);
 });
 
 // creates/updates an event with the given id
-router.put('/:id', async (req, res, next) => {
+router.put("/:id", async (req, res) => {
   const eventId = req.params.id;
   const event = req.body;
 
   const updatedEvent = await EventData.findByIdAndUpdate(eventId, event, {
     new: true,
-    useFindAndModify: true
+    useFindAndModify: true,
   });
 
   res.json(updatedEvent.toJSON());
 });
 
-router.put('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
+router.put("/", CREATE_EVENT_VALIDATOR, (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.mapped() });
@@ -74,14 +71,14 @@ router.put('/', CREATE_EVENT_VALIDATOR, (req, res, next) => {
   const updateEventData = matchedData(req);
   console.log(updateEventData);
   EventData.findOneAndUpdate({ _id: updateEventData._id }, updateEventData, {
-    new: true
+    new: true,
   })
-    .then(event => {
+    .then((event) => {
       res.json({
-        event
+        event,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 });

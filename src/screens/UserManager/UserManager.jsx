@@ -1,9 +1,9 @@
-import React from 'react';
-import UserTable from './UserTable';
-import styled from 'styled-components';
-import { fetchUserManagementData, fetchUserCount } from '../../actions/queries';
-import { Button } from 'reactstrap';
-import Icon from '../../components/Icon';
+import React from "react";
+import UserTable from "./UserTable";
+import styled from "styled-components";
+import { fetchUserManagementData, fetchUserCount } from "../../actions/queries";
+import { Button } from "reactstrap";
+import Icon from "../../components/Icon";
 
 const PAGE_SIZE = 10;
 
@@ -11,7 +11,7 @@ const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.grey9};
+    background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -25,7 +25,7 @@ const Styled = {
     height: 3rem;
 
     p {
-      color: ${props => props.theme.grey5};
+      color: ${(props) => props.theme.grey5};
       margin: 0 1rem;
       font-size: 1.2rem;
     }
@@ -41,14 +41,14 @@ const Styled = {
     background: white;
     border: none;
 
-    ${props => props.disabled && 'background: white !important'}
+    ${(props) => props.disabled && "background: white !important"}
   `,
   ToBeginningButton: styled(Button)`
     background: white;
     border: none;
     margin-left: auto;
     margin-right: 1rem;
-  `
+  `,
 };
 
 class UserManager extends React.Component {
@@ -56,25 +56,25 @@ class UserManager extends React.Component {
     users: [],
     userCount: 0,
     currentPage: 0,
-    loadingMoreUsers: false
+    loadingMoreUsers: false,
   };
 
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
     this.setState({ loadingMoreUsers: true });
-    fetchUserCount().then(result => {
+    fetchUserCount().then((result) => {
       if (result && result.data && result.data.count) {
         this.setState({
-          userCount: result.data.count
+          userCount: result.data.count,
         });
       }
     });
-    fetchUserManagementData().then(result => {
+    fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
           users: result.data.users,
           currentPage: 0,
-          loadingMoreUsers: false
+          loadingMoreUsers: false,
         });
       }
     });
@@ -83,30 +83,32 @@ class UserManager extends React.Component {
     const { currentPage, users } = this.state;
     if ((currentPage + 1) * PAGE_SIZE === users.length) {
       this.setState({ loadingMoreUsers: true });
-      fetchUserManagementData(users[users.length - 1]._id).then(result => {
+      fetchUserManagementData(users[users.length - 1]._id).then((result) => {
         if (result && result.data && result.data.users) {
           this.setState({
             users: [...users, ...result.data.users],
             currentPage: currentPage + 1,
-            loadingMoreUsers: false
+            loadingMoreUsers: false,
           });
         }
       });
     } else {
       this.setState({
-        currentPage: currentPage + 1
+        currentPage: currentPage + 1,
       });
     }
   };
-  onPreviousPage = () => this.setState({ currentPage: this.state.currentPage - 1 });
+  onPreviousPage = () =>
+    this.setState({ currentPage: this.state.currentPage - 1 });
   onToBeginning = () => this.setState({ currentPage: 0 });
   getUsersAtPage = () => {
     const { users, currentPage } = this.state;
     const start = currentPage * PAGE_SIZE;
     return users.slice(start, start + PAGE_SIZE);
   };
-  atEnd = () => (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
-  onEditUser = editedUser => {
+  atEnd = () =>
+    (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
+  onEditUser = () => {
     /** code to update users in state at that specific index */
   };
   render() {
@@ -124,12 +126,21 @@ class UserManager extends React.Component {
             </Styled.ToBeginningButton>
           )}
           <Styled.PaginationContainer>
-            <Styled.Button disabled={currentPage === 0} onClick={this.onPreviousPage}>
-              <Icon color={currentPage === 0 ? 'grey7' : 'grey3'} name="left-chevron" />
+            <Styled.Button
+              disabled={currentPage === 0}
+              onClick={this.onPreviousPage}
+            >
+              <Icon
+                color={currentPage === 0 ? "grey7" : "grey3"}
+                name="left-chevron"
+              />
             </Styled.Button>
             <p>{currentPage + 1}</p>
             <Styled.Button disabled={this.atEnd()} onClick={this.onNextPage}>
-              <Icon color={this.atEnd() ? 'grey7' : 'grey3'} name="right-chevron" />
+              <Icon
+                color={this.atEnd() ? "grey7" : "grey3"}
+                name="right-chevron"
+              />
             </Styled.Button>
           </Styled.PaginationContainer>
         </Styled.ButtonContainer>

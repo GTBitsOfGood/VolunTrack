@@ -1,23 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // define schema
 const waiverSchema = new mongoose.Schema(
   {
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     desc: {
-        type: String,
-        required: false
-      },
+      type: String,
+      required: false,
+    },
     img: {
-        data: Buffer,
-        contentType: String
-    }
+      data: Buffer,
+      contentType: String,
+    },
   },
   { timestamps: true }
 );
 
 // export Event model to app
-module.exports = mongoose.model('Waiver', waiverSchema);
+module.exports = mongoose.model("Waiver", waiverSchema);

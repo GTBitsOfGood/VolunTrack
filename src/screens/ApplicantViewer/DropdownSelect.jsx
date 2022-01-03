@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
 const Container = styled.div`
   position: relative;
@@ -18,13 +18,13 @@ const Container = styled.div`
 const OptionContainer = styled.div`
   width: 12rem;
   background: white;
-  border: 1px solid ${props => props.theme.grey7};
+  border: 1px solid ${(props) => props.theme.grey7};
   border-radius: 0.5rem;
   padding: 0 0.4rem;
   overflow: hidden;
   transition: transform 0.05s;
   transform-origin: top;
-  transform: ${props => (props.expanded ? 'scaleY(1)' : 'scaleY(0);')};
+  transform: ${(props) => (props.expanded ? "scaleY(1)" : "scaleY(0);")};
 
   button {
     padding-left: 0.5rem;
@@ -53,7 +53,7 @@ const Option = styled.button`
   text-align: left;
 
   :hover {
-    background: ${props => props.theme.grey9};
+    background: ${(props) => props.theme.grey9};
   }
 `;
 
@@ -61,13 +61,13 @@ class DropdownSelect extends React.Component {
   constructor() {
     super();
     this.state = {
-      expanded: false
+      expanded: false,
     };
   }
   onToggle = () => {
     this.setState({ expanded: !this.state.expanded });
   };
-  onSelect = selected => {
+  onSelect = (selected) => {
     this.props.updateCallback(selected);
     this.onToggle();
   };

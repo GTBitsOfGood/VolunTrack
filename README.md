@@ -9,11 +9,13 @@ Refactor list:
 - break up actions/queries.js into multple files
 - readd validation back into server actions using next-connect and express-validator
 - I think splash is a weird component to have, just have all of that logic be handled inside of the index page or promote splash to its own screens folder.
+- put auth back into this application, the files and api routes exist but nothing is filled in properly.
 
 migration list:
 
-- make the api best practices
-- use ssr in place of useeffect
+- make the api best practices because it seems pretty all over the place
+  - add some type of api documentation/swagger or whatever
+- use ssr in place of useeffect (use isomorphic unfetch in this case)
 
 ## Stack
 

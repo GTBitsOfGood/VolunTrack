@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Tag from '../../components/Tag';
-import { getStatusColor, statuses } from './applicantInfoHelpers';
-import { withTheme } from 'styled-components';
+import React from "react";
+import PropTypes from "prop-types";
+import Tag from "../../components/Tag";
+import { getStatusColor, statuses } from "./applicantInfoHelpers";
+import { withTheme } from "styled-components";
 
 const StatusBadge = ({ status, selected, theme }) => (
   <Tag
-    type={getStatusColor(status) || ''}
-    color={selected ? theme.grey9 : ''}
-    textColor={selected ? theme.primary : ''}
+    type={getStatusColor(status) || ""}
+    color={selected ? theme.grey9 : ""}
+    textColor={selected ? theme.primary : ""}
     text={statuses[status]}
   />
 );
@@ -16,7 +16,7 @@ const StatusBadge = ({ status, selected, theme }) => (
 StatusBadge.propTypes = {
   status: PropTypes.string.isRequired,
   selected: PropTypes.bool,
-  theme: PropTypes.object
+  theme: PropTypes.object,
 };
 
 export default withTheme(StatusBadge);

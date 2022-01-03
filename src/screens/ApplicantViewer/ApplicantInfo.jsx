@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Tag from '../../components/Tag';
-import Icon from '../../components/Icon'
-import { getStatusColor, statuses, roles } from './applicantInfoHelpers';
-import DropdownSelect from './DropdownSelect';
-import { updateApplicantStatus, updateApplicantRole } from '../../actions/queries';
-import styled, { withTheme } from 'styled-components';
-import { RequestContext } from '../../providers/RequestProvider';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Tag from "../../components/Tag";
+import Icon from "../../components/Icon";
+import { getStatusColor, statuses, roles } from "./applicantInfoHelpers";
+import DropdownSelect from "./DropdownSelect";
+import {
+  updateApplicantStatus,
+  updateApplicantRole,
+} from "../../actions/queries";
+import styled, { withTheme } from "styled-components";
+import { RequestContext } from "../../providers/RequestProvider";
 
 const Heading = styled.div`
   display: flex;
@@ -32,7 +35,7 @@ const Section = styled.section`
   h5 {
     font-size: 1rem;
     margin-bottom: 1rem;
-    color: ${props => props.theme.grey5};
+    color: ${(props) => props.theme.grey5};
     font-weight: 600;
     width: 100%;
   }
@@ -49,7 +52,7 @@ const Section = styled.section`
   }
 
   a {
-    color: ${props => props.theme.grey1};
+    color: ${(props) => props.theme.grey1};
   }
 `;
 
@@ -57,7 +60,7 @@ const SubSection = styled.div`
   flex: 1;
   display: inline-block;
   margin-right: 1rem;
-  min-width: ${props => props.minWidth || '15rem'};
+  min-width: ${(props) => props.minWidth || "15rem"};
 `;
 
 const Container = styled.div`
@@ -72,7 +75,7 @@ class ApplicantInfo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      editingMode: false
+      editingMode: false,
     };
   }
 
@@ -81,7 +84,7 @@ class ApplicantInfo extends Component {
     this.context.startLoading();
     setTimeout(() => {
       updateApplicantStatus(email, status).then(() => {
-        this.context.success('Updated status!');
+        this.context.success("Updated status!");
         callback(email, status);
       });
     }, 1000);
@@ -92,14 +95,15 @@ class ApplicantInfo extends Component {
     this.context.startLoading();
     setTimeout(() => {
       updateApplicantRole(email, role).then(() => {
-        this.context.success('Updated role!');
+        this.context.success("Updated role!");
         callback(email, role);
       });
     }, 1000);
   };
 
   render() {
-    const { applicant, updateStatusCallback, updateRoleCallback, theme } = this.props;
+    const { applicant, updateStatusCallback, updateRoleCallback, theme } =
+      this.props;
     return (
       <div>
         {applicant && (
@@ -108,12 +112,14 @@ class ApplicantInfo extends Component {
               <Heading>
                 <h1>{`${applicant.bio.first_name} ${applicant.bio.last_name}`}</h1>
                 <DropdownSelect
-                  updateCallback={selected => this.updateStatus(updateStatusCallback, selected)}
+                  updateCallback={(selected) =>
+                    this.updateStatus(updateStatusCallback, selected)
+                  }
                   options={statuses}
                   screenEdgeAlign={true}
                 >
                   <Tag
-                    type={getStatusColor(applicant.status) || ''}
+                    type={getStatusColor(applicant.status) || ""}
                     text={statuses[applicant.status]}
                   >
                     <Icon
@@ -127,18 +133,26 @@ class ApplicantInfo extends Component {
               <SubSection>
                 <h5>Role</h5>
                 <DropdownSelect
-                  updateCallback={selected => this.updateRole(updateRoleCallback, selected)}
+                  updateCallback={(selected) =>
+                    this.updateRole(updateRoleCallback, selected)
+                  }
                   options={roles}
                 >
                   <p>
-                    {roles[applicant.role]}{' '}
-                    <Icon name="dropdown-arrow" color={theme.grey1} size="1.5rem" />
+                    {roles[applicant.role]}{" "}
+                    <Icon
+                      name="dropdown-arrow"
+                      color={theme.grey1}
+                      size="1.5rem"
+                    />
                   </p>
                 </DropdownSelect>
               </SubSection>
               <SubSection>
                 <h5>Email</h5>
-                <a href={'mailto:' + applicant.bio.email}>{applicant.bio.email}</a>
+                <a href={"mailto:" + applicant.bio.email}>
+                  {applicant.bio.email}
+                </a>
               </SubSection>
               <SubSection>
                 <h5>Phone Number</h5>
@@ -148,7 +162,7 @@ class ApplicantInfo extends Component {
             {applicant.history && (
               <Section>
                 <h4>History</h4>
-                <p>{applicant.history + ''}</p>
+                <p>{applicant.history + ""}</p>
               </Section>
             )}
           </Container>
@@ -163,7 +177,8 @@ export default withTheme(ApplicantInfo);
 ApplicantInfo.propTypes = {
   applicant: PropTypes.object.isRequired,
   updateStatusCallback: PropTypes.func.isRequired,
-  updateRoleCallback: PropTypes.func.isRequired
+  updateRoleCallback: PropTypes.func.isRequired,
+  theme: PropTypes.object,
 };
 
 ApplicantInfo.contextType = RequestContext;

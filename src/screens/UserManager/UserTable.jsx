@@ -1,18 +1,22 @@
-import React from 'react';
-import { roles, statuses, mandated } from '../ApplicantViewer/applicantInfoHelpers';
-import { Button, ModalHeader, ModalBody, ModalFooter, Modal } from 'reactstrap';
-import Loading from '../../components/Loading';
-import PropTypes from 'prop-types';
-import * as Table from '../sharedStyles/tableStyles';
-import * as Form from '../sharedStyles/formStyles';
+import React from "react";
+import {
+  roles,
+  statuses,
+  mandated,
+} from "../ApplicantViewer/applicantInfoHelpers";
+import { Button, ModalHeader, ModalBody, ModalFooter, Modal } from "reactstrap";
+import Loading from "../../components/Loading";
+import PropTypes from "prop-types";
+import * as Table from "../sharedStyles/tableStyles";
+import * as Form from "../sharedStyles/formStyles";
 
-const keyToValue = key => {
-  key = key.replace(/_/g, ' ');
+const keyToValue = (key) => {
+  key = key.replace(/_/g, " ");
   key = key
     .toLowerCase()
-    .split(' ')
-    .map(s => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(' ');
+    .split(" ")
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(" ");
   return key;
 };
 
@@ -20,22 +24,22 @@ class UserTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userSelectedForEdit: null
+      userSelectedForEdit: null,
     };
   }
-  onDisplayEditUserModal = userToEdit => {
+  onDisplayEditUserModal = (userToEdit) => {
     console.log(userToEdit);
     this.setState({
-      userSelectedForEdit: userToEdit
+      userSelectedForEdit: userToEdit,
     });
   };
 
-  onModalClose = updatedUser => {
+  onModalClose = (updatedUser) => {
     if (updatedUser) {
       this.props.editUserCallback(updatedUser);
     }
     this.setState({
-      userSelectedForEdit: null
+      userSelectedForEdit: null,
     });
   };
   render() {
@@ -76,7 +80,9 @@ class UserTable extends React.Component {
                 <Form.Label>Name</Form.Label>
                 <Form.Input
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.name : ''
+                    this.state.userSelectedForEdit
+                      ? this.state.userSelectedForEdit.name
+                      : ""
                   }
                   type="text"
                   name="Name"
@@ -84,7 +90,9 @@ class UserTable extends React.Component {
                 <Form.Label>Email</Form.Label>
                 <Form.Input
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.email : ''
+                    this.state.userSelectedForEdit
+                      ? this.state.userSelectedForEdit.email
+                      : ""
                   }
                   type="text"
                   name="Email"
@@ -92,7 +100,9 @@ class UserTable extends React.Component {
                 <Form.Label>Role</Form.Label>
                 <Form.Dropdown
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.role : ''
+                    this.state.userSelectedForEdit
+                      ? this.state.userSelectedForEdit.role
+                      : ""
                   }
                   type="select"
                   name="roleSelected"
@@ -104,7 +114,9 @@ class UserTable extends React.Component {
                 <Form.Label>Status</Form.Label>
                 <Form.Dropdown
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.status : ''
+                    this.state.userSelectedForEdit
+                      ? this.state.userSelectedForEdit.status
+                      : ""
                   }
                   type="select"
                   name="statusSelected"
@@ -116,7 +128,9 @@ class UserTable extends React.Component {
                 <Form.Label>Mandated Hours</Form.Label>
                 <Form.Dropdown
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.mandated : ''
+                    this.state.userSelectedForEdit
+                      ? this.state.userSelectedForEdit.mandated
+                      : ""
                   }
                   type="select"
                   name="mandatedSelected"
@@ -128,7 +142,9 @@ class UserTable extends React.Component {
                 <Form.Label>Number of Mandated Hours</Form.Label>
                 <Form.Input
                   defaultValue={
-                    this.state.userSelectedForEdit ? this.state.userSelectedForEdit.mandatedHours : '0'
+                    this.state.userSelectedForEdit
+                      ? this.state.userSelectedForEdit.mandatedHours
+                      : "0"
                   }
                   type="text"
                   name="mandatedHours"
@@ -158,5 +174,5 @@ export default UserTable;
 UserTable.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool,
-  editUserCallback: PropTypes.func.isRequired
+  editUserCallback: PropTypes.func.isRequired,
 };

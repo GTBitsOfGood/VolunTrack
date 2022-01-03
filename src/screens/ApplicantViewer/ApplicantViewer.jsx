@@ -1,13 +1,17 @@
-import React, { Component } from 'react';
-import ApplicantList from './ApplicantList';
-import ApplicantInfo from './ApplicantInfo';
-import InfiniteScroll from '../../components/InfiniteScroll';
-import Icon from '../../components/Icon';
-import Loading from '../../components/Loading'
-import { filterApplicants, fetchMoreApplicants, searchApplicants } from '../../actions/queries';
-import styled from 'styled-components';
-import ApplicantSearch from './ApplicantSearch';
-import { Button } from 'reactstrap';
+import React, { Component } from "react";
+import ApplicantList from "./ApplicantList";
+import ApplicantInfo from "./ApplicantInfo";
+import InfiniteScroll from "../../components/InfiniteScroll";
+import Icon from "../../components/Icon";
+import Loading from "../../components/Loading";
+import {
+  filterApplicants,
+  fetchMoreApplicants,
+  searchApplicants,
+} from "../../actions/queries";
+import styled from "styled-components";
+import ApplicantSearch from "./ApplicantSearch";
+import { Button } from "reactstrap";
 
 const Styled = {
   Container: styled.div`
@@ -25,7 +29,7 @@ const Styled = {
     overflow-y: scroll;
     padding: 1rem;
 
-    ${props =>
+    ${(props) =>
       props.loading &&
       `
       display: flex;
@@ -42,20 +46,20 @@ const Styled = {
     span {
       margin-left: 0.5rem;
     }
-  `
+  `,
 };
 class AdminDash extends Component {
   constructor() {
     super();
     this.state = {
       selectedApplicantIndex: 0,
-      applicants: []
+      applicants: [],
     };
   }
 
-  onSelectApplicant = index => {
+  onSelectApplicant = (index) => {
     this.setState({
-      selectedApplicantIndex: index
+      selectedApplicantIndex: index,
     });
   };
 
@@ -63,7 +67,7 @@ class AdminDash extends Component {
     this.setState(
       {
         isLoading: true,
-        applicants: []
+        applicants: [],
       },
       this.onLoadMoreApplicants
     );
@@ -71,49 +75,53 @@ class AdminDash extends Component {
 
   onLoadMoreApplicants = () => {
     this.setState({
-      isLoading: true
+      isLoading: true,
     });
 
     const { applicants } = this.state;
-    const lastPaginationId = applicants.length ? applicants[applicants.length - 1]._id : 0;
+    const lastPaginationId = applicants.length
+      ? applicants[applicants.length - 1]._id
+      : 0;
     console.log(lastPaginationId);
 
-    fetchMoreApplicants(lastPaginationId).then(res =>
+    fetchMoreApplicants(lastPaginationId).then((res) =>
       this.setState({
         applicants: [...this.state.applicants, ...res.data.users],
-        isLoading: false
+        isLoading: false,
       })
     );
   };
   onUpdateApplicantStatus = (applicantEmail, updatedStatus) => {
     this.setState({
-      applicants: this.state.applicants.map(applicant => {
-        if (applicant.bio.email === applicantEmail) return { ...applicant, status: updatedStatus };
+      applicants: this.state.applicants.map((applicant) => {
+        if (applicant.bio.email === applicantEmail)
+          return { ...applicant, status: updatedStatus };
         return applicant;
-      })
+      }),
     });
   };
   onUpdateApplicantRole = (applicantEmail, updatedRole) => {
     this.setState({
-      applicants: this.state.applicants.map(applicant => {
-        if (applicant.bio.email === applicantEmail) return { ...applicant, role: updatedRole };
+      applicants: this.state.applicants.map((applicant) => {
+        if (applicant.bio.email === applicantEmail)
+          return { ...applicant, role: updatedRole };
         return applicant;
-      })
+      }),
     });
   };
 
   onSearchSubmit = (textInput, type) => {
-    searchApplicants(textInput, type).then(response =>
+    searchApplicants(textInput, type).then((response) =>
       this.setState({
-        applicants: response.data.users
+        applicants: response.data.users,
       })
     );
   };
 
-  onApplyFilters = filters => {
-    filterApplicants(filters).then(response =>
+  onApplyFilters = (filters) => {
+    filterApplicants(filters).then((response) =>
       this.setState({
-        applicants: response.data.users
+        applicants: response.data.users,
       })
     );
   };
@@ -122,7 +130,10 @@ class AdminDash extends Component {
     return (
       <Styled.Container>
         <Styled.Main>
-          <InfiniteScroll loadCallback={this.onLoadMoreApplicants} isLoading={isLoading}>
+          <InfiniteScroll
+            loadCallback={this.onLoadMoreApplicants}
+            isLoading={isLoading}
+          >
             <ApplicantList
               applicants={applicants}
               selectApplicantCallback={this.onSelectApplicant}
@@ -140,7 +151,9 @@ class AdminDash extends Component {
               </Styled.SecondaryOptions>
             </ApplicantList>
           </InfiniteScroll>
-          <Styled.ApplicantInfoContainer loading={!applicants || !applicants.length}>
+          <Styled.ApplicantInfoContainer
+            loading={!applicants || !applicants.length}
+          >
             {applicants && applicants.length ? (
               <ApplicantInfo
                 applicant={applicants[selectedApplicantIndex]}

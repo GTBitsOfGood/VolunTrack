@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const ObjectId = mongoose.Schema.Types.ObjectId;
-const UserData = require('./userData');
+const UserData = require("./userData");
 
 // define schema for user collection (user model)
 const userCredsSchema = new mongoose.Schema(
@@ -8,10 +8,10 @@ const userCredsSchema = new mongoose.Schema(
     googleId: { type: String, required: true, index: true, unique: true },
     accessToken: { type: String, required: true },
     refreshToken: { type: String },
-    userDataId: { type: ObjectId }
+    userDataId: { type: ObjectId },
   },
   {
-    timestamps: true
+    timestamps: true,
     // toJSON: {
     //   getters: true,
     //   virtuals: true
@@ -19,7 +19,7 @@ const userCredsSchema = new mongoose.Schema(
   }
 );
 
-userCredsSchema.statics.findOrCreate = function(
+userCredsSchema.statics.findOrCreate = function (
   accessToken,
   refreshToken,
   profile,
@@ -28,14 +28,14 @@ userCredsSchema.statics.findOrCreate = function(
   const that = this;
   return this.findOne(
     {
-      googleId: profile.id
+      googleId: profile.id,
     },
     (err, user) => {
       // no user was found, lets create a new one
       if (!user) {
         const { email, given_name, family_name } = profile._json;
         const newUserData = new UserData({
-          bio: { email, first_name: given_name, last_name: family_name }
+          bio: { email, first_name: given_name, last_name: family_name },
         });
 
         newUserData.save((err1, savedUserData) => {
@@ -44,7 +44,7 @@ userCredsSchema.statics.findOrCreate = function(
             googleId: profile.id,
             accessToken,
             refreshToken,
-            userDataId: savedUserData.id
+            userDataId: savedUserData.id,
           });
           newUser.save((error, savedUser) => cb(error, savedUser));
         });
@@ -57,4 +57,4 @@ userCredsSchema.statics.findOrCreate = function(
 };
 
 // export user model to app
-module.exports = mongoose.model('UserCreds', userCredsSchema);
+module.exports = mongoose.model("UserCreds", userCredsSchema);

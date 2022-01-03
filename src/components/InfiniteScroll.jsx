@@ -1,7 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
-import PropTypes from 'prop-types';
-import Loading from './Loading';
+import React from "react";
+import styled from "styled-components";
+import PropTypes from "prop-types";
+import Loading from "./Loading";
 
 const Styled = {
   Container: styled.div`
@@ -10,7 +10,7 @@ const Styled = {
   `,
   Bottom: styled.div`
     height: 100px;
-  `
+  `,
 };
 
 class InfiniteScroll extends React.Component {
@@ -25,7 +25,7 @@ class InfiniteScroll extends React.Component {
         this.props.loadCallback();
         this.setState(
           {
-            displayTimeout: true
+            displayTimeout: true,
           },
           () => {
             setTimeout(() => {
@@ -33,10 +33,11 @@ class InfiniteScroll extends React.Component {
                 let currScrollTop = this.containerRef.current.scrollTop;
                 console.log(scrollHeight - clientHeight - currScrollTop);
                 if (scrollHeight - clientHeight - currScrollTop <= 0) {
-                  this.containerRef.current.scrollTop = scrollHeight - clientHeight - 100;
+                  this.containerRef.current.scrollTop =
+                    scrollHeight - clientHeight - 100;
                 }
                 this.setState({
-                  displayTimeout: false
+                  displayTimeout: false,
                 });
               }
             }, 1000);
@@ -47,7 +48,7 @@ class InfiniteScroll extends React.Component {
   };
   componentDidMount = () => {
     this.scrollCallback(this.containerRef.current);
-    this.containerRef.current.addEventListener('scroll', event =>
+    this.containerRef.current.addEventListener("scroll", (event) =>
       this.scrollCallback(event.target)
     );
   };
@@ -56,7 +57,9 @@ class InfiniteScroll extends React.Component {
     return (
       <Styled.Container ref={this.containerRef}>
         {children}
-        <Styled.Bottom>{(isLoading || this.state.displayTimeout) && <Loading />}</Styled.Bottom>
+        <Styled.Bottom>
+          {(isLoading || this.state.displayTimeout) && <Loading />}
+        </Styled.Bottom>
       </Styled.Container>
     );
   }
@@ -64,7 +67,7 @@ class InfiniteScroll extends React.Component {
 
 InfiniteScroll.propTypes = {
   loadCallback: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
 };
 
 export default InfiniteScroll;

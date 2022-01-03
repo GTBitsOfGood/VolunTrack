@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { withRouter } from 'next/router';
-import Link from 'next/link'
-import styled from 'styled-components';
-import Icon from './Icon';
+import React, { useState } from "react";
+import { withRouter } from "next/router";
+import Link from "next/link";
+import styled from "styled-components";
+import Icon from "./Icon";
 // import { GoogleLogout } from 'react-google-login';
 
 import {
@@ -16,40 +16,40 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Container
-} from 'reactstrap';
+  Container,
+} from "reactstrap";
 
-import logo from '../images/bog_logo.png';
-import avatar from '../images/test.jpg';
-import { capitalizeFirstLetter } from './Shared/helpers';
+import logo from "../images/bog_logo.png";
+import avatar from "../images/test.jpg";
+import { capitalizeFirstLetter } from "./Shared/helpers";
 
-const pageSwitchWidth = currPath => {
+const pageSwitchWidth = (currPath) => {
   switch (currPath) {
-    case '/applicant-viewer':
-      return '9.6rem';
-    case '/user-manager':
-      return '8.6rem';
-    case '/settings':
-      return '8.6rem';      
-    case '/events':
-      return '4.8rem';
+    case "/applicant-viewer":
+      return "9.6rem";
+    case "/user-manager":
+      return "8.6rem";
+    case "/settings":
+      return "8.6rem";
+    case "/events":
+      return "4.8rem";
     default:
-      return '0';
+      return "0";
   }
 };
 
-const pageSwitchLeft = currPath => {
+const pageSwitchLeft = (currPath) => {
   switch (currPath) {
-    case '/applicant-viewer':
-      return '-1rem';
-    case '/user-manager':
-      return '8.3rem';
-    case '/settings':
-      return '8.3rem';
-    case '/events':
-      return '16.9rem';
+    case "/applicant-viewer":
+      return "-1rem";
+    case "/user-manager":
+      return "8.3rem";
+    case "/settings":
+      return "8.3rem";
+    case "/events":
+      return "16.9rem";
     default:
-      return '0';
+      return "0";
   }
 };
 
@@ -88,12 +88,12 @@ const Styled = {
     margin-right: auto;
 
     :before {
-      content: '';
-      width: ${props => pageSwitchWidth(props.currPathName)};
+      content: "";
+      width: ${(props) => pageSwitchWidth(props.currPathName)};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
-      left: ${props => pageSwitchLeft(props.currPathName)};
+      left: ${(props) => pageSwitchLeft(props.currPathName)};
       background: white;
       z-index: 0;
       transition: all 0.3s;
@@ -108,7 +108,7 @@ const Styled = {
       color: #707070;
       text-decoration: none;
     }
-    ${props =>
+    ${(props) =>
       props.selected
         ? `
       color: ${props.theme.primaryGrey};
@@ -153,7 +153,7 @@ const Styled = {
     flex-direction: column;
     justify-content: center;
     flex-wrap: wrap;
-    ${props =>
+    ${(props) =>
       `
       color: ${props.theme.primaryGrey};
       font-size: 16px;
@@ -166,7 +166,7 @@ const Styled = {
     justify-content: space-between;
     list-style: none;
     padding-left: 80px;
-  `
+  `,
 };
 
 const Header = ({ onLogout, user }) => {
@@ -176,37 +176,48 @@ const Header = ({ onLogout, user }) => {
     setIsOpen(!isOpen);
   };
 
-  const currPageMatches = page => window.location.pathname === page;
+  const currPageMatches = (page) => window.location.pathname === page;
 
   return (
     <Styled.Navbar light expand="md">
-      <Container style={{ marginLeft: '0px', marginRight: '0px', maxWidth: '100%' }}>
-        <NavbarBrand tag={props => <Link {...props} />} to="/events">
-          <img style={{ width: '175px' }} alt="bog logo" src={logo} />
+      <Container
+        style={{ marginLeft: "0px", marginRight: "0px", maxWidth: "100%" }}
+      >
+        <NavbarBrand tag={(props) => <Link {...props} />} to="/events">
+          <img style={{ width: "175px" }} alt="bog logo" src={logo} />
         </NavbarBrand>
 
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={window.location.pathname}>
-              {user.role === 'admin' && (
+              {user.role === "admin" && (
                 <Styled.PageLink
                   to="/applicant-viewer"
-                  selected={currPageMatches('/applicant-viewer')}
+                  selected={currPageMatches("/applicant-viewer")}
                 >
                   Applicant Viewer
                 </Styled.PageLink>
               )}
-              {user.role === 'admin' && (
-                <Styled.PageLink to="/user-manager" selected={currPageMatches('/user-manager')}>
+              {user.role === "admin" && (
+                <Styled.PageLink
+                  to="/user-manager"
+                  selected={currPageMatches("/user-manager")}
+                >
                   User Manager
                 </Styled.PageLink>
               )}
-              <Styled.PageLink to="/events" selected={currPageMatches('/events')}>
+              <Styled.PageLink
+                to="/events"
+                selected={currPageMatches("/events")}
+              >
                 Events
               </Styled.PageLink>
-              {user.role === 'admin' && (
-                <Styled.PageLink to="/settings" selected={currPageMatches('/settings')}>
+              {user.role === "admin" && (
+                <Styled.PageLink
+                  to="/settings"
+                  selected={currPageMatches("/settings")}
+                >
                   Settings
                 </Styled.PageLink>
               )}
@@ -215,28 +226,36 @@ const Header = ({ onLogout, user }) => {
               <Styled.Toggle color="white">
                 <Styled.UserContainer>
                   <Styled.UserContainer>
-                    <Styled.ImgContainer style={{ paddingLeft: '0px' }}>
-                      <Styled.UserIcon src={avatar} alt="icon"></Styled.UserIcon>
+                    <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
+                      <Styled.UserIcon
+                        src={avatar}
+                        alt="icon"
+                      ></Styled.UserIcon>
                     </Styled.ImgContainer>
                     <Styled.TxtContainer>
                       <p
-                        style={{ margin: '0px' }}
+                        style={{ margin: "0px" }}
                       >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                      <p style={{ margin: '0px' }}>{`${capitalizeFirstLetter(user.role ?? '')}`}</p>
+                      <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+                        user.role ?? ""
+                      )}`}</p>
                     </Styled.TxtContainer>
-                    <Styled.ImgContainer style={{ paddingRight: '0px' }}>
+                    <Styled.ImgContainer style={{ paddingRight: "0px" }}>
                       <Icon name="dropdown-arrow" size="1.5rem" />
                     </Styled.ImgContainer>
                   </Styled.UserContainer>
                 </Styled.UserContainer>
               </Styled.Toggle>
-              <DropdownMenu style={{ width: '100%' }}>
-                <DropdownItem tag={props => <Link {...props} />} to="/profile">
+              <DropdownMenu style={{ width: "100%" }}>
+                <DropdownItem
+                  tag={(props) => <Link {...props} />}
+                  to="/profile"
+                >
                   Profile
                 </DropdownItem>
                 <DropdownItem onClick={onLogout} href="/">
-                  {' '}
-                  Logout{' '}
+                  {" "}
+                  Logout{" "}
                 </DropdownItem>
               </DropdownMenu>
             </Styled.Dropdown>

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Button } from 'reactstrap';
-import Icon from '../../../components/Icon';
-import EventTable from './EventTable';
-import { fetchEvents } from '../../../actions/queries';
-import { updateEvent } from './eventHelpers';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Button } from "reactstrap";
+import Icon from "../../../components/Icon";
+import EventTable from "./EventTable";
+import { fetchEvents } from "../../../actions/queries";
+import { updateEvent } from "./eventHelpers";
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.grey9};
+    background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -26,7 +26,7 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
-  `
+  `,
 };
 
 const EventManager = ({ user }) => {
@@ -40,7 +40,7 @@ const EventManager = ({ user }) => {
   const onRefresh = () => {
     setLoading(true);
     fetchEvents()
-      .then(result => {
+      .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
         }
@@ -50,22 +50,27 @@ const EventManager = ({ user }) => {
       });
   };
 
-  const onRegister = async event => {
-    const changedEvent = { ...event, volunteers: event.volunteers.concat(user._id) }; // adds userId to event
+  const onRegister = async (event) => {
+    const changedEvent = {
+      ...event,
+      volunteers: event.volunteers.concat(user._id),
+    }; // adds userId to event
     const updatedEvent = await updateEvent(changedEvent); // updates event in backend
-    setEvents(events.map(e => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
+    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
 
     onRefresh();
   };
 
-  const onUnregister = async event => {
+  const onUnregister = async (event) => {
     const changedEvent = {
       // remove current user id from event volunteers
       ...event,
-      volunteers: event.volunteers.filter(volunteer => volunteer !== user._id)
+      volunteers: event.volunteers.filter(
+        (volunteer) => volunteer !== user._id
+      ),
     };
     const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map(e => (e._id === event._id ? updatedEvent : e)));
+    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
 
     onRefresh();
   };
@@ -85,7 +90,7 @@ const EventManager = ({ user }) => {
         onUnregister={onUnregister}
         user={user}
       >
-        {' '}
+        {" "}
       </EventTable>
     </Styled.Container>
   );

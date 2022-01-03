@@ -1,16 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import * as Table from '../../sharedStyles/tableStyles';
-import Loading from '../../../components/Loading';
-import Icon from '../../../components/Icon';
-import styled from 'styled-components';
-import { Button } from 'reactstrap';
+import React from "react";
+import PropTypes from "prop-types";
+import * as Table from "../../sharedStyles/tableStyles";
+import Loading from "../../../components/Loading";
+import Icon from "../../../components/Icon";
+import styled from "styled-components";
+import { Button } from "reactstrap";
 
 const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
-  `
+  `,
 };
 
 const EventTable = ({ events, loading, onRegister, onUnregister, user }) => {
@@ -35,14 +35,20 @@ const EventTable = ({ events, loading, onRegister, onUnregister, user }) => {
                 <td>{event.location}</td>
                 <td>
                   {event.external_links && event.external_links.length ? (
-                    <a href={event.external_links[0]} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={event.external_links[0]}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {event.external_links[0]}
                     </a>
                   ) : (
-                    'N/A'
+                    "N/A"
                   )}
                 </td>
-                <td>{event.volunteers.length + ' / ' + event.max_volunteers}</td>
+                <td>
+                  {event.volunteers.length + " / " + event.max_volunteers}
+                </td>
                 <td>
                   {event.volunteers.includes(user._id) ? (
                     <>
@@ -70,7 +76,7 @@ EventTable.propTypes = {
   loading: PropTypes.bool,
   events: PropTypes.array,
   onEditClicked: PropTypes.func,
-  onDeleteClicked: PropTypes.func
+  onDeleteClicked: PropTypes.func,
 };
 
 export default EventTable;

@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { Button } from 'reactstrap';
-import Icon from '../../../components/Icon';
-import EventTable from './EventTable';
-import { fetchEvents } from '../../../actions/queries';
-import EventCreateModal from './EventCreateModal';
-import EventEditModal from './EventEditModal';
-import EventDeleteModal from './EventDeleteModal';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { Button } from "reactstrap";
+import Icon from "../../../components/Icon";
+import EventTable from "./EventTable";
+import { fetchEvents } from "../../../actions/queries";
+import EventCreateModal from "./EventCreateModal";
+import EventEditModal from "./EventEditModal";
+import EventDeleteModal from "./EventDeleteModal";
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${props => props.theme.grey9};
+    background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -28,7 +28,7 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
-  `
+  `,
 };
 
 const EventManager = () => {
@@ -39,7 +39,7 @@ const EventManager = () => {
   const onRefresh = () => {
     setLoading(true);
     fetchEvents()
-      .then(result => {
+      .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
         }
@@ -54,7 +54,7 @@ const EventManager = () => {
   };
 
   const toggleCreateModal = () => {
-    setShowCreateModal(prev => !prev);
+    setShowCreateModal((prev) => !prev);
     onRefresh();
   };
   useEffect(() => {
@@ -65,20 +65,20 @@ const EventManager = () => {
   const [currEvent, setCurrEvent] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const onEditClicked = event => {
+  const onEditClicked = (event) => {
     setShowEditModal(true);
     setCurrEvent(event);
   };
   const toggleEditModal = () => {
-    setShowEditModal(prev => !prev);
+    setShowEditModal((prev) => !prev);
     onRefresh();
   };
-  const onDeleteClicked = event => {
+  const onDeleteClicked = (event) => {
     setShowDeleteModal(true);
     setCurrEvent(event);
   };
   const toggleDeleteModal = () => {
-    setShowDeleteModal(prev => !prev);
+    setShowDeleteModal((prev) => !prev);
     onRefresh();
   };
 
@@ -100,11 +100,19 @@ const EventManager = () => {
         onEditClicked={onEditClicked}
         onDeleteClicked={onDeleteClicked}
       >
-        {' '}
+        {" "}
       </EventTable>
       <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-      <EventEditModal open={showEditModal} toggle={toggleEditModal} event={currEvent} />
-      <EventDeleteModal open={showDeleteModal} toggle={toggleDeleteModal} event={currEvent} />
+      <EventEditModal
+        open={showEditModal}
+        toggle={toggleEditModal}
+        event={currEvent}
+      />
+      <EventDeleteModal
+        open={showDeleteModal}
+        toggle={toggleDeleteModal}
+        event={currEvent}
+      />
     </Styled.Container>
   );
 };

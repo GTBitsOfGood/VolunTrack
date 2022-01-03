@@ -1,37 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import Icon from '../../../components/Icon';
-import * as Table from '../../sharedStyles/tableStyles';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Formik, Form as FForm, Field, FieldArray, ErrorMessage } from 'formik';
-import * as SForm from '../../sharedStyles/formStyles';
-import PropTypes from 'prop-types';
-import { eventValidator } from './eventHelpers';
-import { createEvent } from '../../../actions/queries';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import Icon from "../../../components/Icon";
+import * as Table from "../../sharedStyles/tableStyles";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Formik, Form as FForm, Field, FieldArray, ErrorMessage } from "formik";
+import * as SForm from "../../sharedStyles/formStyles";
+import PropTypes from "prop-types";
+import { eventValidator } from "./eventHelpers";
+import { createEvent } from "../../../actions/queries";
 
 const Styled = {
   Form: styled(FForm)``,
   ErrorMessage: styled(ErrorMessage).attrs({
-    component: 'span'
+    component: "span",
   })`
     ::before {
-      content: '*';
+      content: "*";
     }
     color: red;
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
-  `
+  `,
 };
 
 const EventCreateModal = ({ open, toggle }) => {
   const [shiftElements, setShiftElements] = useState([]);
 
   const onClickAddShifts = () => {
-    setShiftElements([...shiftElements, { start_time: '', end_time: '', max_volunteers: '' }]);
+    setShiftElements([
+      ...shiftElements,
+      { start_time: "", end_time: "", max_volunteers: "" },
+    ]);
   };
 
-  const onDeleteShift = index => () => {
+  const onDeleteShift = (index) => () => {
     if (shiftElements.length > 1) {
       let newArray = [];
       for (let i = 0; i < shiftElements.length; i++) {
@@ -48,22 +51,24 @@ const EventCreateModal = ({ open, toggle }) => {
       <ModalHeader toggle={toggle}>Create Event</ModalHeader>
       <Formik
         initialValues={{
-          name: '',
-          date: '',
-          location: '',
-          description: '',
-          contact_phone: '',
-          contact_email: '',
+          name: "",
+          date: "",
+          location: "",
+          description: "",
+          contact_phone: "",
+          contact_email: "",
           external_links: [],
-          shifts: []
+          shifts: [],
         }}
         onSubmit={(values, { setSubmitting }) => {
           const event = {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links ? [values.external_links] : undefined,
-            shifts: values.shifts ? shiftElements : undefined
+            external_links: values.external_links
+              ? [values.external_links]
+              : undefined,
+            shifts: values.shifts ? shiftElements : undefined,
           };
           setSubmitting(true);
           createEvent(event)
@@ -73,17 +78,28 @@ const EventCreateModal = ({ open, toggle }) => {
           setShiftElements([]);
         }}
         validationSchema={eventValidator}
-        render={({ handleSubmit, isValid, isSubmitting, values, setFieldValue, handleBlur }) => (
+        render={({
+          handleSubmit,
+          isValid,
+          isSubmitting,
+          values,
+          setFieldValue,
+          handleBlur,
+        }) => (
           <React.Fragment>
             <ModalBody>
               <Styled.Form>
                 <SForm.FormGroup>
                   <SForm.Label>Name</SForm.Label>
                   <Styled.ErrorMessage name="name" />
-                  <Field name="name">{({ field }) => <SForm.Input {...field} type="text" />}</Field>
+                  <Field name="name">
+                    {({ field }) => <SForm.Input {...field} type="text" />}
+                  </Field>
                   <SForm.Label>Date</SForm.Label>
                   <Styled.ErrorMessage name="date" />
-                  <Field name="date">{({ field }) => <SForm.Input {...field} type="date" />}</Field>
+                  <Field name="date">
+                    {({ field }) => <SForm.Input {...field} type="date" />}
+                  </Field>
                   <SForm.Label>Location</SForm.Label>
                   <Styled.ErrorMessage name="location" />
                   <Field name="location">
@@ -125,8 +141,9 @@ const EventCreateModal = ({ open, toggle }) => {
                                       <SForm.Input
                                         {...field}
                                         type="time"
-                                        onInput={e =>
-                                          (shiftElements[index].start_time = e.target.value)
+                                        onInput={(e) =>
+                                          (shiftElements[index].start_time =
+                                            e.target.value)
                                         }
                                         value={shiftElements[index].start_time}
                                       />
@@ -139,24 +156,32 @@ const EventCreateModal = ({ open, toggle }) => {
                                       <SForm.Input
                                         {...field}
                                         type="time"
-                                        onInput={e =>
-                                          (shiftElements[index].end_time = e.target.value)
+                                        onInput={(e) =>
+                                          (shiftElements[index].end_time =
+                                            e.target.value)
                                         }
                                         value={shiftElements[index].end_time}
                                       />
                                     )}
                                   </Field>
                                   <SForm.Label>Max Volunteers</SForm.Label>
-                                  <Styled.ErrorMessage name={`Max Volunteers`} />
-                                  <Field name={`shifts.${index}.max_volunteers`}>
+                                  <Styled.ErrorMessage
+                                    name={`Max Volunteers`}
+                                  />
+                                  <Field
+                                    name={`shifts.${index}.max_volunteers`}
+                                  >
                                     {({ field }) => (
                                       <SForm.Input
                                         {...field}
                                         type="number"
-                                        onInput={e =>
-                                          (shiftElements[index].max_volunteers = e.target.value)
+                                        onInput={(e) =>
+                                          (shiftElements[index].max_volunteers =
+                                            e.target.value)
                                         }
-                                        value={shiftElements[index].max_volunteers}
+                                        value={
+                                          shiftElements[index].max_volunteers
+                                        }
                                         min="0"
                                       />
                                     )}
@@ -180,7 +205,11 @@ const EventCreateModal = ({ open, toggle }) => {
               <Button color="secondary" onClick={toggle}>
                 Cancel
               </Button>
-              <Button color="primary" onClick={handleSubmit} disabled={!isValid || isSubmitting}>
+              <Button
+                color="primary"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+              >
                 Submit
               </Button>
             </ModalFooter>
@@ -192,7 +221,7 @@ const EventCreateModal = ({ open, toggle }) => {
 };
 EventCreateModal.propTypes = {
   open: PropTypes.bool,
-  toggle: PropTypes.func
+  toggle: PropTypes.func,
 };
 
 export default EventCreateModal;
