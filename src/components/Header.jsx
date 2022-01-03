@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter } from "next/router";
+import { useRouter, withRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import styled from "styled-components";
@@ -171,33 +171,44 @@ const Styled = {
 
 const Header = ({ onLogout, user }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter;
 
   const toggle = () => {
     setIsOpen(!isOpen);
   };
 
-  const currPageMatches = (page) => window.location.pathname === page;
+  const currPageMatches = (page) => router.pathname === page;
 
   return (
     <Styled.Navbar light expand="md">
       <Container
-        style={{ marginLeft: "0px", marginRight: "0px", maxWidth: "100%" }}
+        style={{
+          marginLeft: "0px",
+          marginRight: "0px",
+          maxWidth: "100%",
+          display: "flex",
+        }}
       >
-        <NavbarBrand tag={(props) => <Link {...props} />} to="/events">
-          <Image
-            style={{ width: "175px" }}
-            alt="bog logo"
-            src="/images/bog_logo.png"
-          />
+        <NavbarBrand tag={(props) => <Link {...props} />} href="/events">
+          <div style={{ width: "175px" }}>
+            <Image
+              layout="responsive"
+              objectFit="contain"
+              width="175px"
+              height="100%"
+              alt="bog logo"
+              src="/images/bog_logo.png"
+            />
+          </div>
         </NavbarBrand>
 
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Styled.FlexContainer className="navbar-nav">
-            <Styled.PageSwitch currPathName={window.location.pathname}>
+            <Styled.PageSwitch currPathName={router.pathname}>
               {user.role === "admin" && (
                 <Styled.PageLink
-                  to="/applicant-viewer"
+                  href="/applicant-viewer"
                   selected={currPageMatches("/applicant-viewer")}
                 >
                   Applicant Viewer
@@ -205,21 +216,21 @@ const Header = ({ onLogout, user }) => {
               )}
               {user.role === "admin" && (
                 <Styled.PageLink
-                  to="/user-manager"
+                  href="/user-manager"
                   selected={currPageMatches("/user-manager")}
                 >
                   User Manager
                 </Styled.PageLink>
               )}
               <Styled.PageLink
-                to="/events"
+                href="/events"
                 selected={currPageMatches("/events")}
               >
                 Events
               </Styled.PageLink>
               {user.role === "admin" && (
                 <Styled.PageLink
-                  to="/settings"
+                  href="/settings"
                   selected={currPageMatches("/settings")}
                 >
                   Settings
@@ -253,7 +264,7 @@ const Header = ({ onLogout, user }) => {
               <DropdownMenu style={{ width: "100%" }}>
                 <DropdownItem
                   tag={(props) => <Link {...props} />}
-                  to="/profile"
+                  href="/profile"
                 >
                   Profile
                 </DropdownItem>

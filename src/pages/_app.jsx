@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import "focus-visible/dist/focus-visible.min.js";
 import "normalize.css";
 import "../../public/static/styles/App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import styled from "styled-components";
 import axios from "axios";
 import Splash from "../components/Splash/Footer";
@@ -59,7 +60,7 @@ const MyApp = ({ Component, pageProps, router, currentUser }) => {
           <Styled.Container>
             {isAuthenticated ? (
               <>
-                {/* <Header onLogout={logout} user={user} /> */}
+                <Header onLogout={logout} user={user} />
                 <Component user={user} {...pageProps} />
               </>
             ) : (
