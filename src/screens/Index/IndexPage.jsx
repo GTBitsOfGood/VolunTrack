@@ -1,5 +1,4 @@
 import React from "react";
-import { helloWorld } from "../../actions/General";
 import classes from "./IndexPage.module.css";
 
 const IndexPage = () => {
@@ -7,9 +6,7 @@ const IndexPage = () => {
 
   React.useEffect(() => {
     // Example how to create page without ssr
-    helloWorld().then((resp) => {
-      setPayload(resp);
-    });
+    setPayload("i am just a placeholder");
   }, []);
 
   return (

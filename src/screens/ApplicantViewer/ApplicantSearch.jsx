@@ -9,7 +9,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
-import Icon from "../Shared/Icon";
+import Icon from "../../components/Icon";
 
 const Styled = {
   FilterContainer: styled.form`

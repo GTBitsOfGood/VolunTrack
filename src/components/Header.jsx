@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 import styled from "styled-components";
 import Icon from "./Icon";
 // import { GoogleLogout } from 'react-google-login';
@@ -19,9 +20,8 @@ import {
   Container,
 } from "reactstrap";
 
-import logo from "../images/bog_logo.png";
-import avatar from "../images/test.jpg";
-import { capitalizeFirstLetter } from "./Shared/helpers";
+// todo: put this somewhere that makes sense
+import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 
 const pageSwitchWidth = (currPath) => {
   switch (currPath) {
@@ -184,7 +184,11 @@ const Header = ({ onLogout, user }) => {
         style={{ marginLeft: "0px", marginRight: "0px", maxWidth: "100%" }}
       >
         <NavbarBrand tag={(props) => <Link {...props} />} to="/events">
-          <img style={{ width: "175px" }} alt="bog logo" src={logo} />
+          <Image
+            style={{ width: "175px" }}
+            alt="bog logo"
+            src="/images/bog_logo.png"
+          />
         </NavbarBrand>
 
         <NavbarToggler onClick={toggle} />
@@ -228,7 +232,7 @@ const Header = ({ onLogout, user }) => {
                   <Styled.UserContainer>
                     <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
                       <Styled.UserIcon
-                        src={avatar}
+                        src="/images/test.jpg"
                         alt="icon"
                       ></Styled.UserIcon>
                     </Styled.ImgContainer>

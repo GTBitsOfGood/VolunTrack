@@ -57,6 +57,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-google-button": "^0.7.2",
+    "react-google-login": "^5.2.2",
+    "reactstrap": "^9.0.1",
     "styled-components": "^5.3.3",
     "yup": "^0.32.11"
   },

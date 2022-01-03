@@ -7,7 +7,7 @@ import "normalize.css";
 import "../../public/static/styles/App.css";
 import styled from "styled-components";
 import axios from "axios";
-import Splash from "../components/Splash";
+import Splash from "../components/Splash/Footer";
 import StyleProvider from "../providers/StyleProvider";
 import RequestProvider from "../providers/RequestProvider";
 
@@ -27,7 +27,8 @@ const Styled = {
 
 const MyApp = ({ Component, pageProps, router, currentUser }) => {
   // TODO: take this logic outside of _app.jsx
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // TODO: default false
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [user, setUser] = useState({});
 
   const login = (user) => {
@@ -58,7 +59,7 @@ const MyApp = ({ Component, pageProps, router, currentUser }) => {
           <Styled.Container>
             {isAuthenticated ? (
               <>
-                <Header onLogout={logout} user={user} />
+                {/* <Header onLogout={logout} user={user} /> */}
                 <Component user={user} {...pageProps} />
               </>
             ) : (
