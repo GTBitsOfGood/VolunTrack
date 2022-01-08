@@ -57,7 +57,6 @@ const EventCreateModal = ({ open, toggle }) => {
           description: "",
           contact_phone: "",
           contact_email: "",
-          external_links: [],
           shifts: [],
         }}
         onSubmit={(values, { setSubmitting }) => {
@@ -65,9 +64,6 @@ const EventCreateModal = ({ open, toggle }) => {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links
-              ? [values.external_links]
-              : undefined,
             shifts: values.shifts ? shiftElements : undefined,
           };
           setSubmitting(true);
@@ -119,11 +115,6 @@ const EventCreateModal = ({ open, toggle }) => {
                   <Styled.ErrorMessage name="contact_email" />
                   <Field name="contact_email">
                     {({ field }) => <SForm.Input {...field} type="email" />}
-                  </Field>
-                  <SForm.Label>External Link</SForm.Label>
-                  <Styled.ErrorMessage name="external_links" />
-                  <Field name="external_links">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
                   <FieldArray
                     name="shifts"

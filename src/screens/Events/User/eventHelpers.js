@@ -8,7 +8,6 @@ export const eventValidator = object().shape({
   description: string().trim().required(),
   contact_phone: string().trim(),
   contact_email: string().email().trim(),
-  external_links: string().url().trim(),
   max_volunteers: number().positive().required(),
 });
 

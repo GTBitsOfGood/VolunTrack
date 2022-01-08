@@ -65,7 +65,6 @@ const CREATE_EVENT_VALIDATOR = [
   check("contact_phone").optional().isAscii().trim(),
   check("contact_email").optional().isAscii().trim(),
   check("volunteers").optional().isArray().trim(),
-  check("external_links").optional().isArray().trim(),
   check("shifts.*.start_time").isAscii().trim(),
   check("shifts.*.start_time").isAscii().trim(),
   check("shifts.*.end_time").isAscii().trim(),

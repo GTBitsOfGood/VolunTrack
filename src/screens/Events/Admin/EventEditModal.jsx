@@ -35,16 +35,12 @@ const EventEditModal = ({ open, toggle, event }) => {
           contact_phone: event ? event.contact_phone : "",
           contact_email: event ? event.email : "",
           shifts: event ? event.shifts : [],
-          external_links: event ? event.external_links : [],
         }}
         onSubmit={(values, { setSubmitting }) => {
           const editedEvent = {
             ...values,
             contact_phone: values.contact_phone || undefined,
             contact_email: values.contact_email || undefined,
-            external_links: values.external_links
-              ? [values.external_links]
-              : undefined,
             _id: event._id,
           };
           setSubmitting(true);
@@ -93,11 +89,6 @@ const EventEditModal = ({ open, toggle, event }) => {
                   <Styled.ErrorMessage name="contact_email" />
                   <Field name="contact_email">
                     {({ field }) => <SForm.Input {...field} type="email" />}
-                  </Field>
-                  <SForm.Label>External Link</SForm.Label>
-                  <Styled.ErrorMessage name="external_links" />
-                  <Field name="external_links">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
                   </Field>
                 </SForm.FormGroup>
               </Styled.Form>

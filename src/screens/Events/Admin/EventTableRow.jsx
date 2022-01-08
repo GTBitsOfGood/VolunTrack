@@ -50,19 +50,6 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
       <td>{event.name}</td>
       <td>{event.date}</td>
       <td>{event.location}</td>
-      <td>
-        {event.external_links && event.external_links.length ? (
-          <a
-            href={event.external_links[0]}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {event.external_links[0]}
-          </a>
-        ) : (
-          "N/A"
-        )}
-      </td>
       <td>{event.shifts.length}</td>
       {showVolunteers &&
         currentVolunteers.map((volunteer, idx) => (

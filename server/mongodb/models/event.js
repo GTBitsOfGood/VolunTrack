@@ -35,11 +35,6 @@ const eventSchema = new mongoose.Schema(
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Shift" }],
       default: [],
     },
-    external_links: {
-      type: [String],
-      default: [],
-      required: false,
-    },
     shifts: {
       type: [
         {

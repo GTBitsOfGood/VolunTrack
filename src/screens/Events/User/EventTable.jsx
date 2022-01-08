@@ -34,19 +34,6 @@ const EventTable = ({ events, loading, onRegister, onUnregister, user }) => {
                 <td>{event.date}</td>
                 <td>{event.location}</td>
                 <td>
-                  {event.external_links && event.external_links.length ? (
-                    <a
-                      href={event.external_links[0]}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {event.external_links[0]}
-                    </a>
-                  ) : (
-                    "N/A"
-                  )}
-                </td>
-                <td>
                   {event.volunteers.length + " / " + event.max_volunteers}
                 </td>
                 <td>
