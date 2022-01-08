@@ -1,5 +1,5 @@
 // NPM Packages
-const { check } = require("express-validator/check");
+const { check } = require("express-validator");
 
 // TODO: Convert this into custom middlewares using next-connect
 

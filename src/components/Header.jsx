@@ -179,6 +179,9 @@ const Header = ({ onLogout, user }) => {
 
   const currPageMatches = (page) => router.pathname === page;
 
+  // DELETE AFTER AUTHENTICATION
+  user.role = "admin";
+
   return (
     <Styled.Navbar light expand="md">
       <Container
@@ -272,6 +275,7 @@ const Header = ({ onLogout, user }) => {
                   {" "}
                   Logout{" "}
                 </DropdownItem>
+                
               </DropdownMenu>
             </Styled.Dropdown>
           </Styled.FlexContainer>

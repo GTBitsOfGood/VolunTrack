@@ -49,5 +49,5 @@ userDataSchema.virtual("age").get(function () {
 });
 
 // export user model to app
-module.exports = mongoose.model("UserData", userDataSchema);
+module.exports = mongoose.models.UserData || mongoose.model("UserData", userDataSchema);
 module.exports.UserDataSchema = userDataSchema;

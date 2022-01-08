@@ -35,6 +35,8 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
       .finally(() => {});
   };
 
+  // must fix tr inside of tr
+  // this should be resolved later as the current ui layout is also incorrect
   return (
     <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
       <td>
@@ -70,16 +72,16 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
           </tr>
         ))}
 
-      <tr>
-        {event.shifts.map((shift, idx) => (
-          <div>
-            <td> Shift {idx + 1} </td>
-            <td>Start Time: {shift.start_time}</td>
-            <td>End Time: {shift.end_time}</td>
-            <td>Max Volunteers: {shift.max_volunteers}</td>
-          </div>
-        ))}
-      </tr>
+      
+      {event.shifts.map((shift, idx) => (
+        <tr key="idx">
+          <td>Shift {idx + 1} </td>
+          <td>Start Time: {shift.start_time}</td>
+          <td>End Time: {shift.end_time}</td>
+          <td>Max Volunteers: {shift.max_volunteers}</td>
+        </tr>
+      ))}
+      
       <td>
         <Styled.Button onClick={() => onEditClicked(event)}>
           <Icon color="grey3" name="create" />

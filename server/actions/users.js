@@ -1,27 +1,24 @@
 // NPM Packages
 const express = require("express");
 const router = express.Router();
-const { check, oneOf, validationResult } = require("express-validator/check");
-const { matchedData } = require("express-validator/filter");
+const { check, oneOf, validationResult, matchedData } = require("express-validator");
 const mongoose = require("mongoose");
+import dbConnect from "../mongodb/index";
 
 // Local Imports
-const { SendEmailError, EmailInUseError } = require("../util/errors");
-const UserData = require("../models/userData");
-const { USER_DATA_VALIDATOR } = require("../util/validators");
+const { SendEmailError, EmailInUseError } = require("../errors");
+const UserData = require("../mongodb/models/userData");
+const { USER_DATA_VALIDATOR } = require("../validators");
 const DEFAULT_PAGE_SIZE = 10;
 //events
 
-router.post("/", USER_DATA_VALIDATOR, (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.mapped() });
-  }
-  const newUserData = matchedData(req);
+export async function createUser(newUserData, user, next) {
+  await dbConnect();
+
   let userData = null;
-  UserData.findOne({ "bio.email": newUserData.bio.email })
-    .then((user) => {
-      if (user) {
+  return UserData.findOne({ 'bio.email': newUserData.bio.email })
+    .then(userExists => {
+      if (userExists) {
         throw new EmailInUseError(
           `Email ${newUserData.bio.email} already in use`,
           newUserData.bio.email
@@ -33,13 +30,13 @@ router.post("/", USER_DATA_VALIDATOR, (req, res, next) => {
       const newUser = new UserData(newUserData);
       return newUser.save();
     })
-    .then((savedUserData) => {
+    .then(savedUserData => {
       // Save data for response
       userData = savedUserData;
 
-      if (req.user && !req.user.userDataId) {
+      if (user && !user.userDataId) {
         // First created user, associate with user credentials
-        const userCreds = req.user;
+        const userCreds = user;
         userCreds.userDataId = savedUserData.id;
         return userCreds.save();
       }
@@ -47,79 +44,65 @@ router.post("/", USER_DATA_VALIDATOR, (req, res, next) => {
       return Promise.resolve();
     })
     .then(() => {
-      res.status(200).json({ userData });
+      return {status: 200, message: { userData }};
     })
-    .catch((err) => {
+    .catch(err => {
       if (err instanceof EmailInUseError) {
-        return res.status(400).json({
-          error: err.message,
-          errorType: err.name,
-        });
+       return {status: 400, message: {
+        error: result.message,
+        errorType: result.name,
+      }};
       }
 
       // Generic error handler
-      return next(err);
+      next(err);
     });
-});
+}
 
-router.get("/eventVolunteers", (req, res, next) => {
-  let parsedVolunteers = JSON.parse(req.query.volunteers);
-  let volunteers = parsedVolunteers.map(mongoose.Types.ObjectId);
+export async function getUsers(type, status, role, date, availability, email, lastPaginationId, pageSize, next) {
+  await dbConnect();
 
-  UserData.find({
-    _id: { $in: volunteers },
-  })
-    .then((users) => {
-      if (!users) {
-        return res.status(404).json({ errors: `No Users found` });
-      }
-      res.status(200).json({ users });
-    })
-    .catch((err) => next(err));
-});
-
-router.get("/", (req, res, next) => {
   const filter = {};
-  if (req.query.type) {
-    UserData.find({ role: req.query.type })
-      .then((users) => res.status(200).json({ users }))
+  if (type) {
+    return UserData.find({ role: type })
+      .then((users) => {return {status: 200, message: { users }}})
       .catch((err) => next(err));
   }
-  if (req.query.status) {
+  if (status) {
     try {
       // Each role is sent as an object key
       // For mongo '$or' query, these keys need to be reduced to an array
-      const statusFilter = Object.keys(JSON.parse(req.query.status)).reduce(
+      const statusFilter = Object.keys(JSON.parse(status)).reduce(
         (query, key) => [...query, { status: key }],
         []
       );
       if (!statusFilter.length) {
-        res.status(400).json({ error: "Invalid status param" });
+        return { status: 400, message: {error: "Invalid status param" }};
       }
       filter.$or = statusFilter;
     } catch (e) {
-      res.status(400).json({ error: "Invalid status param" });
+      return { status: 400, message: {error: "Invalid status param" }};
     }
   }
-  if (req.query.role) {
+  if (role) {
     try {
       // Each role is sent as an object key
       // For mongo '$or' query, these keys need to be reduced to an array
-      const roleFilter = Object.keys(JSON.parse(req.query.role)).reduce(
+      const roleFilter = Object.keys(JSON.parse(role)).reduce(
         (query, key) => [...query, { role: key }],
         []
       );
       if (!roleFilter.length) {
-        res.status(400).json({ error: "Invalid role param" });
+        return { status: 400, message: {error: "Invalid role param" }};
       }
       filter.$or = roleFilter;
     } catch (e) {
-      res.status(400).json({ error: "Invalid role param" });
+      return { status: 400, message: {error: "Invalid role param" }};
     }
   }
-  if (req.query.date) {
+  if (date) {
     try {
-      const dates = JSON.parse(req.query.date).reduce(
+      const dates = JSON.parse(date).reduce(
         (query, curr) => [
           ...query,
           { createdAt: { $gte: new Date(curr.from), $lte: new Date(curr.to) } },
@@ -129,63 +112,85 @@ router.get("/", (req, res, next) => {
       if (dates.length)
         filter.$or = filter.$or ? [...filter.$or, ...dates] : dates;
     } catch (e) {
-      res.status(400).json({ error: "Invalid date param" });
+      return { status: 400, message: {error: "Invalid date param" }};
     }
   }
-  if (req.query.availability) {
+  if (availability) {
     try {
-      filter.availability = JSON.parse(req.query.availability);
+      filter.availability = JSON.parse(availability);
     } catch (e) {
-      res.status(400).json({ error: "Invalid availability param" });
+      return { status: 400, message: {error: "Invalid availability param" }};
     }
   }
-  if (req.query.email) {
+  
+  //TODO: this logic came from vms, seems weird
+  if (email) {
     try {
-      filter.availability = JSON.parse(req.query.availability);
+      filter.availability = JSON.parse(availability);
     } catch (e) {
-      res.status(400).json({ error: "Invalid availability param" });
+      return { status: 400, message: {error: "Invalid availability param" }};
     }
   }
-  if (req.query.lastPaginationId) {
-    filter._id = { $lt: mongoose.Types.ObjectId(req.query.lastPaginationId) };
+  if (lastPaginationId) {
+    filter._id = { $lt: mongoose.Types.ObjectId(lastPaginationId) };
   }
   // Search ordered newest first, matching filters, limited by pagination size
-  UserData.aggregate([
+  return UserData.aggregate([
     { $sort: { _id: -1 } },
     { $match: filter },
-    { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+    { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
   ])
     .then((users) => {
-      res.status(200).json({ users });
+      return { status: 200, message: { users }};
     })
     .catch((err) => next(err));
-});
 
-router.get("/managementData", (req, res, next) => {
+}
+
+export async function getEventVolunteers(parsedVolunteers, next) {
+  await dbConnect();
+
+  let volunteers = parsedVolunteers.map(mongoose.Types.ObjectId);
+
+  return UserData.find({
+    _id: { $in: volunteers },
+  })
+    .then((users) => {
+      if (!users) {
+        return { status: 404, message: {error: `No Users found` }};
+      }
+      return {status: 200, message: { users }};
+    })
+    .catch((err) => next(err));
+}
+
+export async function getManagementData(role, lastPaginationId, pageSize, next) {
+  await dbConnect();
+
   const filter = {};
-  if (req.query.role) {
+  if (role) {
     try {
       // Each role is sent as an object key
       // For mongo '$or' query, these keys need to be reduced to an array
-      const roleFilter = Object.keys(JSON.parse(req.query.role)).reduce(
+      const roleFilter = Object.keys(JSON.parse(role)).reduce(
         (query, key) => [...query, { role: key }],
         []
       );
       if (!roleFilter.length) {
-        res.status(400).json({ error: "Invalid role param" });
+        return { status: 400, message: {error: "Invalid role param" }};
       }
       filter.$or = roleFilter;
     } catch (e) {
-      res.status(400).json({ error: "Invalid role param" });
+      return { status: 400, message: {error: "Invalid role param" }};
     }
   }
-  if (req.query.lastPaginationId) {
-    filter._id = { $lt: mongoose.Types.ObjectId(req.query.lastPaginationId) };
+  if (lastPaginationId) {
+    filter._id = { $lt: mongoose.Types.ObjectId(lastPaginationId) };
   }
-  UserData.aggregate([
+  return UserData.aggregate([
     { $sort: { _id: -1 } },
     { $match: filter },
-    { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+    { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
     {
       $project: {
         name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
@@ -196,31 +201,35 @@ router.get("/managementData", (req, res, next) => {
     },
   ])
     .then((users) => {
-      res.status(200).json({ users });
+      return {status: 200, message: { users }};
     })
     .catch((err) => next(err));
-});
+}
 
-router.get("/count", (req, res, next) => {
-  UserData.estimatedDocumentCount()
+export async function getCount(next) {
+  await dbConnect();
+
+  return UserData.estimatedDocumentCount()
     .exec()
     .then((count) => {
-      res.status(200).json({ count });
+      return { status: 200, message: { count }};
     })
     .catch((err) => next(err));
-});
+}
 
-router.get("/current", (req, res, next) => {
-  UserData.find({ "bio.email": "james@jameswang.com" })
-    .then((users) => {
-      res.status(200).json({ users });
-    })
-    .catch((err) => next(err));
-});
+export async function getCurrentUser() {
+  await dbConnect();
 
-router.get("/searchByContent", (req, res, next) => {
-  const inputText = req.query.searchquery;
-  const searchType = req.query.searchtype;
+  return UserData.find({ "bio.email": "james@jameswang.com" })
+  .then((users) => {
+    return { status: 200, message: { users }};
+  })
+  .catch((err) => next(err));
+}
+
+export async function searchByContent(inputText, searchType, pageSize, next) {
+  await dbConnect();
+
   const regexquery = { $regex: new RegExp(inputText), $options: "i" };
   const filter = {};
 
@@ -233,12 +242,14 @@ router.get("/searchByContent", (req, res, next) => {
         { "bio.email": regexquery },
         { "bio.phone_number": regexquery },
       ];
-      UserData.aggregate([
+      return UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+        { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
-        .then((users) => res.status(200).json({ users }))
+        .then((users) => {
+          return { status: 200, message: { users }};
+        })
         .catch((err) => next(err));
       break;
     case "History":
@@ -248,12 +259,14 @@ router.get("/searchByContent", (req, res, next) => {
         { "history.volunteer_commitment": regexquery },
         { "history.previous_volunteer_experience": regexquery },
       ];
-      UserData.aggregate([
+      return UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+        { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
-        .then((users) => res.status(200).json({ users }))
+        .then((users) => {
+          return { status: 200, message: { users }};
+        })
         .catch((err) => next(err));
       break;
     case "Name":
@@ -261,34 +274,38 @@ router.get("/searchByContent", (req, res, next) => {
         { "bio.first_name": regexquery },
         { "bio.last_name": regexquery },
       ];
-      UserData.aggregate([
+      return UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+        { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
-        .then((users) => res.status(200).json({ users }))
+        .then((users) => {
+          return { status: 200, message: { users }};
+        })
         .catch((err) => next(err));
       break;
     case "Email":
       filter.$or = [{ "bio.email": regexquery }];
-      UserData.aggregate([
+      return UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+        { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          res.status(200).json({ users });
+          return { status: 200, message: { users }};
         })
         .catch((err) => next(err));
       break;
     case "Phone Number":
       filter.$or = [{ "bio.phone_number": regexquery }];
-      UserData.aggregate([
+      return UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+        { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
-        .then((users) => res.status(200).json({ users }))
+        .then((users) => {
+          return { status: 200, message: { users }};
+        })
         .catch((err) => next(err));
       break;
     default:
@@ -302,85 +319,84 @@ router.get("/searchByContent", (req, res, next) => {
         { "bio.email": regexquery },
         { "bio.phone_number": regexquery },
       ];
-      UserData.aggregate([
+      return UserData.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
-        { $limit: parseInt(req.query.pageSize, 10) || DEFAULT_PAGE_SIZE },
+        { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
-        .then((users) => res.status(200).json({ users }))
+        .then((users) => {
+          return { status: 200, message: { users }};
+        })
         .catch((err) => next(err));
   }
-});
+}
 
-router.post("/updateStatus", (req, res) => {
-  if (!req.query.email || !req.query.status)
-    res.status(400).json({ error: "Invalid email or status sent" });
-  const { email, status } = req.query;
-  UserData.updateOne({ "bio.email": email }, { $set: { status: status } }).then(
+export async function updateStatus(email, status) {
+  await dbConnect();
+
+  if (!email || !status)
+    return { status: 400, message: {error: "Invalid email or status sent" }};
+  
+  return UserData.updateOne({ "bio.email": email }, { $set: { status: status } }).then(
     (result) => {
       if (!result.nModified)
-        res.status(400).json({
-          error: "Email requested for update was invalid. 0 items changed.",
-        });
-      res.sendStatus(200);
+        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
+      return {status: 200}
     }
   );
-});
-router.post("/updateUser", (req, res) => {
+}
+
+// multiple updates, not sure how to handle
+// maybe run in parallel with Promise.all?
+export async function updateUser(email, phone_number, first_name, last_name) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
-  if (!req.query.email) res.status(400).json({ error: "Invalid email sent" });
-  let email = req.query.email;
+  await dbConnect();
+  
+  if (!email) return { status: 400, message: {error: "Invalid email sent" }};
 
-  if (req.query.phone_number) {
+  if (phone_number) {
     UserData.updateOne(
       { "bio.email": email },
-      { $set: { "bio.phone_number": req.query.phone_number } }
+      { $set: { "bio.phone_number": phone_number } }
     ).then((result) => {
       if (!result.nModified)
-        res.status(400).json({
-          error: "Email requested for update was invalid. 0 items changed.",
-        });
+        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
     });
   }
-  if (req.query.first_name) {
+  if (first_name) {
     UserData.updateOne(
       { "bio.email": email },
-      { $set: { "bio.first_name": req.query.first_name } }
+      { $set: { "bio.first_name": first_name } }
     ).then((result) => {
       if (!result.nModified)
-        res.status(400).json({
-          error: "Email requested for update was invalid. 0 items changed.",
-        });
+        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
     });
   }
-  if (req.query.last_name) {
+  if (last_name) {
     UserData.updateOne(
       { "bio.email": email },
-      { $set: { "bio.last_name": req.query.last_name } }
+      { $set: { "bio.last_name": last_name } }
     ).then((result) => {
       if (!result.nModified)
-        res.status(400).json({
-          error: "Email requested for update was invalid. 0 items changed.",
-        });
+        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
+      return {status: 200}
     });
   }
-  res.sendStatus(200);
-});
+  return {status: 200};
+}
 
-router.post("/updateRole", (req, res) => {
-  if (!req.query.email || !req.query.role)
-    res.status(400).json({ error: "Invalid email or role sent" });
-  const { email, role } = req.query;
-  UserData.updateOne({ "bio.email": email }, { $set: { role: role } }).then(
+export async function updateRole(email, role) {
+  if (!email || !role)
+    return {status: 400, message: { error: "Invalid email or role sent" }};
+
+  return UserData.updateOne({ "bio.email": email }, { $set: { role: role } }).then(
     (result) => {
       if (!result.nModified)
-        res.status(400).json({
-          error: "Email requested for update was invalid. 0 items changed.",
-        });
-      res.sendStatus(200);
+        return { status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
+      return { status: 200 };
     }
   );
-});
+}
 
 // router.put('/:id/updateProfile', async (req, res, next) => {
 //   const id = req.params.id;
@@ -398,101 +414,71 @@ router.post("/updateRole", (req, res) => {
 //     .catch(err => next(err));
 // });
 
-router
-  .route("/:id")
-  .get([check("id").isMongoId()], (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.mapped() });
+export async function getUserFromId(id, next) {
+  return UserData.findById(id)
+  .then((user) => {
+    if (!user) {
+      return { status: 404, message: { error: `No user found with id: ${id}` }};
     }
-
-    UserData.findById(req.params.id)
-      .then((user) => {
-        if (!user) {
-          return res
-            .status(404)
-            .json({ errors: `No User found with id: ${req.params.id}` });
-        }
-        res.status(200).json({ user });
-      })
-      .catch((err) => next(err));
+    return { status: 200, message: { user }};
   })
-  .put(
-    [check("id").isMongoId()],
-    oneOf(USER_DATA_VALIDATOR),
-    (req, res, next) => {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.mapped() });
+  .catch((err) => next(err));
+}
+
+export async function updateUserId(userDataReq, events, id, action) {
+  return UserData.findById(id)
+    .then((user) => {
+      if (!user) {
+        return { status: 404, message: { error: `No user found with id: ${id}` }};
       }
 
-      const userDataReq = matchedData(req);
-      const events = req.body.events;
+      if (action === "appendEvent") {
+        events.forEach((eventId) => user.events.push(eventId));
+      } else if (action === "removeEvents") {
+        events.forEach((eventId) =>
+          user.events.splice(user.events.indexOf(eventId), 1)
+        );
+      }
 
-      UserData.findById(req.params.id)
-        .then((user) => {
-          if (!user) {
-            return res
-              .status(404)
-              .json({ errors: `No user found with id: ${req.params.id}` });
-          }
+      delete userDataReq.id; // we do not want to update the user's id
+      updateUserObjectFromRequest(userDataReq, user);
 
-          if (req.query.action === "appendEvent") {
-            events.forEach((eventId) => user.events.push(eventId));
-          } else if (req.query.action === "removeEvents") {
-            events.forEach((eventId) =>
-              user.events.splice(user.events.indexOf(eventId), 1)
-            );
-          }
+      // Save to db
+      return user.save();
+    })
+    .then((user) => {
+      return { status: 200, message: {user}};
+    })
+    .catch((err) => {
+      console.log(err);
+      if (err instanceof SendEmailError) {
+        return { status: 400, message: {
+          error: err.message,
+          errorType: err.name,
+        }};
+      }
 
-          delete userDataReq.id; // we do not want to update the user's id
-          updateUserObjectFromRequest(userDataReq, user);
+      // Generic error handler
+      next(err);
+    });
+}
 
-          // Save to db
-          return user.save();
-        })
-        .then((user) => {
-          return res.status(200).json({ user });
-        })
-        .catch((err) => {
-          console.log(err);
-          if (err instanceof SendEmailError) {
-            return res.status(400).json({
-              error: err.message,
-              errorType: err.name,
-            });
-          }
-
-          // Generic error handler
-          return next(err);
-        });
-    }
-  )
-  .delete([check("id").isMongoId()], (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.mapped() });
-    }
-
-    if (req.user && req.user.userDataId === req.params.id) {
+export async function deleteUserId(user, id, next) {
+    if (user && user.userDataId === id) {
       // User is trying to remove themselves, don't let that happen...
-      return res.status(403).json({
-        error: "Cannot delete yourself!",
-      });
+      return { status: 403, message: {error: "Cannot delete yourself!"}};
     }
 
-    UserData.findByIdAndRemove(req.params.id)
+    return UserData.findByIdAndRemove(id)
       .then((removed) => {
         if (!removed) {
-          return res
-            .status(404)
-            .json({ errors: `No user found with id: ${req.params.id}` });
+          return { status: 404, message: {error: `No user found with id: ${id}`}};
         }
 
-        return res.status(200).json({ removed });
+        return { status: 200, message: {removed}};
       })
       .catch((err) => next(err));
-  });
+}
 
 /**
  * Side Affect: Modifies `dbUser`
@@ -513,5 +499,3 @@ function updateUserObjectFromRequest(reqUser, dbUser) {
     }
   }
 }
-
-module.exports = router;

@@ -57,4 +57,4 @@ userCredsSchema.statics.findOrCreate = function (
 };
 
 // export user model to app
-module.exports = mongoose.model("UserCreds", userCredsSchema);
+module.exports = mongoose.models.UserCreds || mongoose.model("UserCreds", userCredsSchema);

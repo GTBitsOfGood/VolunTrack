@@ -40,6 +40,7 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
+    color: black;
 
     ${(props) => props.disabled && "background: white !important"}
   `,
@@ -48,6 +49,7 @@ const Styled = {
     border: none;
     margin-left: auto;
     margin-right: 1rem;
+    color: black;
   `,
 };
 

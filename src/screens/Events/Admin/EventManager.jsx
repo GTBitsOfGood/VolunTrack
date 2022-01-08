@@ -28,6 +28,7 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
+    color: black;
   `,
 };
 

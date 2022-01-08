@@ -34,6 +34,7 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
           {!loading &&
             events.map((event, idx) => (
               <EventTableRow
+                key={idx}
                 event={event}
                 onEditClicked={onEditClicked}
                 onDeleteClicked={onDeleteClicked}
