@@ -46,6 +46,11 @@ const EventCreateModal = ({ open, toggle }) => {
     }
   };
 
+  const onCancel = () => {
+    setShiftElements([]);
+    toggle();
+  }
+
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Create Event</ModalHeader>
@@ -57,7 +62,7 @@ const EventCreateModal = ({ open, toggle }) => {
           description: "",
           contact_phone: "",
           contact_email: "",
-          shifts: [],
+          shifts: undefined,
         }}
         onSubmit={(values, { setSubmitting }) => {
           const event = {
@@ -193,7 +198,7 @@ const EventCreateModal = ({ open, toggle }) => {
               </Styled.Form>
             </ModalBody>
             <ModalFooter>
-              <Button color="secondary" onClick={toggle}>
+              <Button color="secondary" onClick={onCancel}>
                 Cancel
               </Button>
               <Button

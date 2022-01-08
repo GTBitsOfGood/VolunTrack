@@ -48,7 +48,7 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
         </Styled.Button>
       </td>
       <td>{event.name}</td>
-      <td>{event.date}</td>
+      <td>{event.date.slice(0,10)}</td>
       <td>{event.location}</td>
       <td>{event.shifts.length}</td>
       {showVolunteers &&
