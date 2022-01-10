@@ -5,7 +5,7 @@ export default async function handler(req, res, next) {
         let result = await updateUser(req.query.email, req.query.phone_number, req.query.first_name, req.query.last_name);
         
         if (result.status === 200) {
-            res.sendStatus(200);
+            res.status(200).send();
         } else {
             res.status(result.status).json(result.message);
         }

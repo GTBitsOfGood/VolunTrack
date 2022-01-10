@@ -1,6 +1,6 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
-import { FormGroup, CustomInput } from "reactstrap";
+import { FormGroup, CustomInput, Input } from "reactstrap";
 import styled from "styled-components";
 
 const ErrorMsg = styled(ErrorMessage)`

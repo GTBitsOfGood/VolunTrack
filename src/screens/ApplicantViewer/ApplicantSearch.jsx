@@ -114,7 +114,6 @@ class ApplicantSearch extends React.Component {
           <DropdownMenu>
             <DropdownItem header>Search by...</DropdownItem>
             <DropdownItem onClick={this.selectSearchOption}>All</DropdownItem>
-            <DropdownItem onClick={this.selectSearchOption}>Bio</DropdownItem>
             <DropdownItem onClick={this.selectSearchOption}>Email</DropdownItem>
             <DropdownItem onClick={this.selectSearchOption}>
               Phone Number
