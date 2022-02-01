@@ -1,16 +1,12 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Head from "next/head";
-import Header from "../components/Header";
-import "focus-visible/dist/focus-visible.min.js";
-import "normalize.css";
-import "../../public/static/styles/App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import styled from "styled-components";
 import axios from "axios";
-import Splash from "../components/Splash/Footer";
-import StyleProvider from "../providers/StyleProvider";
-import RequestProvider from "../providers/RequestProvider";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "focus-visible/dist/focus-visible.min.js";
+import { SessionProvider } from "next-auth/react";
+import "normalize.css";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import styled from "styled-components";
+import "../../public/static/styles/App.css";
 
 const Styled = {
   Container: styled.div`
@@ -45,33 +41,36 @@ const MyApp = ({ Component, pageProps, router, currentUser }) => {
   };
 
   return (
-    <>
-      <Head>
-        <title>Helping Mamas App</title>
-      </Head>
-      {/* <div className="App">
-      <Header loggedIn={currentUser != null} currentRoute={router.asPath} />
-      <div className="Content">
-        <Component {...pageProps} currentUser={currentUser} />
-      </div>
-    </div> */}
-      <StyleProvider>
-        <RequestProvider>
-          <Styled.Container>
-            {isAuthenticated ? (
-              <>
-                <Header onLogout={logout} user={user} />
-                <Component user={user} {...pageProps} />
-              </>
-            ) : (
-              <>
-                <Splash onAuth={login} />
-              </>
-            )}
-          </Styled.Container>
-        </RequestProvider>
-      </StyleProvider>
-    </>
+    <SessionProvider session={pageProps.session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+    // <>
+    //   <Head>
+    //     <title>Helping Mamas App</title>
+    //   </Head>
+    //   {/* <div className="App">
+    //   <Header loggedIn={currentUser != null} currentRoute={router.asPath} />
+    //   <div className="Content">
+    //     <Component {...pageProps} currentUser={currentUser} />
+    //   </div>
+    // </div> */}
+    //   <StyleProvider>
+    //     <RequestProvider>
+    //       <Styled.Container>
+    //         {isAuthenticated ? (
+    //           <>
+    //             <Header onLogout={logout} user={user} />
+    //             <Component user={user} {...pageProps} />
+    //           </>
+    //         ) : (
+    //           <>
+    //             <Splash onAuth={login} />
+    //           </>
+    //         )}
+    //       </Styled.Container>
+    //     </RequestProvider>
+    //   </StyleProvider>
+    // </>
   );
 };
 
