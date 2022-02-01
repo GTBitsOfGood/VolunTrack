@@ -22,23 +22,23 @@ const Styled = {
   `,
 };
 
-const MyApp = ({ Component, pageProps, router, currentUser }) => {
+const MyApp = ({ Component, pageProps }) => {
   // TODO: take this logic outside of _app.jsx
   // TODO: default false
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-  const [user, setUser] = useState({});
+  // const [isAuthenticated, setIsAuthenticated] = useState(true);
+  // const [user, setUser] = useState({});
 
-  const login = (user) => {
-    setIsAuthenticated(true);
-    setUser(user);
-  };
+  // const login = (user) => {
+  //   setIsAuthenticated(true);
+  //   setUser(user);
+  // };
 
-  const logout = (e) => {
-    e.preventDefault();
-    setIsAuthenticated(false);
-    setUser({});
-    axios.post("/auth/logout");
-  };
+  // const logout = (e) => {
+  //   e.preventDefault();
+  //   setIsAuthenticated(false);
+  //   setUser({});
+  //   axios.post("/auth/logout");
+  // };
 
   return (
     <SessionProvider session={pageProps.session}>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import styled from "styled-components";
 import Icon from "./Icon";
-// import { GoogleLogout } from 'react-google-login';
+import { signOut } from "next-auth/react";
 
 import {
   Collapse,
@@ -22,6 +22,7 @@ import {
 
 // todo: put this somewhere that makes sense
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
+import { useSession } from "next-auth/react";
 
 const pageSwitchWidth = (currPath) => {
   switch (currPath) {
@@ -169,12 +170,19 @@ const Styled = {
   `,
 };
 
-const Header = ({ onLogout, user }) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter;
+  const { data: session } = useSession();
+  const user = session.user;
 
   const toggle = () => {
     setIsOpen(!isOpen);
+  };
+
+  const logout = (e) => {
+    e.preventDefault();
+    signOut();
   };
 
   const currPageMatches = (page) => router.pathname === page;
@@ -271,11 +279,10 @@ const Header = ({ onLogout, user }) => {
                 >
                   Profile
                 </DropdownItem>
-                <DropdownItem onClick={onLogout} href="/">
+                <DropdownItem onClick={logout} href="/">
                   {" "}
                   Logout{" "}
                 </DropdownItem>
-                
               </DropdownMenu>
             </Styled.Dropdown>
           </Styled.FlexContainer>

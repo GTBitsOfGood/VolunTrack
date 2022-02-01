@@ -1,23 +1,60 @@
-import React from "react";
 import classes from "./IndexPage.module.css";
+import axios from "axios";
+
+import { SessionProvider } from "next-auth/react";
+import Header from "../../components/Header";
+import "normalize.css";
+import PropTypes from "prop-types";
+import React, { useState } from "react";
+import styled from "styled-components";
+import Head from "next/head";
+import StyleProvider from "../../providers/StyleProvider";
+import RequestProvider from "../../providers/RequestProvider";
+import { useSession, signIn } from "next-auth/react";
+
+const Styled = {
+  Container: styled.div`
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  `,
+  Content: styled.main`
+    flex: 1;
+    overflow-y: scroll;
+  `,
+};
 
 const IndexPage = () => {
-  const [payload, setPayload] = React.useState("");
+  const { data: session } = useSession();
 
-  React.useEffect(() => {
-    // Example how to create page without ssr
-    setPayload("i am just a placeholder");
-  }, []);
+  const login = (e) => {
+    e.preventDefault();
+    signIn("google");
+  };
 
   return (
     <>
-      <h2 className={classes.centerText}>Welcome to Next.js!</h2>
-      <h3>
-        This page is static rendered, because all API calls are made in
-        useEffect
-      </h3>
-      <h4>{payload}</h4>
-      <p>You can tell because the text above flashes on page refresh</p>
+      {session ? (
+        <>
+          <Head>
+            <title>Helping Mamas App</title>
+          </Head>
+          <StyleProvider>
+            <RequestProvider>
+              <Styled.Container>
+                <Header />
+                <p>this is the index page</p>
+              </Styled.Container>
+            </RequestProvider>
+          </StyleProvider>
+        </>
+      ) : (
+        <a href={`/api/auth/signin`} onClick={login}>
+          Sign in
+        </a>
+      )}
     </>
   );
 };
