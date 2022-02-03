@@ -11,6 +11,7 @@ import Head from "next/head";
 import StyleProvider from "../../providers/StyleProvider";
 import RequestProvider from "../../providers/RequestProvider";
 import { useSession, signIn } from "next-auth/react";
+import GoogleButton from "react-google-button";
 
 const Styled = {
   Container: styled.div`
@@ -27,7 +28,7 @@ const Styled = {
 };
 
 const IndexPage = () => {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
   const login = (e) => {
     e.preventDefault();
@@ -36,7 +37,11 @@ const IndexPage = () => {
 
   return (
     <>
-      {session ? (
+      {status == "loading" && <p>loading...</p>}
+      {status == "unauthenticated" && (
+        <GoogleButton type="light" onClick={login} />
+      )}
+      {status == "authenticated" && (
         <>
           <Head>
             <title>Helping Mamas App</title>
@@ -45,15 +50,10 @@ const IndexPage = () => {
             <RequestProvider>
               <Styled.Container>
                 <Header />
-                <p>this is the index page</p>
               </Styled.Container>
             </RequestProvider>
           </StyleProvider>
         </>
-      ) : (
-        <a href={`/api/auth/signin`} onClick={login}>
-          Sign in
-        </a>
       )}
     </>
   );

@@ -1,7 +1,12 @@
 // NPM Packages
 const express = require("express");
 const router = express.Router();
-const { check, oneOf, validationResult, matchedData } = require("express-validator");
+const {
+  check,
+  oneOf,
+  validationResult,
+  matchedData,
+} = require("express-validator");
 const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 
@@ -16,8 +21,8 @@ export async function createUser(newUserData, user, next) {
   await dbConnect();
 
   let userData = null;
-  return UserData.findOne({ 'bio.email': newUserData.bio.email })
-    .then(userExists => {
+  return UserData.findOne({ "bio.email": newUserData.bio.email })
+    .then((userExists) => {
       if (userExists) {
         throw new EmailInUseError(
           `Email ${newUserData.bio.email} already in use`,
@@ -30,7 +35,7 @@ export async function createUser(newUserData, user, next) {
       const newUser = new UserData(newUserData);
       return newUser.save();
     })
-    .then(savedUserData => {
+    .then((savedUserData) => {
       // Save data for response
       userData = savedUserData;
 
@@ -44,14 +49,17 @@ export async function createUser(newUserData, user, next) {
       return Promise.resolve();
     })
     .then(() => {
-      return {status: 200, message: { userData }};
+      return { status: 200, message: { userData } };
     })
-    .catch(err => {
+    .catch((err) => {
       if (err instanceof EmailInUseError) {
-       return {status: 400, message: {
-        error: result.message,
-        errorType: result.name,
-      }};
+        return {
+          status: 400,
+          message: {
+            error: result.message,
+            errorType: result.name,
+          },
+        };
       }
 
       // Generic error handler
@@ -59,13 +67,25 @@ export async function createUser(newUserData, user, next) {
     });
 }
 
-export async function getUsers(type, status, role, date, availability, email, lastPaginationId, pageSize, next) {
+export async function getUsers(
+  type,
+  status,
+  role,
+  date,
+  availability,
+  email,
+  lastPaginationId,
+  pageSize,
+  next
+) {
   await dbConnect();
 
   const filter = {};
   if (type) {
     return UserData.find({ role: type })
-      .then((users) => {return {status: 200, message: { users }}})
+      .then((users) => {
+        return { status: 200, message: { users } };
+      })
       .catch((err) => next(err));
   }
   if (status) {
@@ -77,11 +97,11 @@ export async function getUsers(type, status, role, date, availability, email, la
         []
       );
       if (!statusFilter.length) {
-        return { status: 400, message: {error: "Invalid status param" }};
+        return { status: 400, message: { error: "Invalid status param" } };
       }
       filter.$or = statusFilter;
     } catch (e) {
-      return { status: 400, message: {error: "Invalid status param" }};
+      return { status: 400, message: { error: "Invalid status param" } };
     }
   }
   if (role) {
@@ -93,11 +113,11 @@ export async function getUsers(type, status, role, date, availability, email, la
         []
       );
       if (!roleFilter.length) {
-        return { status: 400, message: {error: "Invalid role param" }};
+        return { status: 400, message: { error: "Invalid role param" } };
       }
       filter.$or = roleFilter;
     } catch (e) {
-      return { status: 400, message: {error: "Invalid role param" }};
+      return { status: 400, message: { error: "Invalid role param" } };
     }
   }
   if (date) {
@@ -112,23 +132,23 @@ export async function getUsers(type, status, role, date, availability, email, la
       if (dates.length)
         filter.$or = filter.$or ? [...filter.$or, ...dates] : dates;
     } catch (e) {
-      return { status: 400, message: {error: "Invalid date param" }};
+      return { status: 400, message: { error: "Invalid date param" } };
     }
   }
   if (availability) {
     try {
       filter.availability = JSON.parse(availability);
     } catch (e) {
-      return { status: 400, message: {error: "Invalid availability param" }};
+      return { status: 400, message: { error: "Invalid availability param" } };
     }
   }
-  
+
   //TODO: this logic came from vms, seems weird
   if (email) {
     try {
       filter.availability = JSON.parse(availability);
     } catch (e) {
-      return { status: 400, message: {error: "Invalid availability param" }};
+      return { status: 400, message: { error: "Invalid availability param" } };
     }
   }
   if (lastPaginationId) {
@@ -141,10 +161,9 @@ export async function getUsers(type, status, role, date, availability, email, la
     { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
   ])
     .then((users) => {
-      return { status: 200, message: { users }};
+      return { status: 200, message: { users } };
     })
     .catch((err) => next(err));
-
 }
 
 export async function getEventVolunteers(parsedVolunteers, next) {
@@ -157,14 +176,19 @@ export async function getEventVolunteers(parsedVolunteers, next) {
   })
     .then((users) => {
       if (!users) {
-        return { status: 404, message: {error: `No Users found` }};
+        return { status: 404, message: { error: `No Users found` } };
       }
-      return {status: 200, message: { users }};
+      return { status: 200, message: { users } };
     })
     .catch((err) => next(err));
 }
 
-export async function getManagementData(role, lastPaginationId, pageSize, next) {
+export async function getManagementData(
+  role,
+  lastPaginationId,
+  pageSize,
+  next
+) {
   await dbConnect();
 
   const filter = {};
@@ -177,11 +201,11 @@ export async function getManagementData(role, lastPaginationId, pageSize, next) 
         []
       );
       if (!roleFilter.length) {
-        return { status: 400, message: {error: "Invalid role param" }};
+        return { status: 400, message: { error: "Invalid role param" } };
       }
       filter.$or = roleFilter;
     } catch (e) {
-      return { status: 400, message: {error: "Invalid role param" }};
+      return { status: 400, message: { error: "Invalid role param" } };
     }
   }
   if (lastPaginationId) {
@@ -201,7 +225,7 @@ export async function getManagementData(role, lastPaginationId, pageSize, next) 
     },
   ])
     .then((users) => {
-      return {status: 200, message: { users }};
+      return { status: 200, message: { users } };
     })
     .catch((err) => next(err));
 }
@@ -212,7 +236,7 @@ export async function getCount(next) {
   return UserData.estimatedDocumentCount()
     .exec()
     .then((count) => {
-      return { status: 200, message: { count }};
+      return { status: 200, message: { count } };
     })
     .catch((err) => next(err));
 }
@@ -221,10 +245,10 @@ export async function getCurrentUser() {
   await dbConnect();
 
   return UserData.find({ "bio.email": "james@jameswang.com" })
-  .then((users) => {
-    return { status: 200, message: { users }};
-  })
-  .catch((err) => next(err));
+    .then((users) => {
+      return { status: 200, message: { users } };
+    })
+    .catch((err) => next(err));
 }
 
 export async function searchByContent(inputText, searchType, pageSize, next) {
@@ -248,7 +272,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          return { status: 200, message: { users }};
+          return { status: 200, message: { users } };
         })
         .catch((err) => next(err));
       break;
@@ -265,7 +289,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          return { status: 200, message: { users }};
+          return { status: 200, message: { users } };
         })
         .catch((err) => next(err));
       break;
@@ -280,7 +304,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          return { status: 200, message: { users }};
+          return { status: 200, message: { users } };
         })
         .catch((err) => next(err));
       break;
@@ -292,7 +316,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          return { status: 200, message: { users }};
+          return { status: 200, message: { users } };
         })
         .catch((err) => next(err));
       break;
@@ -304,7 +328,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          return { status: 200, message: { users }};
+          return { status: 200, message: { users } };
         })
         .catch((err) => next(err));
       break;
@@ -325,7 +349,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
       ])
         .then((users) => {
-          return { status: 200, message: { users }};
+          return { status: 200, message: { users } };
         })
         .catch((err) => next(err));
   }
@@ -335,15 +359,21 @@ export async function updateStatus(email, status) {
   await dbConnect();
 
   if (!email || !status)
-    return { status: 400, message: {error: "Invalid email or status sent" }};
-  
-  return UserData.updateOne({ "bio.email": email }, { $set: { status: status } }).then(
-    (result) => {
-      if (!result.nModified)
-        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
-      return {status: 200}
-    }
-  );
+    return { status: 400, message: { error: "Invalid email or status sent" } };
+
+  return UserData.updateOne(
+    { "bio.email": email },
+    { $set: { status: status } }
+  ).then((result) => {
+    if (!result.nModified)
+      return {
+        status: 400,
+        message: {
+          error: "Email requested for update was invalid. 0 items changed.",
+        },
+      };
+    return { status: 200 };
+  });
 }
 
 // multiple updates, not sure how to handle
@@ -351,8 +381,8 @@ export async function updateStatus(email, status) {
 export async function updateUser(email, phone_number, first_name, last_name) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
-  
-  if (!email) return { status: 400, message: {error: "Invalid email sent" }};
+
+  if (!email) return { status: 400, message: { error: "Invalid email sent" } };
 
   if (phone_number) {
     UserData.updateOne(
@@ -360,7 +390,12 @@ export async function updateUser(email, phone_number, first_name, last_name) {
       { $set: { "bio.phone_number": phone_number } }
     ).then((result) => {
       if (!result.nModified)
-        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
     });
   }
   if (first_name) {
@@ -369,7 +404,12 @@ export async function updateUser(email, phone_number, first_name, last_name) {
       { $set: { "bio.first_name": first_name } }
     ).then((result) => {
       if (!result.nModified)
-        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
     });
   }
   if (last_name) {
@@ -378,24 +418,35 @@ export async function updateUser(email, phone_number, first_name, last_name) {
       { $set: { "bio.last_name": last_name } }
     ).then((result) => {
       if (!result.nModified)
-        return {status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
-      return {status: 200}
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
     });
   }
-  return {status: 200};
+  return { status: 200 };
 }
 
 export async function updateRole(email, role) {
   if (!email || !role)
-    return {status: 400, message: { error: "Invalid email or role sent" }};
+    return { status: 400, message: { error: "Invalid email or role sent" } };
 
-  return UserData.updateOne({ "bio.email": email }, { $set: { role: role } }).then(
-    (result) => {
-      if (!result.nModified)
-        return { status: 400, message: {error: "Email requested for update was invalid. 0 items changed."}};
-      return { status: 200 };
-    }
-  );
+  return UserData.updateOne(
+    { "bio.email": email },
+    { $set: { role: role } }
+  ).then((result) => {
+    if (!result.nModified)
+      return {
+        status: 400,
+        message: {
+          error: "Email requested for update was invalid. 0 items changed.",
+        },
+      };
+    return { status: 200 };
+  });
 }
 
 // router.put('/:id/updateProfile', async (req, res, next) => {
@@ -416,20 +467,26 @@ export async function updateRole(email, role) {
 
 export async function getUserFromId(id, next) {
   return UserData.findById(id)
-  .then((user) => {
-    if (!user) {
-      return { status: 404, message: { error: `No user found with id: ${id}` }};
-    }
-    return { status: 200, message: { user }};
-  })
-  .catch((err) => next(err));
+    .then((user) => {
+      if (!user) {
+        return {
+          status: 404,
+          message: { error: `No user found with id: ${id}` },
+        };
+      }
+      return { status: 200, message: { user } };
+    })
+    .catch((err) => next(err));
 }
 
 export async function updateUserId(userDataReq, events, id, action) {
   return UserData.findById(id)
     .then((user) => {
       if (!user) {
-        return { status: 404, message: { error: `No user found with id: ${id}` }};
+        return {
+          status: 404,
+          message: { error: `No user found with id: ${id}` },
+        };
       }
 
       if (action === "appendEvent") {
@@ -447,15 +504,18 @@ export async function updateUserId(userDataReq, events, id, action) {
       return user.save();
     })
     .then((user) => {
-      return { status: 200, message: {user}};
+      return { status: 200, message: { user } };
     })
     .catch((err) => {
       console.log(err);
       if (err instanceof SendEmailError) {
-        return { status: 400, message: {
-          error: err.message,
-          errorType: err.name,
-        }};
+        return {
+          status: 400,
+          message: {
+            error: err.message,
+            errorType: err.name,
+          },
+        };
       }
 
       // Generic error handler
@@ -464,20 +524,23 @@ export async function updateUserId(userDataReq, events, id, action) {
 }
 
 export async function deleteUserId(user, id, next) {
-    if (user && user.userDataId === id) {
-      // User is trying to remove themselves, don't let that happen...
-      return { status: 403, message: {error: "Cannot delete yourself!"}};
-    }
+  if (user && user.userDataId === id) {
+    // User is trying to remove themselves, don't let that happen...
+    return { status: 403, message: { error: "Cannot delete yourself!" } };
+  }
 
-    return UserData.findByIdAndRemove(id)
-      .then((removed) => {
-        if (!removed) {
-          return { status: 404, message: {error: `No user found with id: ${id}`}};
-        }
+  return UserData.findByIdAndRemove(id)
+    .then((removed) => {
+      if (!removed) {
+        return {
+          status: 404,
+          message: { error: `No user found with id: ${id}` },
+        };
+      }
 
-        return { status: 200, message: {removed}};
-      })
-      .catch((err) => next(err));
+      return { status: 200, message: { removed } };
+    })
+    .catch((err) => next(err));
 }
 
 /**
