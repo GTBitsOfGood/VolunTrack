@@ -68,6 +68,7 @@ const Styled = {
     text-align: center;
     min-width: 7rem;
     width: fit-content;
+    margin-right: 1rem;
   `,
   Toggle: styled(DropdownToggle)`
     text-align: left;
@@ -193,7 +194,7 @@ const Header = ({ onLogout, user }) => {
         }}
       >
         <NavbarBrand tag={(props) => <Link {...props} />} href="/events">
-          <div style={{ width: "175px" }}>
+          <div style={{ width: "175px", marginLeft: "1rem"}}>
             <Image
               layout="responsive"
               objectFit="contain"
