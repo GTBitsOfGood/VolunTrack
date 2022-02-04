@@ -25,9 +25,12 @@ export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   events: {
     createUser: async (message) => {
-      await User.deleteOne({ _id: new ObjectId(message.user.id) });
+      const _id = new ObjectId(message.user.id);
+
+      await User.deleteOne({ _id });
 
       const userData = {
+        _id,
         bio: {
           first_name: message.user.name.split(" ")[0],
           last_name: message.user.name.split(" ")[1],
