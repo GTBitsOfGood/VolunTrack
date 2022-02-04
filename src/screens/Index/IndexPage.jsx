@@ -1,8 +1,6 @@
-import { signIn, useSession } from "next-auth/react";
-import Head from "next/head";
+import { useSession } from "next-auth/react";
 import "normalize.css";
 import React from "react";
-import GoogleButton from "react-google-button";
 import styled from "styled-components";
 
 const Styled = {
@@ -20,27 +18,13 @@ const Styled = {
 };
 
 const IndexPage = () => {
-  const { status } = useSession();
-
-  const login = (e) => {
-    e.preventDefault();
-    signIn("google");
-  };
+  const { data: session } = useSession();
+  console.log(session.user);
 
   return (
-    <>
-      {status == "loading" && <p>loading...</p>}
-      {status == "unauthenticated" && (
-        <GoogleButton type="light" onClick={login} />
-      )}
-      {status == "authenticated" && (
-        <>
-          <Head>
-            <title>Helping Mamas App</title>
-          </Head>
-        </>
-      )}
-    </>
+    <h1>
+      Welcome {session.user.bio.first_name} {session.user.bio.last_name}
+    </h1>
   );
 };
 
