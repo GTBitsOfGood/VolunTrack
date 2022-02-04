@@ -1,10 +1,11 @@
+import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import styled from "styled-components";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../sharedStyles/formStyles";
 import { Button } from "reactstrap";
-import { profileValidator } from "./helpers";
+import styled from "styled-components";
 import { editProfile } from "../../actions/queries";
+import * as SForm from "../sharedStyles/formStyles";
+import { profileValidator } from "./helpers";
 
 const Styled = {
   Container: styled.div`
@@ -40,8 +41,11 @@ const Styled = {
   `,
 };
 
-const Profile = ({ user }) => {
+const Profile = () => {
   const [successText, setSuccessText] = useState("");
+
+  const { data: session } = useSession();
+  const user = session.user;
 
   const {
     first_name = "",
@@ -75,7 +79,8 @@ const Profile = ({ user }) => {
             });
         }}
         validationSchema={profileValidator}
-        render={({ handleSubmit, isValid, isSubmitting }) => (
+      >
+        {({ handleSubmit, isValid, isSubmitting }) => (
           <>
             <Styled.Form>
               <p>{successText}</p>
@@ -114,7 +119,7 @@ const Profile = ({ user }) => {
             </Styled.Form>
           </>
         )}
-      ></Formik>
+      </Formik>
     </Styled.Container>
   );
 };

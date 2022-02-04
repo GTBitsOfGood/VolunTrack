@@ -19,7 +19,6 @@ const Styled = {
 
 const IndexPage = () => {
   const { data: session } = useSession();
-  console.log(session.user);
 
   return (
     <h1>
