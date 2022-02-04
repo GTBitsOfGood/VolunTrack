@@ -26,6 +26,18 @@ export async function getEvents(startDate, endDate, next) {
       return events;
     })
     .catch(next);
+  } else if (!startDate) {
+    return EventData.find({ date: { $lte: endDate}})
+      .then((events) => {
+        return events;
+      })
+      .catch(next);
+  } else if (!endDate) {
+    return EventData.find({ date: { $gte: startDate}})
+      .then((events) => {
+        return events;
+      })
+      .catch(next);
   } else {
     startDate = new Date(startDate);
     endDate = new Date(endDate);
