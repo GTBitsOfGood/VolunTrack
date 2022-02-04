@@ -2,7 +2,6 @@ import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoClient, ObjectId } from "mongodb";
-import dbConnect from "../../../../server/mongodb/index";
 import User from "../../../../server/mongodb/models/User";
 
 const uri = process.env.MONGO_DB;
