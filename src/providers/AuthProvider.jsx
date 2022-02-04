@@ -1,25 +1,24 @@
-import React from "react";
-import { useSession, signIn } from "next-auth/react";
-import GoogleButton from "react-google-button";
+import { signIn, useSession } from "next-auth/react";
 import PropTypes from "prop-types";
+import React from "react";
+import GoogleButton from "react-google-button";
 
 const AuthProvider = ({ children }) => {
-  const { data: session } = useSession();
+  const { status } = useSession();
 
   const login = (e) => {
     e.preventDefault();
     signIn("google");
   };
 
-  return (
-    <>
-      {session ? (
-        <>{children}</>
-      ) : (
-        <GoogleButton type="light" onClick={login} />
-      )}
-    </>
-  );
+  switch (status) {
+    case "authenticated":
+      return <>{children}</>;
+    case "loading":
+      return <p>loading...</p>;
+    default:
+      return <GoogleButton type="light" onClick={login} />;
+  }
 };
 
 AuthProvider.propTypes = {

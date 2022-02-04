@@ -1,28 +1,25 @@
-import React, { useState } from "react";
-import { useRouter, withRouter } from "next/router";
-import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import styled from "styled-components";
-import Icon from "./Icon";
-import { signOut } from "next-auth/react";
-
+import Link from "next/link";
+import { useRouter, withRouter } from "next/router";
+import React, { useState } from "react";
 import {
   Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
+  Container,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
   NavItem,
   UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Container,
 } from "reactstrap";
-
+import styled from "styled-components";
 // todo: put this somewhere that makes sense
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
-import { useSession } from "next-auth/react";
+import Icon from "./Icon";
 
 const pageSwitchWidth = (currPath) => {
   switch (currPath) {
@@ -172,7 +169,7 @@ const Styled = {
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter;
+  const router = useRouter();
   const { data: session } = useSession();
   const user = session.user;
 
@@ -183,6 +180,11 @@ const Header = () => {
   const logout = (e) => {
     e.preventDefault();
     signOut();
+  };
+
+  const goToProfile = (e) => {
+    e.preventDefault();
+    router.push("/profile");
   };
 
   const currPageMatches = (page) => router.pathname === page;
@@ -273,10 +275,7 @@ const Header = () => {
                 </Styled.UserContainer>
               </Styled.Toggle>
               <DropdownMenu style={{ width: "100%" }}>
-                <DropdownItem
-                  tag={(props) => <Link {...props} />}
-                  href="/profile"
-                >
+                <DropdownItem onClick={goToProfile} href="/profile">
                   Profile
                 </DropdownItem>
                 <DropdownItem onClick={logout} href="/">

@@ -1,7 +1,8 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import { MongoClient, ObjectId } from "mongodb";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { MongoClient, ObjectId } from "mongodb";
+import dbConnect from "../../../../server/mongodb/index";
 import User from "../../../../server/mongodb/models/User";
 
 const uri = process.env.MONGO_DB;
@@ -24,6 +25,8 @@ export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   events: {
     createUser: async (message) => {
+      await dbConnect();
+
       const _id = new ObjectId(message.user.id);
 
       await User.deleteOne({ _id });
@@ -41,6 +44,19 @@ export default NextAuth({
       const user = new User(userData);
 
       await user.save();
+    },
+  },
+  callbacks: {
+    async session({ session, token, user }) {
+      await dbConnect();
+
+      const _id = new ObjectId(user.id);
+      const currentUser = await User.findOne({ _id });
+
+      return {
+        ...session,
+        user: currentUser,
+      };
     },
   },
 });

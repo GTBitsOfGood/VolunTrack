@@ -1,14 +1,9 @@
-import classes from "./IndexPage.module.css";
-import axios from "axios";
-
-import "normalize.css";
-import PropTypes from "prop-types";
-import React, { useState } from "react";
-import styled from "styled-components";
+import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
-
-import { useSession, signIn } from "next-auth/react";
+import "normalize.css";
+import React from "react";
 import GoogleButton from "react-google-button";
+import styled from "styled-components";
 
 const Styled = {
   Container: styled.div`

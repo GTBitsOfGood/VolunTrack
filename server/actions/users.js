@@ -9,19 +9,21 @@ const {
 } = require("express-validator");
 const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
+import User from "../mongodb/models/User";
 
 // Local Imports
 const { SendEmailError, EmailInUseError } = require("../errors");
 const UserData = require("../mongodb/models/userData");
 const { USER_DATA_VALIDATOR } = require("../validators");
 const DEFAULT_PAGE_SIZE = 10;
+
 //events
 
 export async function createUser(newUserData, user, next) {
   await dbConnect();
 
   let userData = null;
-  return UserData.findOne({ "bio.email": newUserData.bio.email })
+  return User.findOne({ "bio.email": newUserData.bio.email })
     .then((userExists) => {
       if (userExists) {
         throw new EmailInUseError(
@@ -82,7 +84,7 @@ export async function getUsers(
 
   const filter = {};
   if (type) {
-    return UserData.find({ role: type })
+    return User.find({ role: type })
       .then((users) => {
         return { status: 200, message: { users } };
       })
@@ -155,7 +157,7 @@ export async function getUsers(
     filter._id = { $lt: mongoose.Types.ObjectId(lastPaginationId) };
   }
   // Search ordered newest first, matching filters, limited by pagination size
-  return UserData.aggregate([
+  return User.aggregate([
     { $sort: { _id: -1 } },
     { $match: filter },
     { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -211,7 +213,7 @@ export async function getManagementData(
   if (lastPaginationId) {
     filter._id = { $lt: mongoose.Types.ObjectId(lastPaginationId) };
   }
-  return UserData.aggregate([
+  return User.aggregate([
     { $sort: { _id: -1 } },
     { $match: filter },
     { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -233,7 +235,7 @@ export async function getManagementData(
 export async function getCount(next) {
   await dbConnect();
 
-  return UserData.estimatedDocumentCount()
+  return User.estimatedDocumentCount()
     .exec()
     .then((count) => {
       return { status: 200, message: { count } };
@@ -266,7 +268,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "bio.email": regexquery },
         { "bio.phone_number": regexquery },
       ];
-      return UserData.aggregate([
+      return User.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -283,7 +285,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "history.volunteer_commitment": regexquery },
         { "history.previous_volunteer_experience": regexquery },
       ];
-      return UserData.aggregate([
+      return User.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -298,7 +300,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "bio.first_name": regexquery },
         { "bio.last_name": regexquery },
       ];
-      return UserData.aggregate([
+      return User.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -310,7 +312,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
       break;
     case "Email":
       filter.$or = [{ "bio.email": regexquery }];
-      return UserData.aggregate([
+      return User.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -322,7 +324,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
       break;
     case "Phone Number":
       filter.$or = [{ "bio.phone_number": regexquery }];
-      return UserData.aggregate([
+      return User.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -343,7 +345,7 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "bio.email": regexquery },
         { "bio.phone_number": regexquery },
       ];
-      return UserData.aggregate([
+      return User.aggregate([
         { $sort: { _id: -1 } },
         { $match: filter },
         { $limit: parseInt(pageSize, 10) || DEFAULT_PAGE_SIZE },
@@ -361,7 +363,7 @@ export async function updateStatus(email, status) {
   if (!email || !status)
     return { status: 400, message: { error: "Invalid email or status sent" } };
 
-  return UserData.updateOne(
+  return User.updateOne(
     { "bio.email": email },
     { $set: { status: status } }
   ).then((result) => {
@@ -385,7 +387,7 @@ export async function updateUser(email, phone_number, first_name, last_name) {
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
 
   if (phone_number) {
-    UserData.updateOne(
+    User.updateOne(
       { "bio.email": email },
       { $set: { "bio.phone_number": phone_number } }
     ).then((result) => {
@@ -399,7 +401,7 @@ export async function updateUser(email, phone_number, first_name, last_name) {
     });
   }
   if (first_name) {
-    UserData.updateOne(
+    User.updateOne(
       { "bio.email": email },
       { $set: { "bio.first_name": first_name } }
     ).then((result) => {
@@ -413,7 +415,7 @@ export async function updateUser(email, phone_number, first_name, last_name) {
     });
   }
   if (last_name) {
-    UserData.updateOne(
+    User.updateOne(
       { "bio.email": email },
       { $set: { "bio.last_name": last_name } }
     ).then((result) => {
@@ -434,39 +436,22 @@ export async function updateRole(email, role) {
   if (!email || !role)
     return { status: 400, message: { error: "Invalid email or role sent" } };
 
-  return UserData.updateOne(
-    { "bio.email": email },
-    { $set: { role: role } }
-  ).then((result) => {
-    if (!result.nModified)
-      return {
-        status: 400,
-        message: {
-          error: "Email requested for update was invalid. 0 items changed.",
-        },
-      };
-    return { status: 200 };
-  });
+  return User.updateOne({ "bio.email": email }, { $set: { role: role } }).then(
+    (result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    }
+  );
 }
 
-// router.put('/:id/updateProfile', async (req, res, next) => {
-//   const id = req.params.id;
-//   if (!id) {
-//     return res.status(400).send('No Id supplied');
-//   }
-
-//   const oldUser = UserData.findById(id)
-//     .then(user => {
-//       if (!user) {
-//         return res.status(400).json({ errors: `No user found with id: ${id}` });
-//       }
-//       res.status(200).json({ user });
-//     })
-//     .catch(err => next(err));
-// });
-
 export async function getUserFromId(id, next) {
-  return UserData.findById(id)
+  return User.findById(id)
     .then((user) => {
       if (!user) {
         return {
@@ -479,8 +464,8 @@ export async function getUserFromId(id, next) {
     .catch((err) => next(err));
 }
 
-export async function updateUserId(userDataReq, events, id, action) {
-  return UserData.findById(id)
+export async function updateUserId(userDataReq, events, id, action, next) {
+  return User.findById(id)
     .then((user) => {
       if (!user) {
         return {
@@ -529,7 +514,7 @@ export async function deleteUserId(user, id, next) {
     return { status: 403, message: { error: "Cannot delete yourself!" } };
   }
 
-  return UserData.findByIdAndRemove(id)
+  return User.findByIdAndRemove(id)
     .then((removed) => {
       if (!removed) {
         return {

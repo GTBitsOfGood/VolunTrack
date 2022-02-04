@@ -1,14 +1,14 @@
+import PropTypes from "prop-types";
 import React from "react";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import Loading from "../../components/Loading";
 import {
+  mandated,
   roles,
   statuses,
-  mandated,
 } from "../ApplicantViewer/applicantInfoHelpers";
-import { Button, ModalHeader, ModalBody, ModalFooter, Modal } from "reactstrap";
-import Loading from "../../components/Loading";
-import PropTypes from "prop-types";
-import * as Table from "../sharedStyles/tableStyles";
 import * as Form from "../sharedStyles/formStyles";
+import * as Table from "../sharedStyles/tableStyles";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -28,7 +28,6 @@ class UserTable extends React.Component {
     };
   }
   onDisplayEditUserModal = (userToEdit) => {
-    console.log(userToEdit);
     this.setState({
       userSelectedForEdit: userToEdit,
     });
