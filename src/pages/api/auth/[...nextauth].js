@@ -2,6 +2,8 @@ import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoClient, ObjectId } from "mongodb";
+import dbConnect from "../../../../server/mongodb/index";
+import User from "../../../../server/mongodb/models/User";
 
 const uri = process.env.MONGO_DB;
 const options = {
@@ -22,19 +24,21 @@ export default NextAuth({
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
   events: {
-    signIn: async (message) => {
-      const usersCollection = client
-        .db(process.env.DATABASE_NAME)
-        .collection("users");
+    createUser: async (message) => {
+      await User.deleteOne({ _id: new ObjectId(message.user.id) });
 
-      usersCollection.updateOne(
-        { _id: new ObjectId(message.user.id) },
-        {
-          $set: {
-            username: "username1",
-          },
-        }
-      );
+      const userData = {
+        bio: {
+          first_name: message.user.name.split(" ")[0],
+          last_name: message.user.name.split(" ")[1],
+          phone_number: "",
+          email: message.user.email,
+        },
+      };
+
+      const user = new User(userData);
+
+      await user.save();
     },
   },
 });
