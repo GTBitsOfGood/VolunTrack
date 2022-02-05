@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-// define schema for user collection (user model)
+// Schema for User model
 const userSchema = new Schema(
   {
     role: {

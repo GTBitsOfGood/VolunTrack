@@ -24,6 +24,8 @@ export default NextAuth({
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
   events: {
+    // NextJS creates a default user with name, email, and user fields
+    // We can delete this and then add a new User from the defined User schema
     createUser: async (message) => {
       await dbConnect();
 
@@ -47,6 +49,7 @@ export default NextAuth({
     },
   },
   callbacks: {
+    // This determines what is returned from useSession and getSession calls
     async session({ session, token, user }) {
       await dbConnect();
 

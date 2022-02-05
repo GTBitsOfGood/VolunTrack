@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import GoogleButton from "react-google-button";
 
+// AuthProvider wraps the entire appication and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {
   const { status } = useSession();
 
