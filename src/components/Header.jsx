@@ -100,28 +100,14 @@ const Styled = {
       transition: all 0.3s;
     }
   `,
-  PageLink: styled(Link)`
-    margin-left: 2rem;
+  PageLink: styled.div`
+    color: #969696;
+    margin-left: 0.5rem;
     margin-right: 2rem;
-    z-index: 1;
-
+    text-decoration: none;
     :hover {
-      color: #707070;
-      text-decoration: none;
+      color: #607177;
     }
-    ${(props) =>
-      props.selected
-        ? `
-      color: ${props.theme.primaryGrey};
-      font-weight: 600;
-
-      :hover {
-        color: ${props.theme.primaryGrey};
-      }
-    `
-        : `
-      color: #969696;
-    `}
   `,
   DropdownLink: styled(Link)`
     color: black;
@@ -211,34 +197,34 @@ const Header = ({ onLogout, user }) => {
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
               {user.role === "admin" && (
-                <Styled.PageLink
+              <Link
                   href="/applicant-viewer"
                   selected={currPageMatches("/applicant-viewer")}
                 >
-                  Applicant Viewer
-                </Styled.PageLink>
+                <Styled.PageLink>Applicant Viewer</Styled.PageLink>
+              </Link>
               )}
               {user.role === "admin" && (
-                <Styled.PageLink
+              <Link
                   href="/user-manager"
                   selected={currPageMatches("/user-manager")}
-                >
-                  User Manager
-                </Styled.PageLink>
+              >
+                <Styled.PageLink>User Manager</Styled.PageLink>
+              </Link>
               )}
-              <Styled.PageLink
+              <Link
                 href="/events"
                 selected={currPageMatches("/events")}
               >
-                Events
-              </Styled.PageLink>
+                <Styled.PageLink>Events</Styled.PageLink>
+              </Link>
               {user.role === "admin" && (
-                <Styled.PageLink
-                  href="/settings"
-                  selected={currPageMatches("/settings")}
-                >
-                  Settings
-                </Styled.PageLink>
+              <Link
+                href="/settings"
+                selected={currPageMatches("/settings")}
+              >
+                <Styled.PageLink>Settings</Styled.PageLink>
+              </Link>
               )}
             </Styled.PageSwitch>
             <Styled.Dropdown nav inNavbar className="navbar-nav">
