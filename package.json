@@ -13,7 +13,7 @@
   },
   "homepage": "https://github.com/GTBitsOfGood/nextjs-starter#readme",
   "scripts": {
-    "dev": "next -p 5000",
+    "dev": "next -p 3000",
     "build": "next build",
     "start": "next build && next start",
     "lint": "eslint \"**/*.{js,jsx}\"",
