@@ -27,7 +27,7 @@ const Styled = {
     background: white;
     border: none;
     &:hover {
-      background: gainsboro
+      background: gainsboro;
     }
   `,
 };

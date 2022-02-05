@@ -24,6 +24,15 @@ const Styled = {
     overflow: hidden;
     padding: 0;
   `,
+  Button: styled(Button)`
+    background: gainsboro;
+    border: none;
+    color: black;
+    &:hover {
+      background: lightgray;
+      color: black;
+    }
+  `,
   DropdownToggle: styled(DropdownToggle)`
     background: white;
     border: 1px solid ${(props) => props.theme.grey8};
@@ -120,7 +129,7 @@ class ApplicantSearch extends React.Component {
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
-        <Button onClick={this.onShowFilterModal}>Filter</Button>
+        <Styled.Button onClick={this.onShowFilterModal}>Filter</Styled.Button>
 
         <Filters
           show={this.state.showFilterModal}

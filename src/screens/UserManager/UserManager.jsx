@@ -41,7 +41,9 @@ const Styled = {
     background: white;
     border: none;
     color: black;
-
+    &:hover {
+      background: gainsboro;
+    }
     ${(props) => props.disabled && "background: white !important"}
   `,
   ToBeginningButton: styled(Button)`
@@ -120,7 +122,7 @@ class UserManager extends React.Component {
         <Styled.ButtonContainer>
           <Styled.Button onClick={this.onRefresh}>
             <Icon color="grey3" name="refresh" />
-            <span> Refresh</span>
+            <span style={{ color: "black" }}> Refresh</span>
           </Styled.Button>
           {currentPage > 0 && (
             <Styled.ToBeginningButton onClick={this.onToBeginning}>
