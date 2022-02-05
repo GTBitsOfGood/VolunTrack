@@ -118,15 +118,6 @@ const Styled = {
       text-decoration: none;
     }
   `,
-  // DropdownLinkProfile: styled.div`
-  //   color: #212529, 
-  //   textDecoration: none, 
-  //   margin-left: 2rem,
-  //   :hover {
-  //     background-color: #607177;
-  //     cursor: pointer;
-  //   }
-  // `,
   DropdownItem: styled.div`
     color: #212529;
     padding-left: 1.2rem;
@@ -273,12 +264,12 @@ const Header = ({ onLogout, user }) => {
                 </Styled.UserContainer>
               </Styled.Toggle>
               <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
-                <Styled.DropdownItem
+                <DropdownItem
                   tag={(props) => <Link {...props} />}
                   href="/profile"
                 >
-                  Profile
-                </Styled.DropdownItem>
+                <Styled.DropdownItem>Profile</Styled.DropdownItem>             
+                </DropdownItem>
                 <Styled.DropdownItem onClick={onLogout} href="/">
                   {" "}
                   Logout{" "}
