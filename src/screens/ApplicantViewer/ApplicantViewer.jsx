@@ -53,6 +53,11 @@ const Styled = {
     &:hover {
       background: lightgray;
     }
+    &:focus {
+      background: gainsboro;
+      outline: none;
+      border: none;
+    }
   `,
 };
 class AdminDash extends Component {

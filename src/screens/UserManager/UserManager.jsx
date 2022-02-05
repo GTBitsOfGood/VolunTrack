@@ -44,6 +44,11 @@ const Styled = {
     &:hover {
       background: gainsboro;
     }
+    &:focus {
+      background: white;
+      outline: none;
+      border: none;
+    }
     ${(props) => props.disabled && "background: white !important"}
   `,
   ToBeginningButton: styled(Button)`

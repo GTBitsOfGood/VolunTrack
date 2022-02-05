@@ -29,6 +29,11 @@ const Styled = {
     &:hover {
       background: gainsboro;
     }
+    &:focus {
+      background: white;
+      outline: none;
+      border: none;
+    }
   `,
 };
 
