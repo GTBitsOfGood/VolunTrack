@@ -259,8 +259,8 @@ const Header = ({ onLogout, user }) => {
                   </Styled.UserContainer>
                 </Styled.UserContainer>
               </Styled.Toggle>
-              <DropdownMenu style={{ width: "100%" }}>
-                <DropdownItem
+              <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
+                <DropdownItem style = {{marginLeft: "10px"}}
                   tag={(props) => <Link {...props} />}
                   href="/profile"
                 >
