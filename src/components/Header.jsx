@@ -107,6 +107,7 @@ const Styled = {
     text-decoration: none;
     :hover {
       color: #607177;
+      font-weight: bold;
     }
   `,
   DropdownLink: styled(Link)`
