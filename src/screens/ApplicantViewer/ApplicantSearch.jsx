@@ -34,8 +34,7 @@ const Styled = {
     }
     &:focus {
       background: gainsboro;
-      outline: none;
-      border: none;
+      box-shadow: none;
     } 
   `,
   DropdownToggle: styled(DropdownToggle)`
