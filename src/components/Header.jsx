@@ -230,9 +230,9 @@ const Header = ({ onLogout, user }) => {
             <Styled.Dropdown nav inNavbar className="navbar-nav">
               <Styled.Toggle color="white">
                 <Styled.UserContainer>
-                  <Styled.UserContainer>
+                  <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
                     <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
-                      <Styled.UserIcon
+                      <Styled.UserIcon style={{ marginRight: "20px" }}
                         src="/images/test.jpg"
                         alt="icon"
                       ></Styled.UserIcon>
