@@ -31,8 +31,7 @@ const Styled = {
     }
     &:focus {
       background: white;
-      outline: none;
-      border: none;
+      box-shadow: none;
     }
   `,
 };
