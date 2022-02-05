@@ -108,6 +108,7 @@ const Styled = {
     :hover {
       color: #607177;
       font-weight: bold;
+      cursor: pointer;
     }
   `,
   DropdownLink: styled(Link)`
@@ -117,12 +118,23 @@ const Styled = {
       text-decoration: none;
     }
   `,
-  DropdownLinkProfile: styled.div`
-    color: "#212529", 
-    textDecoration: "none", 
-    padding-left: "2rem",
-    :hover {
-      color: #607177;
+  // DropdownLinkProfile: styled.div`
+  //   color: #212529, 
+  //   textDecoration: none, 
+  //   margin-left: 2rem,
+  //   :hover {
+  //     background-color: #607177;
+  //     cursor: pointer;
+  //   }
+  // `,
+  DropdownItem: styled.div`
+    color: #212529;
+    padding-left: 1.2rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    :hover{
+      cursor: pointer;
+      background-color: #F2F2F2;
     }
   `,
   UserContainer: styled.div`
@@ -261,16 +273,16 @@ const Header = ({ onLogout, user }) => {
                 </Styled.UserContainer>
               </Styled.Toggle>
               <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
-                <DropdownItem
+                <Styled.DropdownItem
                   tag={(props) => <Link {...props} />}
                   href="/profile"
                 >
-                <Styled.DropdownLinkProfile>Profile</Styled.DropdownLinkProfile>
-                </DropdownItem>
-                <DropdownItem onClick={onLogout} href="/">
+                  Profile
+                </Styled.DropdownItem>
+                <Styled.DropdownItem onClick={onLogout} href="/">
                   {" "}
                   Logout{" "}
-                </DropdownItem>
+                </Styled.DropdownItem>
                 
               </DropdownMenu>
             </Styled.Dropdown>
