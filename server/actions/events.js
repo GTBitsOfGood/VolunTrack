@@ -16,15 +16,41 @@ export async function createEvent(newEventData, next) {
   });
 }
 
-export async function getEvents(next) {
+export async function getEvents(startDate, endDate, next) {
 
   await dbConnect();
 
-  return EventData.find({})
-  .then((events) => {
-    return events;
-  })
-  .catch(next);
+  if (!startDate && !endDate){
+    return EventData.find({})
+    .then((events) => {
+      return events;
+    })
+    .catch(next);
+  } else if (!startDate) {
+    return EventData.find({ date: { $lte: endDate}})
+      .then((events) => {
+        return events;
+      })
+      .catch(next);
+  } else if (!endDate) {
+    return EventData.find({ date: { $gte: startDate}})
+      .then((events) => {
+        return events;
+      })
+      .catch(next);
+  } else {
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+    if (startDate == "Invalid Date" || endDate == "Invalid Date") {
+      return { status: 400, message: {error: "Invalid Date sent" }};
+    } else {
+      return EventData.find({ date: { $gte: startDate, $lte: endDate}})
+      .then((events) => {
+        return events;
+      })
+      .catch(next);
+    }
+  }
 }
 
 export async function updateEvent(updateEventData, next) {
