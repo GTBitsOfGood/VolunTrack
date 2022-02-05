@@ -116,6 +116,14 @@ const Styled = {
       text-decoration: none;
     }
   `,
+  DropdownLinkProfile: styled.div`
+    color: "#212529", 
+    textDecoration: "none", 
+    padding-left: "2rem",
+    :hover {
+      color: #607177;
+    }
+  `,
   UserContainer: styled.div`
     display: flex;
     align-items: center;
@@ -256,7 +264,7 @@ const Header = ({ onLogout, user }) => {
                   tag={(props) => <Link {...props} />}
                   href="/profile"
                 >
-                  Profile
+                <Styled.DropdownLinkProfile>Profile</Styled.DropdownLinkProfile>
                 </DropdownItem>
                 <DropdownItem onClick={onLogout} href="/">
                   {" "}
