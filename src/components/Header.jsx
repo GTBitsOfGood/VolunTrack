@@ -211,7 +211,7 @@ const Header = ({ onLogout, user }) => {
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
               {user.role === "admin" && (
-                <Styled.PageLink
+                <Styled.PageLink style={{color: "red"}}
                   href="/applicant-viewer"
                   selected={currPageMatches("/applicant-viewer")}
                 >
