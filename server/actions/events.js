@@ -27,17 +27,27 @@ export async function getEvents(startDate, endDate, next) {
     })
     .catch(next);
   } else if (!startDate) {
-    return EventData.find({ date: { $lte: endDate}})
+    endDate = new Date(endDate);
+    if (endDate == "Invalid Date") {
+      return { status: 400, message: {error: "Invalid Date sent" }};
+    } else {
+      return EventData.find({ date: { $lte: endDate}})
       .then((events) => {
         return events;
       })
       .catch(next);
+    }
   } else if (!endDate) {
-    return EventData.find({ date: { $gte: startDate}})
+    startDate = new Date(startDate);
+    if (startDate == "Invalid Date") {
+      return { status: 400, message: {error: "Invalid Date sent" }};
+    } else {
+      return EventData.find({ date: { $gte: startDate}})
       .then((events) => {
         return events;
       })
       .catch(next);
+    }
   } else {
     startDate = new Date(startDate);
     endDate = new Date(endDate);
