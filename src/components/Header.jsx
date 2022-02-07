@@ -93,7 +93,7 @@ const Styled = {
       position: absolute;
       border-radius: 0.5rem;
       left: ${(props) => pageSwitchLeft(props.currPathName)};
-      background: white;
+      background: transparent;
       z-index: 0;
       transition: all 0.3s;
     }
