@@ -1,27 +1,25 @@
-import React, { useState } from "react";
-import { useRouter, withRouter } from "next/router";
-import Link from "next/link";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import styled from "styled-components";
-import Icon from "./Icon";
-// import { GoogleLogout } from 'react-google-login';
-
+import Link from "next/link";
+import { useRouter, withRouter } from "next/router";
+import React, { useState } from "react";
 import {
   Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
+  Container,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
   NavItem,
   UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Container,
 } from "reactstrap";
-
+import styled from "styled-components";
 // todo: put this somewhere that makes sense
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
+import Icon from "./Icon";
 
 const pageSwitchWidth = (currPath) => {
   switch (currPath) {
@@ -168,12 +166,24 @@ const Styled = {
   `,
 };
 
-const Header = ({ onLogout, user }) => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter;
+  const router = useRouter();
+  const { data: session } = useSession();
+  const user = session.user;
 
   const toggle = () => {
     setIsOpen(!isOpen);
+  };
+
+  const logout = (e) => {
+    e.preventDefault();
+    signOut();
+  };
+
+  const goToProfile = (e) => {
+    e.preventDefault();
+    router.push("/profile");
   };
 
   const currPageMatches = (page) => router.pathname === page;
@@ -263,18 +273,15 @@ const Header = ({ onLogout, user }) => {
                   </Styled.UserContainer>
                 </Styled.UserContainer>
               </Styled.Toggle>
+
               <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
-                <DropdownItem
-                  tag={(props) => <Link {...props} />}
-                  href="/profile"
-                >
-                <Styled.DropdownItem>Profile</Styled.DropdownItem>             
+                <DropdownItem onClick={goToProfile} href="/profile">
+                  <Styled.DropdownItem>Profile</Styled.DropdownItem>             
                 </DropdownItem>
-                <Styled.DropdownItem onClick={onLogout} href="/">
+                <Styled.DropdownItem onClick={logout} href="/">
                   {" "}
                   Logout{" "}
-                </Styled.DropdownItem>
-                
+                </Styled.DropdownItem>                
               </DropdownMenu>
             </Styled.Dropdown>
           </Styled.FlexContainer>

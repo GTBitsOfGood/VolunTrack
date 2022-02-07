@@ -1,24 +1,29 @@
+import { useSession } from "next-auth/react";
+import "normalize.css";
 import React from "react";
-import classes from "./IndexPage.module.css";
+import styled from "styled-components";
+
+const Styled = {
+  Container: styled.div`
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  `,
+  Content: styled.main`
+    flex: 1;
+    overflow-y: scroll;
+  `,
+};
 
 const IndexPage = () => {
-  const [payload, setPayload] = React.useState("");
-
-  React.useEffect(() => {
-    // Example how to create page without ssr
-    setPayload("i am just a placeholder");
-  }, []);
+  const { data: session } = useSession();
 
   return (
-    <>
-      <h2 className={classes.centerText}>Welcome to Next.js!</h2>
-      <h3>
-        This page is static rendered, because all API calls are made in
-        useEffect
-      </h3>
-      <h4>{payload}</h4>
-      <p>You can tell because the text above flashes on page refresh</p>
-    </>
+    <h1>
+      Welcome {session.user.bio.first_name} {session.user.bio.last_name}
+    </h1>
   );
 };
 
