@@ -68,6 +68,7 @@ const Styled = {
     text-align: center;
     min-width: 7rem;
     width: fit-content;
+    margin-right: 1rem;
   `,
   Toggle: styled(DropdownToggle)`
     text-align: left;
@@ -99,34 +100,32 @@ const Styled = {
       transition: all 0.3s;
     }
   `,
-  PageLink: styled(Link)`
-    margin-left: 2rem;
+  PageLink: styled.div`
+    color: #969696;
+    margin-left: 0.5rem;
     margin-right: 2rem;
-    z-index: 1;
-
+    text-decoration: none;
     :hover {
-      color: #707070;
-      text-decoration: none;
+      color: #607177;
+      font-weight: bold;
+      cursor: pointer;
     }
-    ${(props) =>
-      props.selected
-        ? `
-      color: ${props.theme.primaryGrey};
-      font-weight: 600;
-
-      :hover {
-        color: ${props.theme.primaryGrey};
-      }
-    `
-        : `
-      color: #969696;
-    `}
   `,
   DropdownLink: styled(Link)`
     color: black;
     :hover {
       color: black;
       text-decoration: none;
+    }
+  `,
+  DropdownItem: styled.div`
+    color: #212529;
+    padding-left: 1.2rem;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    :hover{
+      cursor: pointer;
+      background-color: #F2F2F2;
     }
   `,
   UserContainer: styled.div`
@@ -193,7 +192,7 @@ const Header = ({ onLogout, user }) => {
         }}
       >
         <NavbarBrand tag={(props) => <Link {...props} />} href="/events">
-          <div style={{ width: "175px" }}>
+          <div style={{ width: "175px", marginLeft: "1rem"}}>
             <Image
               layout="responsive"
               objectFit="contain"
@@ -210,42 +209,42 @@ const Header = ({ onLogout, user }) => {
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
               {user.role === "admin" && (
-                <Styled.PageLink
+              <Link
                   href="/applicant-viewer"
                   selected={currPageMatches("/applicant-viewer")}
                 >
-                  Applicant Viewer
-                </Styled.PageLink>
+                <Styled.PageLink>Applicant Viewer</Styled.PageLink>
+              </Link>
               )}
               {user.role === "admin" && (
-                <Styled.PageLink
+              <Link
                   href="/user-manager"
                   selected={currPageMatches("/user-manager")}
-                >
-                  User Manager
-                </Styled.PageLink>
+              >
+                <Styled.PageLink>User Manager</Styled.PageLink>
+              </Link>
               )}
-              <Styled.PageLink
+              <Link
                 href="/events"
                 selected={currPageMatches("/events")}
               >
-                Events
-              </Styled.PageLink>
+                <Styled.PageLink>Events</Styled.PageLink>
+              </Link>
               {user.role === "admin" && (
-                <Styled.PageLink
-                  href="/settings"
-                  selected={currPageMatches("/settings")}
-                >
-                  Settings
-                </Styled.PageLink>
+              <Link
+                href="/settings"
+                selected={currPageMatches("/settings")}
+              >
+                <Styled.PageLink>Settings</Styled.PageLink>
+              </Link>
               )}
             </Styled.PageSwitch>
             <Styled.Dropdown nav inNavbar className="navbar-nav">
               <Styled.Toggle color="white">
                 <Styled.UserContainer>
-                  <Styled.UserContainer>
+                  <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
                     <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
-                      <Styled.UserIcon
+                      <Styled.UserIcon style={{ marginRight: "20px" }}
                         src="/images/test.jpg"
                         alt="icon"
                       ></Styled.UserIcon>
@@ -264,17 +263,17 @@ const Header = ({ onLogout, user }) => {
                   </Styled.UserContainer>
                 </Styled.UserContainer>
               </Styled.Toggle>
-              <DropdownMenu style={{ width: "100%" }}>
+              <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
                 <DropdownItem
                   tag={(props) => <Link {...props} />}
                   href="/profile"
                 >
-                  Profile
+                <Styled.DropdownItem>Profile</Styled.DropdownItem>             
                 </DropdownItem>
-                <DropdownItem onClick={onLogout} href="/">
+                <Styled.DropdownItem onClick={onLogout} href="/">
                   {" "}
                   Logout{" "}
-                </DropdownItem>
+                </Styled.DropdownItem>
                 
               </DropdownMenu>
             </Styled.Dropdown>

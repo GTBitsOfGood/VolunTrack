@@ -47,6 +47,17 @@ const Styled = {
       margin-left: 0.5rem;
     }
   `,
+  Button: styled(Button)`
+    background: gainsboro;
+    border: none;
+    &:hover {
+      background: lightgray;
+    }
+    &:focus {
+      background: gainsboro;
+      box-shadow: none;
+    }
+  `,
 };
 class AdminDash extends Component {
   constructor() {
@@ -144,10 +155,10 @@ class AdminDash extends Component {
                 applyFiltersCallback={this.onApplyFilters}
               />
               <Styled.SecondaryOptions>
-                <Button onClick={this.onRefreshApplicants}>
+                <Styled.Button onClick={this.onRefreshApplicants}>
                   <Icon color="grey3" name="refresh" />
-                  <span>Refresh</span>
-                </Button>
+                  <span style={{ color: "black" }}>Refresh</span>
+                </Styled.Button>
               </Styled.SecondaryOptions>
             </ApplicantList>
           </InfiniteScroll>

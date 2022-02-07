@@ -26,6 +26,13 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
+    &:hover {
+      background: gainsboro;
+    }
+    &:focus {
+      background: white;
+      box-shadow: none;
+    }
   `,
 };
 
@@ -64,7 +71,7 @@ const SettingsManager = () => {
       <Styled.HeaderContainer>
         <Styled.Button onClick={onCreateClicked}>
           <Icon color="grey3" name="add" />
-          <span>Edit</span>
+          <span style={{ color: "black" }}>Edit</span>
         </Styled.Button>
       </Styled.HeaderContainer>
       <SettingsTable user={userData} loading={loading}>
