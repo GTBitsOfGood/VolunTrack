@@ -26,6 +26,13 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
+    &:hover {
+      background: gainsboro;
+    }
+    &:focus {
+      background: white;
+      box-shadow: none;
+    }
   `,
 };
 
@@ -80,7 +87,7 @@ const EventManager = ({ user }) => {
       <Styled.HeaderContainer>
         <Styled.Button onClick={onRefresh}>
           <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
+          <span style={{ color: "black" }}>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
       <EventTable

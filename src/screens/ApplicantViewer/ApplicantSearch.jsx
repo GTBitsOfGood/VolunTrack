@@ -24,12 +24,26 @@ const Styled = {
     overflow: hidden;
     padding: 0;
   `,
+  Button: styled(Button)`
+    background: gainsboro;
+    border: none;
+    color: black;
+    &:hover {
+      background: lightgray;
+      color: black;
+    }
+    &:focus {
+      background: gainsboro;
+      box-shadow: none;
+    } 
+  `,
   DropdownToggle: styled(DropdownToggle)`
     background: white;
     border: 1px solid ${(props) => props.theme.grey8};
     border-left: none;
     border-radius: 0 0.5rem 0.5rem 0;
     margin-right: 0.5rem;
+    color: black;
   `,
   SearchBox: styled(Input)`
     border: 1px solid ${(props) => props.theme.grey8};
@@ -110,7 +124,7 @@ class ApplicantSearch extends React.Component {
         />
 
         <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
-          <Styled.DropdownToggle caret />
+          <Styled.DropdownToggle caret> </Styled.DropdownToggle>
           <DropdownMenu>
             <DropdownItem header>Search by...</DropdownItem>
             <DropdownItem onClick={this.selectSearchOption}>All</DropdownItem>
@@ -120,7 +134,7 @@ class ApplicantSearch extends React.Component {
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
-        <Button onClick={this.onShowFilterModal}>Filter</Button>
+        <Styled.Button onClick={this.onShowFilterModal} style={{ color: "black" }}>Filter</Styled.Button>
 
         <Filters
           show={this.state.showFilterModal}

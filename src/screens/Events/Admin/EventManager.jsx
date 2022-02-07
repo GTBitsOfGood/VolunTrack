@@ -29,6 +29,12 @@ const Styled = {
     background: white;
     border: none;
     color: black;
+    
+    &:focus {
+      background: white;
+      outline: none;
+      border: none;
+    }
   `,
 };
 

@@ -20,13 +20,13 @@ export async function getEvents(startDate, endDate, next) {
 
   await dbConnect();
 
-  if (!startDate && !endDate){
+  if (startDate == "undefined" && endDate == "undefined"){
     return EventData.find({})
     .then((events) => {
       return events;
     })
     .catch(next);
-  } else if (!startDate) {
+  } else if (startDate == "undefined") {
     endDate = new Date(endDate);
     if (endDate == "Invalid Date") {
       return { status: 400, message: {error: "Invalid Date sent" }};
@@ -37,7 +37,7 @@ export async function getEvents(startDate, endDate, next) {
       })
       .catch(next);
     }
-  } else if (!endDate) {
+  } else if (endDate == "undefined") {
     startDate = new Date(startDate);
     if (startDate == "Invalid Date") {
       return { status: 400, message: {error: "Invalid Date sent" }};
