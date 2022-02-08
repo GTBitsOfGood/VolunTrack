@@ -49,7 +49,6 @@ const EventManager = ({ user }) => {
         setLoading(false);
       });
   };
-  console.log("hi", events)
 
   const onRegister = async (event) => {
     const changedEvent = {
