@@ -2,9 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as Table from "../../sharedStyles/tableStyles";
 import Loading from "../../../components/Loading";
-import Icon from "../../../components/Icon";
 import styled from "styled-components";
 import { Button } from "reactstrap";
+import EventTableRow from "./EventTableRow";
 
 const Styled = {
   Button: styled(Button)`
@@ -13,30 +13,33 @@ const Styled = {
   `,
 };
 
-const EventTable = ({ events, loading, onRegister, onUnregister, user }) => {
+const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
   return (
     <Table.Container>
       <Table.Table>
         <thead>
           <tr>
+            <th></th>
             <th>Name</th>
             <th>Date</th>
             <th>Location</th>
             <th>Website</th>
-            <th># of Volunteers</th>
+            <th># of Shifts</th>
+            <th id="volunteerHeader" style={{ visibility: "hidden" }}>
+              Volunteers
+            </th>
           </tr>
         </thead>
         <tbody>
           {!loading &&
             events.map((event, idx) => (
-              <Table.Row key={event._id} evenIndex={idx % 2 === 0}>
-                <td>{event.name}</td>
-                <td>{event.date}</td>
-                <td>{event.location}</td>
-                <td>
-                  {event.volunteers.length + " / " + event.max_volunteers}
-                </td>
-              </Table.Row>
+              <EventTableRow
+                key={idx}
+                event={event}
+                onEditClicked={onEditClicked}
+                onDeleteClicked={onDeleteClicked}
+                idx={idx}
+              />
             ))}
         </tbody>
       </Table.Table>
