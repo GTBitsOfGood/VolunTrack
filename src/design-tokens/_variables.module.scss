@@ -1,0 +1,46 @@
+$gray-100: #F8F8FA;
+$gray-200: #E5E5E5;
+$gray-300: #9C9C9C;
+$gray-400: #6C757D;
+$primary: #ef4e79;
+$success: #9CDEA3;
+$danger: #F06B6B;
+$warning: #F0E767;
+$info: #960034;
+$dark: #7F1C3B;
+$yiq-text-dark: #000000;
+$input-color: #000;
+$input-border-color: $gray-200;
+$nav-tabs-link-active-color: $info;
+$nav-link-disabled-color: $gray-400;
+$secondary: #F9C0C7;
+$dropdown-header-color: #000;
+$pagination-disabled-color: $gray-400;
+$card-border-color: $gray-200;
+$modal-content-border-color: $gray-200;
+$border-color: $gray-200;
+
+:export {
+	gray-100: $gray-100; 
+	gray-200: $gray-200;
+	gray-300: $gray-300;
+	gray-400: $gray-400;
+	primary: $primary;
+	success: $success;
+	danger: $danger;
+	warning: $warning;
+	info: $info;
+	dark: $dark;
+	yiq-text-dark: $yiq-text-dark;
+	input-color: $input-color;
+	input-border-color: $input-border-color;
+	nav-tabs-link-active-color: $nav-tabs-link-active-color;
+	nav-link-disabled-color: $nav-link-disabled-color;
+	secondary: $secondary;
+	dropdown-header-color: $dropdown-header-color;
+	pagination-disabled-color: $pagination-disabled-color;
+	card-border-color: $card-border-color;
+	modal-content-border-color: $modal-content-border-color;
+	border-color: $border-color;
+
+}
