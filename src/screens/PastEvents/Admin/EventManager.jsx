@@ -4,9 +4,6 @@ import { Button } from "reactstrap";
 import Icon from "../../../components/Icon";
 import EventTable from "./EventTable";
 import { fetchEvents } from "../../../actions/queries";
-import EventCreateModal from "./EventCreateModal";
-import EventEditModal from "./EventEditModal";
-import EventDeleteModal from "./EventDeleteModal";
 
 const Styled = {
   Container: styled.div`
@@ -33,13 +30,10 @@ const Styled = {
 };
 
 const EventManager = () => {
-  const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents()
+    fetchEvents(undefined, new Date().toLocaleDateString("en-US"))
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -49,47 +43,14 @@ const EventManager = () => {
         setLoading(false);
       });
   };
-
-  const onCreateClicked = () => {
-    setShowCreateModal(true);
-  };
-
-  const toggleCreateModal = () => {
-    setShowCreateModal((prev) => !prev);
-    onRefresh();
-  };
+  
   useEffect(() => {
     onRefresh();
   }, []);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const onEditClicked = (event) => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
-  const toggleEditModal = () => {
-    setShowEditModal((prev) => !prev);
-    onRefresh();
-  };
-  const onDeleteClicked = (event) => {
-    setShowDeleteModal(true);
-    setCurrEvent(event);
-  };
-  const toggleDeleteModal = () => {
-    setShowDeleteModal((prev) => !prev);
-    onRefresh();
-  };
-
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
-        <Styled.Button onClick={onCreateClicked}>
-          <Icon color="grey3" name="add" />
-          <span>Create</span>
-        </Styled.Button>
         <Styled.Button onClick={onRefresh}>
           <Icon color="grey3" name="refresh" />
           <span> Refresh</span>
@@ -98,22 +59,9 @@ const EventManager = () => {
       <EventTable
         events={events}
         loading={loading}
-        onEditClicked={onEditClicked}
-        onDeleteClicked={onDeleteClicked}
       >
         {" "}
       </EventTable>
-      <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-      <EventEditModal
-        open={showEditModal}
-        toggle={toggleEditModal}
-        event={currEvent}
-      />
-      <EventDeleteModal
-        open={showDeleteModal}
-        toggle={toggleDeleteModal}
-        event={currEvent}
-      />
     </Styled.Container>
   );
 };

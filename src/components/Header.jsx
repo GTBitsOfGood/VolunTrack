@@ -242,7 +242,7 @@ const Header = () => {
               </Link>
               <Link
                 href="/past-events"
-                selected={currPageMatches("/events")}
+                selected={currPageMatches("/past-events")}
               >
                 <Styled.PageLink>Past Events</Styled.PageLink>
               </Link>

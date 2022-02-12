@@ -68,17 +68,6 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
           <td>Max Volunteers: {shift.max_volunteers}</td>
         </tr>
       ))}
-      
-      <td>
-        <Styled.Button onClick={() => onEditClicked(event)}>
-          <Icon color="grey3" name="create" />
-        </Styled.Button>
-      </td>
-      <td>
-        <Styled.Button onClick={() => onDeleteClicked(event)}>
-          <Icon color="grey3" name="delete" />
-        </Styled.Button>
-      </td>
     </Table.Row>
   );
 };
