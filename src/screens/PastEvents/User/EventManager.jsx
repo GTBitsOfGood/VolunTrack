@@ -56,44 +56,17 @@ const EventManager = ({ user }) => {
       });
   };
 
-  const onRegister = async (event) => {
-    const changedEvent = {
-      ...event,
-      volunteers: event.volunteers.concat(user._id),
-    }; // adds userId to event
-    const updatedEvent = await updateEvent(changedEvent); // updates event in backend
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
-
-    onRefresh();
-  };
-
-  const onUnregister = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-
-    onRefresh();
-  };
-
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
-        <Styled.Button onClick={onRefresh}>
+        <Styled.Button onClick={onRefresh} >
           <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
+          <span style={{ color: "black" }}>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
       <EventTable
         events={events}
         loading={loading}
-        onRegister={onRegister}
-        onUnregister={onUnregister}
         user={user}
       >
         {" "}

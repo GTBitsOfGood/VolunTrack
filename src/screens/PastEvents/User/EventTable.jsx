@@ -13,7 +13,7 @@ const Styled = {
   `,
 };
 
-const EventTable = ({ events, loading, onRegister, onUnregister, user }) => {
+const EventTable = ({ events, loading, user }) => {
   return (
     <Table.Container>
       <Table.Table>
