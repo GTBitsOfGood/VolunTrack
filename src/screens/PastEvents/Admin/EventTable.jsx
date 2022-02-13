@@ -48,8 +48,6 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
 EventTable.propTypes = {
   loading: PropTypes.bool,
   events: PropTypes.array,
-  onEditClicked: PropTypes.func,
-  onDeleteClicked: PropTypes.func,
 };
 
 export default EventTable;

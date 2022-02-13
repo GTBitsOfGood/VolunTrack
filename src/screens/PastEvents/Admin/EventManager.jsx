@@ -31,6 +31,9 @@ const Styled = {
 
 const EventManager = () => {
 
+  const [loading, setLoading] = useState(true);
+  const [events, setEvents] = useState([]);
+
   const onRefresh = () => {
     setLoading(true);
     fetchEvents(undefined, new Date().toLocaleDateString("en-US"))
@@ -48,6 +51,8 @@ const EventManager = () => {
     onRefresh();
   }, []);
 
+  const [currEvent, setCurrEvent] = useState(null);
+  
   return (
     <Styled.Container>
       <Styled.HeaderContainer>

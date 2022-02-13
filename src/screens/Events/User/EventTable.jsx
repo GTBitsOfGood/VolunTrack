@@ -36,6 +36,21 @@ const EventTable = ({ events, loading, onRegister, onUnregister, user }) => {
                 <td>
                   {event.volunteers.length + " / " + event.max_volunteers}
                 </td>
+                <td>
+                  {event.volunteers.includes(user._id) ? (
+                    <>
+                      <Styled.Button onClick={() => onUnregister(event)}>
+                        <Icon color="grey3" name="delete" />
+                        <span>Unregister</span>
+                      </Styled.Button>
+                    </>
+                  ) : (
+                    <Styled.Button onClick={() => onRegister(event)}>
+                      <Icon color="grey3" name="add" />
+                      <span>Sign up</span>
+                    </Styled.Button>
+                  )}
+                </td>
               </Table.Row>
             ))}
         </tbody>

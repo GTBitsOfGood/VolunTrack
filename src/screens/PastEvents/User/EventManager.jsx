@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import Icon from "../../../components/Icon";
 import EventTable from "./EventTable";
@@ -33,13 +34,18 @@ const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
 
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
+
   useEffect(() => {
     onRefresh();
   }, []);
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents('2022-01-01')
+    fetchEvents(undefined, new Date().toLocaleDateString("en-US"))
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);

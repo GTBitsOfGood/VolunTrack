@@ -6,6 +6,6 @@ import UserEventManager from "./User";
 const IS_ADMIN = true;
 
 const EventManagerSelector = (props) =>
-  <UserEventManager />;
+  props.isAdmin || IS_ADMIN ? <AdminEventManager /> : <UserEventManager />;
 
 export default EventManagerSelector;
