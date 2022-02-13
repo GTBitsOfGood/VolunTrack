@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Col, Row } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/tableStyles";
@@ -8,6 +9,7 @@ import * as SForm from "../../sharedStyles/formStyles";
 import PropTypes from "prop-types";
 import { eventValidator } from "./eventHelpers";
 import { createEvent } from "../../../actions/queries";
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -22,6 +24,9 @@ const Styled = {
     font-weight: bold;
     display: inline-block;
   `,
+  ModalHeader: styled(ModalHeader)`
+    color: variables.primary;
+  `
 };
 
 const EventCreateModal = ({ open, toggle }) => {
@@ -52,8 +57,8 @@ const EventCreateModal = ({ open, toggle }) => {
   }
 
   return (
-    <Modal isOpen={open} toggle={toggle} backdrop="static">
-      <ModalHeader toggle={toggle}>Create Event</ModalHeader>
+    <Modal isOpen={open} toggle={toggle} backdrop="static" size="lg">
+      <Styled.ModalHeader toggle={toggle} style={{ color: variables.dark }}>Standard Event</Styled.ModalHeader>
       <Formik
         initialValues={{
           name: "",
@@ -88,39 +93,73 @@ const EventCreateModal = ({ open, toggle }) => {
           handleBlur,
         }) => (
           <React.Fragment>
-            <ModalBody>
+            <ModalBody style={{color: variables.dark}}>
               <Styled.Form>
                 <SForm.FormGroup>
-                  <SForm.Label>Name</SForm.Label>
-                  <Styled.ErrorMessage name="name" />
-                  <Field name="name">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-                  <SForm.Label>Date</SForm.Label>
-                  <Styled.ErrorMessage name="date" />
-                  <Field name="date">
-                    {({ field }) => <SForm.Input {...field} type="date" />}
-                  </Field>
-                  <SForm.Label>Location</SForm.Label>
-                  <Styled.ErrorMessage name="location" />
-                  <Field name="location">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-                  <SForm.Label>Description</SForm.Label>
-                  <Styled.ErrorMessage name="description" />
-                  <Field name="description">
-                    {({ field }) => <SForm.Input {...field} type="textarea" />}
-                  </Field>
-                  <SForm.Label>Contact Phone</SForm.Label>
-                  <Styled.ErrorMessage name="contact_phone" />
-                  <Field name="contact_phone">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-                  <SForm.Label>Contact Email</SForm.Label>
-                  <Styled.ErrorMessage name="contact_email" />
-                  <Field name="contact_email">
-                    {({ field }) => <SForm.Input {...field} type="email" />}
-                  </Field>
+                  <Row>
+                    <Col>
+                      <SForm.Label>Event Title</SForm.Label>
+                      <Styled.ErrorMessage name="title" />
+                      <Field name="title">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    
+                    <Col>
+                      <SForm.Label>Date and Time</SForm.Label>
+                      <Styled.ErrorMessage name="date" />
+                      <Field name="date">
+                        {({ field }) => <SForm.Input {...field} type="date" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label></SForm.Label>
+                      <Field name="time">
+                        {({ field }) => <SForm.Input {...field} type="time" />}
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <SForm.Label>Address</SForm.Label>
+                      <Styled.ErrorMessage name="address" />
+                      <Field name="address">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>City</SForm.Label>
+                      <Styled.ErrorMessage name="city" />
+                      <Field name="city">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>Zipcode</SForm.Label>
+                      <Styled.ErrorMessage name="zip" />
+                      <Field name="zip">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <SForm.Label>Max Number of Volunteers</SForm.Label>
+                      <Styled.ErrorMessage name="volunteers" />
+                      <Field name="volunteers">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <SForm.Label>Description</SForm.Label>
+                      <Styled.ErrorMessage name="description" />
+                      <Field name="description">
+                        {({ field }) => <SForm.Input {...field} type="textarea" />}
+                      </Field>
+                    </Col>
+                  </Row>
                   <FieldArray
                     name="shifts"
                     render={() =>
@@ -193,7 +232,7 @@ const EventCreateModal = ({ open, toggle }) => {
                       ))
                     }
                   />
-                  <Button onClick={onClickAddShifts}> Add Shift </Button>
+                  {/* <Button onClick={onClickAddShifts}> Add Shift </Button> */}
                 </SForm.FormGroup>
               </Styled.Form>
             </ModalBody>
@@ -205,6 +244,7 @@ const EventCreateModal = ({ open, toggle }) => {
                 color="primary"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
+                // style={{color: variables.secondary}}
               >
                 Submit
               </Button>
