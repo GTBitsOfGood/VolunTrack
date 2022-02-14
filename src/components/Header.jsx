@@ -239,6 +239,12 @@ const Header = () => {
               <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
+              <Link
+                href="/past-events"
+                selected={currPageMatches("/past-events")}
+              >
+                <Styled.PageLink>Past Events</Styled.PageLink>
+              </Link>
               {user.role === "admin" && (
                 <Link href="/settings" selected={currPageMatches("/settings")}>
                   <Styled.PageLink>Settings</Styled.PageLink>
