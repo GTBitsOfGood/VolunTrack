@@ -61,5 +61,9 @@ export default NextAuth({
         user: currentUser,
       };
     },
+    async redirect({ url, baseUrl }) {
+      console.log("testing2");
+      return baseUrl;
+    },
   },
 });

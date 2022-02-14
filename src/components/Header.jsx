@@ -188,9 +188,6 @@ const Header = () => {
 
   const currPageMatches = (page) => router.pathname === page;
 
-  // DELETE AFTER AUTHENTICATION
-  user.role = "admin";
-
   return (
     <Styled.Navbar light expand="md">
       <Container
