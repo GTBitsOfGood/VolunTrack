@@ -278,10 +278,9 @@ const Header = () => {
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
-                <Styled.DropdownItem onClick={logout} href="/">
-                  {" "}
-                  Logout{" "}
-                </Styled.DropdownItem>
+                <DropdownItem onClick={logout} href="/">
+                  <Styled.DropdownItem>Logout</Styled.DropdownItem>
+                </DropdownItem>
               </DropdownMenu>
             </Styled.Dropdown>
           </Styled.FlexContainer>
