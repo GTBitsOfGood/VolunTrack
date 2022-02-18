@@ -72,8 +72,7 @@ const EventFormModal = ({ toggle, event }) => {
             description: containsExisitingEvent(event) ? event.description : emptyListField,
         }}
         onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(false);
-            toggle();
+            containsExisitingEvent(event) ? onSubmitEditEvent(values, setSubmitting) : onSubmitCreateEvent(values,  setSubmitting);
         }}
         validationSchema={eventValidator}
         render={({
