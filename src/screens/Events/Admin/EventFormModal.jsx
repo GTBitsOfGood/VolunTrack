@@ -155,15 +155,20 @@ const Styled = {
                   </Styled.Form>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="secondary" onClick={toggle}>
+                  <Button 
+                  color="secondary" 
+                  onClick={toggle}
+                  style={{backgroundColor: 'transparent', borderColor: 'transparent', color: variables["event-text"]}}
+                  >
                     Cancel
                   </Button>
                   <Button
                     color="primary"
                     onClick={handleSubmit}
                     disabled={!isValid || isSubmitting}
+                    style={{backgroundColor: variables["button-pink"], borderColor: variables["button-pink"], marginLeft: '4rem'}}
                   >
-                    Submit
+                    Create Event
                   </Button>
                 </ModalFooter>
               </React.Fragment>
