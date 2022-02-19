@@ -4,6 +4,7 @@ import { Modal, ModalHeader } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
 import EventFormModal from "./EventFormModal"
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Form: styled(FForm)``,
