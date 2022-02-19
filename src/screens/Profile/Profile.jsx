@@ -4,8 +4,11 @@ import React, { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { editProfile } from "../../actions/queries";
+import variables from "../../design-tokens/_variables.module.scss";
 import * as SForm from "../sharedStyles/formStyles";
 import { profileValidator } from "./helpers";
+import { Container, Row, Col } from "reactstrap";
+import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 
 const Styled = {
   Container: styled.div`
@@ -52,11 +55,17 @@ const Profile = () => {
     last_name = "",
     email = "",
     phone_number = "",
+    date_of_birth = "",
+    zip_code = "",
+    total_hours = "",
+    address = "",
+    city = "",
+    state = "",
+    court_required = false,
   } = user?.bio ?? {};
 
   return (
     <Styled.Container>
-      <p>Edit Profile</p>
       <Formik
         initialValues={{
           first_name,
@@ -83,38 +92,117 @@ const Profile = () => {
         {({ handleSubmit, isValid, isSubmitting }) => (
           <>
             <Styled.Form>
+              <p
+                style={{ margin: "0px" }}
+              >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+              <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+                user.role ?? ""
+              )}`}</p>
               <p>{successText}</p>
-              <SForm.FormGroup>
-                <SForm.Label>First Name</SForm.Label>
-                <Styled.ErrorMessage name="first_name" />
-                <Field name="first_name">
-                  {({ field }) => <SForm.Input {...field} type="text" />}
-                </Field>
+              <Container>
+                <SForm.FormGroup>
+                  <Row>
+                    <Col>
+                      <SForm.Label>First Name</SForm.Label>
+                      <Styled.ErrorMessage name="first_name" />
+                      <Field name="first_name">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>Last Name</SForm.Label>
+                      <Styled.ErrorMessage name="last_name" />
+                      <Field name="last_name">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                  </Row>
 
-                <SForm.Label>Last Name</SForm.Label>
-                <Styled.ErrorMessage name="last_name" />
-                <Field name="last_name">
-                  {({ field }) => <SForm.Input {...field} type="text" />}
-                </Field>
+                  <Row>
+                    <Col>
+                      <SForm.Label>Email</SForm.Label>
+                      <Styled.ErrorMessage name="email" />
+                      <Field name="email">
+                        {({ field }) => <SForm.Input {...field} type="email" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>Phone</SForm.Label>
+                      <Styled.ErrorMessage name="phone_number" />
+                      <Field name="phone_number">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <SForm.Label>Date of Birth</SForm.Label>
+                      <Styled.ErrorMessage name="date_of_birth" />
+                      <Field name="date_of_birth">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
 
-                <SForm.Label>Email</SForm.Label>
-                <Styled.ErrorMessage name="email" />
-                <Field name="email">
-                  {({ field }) => <SForm.Input {...field} type="email" />}
-                </Field>
+                    <Col>
+                      <SForm.Label>Zip Code</SForm.Label>
+                      <Styled.ErrorMessage name="zip_code" />
+                      <Field name="zip_code">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
 
-                <SForm.Label>Phone Number</SForm.Label>
-                <Styled.ErrorMessage name="phone_number" />
-                <Field name="phone_number">
-                  {({ field }) => <SForm.Input {...field} type="text" />}
-                </Field>
-              </SForm.FormGroup>
+                    <Col>
+                      <SForm.Label>Total Hours</SForm.Label>
+                      <Styled.ErrorMessage name="total_hours" />
+                      <Field name="total_hours">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    {/* <Col>
+                      <SForm.Label>Court Required</SForm.Label>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                      </div>
+                    </Col> */}
+                  </Row>
+
+                  <Row>
+                    <Col>
+                      <SForm.Label>Address</SForm.Label>
+                      <Styled.ErrorMessage name="address" />
+                      <Field name="address">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>City</SForm.Label>
+                      <Styled.ErrorMessage name="city" />
+                      <Field name="city">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>State</SForm.Label>
+                      <Styled.ErrorMessage name="state" />
+                      <Field name="state">
+                        {({ field }) => <SForm.Input {...field} type="text" />}
+                      </Field>
+                    </Col>
+                  </Row>
+                </SForm.FormGroup>
+              </Container>
               <Button
+                // color="variables.primary"
                 color="primary"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
               >
-                Submit
+                Update
               </Button>
             </Styled.Form>
           </>
