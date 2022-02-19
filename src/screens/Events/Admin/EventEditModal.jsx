@@ -5,6 +5,7 @@ import { Form as FForm, ErrorMessage } from "formik";
 
 import PropTypes from "prop-types";
 import EventFormModal from "./EventFormModal"
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -19,12 +20,15 @@ const Styled = {
     font-weight: bold;
     display: inline-block;
   `,
+  ModalHeader: styled(ModalHeader)`
+  color: ${variables["dark"]};
+  `
 };
 
 const EventEditModal = ({ open, toggle, event }) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="lg">
-      <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
+        <Styled.ModalHeader toggle={toggle}>Edit Event</Styled.ModalHeader>
         <EventFormModal
         toggle={toggle}
         event={event}>

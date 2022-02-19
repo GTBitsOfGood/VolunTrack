@@ -20,15 +20,41 @@ const Styled = {
     display: inline-block;
   `,
   ModalHeader: styled(ModalHeader)`
-    color: ${variables["dark"]};
-  `
+    border-color: transparent;
+    .standard {
+      color: ${variables["dark"]};
+      font-weight: 700;
+      border-bottom: 2px solid ${variables["dark"]};
+      padding-right: 90px;
+      padding-left: 90px;
+      margin-left: 50px;
+      padding-top: 100px;
+      margin-right: 0px;
+      display: inline;
+    }
+    .org-event {
+      color: ${variables["input-color"]};
+      border-bottom: 2px solid #E9E9E9;
+      padding-right: 90px;
+      padding-left: 90px;
+      display: inline;
+    }
+    div {
+      margin-top: 40px;
+    }
+  `,
 };
 
 const EventCreateModal = ({ open, toggle }) => {
 
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="lg">
-      <Styled.ModalHeader toggle={toggle}>Standard Event</Styled.ModalHeader>
+      <Styled.ModalHeader toggle={toggle}>
+        <div>
+        <p class = "standard">Standard Event</p>
+        <p class = "org-event">Organization Event</p>
+        </div>
+      </Styled.ModalHeader>
       <EventFormModal toggle={toggle} event={null}></EventFormModal>
     </Modal>
   );
