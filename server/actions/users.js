@@ -221,6 +221,13 @@ export async function getManagementData(
       $project: {
         name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
         email: "$bio.email",
+        phone_number: "$bio.phone_number",
+        date_of_birth: "$bio.date_of_birth",
+        zip_code: "$bio.zip_code",
+        total_hours: "$bio.total_hours",
+        address: "$bio.address",
+        city: "$bio.city",
+        state: "$bio.state",
         role: 1,
         status: 1,
       },

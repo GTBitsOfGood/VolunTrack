@@ -72,6 +72,12 @@ const Profile = () => {
           last_name,
           email,
           phone_number,
+          date_of_birth,
+          zip_code,
+          total_hours,
+          address,
+          city,
+          state,
         }}
         onSubmit={(values, { setSubmitting }) => {
           const profileData = { bio: values };
@@ -93,7 +99,7 @@ const Profile = () => {
           <>
             <Styled.Form>
               <p
-                style={{ margin: "0px" }}
+                style={{ margin: "0px", color: "#7F1C3B", width: "240px" }}
               >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
               <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
                 user.role ?? ""
@@ -195,15 +201,17 @@ const Profile = () => {
                     </Col>
                   </Row>
                 </SForm.FormGroup>
+                <Col>
+                  <Button
+                    // color="variables.primary"
+                    style={{ backgroundColor: "#ef4e79" }}
+                    onClick={handleSubmit}
+                    disabled={!isValid || isSubmitting}
+                  >
+                    Update
+                  </Button>
+                </Col>
               </Container>
-              <Button
-                // color="variables.primary"
-                color="primary"
-                onClick={handleSubmit}
-                disabled={!isValid || isSubmitting}
-              >
-                Update
-              </Button>
             </Styled.Form>
           </>
         )}

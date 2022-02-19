@@ -35,6 +35,12 @@ const SettingsEditModal = ({ open, toggle }) => {
           firstName: "",
           lastName: "",
           phoneNumber: "",
+          dateOfBirth: "",
+          zipCode: "",
+          totalHours: "",
+          address: "",
+          city: "",
+          state: "",
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
@@ -42,7 +48,13 @@ const SettingsEditModal = ({ open, toggle }) => {
             "james@jameswang.com",
             values.firstName,
             values.lastName,
-            values.phoneNumber
+            values.phoneNumber,
+            values.dateOfBirth,
+            values.zipCode,
+            values.totalHours,
+            values.address,
+            values.city,
+            values.state
           );
           window.location.reload();
         }}

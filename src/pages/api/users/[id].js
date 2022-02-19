@@ -1,5 +1,5 @@
 const { check, oneOf, validationResult, matchedData } = require("express-validator");
-const { getUserFromId, updateUserId, deleteUserId } = require("../../../../server/actions/users");
+const { getUserFromId, updateUserId, updateUser, deleteUserId } = require("../../../../server/actions/users")
 const { USER_DATA_VALIDATOR } = require("../../../../server/validators");
 const { SendEmailError } = require("../../../../server/errors");
 
@@ -33,10 +33,8 @@ export default async function handler(req, res, next) {
             return res.status(400).json({ errors: errors.mapped() });
         }
 
-        const userDataReq = matchedData(req);
-        const events = req.body.events;
-
-        let result = updateUserId(userDataReq, events, req.params.id, req.query.action)
+        const userDataReq = req.body.bio;
+        let result = await updateUser(userDataReq.email, userDataReq.phone_number, userDataReq.first_name, userDataReq.last_name, userDataReq.date_of_birth, userDataReq.zip_code, userDataReq.total_hours, userDataReq.address, userDataReq.city, userDataReq.state);
         res.status(result.status).json(result.message);
 
     } else if (req.method === "DELETE") {
