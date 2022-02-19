@@ -19,14 +19,6 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    contact_phone: {
-      type: String,
-      require: false,
-    },
-    contact_email: {
-      type: String,
-      required: false,
-    },
     volunteers: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
       default: [],

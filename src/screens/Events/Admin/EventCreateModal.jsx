@@ -25,22 +25,22 @@ const Styled = {
       color: ${variables["dark"]};
       font-weight: 700;
       border-bottom: 2px solid ${variables["dark"]};
-      padding-right: 90px;
-      padding-left: 90px;
-      margin-left: 50px;
-      padding-top: 100px;
+      padding-right: 4.5rem;
+      padding-left: 4.5rem;
+      margin-left: 5rem;
+      padding-top: 4rem;
       margin-right: 0px;
       display: inline;
     }
     .org-event {
       color: ${variables["input-color"]};
       border-bottom: 2px solid #E9E9E9;
-      padding-right: 90px;
-      padding-left: 90px;
+      padding-right: 4.5rem;
+      padding-left: 4.5rem;
       display: inline;
     }
     div {
-      margin-top: 40px;
+      margin-top: 2rem;
     }
   `,
 };
