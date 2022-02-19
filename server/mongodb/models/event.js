@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // define schema
 const eventSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
       required: true,
     },
@@ -11,31 +11,8 @@ const eventSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    location: {
-      type: String,
-      required: true,
-    },
     description: {
       type: String,
-      required: true,
-    },
-    volunteers: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
-      default: [],
-    },
-    shifts: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Shift" }],
-      default: [],
-    },
-    shifts: {
-      type: [
-        {
-          start_time: String,
-          end_time: String,
-          max_volunteers: Number,
-        },
-      ],
-      default: [],
       required: true,
     },
   },

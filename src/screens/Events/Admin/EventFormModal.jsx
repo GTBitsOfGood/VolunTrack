@@ -34,7 +34,6 @@ const Styled = {
 
 const EventFormModal = ({ toggle, event }) => {
     const emptyStringField = "";
-    const emptyListField = [];
 
     const onSubmitCreateEvent = (values, setSubmitting) => {
         const event = {
@@ -72,7 +71,7 @@ const EventFormModal = ({ toggle, event }) => {
             city: containsExisitingEvent(event) ? event.city : emptyStringField,
             zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
             volunteers: containsExisitingEvent(event) ? event.volunteers : emptyStringField,
-            description: containsExisitingEvent(event) ? event.description : emptyListField,
+            description: containsExisitingEvent(event) ? event.description : emptyStringField,
         }}
         onSubmit={(values, { setSubmitting }) => {
             containsExisitingEvent(event) ? onSubmitEditEvent(values, setSubmitting) : onSubmitCreateEvent(values,  setSubmitting);

@@ -24,7 +24,6 @@ const EventTable = ({ events, loading, onEditClicked, onDeleteClicked }) => {
             <th>Date</th>
             <th>Location</th>
             <th>Website</th>
-            <th># of Shifts</th>
             <th id="volunteerHeader" style={{ visibility: "hidden" }}>
               Volunteers
             </th>
