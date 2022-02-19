@@ -99,7 +99,7 @@ const EventFormModal = ({ toggle, event }) => {
                         <SForm.Label>Date and Time</SForm.Label>
                         <Styled.ErrorMessage name="date" />
                         <Field name="date">
-                        {({ field }) => <SForm.Input {...field} type="date" />}
+                        {({ field }) => <SForm.Input {...field} type="date" />} 
                         </Field>
                     </Styled.Col>
                     <Styled.Col>
