@@ -25,6 +25,9 @@ const Styled = {
     `,
     Col: styled(Col)`
       padding: 10px;
+    `,
+    ModalBody: styled(ModalBody)`
+      margin-left: 8rem;
     `
   };
 
@@ -84,7 +87,7 @@ const EventFormModal = ({ toggle, event }) => {
             handleBlur,
         }) => (
             <React.Fragment>
-            <ModalBody>
+            <Styled.ModalBody>
                 <Styled.Form>
                 <SForm.FormGroup>
                     <Row>
@@ -156,7 +159,7 @@ const EventFormModal = ({ toggle, event }) => {
                     </Row>
                 </SForm.FormGroup>
                 </Styled.Form>
-            </ModalBody>
+            </Styled.ModalBody>
             <ModalFooter>
                 <Button 
                 color="secondary" 
