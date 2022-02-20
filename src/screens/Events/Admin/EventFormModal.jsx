@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Col, Row } from "reactstrap";
 import { ModalBody, ModalFooter, Button } from "reactstrap";
@@ -33,8 +33,6 @@ const Styled = {
 
 
 const EventFormModal = ({ toggle, event }) => {
-    const emptyStringField = "";
-
     const onSubmitCreateEvent = (values, setSubmitting) => {
         const event = {
             ...values,
@@ -60,6 +58,9 @@ const EventFormModal = ({ toggle, event }) => {
         return event;
     }
 
+    const emptyStringField = "";
+    const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
+    
     return (
         <Formik
         initialValues={{
@@ -175,7 +176,7 @@ const EventFormModal = ({ toggle, event }) => {
                 disabled={!isValid || isSubmitting}
                 style={{backgroundColor: variables["button-pink"], borderColor: variables["button-pink"], marginLeft: '4rem'}}
                 >
-                Create Event
+                {submitText}
                 </Button>
             </ModalFooter>
             </React.Fragment>
