@@ -1,17 +1,17 @@
 import React, { Component } from "react";
-import ApplicantList from "./ApplicantList";
-import ApplicantInfo from "./ApplicantInfo";
-import InfiniteScroll from "../../components/InfiniteScroll";
-import Icon from "../../components/Icon";
-import Loading from "../../components/Loading";
+import { Button } from "reactstrap";
+import styled from "styled-components";
 import {
-  filterApplicants,
   fetchMoreApplicants,
+  filterApplicants,
   searchApplicants,
 } from "../../actions/queries";
-import styled from "styled-components";
+import Icon from "../../components/Icon";
+import InfiniteScroll from "../../components/InfiniteScroll";
+import Loading from "../../components/Loading";
+import ApplicantInfo from "./ApplicantInfo";
+import ApplicantList from "./ApplicantList";
 import ApplicantSearch from "./ApplicantSearch";
-import { Button } from "reactstrap";
 
 const Styled = {
   Container: styled.div`
