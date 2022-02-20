@@ -27,7 +27,7 @@ const Styled = {
       padding: 10px;
     `,
     ModalBody: styled(ModalBody)`
-      margin-left: 8rem;
+      margin-left: 5rem;
     `
   };
 

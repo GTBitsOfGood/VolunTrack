@@ -21,14 +21,25 @@ const Styled = {
     display: inline-block;
   `,
   ModalHeader: styled(ModalHeader)`
-  color: ${variables["dark"]};
+    border-color: transparent;
+    p {
+      color: ${variables["dark"]};
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-left: 4.5rem;
+      padding-right: 3.5rem;
+      padding-left: 3.5rem;
+      border-bottom: 2px solid ${variables["dark"]};
+    }
   `
 };
 
 const EventEditModal = ({ open, toggle, event }) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="lg">
-        <Styled.ModalHeader toggle={toggle}>Edit Event</Styled.ModalHeader>
+        <Styled.ModalHeader toggle={toggle}>
+          <p>Edit Event</p>
+        </Styled.ModalHeader>
         <EventFormModal
         toggle={toggle}
         event={event}>
