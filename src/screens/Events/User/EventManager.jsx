@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
-import Icon from "../../../components/Icon";
-import EventTable from "./EventTable";
+import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
+import Icon from "../../../components/Icon";
 import { updateEvent } from "./eventHelpers";
+import EventTable from "./EventTable";
 
 const Styled = {
   Container: styled.div`
