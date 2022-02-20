@@ -1,4 +1,7 @@
+import "bootstrap/dist/css/bootstrap.min.css";
+import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
+import "normalize.css";
 import React from "react";
 import GoogleButton from "react-google-button";
 import variables from "../../design-tokens/_variables.module.scss";
