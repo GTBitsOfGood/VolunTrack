@@ -35,7 +35,7 @@ export default NextAuth({
 
       const userData = {
         _id,
-        imageUrl: `${message.user.image}`,
+        imageUrl: message.user.image,
         bio: {
           first_name: message.user.name.split(" ")[0],
           last_name: message.user.name.split(" ")[1],
