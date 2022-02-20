@@ -11,6 +11,30 @@ const eventSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    startTime: {
+      type: String,
+      required: true,
+    },
+    endTime: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    zip: {
+      type: Number,
+      required: true,
+    },
+    volunteers: {
+      type: Number,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
