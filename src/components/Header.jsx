@@ -169,8 +169,9 @@ const Styled = {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session.user;
+  const {
+    data: { user },
+  } = useSession();
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -255,7 +256,7 @@ const Header = () => {
                     <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
                       <Styled.UserIcon
                         style={{ marginRight: "20px" }}
-                        src="/images/test.jpg"
+                        src={user.imageUrl ?? "/images/test.jpg"}
                         alt="icon"
                       ></Styled.UserIcon>
                     </Styled.ImgContainer>
