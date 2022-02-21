@@ -63,10 +63,10 @@ const EventFormModal = ({ toggle, event }) => {
     return (
         <Formik
         initialValues={{
-            title: containsExisitingEvent(event) ? event.name : emptyStringField,
+            title: containsExisitingEvent(event) ? event.title : emptyStringField,
             date: containsExisitingEvent(event) ? event.date.split("T")[0] : emptyStringField, // strips timestamp
-            startTime: containsExisitingEvent(event) ? event.time : emptyStringField,
-            endTime: containsExisitingEvent(event) ? event.time : emptyStringField,
+            startTime: containsExisitingEvent(event) ? event.startTime : emptyStringField,
+            endTime: containsExisitingEvent(event) ? event.endTime : emptyStringField,
             address: containsExisitingEvent(event) ? event.address : emptyStringField,
             city: containsExisitingEvent(event) ? event.city : emptyStringField,
             zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
