@@ -47,10 +47,8 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
           />
         </Styled.Button>
       </td>
-      <td>{event.name}</td>
+      <td>{event.title}</td>
       <td>{event.date.slice(0,10)}</td>
-      <td>{event.location}</td>
-      <td>{event.shifts.length}</td>
       {showVolunteers &&
         currentVolunteers.map((volunteer, idx) => (
           <tr>
@@ -58,16 +56,6 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
             <td> {volunteer.bio.last_name}</td>
           </tr>
         ))}
-
-      
-      {event.shifts.map((shift, idx) => (
-        <tr key="idx">
-          <td>Shift {idx + 1} </td>
-          <td>Start Time: {shift.start_time}</td>
-          <td>End Time: {shift.end_time}</td>
-          <td>Max Volunteers: {shift.max_volunteers}</td>
-        </tr>
-      ))}
       
       <td>
         <Styled.Button onClick={() => onEditClicked(event)}>
