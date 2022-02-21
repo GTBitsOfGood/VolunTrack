@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Col, Row } from "reactstrap";
 import { ModalBody, ModalFooter, Button } from "reactstrap";
@@ -33,8 +33,6 @@ const Styled = {
 
 
 const EventFormModal = ({ toggle, event }) => {
-    const emptyStringField = "";
-
     const onSubmitCreateEvent = (values, setSubmitting) => {
         const event = {
             ...values,
@@ -60,6 +58,9 @@ const EventFormModal = ({ toggle, event }) => {
         return event;
     }
 
+    const emptyStringField = "";
+    const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
+    
     return (
         <Formik
         initialValues={{
@@ -90,30 +91,32 @@ const EventFormModal = ({ toggle, event }) => {
                 <Styled.Form>
                 <SForm.FormGroup>
                     <Row>
-                    <Styled.Col>
-                        <SForm.Label>Event Title</SForm.Label>
-                        <Styled.ErrorMessage name="title" />
-                        <Field name="title">
-                        {({ field }) => <SForm.Input {...field} type="text" />}
-                        </Field>
-                    </Styled.Col>
-                    <Styled.Col>
-                        <SForm.Label>Date and Time</SForm.Label>
-                        <Styled.ErrorMessage name="date" />
-                        <Field name="date">
-                        {({ field }) => <SForm.Input {...field} type="date" />} 
-                        </Field>
-                    </Styled.Col>
-                    <Styled.Col>
-                        <SForm.Label></SForm.Label>
-                        <Field name="startTime">
-                        {({ field }) => <SForm.Input {...field} type="time" />}
-                        </Field>
-                        <SForm.Label></SForm.Label>
-                        <Field name="endTime">
-                        {({ field }) => <SForm.Input {...field} type="time" />}
-                        </Field>
-                    </Styled.Col>
+                        <Styled.Col>
+                            <SForm.Label>Event Title</SForm.Label>
+                            <Styled.ErrorMessage name="title" />
+                            <Field name="title">
+                            {({ field }) => <SForm.Input {...field} type="text" />}
+                            </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                            <SForm.Label>Date</SForm.Label>
+                            <Styled.ErrorMessage name="date" />
+                            <Field name="date">
+                            {({ field }) => <SForm.Input {...field} type="date" />} 
+                            </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                            <SForm.Label>Start Time</SForm.Label>
+                            <Field name="startTime">
+                            {({ field }) => <SForm.Input {...field} type="time" />}
+                            </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                            <SForm.Label>End Time</SForm.Label>
+                            <Field name="endTime">
+                            {({ field }) => <SForm.Input {...field} type="time" />}
+                            </Field>
+                        </Styled.Col>
                     </Row>
                     <Row>
                     <Styled.Col>
@@ -173,7 +176,7 @@ const EventFormModal = ({ toggle, event }) => {
                 disabled={!isValid || isSubmitting}
                 style={{backgroundColor: variables["button-pink"], borderColor: variables["button-pink"], marginLeft: '4rem'}}
                 >
-                Create Event
+                {submitText}
                 </Button>
             </ModalFooter>
             </React.Fragment>

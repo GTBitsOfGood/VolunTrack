@@ -21,17 +21,6 @@ const Styled = {
   `,
   ModalHeader: styled(ModalHeader)`
     border-color: transparent;
-    .standard {
-      color: ${variables["dark"]};
-      font-weight: 700;
-      border-bottom: 2px solid ${variables["dark"]};
-      padding-right: 3.5rem;
-      padding-left: 3.5rem;
-      margin-left: 5rem;
-      padding-top: 4rem;
-      margin-right: 0px;
-      display: inline;
-    }
     .org-event {
       color: ${variables["input-color"]};
       border-bottom: 2px solid #E9E9E9;
@@ -39,22 +28,30 @@ const Styled = {
       padding-left: 3.5rem;
       display: inline;
     }
-    div {
-      margin-top: 2rem;
-    }
   `,
+  HeaderText: styled.p`
+    color: ${variables["dark"]};
+    font-weight: 900;
+    font-size: 1.2em;
+    border-bottom: 2px solid ${variables["dark"]};
+    padding-right: 3.5rem;
+    padding-left: 2rem;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    text-align: center;
+    display: inline;
+  `
 };
 
 const EventCreateModal = ({ open, toggle }) => {
 
   return (
-    <Modal isOpen={open} toggle={toggle} backdrop="static" size="lg">
-        <Styled.ModalHeader toggle={toggle}>
-          <div>
-          <p class = "standard">Standard Event</p>
-          <p class = "org-event">Organization Event</p>
-          </div>
-        </Styled.ModalHeader>
+    <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
+        <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
+        <Styled.HeaderText>
+            <p>Standard Event</p>
+            {/* <p class = "org-event">Organization Event</p> */}
+        </Styled.HeaderText>
         <EventFormModal toggle={toggle} event={null}></EventFormModal>
     </Modal>
   );

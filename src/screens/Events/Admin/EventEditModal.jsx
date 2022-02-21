@@ -31,15 +31,28 @@ const Styled = {
       padding-left: 3.5rem;
       border-bottom: 2px solid ${variables["dark"]};
     }
+  `,
+  HeaderText: styled.p`
+    color: ${variables["dark"]};
+    font-weight: 900;
+    font-size: 1.2em;
+    border-bottom: 2px solid ${variables["dark"]};
+    padding-right: 3.5rem;
+    padding-left: 2rem;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    text-align: center;
+    display: inline;
   `
 };
 
 const EventEditModal = ({ open, toggle, event }) => {
   return (
-    <Modal isOpen={open} toggle={toggle} size="lg">
-        <Styled.ModalHeader toggle={toggle}>
+    <Modal isOpen={open} toggle={toggle} size="xl">
+        <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
+        <Styled.HeaderText>
           <p>Edit Event</p>
-        </Styled.ModalHeader>
+        </Styled.HeaderText>
         <EventFormModal
         toggle={toggle}
         event={event}>
