@@ -30,6 +30,8 @@ const Styled = {
   `,
   Form: styled(FForm)`
     width: 50%;
+    background: white;
+    padding: 5%;
   `,
   ErrorMessage: styled(ErrorMessage).attrs({
     component: "span",
@@ -99,7 +101,13 @@ const Profile = () => {
           <>
             <Styled.Form>
               <p
-                style={{ margin: "0px", color: "#7F1C3B", width: "240px" }}
+                style={{
+                  margin: "0px",
+                  color: "#7F1C3B",
+                  width: "240px",
+                  "font-size": "24px",
+                  "font-weight": "800",
+                }}
               >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
               <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
                 user.role ?? ""
@@ -204,7 +212,7 @@ const Profile = () => {
                 <Col>
                   <Button
                     // color="variables.primary"
-                    style={{ backgroundColor: "#ef4e79" }}
+                    style={{ backgroundColor: "#ef4e79", float: "right" }}
                     onClick={handleSubmit}
                     disabled={!isValid || isSubmitting}
                   >

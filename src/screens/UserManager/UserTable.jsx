@@ -72,8 +72,16 @@ class UserTable extends React.Component {
           </tbody>
         </Table.Table>
         {loading && <Loading />}
-        <Modal isOpen={this.state.userSelectedForEdit} onClose={null}>
-          <ModalHeader>Edit User</ModalHeader>
+        <Modal
+          style={{ "max-width": "750px" }}
+          isOpen={this.state.userSelectedForEdit}
+          onClose={null}
+        >
+          <ModalHeader color="#ef4e79">
+            {this.state.userSelectedForEdit
+              ? this.state.userSelectedForEdit.name
+              : ""}
+          </ModalHeader>
           <Container>
             <ModalBody>
               <form>
@@ -84,7 +92,7 @@ class UserTable extends React.Component {
                       <Form.Input
                         defaultValue={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.name
+                            ? this.state.userSelectedForEdit.first_name
                             : ""
                         }
                         type="text"
@@ -96,7 +104,7 @@ class UserTable extends React.Component {
                       <Form.Input
                         defaultValue={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.name
+                            ? this.state.userSelectedForEdit.last_name
                             : ""
                         }
                         type="text"
@@ -182,11 +190,47 @@ class UserTable extends React.Component {
                     <Row>
                       <Col>
                         <Form.Label>Notes</Form.Label>
-                        <Form.Input>
-                          <text-area></text-area>
-                        </Form.Input>
+                        <Form.Input type="textarea"></Form.Input>
                       </Col>
                     </Row>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Address</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.address
+                            : ""
+                        }
+                        type="text"
+                        name="Address"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>City</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.city
+                            : ""
+                        }
+                        type="text"
+                        name="City"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>State</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.state
+                            : ""
+                        }
+                        type="text"
+                        name="State"
+                      />
+                    </Col>
                   </Row>
                 </Form.FormGroup>
               </form>

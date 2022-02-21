@@ -220,6 +220,8 @@ export async function getManagementData(
     {
       $project: {
         name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
+        first_name: "$bio.first_name",
+        last_name: "$bio.last_name",
         email: "$bio.email",
         phone_number: "$bio.phone_number",
         date_of_birth: "$bio.date_of_birth",
