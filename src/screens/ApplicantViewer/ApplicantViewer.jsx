@@ -1,3 +1,5 @@
+import { useSession } from "next-auth/react";
+import Error from "next/error";
 import React, { Component } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
@@ -59,6 +61,25 @@ const Styled = {
     }
   `,
 };
+
+function authWrapper(Component) {
+  return function WrappedComponent(props) {
+    const {
+      data: { user },
+    } = useSession();
+    if (user.role !== "admin") {
+      return (
+        <Error
+          title="You are not authorized to access this page"
+          statusCode={403}
+        />
+      );
+    } else {
+      return <Component {...props} user={user} />;
+    }
+  };
+}
+
 class AdminDash extends Component {
   constructor() {
     super();
@@ -138,6 +159,7 @@ class AdminDash extends Component {
   };
   render() {
     const { isLoading, applicants, selectedApplicantIndex } = this.state;
+
     return (
       <Styled.Container>
         <Styled.Main>
@@ -181,4 +203,4 @@ class AdminDash extends Component {
   }
 }
 
-export default AdminDash;
+export default authWrapper(AdminDash);
