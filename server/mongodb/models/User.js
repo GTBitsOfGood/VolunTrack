@@ -28,6 +28,12 @@ const userSchema = new Schema(
       last_name: { type: String },
       phone_number: { type: String },
       email: { type: String, index: true, unique: true },
+      date_of_birth: { type: String },
+      zip_code: { type: String },
+      total_hours: { type: String },
+      address: { type: String },
+      city: { type: String },
+      state: { type: String },
     },
     history: { type: String },
     employment: {

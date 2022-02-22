@@ -18,11 +18,13 @@ export default async function handler(req, res, next) {
         });
 
     } else if (req.method === "PUT") {
-        const eventID = req.params.id;
+        const eventID = req.query.id;
         const event = req.body;
 
         await updateEventID(eventID, event);
-
-        res.json(updatedEvent.toJSON());
+        
+        res.json({
+            message: "Event successfully updated!",
+        });
     }
 }

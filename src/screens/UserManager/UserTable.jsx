@@ -9,6 +9,7 @@ import {
 } from "../ApplicantViewer/applicantInfoHelpers";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
+import { Container, Row, Col } from "reactstrap";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -71,92 +72,179 @@ class UserTable extends React.Component {
           </tbody>
         </Table.Table>
         {loading && <Loading />}
-        <Modal isOpen={this.state.userSelectedForEdit} onClose={null}>
-          <ModalHeader>Edit User</ModalHeader>
-          <ModalBody>
-            <form>
-              <Form.FormGroup>
-                <Form.Label>Name</Form.Label>
-                <Form.Input
-                  defaultValue={
-                    this.state.userSelectedForEdit
-                      ? this.state.userSelectedForEdit.name
-                      : ""
-                  }
-                  type="text"
-                  name="Name"
-                />
-                <Form.Label>Email</Form.Label>
-                <Form.Input
-                  defaultValue={
-                    this.state.userSelectedForEdit
-                      ? this.state.userSelectedForEdit.email
-                      : ""
-                  }
-                  type="text"
-                  name="Email"
-                />
-                <Form.Label>Role</Form.Label>
-                <Form.Dropdown
-                  defaultValue={
-                    this.state.userSelectedForEdit
-                      ? this.state.userSelectedForEdit.role
-                      : ""
-                  }
-                  type="select"
-                  name="roleSelected"
-                >
-                  {Object.keys(roles).map((t, i) => (
-                    <option value={t}>{keyToValue(t)}</option>
-                  ))}
-                </Form.Dropdown>
-                <Form.Label>Status</Form.Label>
-                <Form.Dropdown
-                  defaultValue={
-                    this.state.userSelectedForEdit
-                      ? this.state.userSelectedForEdit.status
-                      : ""
-                  }
-                  type="select"
-                  name="statusSelected"
-                >
-                  {Object.keys(statuses).map((t, i) => (
-                    <option value={t}>{keyToValue(t)}</option>
-                  ))}
-                </Form.Dropdown>
-                <Form.Label>Mandated Hours</Form.Label>
-                <Form.Dropdown
-                  defaultValue={
-                    this.state.userSelectedForEdit
-                      ? this.state.userSelectedForEdit.mandated
-                      : ""
-                  }
-                  type="select"
-                  name="mandatedSelected"
-                >
-                  {Object.keys(mandated).map((t, i) => (
-                    <option value={t}>{keyToValue(t)}</option>
-                  ))}
-                </Form.Dropdown>
-                <Form.Label>Number of Mandated Hours</Form.Label>
-                <Form.Input
-                  defaultValue={
-                    this.state.userSelectedForEdit
-                      ? this.state.userSelectedForEdit.mandatedHours
-                      : "0"
-                  }
-                  type="text"
-                  name="mandatedHours"
-                />
-              </Form.FormGroup>
-            </form>
-          </ModalBody>
+        <Modal
+          style={{ "max-width": "750px" }}
+          isOpen={this.state.userSelectedForEdit}
+          onClose={null}
+        >
+          <ModalHeader color="#ef4e79">
+            {this.state.userSelectedForEdit
+              ? this.state.userSelectedForEdit.name
+              : ""}
+          </ModalHeader>
+          <Container>
+            <ModalBody>
+              <form>
+                <Form.FormGroup>
+                  <Row>
+                    <Col>
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.first_name
+                            : ""
+                        }
+                        type="text"
+                        name="Name"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.last_name
+                            : ""
+                        }
+                        type="text"
+                        name="Name"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Email</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.email
+                            : ""
+                        }
+                        type="text"
+                        name="Email"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Phone</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.phone
+                            : ""
+                        }
+                        type="text"
+                        name="Phone"
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col>
+                      <Form.Label>Date of Birth</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.date_of_birth
+                            : ""
+                        }
+                        type="text"
+                        name="Date of Birth"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Zip Code</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.zip_code
+                            : ""
+                        }
+                        type="text"
+                        name="Zip Code"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Total Hours</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.total_hours
+                            : ""
+                        }
+                        type="text"
+                        name="Total Hours"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Court Required</Form.Label>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                      </div>
+                    </Col>
+                    <Row>
+                      <Col>
+                        <Form.Label>Notes</Form.Label>
+                        <Form.Input type="textarea"></Form.Input>
+                      </Col>
+                    </Row>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Address</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.address
+                            : ""
+                        }
+                        type="text"
+                        name="Address"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>City</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.city
+                            : ""
+                        }
+                        type="text"
+                        name="City"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>State</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.state
+                            : ""
+                        }
+                        type="text"
+                        name="State"
+                      />
+                    </Col>
+                  </Row>
+                </Form.FormGroup>
+              </form>
+            </ModalBody>
+          </Container>
           <ModalFooter>
             <Button color="secondary" onClick={this.onModalClose}>
               Cancel
             </Button>
-            <Button color="primary" onClick={this.onModalClose}>
-              Submit
+            <Button
+              style={{ backgroundColor: "#ef4e79" }}
+              onClick={this.onModalClose}
+            >
+              Update
             </Button>
             {/* <Button color="primary" type="submit">
                 Submit

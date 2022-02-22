@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
 import { updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
+import Calendar from "react-calendar";
+import 'react-calendar/dist/Calendar.css';
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Container: styled.div`
@@ -12,20 +16,24 @@ const Styled = {
     height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
-    display: flex;
     flex-direction: column;
     align-items: center;
   `,
   HeaderContainer: styled.div`
-    width: 95%;
+    width: 60%;
     max-width: 80rem;
     display: flex;
-    justify-content: right;
-    margin-bottom: 1rem;
+    justify-content: end;
+    margin: 0 auto;
   `,
   Button: styled(Button)`
-    background: white;
+    background: ${variables.primary};
     border: none;
+    color: white;
+    width: 7rem;
+    height: 3rem;
+    margin-top: 2rem;
+
     &:hover {
       background: gainsboro;
     }
@@ -34,12 +42,45 @@ const Styled = {
       box-shadow: none;
     }
   `,
+  Content: styled.div`
+    width: 60%;
+    height: 100%;
+    background: ${(props) => props.theme.grey9};
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: start;
+  `,
+  EventContainer: styled.div`
+    width: 78%;
+    max-width: 80rem;
+    display: flex;
+    flex-direction column;
+    justify-content: end;
+    margin-bottom: 1rem;
+  `,
+  Events: styled.div`
+    font-family:Inter;
+    text-align:left;
+    font-size:36px;
+    font-weight:bold;
+  `,
+  Date: styled.div`
+    font-family:Inter;
+    text-align:left;
+    font-size:28px;
+    font-weight:bold;
+  `,
 };
 
 const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
   useEffect(() => {
     onRefresh();
   }, []);
@@ -82,23 +123,48 @@ const EventManager = ({ user }) => {
     onRefresh();
   };
 
+  const [value,setDate] = useState(new Date());
+
+  const onChange = (value, event) => {
+    setDate(value);
+    let datestr = value.toString();
+    let selectDate = new Date(datestr).toISOString().split('T')[0];
+    
+    setLoading(true);
+    fetchEvents(selectDate, selectDate)
+      .then((result) => {
+        if (result && result.data && result.data.events) {
+          setEvents(result.data.events);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
+        <Styled.EventContainer>
+          <Styled.Events>Events</Styled.Events>
+          <Styled.Date>{value.toDateString()}</Styled.Date>
+        </Styled.EventContainer>
         <Styled.Button onClick={onRefresh}>
           <Icon color="grey3" name="refresh" />
-          <span style={{ color: "black" }}>Refresh</span>
+          <span>Refresh</span>
         </Styled.Button>
       </Styled.HeaderContainer>
-      <EventTable
-        events={events}
-        loading={loading}
-        onRegister={onRegister}
-        onUnregister={onUnregister}
-        user={user}
-      >
-        {" "}
-      </EventTable>
+      <Styled.Content>
+        <Calendar onChange={onChange} value={value}/>
+        <EventTable
+          events={events}
+          onRegister={onRegister}
+          onUnregister={onUnregister}
+          user={user}
+        >
+          {" "}
+        </EventTable>
+      </Styled.Content>
     </Styled.Container>
   );
 };

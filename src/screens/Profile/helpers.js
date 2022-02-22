@@ -10,4 +10,9 @@ export const profileValidator = object().shape({
   last_name: string().trim().required(),
   email: string().email().trim().required(),
   phone_number: string().trim().required(),
+  date_of_birth: string().trim().required(),
+  zip_code: string().trim().required(),
+  address: string().trim().required(),
+  city: string().trim().required(),
+  state: string().trim().required(),
 });

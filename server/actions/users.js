@@ -220,7 +220,16 @@ export async function getManagementData(
     {
       $project: {
         name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
+        first_name: "$bio.first_name",
+        last_name: "$bio.last_name",
         email: "$bio.email",
+        phone_number: "$bio.phone_number",
+        date_of_birth: "$bio.date_of_birth",
+        zip_code: "$bio.zip_code",
+        total_hours: "$bio.total_hours",
+        address: "$bio.address",
+        city: "$bio.city",
+        state: "$bio.state",
         role: 1,
         status: 1,
       },
@@ -267,6 +276,12 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "bio.last_name": regexquery },
         { "bio.email": regexquery },
         { "bio.phone_number": regexquery },
+        { "bio.date_of_birth": regexquery },
+        { "bio.zip_code": regexquery },
+        { "bio.total_hours": regexquery },
+        { "bio.address": regexquery },
+        { "bio.city": regexquery },
+        { "bio.state": regexquery },
       ];
       return User.aggregate([
         { $sort: { _id: -1 } },
@@ -380,7 +395,7 @@ export async function updateStatus(email, status) {
 
 // multiple updates, not sure how to handle
 // maybe run in parallel with Promise.all?
-export async function updateUser(email, phone_number, first_name, last_name) {
+export async function updateUser(email, phone_number, first_name, last_name, date_of_birth, zip_code, total_hours, address, city, state) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
 
@@ -429,6 +444,119 @@ export async function updateUser(email, phone_number, first_name, last_name) {
       return { status: 200 };
     });
   }
+
+  if (phone_number) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.phone_number": phone_number } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
+  if (date_of_birth) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.date_of_birth": date_of_birth } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
+  if (total_hours) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.total_hours": total_hours } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
+  if (zip_code) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.zip_code": zip_code } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
+  if (address) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.address": address } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
+  if (city) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.city": city } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
+  if (state) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.state": state } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+      return { status: 200 };
+    });
+  }
+
   return { status: 200 };
 }
 

@@ -71,7 +71,7 @@ const EventFormModal = ({ toggle, event }) => {
             address: containsExisitingEvent(event) ? event.address : emptyStringField,
             city: containsExisitingEvent(event) ? event.city : emptyStringField,
             zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
-            volunteers: containsExisitingEvent(event) ? event.volunteers : emptyStringField,
+            max_volunteers: containsExisitingEvent(event) ? event.max_volunteers : emptyStringField,
             description: containsExisitingEvent(event) ? event.description : emptyStringField,
         }}
         onSubmit={(values, { setSubmitting }) => {
@@ -144,8 +144,8 @@ const EventFormModal = ({ toggle, event }) => {
                     <Row>
                     <Styled.Col>
                         <SForm.Label>Max Number of Volunteers</SForm.Label>
-                        <Styled.ErrorMessage name="volunteers" />
-                        <Field name="volunteers">
+                        <Styled.ErrorMessage name="max_volunteers" />
+                        <Field name="max_volunteers">
                         {({ field }) => <SForm.Input {...field} type="number" />}
                         </Field>
                     </Styled.Col>
