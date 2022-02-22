@@ -35,6 +35,7 @@ export default NextAuth({
 
       const userData = {
         _id,
+        imageUrl: message.user.image,
         bio: {
           first_name: message.user.name.split(" ")[0],
           last_name: message.user.name.split(" ")[1],
@@ -60,6 +61,9 @@ export default NextAuth({
         ...session,
         user: currentUser,
       };
+    },
+    async redirect({ url, baseUrl }) {
+      return baseUrl;
     },
   },
 });

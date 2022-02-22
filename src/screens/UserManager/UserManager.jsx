@@ -1,9 +1,11 @@
+import { useSession } from "next-auth/react";
+import Error from "next/error";
 import React from "react";
-import UserTable from "./UserTable";
-import styled from "styled-components";
-import { fetchUserManagementData, fetchUserCount } from "../../actions/queries";
 import { Button } from "reactstrap";
+import styled from "styled-components";
+import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import Icon from "../../components/Icon";
+import UserTable from "./UserTable";
 
 const PAGE_SIZE = 10;
 
@@ -58,6 +60,24 @@ const Styled = {
     color: black;
   `,
 };
+
+function authWrapper(Component) {
+  return function WrappedComponent(props) {
+    const {
+      data: { user },
+    } = useSession();
+    if (user.role !== "admin") {
+      return (
+        <Error
+          title="You are not authorized to access this page"
+          statusCode={403}
+        />
+      );
+    } else {
+      return <Component {...props} user={user} />;
+    }
+  };
+}
 
 class UserManager extends React.Component {
   state = {
@@ -162,4 +182,4 @@ class UserManager extends React.Component {
   }
 }
 
-export default UserManager;
+export default authWrapper(UserManager);

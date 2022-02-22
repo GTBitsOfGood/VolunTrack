@@ -40,6 +40,7 @@ const userSchema = new Schema(
       industry: { type: String },
       occupation: { type: [String] },
     },
+    imageUrl: { type: String },
   },
   {
     timestamps: true,

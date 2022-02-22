@@ -169,8 +169,9 @@ const Styled = {
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
-  const user = session.user;
+  const {
+    data: { user },
+  } = useSession();
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -188,9 +189,6 @@ const Header = () => {
 
   const currPageMatches = (page) => router.pathname === page;
 
-  // DELETE AFTER AUTHENTICATION
-  user.role = "admin";
-
   return (
     <Styled.Navbar light expand="md">
       <Container
@@ -201,8 +199,10 @@ const Header = () => {
           display: "flex",
         }}
       >
-        <NavbarBrand tag={(props) => <Link {...props} />} href="/events">
-          <div style={{ width: "175px", marginLeft: "1rem" }}>
+        <NavbarBrand tag={(props) => <Link {...props} />} href="/">
+          <div
+            style={{ width: "175px", marginLeft: "1rem", cursor: "pointer" }}
+          >
             <Image
               layout="responsive"
               objectFit="contain"
@@ -256,7 +256,7 @@ const Header = () => {
                     <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
                       <Styled.UserIcon
                         style={{ marginRight: "20px" }}
-                        src="/images/test.jpg"
+                        src={user.imageUrl ?? "/images/test.jpg"}
                         alt="icon"
                       ></Styled.UserIcon>
                     </Styled.ImgContainer>
@@ -279,10 +279,9 @@ const Header = () => {
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
-                <Styled.DropdownItem onClick={logout} href="/">
-                  {" "}
-                  Logout{" "}
-                </Styled.DropdownItem>
+                <DropdownItem onClick={logout} href="/">
+                  <Styled.DropdownItem>Logout</Styled.DropdownItem>
+                </DropdownItem>
               </DropdownMenu>
             </Styled.Dropdown>
           </Styled.FlexContainer>

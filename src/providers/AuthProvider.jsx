@@ -1,16 +1,13 @@
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import PropTypes from "prop-types";
 import React from "react";
-import GoogleButton from "react-google-button";
+import LoginPage from "../screens/Login";
 
 // AuthProvider wraps the entire appication and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {
   const { status } = useSession();
-
-  const login = (e) => {
-    e.preventDefault();
-    signIn("google");
-  };
+  const router = useRouter();
 
   switch (status) {
     case "authenticated":
@@ -18,7 +15,9 @@ const AuthProvider = ({ children }) => {
     case "loading":
       return <p>loading...</p>;
     default:
-      return <GoogleButton type="light" onClick={login} />;
+      // unauthenticated, send to login page
+      if (router.pathname !== "/login") router.replace("/login");
+      return <LoginPage />;
   }
 };
 

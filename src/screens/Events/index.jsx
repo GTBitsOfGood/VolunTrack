@@ -1,11 +1,18 @@
+import { useSession } from "next-auth/react";
 import React from "react";
 import AdminEventManager from "./Admin";
 import UserEventManager from "./User";
 
-// todo: delete once authorization has been added
-const IS_ADMIN = true;
+const EventManagerSelector = () => {
+  const {
+    data: { user },
+  } = useSession();
 
-const EventManagerSelector = (props) =>
-  props.isAdmin || IS_ADMIN ? <AdminEventManager /> : <UserEventManager />;
+  return user.role === "admin" ? (
+    <AdminEventManager user={user} />
+  ) : (
+    <UserEventManager user={user} />
+  );
+};
 
 export default EventManagerSelector;

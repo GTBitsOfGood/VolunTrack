@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import styled from "styled-components";
 import { Button } from "reactstrap";
-import Icon from "../../../components/Icon";
-import EventTable from "./EventTable";
+import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
+import Icon from "../../../components/Icon";
 import { updateEvent } from "./eventHelpers";
+import EventTable from "./EventTable";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import variables from "../../../design-tokens/_variables.module.scss";
