@@ -121,9 +121,9 @@ const Styled = {
     padding-left: 1.2rem;
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
-    :hover{
+    :hover {
       cursor: pointer;
-      background-color: #F2F2F2;
+      background-color: #f2f2f2;
     }
   `,
   UserContainer: styled.div`
@@ -202,7 +202,7 @@ const Header = () => {
         }}
       >
         <NavbarBrand tag={(props) => <Link {...props} />} href="/events">
-          <div style={{ width: "175px", marginLeft: "1rem"}}>
+          <div style={{ width: "175px", marginLeft: "1rem" }}>
             <Image
               layout="responsive"
               objectFit="contain"
@@ -219,25 +219,22 @@ const Header = () => {
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
               {user.role === "admin" && (
-              <Link
+                <Link
                   href="/applicant-viewer"
                   selected={currPageMatches("/applicant-viewer")}
                 >
-                <Styled.PageLink>Applicant Viewer</Styled.PageLink>
-              </Link>
+                  <Styled.PageLink>Applicant Viewer</Styled.PageLink>
+                </Link>
               )}
               {user.role === "admin" && (
-              <Link
+                <Link
                   href="/user-manager"
                   selected={currPageMatches("/user-manager")}
-              >
-                <Styled.PageLink>User Manager</Styled.PageLink>
-              </Link>
+                >
+                  <Styled.PageLink>User Manager</Styled.PageLink>
+                </Link>
               )}
-              <Link
-                href="/events"
-                selected={currPageMatches("/events")}
-              >
+              <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
               <Link
@@ -247,12 +244,9 @@ const Header = () => {
                 <Styled.PageLink>Past Events</Styled.PageLink>
               </Link>
               {user.role === "admin" && (
-              <Link
-                href="/settings"
-                selected={currPageMatches("/settings")}
-              >
-                <Styled.PageLink>Settings</Styled.PageLink>
-              </Link>
+                <Link href="/settings" selected={currPageMatches("/settings")}>
+                  <Styled.PageLink>Settings</Styled.PageLink>
+                </Link>
               )}
             </Styled.PageSwitch>
             <Styled.Dropdown nav inNavbar className="navbar-nav">
@@ -260,7 +254,8 @@ const Header = () => {
                 <Styled.UserContainer>
                   <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
                     <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
-                      <Styled.UserIcon style={{ marginRight: "20px" }}
+                      <Styled.UserIcon
+                        style={{ marginRight: "20px" }}
                         src="/images/test.jpg"
                         alt="icon"
                       ></Styled.UserIcon>
@@ -282,12 +277,12 @@ const Header = () => {
 
               <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
                 <DropdownItem onClick={goToProfile} href="/profile">
-                  <Styled.DropdownItem>Profile</Styled.DropdownItem>             
+                  <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
                 <Styled.DropdownItem onClick={logout} href="/">
                   {" "}
                   Logout{" "}
-                </Styled.DropdownItem>                
+                </Styled.DropdownItem>
               </DropdownMenu>
             </Styled.Dropdown>
           </Styled.FlexContainer>
