@@ -1,19 +1,13 @@
 import { string, object, number, date, array } from "yup";
 
 export const eventValidator = object().shape({
-  name: string().trim().required(),
+  title: string().trim().required(),
   date: date().required(),
-  location: string().trim().required(),
+  startTime: string().required(),
+  endTime: string().required(),
+  address: string().trim().required(),
+  city: string().trim().required(),
+  zip: string().trim().required(),
+  volunteers: string().trim().required(),
   description: string().trim().required(),
-  contact_phone: string().trim(),
-  contact_email: string().email().trim(),
-  shifts: array()
-    .of(
-      object().shape({
-        start_time: string().required(),
-        end_time: string().required(),
-        max_volunteers: number().required(),
-      })
-    )
-    .required(),
 });
