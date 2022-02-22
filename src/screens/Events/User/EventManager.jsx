@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import { Button } from "reactstrap";
 import Icon from "../../../components/Icon";
@@ -76,7 +77,10 @@ const Styled = {
 const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
   useEffect(() => {
     onRefresh();
   }, []);

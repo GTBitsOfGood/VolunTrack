@@ -1,4 +1,5 @@
 import React from "react";
+import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import * as Table from "../../sharedStyles/tableStyles";
 import Icon from "../../../components/Icon";
@@ -9,6 +10,8 @@ const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
+    color: #000;
+    padding: 0;
   `,
   Container: styled.div`
   width: 100%;
@@ -34,7 +37,12 @@ const convertTime = (time) => {
   return hours.toString()+':'+min+suffix;
 }
 
+
 const EventTable = ({ events, onRegister, onUnregister, user}) => {
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
   return (
     <Styled.Container>
       <Styled.ul>
@@ -44,18 +52,24 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
               <Table.Inner>
                 <Table.Slots>SLOTS</Table.Slots>
                 <Table.Register>
-                  <Styled.Button onClick={() => onRegister(event)}>
-                    <Icon color="grey3" name="add" />
-                    <span>Sign up</span>
-                  </Styled.Button>
+                 {event.volunteers.includes(user._id) ? (
+                    <>
+                      <Styled.Button onClick={() => onUnregister(event)}>
+                        <Icon color="grey3" name="delete" />
+                        <span>Unregister</span>
+                      </Styled.Button>
+                    </>
+                  ) : (
+                    <Styled.Button onClick={() => onRegister(event)}>
+                      <Icon color="grey3" name="add" />
+                      <span>Sign up</span>
+                    </Styled.Button>
+                  )}
+
                 </Table.Register>
                 <Table.Text>
                   <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
-                  <Table.EventName>{event.title}</Table.EventName>
-                  {event.shifts.map((shift) => (
-                    <Table.Time>{convertTime(shift.start_time)} - {convertTime(shift.end_time)}</Table.Time>
-                  ))}
-                  
+                  <Table.EventName>{event.title}</Table.EventName>                
                 </Table.Text>
               </Table.Inner>
               <Table.Creation>{event.date.slice(0,10)}</Table.Creation>

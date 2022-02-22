@@ -54,12 +54,8 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
                   </Styled.Button>
                 </Table.Delete>
                 <Table.Text>
-                  <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
                   <Table.EventName>{event.title}</Table.EventName>
-                  {event.shifts.map((shift) => (
-                    <Table.Time>{convertTime(shift.start_time)} - {convertTime(shift.end_time)}</Table.Time>
-                  ))}
-                  
+                  <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
                 </Table.Text>
               </Table.Inner>
               <Table.Creation>{event.date.slice(0,10)}</Table.Creation>

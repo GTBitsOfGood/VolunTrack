@@ -32,6 +32,11 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
     volunteers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
+      required: true,
+      default: [],
+    },
+    max_volunteers: {
       type: Number,
       required: true,
     },
@@ -44,4 +49,5 @@ const eventSchema = new mongoose.Schema(
 );
 
 // export Event model to app
+
 module.exports = mongoose.models.Event || mongoose.model("Event", eventSchema);
