@@ -26,12 +26,11 @@ const Styled = {
     align-items: center;
   `,
   HeaderContainer: styled.div`
-    width: 95%;
+    width: 60%;
     max-width: 80rem;
     display: flex;
     justify-content: end;
-    margin-bottom: 1rem;
-    padding-right: 5rem;
+    margin: 0 auto;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
@@ -48,17 +47,17 @@ const Styled = {
     }
   `,
   Content: styled.div`
-    width: 100%;
+    width: 60%;
     height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
     flex-direction: row;
-    margin-left: 10rem;
+    margin: 0 auto;
     align-items: start;
   `,
   EventContainer: styled.div`
-    width: 75%;
+    width: 78%;
     max-width: 80rem;
     display: flex;
     flex-direction column;

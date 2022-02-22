@@ -51,7 +51,7 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
                 </Table.Register>
                 <Table.Text>
                   <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
-                  <Table.EventName>{event.name}</Table.EventName>
+                  <Table.EventName>{event.title}</Table.EventName>
                   {event.shifts.map((shift) => (
                     <Table.Time>{convertTime(shift.start_time)} - {convertTime(shift.end_time)}</Table.Time>
                   ))}
