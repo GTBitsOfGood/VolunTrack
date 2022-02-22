@@ -65,7 +65,7 @@ const CREATE_EVENT_VALIDATOR = [
   check("address").isAscii().trim(),
   check("city").isAscii().trim(),
   check("zip").isAscii().trim().escape(),
-  check("volunteers").isAscii().trim(),
+  check("max_volunteers").isAscii().trim(),
   check("description").isAscii().trim(),
 ];
 
