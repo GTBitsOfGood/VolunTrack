@@ -58,17 +58,15 @@ const USER_DATA_VALIDATOR = [
 // TODO Add validations for volunteers Array
 const CREATE_EVENT_VALIDATOR = [
   check("_id").optional(),
-  check("name").isAscii().trim(),
+  check("title").isAscii().trim(),
   check("date").exists(),
-  check("location").isAscii().trim(),
+  check("startTime").exists(),
+  check("endTime").exists(),
+  check("address").isAscii().trim(),
+  check("city").isAscii().trim(),
+  check("zip").isAscii().trim().escape(),
+  check("volunteers").isAscii().trim(),
   check("description").isAscii().trim(),
-  check("contact_phone").optional().isAscii().trim(),
-  check("contact_email").optional().isAscii().trim(),
-  check("volunteers").optional().isArray().trim(),
-  check("shifts.*.start_time").isAscii().trim(),
-  check("shifts.*.start_time").isAscii().trim(),
-  check("shifts.*.end_time").isAscii().trim(),
-  check("shifts.*.max_volunteers").isAscii().trim(),
 ];
 
 const OBJECT_ID_REGEX = new RegExp("^[0-9a-fA-F]{24}$");

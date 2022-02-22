@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../sharedStyles/formStyles";
+import { Modal, ModalHeader } from "reactstrap";
+import { Form as FForm, ErrorMessage } from "formik";
+
 import PropTypes from "prop-types";
-import { eventValidator } from "./eventHelpers";
-import { editEvent } from "../../../actions/queries";
+import EventFormModal from "./EventFormModal"
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -20,94 +20,43 @@ const Styled = {
     font-weight: bold;
     display: inline-block;
   `,
+  ModalHeader: styled(ModalHeader)`
+    border-color: transparent;
+    p {
+      color: ${variables["dark"]};
+      font-weight: 700;
+      margin-top: 2rem;
+      margin-left: 4.5rem;
+      padding-right: 3.5rem;
+      padding-left: 3.5rem;
+      border-bottom: 2px solid ${variables["dark"]};
+    }
+  `,
+  HeaderText: styled.p`
+    color: ${variables["dark"]};
+    font-weight: 900;
+    font-size: 1.2em;
+    border-bottom: 2px solid ${variables["dark"]};
+    padding-right: 3.5rem;
+    padding-left: 2rem;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    text-align: center;
+    display: inline;
+  `
 };
 
 const EventEditModal = ({ open, toggle, event }) => {
   return (
-    <Modal isOpen={open} toggle={toggle}>
-      <ModalHeader toggle={toggle}>Edit Event</ModalHeader>
-      <Formik
-        initialValues={{
-          name: event ? event.name : "",
-          date: event ? event.date.split("T")[0] : "", // strips timestamp
-          location: event ? event.location : "",
-          description: event ? event.description : "",
-          contact_phone: event ? event.contact_phone : "",
-          contact_email: event ? event.email : "",
-          shifts: event ? event.shifts : [],
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          const editedEvent = {
-            ...values,
-            contact_phone: values.contact_phone || undefined,
-            contact_email: values.contact_email || undefined,
-            _id: event._id,
-          };
-          setSubmitting(true);
-          editEvent(editedEvent);
-          toggle();
-        }}
-        validationSchema={eventValidator}
-        render={({
-          handleSubmit,
-          isValid,
-          isSubmitting,
-          values,
-          setFieldValue,
-          handleBlur,
-        }) => (
-          <React.Fragment>
-            <ModalBody>
-              <Styled.Form>
-                <SForm.FormGroup>
-                  <SForm.Label>Name</SForm.Label>
-                  <Styled.ErrorMessage name="name" />
-                  <Field name="name">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-                  <SForm.Label>Date</SForm.Label>
-                  <Styled.ErrorMessage name="date" />
-                  <Field name="date">
-                    {({ field }) => <SForm.Input {...field} type="date" />}
-                  </Field>
-                  <SForm.Label>Location</SForm.Label>
-                  <Styled.ErrorMessage name="location" />
-                  <Field name="location">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-                  <SForm.Label>Description</SForm.Label>
-                  <Styled.ErrorMessage name="description" />
-                  <Field name="description">
-                    {({ field }) => <SForm.Input {...field} type="textarea" />}
-                  </Field>
-                  <SForm.Label>Contact Phone</SForm.Label>
-                  <Styled.ErrorMessage name="contact_phone" />
-                  <Field name="contact_phone">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
-                  </Field>
-                  <SForm.Label>Contact Email</SForm.Label>
-                  <Styled.ErrorMessage name="contact_email" />
-                  <Field name="contact_email">
-                    {({ field }) => <SForm.Input {...field} type="email" />}
-                  </Field>
-                </SForm.FormGroup>
-              </Styled.Form>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="secondary" onClick={toggle}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
-                onClick={handleSubmit}
-                disabled={!isValid || isSubmitting}
-              >
-                Submit
-              </Button>
-            </ModalFooter>
-          </React.Fragment>
-        )}
-      />
+    <Modal isOpen={open} toggle={toggle} size="xl">
+        <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
+        <Styled.HeaderText>
+          <p>Edit Event</p>
+        </Styled.HeaderText>
+        <EventFormModal
+        toggle={toggle}
+        event={event}>
+        </EventFormModal>    
     </Modal>
   );
 };
