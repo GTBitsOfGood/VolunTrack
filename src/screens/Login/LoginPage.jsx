@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
 import "normalize.css";
