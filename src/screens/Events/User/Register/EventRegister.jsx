@@ -1,11 +1,12 @@
 import React from "react";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 import { Modal, ModalHeader, ModalFooter, Row, Col, Button, Container, FormGroup, Label, Input } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
-import Icon from "../../../components/Icon";
+import Icon from "../../../../components/Icon";
 
 import PropTypes from "prop-types";
-import variables from "../../../design-tokens/_variables.module.scss";
+import variables from "../../../../design-tokens/_variables.module.scss";
 // background-color: ${variables["gray-200"]};
 
 const Styled = {
@@ -37,10 +38,15 @@ const Styled = {
       text-align: center;
       display: inline;
     `,
+    MainContainer: styled(Container)`
+        margin-left: "0px",
+        margin-right: "0px",
+        max-width: "100%",
+    `,
     Container: styled(Container)`
         background-color: ${variables["gray-100"]};
-        padding: 2.5rem;
-        overflow-y: hidden;
+        overflow-y: scroll;
+        overflow-x: hidden;
     `,
     Row: styled(Row)`
         margin-bottom: 0.2rem;
@@ -48,11 +54,14 @@ const Styled = {
     Button: styled(Button)`
         background-color: ${variables["primary"]};
         color: ${variables["white"]};
-        width: 100%;
+        width: 80%;
+        margin: auto;
     `,
     ModalFooter: styled(ModalFooter)`
+        background-color: ${variables["white"]};
         position: sticky;
         bottom: 0;
+        margin: 0 -1rem 0 -1rem;
     `,
     EventContainer: styled(Container)`
       background-color: ${variables["white"]};
@@ -138,11 +147,16 @@ const EventRegister = ({open, toggle, event, user}) => {
     //     maxNum: event.max_volunteers
     // }
 
+    const router = useRouter();
+
+    const onCompleteRegistration = () => {
+        router.replace('/events')
+    }
+
     console.log(event)
     console.log("hello")
     console.log(user)
     return (
-        <Modal isOpen={open} toggle={toggle} size="xl" fullscreen={fullScreen}>
             <Styled.Container fluid="md">
                 <Styled.Row>
                     <Col>
@@ -266,12 +280,12 @@ const EventRegister = ({open, toggle, event, user}) => {
                             </Col>
                         </Row>
                     </Container>
-                </Styled.Row>
+                </Styled.Row>  
                 <Styled.ModalFooter>
-                    <Styled.Button>Complete Registration</Styled.Button>
-                </Styled.ModalFooter>    
+                    <Styled.Button onClick={() => onCompleteRegistration()}>Complete Registration</Styled.Button>
+                </Styled.ModalFooter>  
             </Styled.Container>
-        </Modal>
+
     )
 }
 
