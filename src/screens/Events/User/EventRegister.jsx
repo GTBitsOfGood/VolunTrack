@@ -38,7 +38,7 @@ const Styled = {
       display: inline;
     `,
     Container: styled(Container)`
-        background-color: ${variables["gray-200"]};
+        background-color: ${variables["gray-100"]};
         padding: 2.5rem;
         overflow-y: hidden;
     `,
@@ -102,6 +102,7 @@ const Styled = {
     EventInfoText: styled.p`
         color: ${variables["dark"]};
         font-size: 1rem;
+        font-weight: 600;
         margin-left: 0.5rem;
     `,
     EventTitleText: styled.p`
@@ -120,7 +121,11 @@ const Styled = {
         padding: 1rem 1rem 0 1rem;
     `,
     VolunteerInfoText: styled(Row)`
-        : 0 1rem 0 1rem;
+    `,
+    EventInfoCol: styled(Col)`
+        background-color: ${variables["gray-100"]};
+        margin: 0 2rem 0.5rem 0;
+        border-radius: 0.5rem;
     `,
 
 
@@ -168,7 +173,7 @@ const EventRegister = ({open, toggle, event, user}) => {
                             <Styled.DetailText>Help us move boxes from our trucks to the warehouse.</Styled.DetailText>
                         </Styled.EventRow>
                         <Styled.EventRow>
-                            <Col>
+                            <Styled.EventInfoCol xs="2">
                                 <Row>
                                     <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M22.8475 6.26904H7.24434C6.01329 6.26904 5.01532 7.26701 5.01532 8.49806V24.1012C5.01532 25.3322 6.01329 26.3302 7.24434 26.3302H22.8475C24.0785 26.3302 25.0765 25.3322 25.0765 24.1012V8.49806C25.0765 7.26701 24.0785 6.26904 22.8475 6.26904Z" stroke="black" stroke-width="1.88073" stroke-linecap="round" stroke-linejoin="round"/>
@@ -178,17 +183,17 @@ const EventRegister = ({open, toggle, event, user}) => {
                                     </svg>
                                     <Styled.EventInfoText>March 19</Styled.EventInfoText>
                                 </Row>
-                            </Col>
-                            <Col>
+                            </Styled.EventInfoCol>
+                            <Styled.EventInfoCol xs="3">
                                 <Row>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M12 7V12.25L16 14" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                     </svg>
-                                    <Styled.EventInfoText>7:00AM</Styled.EventInfoText>
+                                    <Styled.EventInfoText>7:00AM - 4:00PM</Styled.EventInfoText>
                                 </Row>
-                            </Col>
-                            <Col>
+                            </Styled.EventInfoCol>
+                            <Styled.EventInfoCol xs="4">
                                 <Row>
                                     <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.607 25.8466C14.8442 26.115 15.2476 26.115 15.4848 25.8466C17.0928 24.0267 22.5688 17.3817 22.5688 11.2842C22.5688 7.12936 19.2007 3.76123 15.0459 3.76123C10.8911 3.76123 7.52293 7.12936 7.52293 11.2842C7.52293 17.3817 12.999 24.0267 14.607 25.8466Z" stroke="black" stroke-width="1.88073"/>
@@ -196,7 +201,7 @@ const EventRegister = ({open, toggle, event, user}) => {
                                     </svg>
                                     <Styled.EventInfoText>521 Waffleburger Dr SW</Styled.EventInfoText>
                                 </Row>
-                            </Col>
+                            </Styled.EventInfoCol>
                         </Styled.EventRow>
                         <Styled.EventRow>
                             <Col>
