@@ -1,5 +1,6 @@
 import React from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import PropTypes from "prop-types";
 import * as Table from "../../sharedStyles/tableStyles";
 import Icon from "../../../components/Icon";
@@ -60,10 +61,18 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user}) => {
                       </Styled.Button>
                     </>
                   ) : (
-                    <Styled.Button onClick={() => onRegisterClicked(event, user)}>
-                      <Icon color="grey3" name="add" />
-                      <span>Sign up</span>
-                    </Styled.Button>
+                    <Link
+                    href={{
+                      pathname: "/register",
+                      // query: { testing: "data" },
+                      // query: { id: JSON.stringify(event), testing: "data" },
+                    }}
+                  >
+                      <Styled.Button>
+                        <Icon color="grey3" name="add" />
+                        <span>Sign up</span>
+                      </Styled.Button>
+                    </Link>
                   )}
 
                 </Table.Register>

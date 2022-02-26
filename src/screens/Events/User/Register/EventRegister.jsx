@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import { Modal, ModalHeader, ModalFooter, Row, Col, Button, Container, FormGroup, Label, Input } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
@@ -136,11 +137,10 @@ const Styled = {
         margin: 0 2rem 0.5rem 0;
         border-radius: 0.5rem;
     `,
-
-
   };
+//   const EventRegister = ({id, testing}) => {
 
-const EventRegister = ({open, toggle, event, user}) => {
+const EventRegister = () => {
     const fullScreen = true; // doesn't take in fullscreen right now
     // const volunteerSpots = {
     //     currNum: event.volunteers, // currently event.volunteers is null
@@ -149,13 +149,32 @@ const EventRegister = ({open, toggle, event, user}) => {
 
     const router = useRouter();
 
+    // const {
+    //     query: { testing },
+    // } = router
+    // console.log(testing);
+
+    const { data: session } = useSession();
+    // const user = session.user;
+    // const {
+    //     first_name = "",
+    //     last_name = "",
+    //     email = "",
+    //     phone_number = "",
+    //     date_of_birth = "",
+    //     zip_code = "",
+    //     total_hours = "",
+    //     address = "",
+    //     city = "",
+    //     state = "",
+    //     court_required = false,
+    // } = user?.bio ?? {};
+
     const onCompleteRegistration = () => {
         router.replace('/events')
     }
 
-    console.log(event)
-    console.log("hello")
-    console.log(user)
+
     return (
             <Styled.Container fluid="md">
                 <Styled.Row>
@@ -289,11 +308,15 @@ const EventRegister = ({open, toggle, event, user}) => {
     )
 }
 
-EventRegister.propTypes = {
-    open: PropTypes.bool,
-    toggle: PropTypes.func,
-    event: PropTypes.object,
-    user: PropTypes.object
-};
+// EventRegister.propTypes = {
+//     open: PropTypes.bool,
+//     toggle: PropTypes.func,
+//     event: PropTypes.object,
+//     user: PropTypes.object
+// };
+
+// EventRegister.getInitialProps = ({ query: { id, testing } }) => {
+//     return { id, testing }
+// }
 
 export default EventRegister;
