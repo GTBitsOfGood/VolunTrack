@@ -38,7 +38,7 @@ const convertTime = (time) => {
 }
 
 
-const EventTable = ({ events, onRegister, onUnregister, user}) => {
+const EventTable = ({ events, onRegisterClicked, onUnregister, user}) => {
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -60,7 +60,7 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
                       </Styled.Button>
                     </>
                   ) : (
-                    <Styled.Button onClick={() => onRegister(event)}>
+                    <Styled.Button onClick={() => onRegisterClicked(event, user)}>
                       <Icon color="grey3" name="add" />
                       <span>Sign up</span>
                     </Styled.Button>
@@ -81,9 +81,10 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
   );
 };
 EventTable.propTypes = {
-  events:PropTypes.Array,
-  onEditClicked: PropTypes.func,
-  onDeleteClicked: PropTypes.func,
+  events: PropTypes.Array,
+  onRegisterClicked: PropTypes.func,
+  onUnregister: PropTypes.func,
+  user: PropTypes.object
 }
 
 export default EventTable;

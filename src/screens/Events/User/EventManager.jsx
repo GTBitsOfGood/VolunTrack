@@ -6,6 +6,7 @@ import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
 import { updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
+import EventRegister from "./EventRegister";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -77,6 +78,10 @@ const Styled = {
 const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [currEvent, setCurrEvent] = useState(null);
+  const [currUser, setCurrUser] = useState(null);
+
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -142,6 +147,17 @@ const EventManager = ({ user }) => {
       });
   };
 
+  const onRegisterClicked = (event, user) => {
+    setShowRegisterModal(true);
+    setCurrEvent(event);
+    setCurrUser(user);
+  };
+
+  const toggleRegisterModal = () => {
+    setShowRegisterModal((prev) => !prev);
+    onRefresh();
+  };
+
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
@@ -158,12 +174,17 @@ const EventManager = ({ user }) => {
         <Calendar onChange={onChange} value={value}/>
         <EventTable
           events={events}
-          onRegister={onRegister}
+          onRegisterClicked={onRegisterClicked}
           onUnregister={onUnregister}
           user={user}
         >
           {" "}
         </EventTable>
+        <EventRegister
+          open={showRegisterModal}
+          toggle={toggleRegisterModal}
+          event={currEvent}
+          user={currUser}/>
       </Styled.Content>
     </Styled.Container>
   );
