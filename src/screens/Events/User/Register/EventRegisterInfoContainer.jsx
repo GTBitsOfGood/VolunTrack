@@ -56,8 +56,8 @@ const Styled = {
     EventInfoCol: styled(Col)`
         background-color: ${variables["gray-100"]};
         margin: 0 2rem 0.5rem 0;
-        padding-top: 0.6rem;
-        padding-left: 1.2rem;
+        padding-top: 0.8rem;
+        padding-left: 1.6rem;
         border-radius: 0.5rem;
     `,
     };

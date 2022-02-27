@@ -33,7 +33,7 @@ const Styled = {
     `,
     MainText: styled.p`
         color: ${variables["yiq-text-dark"]};
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 900;
         text-align: left;
         overflow-wrap: break-word;
