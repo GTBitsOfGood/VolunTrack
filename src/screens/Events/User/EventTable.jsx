@@ -61,18 +61,10 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user}) => {
                       </Styled.Button>
                     </>
                   ) : (
-                    <Link
-                    href={{
-                      pathname: "/register",
-                      // query: { testing: "data" },
-                      // query: { id: JSON.stringify(event), testing: "data" },
-                    }}
-                  >
-                      <Styled.Button>
-                        <Icon color="grey3" name="add" />
-                        <span>Sign up</span>
-                      </Styled.Button>
-                    </Link>
+                    <Styled.Button onClick={() => onRegisterClicked(event)}>
+                      <Icon color="grey3" name="add" />
+                      <span>Sign up</span>
+                    </Styled.Button>
                   )}
 
                 </Table.Register>

@@ -184,11 +184,6 @@ const EventManager = ({ user }) => {
         >
           {" "}
         </EventTable>
-        {/* <EventRegister
-          open={showRegisterModal}
-          toggle={toggleRegisterModal}
-          event={currEvent}
-          user={currUser}/> */}
       </Styled.Content>
     </Styled.Container>
   );
