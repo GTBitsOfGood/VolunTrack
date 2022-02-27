@@ -77,12 +77,22 @@ const Styled = {
         text-align: left;
         overflow-wrap: break-word;
     `,
-    VolunteerText: styled.p`
+    VolunteerNumberText: styled.p`
         color: ${variables["yiq-text-dark"]};
         font-size: 1.3rem;
+        font-weight: 900;
+        text-align: left;
+        margin-left: 1rem;
+        padding-top: 0.5rem;
+        overflow-wrap: break-word;
+    `,
+    VolunteerText: styled.p`
+        color: ${variables["yiq-text-dark"]};
+        font-size: 1rem;
         font-weight: 500;
         text-align: left;
-        padding-top: 0.5rem;
+        margin-left: 0.7rem;
+        padding-top: 0.8rem;
         overflow-wrap: break-word;
     `,
     SectionText: styled.p`
@@ -93,14 +103,14 @@ const Styled = {
         margin-left: 1rem;
         overflow-wrap: break-word;
     `,
-    TooltipText: styled.p`
+    LinkedText: styled.p`
         color: ${variables["primary"]};
         font-size: 0.9rem;
         font-weight: 900;
         text-align: left;
         text-decoration: underline;
         margin-left: 0.75rem;
-        padding-top: 0.3rem;
+        padding-top: 0.4rem;
         overflow-wrap: break-word;
     `,
     ContactText: styled.p`
@@ -215,12 +225,15 @@ const EventRegister = () => {
                     </Col>
                     <Col xs="12" lg={{ size: 4, offset: 2}}>
                         {/* <h2>{event.volunteers.length}/{event.max_volunteers} Spots Remaining</h2> */}
-                        <Styled.VolunteerText>30/100 Spots Remaining</Styled.VolunteerText>
+                        <Row>
+                            <Styled.VolunteerNumberText>30/100 </Styled.VolunteerNumberText>
+                            <Styled.VolunteerText> Spots Remaining</Styled.VolunteerText>
+                        </Row>
                     </Col>
                 </Styled.Row>
                 <Styled.Row>
                     <Styled.SectionText>Event Information</Styled.SectionText>
-                    <Styled.TooltipText>Visit Event Page</Styled.TooltipText>
+                    <Styled.LinkedText>Visit Event Page</Styled.LinkedText>
                 </Styled.Row>
                 <Styled.Row>
                     <Styled.EventContainer>
@@ -290,7 +303,7 @@ const EventRegister = () => {
                 </Styled.Row>
                 <Styled.Row>
                     <Styled.SectionText>Your Group</Styled.SectionText>
-                    <Styled.TooltipText>Add Minor (under 13 years old)</Styled.TooltipText>
+                    <Styled.LinkedText>Add Minor (under 13 years old)</Styled.LinkedText>
                 </Styled.Row>
                 <Styled.AccomodationRow>
                     <FormGroup check>
