@@ -4,10 +4,10 @@ import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import { ModalFooter, Row, Col, Button, Container, FormGroup, UncontrolledTooltip, Input } from "reactstrap";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
+import IconSpecial from "../../../../components/IconSpecial";
 
 import PropTypes from "prop-types";
 import variables from "../../../../design-tokens/_variables.module.scss";
-// background-color: ${variables["gray-200"]};
 
 const Styled = {
     Container: styled(Container)`
@@ -123,7 +123,6 @@ const EventRegister = (event) => {
                     <Styled.MainText>Confirm Registration</Styled.MainText>
                 </Col>
                 <Col xs="12" lg={{ size: 4, offset: 2}}>
-                    {/* <h2>{event.volunteers.length}/{event.max_volunteers} Spots Remaining</h2> */}
                     <Row>
                         <Styled.VolunteerNumberText>30/100 </Styled.VolunteerNumberText>
                         <Styled.VolunteerText> Spots Remaining</Styled.VolunteerText>
@@ -146,11 +145,7 @@ const EventRegister = (event) => {
                     <Input type="checkbox"/>{' '}
                 </FormGroup>
                 <Styled.AccomodationText>I require accomadation for my court required hours</Styled.AccomodationText>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" href="#" id="tooltipShow">
-                    <path d="M10 13.3333L10 9.16659" stroke="#EF4E79" stroke-width="1.25" stroke-linecap="round"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 5.83333C9.53976 5.83333 9.16666 6.20643 9.16666 6.66667C9.16666 7.1269 9.53976 7.5 10 7.5C10.4602 7.5 10.8333 7.1269 10.8333 6.66667C10.8333 6.20643 10.4602 5.83333 10 5.83333Z" fill="#EF4E79"/>
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M10 1.66659C5.39763 1.66659 1.66667 5.39755 1.66667 9.99992C1.66666 14.6023 5.39762 18.3333 10 18.3333C14.6024 18.3333 18.3333 14.6023 18.3333 9.99992C18.3333 5.39755 14.6024 1.66659 10 1.66659Z" stroke="#EF4E79" stroke-width="1.25"/>
-                </svg>
+                <IconSpecial width="20" height="20" viewBox="0 0 20 20" name="info" href="#" id="tooltipShow"/>
                 <UncontrolledTooltip placement="right" target="tooltipShow">
                     Here is information about your required court hours. 
                 </UncontrolledTooltip>
