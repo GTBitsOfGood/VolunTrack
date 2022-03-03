@@ -5,6 +5,7 @@ import * as Table from "../../sharedStyles/tableStyles";
 import Icon from "../../../components/Icon";
 import styled from "styled-components";
 import { Button } from "reactstrap";
+import Link from "next/link";
 
 const Styled = {
   Button: styled(Button)`
@@ -43,12 +44,13 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
     const { data: session } = useSession();
     user = session.user;
   }
+  console.log(events);
   return (
     <Styled.Container>
       <Styled.ul>
         {events.map((event) => (
           <Styled.List>
-            <Table.EventList>
+            <Link href={`events/${event._id}}`}><Table.EventList>
               <Table.Inner>
                 <Table.Slots>SLOTS</Table.Slots>
                 <Table.Register>
@@ -73,7 +75,7 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
                 </Table.Text>
               </Table.Inner>
               <Table.Creation>{event.date.slice(0,10)}</Table.Creation>
-            </Table.EventList>
+            </Table.EventList></Link> 
           </Styled.List>
         ))}
       </Styled.ul>
