@@ -44,7 +44,6 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
     const { data: session } = useSession();
     user = session.user;
   }
-  console.log(events);
   return (
     <Styled.Container>
       <Styled.ul>
