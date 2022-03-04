@@ -8,7 +8,9 @@ const Styled = {
     Button: styled(Button)`
         background-color: ${variables["primary"]};
         color: white;
-        margin: 4rem;
+        margin-bottom: 2rem;
+        margin-left: 4rem;
+        margin-right: 4rem;
         font-size: 20px;
         position: fixed;
         bottom: 0;
@@ -17,7 +19,9 @@ const Styled = {
     EventTable: styled.div`
         display: flex;
         flex-direction: row;
-        margin-top: 2rem;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+        background-color: ${variables["gray-100"]};
     `,
     EventCol: styled.div`
         display: flex;
@@ -29,6 +33,7 @@ const Styled = {
         color: black;
         font-weight: bold;
         margin-bottom: 4px;
+        font-size: 40px;
     `,
     EventSubhead: styled.div`
         display: flex;
@@ -55,6 +60,8 @@ const Styled = {
     InfoTableRow: styled.div`
         display: flex;
         flex-direction: row;
+        background-color: white;
+        padding-right: 5rem;
     `,
     InfoTableText: styled.p`
         font-size: 16px;
