@@ -1,9 +1,19 @@
 import React from "react";
 import {useRouter} from 'next/router';
 import styled from "styled-components";
-// import variables from "../../../design-tokens/_variables.module.scss";
+import { Button } from "reactstrap";
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
+    Button: styled(Button)`
+        background-color: ${variables["primary"]};
+        color: white;
+        margin: 4rem;
+        font-size: 20px;
+        position: fixed;
+        bottom: 0;
+        width: 90%;
+    `,
     EventTable: styled.div`
         display: flex;
         flex-direction: row;
@@ -40,7 +50,15 @@ const Styled = {
     `,
     InfoTable: styled.div`
         display: flex;
+        flex-direction: column;
+    `,
+    InfoTableRow: styled.div`
+        display: flex;
         flex-direction: row;
+    `,
+    InfoTableText: styled.p`
+        font-size: 16px;
+        margin: 20px;
     `
 };
 
@@ -73,10 +91,39 @@ const EventInfo = (event) => {
             <Styled.EventCol>
                 <Styled.InfoHead>Event Information</Styled.InfoHead>
                 <Styled.InfoTable>
+                    <Styled.InfoTableRow>
+                        <Styled.InfoTableText>
+                            <b>Date:</b>
+                            <br></br>
+                            09/02/22
+                        </Styled.InfoTableText>
+                        <Styled.InfoTableText>
+                            <b>Time:</b>
+                            <br></br>
+                            9:05AM - 1:14PM
+                        </Styled.InfoTableText>
+                    </Styled.InfoTableRow>
 
+                    <Styled.InfoTableRow>
+                        <Styled.InfoTableText>
+                            <b>Location:</b>
+                            <br></br>
+                            Address
+                        </Styled.InfoTableText>
+                        <Styled.InfoTableText>
+                            <b>Contact:</b>
+                            <br></br>
+                            Phone
+                            <br></br>
+                            Email
+                        </Styled.InfoTableText>
+                    </Styled.InfoTableRow>
                 </Styled.InfoTable>
             </Styled.EventCol>
         </Styled.EventTable>
+        <Styled.Button>
+            Register
+        </Styled.Button>
         </>
     )};
 
