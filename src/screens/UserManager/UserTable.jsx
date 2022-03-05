@@ -64,7 +64,6 @@ class UserTable extends React.Component {
   };
   render() {
     const { users, loading } = this.props;
-    console.log(users);
     return (
       <Table.Container>
         <Table.Table>
@@ -85,18 +84,20 @@ class UserTable extends React.Component {
                         navigator.clipboard.writeText(user.email);
                       }}
                     >
-                      <Icon color="grey3" name="ficopy" />
+                      <Icon color="grey3" name="copy" />
                     </Styled.Button>
                   </td>
                   <td>
                     xxx-xxx-
                     {user.phone_number.substr(user.phone_number.length - 4)}
                   </td>
-                  <Styled.Button
-                    onClick={() => this.onDisplayEditUserModal(user)}
-                  >
-                    <Icon color="grey3" name="create" />
-                  </Styled.Button>
+                  <td>
+                    <Styled.Button
+                      onClick={() => this.onDisplayEditUserModal(user)}
+                    >
+                      <Icon color="grey3" name="create" />
+                    </Styled.Button>
+                  </td>
                 </Table.Row>
               ))}
           </tbody>

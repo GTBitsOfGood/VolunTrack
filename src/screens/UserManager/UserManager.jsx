@@ -63,7 +63,23 @@ const Styled = {
   SearchBox: styled.div`
     position: absolute;
     left: 75px;
-    top: 150px;
+    top: 163px;
+    width: 78%;
+  `,
+  TableUsers: styled.div`
+    position: absolute;
+    left: 75px;
+    top: 213px;
+    width: 100%;
+  `,
+  TotalVols: styled.div`
+    position: absolute;
+    right: 90px;
+    top: 173px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 19px;
   `,
   Text: styled.div`
     color: #000000;
@@ -153,9 +169,14 @@ class UserManager extends React.Component {
     return users.slice(start, start + PAGE_SIZE);
   };
   onChangeSearch = (record) => {
+    console.log(record);
     const { users, currentPage } = this.state;
-    this.setState({
-      users: users.filter((user) => user.name.includes(record)),
+    fetchUserManagementData().then((result) => {
+      this.setState({
+        users: result.data.users.filter((user) =>
+          user.name.toLowerCase().includes(record.toLowerCase())
+        ),
+      });
     });
   };
   atEnd = () =>
@@ -168,20 +189,23 @@ class UserManager extends React.Component {
     return (
       <Styled.Container>
         <Styled.Text>Volunteers</Styled.Text>
-        Total Volunteers: {this.getUsersAtPage().length}
+        <Styled.TotalVols>
+          Total Volunteers: {this.getUsersAtPage().length}
+        </Styled.TotalVols>
         <Styled.SearchBox>
           <ReactSearchBox
             placeholder="Search Name"
-            value="Doe"
             data={this.getUsersAtPage()}
             onChange={(record) => this.onChangeSearch(record)}
           />
         </Styled.SearchBox>
-        <UserTable
-          users={this.getUsersAtPage()}
-          loading={loadingMoreUsers}
-          editUserCallback={this.onEditUser}
-        />
+        <Styled.TableUsers>
+          <UserTable
+            users={this.getUsersAtPage()}
+            loading={loadingMoreUsers}
+            editUserCallback={this.onEditUser}
+          />
+        </Styled.TableUsers>
       </Styled.Container>
     );
   }
