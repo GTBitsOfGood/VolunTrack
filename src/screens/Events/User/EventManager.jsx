@@ -85,12 +85,15 @@ const EventManager = ({ user }) => {
     onRefresh();
   }, []);
 
+  const [markDates, setDates] = useState([]);
+
   const onRefresh = () => {
     setLoading(true);
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
+          setDates(result.data.events);
         }
       })
       .finally(() => {
@@ -142,6 +145,26 @@ const EventManager = ({ user }) => {
       });
   };
 
+  const formatJsDate = (jsDate, separator = "/") => {
+    return [
+        String(jsDate.getFullYear()).padStart(4, '0'),
+        String(jsDate.getMonth() + 1).padStart(2, "0"),
+        String(jsDate.getDate()).padStart(2, "0")
+    ].join(separator)
+}
+  const setMarkDates = ({date, view}, markDates) => {
+    const fDate = formatJsDate(date, "-")
+    let tileClassName = "";
+    let test = [];
+    for(let i = 0; i < markDates.length; i++) {
+      test.push(markDates[i].date.slice(0,10));
+    }
+    if (test.includes(fDate)) {
+      tileClassName = "marked";
+    }
+    return (tileClassName !== "") ? tileClassName : null;
+  }
+
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
@@ -155,7 +178,12 @@ const EventManager = ({ user }) => {
         </Styled.Button>
       </Styled.HeaderContainer>
       <Styled.Content>
-        <Calendar onChange={onChange} value={value}/>
+        <Calendar 
+          onChange={onChange} 
+          value={value} 
+          tileClassName={({date, view}) => setMarkDates({date, view}, markDates)}
+        />
+        
         <EventTable
           events={events}
           onRegister={onRegister}
