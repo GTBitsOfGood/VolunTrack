@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import Icon from "../../components/Icon";
 import UserTable from "./UserTable";
+import ReactSearchBox from "react-search-box";
 
 const PAGE_SIZE = 10;
 
@@ -58,6 +59,23 @@ const Styled = {
     margin-left: auto;
     margin-right: 1rem;
     color: black;
+  `,
+  SearchBox: styled.div`
+    position: absolute;
+    left: 75px;
+    top: 150px;
+  `,
+  Text: styled.div`
+    color: #000000;
+    position: absolute;
+    width: 184px;
+    height: 41px;
+    left: 75px;
+    top: 119px;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 41px;
   `,
 };
 
@@ -134,6 +152,12 @@ class UserManager extends React.Component {
     const start = currentPage * PAGE_SIZE;
     return users.slice(start, start + PAGE_SIZE);
   };
+  onChangeSearch = (record) => {
+    const { users, currentPage } = this.state;
+    this.setState({
+      users: users.filter((user) => user.name.includes(record)),
+    });
+  };
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
@@ -143,35 +167,16 @@ class UserManager extends React.Component {
     const { currentPage, loadingMoreUsers } = this.state;
     return (
       <Styled.Container>
-        <Styled.ButtonContainer>
-          <Styled.Button onClick={this.onRefresh}>
-            <Icon color="grey3" name="refresh" />
-            <span style={{ color: "black" }}> Refresh</span>
-          </Styled.Button>
-          {currentPage > 0 && (
-            <Styled.ToBeginningButton onClick={this.onToBeginning}>
-              To Beginning
-            </Styled.ToBeginningButton>
-          )}
-          <Styled.PaginationContainer>
-            <Styled.Button
-              disabled={currentPage === 0}
-              onClick={this.onPreviousPage}
-            >
-              <Icon
-                color={currentPage === 0 ? "grey7" : "grey3"}
-                name="left-chevron"
-              />
-            </Styled.Button>
-            <p>{currentPage + 1}</p>
-            <Styled.Button disabled={this.atEnd()} onClick={this.onNextPage}>
-              <Icon
-                color={this.atEnd() ? "grey7" : "grey3"}
-                name="right-chevron"
-              />
-            </Styled.Button>
-          </Styled.PaginationContainer>
-        </Styled.ButtonContainer>
+        <Styled.Text>Volunteers</Styled.Text>
+        Total Volunteers: {this.getUsersAtPage().length}
+        <Styled.SearchBox>
+          <ReactSearchBox
+            placeholder="Search Name"
+            value="Doe"
+            data={this.getUsersAtPage()}
+            onChange={(record) => this.onChangeSearch(record)}
+          />
+        </Styled.SearchBox>
         <UserTable
           users={this.getUsersAtPage()}
           loading={loadingMoreUsers}
