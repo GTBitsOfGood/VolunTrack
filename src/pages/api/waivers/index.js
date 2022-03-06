@@ -51,6 +51,31 @@ apiRoute.post('/api/waivers/', upload.fields([
     res.status(200).json({ data: 'success' });
 });
 
+apiRoute.get('/api/waivers/', async (req, res) => {
+    let minor = (req.query.minor.toLowerCase() === 'true');
+    let adult = (req.query.adult.toLowerCase() === 'true');
+    let result = {};
+    let paths = glob.sync('./public/files/*');
+    if (adult) {
+        for (const filePath of paths) {
+            const splits = filePath.split('/');
+            const fileName = splits[3].split('.')[0];
+            if (fileName === 'adult') {
+                result.adult = filePath;
+            }
+        }
+    }
+    if (minor) {
+        for (const filePath of paths) {
+            const splits = filePath.split('/');
+            const fileName = splits[3].split('.')[0];
+            if (fileName === 'minor') {
+                result.minor = filePath;
+            }
+        }
+    }
+    return res.status(200).json(result);
+})
 
 export default apiRoute;
 
