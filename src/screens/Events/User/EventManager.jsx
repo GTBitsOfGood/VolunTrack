@@ -74,28 +74,24 @@ const Styled = {
   `,
 };
 
-const EventManager = ({ user }) => {
+const EventManager = () => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-  if (!user) {
-    const { data: session } = useSession();
-    user = session.user;
-  }
+  const {
+    data: { user },
+  } = useSession();
+
   useEffect(() => {
     onRefresh();
   }, []);
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setLoading(true);
-    fetchEvents()
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    const events = (await fetchEvents())?.data?.events;
+    if (events) setEvents(events);
+
+    setLoading(false);
   };
 
   const onRegister = async (event) => {
