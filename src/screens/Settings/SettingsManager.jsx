@@ -34,6 +34,11 @@ const Styled = {
       box-shadow: none;
     }
   `,
+  Files: styled.div`
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+  `,
 };
 
 const SettingsManager = () => {
@@ -78,6 +83,19 @@ const SettingsManager = () => {
         {" "}
       </SettingsTable>
       <SettingsEditModal open={showEditModal} toggle={toggleEditModal} />
+      <Styled.Files>
+        Adult
+        <form action="/api/waivers" enctype="multipart/form-data" method="POST">
+          <input type="file" class="admin__input" id="adult" name="adult" />
+          <input class="admin__submit" type="submit" />
+        </form>
+        Minor
+        <form action="/api/waivers" enctype="multipart/form-data" method="POST">
+          <input type="file" class="admin__input" id="minor" name="minor" />
+          <input class="admin__submit" type="submit" />
+        </form>
+      </Styled.Files>
+      
     </Styled.Container>
   );
 };

@@ -1,40 +1,63 @@
-//const { validationResult, matchedData } = require("express-validator");
-//const { CREATE_EVENT_VALIDATOR} = require("../../../../server/validators");
-
+import nextConnect from 'next-connect';
 import multer from 'multer';
-const express = require("express");
-const router = express.Router();
+import path from 'path';
+import glob from 'glob';
+import fs from 'fs'
+
 
 const upload = multer({
     storage: multer.diskStorage({
-        destination: './public/files',
-        filename: (req, file, cb) => cb(null, file.originalname)
-    })
+        destination: (req, file, cb) => {       
+            glob('./public/files/*', function (er, files) {
+                for (const filePath of files) {
+                    const splits = filePath.split('/');
+                    const [fileName, extension] = splits[3].split('.');
+                    if (fileName === file.fieldname && ('.'+extension) !== path.extname(file.originalname)) {
+                        fs.unlinkSync(filePath);
+                    }
+                }
+            })
+            cb(null, './public/files/');
+        },
+        filename: (req, file, cb) => {
+            cb(null, file.fieldname + path.extname(file.originalname));
+        },
+        
+    }),
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'application/pdf' ||
+        file.mimetype === 'application/msword' ||
+        file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            cb(null, true);
+        } else {
+            return cb(new Error("Only pdf/doc/docx are allowed"), false);
+        }
+    },
+});
+
+const apiRoute = nextConnect({
+    onError(error, req, res) {
+        res.status(501).json({ error: `Sorry something Happened! ${error.message}` });
+    },
+    onNoMatch(req, res) {
+        res.status(405).json({ error: `Method '${req.method}' Not Allowed` });
+    },
+});
+
+apiRoute.post('/api/waivers/', upload.fields([
+    { name: 'adult', maxCount: 1 },
+    { name: 'minor', maxCount: 1 }
+  ]), (req, res) => {
+    res.status(200).json({ data: 'success' });
 });
 
 
+export default apiRoute;
 
-export default async function handler(req, res, next) {
-    if (req.method === "GET") {
-        return res.status(200).json({
-            message: "test"
-        });
-
-    } else if (req.method === "POST") {
-        //await addWaiver()
-        
-        upload.single('test');
-        
-        //console.log(req.body);
-        //console.log(req);
-        console.log(req.file);
-
-        res.json({
-            message: "Waiver successfully added!",
-        });
-    } else {
-        res.status(404).json({message: "Invalid Request Method"});
-    }
-}
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
 
