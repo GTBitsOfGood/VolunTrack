@@ -29,3 +29,17 @@ html, body, #__next {
 *:focus:not(.focus-visible) {
     outline: none;
 }
+
+.marked {
+    position: relative !important;
+}
+
+.marked::before {
+    content: '.';
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    font-weight: bolder;
+}

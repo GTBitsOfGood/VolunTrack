@@ -69,7 +69,8 @@ const EventTable = ({ events, onRegister, onUnregister, user}) => {
                 </Table.Register>
                 <Table.Text>
                   <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
-                  <Table.EventName>{event.title}</Table.EventName>                
+                  <Table.EventName>{event.title}</Table.EventName>     
+                  <Table.Time>{convertTime(event.startTime)} - {convertTime(event.endTime)}</Table.Time>           
                 </Table.Text>
               </Table.Inner>
               <Table.Creation>{event.date.slice(0,10)}</Table.Creation>
