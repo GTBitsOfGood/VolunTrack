@@ -22,6 +22,7 @@ const Styled = {
         padding-top: 2rem;
         padding-bottom: 4rem;
         background-color: ${variables["gray-100"]};
+        height: 100vh;
     `,
     EventCol: styled.div`
         display: flex;
@@ -95,7 +96,7 @@ const EventInfo = (event) => {
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
                 </Styled.Info>
             </Styled.EventCol>
-            <Styled.EventCol>
+            <Styled.EventCol style={{"margin-left": "auto"}}>
                 <Styled.InfoHead>Event Information</Styled.InfoHead>
                 <Styled.InfoTable>
                     <Styled.InfoTableRow>
