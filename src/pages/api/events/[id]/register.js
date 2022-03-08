@@ -9,6 +9,8 @@ export default async function handler(req, res, next) {
     const event = req.body.event;
     const user = req.body.user;
 
+    const updatedEvent = await updateEventID(eventId, event, next);
+
     await mailchimp.messages.sendTemplate({
       template_name: "event-register-confirmation",
       template_content: [],
@@ -22,8 +24,6 @@ export default async function handler(req, res, next) {
         ],
       },
     });
-
-    const updatedEvent = await updateEventID(eventId, event);
 
     res.status(200).json(updatedEvent);
   }

@@ -91,13 +91,15 @@ export async function deleteEventID(eventID, next) {
     .catch(next);
 }
 
-export async function updateEventID(eventID, event) {
+export async function updateEventID(eventID, event, next) {
   await dbConnect();
 
   return EventData.findByIdAndUpdate(eventID, event, {
     new: true,
     useFindAndModify: true,
-  }).then(() => {
-    return event;
-  });
+  })
+    .then(() => {
+      return event;
+    })
+    .catch(next);
 }
