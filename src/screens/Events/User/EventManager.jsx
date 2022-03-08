@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
-import { updateEvent } from "./eventHelpers";
+import { registerForEvent, updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
 
 const Styled = {
@@ -113,7 +113,7 @@ const EventManager = ({ user }) => {
       ...event,
       volunteers: event.volunteers.concat(user._id),
     }; // adds userId to event
-    const updatedEvent = await updateEvent(changedEvent); // updates event in backend
+    const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
     setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
 
     onRefresh();
