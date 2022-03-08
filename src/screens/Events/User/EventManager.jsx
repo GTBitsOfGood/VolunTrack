@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
@@ -7,7 +8,7 @@ import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
-import { registerForEvent, updateEvent } from "./eventHelpers";
+import { updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
 
 const Styled = {
@@ -74,7 +75,7 @@ const Styled = {
   `,
 };
 
-const EventManager = () => {
+const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -112,7 +113,7 @@ const EventManager = () => {
       ...event,
       volunteers: event.volunteers.concat(user._id),
     }; // adds userId to event
-    const updatedEvent = await registerForEvent({ user, event: changedEvent });
+    const updatedEvent = await updateEvent(changedEvent); // updates event in backend
     setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
 
     onRefresh();
