@@ -3,6 +3,9 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button } from "reactstrap";
+import styled from "styled-components";
+import Icon from "../../../components/Icon";
+import * as Table from "../../sharedStyles/tableStyles";
 
 const Styled = {
   Button: styled(Button)`
@@ -35,14 +38,7 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventTable = ({ events, onRegister, onUnregister }) => {
-  const {
-    data: { user },
-  } = useSession();
-
-  console.log(user);
-
-const EventTable = ({ events, onRegisterClicked, onUnregister, user}) => {
+const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -52,32 +48,39 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user}) => {
       <Styled.ul>
         {events.map((event) => (
           <Styled.List>
-            <Link href={`events/${event._id}}`}><Table.EventList>
-              <Table.Inner>
-                <Table.Slots>SLOTS</Table.Slots>
-                <Table.Register>
-                  {event.volunteers.includes(user._id) ? (
-                    <>
-                      <Styled.Button onClick={() => onUnregister(event)}>
-                        <Icon color="grey3" name="delete" />
-                        <span>Unregister</span>
+            <Link href={`events/${event._id}}`}>
+              <Table.EventList>
+                <Table.Inner>
+                  <Table.Slots>SLOTS</Table.Slots>
+                  <Table.Register>
+                    {event.volunteers.includes(user._id) ? (
+                      <>
+                        <Styled.Button onClick={() => onUnregister(event)}>
+                          <Icon color="grey3" name="delete" />
+                          <span>Unregister</span>
+                        </Styled.Button>
+                      </>
+                    ) : (
+                      <Styled.Button onClick={() => onRegisterClicked(event)}>
+                        <Icon color="grey3" name="add" />
+                        <span>Sign up</span>
                       </Styled.Button>
-                    </>
-                  ) : (
-                    <Styled.Button onClick={() => onRegisterClicked(event)}>
-                      <Icon color="grey3" name="add" />
-                      <span>Sign up</span>
-                    </Styled.Button>
-                  )}
-                </Table.Register>
-                <Table.Text>
-                  <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
-                  <Table.EventName>{event.title}</Table.EventName>     
-                  <Table.Time>{convertTime(event.startTime)} - {convertTime(event.endTime)}</Table.Time>           
-                </Table.Text>
-              </Table.Inner>
-              <Table.Creation>{event.date.slice(0,10)}</Table.Creation>
-            </Table.EventList></Link> 
+                    )}
+                  </Table.Register>
+                  <Table.Text>
+                    <Table.Volunteers>
+                      {event.volunteers.length}/{event.max_volunteers}{" "}
+                    </Table.Volunteers>
+                    <Table.EventName>{event.title}</Table.EventName>
+                    <Table.Time>
+                      {convertTime(event.startTime)} -{" "}
+                      {convertTime(event.endTime)}
+                    </Table.Time>
+                  </Table.Text>
+                </Table.Inner>
+                <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
+              </Table.EventList>
+            </Link>
           </Styled.List>
         ))}
       </Styled.ul>
@@ -88,7 +91,7 @@ EventTable.propTypes = {
   events: PropTypes.Array,
   onRegisterClicked: PropTypes.func,
   onUnregister: PropTypes.func,
-  user: PropTypes.object
-}
+  user: PropTypes.object,
+};
 
 export default EventTable;
