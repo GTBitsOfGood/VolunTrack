@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
 import { updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
+import EventRegister from "./Register/EventRegister";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -77,6 +79,12 @@ const Styled = {
 const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [currEvent, setCurrEvent] = useState(null);
+  const [currUser, setCurrUser] = useState(null);
+  
+  const router = useRouter();
+
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -145,6 +153,18 @@ const EventManager = ({ user }) => {
       });
   };
 
+  
+  const onRegisterClicked = (event, user) => {
+    setShowRegisterModal(true);
+    setCurrEvent(event);
+    setCurrUser(user);
+    router.replace("/register")
+  };
+
+  const toggleRegisterModal = () => {
+    setShowRegisterModal((prev) => !prev);
+    onRefresh();
+  };
   const formatJsDate = (jsDate, separator = "/") => {
     return [
         String(jsDate.getFullYear()).padStart(4, '0'),
@@ -186,7 +206,7 @@ const EventManager = ({ user }) => {
         
         <EventTable
           events={events}
-          onRegister={onRegister}
+          onRegisterClicked={onRegisterClicked}
           onUnregister={onUnregister}
           user={user}
         >

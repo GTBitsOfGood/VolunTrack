@@ -10,6 +10,7 @@ export default {
     "user-manager": "/user-manager",
     settings: "/settings",
     profile: "/profile",
+    register: "/register"
   },
   api: {
     auth: {},

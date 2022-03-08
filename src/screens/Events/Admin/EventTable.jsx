@@ -68,7 +68,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
   );
 };
 EventTable.propTypes = {
-  events:PropTypes.Array,
+  events: PropTypes.Array,
   onEditClicked: PropTypes.func,
   onDeleteClicked: PropTypes.func,
 }
