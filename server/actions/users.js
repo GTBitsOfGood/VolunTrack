@@ -73,6 +73,7 @@ export async function getUsers(
   type,
   status,
   role,
+  phone_number,
   date,
   availability,
   email,

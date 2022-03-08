@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import Icon from "../../components/Icon";
 import UserTable from "./UserTable";
+import ReactSearchBox from "react-search-box";
 
 const PAGE_SIZE = 10;
 
@@ -17,7 +18,6 @@ const Styled = {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
   `,
   PaginationContainer: styled.div`
     background: white;
@@ -58,6 +58,38 @@ const Styled = {
     margin-left: auto;
     margin-right: 1rem;
     color: black;
+  `,
+  SearchBox: styled.div`
+    position: relative;
+    left: 10%;
+    width: 70%;
+  `,
+  TableUsers: styled.div`
+    position: relative;
+    left: 10%;
+    margin-top: 20px;
+    width: 80%;
+  `,
+  TotalVols: styled.div`
+    position: relative;
+    right: 10%;
+    top: 3%;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 19px;
+    display: flex;
+    flex-flow: row-reverse;
+  `,
+  Text: styled.div`
+    color: #000000;
+    position: relative;
+    width: 184px;
+    left: 10%;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 41px;
   `,
 };
 
@@ -134,6 +166,16 @@ class UserManager extends React.Component {
     const start = currentPage * PAGE_SIZE;
     return users.slice(start, start + PAGE_SIZE);
   };
+  onChangeSearch = (record) => {
+    const { users, currentPage } = this.state;
+    fetchUserManagementData().then((result) => {
+      this.setState({
+        users: result.data.users.filter((user) =>
+          user.name.toLowerCase().includes(record.toLowerCase())
+        ),
+      });
+    });
+  };
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
@@ -143,40 +185,24 @@ class UserManager extends React.Component {
     const { currentPage, loadingMoreUsers } = this.state;
     return (
       <Styled.Container>
-        <Styled.ButtonContainer>
-          <Styled.Button onClick={this.onRefresh}>
-            <Icon color="grey3" name="refresh" />
-            <span style={{ color: "black" }}> Refresh</span>
-          </Styled.Button>
-          {currentPage > 0 && (
-            <Styled.ToBeginningButton onClick={this.onToBeginning}>
-              To Beginning
-            </Styled.ToBeginningButton>
-          )}
-          <Styled.PaginationContainer>
-            <Styled.Button
-              disabled={currentPage === 0}
-              onClick={this.onPreviousPage}
-            >
-              <Icon
-                color={currentPage === 0 ? "grey7" : "grey3"}
-                name="left-chevron"
-              />
-            </Styled.Button>
-            <p>{currentPage + 1}</p>
-            <Styled.Button disabled={this.atEnd()} onClick={this.onNextPage}>
-              <Icon
-                color={this.atEnd() ? "grey7" : "grey3"}
-                name="right-chevron"
-              />
-            </Styled.Button>
-          </Styled.PaginationContainer>
-        </Styled.ButtonContainer>
-        <UserTable
-          users={this.getUsersAtPage()}
-          loading={loadingMoreUsers}
-          editUserCallback={this.onEditUser}
-        />
+        <Styled.Text>Volunteers</Styled.Text>
+        <Styled.TotalVols>
+          Total Volunteers: {this.getUsersAtPage().length}
+        </Styled.TotalVols>
+        <Styled.SearchBox>
+          <ReactSearchBox
+            placeholder="Search Name"
+            data={this.getUsersAtPage()}
+            onChange={(record) => this.onChangeSearch(record)}
+          />
+        </Styled.SearchBox>
+        <Styled.TableUsers>
+          <UserTable
+            users={this.getUsersAtPage()}
+            loading={loadingMoreUsers}
+            editUserCallback={this.onEditUser}
+          />
+        </Styled.TableUsers>
       </Styled.Container>
     );
   }
