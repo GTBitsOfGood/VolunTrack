@@ -167,7 +167,6 @@ class UserManager extends React.Component {
     return users.slice(start, start + PAGE_SIZE);
   };
   onChangeSearch = (record) => {
-    console.log(record);
     const { users, currentPage } = this.state;
     fetchUserManagementData().then((result) => {
       this.setState({
