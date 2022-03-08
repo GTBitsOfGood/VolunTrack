@@ -10,6 +10,8 @@ import {
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
+import styled from "styled-components";
+import Icon from "../../components/Icon";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -19,6 +21,24 @@ const keyToValue = (key) => {
     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
     .join(" ");
   return key;
+};
+
+const Styled = {
+  Button: styled(Button)`
+    background: white;
+    border: none;
+  `,
+  Container: styled.div`
+    width: 100%;
+    height: 100%;
+    margin: auto;
+  `,
+  ul: styled.ul`
+    list-style-type: none;
+  `,
+  List: styled.li`
+    padding-bottom: 120px;
+  `,
 };
 
 class UserTable extends React.Component {
@@ -45,28 +65,40 @@ class UserTable extends React.Component {
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container>
+      <Table.Container style={{width:"100%", "max-width":"none"}}>
         <Table.Table>
           <tbody>
             <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Mandated</th>
+              <th style={{ color: "#960034" }}>Volunteer Name</th>
+              <th style={{ color: "#960034" }}>Email Address</th>
+              <th style={{ color: "#960034" }}>Phone Number</th>
             </tr>
             {!loading &&
               users.map((user, index) => (
-                <Table.Row
-                  key={index}
-                  evenIndex={index % 2 === 0}
-                  onClick={() => this.onDisplayEditUserModal(user)}
-                >
+                <Table.Row key={index} evenIndex={index % 2 === 0}>
                   <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{roles[user.role]}</td>
-                  <td>{statuses[user.status]}</td>
-                  <td>{mandated[user.mandated]}</td>
+                  <td>
+                    {user.email}
+                    <Styled.Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(user.email);
+                      }}
+                    >
+                      <Icon color="grey3" name="copy" />
+                    </Styled.Button>
+                  </td>
+                  <td>
+                    {user.phone_number.substr(0, 3)}-
+                    {user.phone_number.substr(3, 3)}-
+                    {user.phone_number.substr(6, 4)}
+                  </td>
+                  <td>
+                    <Styled.Button
+                      onClick={() => this.onDisplayEditUserModal(user)}
+                    >
+                      <Icon color="grey3" name="create" />
+                    </Styled.Button>
+                  </td>
                 </Table.Row>
               ))}
           </tbody>
@@ -130,7 +162,7 @@ class UserTable extends React.Component {
                       <Form.Input
                         defaultValue={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.phone
+                            ? this.state.userSelectedForEdit.phone_number
                             : ""
                         }
                         type="text"

@@ -21,6 +21,7 @@ $modal-content-border-color: $gray-200;
 $border-color: $gray-200;
 $button-pink: #F97A98;
 $event-text: #5C5C5C;
+$white: #FFFFFF;
 
 :export {
 	gray-100: $gray-100; 
@@ -46,4 +47,5 @@ $event-text: #5C5C5C;
 	border-color: $border-color;
 	button-pink: $button-pink;
 	event-text: $event-text;
+	white: $white;
 }

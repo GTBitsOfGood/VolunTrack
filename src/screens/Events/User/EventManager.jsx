@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
@@ -77,21 +77,34 @@ const Styled = {
 const EventManager = () => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-  const {
-    data: { user },
-  } = useSession();
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [currEvent, setCurrEvent] = useState(null);
+  const [currUser, setCurrUser] = useState(null);
 
+  const router = useRouter();
+
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
   useEffect(() => {
     onRefresh();
   }, []);
 
-  const onRefresh = async () => {
+  const [markDates, setDates] = useState([]);
+
+  const onRefresh = () => {
     setLoading(true);
-
-    const events = (await fetchEvents())?.data?.events;
-    if (events) setEvents(events);
-
-    setLoading(false);
+    fetchEvents()
+      .then((result) => {
+        if (result && result.data && result.data.events) {
+          setEvents(result.data.events);
+          setDates(result.data.events);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onRegister = async (event) => {
@@ -138,6 +151,37 @@ const EventManager = () => {
       });
   };
 
+  const onRegisterClicked = (event, user) => {
+    setShowRegisterModal(true);
+    setCurrEvent(event);
+    setCurrUser(user);
+    router.replace("/register");
+  };
+
+  const toggleRegisterModal = () => {
+    setShowRegisterModal((prev) => !prev);
+    onRefresh();
+  };
+  const formatJsDate = (jsDate, separator = "/") => {
+    return [
+      String(jsDate.getFullYear()).padStart(4, "0"),
+      String(jsDate.getMonth() + 1).padStart(2, "0"),
+      String(jsDate.getDate()).padStart(2, "0"),
+    ].join(separator);
+  };
+  const setMarkDates = ({ date, view }, markDates) => {
+    const fDate = formatJsDate(date, "-");
+    let tileClassName = "";
+    let test = [];
+    for (let i = 0; i < markDates.length; i++) {
+      test.push(markDates[i].date.slice(0, 10));
+    }
+    if (test.includes(fDate)) {
+      tileClassName = "marked";
+    }
+    return tileClassName !== "" ? tileClassName : null;
+  };
+
   return (
     <Styled.Container>
       <Styled.HeaderContainer>
@@ -151,10 +195,17 @@ const EventManager = () => {
         </Styled.Button>
       </Styled.HeaderContainer>
       <Styled.Content>
-        <Calendar onChange={onChange} value={value} />
+        <Calendar
+          onChange={onChange}
+          value={value}
+          tileClassName={({ date, view }) =>
+            setMarkDates({ date, view }, markDates)
+          }
+        />
+
         <EventTable
           events={events}
-          onRegister={onRegister}
+          onRegisterClicked={onRegisterClicked}
           onUnregister={onUnregister}
           user={user}
         >

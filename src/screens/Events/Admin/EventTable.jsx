@@ -56,6 +56,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
                 <Table.Text>
                   <Table.EventName>{event.title}</Table.EventName>
                   <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
+                  <Table.Time>{convertTime(event.startTime)} - {convertTime(event.endTime)}</Table.Time>
                 </Table.Text>
               </Table.Inner>
               <Table.Creation>{event.date.slice(0,10)}</Table.Creation>
@@ -67,7 +68,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
   );
 };
 EventTable.propTypes = {
-  events:PropTypes.Array,
+  events: PropTypes.Array,
   onEditClicked: PropTypes.func,
   onDeleteClicked: PropTypes.func,
 }
