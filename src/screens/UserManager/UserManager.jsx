@@ -18,7 +18,6 @@ const Styled = {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
   `,
   PaginationContainer: styled.div`
     background: white;
@@ -61,33 +60,32 @@ const Styled = {
     color: black;
   `,
   SearchBox: styled.div`
-    position: absolute;
-    left: 75px;
-    top: 163px;
-    width: 78%;
+    position: relative;
+    left: 10%;
+    width: 70%;
   `,
   TableUsers: styled.div`
-    position: absolute;
-    left: 75px;
-    top: 213px;
-    width: 100%;
+    position: relative;
+    left: 10%;
+    margin-top: 20px;
+    width: 80%;
   `,
   TotalVols: styled.div`
-    position: absolute;
-    right: 90px;
-    top: 173px;
+    position: relative;
+    right: 10%;
+    top: 3%;
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
     line-height: 19px;
+    display: flex;
+    flex-flow: row-reverse;
   `,
   Text: styled.div`
     color: #000000;
-    position: absolute;
+    position: relative;
     width: 184px;
-    height: 41px;
-    left: 75px;
-    top: 119px;
+    left: 10%;
     font-style: normal;
     font-weight: bold;
     font-size: 32px;

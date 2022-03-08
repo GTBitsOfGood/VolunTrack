@@ -65,7 +65,7 @@ class UserTable extends React.Component {
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container>
+      <Table.Container style={{width:"100%", "max-width":"none"}}>
         <Table.Table>
           <tbody>
             <tr>
@@ -88,8 +88,9 @@ class UserTable extends React.Component {
                     </Styled.Button>
                   </td>
                   <td>
-                    xxx-xxx-
-                    {user.phone_number.substr(user.phone_number.length - 4)}
+                    {user.phone_number.substr(0, 3)}-
+                    {user.phone_number.substr(3, 3)}-
+                    {user.phone_number.substr(6, 4)}
                   </td>
                   <td>
                     <Styled.Button
