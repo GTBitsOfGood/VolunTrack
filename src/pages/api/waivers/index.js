@@ -2,8 +2,7 @@ import nextConnect from 'next-connect';
 import multer from 'multer';
 import path from 'path';
 import glob from 'glob';
-import fs from 'fs'
-
+import fs from 'fs';
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -47,11 +46,14 @@ const apiRoute = nextConnect({
 apiRoute.post('/api/waivers/', upload.fields([
     { name: 'adult', maxCount: 1 },
     { name: 'minor', maxCount: 1 }
-  ]), (req, res) => {
+  ]), async (req, res) => {
     res.status(200).json({ data: 'success' });
 });
 
 apiRoute.get('/api/waivers/', async (req, res) => {
+    if (typeof(req.query.minor) === 'undefined' || typeof(req.query.adult) === 'undefined') {
+        return res.end('Invalid parameters');
+    }
     let minor = (req.query.minor.toLowerCase() === 'true');
     let adult = (req.query.adult.toLowerCase() === 'true');
     let result = {};
