@@ -3,6 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import glob from 'glob';
 import fs from 'fs';
+import { getSession } from "next-auth/react";
 
 const upload = multer({
     storage: multer.diskStorage({
@@ -46,8 +47,20 @@ const apiRoute = nextConnect({
 apiRoute.post('/api/waivers/', upload.fields([
     { name: 'adult', maxCount: 1 },
     { name: 'minor', maxCount: 1 }
-  ]), async (req, res) => {
-    res.status(200).json({ data: 'success' });
+  ]), async (req, res, next) => {
+    try {
+        const session = await getSession({ req })
+        if (session) {
+            if (session.user.role !== 'admin') {
+                throw new Error('You are not permitted to access this endpoint');
+            }
+        } else {
+            res.status(403);
+        }
+        res.status(200).json({ message: 'successfully added waiver' });
+    } catch(err) {
+        res.status(500).json({ message: err.message });
+    }  
 });
 
 apiRoute.get('/api/waivers/', async (req, res) => {
