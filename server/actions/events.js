@@ -7,58 +7,57 @@ export async function createEvent(newEventData, next) {
   await dbConnect();
 
   return newEvent
-  .save()
-  .then(() => {
-    return;
-  })
-  .catch((err) => {
-    next(err);
-  });
+    .save()
+    .then(() => {
+      return;
+    })
+    .catch((err) => {
+      next(err);
+    });
 }
 
 export async function getEvents(startDate, endDate, next) {
-
   await dbConnect();
 
-  if (startDate == "undefined" && endDate == "undefined"){
+  if (startDate == "undefined" && endDate == "undefined") {
     return EventData.find({})
-    .then((events) => {
-      return events;
-    })
-    .catch(next);
-  } else if (startDate == "undefined") {
-    endDate = new Date(endDate);
-    if (endDate == "Invalid Date") {
-      return { status: 400, message: {error: "Invalid Date sent" }};
-    } else {
-      return EventData.find({ date: { $lte: endDate}})
       .then((events) => {
         return events;
       })
       .catch(next);
+  } else if (startDate == "undefined") {
+    endDate = new Date(endDate);
+    if (endDate == "Invalid Date") {
+      return { status: 400, message: { error: "Invalid Date sent" } };
+    } else {
+      return EventData.find({ date: { $lte: endDate } })
+        .then((events) => {
+          return events;
+        })
+        .catch(next);
     }
   } else if (endDate == "undefined") {
     startDate = new Date(startDate);
     if (startDate == "Invalid Date") {
-      return { status: 400, message: {error: "Invalid Date sent" }};
+      return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
-      return EventData.find({ date: { $gte: startDate}})
-      .then((events) => {
-        return events;
-      })
-      .catch(next);
+      return EventData.find({ date: { $gte: startDate } })
+        .then((events) => {
+          return events;
+        })
+        .catch(next);
     }
   } else {
     startDate = new Date(startDate);
     endDate = new Date(endDate);
     if (startDate == "Invalid Date" || endDate == "Invalid Date") {
-      return { status: 400, message: {error: "Invalid Date sent" }};
+      return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
-      return EventData.find({ date: { $gte: startDate, $lte: endDate}})
-      .then((events) => {
-        return events;
-      })
-      .catch(next);
+      return EventData.find({ date: { $gte: startDate, $lte: endDate } })
+        .then((events) => {
+          return events;
+        })
+        .catch(next);
     }
   }
 }
@@ -67,9 +66,13 @@ export async function updateEvent(updateEventData, next) {
   await dbConnect();
 
   console.log(updateEventData);
-  return EventData.findOneAndUpdate({ _id: updateEventData._id }, updateEventData, {
-    new: true,
-  })
+  return EventData.findOneAndUpdate(
+    { _id: updateEventData._id },
+    updateEventData,
+    {
+      new: true,
+    }
+  )
     .then((event) => {
       return event;
     })
@@ -88,13 +91,15 @@ export async function deleteEventID(eventID, next) {
     .catch(next);
 }
 
-export async function updateEventID(eventID, event) {
+export async function updateEventID(eventID, event, next) {
   await dbConnect();
 
   return EventData.findByIdAndUpdate(eventID, event, {
     new: true,
     useFindAndModify: true,
-  }).then(() => {
-    return;
   })
+    .then(() => {
+      return event;
+    })
+    .catch(next);
 }

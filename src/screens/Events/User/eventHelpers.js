@@ -1,5 +1,5 @@
-import { string, object, number, date, array } from "yup";
 import axios from "axios";
+import { date, object, string } from "yup";
 
 export const eventValidator = object().shape({
   title: string().trim().required(),
@@ -12,6 +12,9 @@ export const eventValidator = object().shape({
   volunteers: string().trim().required(),
   description: string().trim().required(),
 });
+
+export const registerForEvent = async (data) =>
+  (await axios.post(`/api/events/${data.event._id}/register`, data)).data;
 
 export const updateEvent = async (event) =>
   (await axios.put(`/api/events/${event._id}`, event)).data;

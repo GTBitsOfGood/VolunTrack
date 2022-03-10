@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
-import { updateEvent } from "./eventHelpers";
-import EventTable from "./EventTable";
-import EventRegister from "./Register/EventRegister";
-import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
 import variables from "../../../design-tokens/_variables.module.scss";
+import { registerForEvent, updateEvent } from "./eventHelpers";
+import EventTable from "./EventTable";
 
 const Styled = {
   Container: styled.div`
@@ -63,16 +62,16 @@ const Styled = {
     margin-bottom: 1rem;
   `,
   Events: styled.div`
-    font-family:Inter;
-    text-align:left;
-    font-size:36px;
-    font-weight:bold;
+    font-family: Inter;
+    text-align: left;
+    font-size: 36px;
+    font-weight: bold;
   `,
   Date: styled.div`
-    font-family:Inter;
-    text-align:left;
-    font-size:28px;
-    font-weight:bold;
+    font-family: Inter;
+    text-align: left;
+    font-size: 28px;
+    font-weight: bold;
   `,
 };
 
@@ -82,7 +81,7 @@ const EventManager = ({ user }) => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [currEvent, setCurrEvent] = useState(null);
   const [currUser, setCurrUser] = useState(null);
-  
+
   const router = useRouter();
 
   if (!user) {
@@ -114,7 +113,7 @@ const EventManager = ({ user }) => {
       ...event,
       volunteers: event.volunteers.concat(user._id),
     }; // adds userId to event
-    const updatedEvent = await updateEvent(changedEvent); // updates event in backend
+    const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
     setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
 
     onRefresh();
@@ -134,13 +133,13 @@ const EventManager = ({ user }) => {
     onRefresh();
   };
 
-  const [value,setDate] = useState(new Date());
+  const [value, setDate] = useState(new Date());
 
   const onChange = (value, event) => {
     setDate(value);
     let datestr = value.toString();
-    let selectDate = new Date(datestr).toISOString().split('T')[0];
-    
+    let selectDate = new Date(datestr).toISOString().split("T")[0];
+
     setLoading(true);
     fetchEvents(selectDate, selectDate)
       .then((result) => {
@@ -153,12 +152,11 @@ const EventManager = ({ user }) => {
       });
   };
 
-  
   const onRegisterClicked = (event, user) => {
     setShowRegisterModal(true);
     setCurrEvent(event);
     setCurrUser(user);
-    router.replace("/register")
+    router.replace("/register");
   };
 
   const toggleRegisterModal = () => {
@@ -167,23 +165,23 @@ const EventManager = ({ user }) => {
   };
   const formatJsDate = (jsDate, separator = "/") => {
     return [
-        String(jsDate.getFullYear()).padStart(4, '0'),
-        String(jsDate.getMonth() + 1).padStart(2, "0"),
-        String(jsDate.getDate()).padStart(2, "0")
-    ].join(separator)
-}
-  const setMarkDates = ({date, view}, markDates) => {
-    const fDate = formatJsDate(date, "-")
+      String(jsDate.getFullYear()).padStart(4, "0"),
+      String(jsDate.getMonth() + 1).padStart(2, "0"),
+      String(jsDate.getDate()).padStart(2, "0"),
+    ].join(separator);
+  };
+  const setMarkDates = ({ date, view }, markDates) => {
+    const fDate = formatJsDate(date, "-");
     let tileClassName = "";
     let test = [];
-    for(let i = 0; i < markDates.length; i++) {
-      test.push(markDates[i].date.slice(0,10));
+    for (let i = 0; i < markDates.length; i++) {
+      test.push(markDates[i].date.slice(0, 10));
     }
     if (test.includes(fDate)) {
       tileClassName = "marked";
     }
-    return (tileClassName !== "") ? tileClassName : null;
-  }
+    return tileClassName !== "" ? tileClassName : null;
+  };
 
   return (
     <Styled.Container>
@@ -198,12 +196,14 @@ const EventManager = ({ user }) => {
         </Styled.Button>
       </Styled.HeaderContainer>
       <Styled.Content>
-        <Calendar 
-          onChange={onChange} 
-          value={value} 
-          tileClassName={({date, view}) => setMarkDates({date, view}, markDates)}
+        <Calendar
+          onChange={onChange}
+          value={value}
+          tileClassName={({ date, view }) =>
+            setMarkDates({ date, view }, markDates)
+          }
         />
-        
+
         <EventTable
           events={events}
           onRegisterClicked={onRegisterClicked}
