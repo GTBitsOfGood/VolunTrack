@@ -24,7 +24,19 @@ const upload = multer({
         },
         
     }),
-    fileFilter: (req, file, cb) => {
+    fileFilter: async (req, file, cb) => {
+        try {
+            const session = await getSession({ req })
+            if (session) {
+                if (session.user.role !== 'admin') {
+                    throw new Error('You are not permitted to access this endpoint');
+                }
+            } else {
+                throw new Error('Not authenticated');;
+            }
+        } catch(err) {
+            return cb(err, false);
+        }  
         if (file.mimetype === 'application/pdf' ||
         file.mimetype === 'application/msword' ||
         file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
@@ -48,19 +60,7 @@ apiRoute.post('/api/waivers/', upload.fields([
     { name: 'adult', maxCount: 1 },
     { name: 'minor', maxCount: 1 }
   ]), async (req, res, next) => {
-    try {
-        const session = await getSession({ req })
-        if (session) {
-            if (session.user.role !== 'admin') {
-                throw new Error('You are not permitted to access this endpoint');
-            }
-        } else {
-            res.status(403);
-        }
-        res.status(200).json({ message: 'successfully added waiver' });
-    } catch(err) {
-        res.status(500).json({ message: err.message });
-    }  
+    res.status(200).json({ message: 'successfully added waiver' });
 });
 
 apiRoute.get('/api/waivers/', async (req, res) => {
