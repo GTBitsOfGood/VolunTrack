@@ -40,7 +40,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
       <Styled.ul>
         {events.map((event) => (
           <Styled.List>
-            <Table.EventList>
+            <Link href={`events/${event._id}}`}><Table.EventList>
               <Table.Inner>
                 <Table.Slots>SLOTS</Table.Slots>
                 <Table.Edit>
@@ -60,7 +60,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
                 </Table.Text>
               </Table.Inner>
               <Table.Creation>{event.date.slice(0,10)}</Table.Creation>
-            </Table.EventList>
+            </Table.EventList></Link>
           </Styled.List>
         ))}
       </Styled.ul>
