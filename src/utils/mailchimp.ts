@@ -2,8 +2,9 @@ const mailchimp = require("@mailchimp/mailchimp_transactional")(
   process.env.MAILCHIMP_API_KEY
 );
 
-export const sendEmailWithTemplate = async (
-  userEmail: string,
+// Sends email using Mandrill/Mailchimp template to list of user emails
+export const sendEmail = async (
+  userEmails: [{ email: string }],
   templateName: string,
   templateVariables: [{ [key: string]: string }]
 ): Promise<void> => {
@@ -11,7 +12,7 @@ export const sendEmailWithTemplate = async (
     template_name: templateName,
     template_content: [],
     message: {
-      to: [{ email: userEmail }],
+      to: userEmails,
       global_merge_vars: templateVariables,
     },
   });

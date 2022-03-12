@@ -174,7 +174,7 @@ export async function getEventVolunteers(parsedVolunteers, next) {
 
   let volunteers = parsedVolunteers.map(mongoose.Types.ObjectId);
 
-  return UserData.find({
+  return User.find({
     _id: { $in: volunteers },
   })
     .then((users) => {
@@ -396,7 +396,18 @@ export async function updateStatus(email, status) {
 
 // multiple updates, not sure how to handle
 // maybe run in parallel with Promise.all?
-export async function updateUser(email, phone_number, first_name, last_name, date_of_birth, zip_code, total_hours, address, city, state) {
+export async function updateUser(
+  email,
+  phone_number,
+  first_name,
+  last_name,
+  date_of_birth,
+  zip_code,
+  total_hours,
+  address,
+  city,
+  state
+) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
 
@@ -527,19 +538,18 @@ export async function updateUser(email, phone_number, first_name, last_name, dat
   }
 
   if (city) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.city": city } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-      return { status: 200 };
-    });
+    User.updateOne({ "bio.email": email }, { $set: { "bio.city": city } }).then(
+      (result) => {
+        if (!result.nModified)
+          return {
+            status: 400,
+            message: {
+              error: "Email requested for update was invalid. 0 items changed.",
+            },
+          };
+        return { status: 200 };
+      }
+    );
   }
 
   if (state) {

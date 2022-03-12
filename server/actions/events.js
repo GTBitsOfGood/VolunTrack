@@ -65,7 +65,6 @@ export async function getEvents(startDate, endDate, next) {
 export async function updateEvent(updateEventData, next) {
   await dbConnect();
 
-  console.log(updateEventData);
   return EventData.findOneAndUpdate(
     { _id: updateEventData._id },
     updateEventData,
