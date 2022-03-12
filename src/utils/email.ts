@@ -1,6 +1,7 @@
 const mailchimp = require("@mailchimp/mailchimp_transactional")(
   process.env.MAILCHIMP_API_KEY
 );
+const { getEventVolunteers } = require("../../server/actions/users");
 
 // Sends email using Mandrill/Mailchimp template to list of user emails
 export const sendEmail = async (
@@ -16,4 +17,16 @@ export const sendEmail = async (
       global_merge_vars: templateVariables,
     },
   });
+};
+
+export const getEventEmails = async (event: any) => {
+  const eventVolunteers = await getEventVolunteers(event.volunteers);
+  const eventVolunteerEmails = eventVolunteers.message.users.map(
+    (user) => user.bio.email
+  );
+  const formattedEventVolunteerEmails = eventVolunteerEmails.map(
+    (userEmail) => ({ email: userEmail })
+  );
+
+  return formattedEventVolunteerEmails;
 };

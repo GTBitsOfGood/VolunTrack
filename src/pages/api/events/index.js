@@ -5,11 +5,10 @@ const {
   getEvents,
   updateEvent,
 } = require("../../../../server/actions/events");
-const { getEventVolunteers } = require("../../../../server/actions/users");
 
 import initMiddleware from "../../../../lib/init-middleware";
 import validateMiddleware from "../../../../lib/validate-middleware";
-import { sendEmail } from "../../../utils/mailchimp";
+import { getEventEmails, sendEmail } from "../../../utils/email";
 
 const validateBody = initMiddleware(
   validateMiddleware(CREATE_EVENT_VALIDATOR, validationResult)
@@ -47,26 +46,14 @@ export default async function handler(req, res, next) {
 
     let event = await updateEvent(updateEventData, next);
 
-    const eventVolunteers = await getEventVolunteers(event.volunteers);
-    const eventVolunteerEmails = eventVolunteers.message.users.map(
-      (user) => user.bio.email
-    );
-    const formattedEventVolunteerEmails = eventVolunteerEmails.map(
-      (userEmail) => ({ email: userEmail })
-    );
-
     const emailTemplateVariables = [
       {
         name: "eventTitle",
         content: `${event.title}`,
       },
     ];
-
-    await sendEmail(
-      formattedEventVolunteerEmails,
-      "event-update",
-      emailTemplateVariables
-    );
+    const eventEmails = await getEventEmails(event);
+    await sendEmail(eventEmails, "event-update", emailTemplateVariables);
 
     res.json({
       event,

@@ -1,6 +1,6 @@
 const { updateEventID } = require("../../../../../server/actions/events");
 
-import { sendEmail } from "../../../../utils/mailchimp";
+import { sendEmail } from "../../../../utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "POST") {
