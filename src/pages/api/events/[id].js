@@ -1,8 +1,11 @@
 const {
   deleteEventID,
   updateEventID,
+  getEventByID,
 } = require("../../../../server/actions/events");
 const { isValidObjectID } = require("../../../../server/validators");
+
+import { getEventEmails, sendEmail } from "../../../utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "DELETE") {
@@ -14,7 +17,18 @@ export default async function handler(req, res, next) {
       res.status(400).json({ error: "Object ID not valid" });
     }
 
+    const event = await getEventByID(id, next);
+
     await deleteEventID(id, next);
+
+    const emailTemplateVariables = [
+      {
+        name: "eventTitle",
+        content: `${event.title}`,
+      },
+    ];
+    const eventEmails = await getEventEmails(event);
+    await sendEmail(eventEmails, "event-delete", emailTemplateVariables);
 
     res.json({
       message: "Event successfully deleted!",

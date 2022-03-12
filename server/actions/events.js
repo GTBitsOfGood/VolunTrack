@@ -16,6 +16,16 @@ export async function createEvent(newEventData, next) {
     });
 }
 
+export async function getEventByID(eventID, next) {
+  await dbConnect();
+
+  return EventData.findOne({ _id: eventID })
+    .then((event) => {
+      return event;
+    })
+    .catch(next);
+}
+
 export async function getEvents(startDate, endDate, next) {
   await dbConnect();
 
