@@ -206,7 +206,7 @@ const EventManager = ({ user }) => {
 
         <EventTable
           events={events}
-          onRegisterClicked={onRegisterClicked}
+          onRegisterClicked={onRegister}
           onUnregister={onUnregister}
           user={user}
         >
