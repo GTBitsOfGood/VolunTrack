@@ -19,6 +19,7 @@ export const sendEmail = async (
   });
 };
 
+// Returns the list of emails of volunteers who are signed up for a specified event
 export const getEventEmails = async (event: any) => {
   const eventVolunteers = await getEventVolunteers(event.volunteers);
   const eventVolunteerEmails = eventVolunteers.message.users.map(
