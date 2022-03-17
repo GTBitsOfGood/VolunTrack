@@ -55,7 +55,6 @@ const Inner = styled.div`
 const Slots = styled.span`
   width:39px;
 	height:14px;
-	font-family:Inter;
 	text-align:left;
 	font-size:12px;
   color: ${variables['gray-300']};
@@ -89,7 +88,6 @@ const Text = styled.div`
 const Volunteers = styled.span`
   width:72px;
 	height:49px;
-  font-family:Mulish;
 	text-align:center;
 	font-size:30px;
   line-height:px;
@@ -100,7 +98,6 @@ const Volunteers = styled.span`
 const EventName = styled.span`
   width:267px;
 	height:24px;
-	font-family:Alef;
 	text-align:left;
 	font-size:16px;
   line-height:px;
@@ -114,7 +111,6 @@ const Time = styled.span`
 	height:22px;
 	left:134px;
 	top:32px;
-	font-family:Inter;
 	text-align:left;
 	font-size:18px;
   left:134px;
@@ -124,7 +120,6 @@ const Time = styled.span`
 const Creation = styled.span`
   width:154px;
 	height:22px;
-  font-family:Inter;
 	text-align:right;
 	font-size:12px;
   line-height:px;
