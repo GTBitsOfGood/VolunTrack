@@ -27,6 +27,8 @@ const pageSwitchWidth = (currPath) => {
       return "9.6rem";
     case "/user-manager":
       return "8.6rem";
+    case "/assistants":
+      return "8.6rem";
     case "/settings":
       return "8.6rem";
     case "/events":
@@ -42,6 +44,8 @@ const pageSwitchLeft = (currPath) => {
       return "-1rem";
     case "/user-manager":
       return "8.3rem";
+    case "/assistants":
+      return "8.6rem";
     case "/settings":
       return "8.3rem";
     case "/events":
@@ -187,6 +191,11 @@ const Header = () => {
     router.push("/profile");
   };
 
+  const goToManageAdmins = (e) => {
+    e.preventDefault();
+    router.push("/assistants");
+  };
+
   const currPageMatches = (page) => router.pathname === page;
 
   return (
@@ -234,6 +243,14 @@ const Header = () => {
                   <Styled.PageLink>User Manager</Styled.PageLink>
                 </Link>
               )}
+              {user.role === "admin" && (
+                <Link
+                  href="/assistants"
+                  selected={currPageMatches("/assistants")}
+                >
+                  <Styled.PageLink>Employees</Styled.PageLink>
+                </Link>
+              )}
               <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
@@ -243,11 +260,31 @@ const Header = () => {
               >
                 <Styled.PageLink>Past Events</Styled.PageLink>
               </Link>
-              {user.role === "admin" && (
-                <Link href="/settings" selected={currPageMatches("/settings")}>
-                  <Styled.PageLink>Settings</Styled.PageLink>
-                </Link>
-              )}
+              <Styled.Dropdown nav inNavbar className="navbar-nav">
+                <Styled.Toggle color="white">
+                  <Styled.UserContainer>
+                    <Styled.TxtContainer>
+                      {user.role === "admin" && (
+                        <Link
+                          href="/settings"
+                          selected={currPageMatches("/settings")}
+                        >
+                          <Styled.PageLink>Settings</Styled.PageLink>
+                        </Link>
+                      )}
+                    </Styled.TxtContainer>
+                    <Styled.ImgContainer style={{ paddingRight: "0px" }}>
+                      <Icon name="dropdown-arrow" size="1.5rem" />
+                    </Styled.ImgContainer>
+                  </Styled.UserContainer>
+                </Styled.Toggle>
+
+                <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
+                  <DropdownItem onClick={goToManageAdmins} href="/assistants">
+                    <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Styled.Dropdown>
             </Styled.PageSwitch>
             <Styled.Dropdown nav inNavbar className="navbar-nav">
               <Styled.Toggle color="white">
