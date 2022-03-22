@@ -6,6 +6,7 @@ import * as Table from "../../sharedStyles/tableStyles";
 import Icon from "../../../components/Icon";
 import styled from "styled-components";
 import { Button } from "reactstrap";
+import { useHistory } from "react-router-dom";
 
 const Styled = {
   Button: styled(Button)`
@@ -15,9 +16,9 @@ const Styled = {
     padding: 0;
   `,
   Container: styled.div`
-  width: 100%;
-  height:100%;
-  margin:auto;
+    width: 100%;
+    height: 100%;
+    margin: auto;
   `,
   ul: styled.ul`
     list-style-type:none;
@@ -49,7 +50,8 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user}) => {
       <Styled.ul>
         {events.map((event) => (
           <Styled.List>
-            <Link href={`events/${event._id}}`}><Table.EventList>
+            <Link href={`events/${event._id}`}>
+            <Table.EventList>
               <Table.Inner>
                 <Table.Slots>SLOTS</Table.Slots>
                 <Table.Register>

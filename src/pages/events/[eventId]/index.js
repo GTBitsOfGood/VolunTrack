@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {useRouter} from 'next/router';
 import styled from "styled-components";
 import { Button } from "reactstrap";
+import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
@@ -27,8 +28,14 @@ const Styled = {
     EventCol: styled.div`
         display: flex;
         flex-direction: column;
-        margin-left: 4rem;
-        margin-right: 4rem;
+        margin-left: 3rem;
+        margin-right: 1rem;
+    `,
+    EventCol2: styled.div`
+        display: flex;
+        flex-direction: column;
+        margin-left: 1rem;
+        margin-right: 3rem;
     `,
     EventName: styled.h1`
         color: black;
@@ -56,13 +63,13 @@ const Styled = {
     `,
     InfoTable: styled.div`
         display: flex;
-        flex-direction: column;
-    `,
-    InfoTableRow: styled.div`
-        display: flex;
         flex-direction: row;
+    `,
+    InfoTableCol: styled.div`
+        display: flex;
+        flex-direction: column;
         background-color: white;
-        padding-right: 5rem;
+        width: 200px;
     `,
     InfoTableText: styled.p`
         font-size: 16px;
@@ -70,18 +77,45 @@ const Styled = {
     `
 };
 
-const EventInfo = (event) => {
+const convertTime = (time) => {
+    let [hour, min] = time.split(':');
+    let hours = parseInt(hour);
+    let suffix = time[-2];
+    if (!(suffix in ['pm', 'am', 'PM', 'AM'])) {
+      suffix = (hours > 11)? 'pm': 'am';
+    }
+    hours = ((hours + 11) % 12 + 1);
+    return hours.toString()+':'+min+suffix;
+   }
+
+const EventInfo = () => {
     const router = useRouter()
-    const { eventId } = router.query
+    const { eventId } = router.query;
+    const [event, setEvent] = useState([]);
+    
+    const onRefresh = () => {
+        fetchEventsById(eventId)
+        .then((result) => {
+            setEvent(result.data.event);
+        });
+    };
+
+    useEffect(() => {
+        onRefresh();
+    }, []);
+
+    if (!event || !event.date) {
+        return (<div />)
+    }
 
     return (
         <>
         <Styled.EventTable>
             <Styled.EventCol>
-                <Styled.EventName>Event Name</Styled.EventName> 
+                <Styled.EventName>{event.title}</Styled.EventName> 
                 <Styled.EventSubhead>
-                    <Styled.Slots>Slots Created</Styled.Slots>
-                    <Styled.Date>Date Here</Styled.Date>
+                    <Styled.Slots> {event.volunteers.length} / {event.max_volunteers} Slots Remaining</Styled.Slots>
+                    <Styled.Date>Updated {event.updatedAt.slice(0,10)}</Styled.Date>
                 </Styled.EventSubhead>
                 <Styled.Info>[DescriptionFiller] Lorem ipsum dolor sit amet, consectetur adipiscing elit</Styled.Info>
                 <Styled.Info><b>Age Requirement:</b> 13+</Styled.Info>
@@ -96,27 +130,14 @@ const EventInfo = (event) => {
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit
                 </Styled.Info>
             </Styled.EventCol>
-            <Styled.EventCol style={{"margin-left": "auto"}}>
+            <Styled.EventCol2 style={{"margin-left": "auto"}}>
                 <Styled.InfoHead>Event Information</Styled.InfoHead>
                 <Styled.InfoTable>
-                    <Styled.InfoTableRow>
+                    <Styled.InfoTableCol>
                         <Styled.InfoTableText>
                             <b>Date:</b>
                             <br></br>
-                            09/02/22
-                        </Styled.InfoTableText>
-                        <Styled.InfoTableText>
-                            <b>Time:</b>
-                            <br></br>
-                            9:05AM - 1:14PM
-                        </Styled.InfoTableText>
-                    </Styled.InfoTableRow>
-
-                    <Styled.InfoTableRow>
-                        <Styled.InfoTableText>
-                            <b>Location:</b>
-                            <br></br>
-                            Address
+                            {event.date.slice(0, 10)}
                         </Styled.InfoTableText>
                         <Styled.InfoTableText>
                             <b>Contact:</b>
@@ -125,9 +146,23 @@ const EventInfo = (event) => {
                             <br></br>
                             Email
                         </Styled.InfoTableText>
-                    </Styled.InfoTableRow>
+                    </Styled.InfoTableCol>
+
+                    <Styled.InfoTableCol>
+                        <Styled.InfoTableText>
+                            <b>Time:</b>
+                            <br></br>
+                            {convertTime(event.startTime)} - {convertTime(event.endTime)}
+                        </Styled.InfoTableText>
+                        <Styled.InfoTableText>
+                            <b>Location:</b>
+                            <br></br>
+                            {event.address}
+                            <br></br>
+                        </Styled.InfoTableText>
+                    </Styled.InfoTableCol>
                 </Styled.InfoTable>
-            </Styled.EventCol>
+            </Styled.EventCol2>
         </Styled.EventTable>
         <Styled.Button>
             Register
