@@ -99,8 +99,6 @@ const EventInfo = ({ user }) => {
         user = session.user;
       };
     
-    console.log(user);
-    console.log(user.role);
     const onRefresh = () => {
         fetchEventsById(eventId)
         .then((result) => {
@@ -120,7 +118,6 @@ const EventInfo = ({ user }) => {
         router.replace("/register")
       };
 
-    console.log(event);
     return (
         <>
         <Styled.EventTable>
