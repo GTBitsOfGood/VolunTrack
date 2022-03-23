@@ -108,6 +108,13 @@ const EventInfo = () => {
         return (<div />)
     }
 
+    const onRegisterClicked = (event, user) => {
+        // setShowRegisterModal(true);
+        // setCurrEvent(event);
+        // setCurrUser(user);
+        router.replace("/register")
+      };
+
     return (
         <>
         <Styled.EventTable>
@@ -164,7 +171,7 @@ const EventInfo = () => {
                 </Styled.InfoTable>
             </Styled.EventCol2>
         </Styled.EventTable>
-        <Styled.Button>
+        <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
         </Styled.Button>
         </>

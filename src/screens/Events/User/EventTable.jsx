@@ -6,7 +6,6 @@ import * as Table from "../../sharedStyles/tableStyles";
 import Icon from "../../../components/Icon";
 import styled from "styled-components";
 import { Button } from "reactstrap";
-import { useHistory } from "react-router-dom";
 
 const Styled = {
   Button: styled(Button)`
