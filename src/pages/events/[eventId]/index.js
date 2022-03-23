@@ -120,6 +120,7 @@ const EventInfo = ({ user }) => {
         router.replace("/register")
       };
 
+    console.log(event);
     return (
         <>
         <Styled.EventTable>
@@ -127,7 +128,7 @@ const EventInfo = ({ user }) => {
                 <Styled.EventName>{event.title}</Styled.EventName> 
                 <Styled.EventSubhead>
                     <Styled.Slots> {event.max_volunteers-event.volunteers.length} Slots Remaining</Styled.Slots>
-                    <Styled.Date>Updated {event.updatedAt.slice(0,10)}</Styled.Date>
+                    <Styled.Date>Updated {event.updatedAt.slice(0,10)} @ {convertTime(event.updatedAt.slice(11, 16))}</Styled.Date>
                 </Styled.EventSubhead>
                 <Styled.Info>[DescriptionFiller] Lorem ipsum dolor sit amet, consectetur adipiscing elit</Styled.Info>
                 <Styled.Info><b>Age Requirement:</b> 13+</Styled.Info>
