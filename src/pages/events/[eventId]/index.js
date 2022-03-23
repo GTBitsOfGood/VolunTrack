@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Button } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
+import { useSession } from "next-auth/react";
 
 const Styled = {
     Button: styled(Button)`
@@ -88,11 +89,18 @@ const convertTime = (time) => {
     return hours.toString()+':'+min+suffix;
    }
 
-const EventInfo = () => {
+const EventInfo = ({ user }) => {
     const router = useRouter()
     const { eventId } = router.query;
     const [event, setEvent] = useState([]);
     
+    if (!user) {
+        const { data: session } = useSession();
+        user = session.user;
+      };
+    
+    console.log(user);
+    console.log(user.role);
     const onRefresh = () => {
         fetchEventsById(eventId)
         .then((result) => {
@@ -108,10 +116,7 @@ const EventInfo = () => {
         return (<div />)
     }
 
-    const onRegisterClicked = (event, user) => {
-        // setShowRegisterModal(true);
-        // setCurrEvent(event);
-        // setCurrUser(user);
+    const onRegisterClicked = () => {
         router.replace("/register")
       };
 
@@ -121,7 +126,7 @@ const EventInfo = () => {
             <Styled.EventCol>
                 <Styled.EventName>{event.title}</Styled.EventName> 
                 <Styled.EventSubhead>
-                    <Styled.Slots> {event.volunteers.length} / {event.max_volunteers} Slots Remaining</Styled.Slots>
+                    <Styled.Slots> {event.max_volunteers-event.volunteers.length} Slots Remaining</Styled.Slots>
                     <Styled.Date>Updated {event.updatedAt.slice(0,10)}</Styled.Date>
                 </Styled.EventSubhead>
                 <Styled.Info>[DescriptionFiller] Lorem ipsum dolor sit amet, consectetur adipiscing elit</Styled.Info>
@@ -171,9 +176,9 @@ const EventInfo = () => {
                 </Styled.InfoTable>
             </Styled.EventCol2>
         </Styled.EventTable>
-        <Styled.Button onClick={() => onRegisterClicked(event)}>
+        {user.role == "volunteer" && event.max_volunteers-event.volunteers.length != 0 && <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
-        </Styled.Button>
+        </Styled.Button>}
         </>
     )};
 
