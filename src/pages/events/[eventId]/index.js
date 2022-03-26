@@ -127,18 +127,7 @@ const EventInfo = ({ user }) => {
                     <Styled.Slots> {event.max_volunteers-event.volunteers.length} Slots Remaining</Styled.Slots>
                     <Styled.Date>Updated {event.updatedAt.slice(0,10)} @ {convertTime(event.updatedAt.slice(11, 16))}</Styled.Date>
                 </Styled.EventSubhead>
-                <Styled.Info>[DescriptionFiller] Lorem ipsum dolor sit amet, consectetur adipiscing elit</Styled.Info>
-                <Styled.Info><b>Age Requirement:</b> 13+</Styled.Info>
-                <Styled.Info>
-                    <b>Dress Code:</b>
-                    <br></br>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                </Styled.Info>
-                <Styled.Info>
-                    <b>Important Notes:</b>
-                    <br></br>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
-                </Styled.Info>
+                <Styled.Info>{event.description}</Styled.Info>
             </Styled.EventCol>
             <Styled.EventCol2 style={{"margin-left": "auto"}}>
                 <Styled.InfoHead>Event Information</Styled.InfoHead>

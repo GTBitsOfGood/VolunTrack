@@ -4,6 +4,7 @@ import * as Table from "../../sharedStyles/tableStyles";
 import styled from "styled-components";
 import { Button } from "reactstrap";
 import Icon from "../../../components/Icon";
+import Link from "next/link";
 
 const Styled = {
   Button: styled(Button)`
