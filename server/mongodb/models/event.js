@@ -36,6 +36,14 @@ const eventSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
+    minors: {
+      type: [{
+        volunteer_id: { type: mongoose.Schema.Types.ObjectId, ref: "UserData" },
+        minor: [{ type: String}]
+      }],
+      required: true,
+      default: [],
+    },
     max_volunteers: {
       type: Number,
       required: true,
