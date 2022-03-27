@@ -103,3 +103,11 @@ export async function updateEventID(eventID, event, next) {
     })
     .catch(next);
 }
+
+export async function getEventByID(eventID) {
+  await dbConnect();
+
+  return EventData.findById(eventID).then((event) => {
+    return event;
+  })
+}
