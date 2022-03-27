@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { GoogleLogin } from "react-google-login";
+import PropTypes from "prop-types";
 
 class Footer extends Component {
   googleResponse = (response) => {
@@ -22,7 +23,7 @@ class Footer extends Component {
     });
   };
 
-  loginFailed = (_) => alert("Something went wrong. Please try again");
+  loginFailed = () => alert("Something went wrong. Please try again");
 
   render() {
     return (
@@ -43,5 +44,9 @@ class Footer extends Component {
     );
   }
 }
+
+Footer.propTypes = {
+  onAuth: PropTypes.func,
+};
 
 export default Footer;

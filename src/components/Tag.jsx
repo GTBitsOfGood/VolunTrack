@@ -30,4 +30,5 @@ Tag.propTypes = {
   type: PropTypes.string,
   color: PropTypes.string,
   textColor: PropTypes.string,
+  text: PropTypes.string,
 };

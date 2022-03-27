@@ -19,11 +19,12 @@ const isSameDay = a => b => {
 const Styled = {
   Container: styled.div`
     width: 100%;
-    height: 100%;
+    height: 110%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
   `,
   HeaderContainer: styled.div`
     width: 60%;
@@ -36,7 +37,7 @@ const Styled = {
     background: ${variables.primary};
     border: none;
     color: white;
-    width: 6.5rem;
+    width: 7.5rem;
     height: 3rem;
     margin-top: 2rem;
     
@@ -65,13 +66,11 @@ const Styled = {
     margin-bottom: 1rem;
   `,
   Events: styled.div`
-    font-family:Inter;
     text-align:left;
     font-size:36px;
     font-weight:bold;
   `,
   Date: styled.div`
-    font-family:Inter;
     text-align:left;
     font-size:28px;
     font-weight:bold;

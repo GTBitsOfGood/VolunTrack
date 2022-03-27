@@ -15,6 +15,7 @@ export default {
   api: {
     auth: {},
     events: {},
+    waivers: {},
     users: {},
   },
 };

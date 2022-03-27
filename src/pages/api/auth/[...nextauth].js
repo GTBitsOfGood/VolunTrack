@@ -51,7 +51,7 @@ export default NextAuth({
   },
   callbacks: {
     // This determines what is returned from useSession and getSession calls
-    async session({ session, token, user }) {
+    async session({ session, user }) {
       await dbConnect();
 
       const _id = new ObjectId(user.id);
@@ -62,7 +62,7 @@ export default NextAuth({
         user: currentUser,
       };
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl;
     },
   },

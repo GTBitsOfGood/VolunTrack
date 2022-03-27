@@ -13,7 +13,7 @@ import StyleProvider from "../providers/StyleProvider";
 
 const Styled = {
   Container: styled.div`
-    height: 120vh;
+    height: inherit;
     width: 100vw;
     display: flex;
     flex-direction: column;
