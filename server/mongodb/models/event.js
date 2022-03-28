@@ -48,6 +48,11 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    mandated_volunteers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
+      required: true,
+      default: [],
+    },
     description: {
       type: String,
       required: true,
