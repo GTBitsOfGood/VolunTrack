@@ -1,5 +1,4 @@
 const {
-  getEventByID,
   deleteEventID,
   updateEventID,
   getEventByID,
