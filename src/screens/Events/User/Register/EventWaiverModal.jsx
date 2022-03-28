@@ -154,7 +154,7 @@ const EventWaiverModal = ({ open, toggle, hasMinor, onRegisterAfterWaiverClicked
             }
 
             <Styled.Row>
-                <Styled.MainButton onClick={handleSubmit}>
+                <Styled.MainButton>
                     <IconSpecial width="25" height="24" viewBox="0 0 25 24" name="link"/>
                     Read Waiver
                 </Styled.MainButton>                        
