@@ -60,13 +60,6 @@ const EventMinorModal = ({ open, toggle, event }) => {
         const name = {
             ...values,
         };
-        console.log(name)
-        // deleteEvent(event._id)
-        //   .then(() => {
-        //     setDeleting(true);
-        //     toggle();
-        //   })
-        //   .catch(console.log);
     };
 
     const onCloseClicked = () => {
