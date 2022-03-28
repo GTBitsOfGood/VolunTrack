@@ -58,13 +58,31 @@ class EmployeeTable extends React.Component {
 
   handleStatus = (event, userToEdit) => {
     if (event.value == "Administrator") {
-      userToEdit.role = "admin";
+      const updatedRole = {
+        ...this.state.userSelectedForEdit,
+        role: "admin",
+      };
+      this.setState({
+        userSelectedForEdit: updatedRole,
+      });
     }
     if (event.value == "Admin Assistant") {
-      userToEdit.role = "admin-assistant";
+      const updatedRole = {
+        ...this.state.userSelectedForEdit,
+        role: "admin-assistant",
+      };
+      this.setState({
+        userSelectedForEdit: updatedRole,
+      });
     }
     if (event.value == "Staff") {
-      userToEdit.role = "staff";
+      const updatedRole = {
+        ...this.state.userSelectedForEdit,
+        role: "staff",
+      };
+      this.setState({
+        userSelectedForEdit: updatedRole,
+      });
     }
   };
 
@@ -85,18 +103,9 @@ class EmployeeTable extends React.Component {
         <Table.Table>
           <tbody>
             <tr>
-              <th style={{ color: "#960034" }}>
-                Name
-                <Icon color="grey3" name="copy" />
-              </th>
-              <th style={{ color: "#960034" }}>
-                Email Address
-                <Icon color="grey3" name="copy" />
-              </th>
-              <th style={{ color: "#960034" }}>
-                Role
-                <Icon color="grey3" name="copy" />
-              </th>
+              <th style={{ color: "#960034" }}>Name</th>
+              <th style={{ color: "#960034" }}>Email Address</th>
+              <th style={{ color: "#960034" }}>Role</th>
             </tr>
             {!loading &&
               users.map((user, index) => (
@@ -151,6 +160,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>First Name</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.first_name
@@ -163,6 +173,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>Last Name</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.last_name
@@ -192,6 +203,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>Email</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.email
@@ -204,6 +216,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>Phone</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.phone_number
@@ -219,6 +232,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>Date of Birth</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.date_of_birth
@@ -231,6 +245,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>Zip Code</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.zip_code
@@ -245,6 +260,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>Address</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.address
@@ -257,6 +273,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>City</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.city
@@ -269,6 +286,7 @@ class EmployeeTable extends React.Component {
                     <Col>
                       <Form.Label>State</Form.Label>
                       <Form.Input
+                        readOnly={true}
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.state

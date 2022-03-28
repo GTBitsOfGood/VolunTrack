@@ -243,14 +243,6 @@ const Header = () => {
                   <Styled.PageLink>User Manager</Styled.PageLink>
                 </Link>
               )}
-              {user.role === "admin" && (
-                <Link
-                  href="/assistants"
-                  selected={currPageMatches("/assistants")}
-                >
-                  <Styled.PageLink>Employees</Styled.PageLink>
-                </Link>
-              )}
               <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
@@ -273,7 +265,7 @@ const Header = () => {
                         </Link>
                       )}
                     </Styled.TxtContainer>
-                    <Styled.ImgContainer style={{ paddingRight: "0px" }}>
+                    <Styled.ImgContainer style={{ paddingRight: "300px" }}>
                       <Icon name="dropdown-arrow" size="1.5rem" />
                     </Styled.ImgContainer>
                   </Styled.UserContainer>
