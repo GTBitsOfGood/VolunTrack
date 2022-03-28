@@ -76,15 +76,6 @@ const Styled = {
 const EventWaiverModal = ({ open, toggle, hasMinor, onRegisterAfterWaiverClicked }) => {
     const [showGuardian, setShowGuardian] = useState(true);
 
-    const handleSubmit = () => {
-        // deleteEvent(event._id)
-        //   .then(() => {
-        //     setDeleting(true);
-        //     toggle();
-        //   })
-        //   .catch(console.log);
-    };
-
     const onGuardianClicked = () => {
         setShowGuardian(true);
     }
