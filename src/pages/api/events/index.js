@@ -8,7 +8,7 @@ const {
 
 import initMiddleware from "../../../../lib/init-middleware";
 import validateMiddleware from "../../../../lib/validate-middleware";
-import { getEventEmails, sendEmail } from "../../../utils/email";
+import { sendEventEmail } from "../../../utils/email";
 
 const validateBody = initMiddleware(
   validateMiddleware(CREATE_EVENT_VALIDATOR, validationResult)
@@ -52,8 +52,7 @@ export default async function handler(req, res, next) {
         content: `${event.title}`,
       },
     ];
-    const eventEmails = await getEventEmails(event);
-    await sendEmail(eventEmails, "event-update", emailTemplateVariables);
+    await sendEventEmail(event, "event-update", emailTemplateVariables);
 
     res.json({
       event,

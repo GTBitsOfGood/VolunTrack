@@ -5,7 +5,7 @@ const {
 } = require("../../../../server/actions/events");
 const { isValidObjectID } = require("../../../../server/validators");
 
-import { getEventEmails, sendEmail } from "../../../utils/email";
+import { sendEventEmail } from "../../../utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "DELETE") {
@@ -27,8 +27,7 @@ export default async function handler(req, res, next) {
         content: `${event.title}`,
       },
     ];
-    const eventEmails = await getEventEmails(event);
-    await sendEmail(eventEmails, "event-delete", emailTemplateVariables);
+    await sendEventEmail(event, "event-delete", emailTemplateVariables);
 
     res.json({
       message: "Event successfully deleted!",

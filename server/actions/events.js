@@ -1,4 +1,5 @@
 const EventData = require("../mongodb/models/event");
+import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
 
 export async function createEvent(newEventData, next) {
@@ -8,7 +9,8 @@ export async function createEvent(newEventData, next) {
 
   return newEvent
     .save()
-    .then(() => {
+    .then(async (event) => {
+      await scheduler.scheduleNewEventJobs(event);
       return;
     })
     .catch((err) => {

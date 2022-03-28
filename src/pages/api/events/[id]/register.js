@@ -1,6 +1,6 @@
 const { updateEventID } = require("../../../../../server/actions/events");
 
-import { sendEmail } from "../../../../utils/email";
+import { sendUserEmail } from "../../../../utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "POST") {
@@ -17,8 +17,8 @@ export default async function handler(req, res, next) {
       },
     ];
 
-    await sendEmail(
-      [{ email: user.bio.email }],
+    await sendUserEmail(
+      user.bio.email,
       "event-register-confirmation",
       emailTemplateVariables
     );
