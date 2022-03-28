@@ -14,7 +14,6 @@ const Styled = {
         background-color: ${variables["gray-100"]};
         overflow-y: scroll;
         overflow-x: hidden;
-        font-family: "Aktiv Grotesk"
     `,
     Row: styled(Row)`
         margin: 0 2rem 0.5rem 2rem;

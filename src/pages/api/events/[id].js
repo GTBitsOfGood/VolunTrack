@@ -1,4 +1,5 @@
 const {
+  getEventByID,
   deleteEventID,
   updateEventID,
   getEventByID,
@@ -8,7 +9,17 @@ const { isValidObjectID } = require("../../../../server/validators");
 import { sendEventEmail } from "../../../utils/email";
 
 export default async function handler(req, res, next) {
-  if (req.method === "DELETE") {
+  if (req.method === "GET") {
+    const id = req.query.id;
+    if (!isValidObjectID(id)) {
+      res.status(400).json({ error: "Object ID not valid" });
+    }
+
+    let event = await getEventByID(id, next);
+    return res.status(200).json({
+      event,
+    });
+  } else if (req.method === "DELETE") {
     //const id = req.params.id;
     // for some reason after migration, the id ends up in req.query???
     // i have no idea why

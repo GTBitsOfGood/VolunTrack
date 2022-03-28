@@ -48,7 +48,7 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
       <Styled.ul>
         {events.map((event) => (
           <Styled.List key={event._id}>
-            <Link href={`events/${event._id}}`}>
+            <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
                   <Table.Slots>SLOTS</Table.Slots>

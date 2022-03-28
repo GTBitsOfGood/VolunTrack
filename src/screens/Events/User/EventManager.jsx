@@ -62,13 +62,11 @@ const Styled = {
     margin-bottom: 1rem;
   `,
   Events: styled.div`
-    font-family: Inter;
     text-align: left;
     font-size: 36px;
     font-weight: bold;
   `,
   Date: styled.div`
-    font-family: Inter;
     text-align: left;
     font-size: 28px;
     font-weight: bold;
