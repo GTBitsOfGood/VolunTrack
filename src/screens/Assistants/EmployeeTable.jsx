@@ -56,34 +56,26 @@ class EmployeeTable extends React.Component {
     });
   };
 
-  handleStatus = (event, userToEdit) => {
+  handleStatus = (event) => {
     if (event.value == "Administrator") {
-      const updatedRole = {
-        ...this.state.userSelectedForEdit,
-        role: "admin",
-      };
-      this.setState({
-        userSelectedForEdit: updatedRole,
-      });
+      const newRoleName = "admin";
+      this.props.users
+        .filter((user) => user == this.state.userSelectedForEdit)
+        .map((selectedUser) => (selectedUser.role = newRoleName));
     }
     if (event.value == "Admin Assistant") {
-      const updatedRole = {
-        ...this.state.userSelectedForEdit,
-        role: "admin-assistant",
-      };
-      this.setState({
-        userSelectedForEdit: updatedRole,
-      });
+      const newRoleName = "admin-assistant";
+      this.props.users
+        .filter((user) => user == this.state.userSelectedForEdit)
+        .map((selectedUser) => (selectedUser.role = newRoleName));
     }
     if (event.value == "Staff") {
-      const updatedRole = {
-        ...this.state.userSelectedForEdit,
-        role: "staff",
-      };
-      this.setState({
-        userSelectedForEdit: updatedRole,
-      });
+      const newRoleName = "staff";
+      this.props.users
+        .filter((user) => user == this.state.userSelectedForEdit)
+        .map((selectedUser) => (selectedUser.role = newRoleName));
     }
+    return;
   };
 
   onModalClose = (updatedUser) => {
@@ -188,11 +180,18 @@ class EmployeeTable extends React.Component {
                       <Dropdown
                         options={roles}
                         onChange={(e) => {
-                          this.handleStatus(e, this.state.userSelectedForEdit);
+                          this.handleStatus(e);
                         }}
                         value={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.role
+                            ? this.state.userSelectedForEdit.role == "admin"
+                              ? "Administrator"
+                              : this.state.userSelectedForEdit.role ==
+                                "admin-assistant"
+                              ? "Admin Assistant"
+                              : this.state.userSelectedForEdit.role == "staff"
+                              ? "Staff"
+                              : { defaultOption }
                             : { defaultOption }
                         }
                         placeholder="Select an option"
