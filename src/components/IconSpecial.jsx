@@ -131,6 +131,33 @@ const iconData = {
       />
     </React.Fragment>
   ),
+  exit: (
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M7.6979 6.5L12 10.8021L10.3021 12.5L6 8.1979L1.6979 12.5L0 10.8021L4.3021 6.5L0 2.1979L1.6979 0.5L6 4.8021L10.3021 0.5L12 2.1979L7.6979 6.5Z"
+      fill="black"
+    />
+  ),
+  link: (
+    <React.Fragment>
+      <path
+        d="M10.5 13.1404C10.8955 13.6728 11.4001 14.1134 11.9796 14.4322C12.5591 14.7511 13.1999 14.9407 13.8586 14.9882C14.5172 15.0357 15.1783 14.94 15.797 14.7076C16.4157 14.4751 16.9775 14.1115 17.4443 13.6412L20.2073 10.8588C21.0462 9.98423 21.5103 8.81284 21.4998 7.59697C21.4893 6.38109 21.005 5.21801 20.1512 4.35822C19.2974 3.49844 18.1424 3.01074 16.935 3.00018C15.7276 2.98961 14.5644 3.45702 13.6959 4.30173L12.1117 5.88768"
+        stroke="white"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M14.5 10.8596C14.1045 10.3272 13.5999 9.88658 13.0204 9.56776C12.4409 9.24894 11.8001 9.05935 11.1414 9.01185C10.4828 8.96435 9.82171 9.06004 9.20302 9.29245C8.58433 9.52486 8.02251 9.88853 7.55567 10.3588L4.79268 13.1412C3.95384 14.0158 3.48968 15.1872 3.50017 16.403C3.51067 17.6189 3.99497 18.782 4.84877 19.6418C5.70257 20.5016 6.85756 20.9893 8.06498 20.9998C9.27239 21.0104 10.4356 20.543 11.3041 19.6983L12.879 18.1123"
+        stroke="white"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </React.Fragment>
+  ),
+  highlightTab: <circle cx="4" cy="4" r="4" fill="#F06B6B" />,
 };
 
 const IconSpecial = ({ width, height, viewBox, name, href, id }) => (
@@ -154,6 +181,4 @@ IconSpecial.propTypes = {
   height: PropTypes.string.isRequired,
   viewBox: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  href: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
 };
