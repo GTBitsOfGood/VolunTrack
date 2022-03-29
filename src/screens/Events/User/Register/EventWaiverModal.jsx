@@ -76,6 +76,8 @@ const Styled = {
 const EventWaiverModal = ({ open, toggle, hasMinor, onRegisterAfterWaiverClicked }) => {
     const [showGuardian, setShowGuardian] = useState(true);
 
+    const [waiverCheckboxSelected, setWaiverCheckboxSelected] = useState(false);
+
     const onGuardianClicked = () => {
         setShowGuardian(true);
     }
@@ -91,6 +93,11 @@ const EventWaiverModal = ({ open, toggle, hasMinor, onRegisterAfterWaiverClicked
     const onPrevClicked = () => {
         onGuardianClicked();
     }
+
+    const onWaiverCheckboxClicked = (e) => {
+        setWaiverCheckboxSelected(e.target.checked);
+    }
+
 
     return (
         <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
@@ -161,14 +168,14 @@ const EventWaiverModal = ({ open, toggle, hasMinor, onRegisterAfterWaiverClicked
             </Styled.Row>
             <Styled.Row>
                 <FormGroup check>
-                    <Input type="checkbox"/>{' '}
+                    <Input type="checkbox" onChange={onWaiverCheckboxClicked} checked={waiverCheckboxSelected}/>{' '}
                 </FormGroup>
                 <Styled.Text>I have read the waiver and agree to its terms and conditions</Styled.Text>
             </Styled.Row>
             <ModalFooter>
                 {
                     !hasMinor &&
-                    <Button color="primary" onClick={() => onRegisterAfterWaiverClicked()}>
+                    <Button color="primary" disabled={!waiverCheckboxSelected} onClick={() => onRegisterAfterWaiverClicked()}>
                     Register
                     </Button>
                 }
@@ -184,7 +191,7 @@ const EventWaiverModal = ({ open, toggle, hasMinor, onRegisterAfterWaiverClicked
                         <Styled.Button color="primary" onClick={onPrevClicked}>
                         Previous
                         </Styled.Button>
-                        <Styled.Button color="primary" onClick={() => onRegisterAfterWaiverClicked()}>
+                        <Styled.Button color="primary" disabled={!waiverCheckboxSelected} onClick={() => onRegisterAfterWaiverClicked()}>
                         Register
                         </Styled.Button>
                     </React.Fragment>

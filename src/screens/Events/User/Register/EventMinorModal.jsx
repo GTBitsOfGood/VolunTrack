@@ -123,7 +123,7 @@ const EventMinorModal = ({ open, toggle, event }) => {
                         <Styled.Container>
                             <Row>
                                 <Styled.Col xs="11">
-                                    <Styled.Text>Added Herman Miller. You can press <Styled.BoldText>return</Styled.BoldText> to quickly add more volunteers.</Styled.Text>
+                                    <Styled.Text>Added one minor. Close popup to add more volunteers.</Styled.Text>
                                 </Styled.Col>
                                 <Styled.Col xs="1">
                                     <Button close onClick={onCloseClicked}/>
