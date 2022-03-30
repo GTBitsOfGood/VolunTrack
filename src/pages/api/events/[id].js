@@ -1,7 +1,7 @@
 const {
   getEventByID,
   deleteEventID,
-  updateEventID,
+  updateEventID
 } = require("../../../../server/actions/events");
 const { isValidObjectID } = require("../../../../server/validators");
 

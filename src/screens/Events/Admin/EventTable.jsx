@@ -35,6 +35,14 @@ const convertTime = (time) => {
   return hours.toString()+':'+min+suffix;
 }
 
+const getMinorTotal = (minors) => {
+  let total = 0;
+  minors.forEach(minorObj => {
+    total += minorObj.minor.length;
+  });
+  return total;
+}
+
 const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
   return (
     <Styled.Container>
@@ -56,7 +64,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked}) => {
                 </Table.Delete>
                 <Table.Text>
                   <Table.EventName>{event.title}</Table.EventName>
-                  <Table.Volunteers>{event.volunteers.length}/{event.max_volunteers}          </Table.Volunteers>
+                  <Table.Volunteers>{event.volunteers.length + getMinorTotal(event.minors)}/{event.max_volunteers}          </Table.Volunteers>
                   <Table.Time>{convertTime(event.startTime)} - {convertTime(event.endTime)}</Table.Time>
                 </Table.Text>
               </Table.Inner>

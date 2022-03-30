@@ -18,3 +18,6 @@ export const registerForEvent = async (data) =>
 
 export const updateEvent = async (event) =>
   (await axios.put(`/api/events/${event._id}`, event)).data;
+
+export const getEventVolunteersList = async (event) => 
+  await axios.get(`/api/events/${event._id}/volunteers`);

@@ -23,6 +23,10 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
+    mandatedEvents: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
+      default: [],
+    },
     bio: {
       first_name: { type: String },
       last_name: { type: String },
