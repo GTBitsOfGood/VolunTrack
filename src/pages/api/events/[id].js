@@ -1,7 +1,6 @@
 const {
   deleteEventID,
-  updateEventID,
-  getEventVolunteersList
+  updateEventID
 } = require("../../../../server/actions/events");
 const { isValidObjectID } = require("../../../../server/validators");
 
@@ -27,10 +26,5 @@ export default async function handler(req, res, next) {
     const updatedEvent = await updateEventID(eventID, event);
 
     res.status(200).json(updatedEvent);
-  } else if (req.method === "GET") {
-    const eventId = req.query.id;
-    const volunteers = await getEventVolunteersList(eventId);
-
-    res.status(200).json(volunteers); 
   }
 }
