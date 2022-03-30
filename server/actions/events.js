@@ -141,3 +141,11 @@ export async function getEventVolunteersList(eventId, next) {
   }
   return result;
 }
+
+export async function getEventByID(eventID) {
+  await dbConnect();
+
+  return EventData.findById(eventID).then((event) => {
+    return event;
+  })
+}

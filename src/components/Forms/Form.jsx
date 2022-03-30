@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form as FFForm } from "formik";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const FForm = styled(FFForm)`
   display: flex;
@@ -12,5 +13,9 @@ const Form = (props) => (
     <FForm>{props.children}</FForm>
   </Formik>
 );
+
+Form.propTypes = {
+  children: PropTypes.object,
+};
 
 export default Form;

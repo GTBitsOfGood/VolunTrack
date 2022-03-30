@@ -1,6 +1,7 @@
 import React from "react";
 import { Field, ErrorMessage } from "formik";
-import { FormGroup, CustomInput, Input } from "reactstrap";
+import { FormGroup, CustomInput } from "reactstrap";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 const ErrorMsg = styled(ErrorMessage)`
@@ -30,5 +31,10 @@ const Checkbox = (props) => (
     <ErrorMsg component="div" name={props.name} />
   </div>
 );
+
+Checkbox.propTypes = {
+  name: PropTypes.string,
+  value: PropTypes.string,
+};
 
 export default Checkbox;

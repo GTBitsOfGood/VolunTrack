@@ -101,6 +101,8 @@ export const fetchVolunteers = (eventVolunteers) => {
 
 export const fetchEvents = (startDate, endDate) => axios.get(`/api/events?startDate=${startDate}&endDate=${endDate}`);
 
+export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
+
 export const createEvent = (event) => axios.post("/api/events", event);
 
 export const editEvent = (event) => axios.put("/api/events", event);

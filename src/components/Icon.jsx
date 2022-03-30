@@ -80,4 +80,5 @@ Icon.propTypes = {
   name: PropTypes.string.isRequired,
   color: PropTypes.string,
   size: PropTypes.string,
+  theme: PropTypes.array,
 };
