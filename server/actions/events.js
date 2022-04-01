@@ -1,6 +1,9 @@
 const EventData = require("../mongodb/models/event");
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
+const User = require("../mongodb/models/User");
+const mongoose = require("mongoose");
+const ObjectId = require("mongodb").ObjectId;
 
 export async function createEvent(newEventData, next) {
   const newEvent = new EventData(newEventData);
@@ -103,6 +106,41 @@ export async function updateEventID(eventID, event, next) {
       return event;
     })
     .catch(next);
+}
+
+export async function getEventVolunteersList(eventId, next) {
+  await dbConnect();
+
+  let result = {
+    volunteer: [],
+    minor: {},
+  };
+  let volunteers = [];
+  let minors = [];
+  await EventData.find({ _id: eventId })
+    .then((event) => {
+      volunteers = event[0].volunteers;
+      volunteers = volunteers.map(mongoose.Types.ObjectId);
+      minors = event[0].minors;
+    })
+    .catch(next);
+  await User.find({ _id: { $in: volunteers } })
+    .then((users) => {
+      for (const user of users) {
+        const name = user.bio.first_name + " " + user.bio.last_name;
+        result.volunteer.push(name);
+      }
+    })
+    .catch(next);
+  for (const minor of minors) {
+    await User.findOne({ _id: ObjectId(minor.volunteer_id) })
+      .then((user) => {
+        const name = user.bio.first_name + " " + user.bio.last_name;
+        result.minor[name] = minor.minor;
+      })
+      .catch(next);
+  }
+  return result;
 }
 
 export async function getEventByID(eventID) {

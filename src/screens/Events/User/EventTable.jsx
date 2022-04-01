@@ -38,6 +38,14 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
+const getMinorTotal = (minors) => {
+  let total = 0;
+  minors.forEach(minorObj => {
+    total += minorObj.minor.length;
+  });
+  return total;
+}
+
 const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -69,7 +77,7 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
                   </Table.Register>
                   <Table.Text>
                     <Table.Volunteers>
-                      {event.volunteers.length}/{event.max_volunteers}{" "}
+                      {event.volunteers.length + getMinorTotal(event.minors)}/{event.max_volunteers}{" "}
                     </Table.Volunteers>
                     <Table.EventName>{event.title}</Table.EventName>
                     <Table.Time>
