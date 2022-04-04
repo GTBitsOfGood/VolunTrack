@@ -6,8 +6,12 @@ const {
   updateEvent,
 } = require("../../../../server/actions/events");
 
+import { ObjectId } from "mongodb";
 import initMiddleware from "../../../../lib/init-middleware";
 import validateMiddleware from "../../../../lib/validate-middleware";
+import { agenda } from "../../../../server/jobs";
+import { scheduler } from "../../../../server/jobs/scheduler";
+import { sendEventEmail } from "../../../utils/email";
 
 const validateBody = initMiddleware(
   validateMiddleware(CREATE_EVENT_VALIDATOR, validationResult)
@@ -44,6 +48,18 @@ export default async function handler(req, res, next) {
     const updateEventData = matchedData(req);
 
     let event = await updateEvent(updateEventData, next);
+
+    await agenda.start();
+    await agenda.cancel({ data: new ObjectId(event._id) });
+    await scheduler.scheduleNewEventJobs(event);
+
+    const emailTemplateVariables = [
+      {
+        name: "eventTitle",
+        content: `${event.title}`,
+      },
+    ];
+    await sendEventEmail(event, "event-update", emailTemplateVariables);
 
     res.json({
       event,

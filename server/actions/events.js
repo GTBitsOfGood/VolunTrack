@@ -1,8 +1,9 @@
 const EventData = require("../mongodb/models/event");
-const User = require("../mongodb/models/User");
+import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
+const User = require("../mongodb/models/User");
 const mongoose = require("mongoose");
-const ObjectId = require('mongodb').ObjectId;
+const ObjectId = require("mongodb").ObjectId;
 
 export async function createEvent(newEventData, next) {
   const newEvent = new EventData(newEventData);
@@ -11,7 +12,8 @@ export async function createEvent(newEventData, next) {
 
   return newEvent
     .save()
-    .then(() => {
+    .then(async (event) => {
+      await scheduler.scheduleNewEventJobs(event);
       return;
     })
     .catch((err) => {
@@ -68,7 +70,6 @@ export async function getEvents(startDate, endDate, next) {
 export async function updateEvent(updateEventData, next) {
   await dbConnect();
 
-  console.log(updateEventData);
   return EventData.findOneAndUpdate(
     { _id: updateEventData._id },
     updateEventData,
@@ -116,14 +117,14 @@ export async function getEventVolunteersList(eventId, next) {
   };
   let volunteers = [];
   let minors = [];
-  await EventData.find({_id: eventId})
+  await EventData.find({ _id: eventId })
     .then((event) => {
       volunteers = event[0].volunteers;
       volunteers = volunteers.map(mongoose.Types.ObjectId);
       minors = event[0].minors;
     })
     .catch(next);
-  await User.find({_id: {$in: volunteers }})
+  await User.find({ _id: { $in: volunteers } })
     .then((users) => {
       for (const user of users) {
         const name = user.bio.first_name + " " + user.bio.last_name;
@@ -132,12 +133,12 @@ export async function getEventVolunteersList(eventId, next) {
     })
     .catch(next);
   for (const minor of minors) {
-    await User.findOne({_id: ObjectId(minor.volunteer_id)})
-    .then((user) => {
-      const name = user.bio.first_name + " " + user.bio.last_name;
-      result.minor[name] = minor.minor;
-    })
-    .catch(next);
+    await User.findOne({ _id: ObjectId(minor.volunteer_id) })
+      .then((user) => {
+        const name = user.bio.first_name + " " + user.bio.last_name;
+        result.minor[name] = minor.minor;
+      })
+      .catch(next);
   }
   return result;
 }
@@ -147,5 +148,5 @@ export async function getEventByID(eventID) {
 
   return EventData.findById(eventID).then((event) => {
     return event;
-  })
+  });
 }
