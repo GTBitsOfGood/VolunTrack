@@ -139,7 +139,12 @@ class Assistants extends React.Component {
       fetchUserManagementData(users[users.length - 1]._id).then((result) => {
         if (result && result.data && result.data.users) {
           this.setState({
-            users: [...users, ...result.data.users],
+            users: [...users, ...result.data.users].filter(
+              (user) =>
+                user.role == "admin" ||
+                user.role == "admin-assistant" ||
+                user.role == "staff"
+            ),
             currentPage: currentPage + 1,
             loadingMoreUsers: false,
           });
@@ -163,8 +168,12 @@ class Assistants extends React.Component {
     const { users, currentPage } = this.state;
     fetchUserManagementData().then((result) => {
       this.setState({
-        users: result.data.users.filter((user) =>
-          user.name.toLowerCase().includes(record.toLowerCase())
+        users: result.data.users.filter(
+          (user) =>
+            user.name.toLowerCase().includes(record.toLowerCase()) &&
+            (user.role == "admin" ||
+              user.role == "admin-assistant" ||
+              user.role == "staff")
         ),
       });
     });
