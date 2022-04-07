@@ -54,7 +54,7 @@ const pageSwitchLeft = (currPath) => {
 const Styled = {
   Navbar: styled(Navbar)`
     background-color: #ffffff;
-    height: 90px;
+    height: 60px;
   `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
@@ -100,7 +100,7 @@ const Styled = {
   `,
   PageLink: styled.div`
     color: ${variables["primary"]};
-    font-size: 85%;
+    font-size: 75%;
     font-weight: 550;
     margin-right: 2rem;
     text-decoration: none;
@@ -162,7 +162,9 @@ const Styled = {
     justify-content: space-between;
     list-style: none;
     padding-left: 80px;
+    margin-left: 2rem;
   `,
+
 };
 
 const Header = () => {
@@ -200,13 +202,13 @@ const Header = () => {
       >
         <NavbarBrand tag={(props) => <Link {...props} />} href="/">
           <div
-            style={{ width: "175px", marginLeft: "1rem", cursor: "pointer" }}
+            style={{ width: "175px", cursor: "pointer" }}
           >
             <Image
-              layout="responsive"
               objectFit="contain"
-              height="100%"
-              width="100%"
+              height="60px"
+              width="300px"
+              layout="fixed"
               alt="helping mamas logo"
               src="/images/helping_mamas_logo.png"
             />
