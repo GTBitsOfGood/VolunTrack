@@ -205,7 +205,11 @@ const EventRegister = (event) => {
     if (!(events.volunteers.includes(user._id))) {
       events.volunteers.push(user._id);
     }
-    registerForEvent(events)
+    let data = {
+      event: events,
+      user: user
+    }
+    registerForEvent(data)
     .then();
   };
 

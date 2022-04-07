@@ -1,4 +1,5 @@
 const { updateEventID } = require("../../../../../server/actions/events");
+const User = require("../../../../../server/mongodb/models/User");
 const mailchimp = require("@mailchimp/mailchimp_transactional")(
   process.env.MAILCHIMP_API_KEY
 );
