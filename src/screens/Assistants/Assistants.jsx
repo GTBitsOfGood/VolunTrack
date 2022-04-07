@@ -4,8 +4,7 @@ import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
-import Icon from "../../components/Icon";
-import UserTable from "./UserTable";
+import EmployeeTable from "./EmployeeTable";
 import ReactSearchBox from "react-search-box";
 
 const PAGE_SIZE = 10;
@@ -70,17 +69,6 @@ const Styled = {
     margin-top: 20px;
     width: 80%;
   `,
-  TotalVols: styled.div`
-    position: relative;
-    right: 10%;
-    top: 3%;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 19px;
-    display: flex;
-    flex-flow: row-reverse;
-  `,
   Text: styled.div`
     color: #000000;
     position: relative;
@@ -111,7 +99,7 @@ function authWrapper(Component) {
   };
 }
 
-class UserManager extends React.Component {
+class Assistants extends React.Component {
   state = {
     users: [],
     userCount: 0,
@@ -132,7 +120,12 @@ class UserManager extends React.Component {
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
-          users: result.data.users.filter((user) => user.role == "volunteer"),
+          users: result.data.users.filter(
+            (user) =>
+              user.role == "admin" ||
+              user.role == "admin-assistant" ||
+              user.role == "staff"
+          ),
           currentPage: 0,
           loadingMoreUsers: false,
         });
@@ -146,7 +139,12 @@ class UserManager extends React.Component {
       fetchUserManagementData(users[users.length - 1]._id).then((result) => {
         if (result && result.data && result.data.users) {
           this.setState({
-            users: [...users, ...result.data.users],
+            users: [...users, ...result.data.users].filter(
+              (user) =>
+                user.role == "admin" ||
+                user.role == "admin-assistant" ||
+                user.role == "staff"
+            ),
             currentPage: currentPage + 1,
             loadingMoreUsers: false,
           });
@@ -170,8 +168,12 @@ class UserManager extends React.Component {
     const { users, currentPage } = this.state;
     fetchUserManagementData().then((result) => {
       this.setState({
-        users: result.data.users.filter((user) =>
-          user.name.toLowerCase().includes(record.toLowerCase())
+        users: result.data.users.filter(
+          (user) =>
+            user.name.toLowerCase().includes(record.toLowerCase()) &&
+            (user.role == "admin" ||
+              user.role == "admin-assistant" ||
+              user.role == "staff")
         ),
       });
     });
@@ -185,10 +187,7 @@ class UserManager extends React.Component {
     const { currentPage, loadingMoreUsers } = this.state;
     return (
       <Styled.Container>
-        <Styled.Text>Volunteers</Styled.Text>
-        <Styled.TotalVols>
-          Total Volunteers: {this.getUsersAtPage().length}
-        </Styled.TotalVols>
+        <Styled.Text>Employees</Styled.Text>
         <Styled.SearchBox>
           <ReactSearchBox
             placeholder="Search Name"
@@ -197,7 +196,7 @@ class UserManager extends React.Component {
           />
         </Styled.SearchBox>
         <Styled.TableUsers>
-          <UserTable
+          <EmployeeTable
             users={this.getUsersAtPage()}
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}
@@ -208,4 +207,4 @@ class UserManager extends React.Component {
   }
 }
 
-export default authWrapper(UserManager);
+export default authWrapper(Assistants);
