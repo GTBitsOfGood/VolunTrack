@@ -54,7 +54,7 @@ const pageSwitchLeft = (currPath) => {
 const Styled = {
   Navbar: styled(Navbar)`
     background-color: #ffffff;
-    height: 100px;
+    height: 90px;
   `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
@@ -84,7 +84,7 @@ const Styled = {
     position: relative;
     align-items: center;
     margin-left: 2rem;
-    margin-right: auto;
+    margin-right: 3rem;
 
     :before {
       content: "";
@@ -100,8 +100,8 @@ const Styled = {
   `,
   PageLink: styled.div`
     color: ${variables["primary"]};
+    font-size: 85%;
     font-weight: 550;
-    margin-left: 0.5rem;
     margin-right: 2rem;
     text-decoration: none;
     :hover {
@@ -205,8 +205,8 @@ const Header = () => {
             <Image
               layout="responsive"
               objectFit="contain"
-              width="100%"
               height="100%"
+              width="100%"
               alt="helping mamas logo"
               src="/images/helping_mamas_logo.png"
             />
@@ -237,7 +237,7 @@ const Header = () => {
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
               <Link
-                href="/past-events"
+                href="events"
                 selected={currPageMatches("/past-events")}
               >
                 <Styled.PageLink>Past Events</Styled.PageLink>
