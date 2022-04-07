@@ -59,9 +59,17 @@ class EmployeeTable extends React.Component {
 
   handleStatus = (event) => {
     if (event.value == "Administrator") {
+      const newRoleName = "admin";
+      this.props.users
+        .filter((user) => user == this.state.userSelectedForEdit)
+        .map((selectedUser) => (selectedUser.role = newRoleName));
       updateApplicantRole(this.state.userSelectedForEdit.email, "admin");
     }
     if (event.value == "Admin Assistant") {
+      const newRoleName = "admin-assistant";
+      this.props.users
+        .filter((user) => user == this.state.userSelectedForEdit)
+        .map((selectedUser) => (selectedUser.role = newRoleName));
       updateApplicantRole(
         this.state.userSelectedForEdit.email,
         "admin-assistant"
@@ -69,6 +77,10 @@ class EmployeeTable extends React.Component {
     }
     if (event.value == "Staff") {
       updateApplicantRole(this.state.userSelectedForEdit.email, "staff");
+      const newRoleName = "staff";
+      this.props.users
+        .filter((user) => user == this.state.userSelectedForEdit)
+        .map((selectedUser) => (selectedUser.role = newRoleName));
     }
     return;
   };
