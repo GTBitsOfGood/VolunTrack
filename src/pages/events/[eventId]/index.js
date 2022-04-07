@@ -112,7 +112,7 @@ const EventInfo = () => {
   }
 
   const onRegisterClicked = () => {
-    router.replace("/register");
+    router.replace(`${eventId}/register`);
   };
 
   return (

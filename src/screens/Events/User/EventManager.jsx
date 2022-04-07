@@ -31,7 +31,7 @@ const Styled = {
     background: ${variables.primary};
     border: none;
     color: white;
-    width: 7rem;
+    width: 7.5rem;
     height: 3rem;
     margin-top: 2rem;
 

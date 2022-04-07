@@ -56,12 +56,14 @@ const Styled = {
   `,
 };
 
-const EventMinorModal = ({ open, toggle, event }) => {
+const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   const minor = {
     firstName: "",
     lastName: "",
   };
   const [showSuccess, setShowSuccess] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const handleSubmit = (values) => {
     const name = {
@@ -73,6 +75,13 @@ const EventMinorModal = ({ open, toggle, event }) => {
     setShowSuccess(false);
   };
 
+  const addAndClose = () => {
+    setHasMinorTrue(firstName, lastName);
+    toggle();
+    setFirstName("");
+    setLastName("");
+  }
+
   return (
     <Formik
       initialValues={{
@@ -82,6 +91,9 @@ const EventMinorModal = ({ open, toggle, event }) => {
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         setShowSuccess(true);
+        setHasMinorTrue(firstName, lastName);
+        setFirstName("");
+        setLastName("");
       }}
       render={({ handleSubmit, isSubmitting, handleBlur }) => (
         <React.Fragment>
@@ -102,14 +114,14 @@ const EventMinorModal = ({ open, toggle, event }) => {
                   <Styled.Text>First Name</Styled.Text>
                   <Field name="firstName">
                     {({ field }) => (
-                      <SForm.Input {...field} type="text" onBlur={handleBlur} />
+                      <SForm.Input {...field} type="text" onBlur={handleBlur} value={firstName} onChange={(e) => {setFirstName(e.target.value)}} />
                     )}
                   </Field>
                 </Styled.Col>
                 <Styled.Col>
                   <Styled.Text>Last Name</Styled.Text>
                   <Field name="lastName">
-                    {({ field }) => <SForm.Input {...field} type="text" />}
+                    {({ field }) => <SForm.Input {...field} type="text" value={lastName} onChange={(e) => {setLastName(e.target.value)}} />}
                   </Field>
                 </Styled.Col>
               </Styled.Row>
@@ -121,7 +133,7 @@ const EventMinorModal = ({ open, toggle, event }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={toggle}>
+              <Button color="secondary" onClick={addAndClose}>
                 Add and Close
               </Button>
               <Button color="primary" onClick={handleSubmit}>
