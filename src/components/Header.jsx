@@ -88,7 +88,6 @@ const Styled = {
 
     :before {
       content: "";
-      width: ${(props) => pageSwitchWidth(props.currPathName)};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
