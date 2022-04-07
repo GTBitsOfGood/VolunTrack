@@ -17,9 +17,9 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import styled from "styled-components";
-// todo: put this somewhere that makes sense
-import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import Icon from "./Icon";
+import { capitalizeFirstLetter } from "../screens/Profile/helpers";
+import variables from "../design-tokens/_variables.module.scss"
 
 const pageSwitchWidth = (currPath) => {
   switch (currPath) {
@@ -54,7 +54,7 @@ const pageSwitchLeft = (currPath) => {
 const Styled = {
   Navbar: styled(Navbar)`
     background-color: #ffffff;
-    min-height: 6rem;
+    height: 100px;
   `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
@@ -99,13 +99,12 @@ const Styled = {
     }
   `,
   PageLink: styled.div`
-    color: #969696;
+    color: ${variables["primary"]};
+    font-weight: 550;
     margin-left: 0.5rem;
     margin-right: 2rem;
     text-decoration: none;
     :hover {
-      color: #607177;
-      font-weight: bold;
       cursor: pointer;
     }
   `,
@@ -206,10 +205,10 @@ const Header = () => {
             <Image
               layout="responsive"
               objectFit="contain"
-              width="175px"
+              width="100%"
               height="100%"
-              alt="bog logo"
-              src="/images/bog_logo.png"
+              alt="helping mamas logo"
+              src="/images/helping_mamas_logo.png"
             />
           </div>
         </NavbarBrand>
@@ -275,7 +274,7 @@ const Header = () => {
                 </Styled.UserContainer>
               </Styled.Toggle>
 
-              <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
+              <DropdownMenu style={{ width: "100%" }}>
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
