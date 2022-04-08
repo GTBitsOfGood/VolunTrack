@@ -71,7 +71,7 @@ const Styled = {
   Back: styled.p`
     font-size: 14px;
     margin-left: 10px;
-    margin-top: 5px;
+    padding-top: 5px;
     text-decoration: underline;
     color: ${variables.primary};
   `
