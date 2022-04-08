@@ -150,6 +150,9 @@ const Styled = {
     height: 100%;
     width: 90%;
   `,
+  MinorRow: styled.div`
+    width: 18rem;
+  `,
 };
 
 const EventRegister = (event) => {
@@ -370,18 +373,22 @@ const EventRegister = (event) => {
           </Styled.VolunteerContainer>
         </Col>
         {events.minors && events.minors.map((minor) => (
-          <Col xs="12" lg="3">
+          <Row>
             {minor.volunteer_id === user._id && minor.minor.map((names) => (
-              <Styled.VolunteerContainer>
-                <Styled.VolunteerRow>
-                  <Styled.SectionHeaderText>{names}</Styled.SectionHeaderText>
-                </Styled.VolunteerRow>
-                <Styled.VolunteerRow>
-                  <Styled.DetailText>Minor</Styled.DetailText>
-                </Styled.VolunteerRow>
-              </Styled.VolunteerContainer>
+            <Col>
+              <Styled.MinorRow>
+                <Styled.VolunteerContainer>
+                  <Styled.VolunteerRow>
+                    <Styled.SectionHeaderText>{names}</Styled.SectionHeaderText>
+                  </Styled.VolunteerRow>
+                  <Styled.VolunteerRow>
+                    <Styled.DetailText>Minor</Styled.DetailText>
+                  </Styled.VolunteerRow>
+                </Styled.VolunteerContainer>
+              </Styled.MinorRow>
+            </Col>
             ))}
-          </Col>
+          </Row>
         ))}
       </Styled.Row>
       {!isRegistered && (

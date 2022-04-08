@@ -211,7 +211,7 @@ const EventWaiverModal = ({
         }}>
           <iframe
             style={{ width: "563px", height: "666px" }}
-            src={showGuardian?"/public/files/adult.pdf": "/public/files/minor.pdf"}
+            src={showGuardian?"/files/adult.pdf": "/files/minor.pdf"}
             type='application/pdf'
             title='title'
           />
