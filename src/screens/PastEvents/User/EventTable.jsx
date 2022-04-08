@@ -25,6 +25,9 @@ const Styled = {
   List: styled.li`
     padding-bottom: 120px;
   `,
+  Slots: styled.h1`
+    margin: -50px;
+  `
 };
 
 const convertTime = (time) => {
@@ -59,8 +62,8 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Slots>SLOTS</Table.Slots>
-                  <Table.Register>
+                  <Table.Slots>ATTENDED</Table.Slots>
+                  {/* <Table.Register>
                     {event.volunteers.includes(user._id) ? (
                       <>
                         <Styled.Button onClick={() => onUnregister(event)}>
@@ -74,10 +77,10 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
                         <span>Sign up</span>
                       </Styled.Button>
                     )}
-                  </Table.Register>
+                  </Table.Register> */}
                   <Table.Text>
                     <Table.Volunteers>
-                      {event.volunteers.length + getMinorTotal(event.minors)}/{event.max_volunteers}{" "}
+                      {event.volunteers.length + getMinorTotal(event.minors)}
                     </Table.Volunteers>
                     <Table.EventName>{event.title}</Table.EventName>
                     <Table.Time>

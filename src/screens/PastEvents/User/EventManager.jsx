@@ -49,20 +49,32 @@ const Styled = {
     margin-bottom: 1rem;
   `,
   Content: styled.div`
-  width: 60%;
-  height: 100%;
-  background: ${(props) => props.theme.grey9};
-  padding-top: 1rem;
-  display: flex;
-  flex-direction: row;
-  margin: 0 auto;
-  align-items: start;
+    width: 60%;
+    height: 100%;
+    background: ${(props) => props.theme.grey9};
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: start;
   `,
   Date: styled.div`
-  text-align: left;
-  font-size: 28px;
-  font-weight: bold;
+    text-align: left;
+    font-size: 28px;
+    font-weight: bold;
   `,
+  DateRow: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `,
+  Back: styled.p`
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: 5px;
+    text-decoration: underline;
+    color: ${variables.primary};
+  `
 };
 
 const EventManager = ({ user }) => {
@@ -161,7 +173,10 @@ const EventManager = ({ user }) => {
       <Styled.HeaderContainer>
         <Styled.EventContainer>
             <Styled.Events>Events</Styled.Events>
-            <Styled.Date>{value.toDateString()}</Styled.Date>
+            <Styled.DateRow>
+              <Styled.Date>{value.toDateString()}</Styled.Date>
+              <Styled.Back>Back to Today</Styled.Back>
+            </Styled.DateRow>
         </Styled.EventContainer>
         <Styled.Button onClick={onRefresh} >
           <span style={{ color: "white"}}>Create New Event</span>
