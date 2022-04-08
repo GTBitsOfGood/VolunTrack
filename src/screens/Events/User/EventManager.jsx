@@ -24,7 +24,7 @@ const Styled = {
     width: 60%;
     max-width: 80rem;
     display: flex;
-    justify-content: end;
+    justify-content: start;
     margin: 0 auto;
   `,
   Button: styled(Button)`
