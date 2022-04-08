@@ -24,22 +24,22 @@ const Styled = {
     width: 60%;
     max-width: 80rem;
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     margin: 0 auto;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
     border: none;
     color: white;
-    width: 10rem;
+    width: 7.5rem;
     height: 3rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
   `,
   Events: styled.div`
-  text-align: left;
-  font-size: 36px;
-  font-weight: bold;
-`,
+    text-align: left;
+    font-size: 36px;
+    font-weight: bold;
+  `,
   EventContainer: styled.div`
     width: 78%;
     max-width: 80rem;
@@ -178,8 +178,9 @@ const EventManager = ({ user }) => {
               <Styled.Back>Back to Today</Styled.Back>
             </Styled.DateRow>
         </Styled.EventContainer>
-        <Styled.Button onClick={onRefresh} >
-          <span style={{ color: "white"}}>Create New Event</span>
+        <Styled.Button onClick={onRefresh}>
+          <Icon color="grey3" name="add" />
+          <span style={{ color: "white"}}>Create</span>
         </Styled.Button>
       </Styled.HeaderContainer>
       <Styled.Content>
