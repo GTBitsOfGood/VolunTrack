@@ -341,6 +341,17 @@ const EventRegister = (event) => {
             Add Minor (under 13 years old)
           </Styled.LinkedText>
         </Link>
+        <IconSpecial
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          name="info"
+          href="#"
+          id="minorMaxTipTool"
+        />
+        <UncontrolledTooltip placement="right" target="minorMaxTipTool">
+          The maximum number of minors per guardian is 5.
+        </UncontrolledTooltip>
       </Styled.Row>
       <Styled.AccomodationRow>
         <FormGroup check>

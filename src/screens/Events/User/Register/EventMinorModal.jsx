@@ -64,6 +64,8 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [checked, setCheck] = useState(false);
+  const [displayError, setDisplayError] = useState(false)
 
   const handleSubmit = (values) => {
     const name = {
@@ -76,10 +78,13 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   };
 
   const addAndClose = () => {
-    setHasMinorTrue(firstName, lastName);
+    setShowSuccess(false);
+    setDisplayError(false);
     toggle();
-    setFirstName("");
-    setLastName("");
+  }
+
+  const toggleCheck = (e) => {
+    setCheck(e.target.checked);
   }
 
   return (
@@ -91,7 +96,11 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
         setShowSuccess(true);
-        setHasMinorTrue(firstName, lastName);
+        if (checked) {
+          setHasMinorTrue(firstName, lastName);
+        } else {
+          setDisplayError(true);
+        }
         setFirstName("");
         setLastName("");
       }}
@@ -127,13 +136,13 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
               <Styled.Row>
                 <FormGroup check>
-                  <Input type="checkbox" />{" "}
+                  <Input type="checkbox" onClick={(e) => { toggleCheck(e); }} />{" "}
                 </FormGroup>
                 <Styled.Text>This volunteer is under the age of 13</Styled.Text>
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={addAndClose}>
+              <Button color="secondary" onClick={handleSubmit}>
                 Add and Close
               </Button>
               <Button color="primary" onClick={handleSubmit}>
@@ -153,6 +162,24 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
                     </Styled.Col>
                     <Styled.Col xs="1">
                       <Button close onClick={onCloseClicked} />
+                    </Styled.Col>
+                  </Row>
+                </Styled.Container>
+              </Styled.ConfirmationModal>
+            )}
+          </React.Fragment>
+          <React.Fragment>
+            {displayError && (
+              <Styled.ConfirmationModal isOpen={open} toggle={toggle} size="lg">
+                <Styled.Container>
+                  <Row>
+                    <Styled.Col xs="11">
+                      <Styled.Text>
+                        Minor will need to make an account and register themselves.
+                      </Styled.Text>
+                    </Styled.Col>
+                    <Styled.Col xs="1">
+                      <Button close onClick={addAndClose} />
                     </Styled.Col>
                   </Row>
                 </Styled.Container>
