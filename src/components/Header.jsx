@@ -104,7 +104,7 @@ const Styled = {
   `,
   PageLink: styled.div`
     color: ${variables["primary"]};
-    font-size: 75%;
+    font-size: 90%;
     font-weight: 550;
     margin-right: 2rem;
     text-decoration: none;
@@ -121,7 +121,6 @@ const Styled = {
   `,
   DropdownItem: styled.div`
     color: #212529;
-    padding-left: 1.2rem;
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     :hover {
@@ -134,7 +133,6 @@ const Styled = {
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
-    width: 200px;
   `,
   UserIcon: styled.img`
     border-radius: 50%;
@@ -262,17 +260,17 @@ const Header = () => {
                           href="/settings"
                           selected={currPageMatches("/settings")}
                         >
-                          <Styled.PageLink>Settings</Styled.PageLink>
+                          <Styled.PageLink style={{"font-size": "100%"}}>Settings</Styled.PageLink>
                         </Link>
                       )}
                     </Styled.TxtContainer>
-                    <Styled.ImgContainer style={{ paddingRight: "300px" }}>
+                    <Styled.ImgContainer>
                       <Icon name="dropdown-arrow" size="1.5rem" />
                     </Styled.ImgContainer>
                   </Styled.UserContainer>
                 </Styled.Toggle>
 
-                <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
+                <DropdownMenu style={{ width: "100%", marginTop: "0.9rem", border: "none"}}>
                   <DropdownItem onClick={goToManageAdmins} href="/assistants">
                     <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
                   </DropdownItem>
