@@ -65,7 +65,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [checked, setCheck] = useState(false);
-  const [displayError, setDisplayError] = useState(false)
+  // const [displayError, setDisplayError] = useState(false)
 
   const handleSubmit = (values) => {
     const name = {
@@ -78,8 +78,14 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   };
 
   const addAndClose = () => {
-    setShowSuccess(false);
-    setDisplayError(false);
+    if (checked && firstName !== "" && lastName !== "") {
+      setHasMinorTrue(firstName, lastName);
+    }
+    // } else {
+    //   setDisplayError(true);
+    // }
+    setFirstName("");
+    setLastName("");
     toggle();
   }
 
@@ -95,12 +101,14 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-        setShowSuccess(true);
-        if (checked) {
+        
+        if (checked && firstName !== "" && lastName !== "") {
           setHasMinorTrue(firstName, lastName);
-        } else {
-          setDisplayError(true);
+          setShowSuccess(true);
         }
+        // } else {
+        //   setDisplayError(true);
+        // }
         setFirstName("");
         setLastName("");
       }}
@@ -142,7 +150,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={handleSubmit}>
+              <Button color="secondary" onClick={addAndClose}>
                 Add and Close
               </Button>
               <Button color="primary" onClick={handleSubmit}>
@@ -168,7 +176,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.ConfirmationModal>
             )}
           </React.Fragment>
-          <React.Fragment>
+          {/* <React.Fragment>
             {displayError && (
               <Styled.ConfirmationModal isOpen={open} toggle={toggle} size="lg">
                 <Styled.Container>
@@ -185,7 +193,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
                 </Styled.Container>
               </Styled.ConfirmationModal>
             )}
-          </React.Fragment>
+          </React.Fragment> */}
         </React.Fragment>
       )}
     />
