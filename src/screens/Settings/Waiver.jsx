@@ -24,7 +24,7 @@ const WaiverTextContainer = styled.div`
 const WaiverHeader = styled.h3`
   margin: 0;
 `;
-const WaiverText = styled.p`
+const WaiverLink = styled.a`
   margin: 0;
 `;
 const ReplaceButton = styled(Button)`
@@ -40,6 +40,7 @@ const DeleteButton = styled(Button)`
 const Waiver = ({ filePath }) => {
   const getFileNameFromPath = (filePath) =>
     filePath.split("\\").pop().split("/").pop();
+  const getFilePathForOpening = (filePath) => filePath.replace("./public", "");
 
   return (
     <WaiverContainer>
@@ -47,7 +48,13 @@ const Waiver = ({ filePath }) => {
         <WaiverHeader>
           {filePath.toLowerCase().includes("adult") ? "Adult" : "Minor"} Waiver
         </WaiverHeader>
-        <WaiverText>File: {getFileNameFromPath(filePath)}</WaiverText>
+        <WaiverLink
+          href={getFilePathForOpening(filePath)}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          File: {getFileNameFromPath(filePath)}
+        </WaiverLink>
       </WaiverTextContainer>
       <ReplaceButton>Replace</ReplaceButton>
       <DeleteButton>Delete</DeleteButton>
