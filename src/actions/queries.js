@@ -105,7 +105,7 @@ export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
 export const createEvent = (event) => axios.post("/api/events", event);
 
-export const editEvent = (event) => axios.put("/api/events", event);
+export const editEvent = (event, sendConfirmationEmail) => axios.put("/api/events", event, sendConfirmationEmail);
 
 export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
 

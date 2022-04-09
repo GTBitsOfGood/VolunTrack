@@ -59,7 +59,10 @@ export default async function handler(req, res, next) {
         content: `${event.title}`,
       },
     ];
-    await sendEventEmail(event, "event-update", emailTemplateVariables);
+
+    if (req.sendConfirmationEmail) {
+      await sendEventEmail(event, "event-update", emailTemplateVariables);
+    }
 
     res.json({
       event,
