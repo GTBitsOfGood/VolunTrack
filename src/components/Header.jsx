@@ -17,9 +17,9 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import styled from "styled-components";
-// todo: put this somewhere that makes sense
-import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import Icon from "./Icon";
+import { capitalizeFirstLetter } from "../screens/Profile/helpers";
+import variables from "../design-tokens/_variables.module.scss"
 
 const pageSwitchWidth = (currPath) => {
   switch (currPath) {
@@ -58,7 +58,8 @@ const pageSwitchLeft = (currPath) => {
 const Styled = {
   Navbar: styled(Navbar)`
     background-color: #ffffff;
-    min-height: 6rem;
+    height: 60px;
+    font-size: larger;
   `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
@@ -88,11 +89,10 @@ const Styled = {
     position: relative;
     align-items: center;
     margin-left: 2rem;
-    margin-right: auto;
+    margin-right: 3rem;
 
     :before {
       content: "";
-      width: ${(props) => pageSwitchWidth(props.currPathName)};
       height: 2.2rem;
       position: absolute;
       border-radius: 0.5rem;
@@ -103,13 +103,12 @@ const Styled = {
     }
   `,
   PageLink: styled.div`
-    color: #969696;
-    margin-left: 0.5rem;
+    color: ${variables["primary"]};
+    font-size: 90%;
+    font-weight: 550;
     margin-right: 2rem;
     text-decoration: none;
     :hover {
-      color: #607177;
-      font-weight: bold;
       cursor: pointer;
     }
   `,
@@ -122,7 +121,6 @@ const Styled = {
   `,
   DropdownItem: styled.div`
     color: #212529;
-    padding-left: 1.2rem;
     padding-top: 0.2rem;
     padding-bottom: 0.2rem;
     :hover {
@@ -135,7 +133,6 @@ const Styled = {
     align-items: center;
     justify-content: space-between;
     flex-wrap: nowrap;
-    width: 200px;
   `,
   UserIcon: styled.img`
     border-radius: 50%;
@@ -167,7 +164,9 @@ const Styled = {
     justify-content: space-between;
     list-style: none;
     padding-left: 80px;
+    margin-left: 2rem;
   `,
+
 };
 
 const Header = () => {
@@ -210,15 +209,15 @@ const Header = () => {
       >
         <NavbarBrand tag={(props) => <Link {...props} />} href="/">
           <div
-            style={{ width: "175px", marginLeft: "1rem", cursor: "pointer" }}
+            style={{ width: "175px", cursor: "pointer" }}
           >
             <Image
-              layout="responsive"
               objectFit="contain"
-              width="175px"
-              height="100%"
-              alt="bog logo"
-              src="/images/bog_logo.png"
+              height="60px"
+              width="300px"
+              layout="fixed"
+              alt="helping mamas logo"
+              src="/images/helping_mamas_logo.png"
             />
           </div>
         </NavbarBrand>
@@ -261,17 +260,17 @@ const Header = () => {
                           href="/settings"
                           selected={currPageMatches("/settings")}
                         >
-                          <Styled.PageLink>Settings</Styled.PageLink>
+                          <Styled.PageLink style={{"font-size": "100%"}}>Settings</Styled.PageLink>
                         </Link>
                       )}
                     </Styled.TxtContainer>
-                    <Styled.ImgContainer style={{ paddingRight: "300px" }}>
+                    <Styled.ImgContainer>
                       <Icon name="dropdown-arrow" size="1.5rem" />
                     </Styled.ImgContainer>
                   </Styled.UserContainer>
                 </Styled.Toggle>
 
-                <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
+                <DropdownMenu style={{ width: "100%", marginTop: "0.6rem", border: "none"}}>
                   <DropdownItem onClick={goToManageAdmins} href="/assistants">
                     <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
                   </DropdownItem>
@@ -304,7 +303,7 @@ const Header = () => {
                 </Styled.UserContainer>
               </Styled.Toggle>
 
-              <DropdownMenu style={{ width: "100%", marginTop: "4.1rem" }}>
+              <DropdownMenu style={{ width: "100%" }}>
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
