@@ -5,7 +5,7 @@ import styled from "styled-components";
 import variables from "../../design-tokens/_variables.module.scss";
 
 const WaiverContainer = styled.div`
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 0.5rem;
   height: 8rem;
   width: 100%;

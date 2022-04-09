@@ -5,7 +5,6 @@ import { getCurrentUser } from "../../actions/queries";
 import Icon from "../../components/Icon";
 import SettingsEditModal from "./SettingsEditModal";
 import SettingsTable from "./SettingsTable";
-import Waivers from "./Waivers";
 
 const Styled = {
   Container: styled.div`
@@ -87,7 +86,6 @@ const SettingsManager = () => {
         {" "}
       </SettingsTable>
       <SettingsEditModal open={showEditModal} toggle={toggleEditModal} />
-      <Waivers />
     </Styled.Container>
   );
 };
