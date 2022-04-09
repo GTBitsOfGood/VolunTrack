@@ -63,7 +63,7 @@ export default NextAuth({
       };
     },
     async redirect({ baseUrl }) {
-      return baseUrl;
+      return `${baseUrl}/events`;
     },
   },
 });

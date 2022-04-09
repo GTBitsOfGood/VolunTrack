@@ -1,21 +1,6 @@
 import { useSession } from "next-auth/react";
 import "normalize.css";
 import React from "react";
-import styled from "styled-components";
-
-const Styled = {
-  Container: styled.div`
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  `,
-  Content: styled.main`
-    flex: 1;
-    overflow-y: scroll;
-  `,
-};
 
 const IndexPage = () => {
   const { data: session } = useSession();
