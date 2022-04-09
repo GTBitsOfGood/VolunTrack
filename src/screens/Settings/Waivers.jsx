@@ -4,7 +4,7 @@ import { getWaiverPaths } from "../../actions/queries";
 import Waiver from "./Waiver";
 
 const WaiversContainer = styled.div`
-  max-width: 32rem;
+  max-width: 40rem;
   display: flex;
   flex-direction: column;
 `;

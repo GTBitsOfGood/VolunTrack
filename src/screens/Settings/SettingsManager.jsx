@@ -87,18 +87,6 @@ const SettingsManager = () => {
         {" "}
       </SettingsTable>
       <SettingsEditModal open={showEditModal} toggle={toggleEditModal} />
-      <Styled.Files>
-        Adult
-        <form action="/api/waivers" enctype="multipart/form-data" method="POST">
-          <input type="file" class="admin__input" id="adult" name="adult" />
-          <input class="admin__submit" type="submit" />
-        </form>
-        Minor
-        <form action="/api/waivers" enctype="multipart/form-data" method="POST">
-          <input type="file" class="admin__input" id="minor" name="minor" />
-          <input class="admin__submit" type="submit" />
-        </form>
-      </Styled.Files>
       <Waivers />
     </Styled.Container>
   );
