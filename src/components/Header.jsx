@@ -270,7 +270,7 @@ const Header = () => {
                   </Styled.UserContainer>
                 </Styled.Toggle>
 
-                <DropdownMenu style={{ width: "100%", marginTop: "0.9rem", border: "none"}}>
+                <DropdownMenu style={{ width: "100%", marginTop: "0.6rem", border: "none"}}>
                   <DropdownItem onClick={goToManageAdmins} href="/assistants">
                     <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
                   </DropdownItem>
