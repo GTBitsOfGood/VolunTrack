@@ -38,6 +38,7 @@ const EventList = styled.div`
   width: 730px;
   height: 94px;
   position:absolute;
+  cursor: pointer;
 `;
 const Inner = styled.div`
   background-color: white;

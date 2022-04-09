@@ -253,41 +253,42 @@ const Header = () => {
               >
                 <Styled.PageLink>Past Events</Styled.PageLink>
               </Link>
-              <Styled.Dropdown nav inNavbar className="navbar-nav">
-                <Styled.Toggle color="white">
-                  <Styled.UserContainer>
-                    <Styled.TxtContainer>
-                      {user.role === "admin" && (
-                        <Link
-                          href="/settings"
-                          selected={currPageMatches("/settings")}
-                        >
-                          <Styled.PageLink style={{ "font-size": "100%" }}>
-                            Settings
-                          </Styled.PageLink>
-                        </Link>
-                      )}
-                    </Styled.TxtContainer>
-                    <Styled.ImgContainer>
-                      <Icon name="dropdown-arrow" size="1.5rem" />
-                    </Styled.ImgContainer>
-                  </Styled.UserContainer>
-                </Styled.Toggle>
+              {user.role === "admin" && (
+                <Styled.Dropdown nav inNavbar className="navbar-nav">
+                  <Styled.Toggle color="white">
+                    <Styled.UserContainer>
+                      <Styled.TxtContainer>
+                          <Link
+                            href="/settings"
+                            selected={currPageMatches("/settings")}
+                          >
+                            <Styled.PageLink style={{ "font-size": "100%" }}>
+                              Settings
+                            </Styled.PageLink>
+                          </Link>
+                      </Styled.TxtContainer>
+                      <Styled.ImgContainer>
+                        <Icon name="dropdown-arrow" size="1.5rem" />
+                      </Styled.ImgContainer>
+                    </Styled.UserContainer>
+                  </Styled.Toggle>
 
-                <DropdownMenu
-                  style={{ width: "100%", marginTop: "0.6rem", border: "none" }}
-                >
-                  <DropdownItem onClick={goToManageAdmins} href="/assistants">
-                    <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
-                  </DropdownItem>
-                  <DropdownItem
-                    onClick={goToManageWaivers}
-                    href="/manage-waivers"
+                  <DropdownMenu
+                    style={{ width: "100%", marginTop: "0.6rem", border: "none" }}
                   >
-                    <Styled.DropdownItem>Manage Waivers</Styled.DropdownItem>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Styled.Dropdown>
+                    <DropdownItem onClick={goToManageAdmins} href="/assistants">
+                      <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={goToManageWaivers}
+                      href="/manage-waivers"
+                    >
+                      <Styled.DropdownItem>Manage Waivers</Styled.DropdownItem>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Styled.Dropdown>
+              )}
+
             </Styled.PageSwitch>
             <Styled.Dropdown nav inNavbar className="navbar-nav">
               <Styled.Toggle color="white">
