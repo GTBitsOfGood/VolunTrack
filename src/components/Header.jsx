@@ -55,6 +55,7 @@ const Styled = {
   Navbar: styled(Navbar)`
     background-color: #ffffff;
     height: 60px;
+    font-size: larger;
   `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
