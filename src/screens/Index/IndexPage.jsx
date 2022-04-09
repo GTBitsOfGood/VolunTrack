@@ -1,31 +1,23 @@
 import { useSession } from "next-auth/react";
+import router from "next/router";
 import "normalize.css";
-import React from "react";
-import styled from "styled-components";
-
-const Styled = {
-  Container: styled.div`
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  `,
-  Content: styled.main`
-    flex: 1;
-    overflow-y: scroll;
-  `,
-};
+import React, { useEffect } from "react";
 
 const IndexPage = () => {
-  const { data: session } = useSession();
+  const {
+    data: { user },
+  } = useSession();
+
+  useEffect(() => {
+    if (user.role === "admin") router.push("/events");
+  });
 
   return (
     <>
       <h1>
-        Welcome {session.user.bio.first_name} {session.user.bio.last_name}
+        Welcome {user.bio.first_name} {user.bio.last_name}
       </h1>
-      <h2>Role: {session.user.role}</h2>
+      <h2>Role: {user.role}</h2>
     </>
   );
 };
