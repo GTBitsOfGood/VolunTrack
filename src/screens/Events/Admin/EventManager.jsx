@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Button } from "reactstrap";
-import Icon from "../../../components/Icon";
-import EventTable from "./EventTable";
-import { fetchEvents } from "../../../actions/queries";
-import EventCreateModal from "./EventCreateModal";
-import EventEditModal from "./EventEditModal";
-import EventDeleteModal from "./EventDeleteModal";
+import { differenceInCalendarDays } from 'date-fns';
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
-import { differenceInCalendarDays } from 'date-fns';
+import { Button } from "reactstrap";
+import styled from "styled-components";
+import { fetchEvents } from "../../../actions/queries";
+import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
+import EventCreateModal from "./EventCreateModal";
+import EventDeleteModal from "./EventDeleteModal";
+import EventEditModal from "./EventEditModal";
+import EventTable from "./EventTable";
 
 const isSameDay = a => b => {
   return differenceInCalendarDays(a, b) === 0;

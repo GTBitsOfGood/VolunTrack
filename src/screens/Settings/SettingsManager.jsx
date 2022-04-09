@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
-import Icon from "../../components/Icon";
+import styled from "styled-components";
 import { getCurrentUser } from "../../actions/queries";
+import Icon from "../../components/Icon";
 import SettingsEditModal from "./SettingsEditModal";
 import SettingsTable from "./SettingsTable";
+import Waivers from "./Waivers";
 
 const Styled = {
   Container: styled.div`
@@ -14,7 +15,8 @@ const Styled = {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
   `,
   HeaderContainer: styled.div`
     width: 95%;
@@ -73,12 +75,14 @@ const SettingsManager = () => {
 
   return (
     <Styled.Container>
-      <Styled.HeaderContainer>
-        <Styled.Button onClick={onCreateClicked}>
-          <Icon color="grey3" name="add" />
-          <span style={{ color: "black" }}>Edit</span>
-        </Styled.Button>
-      </Styled.HeaderContainer>
+      <div>
+        <Styled.HeaderContainer>
+          <Styled.Button onClick={onCreateClicked}>
+            <Icon color="grey3" name="add" />
+            <span style={{ color: "black" }}>Edit</span>
+          </Styled.Button>
+        </Styled.HeaderContainer>
+      </div>
       <SettingsTable user={userData} loading={loading}>
         {" "}
       </SettingsTable>
@@ -95,7 +99,7 @@ const SettingsManager = () => {
           <input class="admin__submit" type="submit" />
         </form>
       </Styled.Files>
-      
+      <Waivers />
     </Styled.Container>
   );
 };
