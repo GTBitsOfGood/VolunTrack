@@ -11,7 +11,7 @@ import initMiddleware from "../../../../lib/init-middleware";
 import validateMiddleware from "../../../../lib/validate-middleware";
 import { agenda } from "../../../../server/jobs";
 import { scheduler } from "../../../../server/jobs/scheduler";
-import { sendEventEmail } from "../../../utils/email";
+import { sendEventEmail } from "../../../utils/email.ts";
 
 const validateBody = initMiddleware(
   validateMiddleware(CREATE_EVENT_VALIDATOR, validationResult)
@@ -39,6 +39,11 @@ export default async function handler(req, res, next) {
       message: "Event successfully created!",
     });
   } else if (req.method === "PUT") {
+
+    const sendConfirmationEmail = req.body.sendConfirmationEmail;
+
+    req.body = req.body.event;
+
     await validateBody(req, res);
 
     const errors = validationResult(req);
@@ -59,7 +64,9 @@ export default async function handler(req, res, next) {
         content: `${event.title}`,
       },
     ];
-    await sendEventEmail(event, "event-update", emailTemplateVariables);
+    if (sendConfirmationEmail) {
+      await sendEventEmail(event, "event-update", emailTemplateVariables);
+    }
 
     res.json({
       event,
