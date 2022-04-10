@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useEffect, useState } from "react";
 import { Button } from "reactstrap";
-import Icon from "../../components/Icon";
+import styled from "styled-components";
 import { getCurrentUser } from "../../actions/queries";
+import Icon from "../../components/Icon";
 import SettingsEditModal from "./SettingsEditModal";
 import SettingsTable from "./SettingsTable";
 
@@ -14,7 +14,8 @@ const Styled = {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
   `,
   HeaderContainer: styled.div`
     width: 95%;
@@ -73,29 +74,18 @@ const SettingsManager = () => {
 
   return (
     <Styled.Container>
-      <Styled.HeaderContainer>
-        <Styled.Button onClick={onCreateClicked}>
-          <Icon color="grey3" name="add" />
-          <span style={{ color: "black" }}>Edit</span>
-        </Styled.Button>
-      </Styled.HeaderContainer>
+      <div>
+        <Styled.HeaderContainer>
+          <Styled.Button onClick={onCreateClicked}>
+            <Icon color="grey3" name="add" />
+            <span style={{ color: "black" }}>Edit</span>
+          </Styled.Button>
+        </Styled.HeaderContainer>
+      </div>
       <SettingsTable user={userData} loading={loading}>
         {" "}
       </SettingsTable>
       <SettingsEditModal open={showEditModal} toggle={toggleEditModal} />
-      <Styled.Files>
-        Adult
-        <form action="/api/waivers" enctype="multipart/form-data" method="POST">
-          <input type="file" class="admin__input" id="adult" name="adult" />
-          <input class="admin__submit" type="submit" />
-        </form>
-        Minor
-        <form action="/api/waivers" enctype="multipart/form-data" method="POST">
-          <input type="file" class="admin__input" id="minor" name="minor" />
-          <input class="admin__submit" type="submit" />
-        </form>
-      </Styled.Files>
-      
     </Styled.Container>
   );
 };

@@ -58,7 +58,7 @@ const EventTable = ({ events, user }) => {
                     <Table.Volunteers>
                       {event.volunteers.length + getMinorTotal(event.minors)}
                     </Table.Volunteers>
-                    <Table.Slots>VOLUNTEERS</Table.Slots>
+                    <Table.Slots>Volunteers Attended</Table.Slots>
                   </Table.Text>
                   <Table.TextInfo>
                     <Table.EventName>{event.title}</Table.EventName>

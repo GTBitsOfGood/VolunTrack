@@ -51,24 +51,10 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
     <Styled.Container>
       <Styled.ul>
         {events.map((event) => (
-          <Styled.List key={event}>
+          <Styled.List>
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Text>
-                    <Table.Volunteers>
-                      {event.volunteers.length + getMinorTotal(event.minors)}/
-                      {event.max_volunteers}{" "}
-                    </Table.Volunteers>
-                    <Table.Slots>SLOTS</Table.Slots>
-                  </Table.Text>
-                  <Table.TextInfo>
-                    <Table.EventName>{event.title}</Table.EventName>
-                    <Table.Time>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)}
-                    </Table.Time>
-                  </Table.TextInfo>
                   <Table.Edit>
                     <Styled.Button onClick={() => onEditClicked(event)}>
                       <Icon color="grey3" name="create" />
@@ -79,8 +65,26 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
                       <Icon color="grey3" name="delete" />
                     </Styled.Button>
                   </Table.Delete>
+                  <Table.Text>
+                    <Table.EventName>{event.title}</Table.EventName>
+                    <Table.Volunteers>
+                      {" "}
+                      {event.max_volunteers -
+                        event.volunteers.length +
+                        getMinorTotal(event.minors)}{" "}
+                      slots available
+                    </Table.Volunteers>
+                    <Table.Time>
+                      {convertTime(event.startTime)} -{" "}
+                      {convertTime(event.endTime)} EST
+                    </Table.Time>
+                  </Table.Text>
                 </Table.Inner>
-                <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
+                <Table.Creation>
+                  {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
+                  {event.date.slice(0, 4)}{" "}
+                </Table.Creation>
+
               </Table.EventList>
             </Link>
           </Styled.List>

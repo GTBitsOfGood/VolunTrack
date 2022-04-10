@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { Button } from "reactstrap";
-import Icon from "../../../components/Icon";
-import EventTable from "./EventTable";
-import { fetchEvents } from "../../../actions/queries";
-import EventCreateModal from "./EventCreateModal";
-import EventEditModal from "./EventEditModal";
-import EventDeleteModal from "./EventDeleteModal";
+import { differenceInCalendarDays } from 'date-fns';
+import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import { differenceInCalendarDays } from "date-fns";
+import 'react-calendar/dist/Calendar.css';
+import { Button } from "reactstrap";
+import styled from "styled-components";
+import { fetchEvents } from "../../../actions/queries";
+import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
+import EventCreateModal from "./EventCreateModal";
+import EventDeleteModal from "./EventDeleteModal";
+import EventEditModal from "./EventEditModal";
+import EventTable from "./EventTable";
 
 const isSameDay = (a) => (b) => {
   return differenceInCalendarDays(a, b) === 0;
@@ -25,6 +25,7 @@ const Styled = {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    overflow: hidden;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
@@ -133,6 +134,10 @@ const EventManager = () => {
     fetchEvents(selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
+          result.data.events = result.data.events.filter(function (event) {
+            const currentDate = new Date();
+            return new Date(event.date) > currentDate;
+          });
           setEvents(result.data.events);
         }
       })

@@ -20,7 +20,7 @@ const Label = styled(BLabel)`
 `;
 
 const FormGroup = styled(BFormGroup)`
-  width: 100%;
+  width: 92%;
 `;
 
 const Dropdown = styled(Input)`

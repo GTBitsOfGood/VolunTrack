@@ -1,9 +1,9 @@
-import nextConnect from "next-connect";
-import multer from "multer";
-import path from "path";
-import glob from "glob";
 import fs from "fs";
+import glob from "glob";
+import multer from "multer";
 import { getSession } from "next-auth/react";
+import nextConnect from "next-connect";
+import path from "path";
 
 const upload = multer({
   storage: multer.diskStorage({

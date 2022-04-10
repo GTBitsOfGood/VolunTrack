@@ -37,7 +37,8 @@ const LoadingBody = styled.div`
 const EventList = styled.div`
   width: 730px;
   height: 94px;
-  position: absolute;
+  position:absolute;
+  cursor: pointer;
 `;
 
 const Inner = styled.div`
@@ -77,7 +78,7 @@ const Text = styled.div`
   display: flex;
   flex-direction: column;
   margin: 12px;
-  align-items: center;
+  align-items: left;
 `;
 const TextInfo = styled.div`
   border-radius: 1px;
@@ -88,11 +89,19 @@ const TextInfo = styled.div`
   margin-top: 1.6vw;
 `;
 const Volunteers = styled.span`
-  font-size: 30px;
+  text-align:left;
+  font-size:12px;
+  left: 200px;
+  color:gray;
+  top: 21px;
+  position: absolute;
 `;
 const EventName = styled.span`
-  font-size: 16px;
-  color: ${variables.info};
+  font-size: 18px;
+  color: ${variables["yiq-text-dark"]};
+  text-align:left;
+  font-weight: bold;
+  top:5px;
 `;
 const Time = styled.span`
   font-size: 18px;

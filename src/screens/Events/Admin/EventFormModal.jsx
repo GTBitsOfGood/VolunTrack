@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Col, Row } from "reactstrap";
-import { ModalBody, ModalFooter, Button } from "reactstrap";
+import { ModalBody, ModalFooter, Button, FormGroup, Input, Col, Row } from "reactstrap";
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import PropTypes from "prop-types";
@@ -28,11 +27,19 @@ const Styled = {
     `,
     ModalBody: styled(ModalBody)`
       margin-left: 5rem;
-    `
+    `,
+    GenericText: styled.p`
+        color: ${variables["yiq-text-dark"]};
+    `,
+    Row: styled(Row)`
+        margin: 0.5rem 2rem 0.5rem 1rem;
+    `,
   };
 
 
-const EventFormModal = ({ toggle, event }) => {
+const EventFormModal = ({ toggle, event, han }) => {
+    const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
+
     const onSubmitCreateEvent = (values, setSubmitting) => {
         const event = {
             ...values,
@@ -50,12 +57,16 @@ const EventFormModal = ({ toggle, event }) => {
             _id: event._id,
         };
         setSubmitting(true);
-        editEvent(editedEvent);
+        editEvent(editedEvent, sendConfirmationEmail);
         toggle();
     };
 
     const containsExisitingEvent = (event) => {
         return event;
+    }
+
+    const onSendConfirmationEmailCheckbox = () => {
+        setSendConfirmationEmail(true);
     }
 
     const emptyStringField = "";
@@ -161,6 +172,15 @@ const EventFormModal = ({ toggle, event }) => {
                     </Row>
                 </SForm.FormGroup>
                 </Styled.Form>
+                {
+                    containsExisitingEvent(event) &&
+                    <Styled.Row>
+                        <FormGroup>
+                            <Input type="checkbox" onChange={onSendConfirmationEmailCheckbox}/>{''} 
+                        </FormGroup> 
+                        <Styled.GenericText>I would like to send a confirmation email</Styled.GenericText>
+                    </Styled.Row> 
+                }
             </Styled.ModalBody>
             <ModalFooter>
                 <Button 

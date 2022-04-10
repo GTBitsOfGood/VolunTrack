@@ -62,37 +62,54 @@ const Styled = {
     `,
     };
 
+const convertTime = (time) => {
+  console.log(time);
+  console.log(typeof(time));
+  let [hour, min] = time.split(":");
+  let hours = parseInt(hour);
+  let suffix = time[-2];
+  if (!(suffix in ["pm", "am", "PM", "AM"])) {
+    suffix = hours > 11 ? "pm" : "am";
+  }
+  hours = ((hours + 11) % 12) + 1;
+  return hours.toString() + ":" + min + suffix;
+};
+
 const EventRegisterInfoContainer = ({event, user}) => {
     const {
         email = "",
         phone_number = "",
      } = user?.bio ?? {};
+    
+    if (!event || !event.date) {
+        return <div />;
+    }
 
     return (
     <Styled.EventContainer>
         <Styled.EventRow>
-            <Styled.EventTitleText>Warehouse Loading</Styled.EventTitleText>
+            <Styled.EventTitleText>{event.title}</Styled.EventTitleText>
         </Styled.EventRow>
         <Styled.EventRow>
-            <Styled.DetailText>Help us move boxes from our trucks to the warehouse.</Styled.DetailText>
+            <Styled.DetailText>{event.description}</Styled.DetailText>
         </Styled.EventRow>
         <Styled.EventRow>
             <Styled.EventInfoCol xs="12" lg="3">
                 <Row>
                     <IconSpecial width="31" height="31" viewBox="0 0 31 31" name="date"/>
-                    <Styled.EventInfoText>March 19</Styled.EventInfoText>
+                    <Styled.EventInfoText>{event.date.slice(0, 10)}</Styled.EventInfoText>
                 </Row>
             </Styled.EventInfoCol>
             <Styled.EventInfoCol xs="12" lg="3">
                 <Row>
                     <IconSpecial width="24" height="24" viewBox="0 0 24 24" name="time"/>
-                    <Styled.EventInfoText>7:00AM - 4:00PM</Styled.EventInfoText>
+                    <Styled.EventInfoText>{convertTime(event.startTime)} - {convertTime(event.endTime)}</Styled.EventInfoText>
                 </Row>
             </Styled.EventInfoCol>
             <Styled.EventInfoCol xs="12" lg="4">
                 <Row>
                     <IconSpecial width="31" height="31" viewBox="0 0 31 31" name="location"/>
-                    <Styled.EventInfoText>521 Waffleburger Dr SW</Styled.EventInfoText>
+                    <Styled.EventInfoText>{event.address}</Styled.EventInfoText>
                 </Row>
             </Styled.EventInfoCol>
         </Styled.EventRow>
@@ -103,13 +120,13 @@ const EventRegisterInfoContainer = ({event, user}) => {
             <Col xs="12" lg="4">
                 <Row>
                     <IconSpecial width="24" height="24" viewBox="0 0 24 24" name="email"/>
-                    <Styled.ContactText>{email}</Styled.ContactText>
+                    <Styled.ContactText>info@helpingmamas.org</Styled.ContactText>
                 </Row>
             </Col>
             <Col xs="12" lg="4">
                 <Row>
                     <IconSpecial width="22" height="22" viewBox="0 0 22 22" name="phone"/>
-                    <Styled.ContactText>{phone_number}</Styled.ContactText>
+                    <Styled.ContactText>(770) 985-8010</Styled.ContactText>
                 </Row>
             </Col>
         </Styled.EventRow>
