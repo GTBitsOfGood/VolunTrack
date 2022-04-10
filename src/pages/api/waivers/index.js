@@ -93,6 +93,7 @@ apiRoute.get("/api/waivers/", async (req, res) => {
         result.adult = filePath;
       }
     }
+    if (!result.adult) result.adult = null;
   }
   if (minor) {
     for (const filePath of paths) {
@@ -102,6 +103,7 @@ apiRoute.get("/api/waivers/", async (req, res) => {
         result.minor = filePath;
       }
     }
+    if (!result.minor) result.minor = null;
   }
   return res.status(200).json(result);
 });
