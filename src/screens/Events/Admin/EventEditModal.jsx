@@ -4,7 +4,7 @@ import { Modal, ModalHeader } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 
 import PropTypes from "prop-types";
-import EventFormModal from "./EventFormModal"
+import EventFormModal from "./EventFormModal";
 import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
@@ -43,20 +43,17 @@ const Styled = {
     margin-right: 5rem;
     text-align: center;
     display: inline;
-  `
+  `,
 };
 
 const EventEditModal = ({ open, toggle, event }) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="xl">
-        <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
-        <Styled.HeaderText>
-          <p>Edit Event</p>
-        </Styled.HeaderText>
-        <EventFormModal
-        toggle={toggle}
-        event={event}>
-        </EventFormModal>    
+      <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
+      <Styled.HeaderText>
+        <p>Edit Event</p>
+      </Styled.HeaderText>
+      <EventFormModal toggle={toggle} event={event}></EventFormModal>
     </Modal>
   );
 };

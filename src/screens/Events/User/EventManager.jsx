@@ -14,19 +14,13 @@ import EventTable from "./EventTable";
 const Styled = {
   Container: styled.div`
     width: 100%;
-    height: 110%;
+    height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
-    flex-direction: column;
-    align-items: center;
-    overflow: hidden;
-  `,
-  HeaderContainer: styled.div`
-    width: 60%;
-    max-width: 80rem;
     display: flex;
-    justify-content: end;
-    margin: 0 auto;
+    flex-direction: row;
+    align-items: flex-start;
+    overflow: hidden;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
@@ -35,31 +29,18 @@ const Styled = {
     width: 7.5rem;
     height: 3rem;
     margin-top: 2rem;
+    margin-bottom: 2vw;
 
-    &:hover {
-      background: gainsboro;
-    }
     &:focus {
       background: white;
-      box-shadow: none;
+      outline: none;
+      border: none;
     }
   `,
-  Content: styled.div`
-    width: 60%;
-    height: 100%;
-    background: ${(props) => props.theme.grey9};
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    margin: 0 auto;
-    align-items: start;
-  `,
+  Content: styled.div``,
   EventContainer: styled.div`
-    width: 78%;
-    max-width: 80rem;
     display: flex;
-    flex-direction column;
-    justify-content: end;
+    flex-direction: column;
     margin-bottom: 1rem;
   `,
   Events: styled.div`
@@ -71,6 +52,16 @@ const Styled = {
     text-align: left;
     font-size: 28px;
     font-weight: bold;
+  `,
+  Left: styled.div`
+    margin-left: 10vw;
+    display: flex;
+    flex-direction: column;
+  `,
+  Right: styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 3vw;
   `,
 };
 
@@ -188,17 +179,11 @@ const EventManager = ({ user }) => {
 
   return (
     <Styled.Container>
-      <Styled.HeaderContainer>
+      <Styled.Left>
         <Styled.EventContainer>
           <Styled.Events>Events</Styled.Events>
           <Styled.Date>{value.toDateString()}</Styled.Date>
         </Styled.EventContainer>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
-        </Styled.Button>
-      </Styled.HeaderContainer>
-      <Styled.Content>
         <Calendar
           onChange={onChange}
           value={value}
@@ -206,16 +191,23 @@ const EventManager = ({ user }) => {
             setMarkDates({ date, view }, markDates)
           }
         />
-
-        <EventTable
-          events={events}
-          onRegisterClicked={onRegister}
-          onUnregister={onUnregister}
-          user={user}
-        >
-          {" "}
-        </EventTable>
-      </Styled.Content>
+      </Styled.Left>
+      <Styled.Right>
+        <Styled.Button onClick={onRefresh}>
+          <Icon color="grey3" name="refresh" />
+          <span>Refresh</span>
+        </Styled.Button>
+        <Styled.Content>
+          <EventTable
+            events={events}
+            onRegisterClicked={onRegister}
+            onUnregister={onUnregister}
+            user={user}
+          >
+            {" "}
+          </EventTable>
+        </Styled.Content>
+      </Styled.Right>
     </Styled.Container>
   );
 };
