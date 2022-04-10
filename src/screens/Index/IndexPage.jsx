@@ -10,6 +10,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     if (user.role === "admin") router.push("/events");
+    if (user.role === "volunteer") router.push("/home");
   });
 
   return (

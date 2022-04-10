@@ -87,34 +87,30 @@ const Text = styled.div`
   position:absolute;
 `;
 const Volunteers = styled.span`
-  width:72px;
-	height:49px;
-	text-align:center;
-	font-size:30px;
+  text-align:left;
+  font-size:12px;
   line-height:px;
-  left:16px;
-	top:-4px;
+  left: 200px;
+  color:gray;
+  top:8px;
   position:absolute;
 `;
 const EventName = styled.span`
-  width:267px;
 	height:24px;
 	text-align:left;
 	font-size:16px;
+  font-weight: bold;
   line-height:px;
-  color:${variables.info};
-  left:134px;
+  color:black;
 	top:5px;
   position:absolute;
 `;
 const Time = styled.span`
   width:446px;
 	height:22px;
-	left:134px;
 	top:32px;
 	text-align:left;
 	font-size:18px;
-  left:134px;
 	top:32px;
   position:absolute;
 `;
@@ -122,6 +118,7 @@ const Creation = styled.span`
   width:154px;
 	height:22px;
 	text-align:right;
+  color: gray;
 	font-size:12px;
   line-height:px;
   left:556px;

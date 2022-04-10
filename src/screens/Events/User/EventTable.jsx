@@ -40,11 +40,11 @@ const convertTime = (time) => {
 
 const getMinorTotal = (minors) => {
   let total = 0;
-  minors.forEach(minorObj => {
+  minors.forEach((minorObj) => {
     total += minorObj.minor.length;
   });
   return total;
-}
+};
 
 const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
   if (!user) {
@@ -59,7 +59,6 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Slots>SLOTS</Table.Slots>
                   <Table.Register>
                     {event.volunteers.includes(user._id) ? (
                       <>
@@ -77,16 +76,24 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
                   </Table.Register>
                   <Table.Text>
                     <Table.Volunteers>
-                      {event.volunteers.length + getMinorTotal(event.minors)}/{event.max_volunteers}{" "}
+                      {" "}
+                      {event.max_volunteers -
+                        event.volunteers.length +
+                        getMinorTotal(event.minors)}{" "}
+                      slots available
                     </Table.Volunteers>
                     <Table.EventName>{event.title}</Table.EventName>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)}
+                      {convertTime(event.endTime)} EST
                     </Table.Time>
                   </Table.Text>
                 </Table.Inner>
-                <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
+                <Table.Creation>
+                  {" "}
+                  {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
+                  {event.date.slice(0, 4)}{" "}
+                </Table.Creation>
               </Table.EventList>
             </Link>
           </Styled.List>
