@@ -21,7 +21,9 @@ const Styled = {
     height: 100%;
     margin: auto;
   `,
-  ul: styled.ul`
+  ul: styled.div`
+    display: flex;
+    flex-direction: column;
     list-style-type: none;
   `,
   List: styled.li`
@@ -129,13 +131,15 @@ const HomePageEventTable = ({
                         </Styled.Button>
                       </>
                     </Table.Register>
-                    <Table.Text>
-                      <Table.EventName>{event.title}</Table.EventName>
+                    <Table.TextInfo>
+                      <Table.TitleAddNums>
+                        <Table.EventName>{event.title}</Table.EventName>
+                      </Table.TitleAddNums>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
                         {convertTime(event.endTime)} EST
                       </Table.Time>
-                    </Table.Text>
+                    </Table.TextInfo>
                   </Table.Inner>
                   <Table.Creation style={creationStyle}>
                     {" "}
@@ -159,20 +163,22 @@ const HomePageEventTable = ({
                   <Table.Inner style={{width: "55vw"}}>
                     <Table.Register style={registerButtonStyle}>
                     </Table.Register>
-                    <Table.Text>
-                      <Table.Volunteers>
-                        {" "}
-                        {event.max_volunteers -
-                          event.volunteers.length +
-                          getMinorTotal(event.minors)}{" "}
-                        slots available
-                      </Table.Volunteers>
-                      <Table.EventName>{event.title}</Table.EventName>
+                    <Table.TextInfo>
+                      <Table.TitleAddNums>
+                        <Table.EventName>{event.title}</Table.EventName>
+                        <Table.Volunteers>
+                          {" "}
+                          {event.max_volunteers -
+                            event.volunteers.length +
+                            getMinorTotal(event.minors)}{" "}
+                          slots available
+                        </Table.Volunteers>
+                      </Table.TitleAddNums>
                       <Table.Time>
-                        {convertTime(event.startTime)} -{" "}
-                        {convertTime(event.endTime)} EST
-                      </Table.Time>
-                    </Table.Text>
+                      {convertTime(event.startTime)} -{" "}
+                      {convertTime(event.endTime)} EST
+                    </Table.Time>
+                   </Table.TextInfo>
                   </Table.Inner>
                   <Table.Creation style={creationStyle}>
                     {" "}
@@ -207,20 +213,16 @@ const HomePageEventTable = ({
                         </Styled.Button>
                       </>
                     </Table.Register>
-                    <Table.Text>
-                      <Table.Volunteers>
-                        {" "}
-                        {event.max_volunteers -
-                          event.volunteers.length +
-                          getMinorTotal(event.minors)}{" "}
-                        slots available
-                      </Table.Volunteers>
-                      <Table.EventName>{event.title}</Table.EventName>
+                    <Table.TextInfo>
+                      <Table.TitleAddNums>
+                        <Table.EventName>{event.title}</Table.EventName>
+                      </Table.TitleAddNums>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
                         {convertTime(event.endTime)} EST
                       </Table.Time>
-                    </Table.Text>
+
+                    </Table.TextInfo>
                   </Table.Inner>
                   <Table.Creation style={creationStyle}>
                     {" "}
@@ -244,20 +246,22 @@ const HomePageEventTable = ({
               <Link href={`events/${event._id}`}>
                 <Table.EventList style={eventListStyle}>
                   <Table.Inner style={{width: "55vw"}}>
-                    <Table.Text>
-                      <Table.Volunteers>
-                        {" "}
-                        {event.max_volunteers -
-                          event.volunteers.length +
-                          getMinorTotal(event.minors)}{" "}
-                        slots available
-                      </Table.Volunteers>
-                      <Table.EventName>{event.title}</Table.EventName>
+                    <Table.TextInfo>
+                      <Table.TitleAddNums>
+                        <Table.EventName>{event.title}</Table.EventName>
+                        <Table.Volunteers>
+                          {" "}
+                          {event.max_volunteers -
+                            event.volunteers.length +
+                            getMinorTotal(event.minors)}{" "}
+                          slots available
+                        </Table.Volunteers>
+                      </Table.TitleAddNums>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
                         {convertTime(event.endTime)} EST
                       </Table.Time>
-                    </Table.Text>
+                    </Table.TextInfo>
                   </Table.Inner>
                   <Table.Creation style={creationStyle}>
                     {" "}

@@ -14,7 +14,7 @@ import HomePageEventTable from "./HomePageEventTable";
 const Styled = {
   Container: styled.div`
     width: 100%;
-    height: 110%;
+    height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     flex-direction: column;
@@ -45,7 +45,7 @@ const Styled = {
     }
   `,
   Content: styled.div`
-    width: 60%;
+    width: 54%;
     height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;

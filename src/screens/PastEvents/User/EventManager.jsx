@@ -19,6 +19,7 @@ const Styled = {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
+    overflow: hidden;
   `,
   Left: styled.div`
     margin-left: 10vw;
