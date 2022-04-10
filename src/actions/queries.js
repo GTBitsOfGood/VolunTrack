@@ -45,7 +45,18 @@ export const fetchUserCount = () => axios.get("/api/users/count");
 export const updateApplicantStatus = (email, status) =>
   axios.post(`/api/users/updateStatus?email=${email}&status=${status}`);
 
-export const updateUser = (email, first, last, number, birthday, zip, hours, address, city, state) => {
+export const updateUser = (
+  email,
+  first,
+  last,
+  number,
+  birthday,
+  zip,
+  hours,
+  address,
+  city,
+  state
+) => {
   var query = "";
   if (first.length != 0) {
     query += "first_name=" + first + "&";
@@ -99,14 +110,18 @@ export const fetchVolunteers = (eventVolunteers) => {
   );
 };
 
-export const fetchEvents = (startDate, endDate) => axios.get(`/api/events?startDate=${startDate}&endDate=${endDate}`);
+export const fetchEvents = (startDate, endDate) =>
+  axios.get(`/api/events?startDate=${startDate}&endDate=${endDate}`);
 
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
 export const createEvent = (event) => axios.post("/api/events", event);
 
-export const editEvent = (event) => axios.put("/api/events", event);
+export const editEvent = (event, sendConfirmationEmail) => axios.put("/api/events", { event: event, sendConfirmationEmail: sendConfirmationEmail});
 
 export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
 
 export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
+
+export const getWaiverPaths = () =>
+  axios.get("/api/waivers?adult=true&minor=true");
