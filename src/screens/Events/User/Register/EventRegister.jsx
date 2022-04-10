@@ -268,10 +268,6 @@ const EventRegister = (event) => {
             <Styled.MainText>Confirm Registration</Styled.MainText>
           </Col>
           <Col xs="12" lg={{ size: 4, offset: 2 }}>
-            <Row>
-              <Styled.VolunteerNumberText>30/100 </Styled.VolunteerNumberText>
-              <Styled.VolunteerText> Spots Remaining</Styled.VolunteerText>
-            </Row>
           </Col>
         </Styled.Row>
       )}
@@ -329,7 +325,9 @@ const EventRegister = (event) => {
       <Styled.Row />
       <Styled.Row>
         <Styled.SectionText>Event Information</Styled.SectionText>
-        <Styled.LinkedText>Visit Event Page</Styled.LinkedText>
+        <Link href={`/events/${eventId}`}>
+          <Styled.LinkedText style={{ cursor: "pointer" }}>Visit Event Page</Styled.LinkedText>
+        </Link>
       </Styled.Row>
       <Styled.Row>
         <EventRegisterInfoContainer event={events} user={user} />
@@ -337,7 +335,7 @@ const EventRegister = (event) => {
       <Styled.Row>
         <Styled.SectionText>Your Group</Styled.SectionText>
         <Link href={`/events/${eventId}/register`}>
-          <Styled.LinkedText onClick={onAddMinorClicked}>
+          <Styled.LinkedText style={{ cursor: "pointer" }} onClick={onAddMinorClicked}>
             Add Minor (under 13 years old)
           </Styled.LinkedText>
         </Link>
@@ -350,7 +348,7 @@ const EventRegister = (event) => {
           id="minorMaxTipTool"
         />
         <UncontrolledTooltip placement="right" target="minorMaxTipTool">
-          The maximum number of minors per guardian is 5.
+          The maximum number of minors per guardian is 5. Minors above 13 years need to make their account and register.
         </UncontrolledTooltip>
       </Styled.Row>
       <Styled.AccomodationRow>

@@ -120,13 +120,13 @@ const EventRegisterInfoContainer = ({event, user}) => {
             <Col xs="12" lg="4">
                 <Row>
                     <IconSpecial width="24" height="24" viewBox="0 0 24 24" name="email"/>
-                    <Styled.ContactText>{email}</Styled.ContactText>
+                    <Styled.ContactText>info@helpingmamas.org</Styled.ContactText>
                 </Row>
             </Col>
             <Col xs="12" lg="4">
                 <Row>
                     <IconSpecial width="22" height="22" viewBox="0 0 22 22" name="phone"/>
-                    <Styled.ContactText>{phone_number}</Styled.ContactText>
+                    <Styled.ContactText>(770) 985-8010</Styled.ContactText>
                 </Row>
             </Col>
         </Styled.EventRow>

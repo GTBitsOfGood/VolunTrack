@@ -106,9 +106,6 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
           setHasMinorTrue(firstName, lastName);
           setShowSuccess(true);
         }
-        // } else {
-        //   setDisplayError(true);
-        // }
         setFirstName("");
         setLastName("");
       }}
@@ -144,16 +141,16 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
               <Styled.Row>
                 <FormGroup check>
-                  <Input type="checkbox" onClick={(e) => { toggleCheck(e); }} />{" "}
+                  <Input type="checkbox" checked={checked} onClick={(e) => { toggleCheck(e); }} />{" "}
                 </FormGroup>
                 <Styled.Text>This volunteer is under the age of 13</Styled.Text>
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={addAndClose}>
+              <Button color="secondary" disabled={!checked || firstName == "" || lastName == ""} onClick={addAndClose}>
                 Add and Close
               </Button>
-              <Button color="primary" onClick={handleSubmit}>
+              <Button color="primary" disabled={!checked || firstName == "" || lastName == ""} onClick={handleSubmit}>
                 Add Another
               </Button>
             </ModalFooter>
@@ -176,24 +173,6 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.ConfirmationModal>
             )}
           </React.Fragment>
-          {/* <React.Fragment>
-            {displayError && (
-              <Styled.ConfirmationModal isOpen={open} toggle={toggle} size="lg">
-                <Styled.Container>
-                  <Row>
-                    <Styled.Col xs="11">
-                      <Styled.Text>
-                        Minor will need to make an account and register themselves.
-                      </Styled.Text>
-                    </Styled.Col>
-                    <Styled.Col xs="1">
-                      <Button close onClick={addAndClose} />
-                    </Styled.Col>
-                  </Row>
-                </Styled.Container>
-              </Styled.ConfirmationModal>
-            )}
-          </React.Fragment> */}
         </React.Fragment>
       )}
     />
