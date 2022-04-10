@@ -65,7 +65,6 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [checked, setCheck] = useState(false);
-  // const [displayError, setDisplayError] = useState(false)
 
   const handleSubmit = (values) => {
     const name = {
@@ -81,9 +80,6 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
     if (checked && firstName !== "" && lastName !== "") {
       setHasMinorTrue(firstName, lastName);
     }
-    // } else {
-    //   setDisplayError(true);
-    // }
     setFirstName("");
     setLastName("");
     toggle();
