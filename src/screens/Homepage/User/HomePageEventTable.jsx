@@ -81,7 +81,6 @@ const creationStyle = {
 
 const HomePageEventTable = ({
   events,
-  onRegisterClicked,
   onUnregister,
   user,
 }) => {
@@ -304,7 +303,6 @@ const HomePageEventTable = ({
 };
 HomePageEventTable.propTypes = {
   events: PropTypes.Array,
-  onRegisterClicked: PropTypes.func,
   onUnregister: PropTypes.func,
   user: PropTypes.object,
 };

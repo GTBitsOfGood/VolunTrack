@@ -13,11 +13,5 @@ export const eventValidator = object().shape({
   description: string().trim().required(),
 });
 
-export const registerForEvent = async (data) =>
-  (await axios.post(`/api/events/${data.event._id}/register`, data)).data;
-
 export const updateEvent = async (event) =>
   (await axios.put(`/api/events/${event._id}`, event)).data;
-
-export const getEventVolunteersList = async (event) => 
-  await axios.get(`/api/events/${event._id}/volunteers`);
