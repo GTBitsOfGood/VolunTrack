@@ -1,6 +1,5 @@
 const { updateEventID } = require("../../../../../server/actions/events");
 const User = require("../../../../../server/mongodb/models/User");
-
 import { sendUserEmail } from "../../../../utils/email";
 
 export default async function handler(req, res, next) {
