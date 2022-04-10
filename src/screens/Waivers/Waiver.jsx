@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
+import { deleteWaiver } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
 
 const WaiverContainer = styled.div`
@@ -63,11 +64,15 @@ const Waiver = ({ filePath }) => {
   const getFileNameFromPath = (filePath) =>
     filePath.split("\\").pop().split("/").pop();
 
-  const replace = () => {
+  const handleReplace = () => {
     setIsReplacing(true);
   };
-  const cancelReplace = () => {
+  const handleCancelReplace = () => {
     setIsReplacing(false);
+  };
+  const handleDelete = async () => {
+    const deleteWaiverResponse = await deleteWaiver(getWaiverType(filePath));
+    console.log(deleteWaiverResponse);
   };
 
   return (
@@ -94,7 +99,7 @@ const Waiver = ({ filePath }) => {
             id={getWaiverType(filePath)}
             name={getWaiverType(filePath)}
           />
-          <CancelButton onClick={cancelReplace}>Cancel</CancelButton>
+          <CancelButton onClick={handleCancelReplace}>Cancel</CancelButton>
         </ReplaceForm>
       )}
       {isReplacing ? (
@@ -102,9 +107,9 @@ const Waiver = ({ filePath }) => {
           Submit
         </SubmitButton>
       ) : (
-        <ReplaceButton onClick={replace}>Replace</ReplaceButton>
+        <ReplaceButton onClick={handleReplace}>Replace</ReplaceButton>
       )}
-      <DeleteButton>Delete</DeleteButton>
+      <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
     </WaiverContainer>
   );
 };
