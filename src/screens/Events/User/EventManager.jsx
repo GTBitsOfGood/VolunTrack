@@ -14,11 +14,12 @@ import EventTable from "./EventTable";
 const Styled = {
   Container: styled.div`
     width: 100%;
-    height: 100%;
+    height: 110%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
   `,
   HeaderContainer: styled.div`
     width: 60%;
@@ -97,6 +98,10 @@ const EventManager = ({ user }) => {
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
+          result.data.events = result.data.events.filter(function (event) {
+            const currentDate = new Date();
+            return new Date(event.date) > currentDate;
+          });
           setEvents(result.data.events);
           setDates(result.data.events);
         }

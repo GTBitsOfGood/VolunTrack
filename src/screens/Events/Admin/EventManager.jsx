@@ -141,6 +141,10 @@ const EventManager = () => {
     fetchEvents(selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
+          result.data.events = result.data.events.filter(function (event) {
+            const currentDate = new Date();
+            return new Date(event.date) > currentDate;
+          });
           setEvents(result.data.events);
         }
       })

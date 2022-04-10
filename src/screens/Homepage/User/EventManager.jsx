@@ -14,11 +14,12 @@ import HomePageEventTable from "./HomePageEventTable";
 const Styled = {
   Container: styled.div`
     width: 100%;
-    height: 100%;
+    height: 110%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
   `,
   HeaderContainer: styled.div`
     width: 60%;

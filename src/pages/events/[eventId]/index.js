@@ -5,6 +5,7 @@ import { Button } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { useSession } from "next-auth/react";
+import { updateEvent } from "../../../screens/Events/User/eventHelpers";
 
 const Styled = {
   Button: styled(Button)`
@@ -115,6 +116,20 @@ const EventInfo = () => {
     router.replace(`${eventId}/register`);
   };
 
+  const onUnregisterClicked = async (event) => {
+    const changedEvent = {
+      // remove current user id from event volunteers
+      ...event,
+      volunteers: event.volunteers.filter(
+        (volunteer) => volunteer !== user._id
+      ),
+    };
+    const updatedEvent = await updateEvent(changedEvent);
+    
+    onRefresh();
+  };
+
+  const futureDate = new Date(event.date) > new Date();
   return (
     <>
       <Styled.EventTable>
@@ -167,9 +182,15 @@ const EventInfo = () => {
         </Styled.EventCol2>
       </Styled.EventTable>
       {user.role == "volunteer" &&
-        event.max_volunteers - event.volunteers.length != 0 && (
+        event.max_volunteers - event.volunteers.length != 0 && !event.volunteers.includes(user._id) && futureDate && (
           <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
+          </Styled.Button>
+        )}
+      {user.role == "volunteer" &&
+        event.volunteers.includes(user._id) && futureDate && (
+          <Styled.Button onClick={() => onUnregisterClicked(event)}>
+            Unregister
           </Styled.Button>
         )}
     </>
