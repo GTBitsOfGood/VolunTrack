@@ -133,12 +133,6 @@ const EventManager = ({ user }) => {
 
   return (
     <Styled.Container>
-      <Styled.HeaderContainer>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
-        </Styled.Button>
-      </Styled.HeaderContainer>
       <Styled.Content>
         <HomePageEventTable
           events={events}

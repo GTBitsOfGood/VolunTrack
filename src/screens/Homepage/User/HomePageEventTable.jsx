@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/tableStyles";
 import { fetchEvents } from "../../../actions/queries";
+import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Button: styled(Button)`
@@ -32,6 +33,16 @@ const Styled = {
     font-weight: bold;
     width: 50%;
   `,
+  LinkedText: styled.p`
+  color: ${variables["primary"]};
+  font-size: 0.9rem;
+  font-weight: 900;
+  text-align: left;
+  text-decoration: underline;
+  padding-top: 0.4rem;
+  overflow-wrap: break-word;
+  cursor: pointer;
+  `
 };
 
 const convertTime = (time) => {
@@ -53,6 +64,21 @@ const getMinorTotal = (minors) => {
   return total;
 };
 
+const registerButtonStyle = {
+  "right": 0,
+  "left": "unset"
+}
+
+const eventListStyle = {
+  "width": "unset"
+}
+
+const creationStyle = {
+  "text-align": "left",
+  "right": 0,
+  "left": "unset"
+}
+
 const HomePageEventTable = ({
   events,
   onRegisterClicked,
@@ -63,13 +89,9 @@ const HomePageEventTable = ({
     const { data: session } = useSession();
     user = session.user;
   }
-  const registeredEvents = events.filter(function (event) {
-    return event.volunteers.includes(user._id);
-  });
+
   var upcomingEvents = events.filter(function (event) {
     const currentDate = new Date();
-    console.log(event.date);
-    console.log(currentDate);
     return new Date(event.date) > currentDate;
   });
   upcomingEvents.sort(function (a, b) {
@@ -77,21 +99,30 @@ const HomePageEventTable = ({
     var d = new Date(b.date);
     return c - d;
   });
+
+  const registeredEvents = upcomingEvents.filter(function (event) {
+    return event.volunteers.includes(user._id);
+  });
+
   if (upcomingEvents.length > 5) {
     upcomingEvents = upcomingEvents.slice(0, 5);
+  }
+
+  if (registeredEvents.length > 2) {
+    upcomingEvents = upcomingEvents.slice(0, 2);
   }
 
   if (registeredEvents.length > 0 && upcomingEvents.length > 0) {
     return (
       <Styled.Container>
         <Styled.ul>
-          <Styled.Events>Your Registered Events</Styled.Events>
+          <Styled.Events>Your Upcoming Events</Styled.Events>
           {registeredEvents.map((event) => (
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
-                <Table.EventList>
-                  <Table.Inner>
-                    <Table.Register>
+                <Table.EventList style={eventListStyle}>
+                  <Table.Inner style={{width: "55vw"}}>
+                    <Table.Register style={registerButtonStyle}>
                       <>
                         <Styled.Button onClick={() => onUnregister(event)}>
                           <Icon color="grey3" name="delete" />
@@ -100,13 +131,6 @@ const HomePageEventTable = ({
                       </>
                     </Table.Register>
                     <Table.Text>
-                      <Table.Volunteers>
-                        {" "}
-                        {event.max_volunteers -
-                          event.volunteers.length +
-                          getMinorTotal(event.minors)}{" "}
-                        slots available
-                      </Table.Volunteers>
                       <Table.EventName>{event.title}</Table.EventName>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
@@ -114,7 +138,7 @@ const HomePageEventTable = ({
                       </Table.Time>
                     </Table.Text>
                   </Table.Inner>
-                  <Table.Creation>
+                  <Table.Creation style={creationStyle}>
                     {" "}
                     {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
                     {event.date.slice(0, 4)}{" "}
@@ -126,13 +150,15 @@ const HomePageEventTable = ({
         </Styled.ul>
 
         <Styled.ul>
-          <Styled.Events>New Events</Styled.Events>
+          <Styled.Events>
+            New Events 
+          </Styled.Events>
           {upcomingEvents.map((event) => (
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
-                <Table.EventList>
-                  <Table.Inner>
-                    <Table.Register>
+                <Table.EventList style={eventListStyle}>
+                  <Table.Inner style={{width: "55vw"}}>
+                    <Table.Register style={registerButtonStyle}>
                       {event.volunteers.includes(user._id) ? (
                         <>
                           <Styled.Button onClick={() => onUnregister(event)}>
@@ -140,12 +166,8 @@ const HomePageEventTable = ({
                             <span>Unregister</span>
                           </Styled.Button>
                         </>
-                      ) : (
-                        <Styled.Button onClick={() => onRegisterClicked(event)}>
-                          <Icon color="grey3" name="add" />
-                          <span>Sign up</span>
-                        </Styled.Button>
-                      )}
+                      ) : (null)
+                      }
                     </Table.Register>
                     <Table.Text>
                       <Table.Volunteers>
@@ -162,7 +184,7 @@ const HomePageEventTable = ({
                       </Table.Time>
                     </Table.Text>
                   </Table.Inner>
-                  <Table.Creation>
+                  <Table.Creation style={creationStyle}>
                     {" "}
                     {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
                     {event.date.slice(0, 4)}{" "}
@@ -171,6 +193,9 @@ const HomePageEventTable = ({
               </Link>
             </Styled.List>
           ))}
+        <Link href={`/events`}>
+          <Styled.LinkedText>View More</Styled.LinkedText>
+        </Link>
         </Styled.ul>
       </Styled.Container>
     );
@@ -178,13 +203,13 @@ const HomePageEventTable = ({
     return (
       <Styled.Container>
         <Styled.ul>
-          <Styled.Events>Your Registered Events</Styled.Events>
+          <Styled.Events>Your Upcoming Events</Styled.Events>
           {registeredEvents.map((event) => (
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
-                <Table.EventList>
-                  <Table.Inner>
-                    <Table.Register>
+                <Table.EventList style={eventListStyle}>
+                  <Table.Inner style={{width: "55vw"}}>
+                    <Table.Register style={registerButtonStyle}>
                       <>
                         <Styled.Button onClick={() => onUnregister(event)}>
                           <Icon color="grey3" name="delete" />
@@ -207,7 +232,7 @@ const HomePageEventTable = ({
                       </Table.Time>
                     </Table.Text>
                   </Table.Inner>
-                  <Table.Creation>
+                  <Table.Creation style={creationStyle}>
                     {" "}
                     {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
                     {event.date.slice(0, 4)}{" "}
@@ -227,9 +252,9 @@ const HomePageEventTable = ({
           {upcomingEvents.map((event) => (
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
-                <Table.EventList>
-                  <Table.Inner>
-                    <Table.Register>
+                <Table.EventList style={eventListStyle}>
+                  <Table.Inner style={{width: "55vw"}}>
+                    <Table.Register style={registerButtonStyle}>
                       {event.volunteers.includes(user._id) ? (
                         <>
                           <Styled.Button onClick={() => onUnregister(event)}>
@@ -237,12 +262,7 @@ const HomePageEventTable = ({
                             <span>Unregister</span>
                           </Styled.Button>
                         </>
-                      ) : (
-                        <Styled.Button onClick={() => onRegisterClicked(event)}>
-                          <Icon color="grey3" name="add" />
-                          <span>Sign up</span>
-                        </Styled.Button>
-                      )}
+                      ) : ( null)}
                     </Table.Register>
                     <Table.Text>
                       <Table.Volunteers>
@@ -259,7 +279,7 @@ const HomePageEventTable = ({
                       </Table.Time>
                     </Table.Text>
                   </Table.Inner>
-                  <Table.Creation>
+                  <Table.Creation style={creationStyle}>
                     {" "}
                     {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
                     {event.date.slice(0, 4)}{" "}
@@ -268,6 +288,9 @@ const HomePageEventTable = ({
               </Link>
             </Styled.List>
           ))}
+          <Link href={`/events`}>
+            <Styled.LinkedText>View More</Styled.LinkedText>
+          </Link>
         </Styled.ul>
       </Styled.Container>
     );
