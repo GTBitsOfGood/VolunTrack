@@ -8,26 +8,18 @@ import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/tableStyles";
 
 const Styled = {
-  Button: styled(Button)`
-    background: white;
-    border: none;
-    color: #000;
-    padding: 0;
-  `,
   Container: styled.div`
     width: 100%;
     height: 100%;
     margin: auto;
   `,
-  ul: styled.ul`
-    list-style-type: none;
+  ul: styled.div`
+    display: flex;
+    flex-direction: column;
   `,
-  List: styled.li`
+  List: styled.div`
     padding-bottom: 120px;
   `,
-  Slots: styled.h1`
-    margin: -50px;
-  `
 };
 
 const convertTime = (time) => {
@@ -43,13 +35,13 @@ const convertTime = (time) => {
 
 const getMinorTotal = (minors) => {
   let total = 0;
-  minors.forEach(minorObj => {
+  minors.forEach((minorObj) => {
     total += minorObj.minor.length;
   });
   return total;
-}
+};
 
-const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
+const EventTable = ({ events, user }) => {
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -62,17 +54,19 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Slots>ATTENDED</Table.Slots>
                   <Table.Text>
                     <Table.Volunteers>
                       {event.volunteers.length + getMinorTotal(event.minors)}
                     </Table.Volunteers>
+                    <Table.Slots>VOLUNTEERS</Table.Slots>
+                  </Table.Text>
+                  <Table.TextInfo>
                     <Table.EventName>{event.title}</Table.EventName>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
                       {convertTime(event.endTime)}
                     </Table.Time>
-                  </Table.Text>
+                  </Table.TextInfo>
                 </Table.Inner>
                 <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
               </Table.EventList>

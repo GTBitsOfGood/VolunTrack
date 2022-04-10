@@ -26,7 +26,7 @@ const Styled = {
     padding-bottom: 120px;
   `,
   Slots: styled.h1`
-    margin: -50px;
+    margin-left: -50px;
   `
 };
 

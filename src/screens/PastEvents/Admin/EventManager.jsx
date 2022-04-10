@@ -17,15 +17,18 @@ const Styled = {
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
   `,
-  HeaderContainer: styled.div`
-    width: 60%;
-    max-width: 80rem;
+  Left: styled.div`
+    margin-left: 10vw;
     display: flex;
-    justify-content: flex-start;
-    margin: 0 auto;
+    flex-direction: column;
+  `,
+  Right: styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 3vw;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
@@ -34,6 +37,13 @@ const Styled = {
     width: 7.5rem;
     height: 3rem;
     margin-top: 2rem;
+    margin-bottom: 2vw;
+
+    &:focus {
+      background: white;
+      outline: none;
+      border: none;
+    }
   `,
   Events: styled.div`
     text-align: left;
@@ -41,7 +51,7 @@ const Styled = {
     font-weight: bold;
   `,
   EventContainer: styled.div`
-    width: 78%;
+    width: auto;
     max-width: 80rem;
     display: flex;
     flex-direction: column;
@@ -74,7 +84,7 @@ const Styled = {
     padding-top: 8px;
     text-decoration: underline;
     color: ${variables.primary};
-  `
+  `,
 };
 
 const EventManager = ({ user }) => {
@@ -170,20 +180,14 @@ const EventManager = ({ user }) => {
 
   return (
     <Styled.Container>
-      <Styled.HeaderContainer>
+      <Styled.Left>
         <Styled.EventContainer>
-            <Styled.Events>Events</Styled.Events>
-            <Styled.DateRow>
-              <Styled.Date>{value.toDateString()}</Styled.Date>
-              <Styled.Back>Back to Today</Styled.Back>
-            </Styled.DateRow>
+          <Styled.Events>Events</Styled.Events>
+          <Styled.DateRow>
+            <Styled.Date>{value.toDateString()}</Styled.Date>
+            <Styled.Back>Back to Today</Styled.Back>
+          </Styled.DateRow>
         </Styled.EventContainer>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="add" />
-          <span style={{ color: "white"}}>Create</span>
-        </Styled.Button>
-      </Styled.HeaderContainer>
-      <Styled.Content>
         <Calendar
           onChange={onChange}
           value={value}
@@ -191,6 +195,12 @@ const EventManager = ({ user }) => {
             setMarkDates({ date, view }, markDates)
           }
         />
+      </Styled.Left>
+      <Styled.Right>
+        <Styled.Button onClick={onRefresh}>
+          <Icon color="grey3" name="add" />
+          <span style={{ color: "white" }}>Create</span>
+        </Styled.Button>
 
         <EventTable
           events={events}
@@ -200,8 +210,7 @@ const EventManager = ({ user }) => {
         >
           {" "}
         </EventTable>
-      </Styled.Content>
-
+      </Styled.Right>
     </Styled.Container>
   );
 };
