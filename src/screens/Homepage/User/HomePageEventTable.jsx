@@ -158,15 +158,6 @@ const HomePageEventTable = ({
                 <Table.EventList style={eventListStyle}>
                   <Table.Inner style={{width: "55vw"}}>
                     <Table.Register style={registerButtonStyle}>
-                      {event.volunteers.includes(user._id) ? (
-                        <>
-                          <Styled.Button onClick={() => onUnregister(event)}>
-                            <Icon color="grey3" name="delete" />
-                            <span>Unregister</span>
-                          </Styled.Button>
-                        </>
-                      ) : (null)
-                      }
                     </Table.Register>
                     <Table.Text>
                       <Table.Volunteers>
@@ -253,16 +244,6 @@ const HomePageEventTable = ({
               <Link href={`events/${event._id}`}>
                 <Table.EventList style={eventListStyle}>
                   <Table.Inner style={{width: "55vw"}}>
-                    <Table.Register style={registerButtonStyle}>
-                      {event.volunteers.includes(user._id) ? (
-                        <>
-                          <Styled.Button onClick={() => onUnregister(event)}>
-                            <Icon color="grey3" name="delete" />
-                            <span>Unregister</span>
-                          </Styled.Button>
-                        </>
-                      ) : ( null)}
-                    </Table.Register>
                     <Table.Text>
                       <Table.Volunteers>
                         {" "}
