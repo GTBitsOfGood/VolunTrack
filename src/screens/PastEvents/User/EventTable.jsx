@@ -19,15 +19,14 @@ const Styled = {
     height: 100%;
     margin: auto;
   `,
-  ul: styled.ul`
+  ul: styled.div`
+    display: flex;
+    flex-direction: column;
     list-style-type: none;
   `,
   List: styled.li`
     padding-bottom: 120px;
   `,
-  Slots: styled.h1`
-    margin-left: -50px;
-  `
 };
 
 const convertTime = (time) => {
@@ -43,11 +42,11 @@ const convertTime = (time) => {
 
 const getMinorTotal = (minors) => {
   let total = 0;
-  minors.forEach(minorObj => {
+  minors.forEach((minorObj) => {
     total += minorObj.minor.length;
   });
   return total;
-}
+};
 
 const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
   if (!user) {
@@ -62,32 +61,22 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Slots>ATTENDED</Table.Slots>
-                  {/* <Table.Register>
-                    {event.volunteers.includes(user._id) ? (
-                      <>
-                        <Styled.Button onClick={() => onUnregister(event)}>
-                          <Icon color="grey3" name="delete" />
-                          <span>Unregister</span>
-                        </Styled.Button>
-                      </>
-                    ) : (
-                      <Styled.Button onClick={() => onRegisterClicked(event)}>
-                        <Icon color="grey3" name="add" />
-                        <span>Sign up</span>
-                      </Styled.Button>
-                    )}
-                  </Table.Register> */}
-                  <Table.Text>
-                    <Table.Volunteers>
-                      {event.volunteers.length + getMinorTotal(event.minors)}
-                    </Table.Volunteers>
-                    <Table.EventName>{event.title}</Table.EventName>
+                  <Table.TextInfo>
+                    <Table.TitleAddNums>
+                      <Table.EventName>{event.title}</Table.EventName>
+                      <Table.Text>
+                        <Table.Volunteers>
+                          {event.volunteers.length +
+                            getMinorTotal(event.minors)}
+                        </Table.Volunteers>
+                        <Table.Slots>Volunteers Attended</Table.Slots>
+                      </Table.Text>
+                    </Table.TitleAddNums>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
                       {convertTime(event.endTime)}
                     </Table.Time>
-                  </Table.Text>
+                  </Table.TextInfo>
                 </Table.Inner>
                 <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
               </Table.EventList>

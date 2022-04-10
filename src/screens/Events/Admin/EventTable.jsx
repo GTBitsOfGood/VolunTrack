@@ -51,7 +51,7 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
     <Styled.Container>
       <Styled.ul>
         {events.map((event) => (
-          <Styled.List>
+          <Styled.List key={event._id}>
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
@@ -65,26 +65,27 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
                       <Icon color="grey3" name="delete" />
                     </Styled.Button>
                   </Table.Delete>
-                  <Table.Text>
-                    <Table.EventName>{event.title}</Table.EventName>
-                    <Table.Volunteers>
-                      {" "}
-                      {event.max_volunteers -
-                        event.volunteers.length +
-                        getMinorTotal(event.minors)}{" "}
-                      slots available
-                    </Table.Volunteers>
+                  <Table.TextInfo>
+                    <Table.TitleAddNums>
+                      <Table.EventName>{event.title}</Table.EventName>
+                      <Table.Volunteers>
+                        {" "}
+                        {event.max_volunteers -
+                          event.volunteers.length +
+                          getMinorTotal(event.minors)}{" "}
+                        slots available
+                      </Table.Volunteers>
+                    </Table.TitleAddNums>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
                       {convertTime(event.endTime)} EST
                     </Table.Time>
-                  </Table.Text>
+                  </Table.TextInfo>
                 </Table.Inner>
                 <Table.Creation>
                   {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
                   {event.date.slice(0, 4)}{" "}
                 </Table.Creation>
-
               </Table.EventList>
             </Link>
           </Styled.List>

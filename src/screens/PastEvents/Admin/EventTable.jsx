@@ -54,14 +54,17 @@ const EventTable = ({ events, user }) => {
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Text>
-                    <Table.Volunteers>
-                      {event.volunteers.length + getMinorTotal(event.minors)}
-                    </Table.Volunteers>
-                    <Table.Slots>Volunteers Attended</Table.Slots>
-                  </Table.Text>
                   <Table.TextInfo>
-                    <Table.EventName>{event.title}</Table.EventName>
+                    <Table.TitleAddNums>
+                      <Table.EventName>{event.title}</Table.EventName>
+                      <Table.Text>
+                        <Table.Volunteers>
+                          {event.volunteers.length +
+                            getMinorTotal(event.minors)}
+                        </Table.Volunteers>
+                        <Table.Slots>Volunteers Attended</Table.Slots>
+                      </Table.Text>
+                    </Table.TitleAddNums>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
                       {convertTime(event.endTime)}

@@ -17,31 +17,41 @@ const Styled = {
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
   `,
-  HeaderContainer: styled.div`
-    width: 60%;
-    max-width: 80rem;
+  Left: styled.div`
+    margin-left: 10vw;
     display: flex;
-    justify-content: start;
-    margin: 0 auto;
+    flex-direction: column;
+  `,
+  Right: styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 3vw;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
     border: none;
     color: white;
-    width: 10rem;
+    width: 7.5rem;
     height: 3rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2vw;
+
+    &:focus {
+      background: white;
+      outline: none;
+      border: none;
+    }
   `,
   Events: styled.div`
-  text-align: left;
-  font-size: 36px;
-  font-weight: bold;
-`,
+    text-align: left;
+    font-size: 36px;
+    font-weight: bold;
+  `,
   EventContainer: styled.div`
-    width: 78%;
+    width: auto;
     max-width: 80rem;
     display: flex;
     flex-direction: column;
@@ -71,10 +81,17 @@ const Styled = {
   Back: styled.p`
     font-size: 14px;
     margin-left: 10px;
-    padding-top: 5px;
+    padding-top: 8px;
     text-decoration: underline;
     color: ${variables.primary};
-  `
+  `,
+  Bottom: styled.div`
+    display: flex;
+    flex-direction: row;
+  `,
+  marginTable: styled.div`
+    margin-left: 40px;
+  `,
 };
 
 const EventManager = ({ user }) => {
@@ -170,37 +187,34 @@ const EventManager = ({ user }) => {
 
   return (
     <Styled.Container>
-      <Styled.HeaderContainer>
+      <Styled.Left>
         <Styled.EventContainer>
-            <Styled.Events>Events</Styled.Events>
-            <Styled.DateRow>
-              <Styled.Date>{value.toDateString()}</Styled.Date>
-              <Styled.Back>Back to Today</Styled.Back>
-            </Styled.DateRow>
+          <Styled.Events>Events</Styled.Events>
+          <Styled.DateRow>
+            <Styled.Date>{value.toDateString()}</Styled.Date>
+            <Styled.Back>Back to Today</Styled.Back>
+          </Styled.DateRow>
         </Styled.EventContainer>
-        <Styled.Button onClick={onRefresh} >
-          <span style={{ color: "white"}}>Create New Event</span>
-        </Styled.Button>
-      </Styled.HeaderContainer>
-      <Styled.Content>
-        <Calendar
-          onChange={onChange}
-          value={value}
-          tileClassName={({ date, view }) =>
-            setMarkDates({ date, view }, markDates)
-          }
-        />
-
-        <EventTable
-          events={events}
-          onRegisterClicked={onRegister}
-          onUnregister={onUnregister}
-          user={user}
-        >
-          {" "}
-        </EventTable>
-      </Styled.Content>
-
+        <Styled.Bottom>
+          <div>
+            <Calendar
+              onChange={onChange}
+              value={value}
+              tileClassName={({ date, view }) =>
+                setMarkDates({ date, view }, markDates)
+              }
+            />
+          </div>
+          <Styled.marginTable>
+            <EventTable
+              events={events}
+              onRegisterClicked={onRegister}
+              onUnregister={onUnregister}
+              user={user}
+            ></EventTable>
+          </Styled.marginTable>
+        </Styled.Bottom>
+      </Styled.Left>
     </Styled.Container>
   );
 };

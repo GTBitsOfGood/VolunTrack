@@ -37,7 +37,7 @@ const LoadingBody = styled.div`
 const EventList = styled.div`
   width: 730px;
   height: 94px;
-  position:absolute;
+  position: absolute;
   cursor: pointer;
 `;
 
@@ -76,9 +76,8 @@ const Delete = styled.div`
 const Text = styled.div`
   border-radius: 1px;
   display: flex;
-  flex-direction: column;
-  margin: 12px;
-  align-items: left;
+  flex-direction: row;
+  align-items: center;
 `;
 const TextInfo = styled.div`
   border-radius: 1px;
@@ -86,22 +85,18 @@ const TextInfo = styled.div`
   flex-direction: column;
   margin: 12px;
   align-items: flex-start;
-  margin-top: 1.6vw;
 `;
 const Volunteers = styled.span`
-  text-align:left;
-  font-size:12px;
-  left: 200px;
-  color:gray;
-  top: 21px;
-  position: absolute;
+  text-align: left;
+  font-size: 12px;
+  color: gray;
 `;
 const EventName = styled.span`
   font-size: 18px;
   color: ${variables["yiq-text-dark"]};
-  text-align:left;
+  text-align: left;
   font-weight: bold;
-  top:5px;
+  margin-right: 10px;
 `;
 const Time = styled.span`
   font-size: 18px;
@@ -130,6 +125,11 @@ const UnRegister = styled.div`
   top: 10px;
   position: absolute;
 `;
+const TitleAddNums = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
 export {
   Container,
@@ -149,4 +149,5 @@ export {
   Table,
   Row,
   LoadingBody,
+  TitleAddNums,
 };

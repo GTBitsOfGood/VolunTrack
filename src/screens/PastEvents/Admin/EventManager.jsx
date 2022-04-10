@@ -85,6 +85,13 @@ const Styled = {
     text-decoration: underline;
     color: ${variables.primary};
   `,
+  marginTable: styled.div`
+    margin-left: 40px;
+  `,
+  Bottom: styled.div`
+    display: flex;
+    flex-direction: row;
+  `,
 };
 
 const EventManager = ({ user }) => {
@@ -188,29 +195,26 @@ const EventManager = ({ user }) => {
             <Styled.Back>Back to Today</Styled.Back>
           </Styled.DateRow>
         </Styled.EventContainer>
-        <Calendar
-          onChange={onChange}
-          value={value}
-          tileClassName={({ date, view }) =>
-            setMarkDates({ date, view }, markDates)
-          }
-        />
+        <Styled.Bottom>
+          <div>
+            <Calendar
+              onChange={onChange}
+              value={value}
+              tileClassName={({ date, view }) =>
+                setMarkDates({ date, view }, markDates)
+              }
+            />
+          </div>
+          <Styled.marginTable>
+            <EventTable
+              events={events}
+              onRegisterClicked={onRegister}
+              onUnregister={onUnregister}
+              user={user}
+            ></EventTable>
+          </Styled.marginTable>
+        </Styled.Bottom>
       </Styled.Left>
-      <Styled.Right>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="add" />
-          <span style={{ color: "white" }}>Create</span>
-        </Styled.Button>
-
-        <EventTable
-          events={events}
-          onRegisterClicked={onRegister}
-          onUnregister={onUnregister}
-          user={user}
-        >
-          {" "}
-        </EventTable>
-      </Styled.Right>
     </Styled.Container>
   );
 };

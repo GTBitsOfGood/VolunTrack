@@ -19,8 +19,10 @@ const Styled = {
     height: 100%;
     margin: auto;
   `,
-  ul: styled.ul`
+  ul: styled.div`
     list-style-type: none;
+    display: flex;
+    flex-direction: column;
   `,
   List: styled.li`
     padding-bottom: 120px;
@@ -74,20 +76,22 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
                       </Styled.Button>
                     )}
                   </Table.Register>
-                  <Table.Text>
-                    <Table.Volunteers>
-                      {" "}
-                      {event.max_volunteers -
-                        event.volunteers.length +
-                        getMinorTotal(event.minors)}{" "}
-                      slots available
-                    </Table.Volunteers>
-                    <Table.EventName>{event.title}</Table.EventName>
+                  <Table.TextInfo>
+                    <Table.TitleAddNums>
+                      <Table.EventName>{event.title}</Table.EventName>
+                      <Table.Volunteers>
+                        {" "}
+                        {event.max_volunteers -
+                          event.volunteers.length +
+                          getMinorTotal(event.minors)}{" "}
+                        slots available
+                      </Table.Volunteers>
+                    </Table.TitleAddNums>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
                       {convertTime(event.endTime)} EST
                     </Table.Time>
-                  </Table.Text>
+                  </Table.TextInfo>
                 </Table.Inner>
                 <Table.Creation>
                   {" "}
