@@ -236,6 +236,11 @@ const Header = () => {
                   <Styled.PageLink>Applicant Viewer</Styled.PageLink>
                 </Link>
               )}
+              {user.role === "volunteer" && (
+                <Link href="/home" selected={currPageMatches("/home")}>
+                  <Styled.PageLink>Home</Styled.PageLink>
+                </Link>
+              )}
               {user.role === "admin" && (
                 <Link
                   href="/user-manager"
@@ -258,14 +263,14 @@ const Header = () => {
                   <Styled.Toggle color="white">
                     <Styled.UserContainer>
                       <Styled.TxtContainer>
-                          <Link
-                            href="/settings"
-                            selected={currPageMatches("/settings")}
-                          >
-                            <Styled.PageLink style={{ "font-size": "100%" }}>
-                              Settings
-                            </Styled.PageLink>
-                          </Link>
+                        <Link
+                          href="/settings"
+                          selected={currPageMatches("/settings")}
+                        >
+                          <Styled.PageLink style={{ "font-size": "100%" }}>
+                            Settings
+                          </Styled.PageLink>
+                        </Link>
                       </Styled.TxtContainer>
                       <Styled.ImgContainer>
                         <Icon name="dropdown-arrow" size="1.5rem" />
@@ -274,7 +279,11 @@ const Header = () => {
                   </Styled.Toggle>
 
                   <DropdownMenu
-                    style={{ width: "100%", marginTop: "0.6rem", border: "none" }}
+                    style={{
+                      width: "100%",
+                      marginTop: "0.6rem",
+                      border: "none",
+                    }}
                   >
                     <DropdownItem onClick={goToManageAdmins} href="/assistants">
                       <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
@@ -288,7 +297,6 @@ const Header = () => {
                   </DropdownMenu>
                 </Styled.Dropdown>
               )}
-
             </Styled.PageSwitch>
             <Styled.Dropdown nav inNavbar className="navbar-nav">
               <Styled.Toggle color="white">
