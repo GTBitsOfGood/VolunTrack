@@ -126,3 +126,5 @@ export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
 export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
 
 export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
+
+export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
