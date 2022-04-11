@@ -34,20 +34,26 @@ function authWrapper(Component) {
 const WaiverManager = () => {
   const [waivers, setWaivers] = useState({});
 
-  useEffect(() => {
-    const getAndSetWaivers = async () => {
-      const res = await getWaivers();
-      setWaivers(res.data);
-    };
+  const getAndSetWaivers = async () => {
+    const res = await getWaivers();
+    setWaivers(res.data);
+  };
 
+  useEffect(() => {
     getAndSetWaivers();
   }, []);
 
   return (
     <WaiversContainer>
       <h2>Manage Waivers</h2>
-      <Waiver waiver={{ adult: waivers.adult }} />
-      <Waiver waiver={{ minor: waivers.minor }} />
+      <Waiver
+        waiver={{ adult: waivers.adult }}
+        updateWaivers={getAndSetWaivers}
+      />
+      <Waiver
+        waiver={{ minor: waivers.minor }}
+        updateWaivers={getAndSetWaivers}
+      />
     </WaiversContainer>
   );
 };

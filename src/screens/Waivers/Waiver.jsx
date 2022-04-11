@@ -77,7 +77,7 @@ const WaiverUploadInputContainer = styled.div`
   gap: 0.5rem;
 `;
 
-const Waiver = ({ waiver }) => {
+const Waiver = ({ waiver, updateWaivers }) => {
   const [isReplacing, setIsReplacing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -85,7 +85,6 @@ const Waiver = ({ waiver }) => {
   const waiverTypeCapitalized =
     waiverType.charAt(0).toUpperCase() + waiverType.slice(1);
   const waiverFilePath = waiver[waiverType];
-
   const waiverFileName = waiverFilePath?.split("/").pop();
 
   const handleReplace = () => {
@@ -96,6 +95,7 @@ const Waiver = ({ waiver }) => {
   };
   const handleDelete = async () => {
     await deleteWaiver(waiverType);
+    await updateWaivers();
   };
   const handleUpload = () => {
     setIsUploading(true);
@@ -177,6 +177,7 @@ const Waiver = ({ waiver }) => {
 
 Waiver.propTypes = {
   waiver: PropTypes.object.isRequired,
+  updateWaivers: PropTypes.func.isRequired,
 };
 
 export default Waiver;
