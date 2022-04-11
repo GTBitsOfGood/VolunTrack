@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getWaiverPaths } from "../../actions/queries";
+import { getWaivers } from "../../actions/queries";
 import Waiver from "./Waiver";
 
 const WaiversContainer = styled.div`
@@ -32,23 +32,28 @@ function authWrapper(Component) {
 }
 
 const WaiverManager = () => {
-  const [filePaths, setFilePaths] = useState([]);
+  const [waivers, setWaivers] = useState({});
+
+  const getAndSetWaivers = async () => {
+    const res = await getWaivers();
+    setWaivers(res.data);
+  };
 
   useEffect(() => {
-    const getWaivers = async () => {
-      const waiverPaths = await getWaiverPaths();
-      setFilePaths(Object.values(waiverPaths.data));
-    };
-
-    getWaivers();
+    getAndSetWaivers();
   }, []);
 
   return (
     <WaiversContainer>
       <h2>Manage Waivers</h2>
-      {filePaths.map((path) => (
-        <Waiver filePath={path} key={path} />
-      ))}
+      <Waiver
+        waiver={{ adult: waivers.adult }}
+        updateWaivers={getAndSetWaivers}
+      />
+      <Waiver
+        waiver={{ minor: waivers.minor }}
+        updateWaivers={getAndSetWaivers}
+      />
     </WaiversContainer>
   );
 };

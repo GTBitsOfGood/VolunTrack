@@ -1,8 +1,11 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
+import { deleteWaiver, uploadWaiver } from "../../actions/queries";
+import Icon from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
+import { RequestContext } from "../../providers/RequestProvider";
 
 const WaiverContainer = styled.div`
   padding: 1.5rem;
@@ -23,6 +26,7 @@ const WaiverTextContainer = styled.div`
 `;
 const WaiverHeader = styled.h3`
   margin: 0;
+  text-align: center;
 `;
 const WaiverLink = styled.a`
   margin: 0;
@@ -30,16 +34,17 @@ const WaiverLink = styled.a`
 const ReplaceButton = styled(Button)`
   margin: 0 2rem 0 auto;
   height: 50%;
-  background: ${variables.buttonPink};
+  background: ${variables["secondary"]};
 `;
 const SubmitButton = styled(Button)`
   margin: 0 2rem 0 auto;
   height: 50%;
-  background: ${variables.buttonPink};
+  background: ${variables["secondary"]};
+  align-self: center;
 `;
 const DeleteButton = styled(Button)`
   height: 50%;
-  background: ${variables["button-pink"]};
+  background: ${variables["primary"]};
 `;
 const ReplaceForm = styled.form`
   width: 14rem;
@@ -48,69 +53,146 @@ const ReplaceForm = styled.form`
   gap: 0.5rem;
   flex-direction: column;
 `;
-const ReplaceFileInput = styled.input``;
+const ReplaceFileInput = styled.input`
+  width: 16rem;
+`;
 const CancelButton = styled(Button)`
-  background: ${variables["button-pink"]};
+  background: ${variables["secondary"]};
   width: 50%;
-  align-self: center;
+`;
+const WaiverUploadContainer = styled.div`
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+const WaiverUploadButton = styled(Button)`
+  background: ${variables["primary"]};
+`;
+const WaiverUploadForm = styled.form`
+  display: flex;
+`;
+const WaiverUploadInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `;
 
-const Waiver = ({ filePath }) => {
+const Waiver = ({ waiver, updateWaivers }) => {
   const [isReplacing, setIsReplacing] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const context = useContext(RequestContext);
 
-  const getWaiverType = (filePath) =>
-    filePath.toLowerCase().includes("adult") ? "adult" : "minor";
-  const getFileNameFromPath = (filePath) =>
-    filePath.split("\\").pop().split("/").pop();
+  const waiverType = Object.keys(waiver)[0];
+  const waiverTypeCapitalized =
+    waiverType.charAt(0).toUpperCase() + waiverType.slice(1);
+  const waiverFilePath = waiver[waiverType];
+  const waiverFileName = waiverFilePath?.split("/").pop();
 
-  const replace = () => {
+  const handleReplace = () => {
     setIsReplacing(true);
   };
-  const cancelReplace = () => {
+  const handleCancelReplace = () => {
     setIsReplacing(false);
+  };
+  const handleDelete = async () => {
+    await deleteWaiver(waiverType);
+    await updateWaivers();
+    setIsReplacing(false);
+    context.startLoading();
+    context.success("Waiver deleted!");
+  };
+  const handleUpload = () => {
+    setIsUploading(true);
+  };
+  const handleUploadCancel = () => {
+    setIsUploading(false);
+    setSelectedFile(null);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append(waiverType, selectedFile);
+    await uploadWaiver(formData);
+    await updateWaivers();
+    setIsUploading(false);
+    setIsReplacing(false);
+    context.startLoading();
+    context.success("Waiver uploaded!");
   };
 
   return (
     <WaiverContainer>
-      <WaiverTextContainer>
-        <WaiverHeader>
-          {getWaiverType(filePath).charAt(0).toUpperCase() +
-            getWaiverType(filePath).slice(1)}{" "}
-          Waiver
-        </WaiverHeader>
-        <WaiverLink href={filePath} target="_blank">
-          File: {getFileNameFromPath(filePath)}
-        </WaiverLink>
-      </WaiverTextContainer>
-      {isReplacing && (
-        <ReplaceForm
-          action="/api/waivers"
-          encType="multipart/form-data"
-          method="POST"
-          id={`${getWaiverType(filePath)}Form`}
-        >
-          <ReplaceFileInput
-            type="file"
-            id={getWaiverType(filePath)}
-            name={getWaiverType(filePath)}
-          />
-          <CancelButton onClick={cancelReplace}>Cancel</CancelButton>
-        </ReplaceForm>
-      )}
-      {isReplacing ? (
-        <SubmitButton type="submit" form={`${getWaiverType(filePath)}Form`}>
-          Submit
-        </SubmitButton>
+      {!waiverFilePath ? (
+        <>
+          <WaiverUploadContainer>
+            <WaiverHeader>{waiverTypeCapitalized} Waiver</WaiverHeader>
+            {isUploading ? (
+              <WaiverUploadForm>
+                <WaiverUploadInputContainer>
+                  <ReplaceFileInput
+                    type="file"
+                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                  />
+                  <CancelButton onClick={handleUploadCancel}>
+                    Cancel
+                  </CancelButton>
+                </WaiverUploadInputContainer>
+                <SubmitButton type="submit" onClick={handleSubmit}>
+                  Submit
+                </SubmitButton>
+              </WaiverUploadForm>
+            ) : (
+              <WaiverUploadButton onClick={handleUpload}>
+                <Icon name="add" />
+                Upload
+              </WaiverUploadButton>
+            )}
+          </WaiverUploadContainer>
+        </>
       ) : (
-        <ReplaceButton onClick={replace}>Replace</ReplaceButton>
+        <>
+          <WaiverTextContainer>
+            <WaiverHeader>{waiverTypeCapitalized} Waiver</WaiverHeader>
+            <WaiverLink
+              href={waiverFilePath.replace("./public/", "")}
+              target="_blank"
+            >
+              File: {waiverFileName}
+            </WaiverLink>
+          </WaiverTextContainer>
+          {isReplacing && (
+            <ReplaceForm>
+              <ReplaceFileInput
+                type="file"
+                onChange={(e) => setSelectedFile(e.target.files[0])}
+                id={`${waiverType}ReplaceForm`}
+              />
+              <CancelButton onClick={handleCancelReplace}>Cancel</CancelButton>
+            </ReplaceForm>
+          )}
+          {isReplacing ? (
+            <SubmitButton
+              type="submit"
+              form={`${waiverType}ReplaceForm`}
+              onClick={handleSubmit}
+            >
+              Submit
+            </SubmitButton>
+          ) : (
+            <ReplaceButton onClick={handleReplace}>Replace</ReplaceButton>
+          )}
+          <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+        </>
       )}
-      <DeleteButton>Delete</DeleteButton>
     </WaiverContainer>
   );
 };
 
 Waiver.propTypes = {
-  filePath: PropTypes.string.isRequired,
+  waiver: PropTypes.object.isRequired,
+  updateWaivers: PropTypes.func.isRequired,
 };
 
 export default Waiver;
