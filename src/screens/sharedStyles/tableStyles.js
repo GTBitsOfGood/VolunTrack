@@ -37,111 +37,117 @@ const LoadingBody = styled.div`
 const EventList = styled.div`
   width: 730px;
   height: 94px;
-  position:absolute;
+  position: absolute;
   cursor: pointer;
 `;
+
 const Inner = styled.div`
   background-color: white;
-	width: 730px;
-	height: 94px;
-  border: 1px solid ${variables['gray-200']};
-  border-top-left-radius:8px;
-	border-top-right-radius:8px;
-	border-bottom-left-radius:8px;
-	border-bottom-right-radius:8px;
-  left:0px;
-	top:0px
-  position:absolute;
+  width: 100%;
+  border: 1px solid ${variables["gray-200"]};
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
 `;
+
 const Slots = styled.span`
-  width:39px;
-	height:14px;
-	text-align:left;
-	font-size:12px;
-  color: ${variables['gray-300']};
-  line-height:px;
-  left:56px;
-	top:57px;
-  position:absolute;
+  font-size: 12px;
+  color: ${variables["gray-300"]};
+  margin: 5px;
 `;
 const Edit = styled.div`
-  width:12px;
-	height:12px;
-  left:606px;
-	top:10px;
-  position:absolute;
+  width: 12px;
+  height: 12px;
+  left: 606px;
+  top: 10px;
+  position: absolute;
 `;
 const Delete = styled.div`
-  width:12px;
-  height:12px;
-  left:666px;
-	top:10px;
-  position:absolute;
+  width: 12px;
+  height: 12px;
+  left: 666px;
+  top: 10px;
+  position: absolute;
 `;
 const Text = styled.div`
-  width:646px;
-	height:63px;
-  left:23px;
-	top:20px;
-  border-radius:1px;
-  position:absolute;
+  border-radius: 1px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const TextInfo = styled.div`
+  border-radius: 1px;
+  display: flex;
+  flex-direction: column;
+  margin: 12px;
+  align-items: flex-start;
 `;
 const Volunteers = styled.span`
-  width:72px;
-	height:49px;
-	text-align:center;
-	font-size:30px;
-  line-height:px;
-  left:16px;
-	top:-4px;
-  position:absolute;
+  text-align: left;
+  font-size: 12px;
+  color: gray;
 `;
 const EventName = styled.span`
-  width:267px;
-	height:24px;
-	text-align:left;
-	font-size:16px;
-  line-height:px;
-  color:${variables.info};
-  left:134px;
-	top:5px;
-  position:absolute;
+  font-size: 18px;
+  color: ${variables["yiq-text-dark"]};
+  text-align: left;
+  font-weight: bold;
+  margin-right: 10px;
 `;
 const Time = styled.span`
-  width:446px;
-	height:22px;
-	left:134px;
-	top:32px;
-	text-align:left;
-	font-size:18px;
-  left:134px;
-	top:32px;
-  position:absolute;
+  font-size: 18px;
 `;
 const Creation = styled.span`
-  width:154px;
-	height:22px;
-	text-align:right;
-	font-size:12px;
-  line-height:px;
-  left:556px;
-	top:63px;
-  position:absolute;
+  width: 154px;
+  height: 22px;
+  text-align: right;
+  font-size: 12px;
+  line-height: px;
+  left: 556px;
+  top: 63px;
+  position: absolute;
 `;
 const Register = styled.div`
-  width:10rem;
-  height:12px;
-  left:606px;
-  top:10px;
-  position:absolute;
+  width: 10rem;
+  height: 12px;
+  left: 606px;
+  top: 10px;
+  position: absolute;
 `;
 const UnRegister = styled.div`
-  width:10rem;
-  height:12px;
-  left:606px;
-  top:10px;
-  position:absolute;
+  width: 10rem;
+  height: 12px;
+  left: 606px;
+  top: 10px;
+  position: absolute;
+`;
+const TitleAddNums = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `;
 
-
-export { Container, EventList, Inner, Slots, Edit, Delete, Text, Volunteers, EventName, Time, Creation, Register, UnRegister, Table, Row, LoadingBody };
+export {
+  Container,
+  EventList,
+  Inner,
+  Slots,
+  Edit,
+  Delete,
+  Text,
+  TextInfo,
+  Volunteers,
+  EventName,
+  Time,
+  Creation,
+  Register,
+  UnRegister,
+  Table,
+  Row,
+  LoadingBody,
+  TitleAddNums,
+};

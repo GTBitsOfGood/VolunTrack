@@ -9,7 +9,7 @@ import { fetchEvents } from "../../../actions/queries";
 import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { registerForEvent, updateEvent } from "./eventHelpers";
-import EventTable from "./EventTable";
+import HomePageEventTable from "./HomePageEventTable";
 
 const Styled = {
   Container: styled.div`
@@ -17,30 +17,49 @@ const Styled = {
     height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     overflow: hidden;
+  `,
+  HeaderContainer: styled.div`
+    width: 60%;
+    max-width: 80rem;
+    display: flex;
+    justify-content: end;
+    margin: 0 auto;
   `,
   Button: styled(Button)`
     background: ${variables.primary};
     border: none;
     color: white;
-    width: 7.5rem;
+    width: 8rem;
     height: 3rem;
     margin-top: 2rem;
-    margin-bottom: 2vw;
 
+    &:hover {
+      background: gainsboro;
+    }
     &:focus {
       background: white;
-      outline: none;
-      border: none;
+      box-shadow: none;
     }
   `,
-  Content: styled.div``,
-  EventContainer: styled.div`
+  Content: styled.div`
+    width: 54%;
+    height: 100%;
+    background: ${(props) => props.theme.grey9};
+    padding-top: 1rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: start;
+  `,
+  EventContainer: styled.div`
+    width: 78%;
+    max-width: 80rem;
+    display: flex;
+    flex-direction column;
+    justify-content: end;
     margin-bottom: 1rem;
   `,
   Events: styled.div`
@@ -52,16 +71,6 @@ const Styled = {
     text-align: left;
     font-size: 28px;
     font-weight: bold;
-  `,
-  Left: styled.div`
-    margin-left: 10vw;
-    display: flex;
-    flex-direction: column;
-  `,
-  Right: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 3vw;
   `,
 };
 
@@ -89,10 +98,6 @@ const EventManager = ({ user }) => {
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
-          result.data.events = result.data.events.filter(function (event) {
-            const currentDate = new Date();
-            return new Date(event.date) > currentDate;
-          });
           setEvents(result.data.events);
           setDates(result.data.events);
         }
@@ -127,87 +132,18 @@ const EventManager = ({ user }) => {
     onRefresh();
   };
 
-  const [value, setDate] = useState(new Date());
-
-  const onChange = (value, event) => {
-    setDate(value);
-    let datestr = value.toString();
-    let selectDate = new Date(datestr).toISOString().split("T")[0];
-
-    setLoading(true);
-    fetchEvents(selectDate, selectDate)
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
-  const onRegisterClicked = (event, user) => {
-    setShowRegisterModal(true);
-    setCurrEvent(event);
-    setCurrUser(user);
-    router.replace("/register");
-  };
-
-  const toggleRegisterModal = () => {
-    setShowRegisterModal((prev) => !prev);
-    onRefresh();
-  };
-  const formatJsDate = (jsDate, separator = "/") => {
-    return [
-      String(jsDate.getFullYear()).padStart(4, "0"),
-      String(jsDate.getMonth() + 1).padStart(2, "0"),
-      String(jsDate.getDate()).padStart(2, "0"),
-    ].join(separator);
-  };
-  const setMarkDates = ({ date, view }, markDates) => {
-    const fDate = formatJsDate(date, "-");
-    let tileClassName = "";
-    let test = [];
-    for (let i = 0; i < markDates.length; i++) {
-      test.push(markDates[i].date.slice(0, 10));
-    }
-    if (test.includes(fDate)) {
-      tileClassName = "marked";
-    }
-    return tileClassName !== "" ? tileClassName : null;
-  };
-
   return (
     <Styled.Container>
-      <Styled.Left>
-        <Styled.EventContainer>
-          <Styled.Events>Events</Styled.Events>
-          <Styled.Date>{value.toDateString()}</Styled.Date>
-        </Styled.EventContainer>
-        <Calendar
-          onChange={onChange}
-          value={value}
-          tileClassName={({ date, view }) =>
-            setMarkDates({ date, view }, markDates)
-          }
-        />
-      </Styled.Left>
-      <Styled.Right>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
-        </Styled.Button>
-        <Styled.Content>
-          <EventTable
-            events={events}
-            onRegisterClicked={onRegister}
-            onUnregister={onUnregister}
-            user={user}
-          >
-            {" "}
-          </EventTable>
-        </Styled.Content>
-      </Styled.Right>
+      <Styled.Content>
+        <HomePageEventTable
+          events={events}
+          onRegisterClicked={onRegister}
+          onUnregister={onUnregister}
+          user={user}
+        >
+          {" "}
+        </HomePageEventTable>
+      </Styled.Content>
     </Styled.Container>
   );
 };

@@ -11,7 +11,8 @@ export default {
     "assistants": "/assistants",
     settings: "/settings",
     profile: "/profile",
-    register: "/register"
+    register: "/register",
+    home: "/home"
   },
   api: {
     auth: {},

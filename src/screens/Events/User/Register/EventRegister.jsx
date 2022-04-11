@@ -17,7 +17,8 @@ import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventMinorModal from "./EventMinorModal";
 import EventWaiverModal from "./EventWaiverModal";
 import IconSpecial from "../../../../components/IconSpecial";
-import { fetchEvents } from "../../../../actions/queries";
+import { fetchEventsById } from "../../../../actions/queries";
+import { registerForEvent } from "../eventHelpers";
 
 import PropTypes from "prop-types";
 import variables from "../../../../design-tokens/_variables.module.scss";
@@ -149,10 +150,15 @@ const Styled = {
     height: 100%;
     width: 90%;
   `,
+  MinorRow: styled.div`
+    width: 18rem;
+  `,
 };
 
 const EventRegister = (event) => {
   const router = useRouter();
+  const { eventId } = router.query;
+  const [events, setEvents] = useState({});
   const { data: session } = useSession();
   const user = session.user;
   const [showMinorModal, setShowMinorModal] = useState(false);
@@ -161,14 +167,27 @@ const EventRegister = (event) => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    onLoadEvent();
+  }, []);
+
   const onRefresh = () => {
     setIsLoading(true);
-    fetchEvents()
+    fetchEventsById(eventId)
       .then()
       .finally(() => {
         setTimeout(() => setIsLoading(false), 7000);
       });
   };
+
+  const onLoadEvent = () => {
+    fetchEventsById(eventId)
+      .then((result) => {
+        if (result && result.data && result.data.event) {
+          setEvents(result.data.event);
+        }
+      })
+  }
 
   const onCompleteRegistrationClicked = () => {
     setShowWaiverModal(true);
@@ -186,6 +205,15 @@ const EventRegister = (event) => {
     toggleWaiverModal();
     onRefresh();
     setIsRegistered(true);
+    if (!(events.volunteers.includes(user._id))) {
+      events.volunteers.push(user._id);
+    }
+    let data = {
+      event: events,
+      user: user
+    }
+    registerForEvent(data)
+    .then();
   };
 
   const toggleMinorModal = () => {
@@ -200,6 +228,37 @@ const EventRegister = (event) => {
     setHasMinor((prev) => !prev);
   };
 
+  const setHasMinorTrue = (firstName, lastName) => {
+    let added = false;
+    for (let minor of events.minors) {
+      if (minor.volunteer_id === user._id) {
+        minor.minor.push(firstName + " " + lastName);
+        added = true;
+        break
+      }
+    }
+    if (!added) {
+      let result = {
+        minor: [firstName + " " + lastName],
+        volunteer_id: user._id
+      };
+      events.minors.push(result);
+    }
+    setHasMinor(true);
+  }
+
+  const addMandated = (e) => {
+    const checked = e.target.checked;
+    if (checked) {
+      events.mandated_volunteers.push(user._id);
+    } else {
+      const index = events.mandated_volunteers.indexOf(user._id);
+      if (index !== -1) {
+        events.mandated_volunteers.splice(index, 1);
+      }
+    }
+  }
+
   return (
     <Styled.Container fluid="md">
       <Styled.Title />
@@ -209,10 +268,6 @@ const EventRegister = (event) => {
             <Styled.MainText>Confirm Registration</Styled.MainText>
           </Col>
           <Col xs="12" lg={{ size: 4, offset: 2 }}>
-            <Row>
-              <Styled.VolunteerNumberText>30/100 </Styled.VolunteerNumberText>
-              <Styled.VolunteerText> Spots Remaining</Styled.VolunteerText>
-            </Row>
           </Col>
         </Styled.Row>
       )}
@@ -270,22 +325,35 @@ const EventRegister = (event) => {
       <Styled.Row />
       <Styled.Row>
         <Styled.SectionText>Event Information</Styled.SectionText>
-        <Styled.LinkedText>Visit Event Page</Styled.LinkedText>
+        <Link href={`/events/${eventId}`}>
+          <Styled.LinkedText style={{ cursor: "pointer" }}>Visit Event Page</Styled.LinkedText>
+        </Link>
       </Styled.Row>
       <Styled.Row>
-        <EventRegisterInfoContainer event={event} user={user} />
+        <EventRegisterInfoContainer event={events} user={user} />
       </Styled.Row>
       <Styled.Row>
         <Styled.SectionText>Your Group</Styled.SectionText>
-        <Link href="/register">
-          <Styled.LinkedText onClick={onAddMinorClicked}>
+        <Link href={`/events/${eventId}/register`}>
+          <Styled.LinkedText style={{ cursor: "pointer" }} onClick={onAddMinorClicked}>
             Add Minor (under 13 years old)
           </Styled.LinkedText>
         </Link>
+        <IconSpecial
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          name="info"
+          href="#"
+          id="minorMaxTipTool"
+        />
+        <UncontrolledTooltip placement="right" target="minorMaxTipTool">
+          The maximum number of minors per guardian is 5. Minors above 13 years need to make their account and register.
+        </UncontrolledTooltip>
       </Styled.Row>
       <Styled.AccomodationRow>
         <FormGroup check>
-          <Input type="checkbox" onChange={toggleHasMinor} />{" "}
+          <Input type="checkbox" onClick={(e) => { addMandated(e); }} />{" "}
         </FormGroup>
         <Styled.AccomodationText>
           I require accomadation for my court required hours
@@ -306,23 +374,31 @@ const EventRegister = (event) => {
         <Col xs="12" lg="3">
           <Styled.VolunteerContainer>
             <Styled.VolunteerRow>
-              <Styled.SectionHeaderText>Fred Burger</Styled.SectionHeaderText>
+              <Styled.SectionHeaderText>{user.bio.first_name} {user.bio.last_name}</Styled.SectionHeaderText>
             </Styled.VolunteerRow>
             <Styled.VolunteerRow>
-              <Styled.DetailText>fredfredburger@gmail.com</Styled.DetailText>
+              <Styled.DetailText>{user.bio.email}</Styled.DetailText>
             </Styled.VolunteerRow>
           </Styled.VolunteerContainer>
         </Col>
-        <Col xs="12" lg="3">
-          <Styled.VolunteerContainer>
-            <Styled.VolunteerRow>
-              <Styled.SectionHeaderText>Carlos Burger</Styled.SectionHeaderText>
-            </Styled.VolunteerRow>
-            <Styled.VolunteerRow>
-              <Styled.DetailText>Minor</Styled.DetailText>
-            </Styled.VolunteerRow>
-          </Styled.VolunteerContainer>
-        </Col>
+        {events.minors && events.minors.map((minor) => (
+          <Row>
+            {minor.volunteer_id === user._id && minor.minor.map((names) => (
+            <Col>
+              <Styled.MinorRow>
+                <Styled.VolunteerContainer>
+                  <Styled.VolunteerRow>
+                    <Styled.SectionHeaderText>{names}</Styled.SectionHeaderText>
+                  </Styled.VolunteerRow>
+                  <Styled.VolunteerRow>
+                    <Styled.DetailText>Minor</Styled.DetailText>
+                  </Styled.VolunteerRow>
+                </Styled.VolunteerContainer>
+              </Styled.MinorRow>
+            </Col>
+            ))}
+          </Row>
+        ))}
       </Styled.Row>
       {!isRegistered && (
         <Styled.ModalFooter>
@@ -331,12 +407,18 @@ const EventRegister = (event) => {
           </Styled.Button>
         </Styled.ModalFooter>
       )}
-      <EventMinorModal open={showMinorModal} toggle={toggleMinorModal} />
+      <EventMinorModal 
+        open={showMinorModal} 
+        toggle={toggleMinorModal} 
+        event={events} 
+        setHasMinorTrue={setHasMinorTrue} 
+      />
       <EventWaiverModal
         open={showWaiverModal}
         toggle={toggleWaiverModal}
         hasMinor={hasMinor}
         onRegisterAfterWaiverClicked={onRegisterAfterWaiverClicked}
+        eventId={eventId}
       />
     </Styled.Container>
   );

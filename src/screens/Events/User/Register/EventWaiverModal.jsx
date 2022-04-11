@@ -83,6 +83,7 @@ const EventWaiverModal = ({
   toggle,
   hasMinor,
   onRegisterAfterWaiverClicked,
+  eventId
 }) => {
   const [showGuardian, setShowGuardian] = useState(true);
 
@@ -108,6 +109,11 @@ const EventWaiverModal = ({
     setWaiverCheckboxSelected(e.target.checked);
   };
 
+  const [showMe, setShowMe] = useState(false);
+  const togglePdf = () => {
+    setShowMe((prev) => !prev);
+  }
+
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
       <Styled.ModalHeader>
@@ -125,7 +131,7 @@ const EventWaiverModal = ({
           <Styled.Row>
             {showGuardian && (
               <React.Fragment>
-                <Link href="/register">
+                <Link href={`/events/${eventId}/register`}>
                   <Styled.Tab>
                     <Styled.PrimaryText onClick={onGuardianClicked}>
                       Guardian
@@ -138,7 +144,7 @@ const EventWaiverModal = ({
                     />
                   </Styled.Tab>
                 </Link>
-                <Link href="/register">
+                <Link href={`/events/${eventId}/register`}>
                   <Styled.SecondaryTab>
                     <Styled.PrimaryText onClick={onMinorsClicked}>
                       Minors
@@ -155,7 +161,7 @@ const EventWaiverModal = ({
             )}
             {!showGuardian && (
               <React.Fragment>
-                <Link href="/register">
+                <Link href={`/events/${eventId}/register`}>
                   <Styled.SecondaryTab>
                     <Styled.PrimaryText onClick={onGuardianClicked}>
                       Guardian
@@ -168,7 +174,7 @@ const EventWaiverModal = ({
                     />
                   </Styled.SecondaryTab>
                 </Link>
-                <Link href="/register">
+                <Link href={`/events/${eventId}/register`}>
                   <Styled.Tab>
                     <Styled.PrimaryText onClick={onMinorsClicked}>
                       Minors
@@ -196,10 +202,20 @@ const EventWaiverModal = ({
       )}
 
       <Styled.Row>
-        <Styled.MainButton>
+        <Styled.MainButton onClick = {togglePdf}>
           <IconSpecial width="25" height="24" viewBox="0 0 25 24" name="link" />
           Read Waiver
         </Styled.MainButton>
+        <Styled.Row style={{
+          display: showMe?"block":"none"
+        }}>
+          <iframe
+            style={{ width: "563px", height: "666px" }}
+            src={showGuardian?"/files/adult.pdf": "/files/minor.pdf"}
+            type='application/pdf'
+            title='title'
+          />
+        </Styled.Row>
       </Styled.Row>
       <Styled.Row>
         <FormGroup check>

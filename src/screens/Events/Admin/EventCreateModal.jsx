@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Modal, ModalHeader } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
-import EventFormModal from "./EventFormModal"
+import EventFormModal from "./EventFormModal";
 import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
@@ -23,7 +23,7 @@ const Styled = {
     border-color: transparent;
     .org-event {
       color: ${variables["input-color"]};
-      border-bottom: 2px solid #E9E9E9;
+      border-bottom: 2px solid #e9e9e9;
       padding-right: 3.5rem;
       padding-left: 3.5rem;
       display: inline;
@@ -40,19 +40,18 @@ const Styled = {
     margin-right: 5rem;
     text-align: center;
     display: inline;
-  `
+  `,
 };
 
 const EventCreateModal = ({ open, toggle }) => {
-
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
-        <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
-        <Styled.HeaderText>
-            <p>Standard Event</p>
-            {/* <p class = "org-event">Organization Event</p> */}
-        </Styled.HeaderText>
-        <EventFormModal toggle={toggle} event={null}></EventFormModal>
+      <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
+      <Styled.HeaderText>
+        <p>Standard Event</p>
+        {/* <p class = "org-event">Organization Event</p> */}
+      </Styled.HeaderText>
+      <EventFormModal toggle={toggle} event={null}></EventFormModal>
     </Modal>
   );
 };
