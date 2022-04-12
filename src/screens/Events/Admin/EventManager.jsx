@@ -182,7 +182,7 @@ const EventManager = () => {
         />
       </Styled.Left>
       <Styled.Right>
-        <Styled.Button onClick={onRefresh}>
+        <Styled.Button onClick={onCreateClicked}>
           <Icon color="grey3" name="add" />
           <span style={{ color: "white" }}>Create</span>
         </Styled.Button>
