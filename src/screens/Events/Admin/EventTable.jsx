@@ -56,12 +56,18 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
               <Table.EventList>
                 <Table.Inner>
                   <Table.Edit>
-                    <Styled.Button onClick={() => onEditClicked(event)}>
+                    <Styled.Button onClick={(e) => {
+                      e.stopPropagation();
+                      onEditClicked(event)}
+                    }>
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
                   </Table.Edit>
                   <Table.Delete>
-                    <Styled.Button onClick={() => onDeleteClicked(event)}>
+                    <Styled.Button onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteClicked(event)
+                    }}>
                       <Icon color="grey3" name="delete" />
                     </Styled.Button>
                   </Table.Delete>
