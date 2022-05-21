@@ -246,7 +246,7 @@ const Header = () => {
                   href="/user-manager"
                   selected={currPageMatches("/user-manager")}
                 >
-                  <Styled.PageLink>User Manager</Styled.PageLink>
+                  <Styled.PageLink>Volunteers</Styled.PageLink>
                 </Link>
               )}
               <Link href="/events" selected={currPageMatches("/events")}>
@@ -263,14 +263,9 @@ const Header = () => {
                   <Styled.Toggle color="white">
                     <Styled.UserContainer>
                       <Styled.TxtContainer>
-                        <Link
-                          href="/settings"
-                          selected={currPageMatches("/settings")}
-                        >
-                          <Styled.PageLink style={{ "font-size": "100%" }}>
-                            Settings
-                          </Styled.PageLink>
-                        </Link>
+                        <Styled.PageLink style={{ "font-size": "100%" }}>
+                          Settings
+                        </Styled.PageLink>
                       </Styled.TxtContainer>
                       <Styled.ImgContainer>
                         <Icon name="dropdown-arrow" size="1.5rem" />
