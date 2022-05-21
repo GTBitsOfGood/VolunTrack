@@ -124,9 +124,15 @@ const EventManager = ({ user }) => {
 
   const [value, setDate] = useState(new Date());
 
+  let splitDate = value.toDateString().split(" ");
+  const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
+
   const onChange = (value, event) => {
     setDate(value);
     let datestr = value.toString();
+    let splitDate = value.toDateString().split(" ");
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]; 
+    setDateString(date);
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
@@ -192,7 +198,7 @@ const EventManager = ({ user }) => {
         <Styled.EventContainer>
           <Styled.Events>Events</Styled.Events>
           <Styled.DateRow>
-            <Styled.Date>{value.toDateString()}</Styled.Date>
+            <Styled.Date>{dateString}</Styled.Date>
             <Styled.Back>Back to Today</Styled.Back>
           </Styled.DateRow>
         </Styled.EventContainer>
