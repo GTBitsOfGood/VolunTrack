@@ -31,16 +31,10 @@ const Styled = {
     background: ${variables.primary};
     border: none;
     color: white;
-    width: 7.5rem;
-    height: 3rem;
+    width: 9.5rem;
+    height: 2.5rem;
     margin-top: 2rem;
     margin-bottom: 2vw;
-
-    &:focus {
-      background: white;
-      outline: none;
-      border: none;
-    }
   `,
   Content: styled.div``,
   EventContainer: styled.div`
@@ -183,8 +177,7 @@ const EventManager = () => {
       </Styled.Left>
       <Styled.Right>
         <Styled.Button onClick={onCreateClicked}>
-          <Icon color="grey3" name="add" />
-          <span style={{ color: "white" }}>Create</span>
+          <span style={{ color: "white" }}>Create new event</span>
         </Styled.Button>
         <Styled.Content>
           <EventTable
