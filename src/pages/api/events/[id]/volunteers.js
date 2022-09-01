@@ -4,6 +4,6 @@ export default async function handler(req, res, next) {
     const eventId = req.query.id;
     const volunteers = await getEventVolunteersList(eventId);
 
-    res.status(200).json(volunteers); 
+    res.status(200).json(volunteers);
   }
 }

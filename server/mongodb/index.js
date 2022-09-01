@@ -8,7 +8,6 @@ export default async () => {
     .connect(urls.dbUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      useCreateIndex: true,
       dbName: process.env.DB_NAME,
     })
     .catch((e) => {
