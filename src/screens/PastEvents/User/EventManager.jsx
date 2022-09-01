@@ -9,6 +9,7 @@ import { updateEvent } from "./eventHelpers";
 import variables from "../../../design-tokens/_variables.module.scss";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import {registerForEvent} from "../../Events/User/eventHelpers";
 
 const Styled = {
   Container: styled.div`

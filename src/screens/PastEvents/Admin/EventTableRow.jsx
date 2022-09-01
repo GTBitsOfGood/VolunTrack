@@ -53,7 +53,7 @@ const EventTableRow = ({ event, onEditClicked, onDeleteClicked, idx }) => {
       <td>{event.shifts.length}</td>
       {showVolunteers &&
         currentVolunteers.map((volunteer, idx) => (
-          <tr>
+          <tr key={idx}>
             <td> {volunteer.bio.first_name}</td>
             <td> {volunteer.bio.last_name}</td>
           </tr>
