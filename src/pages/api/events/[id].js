@@ -5,7 +5,7 @@ const {
 } = require("../../../../server/actions/events");
 const { isValidObjectID } = require("../../../../server/validators");
 
-import { sendEventEmail } from "../../../utils/email.ts";
+import { sendEventEmail } from "../../../utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "GET") {
