@@ -105,6 +105,7 @@ class RequestProvider extends React.Component {
             }),
         }}
       >
+        {/* eslint-disable-next-line react/prop-types */}
         {this.props.children}
         <Container {...this.state}>
           <div className="banner">

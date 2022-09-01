@@ -55,6 +55,7 @@ const ApplicantList = ({
   applicants,
   selectApplicantCallback,
   selectedIndex,
+  // eslint-disable-next-line react/prop-types
   children,
 }) => (
   <List>

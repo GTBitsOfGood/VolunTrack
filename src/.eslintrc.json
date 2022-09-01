@@ -26,6 +26,11 @@
   "rules": {
     "no-underscore-dangle": "off",
     "react/jsx-props-no-spreading": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "no-console": "off",
+    "import/prefer-default-export": "off",
+    "prettier/prettier": "warn",
+    "no-unused-vars": "warn",
+    "react/prop-types": "warn"
   }
 }

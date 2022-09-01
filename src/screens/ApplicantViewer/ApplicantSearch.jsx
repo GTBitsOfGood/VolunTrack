@@ -35,7 +35,7 @@ const Styled = {
     &:focus {
       background: gainsboro;
       box-shadow: none;
-    } 
+    }
   `,
   DropdownToggle: styled(DropdownToggle)`
     background: white;
