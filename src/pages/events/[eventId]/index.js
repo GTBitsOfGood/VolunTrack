@@ -125,7 +125,7 @@ const EventInfo = () => {
       ),
     };
     const updatedEvent = await updateEvent(changedEvent);
-    
+
     onRefresh();
   };
 
@@ -182,13 +182,16 @@ const EventInfo = () => {
         </Styled.EventCol2>
       </Styled.EventTable>
       {user.role == "volunteer" &&
-        event.max_volunteers - event.volunteers.length != 0 && !event.volunteers.includes(user._id) && futureDate && (
+        event.max_volunteers - event.volunteers.length != 0 &&
+        !event.volunteers.includes(user._id) &&
+        futureDate && (
           <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
           </Styled.Button>
         )}
       {user.role == "volunteer" &&
-        event.volunteers.includes(user._id) && futureDate && (
+        event.volunteers.includes(user._id) &&
+        futureDate && (
           <Styled.Button onClick={() => onUnregisterClicked(event)}>
             Unregister
           </Styled.Button>

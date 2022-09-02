@@ -39,7 +39,6 @@ export default async function handler(req, res, next) {
       message: "Event successfully created!",
     });
   } else if (req.method === "PUT") {
-
     const sendConfirmationEmail = req.body.sendConfirmationEmail;
 
     req.body = req.body.event;
