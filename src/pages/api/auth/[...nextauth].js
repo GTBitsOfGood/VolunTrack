@@ -62,8 +62,8 @@ export default NextAuth({
         user: currentUser,
       };
     },
-    async redirect({ baseUrl }) {
-      return baseUrl;
+    async redirect() {
+      return process.env.NEXTAUTH_URL;
     },
   },
 });
