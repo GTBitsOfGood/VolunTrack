@@ -78,10 +78,10 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
     "@bitwarden/cli": "^2022.8.0",
     "@types/node": "^18.7.14",
     "@types/react": "^18.0.18",
+    "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^2.0.7",
     "cross-env": "^7.0.3",
     "eslint": "^7.30.0",
