@@ -124,7 +124,7 @@ const EventInfo = () => {
         (volunteer) => volunteer !== user._id
       ),
     };
-    const updatedEvent = await updateEvent(changedEvent);
+    await updateEvent(changedEvent);
 
     onRefresh();
   };

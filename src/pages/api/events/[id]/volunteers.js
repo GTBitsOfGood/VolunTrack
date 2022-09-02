@@ -1,7 +1,7 @@
 const {
   getEventVolunteersList,
 } = require("../../../../../server/actions/events");
-export default async function handler(req, res, next) {
+export default async function handler(req, res) {
   if (req.method === "GET") {
     const eventId = req.query.id;
     const volunteers = await getEventVolunteersList(eventId);
