@@ -1,6 +1,6 @@
 const { updateEventID } = require("../../../../../server/actions/events");
 const User = require("../../../../../server/mongodb/models/User");
-import { sendUserEmail } from "../../../../utils/email";
+// import { sendUserEmail } from "src/utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "POST") {
@@ -10,6 +10,7 @@ export default async function handler(req, res, next) {
 
     const updatedEvent = await updateEventID(eventId, event, next);
 
+    // eslint-disable-next-line no-unused-vars
     const emailTemplateVariables = [
       {
         name: "eventTitle",
@@ -17,11 +18,11 @@ export default async function handler(req, res, next) {
       },
     ];
 
-    await sendUserEmail(
-      user.bio.email,
-      "event-register-confirmation",
-      emailTemplateVariables
-    );
+    // await sendUserEmail(
+    //   user.bio.email,
+    //   "event-register-confirmation",
+    //   emailTemplateVariables
+    // );
 
     if (event.mandated_volunteers.includes(user._id)) {
       await User.updateOne(

@@ -5,7 +5,7 @@ const {
 } = require("../../../../server/actions/events");
 const { isValidObjectID } = require("../../../../server/validators");
 
-import { sendEventEmail } from "src/utils/email";
+// import { sendEventEmail } from "src/utils/email";
 
 export default async function handler(req, res, next) {
   if (req.method === "GET") {
@@ -31,13 +31,14 @@ export default async function handler(req, res, next) {
 
     await deleteEventID(id, next);
 
+    // eslint-disable-next-line no-unused-vars
     const emailTemplateVariables = [
       {
         name: "eventTitle",
         content: `${event.title}`,
       },
     ];
-    await sendEventEmail(event, "event-delete", emailTemplateVariables);
+    // await sendEventEmail(event, "event-delete", emailTemplateVariables);
 
     res.json({
       message: "Event successfully deleted!",
