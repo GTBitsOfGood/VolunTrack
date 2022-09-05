@@ -14,6 +14,7 @@ const options = {
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
 
+// eslint-disable-next-line no-unused-vars
 export default (req, res) => {
   /* next-auth prioritizes x-forwarded-host over NEXTAUTH_URL
     when running in Vercel https://github.com/nextauthjs/next-auth/pull/4509 .
