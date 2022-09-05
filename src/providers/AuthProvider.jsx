@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import LoginPage from "../screens/Login";
 
-// AuthProvider wraps the entire appication and makes sure only authenticated users can access the app
+// AuthProvider wraps the entire application and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {
   const { status } = useSession();
 
