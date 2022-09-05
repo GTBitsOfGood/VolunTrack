@@ -43,8 +43,8 @@ const LoginPage = () => {
   const login = (e) => {
     e.preventDefault();
     signIn("google", {
-      redirect: process.env.NEXTAUTH_URL,
-      callbackUrl: process.env.NEXTAUTH_URL,
+      redirect: process.env.BASE_URL,
+      callbackUrl: process.env.BASE_URL,
     });
   };
 
