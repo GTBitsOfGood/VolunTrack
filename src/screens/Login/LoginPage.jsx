@@ -42,7 +42,10 @@ const Styled = {
 const LoginPage = () => {
   const login = (e) => {
     e.preventDefault();
-    signIn("google");
+    signIn("google", {
+      redirect: process.env.BASE_URL,
+      callbackUrl: process.env.BASE_URL,
+    });
   };
 
   return (

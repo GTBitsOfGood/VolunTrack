@@ -21,22 +21,22 @@ import variables from "../design-tokens/_variables.module.scss";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import Icon from "./Icon";
 
-const pageSwitchWidth = (currPath) => {
-  switch (currPath) {
-    case "/applicant-viewer":
-      return "9.6rem";
-    case "/user-manager":
-      return "8.6rem";
-    case "/assistants":
-      return "8.6rem";
-    case "/settings":
-      return "8.6rem";
-    case "/events":
-      return "4.8rem";
-    default:
-      return "0";
-  }
-};
+// const pageSwitchWidth = (currPath) => {
+//   switch (currPath) {
+//     case "/applicant-viewer":
+//       return "9.6rem";
+//     case "/user-manager":
+//       return "8.6rem";
+//     case "/assistants":
+//       return "8.6rem";
+//     case "/settings":
+//       return "8.6rem";
+//     case "/events":
+//       return "4.8rem";
+//     default:
+//       return "0";
+//   }
+// };
 
 const pageSwitchLeft = (currPath) => {
   switch (currPath) {
