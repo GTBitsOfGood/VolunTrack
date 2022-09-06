@@ -4,7 +4,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import dbConnect from "../../../../server/mongodb/index";
 import User from "../../../../server/mongodb/models/User";
-import CredentialsProvider from "next-auth/providers/credentials";
+// import CredentialsProvider from "next-auth/providers/credentials";
 
 const uri = process.env.MONGO_DB;
 const options = {
@@ -15,32 +15,34 @@ const options = {
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
 
+// process.env.VERCEL_ENV === "preview"
+//     ? CredentialsProvider({
+//       name: "Credentials",
+//       credentials: {
+//         username: {
+//           label: "Username",
+//           type: "text",
+//           placeholder: "jsmith",
+//         },
+//         password: { label: "Password", type: "password" },
+//       },
+//       async authorize() {
+//         return {
+//           id: 1,
+//           name: "J Smith",
+//           email: "jsmith@example.com",
+//           image: "https://i.pravatar.cc/150?u=jsmith@example.com",
+//         };
+//       },
+//     })
+//     :
+
 NextAuth({
   providers: [
-    process.env.VERCEL_ENV === "preview"
-      ? CredentialsProvider({
-          name: "Credentials",
-          credentials: {
-            username: {
-              label: "Username",
-              type: "text",
-              placeholder: "jsmith",
-            },
-            password: { label: "Password", type: "password" },
-          },
-          async authorize() {
-            return {
-              id: 1,
-              name: "J Smith",
-              email: "jsmith@example.com",
-              image: "https://i.pravatar.cc/150?u=jsmith@example.com",
-            };
-          },
-        })
-      : GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
@@ -83,8 +85,8 @@ NextAuth({
         user: currentUser,
       };
     },
-    async redirect() {
-      return process.env.NEXTAUTH_URL;
+    async redirect({ baseUrl }) {
+      return baseUrl;
     },
   },
 });
