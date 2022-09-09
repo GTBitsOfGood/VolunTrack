@@ -42,7 +42,7 @@ const Styled = {
 const LoginPage = () => {
   const login = (e) => {
     e.preventDefault();
-    signIn("google", {});
+    signIn("google");
   };
 
   return (
