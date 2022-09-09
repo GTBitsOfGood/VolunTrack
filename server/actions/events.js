@@ -100,7 +100,7 @@ export async function updateEventID(eventID, event, next) {
 
   return EventData.findByIdAndUpdate(eventID, event, {
     new: true,
-    useFindAndModify: true,
+    useFindAndModify: false,
   })
     .then(() => {
       return event;

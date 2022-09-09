@@ -33,7 +33,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
         type="text/javascript"
         src="https://go.playerzero.app/record/6316bdb7c836d318b2c5ab77"
         async
-        crossOrigin
+        crossOrigin={"true"}
       />
       <AuthProvider>
         <StyleProvider>
