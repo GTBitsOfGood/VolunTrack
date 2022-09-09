@@ -61,11 +61,6 @@ const testVolunteerUser = {
   updatedAt: "2022-04-12T23:08:32.167Z",
   __v: 0,
 };
-//
-// function adapterWrapper(clientPromise) {
-//   console.log("wrapper");
-//   return MongoDBAdapter(clientPromise);
-// }
 
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
@@ -83,17 +78,10 @@ export default NextAuth({
             password: { label: "Password", type: "password" },
           },
           async authorize(credentials) {
-            console.log("authorize");
-            console.log(credentials);
-            console.log(credentials.username);
-            console.log("---");
-
             if (credentials.username === "admin") {
-              console.log("admin");
               currRole = "admin";
               return testAdminUser;
             } else {
-              console.log("volunteer");
               currRole = "volunteer";
               return testVolunteerUser;
             }
@@ -137,14 +125,12 @@ export default NextAuth({
     // This determines what is returned from useSession and getSession calls
     async session({ session, user }) {
       if (process.env.VERCEL_ENV === "preview") {
-        console.log("preview session");
         return {
           ...session,
-          user: (currRole === "admin") ? testAdminUser : testVolunteerUser,
+          user: currRole === "admin" ? testAdminUser : testVolunteerUser,
         };
       }
 
-      console.log("regular session");
       await dbConnect();
 
       const _id = new ObjectId(user.id);
