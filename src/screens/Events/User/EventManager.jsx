@@ -53,6 +53,18 @@ const Styled = {
     font-size: 28px;
     font-weight: bold;
   `,
+  DateRow: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `,
+  Back: styled.p`
+    font-size: 14px;
+    margin-left: 10px;
+    padding-top: 8px;
+    text-decoration: underline;
+    color: ${variables.primary};
+  `,
   Left: styled.div`
     margin-left: 10vw;
     display: flex;
@@ -130,13 +142,15 @@ const EventManager = ({ user }) => {
   const [value, setDate] = useState(new Date());
 
   let splitDate = value.toDateString().split(" ");
-  const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
+  const [dateString, setDateString] = useState(
+    splitDate[1] + " " + splitDate[2] + " " + splitDate[3]
+  );
 
   const onChange = (value, event) => {
     setDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
-    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]; 
+    let date = splitDate[1] + " " + splitDate[2] + " " + splitDate[3];
     setDateString(date);
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
@@ -188,7 +202,10 @@ const EventManager = ({ user }) => {
       <Styled.Left>
         <Styled.EventContainer>
           <Styled.Events>Events</Styled.Events>
-          <Styled.Date>{dateString}</Styled.Date>
+          <Styled.DateRow>
+            <Styled.Date>{dateString}</Styled.Date>
+            <Styled.Back>Back to Today</Styled.Back>
+          </Styled.DateRow>
         </Styled.EventContainer>
         <Calendar
           onChange={onChange}
@@ -205,6 +222,7 @@ const EventManager = ({ user }) => {
         </Styled.Button>
         <Styled.Content>
           <EventTable
+            dateString={dateString}
             events={events}
             onRegisterClicked={onRegister}
             onUnregister={onUnregister}

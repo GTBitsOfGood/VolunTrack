@@ -48,7 +48,76 @@ const getMinorTotal = (minors) => {
   return total;
 };
 
-const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
+const sliceEventDate = (dateNum) => {
+  let eventDate = "";
+  eventDate =
+    dateNum.slice(5, 7) +
+    "/" +
+    dateNum.slice(8, 10) +
+    "/" +
+    dateNum.slice(0, 4);
+  return eventDate;
+};
+
+const getDateMonth = (month) => {
+  let convertMonth;
+  switch (month) {
+    case "Jan":
+      convertMonth = "01";
+      break;
+    case "Feb":
+      convertMonth = "02";
+      break;
+    case "Mar":
+      convertMonth = "03";
+      break;
+    case "Apr":
+      convertMonth = "04";
+      break;
+    case "May":
+      convertMonth = "05";
+      break;
+    case "Jun":
+      convertMonth = "06";
+      break;
+    case "Jul":
+      convertMonth = "07";
+      break;
+    case "Aug":
+      convertMonth = "08";
+      break;
+    case "Sep":
+      convertMonth = "09";
+      break;
+    case "Oct":
+      convertMonth = "10";
+      break;
+    case "Nov":
+      convertMonth = "11";
+      break;
+    case "Dec":
+      convertMonth = "12";
+      break;
+  }
+  return convertMonth;
+};
+
+const compareDateString = (dateNum) => {
+  let date = "";
+  let dateArr = dateNum.split(" ");
+  date = getDateMonth(dateArr[0]);
+  date += "/" + dateArr[1];
+  date += "/" + dateArr[2];
+  return date;
+};
+
+const EventTable = ({
+  dateString,
+  events,
+  onRegisterClicked,
+  onUnregister,
+  user,
+}) => {
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -80,11 +149,30 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
                     <Table.TitleAddNums>
                       <Table.EventName>{event.title}</Table.EventName>
                       <Table.Volunteers>
-                        {" "}
+                        {sliceEventDate(event.date) <
+                        compareDateString(dateString) ? (
+                          <Table.Text>
+                            <Table.Volunteers>
+                              {event.volunteers.length +
+                                getMinorTotal(event.minors)}
+                            </Table.Volunteers>
+                            <Table.Slots>Slots Available</Table.Slots>
+                          </Table.Text>
+                        ) : (
+                          <Table.Text>
+                            <Table.Volunteers>
+                              {event.max_volunteers -
+                                event.volunteers.length +
+                                getMinorTotal(event.minors)}
+                            </Table.Volunteers>
+                            <Table.Slots>Volunteers Attended</Table.Slots>
+                          </Table.Text>
+                        )}
+                        {/* {" "}
                         {event.max_volunteers -
                           event.volunteers.length +
                           getMinorTotal(event.minors)}{" "}
-                        slots available
+                        slots available */}
                       </Table.Volunteers>
                     </Table.TitleAddNums>
                     <Table.Time>
@@ -94,9 +182,10 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
                   </Table.TextInfo>
                 </Table.Inner>
                 <Table.Creation>
-                  {" "}
+                  {sliceEventDate(event.date)}
+                  {/* {" "}
                   {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
-                  {event.date.slice(0, 4)}{" "}
+                  {event.date.slice(0, 4)}{" "} */}
                 </Table.Creation>
               </Table.EventList>
             </Link>
