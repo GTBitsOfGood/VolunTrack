@@ -95,6 +95,7 @@ const EventManager = ({ user }) => {
   }, []);
 
   const [markDates, setDates] = useState([]);
+  const [markCurrDate, setCurrDate] = useState([]);
 
   const onRefresh = () => {
     setLoading(true);
@@ -103,6 +104,7 @@ const EventManager = ({ user }) => {
         if (result && result.data && result.data.events) {
           result.data.events = result.data.events.filter(function (event) {
             const currentDate = new Date();
+            setCurrDate(currentDate);
             return new Date(event.date) > currentDate;
           });
           setEvents(result.data.events);
@@ -148,6 +150,7 @@ const EventManager = ({ user }) => {
 
   const onChange = (value, event) => {
     setDate(value);
+    console.log(markCurrDate);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + " " + splitDate[3];

@@ -59,53 +59,25 @@ const sliceEventDate = (dateNum) => {
   return eventDate;
 };
 
-const getDateMonth = (month) => {
-  let convertMonth;
-  switch (month) {
-    case "Jan":
-      convertMonth = "01";
-      break;
-    case "Feb":
-      convertMonth = "02";
-      break;
-    case "Mar":
-      convertMonth = "03";
-      break;
-    case "Apr":
-      convertMonth = "04";
-      break;
-    case "May":
-      convertMonth = "05";
-      break;
-    case "Jun":
-      convertMonth = "06";
-      break;
-    case "Jul":
-      convertMonth = "07";
-      break;
-    case "Aug":
-      convertMonth = "08";
-      break;
-    case "Sep":
-      convertMonth = "09";
-      break;
-    case "Oct":
-      convertMonth = "10";
-      break;
-    case "Nov":
-      convertMonth = "11";
-      break;
-    case "Dec":
-      convertMonth = "12";
-      break;
-  }
-  return convertMonth;
-};
+const monthMap = new Map([
+  ["Jan", "01"],
+  ["Feb", "02"],
+  ["Mar", "03"],
+  ["Apr", "04"],
+  ["May", "05"],
+  ["Jun", "06"],
+  ["Jul", "07"],
+  ["Aug", "08"],
+  ["Sep", "09"],
+  ["Oct", "10"],
+  ["Nov", "11"],
+  ["Dec", "12"],
+]);
 
 const compareDateString = (dateNum) => {
   let date = "";
   let dateArr = dateNum.split(" ");
-  date = getDateMonth(dateArr[0]);
+  date = monthMap.get(dateArr[0]);
   date += "/" + dateArr[1];
   date += "/" + dateArr[2];
   return date;
@@ -168,11 +140,6 @@ const EventTable = ({
                             <Table.Slots>Volunteers Attended</Table.Slots>
                           </Table.Text>
                         )}
-                        {/* {" "}
-                        {event.max_volunteers -
-                          event.volunteers.length +
-                          getMinorTotal(event.minors)}{" "}
-                        slots available */}
                       </Table.Volunteers>
                     </Table.TitleAddNums>
                     <Table.Time>
@@ -181,12 +148,7 @@ const EventTable = ({
                     </Table.Time>
                   </Table.TextInfo>
                 </Table.Inner>
-                <Table.Creation>
-                  {sliceEventDate(event.date)}
-                  {/* {" "}
-                  {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
-                  {event.date.slice(0, 4)}{" "} */}
-                </Table.Creation>
+                <Table.Creation>{sliceEventDate(event.date)}</Table.Creation>
               </Table.EventList>
             </Link>
           </Styled.List>
