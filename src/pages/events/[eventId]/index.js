@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { Button } from "reactstrap";
+import { Button, Row, Col } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { useSession } from "next-auth/react";
@@ -133,6 +133,7 @@ const EventInfo = () => {
   return (
     <>
       <Styled.EventTable>
+      <Col>
         <Styled.EventCol>
           <Styled.EventName>{event.title}</Styled.EventName>
           <Styled.EventSubhead>
@@ -147,7 +148,10 @@ const EventInfo = () => {
           </Styled.EventSubhead>
           <Styled.Info>{event.description}</Styled.Info>
         </Styled.EventCol>
-        <Styled.EventCol2 style={{ "margin-left": "auto" }}>
+        </Col>
+        <Col>
+          <Row>
+        <Styled.EventCol2 style={{ "margin-right": "auto" }}>
           <Styled.InfoHead>Event Information</Styled.InfoHead>
           <Styled.InfoTable>
             <Styled.InfoTableCol>
@@ -180,6 +184,41 @@ const EventInfo = () => {
             </Styled.InfoTableCol>
           </Styled.InfoTable>
         </Styled.EventCol2>
+        </Row>
+        <br></br>
+          <br></br>
+        <Row>
+        <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+          <Styled.InfoHead>Organization</Styled.InfoHead>
+          <Styled.InfoTable>
+            <Styled.InfoTableCol>
+              <Styled.InfoTableText>
+                <b>POC Name</b>
+                <br></br>
+                {event.pocName}
+              </Styled.InfoTableText>
+              <Styled.InfoTableText>
+                <b>POC Email</b>
+                <br></br>
+                {event.pocEmail}
+              </Styled.InfoTableText>
+              <Styled.InfoTableText>
+                <b>POC Phone</b>
+                <br></br>
+                {event.pocPhone}
+              </Styled.InfoTableText>
+              </Styled.InfoTableCol>
+              <Styled.InfoTableCol>
+              <Styled.InfoTableText>
+                <b>Location</b>
+                <br></br>
+                {event.address}
+              </Styled.InfoTableText>
+            </Styled.InfoTableCol>
+          </Styled.InfoTable>
+        </Styled.EventCol2>
+        </Row>
+        </Col>
       </Styled.EventTable>
       {user.role == "volunteer" &&
         event.max_volunteers - event.volunteers.length != 0 &&
