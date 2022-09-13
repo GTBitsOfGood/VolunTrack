@@ -70,7 +70,7 @@ const EventFormModal = ({ toggle, event, han }) => {
     }
 
     const emptyStringField = "";
-    const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
+    const submitText = containsExisitingEvent(event) ? "Save" : "Create Event";
     
     return (
         <Formik
@@ -194,7 +194,7 @@ const EventFormModal = ({ toggle, event, han }) => {
                 color="primary"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
-                style={{backgroundColor: variables["button-pink"], borderColor: variables["button-pink"], marginLeft: '4rem'}}
+                style={{backgroundColor: 'red', borderColor: 'red', marginLeft: '4rem'}}
                 >
                 {submitText}
                 </Button>
