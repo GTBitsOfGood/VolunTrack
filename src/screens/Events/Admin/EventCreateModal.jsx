@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Modal, ModalHeader } from "reactstrap";
+import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
 import EventFormModal from "./EventFormModal";
@@ -47,10 +47,25 @@ const EventCreateModal = ({ open, toggle }) => {
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
       <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
-      <Styled.HeaderText>
-        <p>Standard Event</p>
-        {/* <p class = "org-event">Organization Event</p> */}
-      </Styled.HeaderText>
+      <Nav tabs>
+        <NavItem>
+          <NavLink>
+            {" "}
+            <Styled.HeaderText>
+              <p>Standard Event</p>
+              {/* <p class = "org-event">Organization Event</p> */}
+            </Styled.HeaderText>
+          </NavLink>
+        </NavItem>
+        <NavItem>
+          <NavLink>
+            {" "}
+            <Styled.HeaderText>
+              <p>Group Event</p>
+            </Styled.HeaderText>
+          </NavLink>
+        </NavItem>
+      </Nav>
       <EventFormModal toggle={toggle} event={null}></EventFormModal>
     </Modal>
   );
