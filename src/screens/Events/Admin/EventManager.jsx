@@ -1,7 +1,7 @@
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from "date-fns";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
@@ -120,13 +120,15 @@ const EventManager = () => {
   const [value, setDate] = useState(new Date());
 
   let splitDate = value.toDateString().split(" ");
-  const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
+  const [dateString, setDateString] = useState(
+    splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
+  );
 
   const onChange = (value, event) => {
     setDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
-    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]; 
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
