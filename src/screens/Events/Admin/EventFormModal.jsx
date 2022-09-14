@@ -86,11 +86,11 @@ const EventFormModal = ({ toggle, event, han }) => {
     containsExisitingEvent(event) ? event.description : emptyStringField
   );
 
+  let ReactQuill;
   // patch for build failure
   if (typeof window !== "undefined") {
-    this.ReactQuill = require("react-quill");
+    ReactQuill = require("react-quill");
   }
-  const ReactQuill = this.ReactQuill;
   const quill = useRef(null);
 
   return (
