@@ -252,6 +252,12 @@ const Header = () => {
               <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
+              <Link
+                href="/past-events"
+                selected={currPageMatches("/past-events")}
+              >
+                <Styled.PageLink>Past Events</Styled.PageLink>
+              </Link>
               {user.role === "admin" && (
                 <Styled.Dropdown nav inNavbar className="navbar-nav">
                   <Styled.Toggle color="white">

@@ -1,7 +1,7 @@
-import { differenceInCalendarDays } from 'date-fns';
+import { differenceInCalendarDays } from "date-fns";
 import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
+import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
@@ -35,6 +35,7 @@ const Styled = {
     height: 2.5rem;
     margin-top: 2rem;
     margin-bottom: 2vw;
+    margin-right: 2vw;
   `,
   Content: styled.div``,
   EventContainer: styled.div`
@@ -62,19 +63,35 @@ const Styled = {
     flex-direction: column;
     margin-left: 3vw;
   `,
+  ButtonRow: styled.div`
+    display: flex;
+    flex-direction: row;
+  `,
 };
 
-const EventManager = () => {
+const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
+
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
   const onRefresh = () => {
     setLoading(true);
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
+          result.data.events = result.data.events.filter(function (event) {
+            const currentDate = new Date();
+            return new Date(event.date) > currentDate;
+          });
           setEvents(result.data.events);
           setDates(result.data.events);
         }
@@ -120,13 +137,15 @@ const EventManager = () => {
   const [value, setDate] = useState(new Date());
 
   let splitDate = value.toDateString().split(" ");
-  const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
+  const [dateString, setDateString] = useState(
+    splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
+  );
 
   const onChange = (value, event) => {
     setDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
-    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]; 
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
@@ -134,10 +153,10 @@ const EventManager = () => {
     fetchEvents(selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
-          result.data.events = result.data.events.filter(function (event) {
-            const currentDate = new Date();
-            return new Date(event.date) > currentDate;
-          });
+          // result.data.events = result.data.events.filter(function (event) {
+          //   const currentDate = new Date();
+          //   return new Date(event.date) > currentDate;
+          // });
           setEvents(result.data.events);
         }
       })
@@ -153,6 +172,7 @@ const EventManager = () => {
       String(jsDate.getDate()).padStart(2, "0"),
     ].join(separator);
   };
+
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
@@ -182,11 +202,18 @@ const EventManager = () => {
         />
       </Styled.Left>
       <Styled.Right>
-        <Styled.Button onClick={onCreateClicked}>
-          <span style={{ color: "white" }}>Create new event</span>
-        </Styled.Button>
+        <Styled.ButtonRow>
+          <Styled.Button onClick={onCreateClicked}>
+            <span style={{ color: "white" }}>Create new event</span>
+          </Styled.Button>
+          <Styled.Button onClick={onRefresh}>
+            <Icon color="grey3" name="refresh" />
+            <span>Refresh</span>
+          </Styled.Button>
+        </Styled.ButtonRow>
         <Styled.Content>
           <EventTable
+            dateString={dateString}
             events={events}
             onEditClicked={onEditClicked}
             onDeleteClicked={onDeleteClicked}

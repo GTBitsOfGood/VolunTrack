@@ -46,7 +46,42 @@ const getMinorTotal = (minors) => {
   return total;
 };
 
-const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
+const sliceEventDate = (dateNum) => {
+  let eventDate = "";
+  eventDate =
+    dateNum.slice(5, 7) +
+    "/" +
+    dateNum.slice(8, 10) +
+    "/" +
+    dateNum.slice(0, 4);
+  return eventDate;
+};
+
+const monthMap = new Map([
+  ["Jan", "01"],
+  ["Feb", "02"],
+  ["Mar", "03"],
+  ["Apr", "04"],
+  ["May", "05"],
+  ["Jun", "06"],
+  ["Jul", "07"],
+  ["Aug", "08"],
+  ["Sep", "09"],
+  ["Oct", "10"],
+  ["Nov", "11"],
+  ["Dec", "12"],
+]);
+
+const compareDateString = (dateNum) => {
+  let date = "";
+  let dateArr = dateNum.split(" ");
+  date = monthMap.get(dateArr[0]);
+  date += "/" + dateArr[1];
+  date += "/" + dateArr[2];
+  return date;
+};
+
+const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
   return (
     <Styled.Container>
       <Styled.ul>
@@ -56,18 +91,22 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
               <Table.EventList>
                 <Table.Inner>
                   <Table.Edit>
-                    <Styled.Button onClick={(e) => {
-                      e.stopPropagation();
-                      onEditClicked(event)}
-                    }>
+                    <Styled.Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditClicked(event);
+                      }}
+                    >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
                   </Table.Edit>
                   <Table.Delete>
-                    <Styled.Button onClick={(e) => {
-                      e.stopPropagation();
-                      onDeleteClicked(event)
-                    }}>
+                    <Styled.Button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteClicked(event);
+                      }}
+                    >
                       <Icon color="grey3" name="delete" />
                     </Styled.Button>
                   </Table.Delete>
@@ -75,11 +114,25 @@ const EventTable = ({ events, onEditClicked, onDeleteClicked }) => {
                     <Table.TitleAddNums>
                       <Table.EventName>{event.title}</Table.EventName>
                       <Table.Volunteers>
-                        {" "}
-                        {event.max_volunteers -
-                          event.volunteers.length +
-                          getMinorTotal(event.minors)}{" "}
-                        slots available
+                        {sliceEventDate(event.date) <
+                        compareDateString(dateString) ? (
+                          <Table.Text>
+                            <Table.Volunteers>
+                              {event.volunteers.length +
+                                getMinorTotal(event.minors)}
+                            </Table.Volunteers>
+                            <Table.Slots>Slots Available</Table.Slots>
+                          </Table.Text>
+                        ) : (
+                          <Table.Text>
+                            <Table.Volunteers>
+                              {event.max_volunteers -
+                                event.volunteers.length +
+                                getMinorTotal(event.minors)}
+                            </Table.Volunteers>
+                            <Table.Slots>Volunteers Attended</Table.Slots>
+                          </Table.Text>
+                        )}
                       </Table.Volunteers>
                     </Table.TitleAddNums>
                     <Table.Time>
