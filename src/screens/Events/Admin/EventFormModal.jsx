@@ -16,7 +16,6 @@ import { eventValidator } from "./eventHelpers";
 import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { set } from "lodash";
 
@@ -87,6 +86,11 @@ const EventFormModal = ({ toggle, event, han }) => {
     containsExisitingEvent(event) ? event.description : emptyStringField
   );
 
+  // patch for build failure
+  if (typeof window !== "undefined") {
+    this.ReactQuill = require("react-quill");
+  }
+  const ReactQuill = this.ReactQuill;
   const quill = useRef(null);
 
   return (
