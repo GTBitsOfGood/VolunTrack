@@ -76,55 +76,38 @@ const EventFormModal = ({ toggle, event, han }) => {
     setSendConfirmationEmail(true);
   };
 
-  const emptyStringField = "";
-  const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
-
-  return (
-    <Formik
-      initialValues={{
-        title: containsExisitingEvent(event) ? event.title : emptyStringField,
-        date: containsExisitingEvent(event)
-          ? event.date.split("T")[0]
-          : emptyStringField, // strips timestamp
-        startTime: containsExisitingEvent(event)
-          ? event.startTime
-          : emptyStringField,
-        endTime: containsExisitingEvent(event)
-          ? event.endTime
-          : emptyStringField,
-        address: containsExisitingEvent(event)
-          ? event.address
-          : emptyStringField,
-        city: containsExisitingEvent(event) ? event.city : emptyStringField,
-        zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
-        max_volunteers: containsExisitingEvent(event)
-          ? event.max_volunteers
-          : emptyStringField,
-        description: containsExisitingEvent(event)
-          ? event.description
-          : emptyStringField,
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        containsExisitingEvent(event)
-          ? onSubmitEditEvent(values, setSubmitting)
-          : onSubmitCreateEvent(values, setSubmitting);
-      }}
-      validationSchema={eventValidator}
-      render={({
-        handleSubmit,
-        isValid,
-        isSubmitting,
-        values,
-        setFieldValue,
-        handleBlur,
-      }) => (
-        <React.Fragment>
-          <Styled.ModalBody>
-            <Styled.Form>
-              <SForm.FormGroup>
-                <Row>
-                  <Col>
-                    {" "}
+    const emptyStringField = "";
+    const submitText = containsExisitingEvent(event) ? "Save" : "Create Event";
+    
+    return (
+        <Formik
+        initialValues={{
+            title: containsExisitingEvent(event) ? event.title : emptyStringField,
+            date: containsExisitingEvent(event) ? event.date.split("T")[0] : emptyStringField, // strips timestamp
+            startTime: containsExisitingEvent(event) ? event.startTime : emptyStringField,
+            endTime: containsExisitingEvent(event) ? event.endTime : emptyStringField,
+            address: containsExisitingEvent(event) ? event.address : emptyStringField,
+            city: containsExisitingEvent(event) ? event.city : emptyStringField,
+            zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
+            max_volunteers: containsExisitingEvent(event) ? event.max_volunteers : emptyStringField,
+            description: containsExisitingEvent(event) ? event.description : emptyStringField,
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+            containsExisitingEvent(event) ? onSubmitEditEvent(values, setSubmitting) : onSubmitCreateEvent(values,  setSubmitting);
+        }}
+        validationSchema={eventValidator}
+        render={({
+            handleSubmit,
+            isValid,
+            isSubmitting,
+            values,
+            setFieldValue,
+            handleBlur,
+        }) => (
+            <React.Fragment>
+            <Styled.ModalBody>
+                <Styled.Form>
+                <SForm.FormGroup>
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Event Title</SForm.Label>
@@ -212,7 +195,40 @@ const EventFormModal = ({ toggle, event, han }) => {
                         </Field>
                       </Styled.Col>
                     </Row>
-                  </Col>
+                </SForm.FormGroup>
+                </Styled.Form>
+                {
+                    containsExisitingEvent(event) &&
+                    <Styled.Row>
+                        <FormGroup>
+                            <Input type="checkbox" onChange={onSendConfirmationEmailCheckbox}/>{''} 
+                        </FormGroup> 
+                        <Styled.GenericText>I would like to send a confirmation email</Styled.GenericText>
+                    </Styled.Row> 
+                }
+            </Styled.ModalBody>
+            <ModalFooter>
+                <Button 
+                color="secondary" 
+                onClick={toggle}
+                style={{backgroundColor: 'transparent', borderColor: 'transparent', color: variables["event-text"]}}
+                >
+                Cancel
+                </Button>
+                <Button
+                color="primary"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+                style={{backgroundColor: 'red', borderColor: 'red', marginLeft: '4rem'}}
+                >
+                {submitText}
+                </Button>
+            </ModalFooter>
+            </React.Fragment>
+        )}
+        />
+    );
+}
 
                   <Col>
                     <Row>

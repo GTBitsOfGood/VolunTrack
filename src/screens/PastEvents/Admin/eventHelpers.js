@@ -1,4 +1,5 @@
 import { string, object, number, date, array } from "yup";
+import axios from "axios";
 
 export const eventValidator = object().shape({
   name: string().trim().required(),
@@ -17,3 +18,6 @@ export const eventValidator = object().shape({
     )
     .required(),
 });
+
+export const updateEvent = async (event) =>
+  (await axios.put(`/api/events/${event._id}`, event)).data;
