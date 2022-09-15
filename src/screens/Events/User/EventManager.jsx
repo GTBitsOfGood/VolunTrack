@@ -200,6 +200,17 @@ const EventManager = ({ user }) => {
     return tileClassName !== "" ? tileClassName : null;
   };
 
+  //attempt at back to today button (needs to be fixed)
+  const setDateBack = () => {
+    setDates(value);
+    setDate(value);
+    let datestr = value.toString();
+    let splitDate = value.toDateString().split(" ");
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
+    setDateString(date);
+    onRefresh();
+  };
+
   return (
     <Styled.Container>
       <Styled.Left>
@@ -207,7 +218,7 @@ const EventManager = ({ user }) => {
           <Styled.Events>Events</Styled.Events>
           <Styled.DateRow>
             <Styled.Date>{dateString}</Styled.Date>
-            <Styled.Back>Back to Today</Styled.Back>
+            <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
           </Styled.DateRow>
         </Styled.EventContainer>
         <Calendar
