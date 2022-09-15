@@ -121,7 +121,17 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
                               {event.volunteers.length +
                                 getMinorTotal(event.minors)}
                             </Table.Volunteers>
-                            <Table.Slots>Slots Available</Table.Slots>
+                            <Table.Slots>
+                              Slots Available{" "}
+                              {console.log(
+                                sliceEventDate(event.date) <
+                                  compareDateString(dateString) +
+                                    " " +
+                                    event.date +
+                                    " " +
+                                    dateString
+                              )}
+                            </Table.Slots>
                           </Table.Text>
                         ) : (
                           <Table.Text>
@@ -141,10 +151,7 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
                     </Table.Time>
                   </Table.TextInfo>
                 </Table.Inner>
-                <Table.Creation>
-                  {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
-                  {event.date.slice(0, 4)}{" "}
-                </Table.Creation>
+                <Table.Creation>{sliceEventDate(event.date)}</Table.Creation>
               </Table.EventList>
             </Link>
           </Styled.List>

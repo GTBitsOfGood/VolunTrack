@@ -64,6 +64,7 @@ const Styled = {
     padding-top: 8px;
     text-decoration: underline;
     color: ${variables.primary};
+    cursor: pointer;
   `,
   Left: styled.div`
     margin-left: 10vw;

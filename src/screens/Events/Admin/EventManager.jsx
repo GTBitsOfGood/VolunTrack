@@ -67,6 +67,19 @@ const Styled = {
     display: flex;
     flex-direction: row;
   `,
+  DateRow: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `,
+  Back: styled.p`
+    font-size: 14px;
+    margin-left: 10px;
+    padding-top: 8px;
+    text-decoration: underline;
+    color: ${variables.primary};
+    cursor: pointer;
+  `,
 };
 
 const EventManager = ({ user }) => {
@@ -153,10 +166,6 @@ const EventManager = ({ user }) => {
     fetchEvents(selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
-          // result.data.events = result.data.events.filter(function (event) {
-          //   const currentDate = new Date();
-          //   return new Date(event.date) > currentDate;
-          // });
           setEvents(result.data.events);
         }
       })
@@ -191,7 +200,10 @@ const EventManager = ({ user }) => {
       <Styled.Left>
         <Styled.EventContainer>
           <Styled.Events>Events</Styled.Events>
-          <Styled.Date>{dateString}</Styled.Date>
+          <Styled.DateRow>
+            <Styled.Date>{dateString}</Styled.Date>
+            <Styled.Back>Back to Today</Styled.Back>
+          </Styled.DateRow>
         </Styled.EventContainer>
         <Calendar
           onChange={onChange}
