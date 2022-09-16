@@ -187,7 +187,7 @@ const EventInfo = () => {
         </Row>
         <br></br>
           <br></br>
-        <Row>
+        {event.pocName != null && <Row>
         <Styled.EventCol2 style={{ "margin-right": "auto" }}>
           <Styled.InfoHead>Organization</Styled.InfoHead>
           <Styled.InfoTable>
@@ -212,12 +212,15 @@ const EventInfo = () => {
               <Styled.InfoTableText>
                 <b>Location</b>
                 <br></br>
-                {event.address}
+                {event.addressLineOne}
+                {event.addressLineTwo}
+                {event.orgCity}, {event.orgState}
+                {event.orgZip}
               </Styled.InfoTableText>
             </Styled.InfoTableCol>
           </Styled.InfoTable>
         </Styled.EventCol2>
-        </Row>
+        </Row>}
         </Col>
       </Styled.EventTable>
       {user.role == "volunteer" &&
