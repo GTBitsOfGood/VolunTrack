@@ -86,7 +86,6 @@ const EventManager = ({ user }) => {
   const [currUser, setCurrUser] = useState(null);
   const [showBack, setShowBack] = useState(false);
 
-
   const router = useRouter();
 
   if (!user) {
@@ -203,7 +202,6 @@ const EventManager = ({ user }) => {
     return tileClassName !== "" ? tileClassName : null;
   };
 
-  //attempt at back to today button (needs to be fixed)
   const setDateBack = () => {
     const currentDate = new Date();
     setDates(currentDate);
@@ -241,15 +239,19 @@ const EventManager = ({ user }) => {
           <span>Refresh</span>
         </Styled.Button>
         <Styled.Content>
-          <EventTable
-            dateString={dateString}
-            events={events}
-            onRegisterClicked={onRegister}
-            onUnregister={onUnregister}
-            user={user}
-          >
-            {" "}
-          </EventTable>
+          {events.length == 0 ? (
+            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+          ) : (
+            <EventTable
+              dateString={dateString}
+              events={events}
+              onRegisterClicked={onRegister}
+              onUnregister={onUnregister}
+              user={user}
+            >
+              {" "}
+            </EventTable>
+          )}
         </Styled.Content>
       </Styled.Right>
     </Styled.Container>

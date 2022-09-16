@@ -197,7 +197,6 @@ const EventManager = ({ user }) => {
     return tileClassName !== "" ? tileClassName : null;
   };
 
-  //attempt at back to today button (needs to be fixed)
   const setDateBack = () => {
     const currentDate = new Date();
     setDates(currentDate);
@@ -240,12 +239,16 @@ const EventManager = ({ user }) => {
           </Styled.Button>
         </Styled.ButtonRow>
         <Styled.Content>
-          <EventTable
-            dateString={dateString}
-            events={events}
-            onEditClicked={onEditClicked}
-            onDeleteClicked={onDeleteClicked}
-          ></EventTable>
+          {events.length == 0 ? (
+            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+          ) : (
+            <EventTable
+              dateString={dateString}
+              events={events}
+              onEditClicked={onEditClicked}
+              onDeleteClicked={onDeleteClicked}
+            ></EventTable>
+          )}
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
           <EventEditModal
             open={showEditModal}
