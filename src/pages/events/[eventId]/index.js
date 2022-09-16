@@ -133,94 +133,97 @@ const EventInfo = () => {
   return (
     <>
       <Styled.EventTable>
-      <Col>
-        <Styled.EventCol>
-          <Styled.EventName>{event.title}</Styled.EventName>
-          <Styled.EventSubhead>
-            <Styled.Slots>
-              {" "}
-              {event.max_volunteers - event.volunteers.length} Slots Remaining
-            </Styled.Slots>
-            <Styled.Date>
-              Updated {event.updatedAt.slice(0, 10)} @{" "}
-              {convertTime(event.updatedAt.slice(11, 16))}
-            </Styled.Date>
-          </Styled.EventSubhead>
-          <Styled.Info>{event.description}</Styled.Info>
-        </Styled.EventCol>
+        <Col>
+          <Styled.EventCol>
+            <Styled.EventName>{event.title}</Styled.EventName>
+            <Styled.EventSubhead>
+              <Styled.Slots>
+                {" "}
+                {event.max_volunteers - event.volunteers.length} Slots Remaining
+              </Styled.Slots>
+              <Styled.Date>
+                Updated {event.updatedAt.slice(0, 10)} @{" "}
+                {convertTime(event.updatedAt.slice(11, 16))}
+              </Styled.Date>
+            </Styled.EventSubhead>
+            <Styled.Info>{event.description}</Styled.Info>
+          </Styled.EventCol>
         </Col>
         <Col>
           <Row>
-        <Styled.EventCol2 style={{ "margin-right": "auto" }}>
-          <Styled.InfoHead>Event Information</Styled.InfoHead>
-          <Styled.InfoTable>
-            <Styled.InfoTableCol>
-              <Styled.InfoTableText>
-                <b>Date:</b>
-                <br></br>
-                {event.date.slice(0, 10)}
-              </Styled.InfoTableText>
-              <Styled.InfoTableText>
-                <b>Contact:</b>
-                <br></br>
-                Phone
-                <br></br>
-                Email
-              </Styled.InfoTableText>
-            </Styled.InfoTableCol>
+            <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+              <Styled.InfoHead>Event Information</Styled.InfoHead>
+              <Styled.InfoTable>
+                <Styled.InfoTableCol>
+                  <Styled.InfoTableText>
+                    <b>Date:</b>
+                    <br></br>
+                    {event.date.slice(0, 10)}
+                  </Styled.InfoTableText>
+                  <Styled.InfoTableText>
+                    <b>Contact:</b>
+                    <br></br>
+                    Phone
+                    <br></br>
+                    Email
+                  </Styled.InfoTableText>
+                </Styled.InfoTableCol>
 
-            <Styled.InfoTableCol>
-              <Styled.InfoTableText>
-                <b>Time:</b>
-                <br></br>
-                {convertTime(event.startTime)} - {convertTime(event.endTime)}
-              </Styled.InfoTableText>
-              <Styled.InfoTableText>
-                <b>Location:</b>
-                <br></br>
-                {event.address}
-                <br></br>
-              </Styled.InfoTableText>
-            </Styled.InfoTableCol>
-          </Styled.InfoTable>
-        </Styled.EventCol2>
-        </Row>
-        <br></br>
+                <Styled.InfoTableCol>
+                  <Styled.InfoTableText>
+                    <b>Time:</b>
+                    <br></br>
+                    {convertTime(event.startTime)} -{" "}
+                    {convertTime(event.endTime)}
+                  </Styled.InfoTableText>
+                  <Styled.InfoTableText>
+                    <b>Location:</b>
+                    <br></br>
+                    {event.address}
+                    <br></br>
+                  </Styled.InfoTableText>
+                </Styled.InfoTableCol>
+              </Styled.InfoTable>
+            </Styled.EventCol2>
+          </Row>
           <br></br>
-        {event.pocName != null && <Row>
-        <Styled.EventCol2 style={{ "margin-right": "auto" }}>
-          <Styled.InfoHead>Organization</Styled.InfoHead>
-          <Styled.InfoTable>
-            <Styled.InfoTableCol>
-              <Styled.InfoTableText>
-                <b>POC Name</b>
-                <br></br>
-                {event.pocName}
-              </Styled.InfoTableText>
-              <Styled.InfoTableText>
-                <b>POC Email</b>
-                <br></br>
-                {event.pocEmail}
-              </Styled.InfoTableText>
-              <Styled.InfoTableText>
-                <b>POC Phone</b>
-                <br></br>
-                {event.pocPhone}
-              </Styled.InfoTableText>
-              </Styled.InfoTableCol>
-              <Styled.InfoTableCol>
-              <Styled.InfoTableText>
-                <b>Location</b>
-                <br></br>
-                {event.addressLineOne}
-                {event.addressLineTwo}
-                {event.orgCity}, {event.orgState}
-                {event.orgZip}
-              </Styled.InfoTableText>
-            </Styled.InfoTableCol>
-          </Styled.InfoTable>
-        </Styled.EventCol2>
-        </Row>}
+          <br></br>
+          {event.pocName != null && (
+            <Row>
+              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+                <Styled.InfoHead>Organization</Styled.InfoHead>
+                <Styled.InfoTable>
+                  <Styled.InfoTableCol>
+                    <Styled.InfoTableText>
+                      <b>POC Name</b>
+                      <br></br>
+                      {event.pocName}
+                    </Styled.InfoTableText>
+                    <Styled.InfoTableText>
+                      <b>POC Email</b>
+                      <br></br>
+                      {event.pocEmail}
+                    </Styled.InfoTableText>
+                    <Styled.InfoTableText>
+                      <b>POC Phone</b>
+                      <br></br>
+                      {event.pocPhone}
+                    </Styled.InfoTableText>
+                  </Styled.InfoTableCol>
+                  <Styled.InfoTableCol>
+                    <Styled.InfoTableText>
+                      <b>Location</b>
+                      <br></br>
+                      {event.addressLineOne}
+                      {event.addressLineTwo}
+                      {event.orgCity}, {event.orgState}
+                      {event.orgZip}
+                    </Styled.InfoTableText>
+                  </Styled.InfoTableCol>
+                </Styled.InfoTable>
+              </Styled.EventCol2>
+            </Row>
+          )}
         </Col>
       </Styled.EventTable>
       {user.role == "volunteer" &&
