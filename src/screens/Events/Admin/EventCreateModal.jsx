@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
 import EventFormModal from "./EventFormModal";
 import variables from "../../../design-tokens/_variables.module.scss";
+import classnames from "classnames";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -31,42 +32,67 @@ const Styled = {
   `,
   HeaderText: styled.p`
     color: ${variables["dark"]};
-    font-weight: 900;
+    font-weight: 700;
     font-size: 1.2em;
-    border-bottom: 2px solid ${variables["dark"]};
-    padding-right: 3.5rem;
-    padding-left: 2rem;
-    margin-left: 5rem;
-    margin-right: 5rem;
-    text-align: center;
-    display: inline;
+    // border-bottom: 2px solid ${variables["dark"]};
+    // padding-right: 3.5rem;
+    // padding-left: 2rem;
+    // margin-left: 5rem;
+    // margin-right: 5rem;
+    // text-align: center;
+    // display: inline;
   `,
 };
 
 const EventCreateModal = ({ open, toggle }) => {
+  // State for current active Tab
+  const [currentActiveTab, setCurrentActiveTab] = useState("1");
+
+  // Toggle active state for Tab
+  const changeTab = (tab) => {
+    if (currentActiveTab !== tab) setCurrentActiveTab(tab);
+  };
+
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
       <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
       <Nav tabs>
         <NavItem>
-          <NavLink>
-            {" "}
-            <Styled.HeaderText>
-              <p>Standard Event</p>
-              {/* <p class = "org-event">Organization Event</p> */}
-            </Styled.HeaderText>
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink>
+          <NavLink
+            className={classnames({
+              active: currentActiveTab === "1",
+            })}
+            onClick={() => {
+              changeTab("1");
+            }}
+          >
             {" "}
             <Styled.HeaderText>
               <p>Group Event</p>
             </Styled.HeaderText>
           </NavLink>
         </NavItem>
+        <NavItem>
+          <NavLink
+            className={classnames({
+              active: currentActiveTab === "2",
+            })}
+            onClick={() => {
+              changeTab("2");
+            }}
+          >
+            {" "}
+            <Styled.HeaderText>
+              <p>Standard Event</p>
+            </Styled.HeaderText>
+          </NavLink>
+        </NavItem>
       </Nav>
-      <EventFormModal toggle={toggle} event={null}></EventFormModal>
+      <EventFormModal
+        toggle={toggle}
+        event={null}
+        isGroupEvent={currentActiveTab === "1"}
+      ></EventFormModal>
     </Modal>
   );
 };

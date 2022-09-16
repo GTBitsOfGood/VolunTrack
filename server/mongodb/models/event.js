@@ -31,6 +31,38 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    pocName: {
+      type: String,
+      required: false,
+    },
+    pocEmail: {
+      type: String,
+      required: false,
+    },
+    pocPhone: {
+      type: Number,
+      required: false,
+    },
+    addressLineOne: {
+      type: String,
+      required: false,
+    },
+    addressLineTwo: {
+      type: String,
+      required: false,
+    },
+    orgCity: {
+      type: String,
+      required: false,
+    },
+    orgState: {
+      type: String,
+      required: false,
+    },
+    orgZip: {
+      type: Number,
+      required: false,
+    },
     volunteers: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
       required: true,
