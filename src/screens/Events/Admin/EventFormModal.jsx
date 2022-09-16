@@ -76,271 +76,237 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     setSendConfirmationEmail(true);
   };
 
-    const emptyStringField = "";
-    const submitText = containsExisitingEvent(event) ? "Save" : "Create Event";
-    
-    return (
-        <Formik
-        initialValues={{
-            title: containsExisitingEvent(event) ? event.title : emptyStringField,
-            date: containsExisitingEvent(event) ? event.date.split("T")[0] : emptyStringField, // strips timestamp
-            startTime: containsExisitingEvent(event) ? event.startTime : emptyStringField,
-            endTime: containsExisitingEvent(event) ? event.endTime : emptyStringField,
-            address: containsExisitingEvent(event) ? event.address : emptyStringField,
-            city: containsExisitingEvent(event) ? event.city : emptyStringField,
-            zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
-            max_volunteers: containsExisitingEvent(event) ? event.max_volunteers : emptyStringField,
-            description: containsExisitingEvent(event) ? event.description : emptyStringField,
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-            containsExisitingEvent(event) ? onSubmitEditEvent(values, setSubmitting) : onSubmitCreateEvent(values,  setSubmitting);
-        }}
-        validationSchema={eventValidator}
-        render={({
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            values,
-            setFieldValue,
-            handleBlur,
-        }) => (
-            <React.Fragment>
-            <Styled.ModalBody>
-                <Styled.Form>
-                <SForm.FormGroup>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Event Title</SForm.Label>
-                        <Styled.ErrorMessage name="title" />
-                        <Field name="title">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Date</SForm.Label>
-                        <Styled.ErrorMessage name="date" />
-                        <Field name="date">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="date" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Start Time</SForm.Label>
-                        <Field name="startTime">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>End Time</SForm.Label>
-                        <Field name="endTime">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                    </Row>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Address</SForm.Label>
-                        <Styled.ErrorMessage name="address" />
-                        <Field name="address">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>City</SForm.Label>
-                        <Styled.ErrorMessage name="city" />
-                        <Field name="city">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Zipcode</SForm.Label>
-                        <Styled.ErrorMessage name="zip" />
-                        <Field name="zip">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="number" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                    </Row>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Max Number of Volunteers</SForm.Label>
-                        <Styled.ErrorMessage name="max_volunteers" />
-                        <Field name="max_volunteers">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="number" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                    </Row>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Description</SForm.Label>
-                        <Styled.ErrorMessage name="description" />
-                        <Field name="description">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="textarea" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                    </Row>
-                </SForm.FormGroup>
-                </Styled.Form>
-                {
-                    containsExisitingEvent(event) &&
-                    <Styled.Row>
-                        <FormGroup>
-                            <Input type="checkbox" onChange={onSendConfirmationEmailCheckbox}/>{''} 
-                        </FormGroup> 
-                        <Styled.GenericText>I would like to send a confirmation email</Styled.GenericText>
-                    </Styled.Row> 
-                }
-            </Styled.ModalBody>
-            <ModalFooter>
-                <Button 
-                color="secondary" 
-                onClick={toggle}
-                style={{backgroundColor: 'transparent', borderColor: 'transparent', color: variables["event-text"]}}
-                >
-                Cancel
-                </Button>
-                <Button
-                color="primary"
-                onClick={handleSubmit}
-                disabled={!isValid || isSubmitting}
-                style={{backgroundColor: 'red', borderColor: 'red', marginLeft: '4rem'}}
-                >
-                {submitText}
-                </Button>
-            </ModalFooter>
-            </React.Fragment>
-        )}
-        />
-    );
-}
+  const emptyStringField = "";
+  const submitText = containsExisitingEvent(event) ? "Save" : "Create Event";
 
-                  {isGroupEvent && (
-                    <Col>
-                      <Row
-                        style={{
-                          marginLeft: "1rem",
-                        }}
-                      >
-                        <SForm.Label>Organization Information</SForm.Label>
-                      </Row>
-                      <Row
-                        style={{
-                          backgroundColor: "#F4F4F4",
-                          marginLeft: "1rem",
-                          padding: "1rem",
-                        }}
-                      >
-                        <Row>
-                          <Styled.Col>
-                            <SForm.Label>Name</SForm.Label>
-                            <Styled.ErrorMessage name="name" />
-                            <Field name="name">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                        </Row>
-                        <Row>
-                          <Styled.Col>
-                            <SForm.Label>POC Name</SForm.Label>
-                            <Styled.ErrorMessage name="pocName" />
-                            <Field name="pocName">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>POC Phone</SForm.Label>
-                            <Field name="pocPhone">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="number" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                        </Row>
-                        <Row>
-                          <Styled.Col>
-                            <SForm.Label>POC Email</SForm.Label>
-                            <Field name="pocEmail">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                        </Row>
-                        <Row>
-                          <Styled.Col>
-                            <SForm.Label>Address Line 1</SForm.Label>
-                            <Styled.ErrorMessage name="addressLineOne" />
-                            <Field name="addressLineOne">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>City</SForm.Label>
-                            <Styled.ErrorMessage name="orgCity" />
-                            <Field name="orgCity">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>State</SForm.Label>
-                            <Styled.ErrorMessage name="orgState" />
-                            <Field name="orgState">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                        </Row>
-                        <Row>
-                          <Styled.Col>
-                            <SForm.Label>Address Line 2</SForm.Label>
-                            <Styled.ErrorMessage name="addressLineTwo" />
-                            <Field name="addressLineTwo">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>Zip Code</SForm.Label>
-                            <Styled.ErrorMessage name="orgZip" />
-                            <Field name="orgZip">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="number" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                        </Row>
-                      </Row>
-                    </Col>
-                  )}
+  return (
+    <Formik
+      initialValues={{
+        title: containsExisitingEvent(event) ? event.title : emptyStringField,
+        date: containsExisitingEvent(event)
+          ? event.date.split("T")[0]
+          : emptyStringField, // strips timestamp
+        startTime: containsExisitingEvent(event)
+          ? event.startTime
+          : emptyStringField,
+        endTime: containsExisitingEvent(event)
+          ? event.endTime
+          : emptyStringField,
+        address: containsExisitingEvent(event)
+          ? event.address
+          : emptyStringField,
+        city: containsExisitingEvent(event) ? event.city : emptyStringField,
+        zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
+        max_volunteers: containsExisitingEvent(event)
+          ? event.max_volunteers
+          : emptyStringField,
+        description: containsExisitingEvent(event)
+          ? event.description
+          : emptyStringField,
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        containsExisitingEvent(event)
+          ? onSubmitEditEvent(values, setSubmitting)
+          : onSubmitCreateEvent(values, setSubmitting);
+      }}
+      validationSchema={eventValidator}
+      render={({
+        handleSubmit,
+        isValid,
+        isSubmitting,
+        values,
+        setFieldValue,
+        handleBlur,
+      }) => (
+        <React.Fragment>
+          <Styled.ModalBody>
+            <Styled.Form>
+              <SForm.FormGroup>
+                <Row>
+                  <Styled.Col>
+                    <SForm.Label>Event Title</SForm.Label>
+                    <Styled.ErrorMessage name="title" />
+                    <Field name="title">
+                      {({ field }) => <SForm.Input {...field} type="text" />}
+                    </Field>
+                  </Styled.Col>
+                  <Styled.Col>
+                    <SForm.Label>Date</SForm.Label>
+                    <Styled.ErrorMessage name="date" />
+                    <Field name="date">
+                      {({ field }) => <SForm.Input {...field} type="date" />}
+                    </Field>
+                  </Styled.Col>
+                  <Styled.Col>
+                    <SForm.Label>Start Time</SForm.Label>
+                    <Field name="startTime">
+                      {({ field }) => <SForm.Input {...field} type="time" />}
+                    </Field>
+                  </Styled.Col>
+                  <Styled.Col>
+                    <SForm.Label>End Time</SForm.Label>
+                    <Field name="endTime">
+                      {({ field }) => <SForm.Input {...field} type="time" />}
+                    </Field>
+                  </Styled.Col>
                 </Row>
+                <Row>
+                  <Styled.Col>
+                    <SForm.Label>Address</SForm.Label>
+                    <Styled.ErrorMessage name="address" />
+                    <Field name="address">
+                      {({ field }) => <SForm.Input {...field} type="text" />}
+                    </Field>
+                  </Styled.Col>
+                  <Styled.Col>
+                    <SForm.Label>City</SForm.Label>
+                    <Styled.ErrorMessage name="city" />
+                    <Field name="city">
+                      {({ field }) => <SForm.Input {...field} type="text" />}
+                    </Field>
+                  </Styled.Col>
+                  <Styled.Col>
+                    <SForm.Label>Zipcode</SForm.Label>
+                    <Styled.ErrorMessage name="zip" />
+                    <Field name="zip">
+                      {({ field }) => <SForm.Input {...field} type="number" />}
+                    </Field>
+                  </Styled.Col>
+                </Row>
+                <Row>
+                  <Styled.Col>
+                    <SForm.Label>Max Number of Volunteers</SForm.Label>
+                    <Styled.ErrorMessage name="max_volunteers" />
+                    <Field name="max_volunteers">
+                      {({ field }) => <SForm.Input {...field} type="number" />}
+                    </Field>
+                  </Styled.Col>
+                </Row>
+                <Row>
+                  <Styled.Col>
+                    <SForm.Label>Description</SForm.Label>
+                    <Styled.ErrorMessage name="description" />
+                    <Field name="description">
+                      {({ field }) => (
+                        <SForm.Input {...field} type="textarea" />
+                      )}
+                    </Field>
+                  </Styled.Col>
+                </Row>
+                {/*  </SForm.FormGroup>*/}
+                {/*</Styled.Form>*/}
+
+                {isGroupEvent && (
+                  <Col>
+                    <Row
+                      style={{
+                        marginLeft: "1rem",
+                      }}
+                    >
+                      <SForm.Label>Organization Information</SForm.Label>
+                    </Row>
+                    <Row
+                      style={{
+                        backgroundColor: "#F4F4F4",
+                        marginLeft: "1rem",
+                        padding: "1rem",
+                      }}
+                    >
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>Name</SForm.Label>
+                          <Styled.ErrorMessage name="name" />
+                          <Field name="name">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>POC Name</SForm.Label>
+                          <Styled.ErrorMessage name="pocName" />
+                          <Field name="pocName">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>POC Phone</SForm.Label>
+                          <Field name="pocPhone">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="number" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>POC Email</SForm.Label>
+                          <Field name="pocEmail">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>Address Line 1</SForm.Label>
+                          <Styled.ErrorMessage name="addressLineOne" />
+                          <Field name="addressLineOne">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>City</SForm.Label>
+                          <Styled.ErrorMessage name="orgCity" />
+                          <Field name="orgCity">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>State</SForm.Label>
+                          <Styled.ErrorMessage name="orgState" />
+                          <Field name="orgState">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>Address Line 2</SForm.Label>
+                          <Styled.ErrorMessage name="addressLineTwo" />
+                          <Field name="addressLineTwo">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="text" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Zip Code</SForm.Label>
+                          <Styled.ErrorMessage name="orgZip" />
+                          <Field name="orgZip">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="number" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                    </Row>
+                  </Col>
+                )}
               </SForm.FormGroup>
             </Styled.Form>
+
             {containsExisitingEvent(event) && (
               <Styled.Row>
                 <FormGroup>
@@ -373,8 +339,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
               onClick={handleSubmit}
               disabled={!isValid || isSubmitting}
               style={{
-                backgroundColor: variables["button-pink"],
-                borderColor: variables["button-pink"],
+                backgroundColor: "red",
+                borderColor: "red",
                 marginLeft: "4rem",
               }}
             >
@@ -386,6 +352,163 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     />
   );
 };
+
+//     {isGroupEvent && (
+//       <Col>
+//         <Row
+//           style={{
+//             marginLeft: "1rem",
+//           }}
+//         >
+//           <SForm.Label>Organization Information</SForm.Label>
+//         </Row>
+//         <Row
+//           style={{
+//             backgroundColor: "#F4F4F4",
+//             marginLeft: "1rem",
+//             padding: "1rem",
+//           }}
+//         >
+//           <Row>
+//             <Styled.Col>
+//               <SForm.Label>Name</SForm.Label>
+//               <Styled.ErrorMessage name="name" />
+//               <Field name="name">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//           </Row>
+//           <Row>
+//             <Styled.Col>
+//               <SForm.Label>POC Name</SForm.Label>
+//               <Styled.ErrorMessage name="pocName" />
+//               <Field name="pocName">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//             <Styled.Col>
+//               <SForm.Label>POC Phone</SForm.Label>
+//               <Field name="pocPhone">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="number" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//           </Row>
+//           <Row>
+//             <Styled.Col>
+//               <SForm.Label>POC Email</SForm.Label>
+//               <Field name="pocEmail">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//           </Row>
+//           <Row>
+//             <Styled.Col>
+//               <SForm.Label>Address Line 1</SForm.Label>
+//               <Styled.ErrorMessage name="addressLineOne" />
+//               <Field name="addressLineOne">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//             <Styled.Col>
+//               <SForm.Label>City</SForm.Label>
+//               <Styled.ErrorMessage name="orgCity" />
+//               <Field name="orgCity">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//             <Styled.Col>
+//               <SForm.Label>State</SForm.Label>
+//               <Styled.ErrorMessage name="orgState" />
+//               <Field name="orgState">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//           </Row>
+//           <Row>
+//             <Styled.Col>
+//               <SForm.Label>Address Line 2</SForm.Label>
+//               <Styled.ErrorMessage name="addressLineTwo" />
+//               <Field name="addressLineTwo">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="text" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//             <Styled.Col>
+//               <SForm.Label>Zip Code</SForm.Label>
+//               <Styled.ErrorMessage name="orgZip" />
+//               <Field name="orgZip">
+//                 {({ field }) => (
+//                   <SForm.Input {...field} type="number" />
+//                 )}
+//               </Field>
+//             </Styled.Col>
+//           </Row>
+//         </Row>
+//       </Col>
+//     )}
+//   </Row>
+// </SForm.FormGroup>
+//             </Styled.Form>
+//             {containsExisitingEvent(event) && (
+//               <Styled.Row>
+//                 <FormGroup>
+//                   <Input
+//                     type="checkbox"
+//                     onChange={onSendConfirmationEmailCheckbox}
+//                   />
+//                   {""}
+//                 </FormGroup>
+//                 <Styled.GenericText>
+//                   I would like to send a confirmation email
+//                 </Styled.GenericText>
+//               </Styled.Row>
+//             )}
+//           </Styled.ModalBody>
+//           <ModalFooter>
+//             <Button
+//               color="secondary"
+//               onClick={toggle}
+//               style={{
+//                 backgroundColor: "transparent",
+//                 borderColor: "transparent",
+//                 color: variables["event-text"],
+//               }}
+//             >
+//               Cancel
+//             </Button>
+//             <Button
+//               color="primary"
+//               onClick={handleSubmit}
+//               disabled={!isValid || isSubmitting}
+//               style={{
+//                 backgroundColor: variables["button-pink"],
+//                 borderColor: variables["button-pink"],
+//                 marginLeft: "4rem",
+//               }}
+//             >
+//               {submitText}
+//             </Button>
+//           </ModalFooter>
+//         </React.Fragment>
+//       )}
+//     />
+//   );
+// };
 
 EventFormModal.propTypes = {
   open: PropTypes.bool,
