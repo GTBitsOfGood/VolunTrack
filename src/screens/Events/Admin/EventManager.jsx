@@ -87,6 +87,7 @@ const EventManager = ({ user }) => {
   const [events, setEvents] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
+  const [showBack, setShowBack] = useState(false);
 
   if (!user) {
     const { data: session } = useSession();
@@ -101,10 +102,10 @@ const EventManager = ({ user }) => {
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
-          result.data.events = result.data.events.filter(function (event) {
-            const currentDate = new Date();
-            return new Date(event.date) > currentDate;
-          });
+          // result.data.events = result.data.events.filter(function (event) {
+          //   const currentDate = new Date();
+          //   return new Date(event.date) > currentDate;
+          // });
           setEvents(result.data.events);
           setDates(result.data.events);
         }
@@ -155,6 +156,7 @@ const EventManager = ({ user }) => {
   );
 
   const onChange = (value, event) => {
+    if (Date.now() !== value) setShowBack(true);
     setDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
@@ -197,12 +199,13 @@ const EventManager = ({ user }) => {
 
   //attempt at back to today button (needs to be fixed)
   const setDateBack = () => {
-    setDates(value);
-    setDate(value);
-    let datestr = value.toString();
-    let splitDate = value.toDateString().split(" ");
+    const currentDate = new Date();
+    setDates(currentDate);
+    setDate(currentDate);
+    let splitDate = currentDate.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
+    setShowBack(false);
     onRefresh();
   };
 
@@ -213,7 +216,9 @@ const EventManager = ({ user }) => {
           <Styled.Events>Events</Styled.Events>
           <Styled.DateRow>
             <Styled.Date>{dateString}</Styled.Date>
-            <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+            {showBack && (
+              <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+            )}
           </Styled.DateRow>
         </Styled.EventContainer>
         <Calendar
