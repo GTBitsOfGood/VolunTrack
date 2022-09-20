@@ -79,7 +79,6 @@ const EventFormModal = ({ toggle, event, han }) => {
   const onSendConfirmationEmailCheckbox = () => {
     setSendConfirmationEmail(true);
   };
-
   const emptyStringField = "";
   const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
   const [content, setContent] = useState(
@@ -92,7 +91,6 @@ const EventFormModal = ({ toggle, event, han }) => {
     ReactQuill = require("react-quill");
   }
   const quill = useRef(null);
-
   return (
     <Formik
       initialValues={{

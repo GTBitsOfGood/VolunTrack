@@ -37,7 +37,9 @@ const Styled = {
       border: none;
     }
   `,
-  Content: styled.div``,
+  Content: styled.div`
+    margin-top: 7rem;
+  `,
   EventContainer: styled.div`
     display: flex;
     flex-direction: column;
@@ -52,6 +54,19 @@ const Styled = {
     text-align: left;
     font-size: 28px;
     font-weight: bold;
+  `,
+  DateRow: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `,
+  Back: styled.p`
+    font-size: 14px;
+    margin-left: 10px;
+    padding-top: 8px;
+    text-decoration: underline;
+    color: ${variables.primary};
+    cursor: pointer;
   `,
   Left: styled.div`
     margin-left: 10vw;
@@ -71,6 +86,7 @@ const EventManager = ({ user }) => {
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [currEvent, setCurrEvent] = useState(null);
   const [currUser, setCurrUser] = useState(null);
+  const [showBack, setShowBack] = useState(false);
 
   const router = useRouter();
 
@@ -89,10 +105,10 @@ const EventManager = ({ user }) => {
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
-          result.data.events = result.data.events.filter(function (event) {
-            const currentDate = new Date();
-            return new Date(event.date) > currentDate;
-          });
+          // result.data.events = result.data.events.filter(function (event) {
+          //   const currentDate = new Date();
+          //   return new Date(event.date) > currentDate;
+          // });
           setEvents(result.data.events);
           setDates(result.data.events);
         }
@@ -130,13 +146,16 @@ const EventManager = ({ user }) => {
   const [value, setDate] = useState(new Date());
 
   let splitDate = value.toDateString().split(" ");
-  const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
+  const [dateString, setDateString] = useState(
+    splitDate[1] + " " + splitDate[2] + " " + splitDate[3]
+  );
 
   const onChange = (value, event) => {
+    if (Date.now() !== value) setShowBack(true);
     setDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
-    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]; 
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
@@ -163,6 +182,7 @@ const EventManager = ({ user }) => {
     setShowRegisterModal((prev) => !prev);
     onRefresh();
   };
+
   const formatJsDate = (jsDate, separator = "/") => {
     return [
       String(jsDate.getFullYear()).padStart(4, "0"),
@@ -170,6 +190,7 @@ const EventManager = ({ user }) => {
       String(jsDate.getDate()).padStart(2, "0"),
     ].join(separator);
   };
+
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
@@ -183,12 +204,28 @@ const EventManager = ({ user }) => {
     return tileClassName !== "" ? tileClassName : null;
   };
 
+  const setDateBack = () => {
+    const currentDate = new Date();
+    setDates(currentDate);
+    setDate(currentDate);
+    let splitDate = currentDate.toDateString().split(" ");
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
+    setDateString(date);
+    setShowBack(false);
+    onRefresh();
+  };
+
   return (
     <Styled.Container>
       <Styled.Left>
         <Styled.EventContainer>
           <Styled.Events>Events</Styled.Events>
-          <Styled.Date>{dateString}</Styled.Date>
+          <Styled.DateRow>
+            <Styled.Date>{dateString}</Styled.Date>
+            {showBack && (
+              <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+            )}
+          </Styled.DateRow>
         </Styled.EventContainer>
         <Calendar
           onChange={onChange}
@@ -199,19 +236,20 @@ const EventManager = ({ user }) => {
         />
       </Styled.Left>
       <Styled.Right>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
-        </Styled.Button>
         <Styled.Content>
-          <EventTable
-            events={events}
-            onRegisterClicked={onRegister}
-            onUnregister={onUnregister}
-            user={user}
-          >
-            {" "}
-          </EventTable>
+          {events.length == 0 ? (
+            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+          ) : (
+            <EventTable
+              dateString={dateString}
+              events={events}
+              onRegisterClicked={onRegister}
+              onUnregister={onUnregister}
+              user={user}
+            >
+              {" "}
+            </EventTable>
+          )}
         </Styled.Content>
       </Styled.Right>
     </Styled.Container>

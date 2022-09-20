@@ -35,6 +35,7 @@ const Styled = {
     height: 2.5rem;
     margin-top: 2rem;
     margin-bottom: 2vw;
+    margin-right: 2vw;
   `,
   Content: styled.div``,
   EventContainer: styled.div`
@@ -62,19 +63,49 @@ const Styled = {
     flex-direction: column;
     margin-left: 3vw;
   `,
+  ButtonRow: styled.div`
+    display: flex;
+    flex-direction: row;
+  `,
+  DateRow: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `,
+  Back: styled.p`
+    font-size: 14px;
+    margin-left: 10px;
+    padding-top: 8px;
+    text-decoration: underline;
+    color: ${variables.primary};
+    cursor: pointer;
+  `,
 };
 
-const EventManager = () => {
+const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
+  const [showBack, setShowBack] = useState(false);
+
+  if (!user) {
+    const { data: session } = useSession();
+    user = session.user;
+  }
+  useEffect(() => {
+    onRefresh();
+  }, []);
 
   const onRefresh = () => {
     setLoading(true);
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
+          // result.data.events = result.data.events.filter(function (event) {
+          //   const currentDate = new Date();
+          //   return new Date(event.date) > currentDate;
+          // });
           setEvents(result.data.events);
           setDates(result.data.events);
         }
@@ -125,6 +156,7 @@ const EventManager = () => {
   );
 
   const onChange = (value, event) => {
+    if (Date.now() !== value) setShowBack(true);
     setDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
@@ -136,10 +168,6 @@ const EventManager = () => {
     fetchEvents(selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
-          result.data.events = result.data.events.filter(function (event) {
-            const currentDate = new Date();
-            return new Date(event.date) > currentDate;
-          });
           setEvents(result.data.events);
         }
       })
@@ -155,6 +183,7 @@ const EventManager = () => {
       String(jsDate.getDate()).padStart(2, "0"),
     ].join(separator);
   };
+
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
@@ -168,12 +197,28 @@ const EventManager = () => {
     return tileClassName !== "" ? tileClassName : null;
   };
 
+  const setDateBack = () => {
+    const currentDate = new Date();
+    setDates(currentDate);
+    setDate(currentDate);
+    let splitDate = currentDate.toDateString().split(" ");
+    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
+    setDateString(date);
+    setShowBack(false);
+    onRefresh();
+  };
+
   return (
     <Styled.Container>
       <Styled.Left>
         <Styled.EventContainer>
           <Styled.Events>Events</Styled.Events>
-          <Styled.Date>{dateString}</Styled.Date>
+          <Styled.DateRow>
+            <Styled.Date>{dateString}</Styled.Date>
+            {showBack && (
+              <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+            )}
+          </Styled.DateRow>
         </Styled.EventContainer>
         <Calendar
           onChange={onChange}
@@ -184,15 +229,22 @@ const EventManager = () => {
         />
       </Styled.Left>
       <Styled.Right>
-        <Styled.Button onClick={onCreateClicked}>
-          <span style={{ color: "white" }}>Create new event</span>
-        </Styled.Button>
+        <Styled.ButtonRow>
+          <Styled.Button onClick={onCreateClicked}>
+            <span style={{ color: "white" }}>Create new event</span>
+          </Styled.Button>
+        </Styled.ButtonRow>
         <Styled.Content>
-          <EventTable
-            events={events}
-            onEditClicked={onEditClicked}
-            onDeleteClicked={onDeleteClicked}
-          ></EventTable>
+          {events.length == 0 ? (
+            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+          ) : (
+            <EventTable
+              dateString={dateString}
+              events={events}
+              onEditClicked={onEditClicked}
+              onDeleteClicked={onDeleteClicked}
+            ></EventTable>
+          )}
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
           <EventEditModal
             open={showEditModal}
