@@ -17,6 +17,7 @@
     "implicit-arrow-linebreak": "off",
     "no-console": "off",
     "import/prefer-default-export": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "prettier/prettier": "warn"
   }
 }
