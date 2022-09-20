@@ -125,7 +125,7 @@ const Styled = {
     padding-bottom: 0.2rem;
     :hover {
       cursor: pointer;
-      background-color: #f2f2f2;
+      // background-color: #f2f2f2;
     }
   `,
   UserContainer: styled.div`
@@ -263,7 +263,7 @@ const Header = () => {
                   <Styled.Toggle color="white">
                     <Styled.UserContainer>
                       <Styled.TxtContainer>
-                        <Styled.PageLink style={{ "font-size": "100%" }}>
+                        <Styled.PageLink style={{ "font-size": "108%" }}>
                           Settings
                         </Styled.PageLink>
                       </Styled.TxtContainer>
