@@ -233,10 +233,6 @@ const EventManager = ({ user }) => {
           <Styled.Button onClick={onCreateClicked}>
             <span style={{ color: "white" }}>Create new event</span>
           </Styled.Button>
-          <Styled.Button onClick={onRefresh}>
-            <Icon color="grey3" name="refresh" />
-            <span>Refresh</span>
-          </Styled.Button>
         </Styled.ButtonRow>
         <Styled.Content>
           {events.length == 0 ? (

@@ -37,7 +37,9 @@ const Styled = {
       border: none;
     }
   `,
-  Content: styled.div``,
+  Content: styled.div`
+    margin-top: 7rem;
+  `,
   EventContainer: styled.div`
     display: flex;
     flex-direction: column;
@@ -234,10 +236,6 @@ const EventManager = ({ user }) => {
         />
       </Styled.Left>
       <Styled.Right>
-        <Styled.Button onClick={onRefresh}>
-          <Icon color="grey3" name="refresh" />
-          <span>Refresh</span>
-        </Styled.Button>
         <Styled.Content>
           {events.length == 0 ? (
             <Styled.Events>No Events Scheduled on This Date</Styled.Events>
