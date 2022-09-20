@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import {
   ModalBody,
@@ -16,6 +16,8 @@ import { eventValidator } from "./eventHelpers";
 import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
+import "react-quill/dist/quill.snow.css";
+import { set } from "lodash";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -50,6 +52,7 @@ const EventFormModal = ({ toggle, event, han }) => {
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
       ...values,
+      description: content,
     };
     setSubmitting(true);
     createEvent(event)
@@ -61,6 +64,7 @@ const EventFormModal = ({ toggle, event, han }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedEvent = {
       ...values,
+      description: content,
       _id: event._id,
     };
     setSubmitting(true);
@@ -75,10 +79,18 @@ const EventFormModal = ({ toggle, event, han }) => {
   const onSendConfirmationEmailCheckbox = () => {
     setSendConfirmationEmail(true);
   };
-
   const emptyStringField = "";
   const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
+  const [content, setContent] = useState(
+    containsExisitingEvent(event) ? event.description : emptyStringField
+  );
 
+  let ReactQuill;
+  // patch for build failure
+  if (typeof window !== "undefined") {
+    ReactQuill = require("react-quill");
+  }
+  const quill = useRef(null);
   return (
     <Formik
       initialValues={{
@@ -108,6 +120,7 @@ const EventFormModal = ({ toggle, event, han }) => {
         containsExisitingEvent(event)
           ? onSubmitEditEvent(values, setSubmitting)
           : onSubmitCreateEvent(values, setSubmitting);
+        quill.current.focus();
       }}
       validationSchema={eventValidator}
       render={({
@@ -187,8 +200,14 @@ const EventFormModal = ({ toggle, event, han }) => {
                     <SForm.Label>Description</SForm.Label>
                     <Styled.ErrorMessage name="description" />
                     <Field name="description">
-                      {({ field }) => (
-                        <SForm.Input {...field} type="textarea" />
+                      {() => (
+                        <ReactQuill
+                          value={content}
+                          onChange={(newValue) => {
+                            setContent(newValue);
+                          }}
+                          ref={quill}
+                        />
                       )}
                     </Field>
                   </Styled.Col>

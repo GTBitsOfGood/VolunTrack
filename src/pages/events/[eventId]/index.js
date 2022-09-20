@@ -145,7 +145,10 @@ const EventInfo = () => {
               {convertTime(event.updatedAt.slice(11, 16))}
             </Styled.Date>
           </Styled.EventSubhead>
-          <Styled.Info>{event.description}</Styled.Info>
+          <Styled.Info>
+            {" "}
+            <div dangerouslySetInnerHTML={{ __html: event.description }} />
+          </Styled.Info>
         </Styled.EventCol>
         <Styled.EventCol2 style={{ "margin-left": "auto" }}>
           <Styled.InfoHead>Event Information</Styled.InfoHead>
