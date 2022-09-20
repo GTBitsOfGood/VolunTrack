@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import {
   ModalBody,
@@ -16,6 +16,8 @@ import { eventValidator } from "./eventHelpers";
 import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
+import "react-quill/dist/quill.snow.css";
+import { set } from "lodash";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -50,6 +52,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
       ...values,
+      description: content,
     };
     setSubmitting(true);
     createEvent(event)
@@ -61,6 +64,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedEvent = {
       ...values,
+      description: content,
       _id: event._id,
     };
     setSubmitting(true);
@@ -77,7 +81,17 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const emptyStringField = "";
-  const submitText = containsExisitingEvent(event) ? "Save" : "Create Event";
+  const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
+  const [content, setContent] = useState(
+      containsExisitingEvent(event) ? event.description : emptyStringField
+  );
+
+  let ReactQuill;
+  // patch for build failure
+  if (typeof window !== "undefined") {
+    ReactQuill = require("react-quill");
+  }
+  const quill = useRef(null);
 
   return (
     <Formik
@@ -187,8 +201,14 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     <SForm.Label>Description</SForm.Label>
                     <Styled.ErrorMessage name="description" />
                     <Field name="description">
-                      {({ field }) => (
-                        <SForm.Input {...field} type="textarea" />
+                      {() => (
+                          <ReactQuill
+                              value={content}
+                              onChange={(newValue) => {
+                                setContent(newValue);
+                              }}
+                              ref={quill}
+                          />
                       )}
                     </Field>
                   </Styled.Col>
@@ -302,7 +322,6 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                 )}
               </SForm.FormGroup>
             </Styled.Form>
-
             {containsExisitingEvent(event) && (
               <Styled.Row>
                 <FormGroup>
@@ -337,6 +356,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
               style={{
                 backgroundColor: "red",
                 borderColor: "red",
+                // backgroundColor: variables["button-pink"],
+                // borderColor: variables["button-pink"],
                 marginLeft: "4rem",
               }}
             >
@@ -348,163 +369,6 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     />
   );
 };
-
-//     {isGroupEvent && (
-//       <Col>
-//         <Row
-//           style={{
-//             marginLeft: "1rem",
-//           }}
-//         >
-//           <SForm.Label>Organization Information</SForm.Label>
-//         </Row>
-//         <Row
-//           style={{
-//             backgroundColor: "#F4F4F4",
-//             marginLeft: "1rem",
-//             padding: "1rem",
-//           }}
-//         >
-//           <Row>
-//             <Styled.Col>
-//               <SForm.Label>Name</SForm.Label>
-//               <Styled.ErrorMessage name="name" />
-//               <Field name="name">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//           </Row>
-//           <Row>
-//             <Styled.Col>
-//               <SForm.Label>POC Name</SForm.Label>
-//               <Styled.ErrorMessage name="pocName" />
-//               <Field name="pocName">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//             <Styled.Col>
-//               <SForm.Label>POC Phone</SForm.Label>
-//               <Field name="pocPhone">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="number" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//           </Row>
-//           <Row>
-//             <Styled.Col>
-//               <SForm.Label>POC Email</SForm.Label>
-//               <Field name="pocEmail">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//           </Row>
-//           <Row>
-//             <Styled.Col>
-//               <SForm.Label>Address Line 1</SForm.Label>
-//               <Styled.ErrorMessage name="addressLineOne" />
-//               <Field name="addressLineOne">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//             <Styled.Col>
-//               <SForm.Label>City</SForm.Label>
-//               <Styled.ErrorMessage name="orgCity" />
-//               <Field name="orgCity">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//             <Styled.Col>
-//               <SForm.Label>State</SForm.Label>
-//               <Styled.ErrorMessage name="orgState" />
-//               <Field name="orgState">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//           </Row>
-//           <Row>
-//             <Styled.Col>
-//               <SForm.Label>Address Line 2</SForm.Label>
-//               <Styled.ErrorMessage name="addressLineTwo" />
-//               <Field name="addressLineTwo">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="text" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//             <Styled.Col>
-//               <SForm.Label>Zip Code</SForm.Label>
-//               <Styled.ErrorMessage name="orgZip" />
-//               <Field name="orgZip">
-//                 {({ field }) => (
-//                   <SForm.Input {...field} type="number" />
-//                 )}
-//               </Field>
-//             </Styled.Col>
-//           </Row>
-//         </Row>
-//       </Col>
-//     )}
-//   </Row>
-// </SForm.FormGroup>
-//             </Styled.Form>
-//             {containsExisitingEvent(event) && (
-//               <Styled.Row>
-//                 <FormGroup>
-//                   <Input
-//                     type="checkbox"
-//                     onChange={onSendConfirmationEmailCheckbox}
-//                   />
-//                   {""}
-//                 </FormGroup>
-//                 <Styled.GenericText>
-//                   I would like to send a confirmation email
-//                 </Styled.GenericText>
-//               </Styled.Row>
-//             )}
-//           </Styled.ModalBody>
-//           <ModalFooter>
-//             <Button
-//               color="secondary"
-//               onClick={toggle}
-//               style={{
-//                 backgroundColor: "transparent",
-//                 borderColor: "transparent",
-//                 color: variables["event-text"],
-//               }}
-//             >
-//               Cancel
-//             </Button>
-//             <Button
-//               color="primary"
-//               onClick={handleSubmit}
-//               disabled={!isValid || isSubmitting}
-//               style={{
-//                 backgroundColor: variables["button-pink"],
-//                 borderColor: variables["button-pink"],
-//                 marginLeft: "4rem",
-//               }}
-//             >
-//               {submitText}
-//             </Button>
-//           </ModalFooter>
-//         </React.Fragment>
-//       )}
-//     />
-//   );
-// };
 
 EventFormModal.propTypes = {
   open: PropTypes.bool,

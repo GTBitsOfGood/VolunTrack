@@ -146,7 +146,10 @@ const EventInfo = () => {
                 {convertTime(event.updatedAt.slice(11, 16))}
               </Styled.Date>
             </Styled.EventSubhead>
-            <Styled.Info>{event.description}</Styled.Info>
+            <Styled.Info>
+              {" "}
+              <div dangerouslySetInnerHTML={{ __html: event.description }} />
+            </Styled.Info>
           </Styled.EventCol>
         </Col>
         <Col>
@@ -168,7 +171,6 @@ const EventInfo = () => {
                     Email
                   </Styled.InfoTableText>
                 </Styled.InfoTableCol>
-
                 <Styled.InfoTableCol>
                   <Styled.InfoTableText>
                     <b>Time:</b>

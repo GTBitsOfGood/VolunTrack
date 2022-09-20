@@ -125,7 +125,7 @@ const Styled = {
     padding-bottom: 0.2rem;
     :hover {
       cursor: pointer;
-      background-color: #f2f2f2;
+      // background-color: #f2f2f2;
     }
   `,
   UserContainer: styled.div`
@@ -252,18 +252,12 @@ const Header = () => {
               <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
-              <Link
-                href="/past-events"
-                selected={currPageMatches("/past-events")}
-              >
-                <Styled.PageLink>Past Events</Styled.PageLink>
-              </Link>
               {user.role === "admin" && (
                 <Styled.Dropdown nav inNavbar className="navbar-nav">
                   <Styled.Toggle color="white">
                     <Styled.UserContainer>
                       <Styled.TxtContainer>
-                        <Styled.PageLink style={{ "font-size": "100%" }}>
+                        <Styled.PageLink style={{ "font-size": "108%" }}>
                           Settings
                         </Styled.PageLink>
                       </Styled.TxtContainer>
