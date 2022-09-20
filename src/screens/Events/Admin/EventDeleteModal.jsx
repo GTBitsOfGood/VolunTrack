@@ -11,6 +11,7 @@ const EventDeleteModal = ({ open, toggle, event }) => {
       .then(() => {
         setDeleting(true);
         toggle();
+        setDeleting(false);
       })
       .catch(console.log);
   };
