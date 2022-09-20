@@ -222,8 +222,6 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                             )}
                           </Field>
                         </Styled.Col>
-                      </Row>
-                      <Row>
                         <Styled.Col>
                           <SForm.Label>POC Name</SForm.Label>
                           <Styled.ErrorMessage name="pocName" />
@@ -241,8 +239,6 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                             )}
                           </Field>
                         </Styled.Col>
-                      </Row>
-                      <Row>
                         <Styled.Col>
                           <SForm.Label>POC Email</SForm.Label>
                           <Field name="pocEmail">
