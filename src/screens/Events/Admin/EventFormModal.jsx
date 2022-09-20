@@ -83,7 +83,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const emptyStringField = "";
   const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
   const [content, setContent] = useState(
-      containsExisitingEvent(event) ? event.description : emptyStringField
+    containsExisitingEvent(event) ? event.description : emptyStringField
   );
 
   let ReactQuill;
@@ -137,189 +137,206 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
             <Styled.Form>
               <SForm.FormGroup>
                 <Row>
-                  <Styled.Col>
-                    <SForm.Label>Event Title</SForm.Label>
-                    <Styled.ErrorMessage name="title" />
-                    <Field name="title">
-                      {({ field }) => <SForm.Input {...field} type="text" />}
-                    </Field>
-                  </Styled.Col>
-                  <Styled.Col>
-                    <SForm.Label>Date</SForm.Label>
-                    <Styled.ErrorMessage name="date" />
-                    <Field name="date">
-                      {({ field }) => <SForm.Input {...field} type="date" />}
-                    </Field>
-                  </Styled.Col>
-                  <Styled.Col>
-                    <SForm.Label>Start Time</SForm.Label>
-                    <Field name="startTime">
-                      {({ field }) => <SForm.Input {...field} type="time" />}
-                    </Field>
-                  </Styled.Col>
-                  <Styled.Col>
-                    <SForm.Label>End Time</SForm.Label>
-                    <Field name="endTime">
-                      {({ field }) => <SForm.Input {...field} type="time" />}
-                    </Field>
-                  </Styled.Col>
-                </Row>
-                <Row>
-                  <Styled.Col>
-                    <SForm.Label>Address</SForm.Label>
-                    <Styled.ErrorMessage name="address" />
-                    <Field name="address">
-                      {({ field }) => <SForm.Input {...field} type="text" />}
-                    </Field>
-                  </Styled.Col>
-                  <Styled.Col>
-                    <SForm.Label>City</SForm.Label>
-                    <Styled.ErrorMessage name="city" />
-                    <Field name="city">
-                      {({ field }) => <SForm.Input {...field} type="text" />}
-                    </Field>
-                  </Styled.Col>
-                  <Styled.Col>
-                    <SForm.Label>Zipcode</SForm.Label>
-                    <Styled.ErrorMessage name="zip" />
-                    <Field name="zip">
-                      {({ field }) => <SForm.Input {...field} type="number" />}
-                    </Field>
-                  </Styled.Col>
-                </Row>
-                <Row>
-                  <Styled.Col>
-                    <SForm.Label>Max Number of Volunteers</SForm.Label>
-                    <Styled.ErrorMessage name="max_volunteers" />
-                    <Field name="max_volunteers">
-                      {({ field }) => <SForm.Input {...field} type="number" />}
-                    </Field>
-                  </Styled.Col>
-                </Row>
-                <Row>
-                  <Styled.Col>
-                    <SForm.Label>Description</SForm.Label>
-                    <Styled.ErrorMessage name="description" />
-                    <Field name="description">
-                      {() => (
-                          <ReactQuill
+                  <Col>
+                    <Row>
+                      <Styled.Col>
+                        <SForm.Label>Event Title</SForm.Label>
+                        <Styled.ErrorMessage name="title" />
+                        <Field name="title">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                      <Styled.Col>
+                        <SForm.Label>Date</SForm.Label>
+                        <Styled.ErrorMessage name="date" />
+                        <Field name="date">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="date" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                      <Styled.Col>
+                        <SForm.Label>Start Time</SForm.Label>
+                        <Field name="startTime">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="time" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                      <Styled.Col>
+                        <SForm.Label>End Time</SForm.Label>
+                        <Field name="endTime">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="time" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                    </Row>
+                    <Row>
+                      <Styled.Col>
+                        <SForm.Label>Address</SForm.Label>
+                        <Styled.ErrorMessage name="address" />
+                        <Field name="address">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                      <Styled.Col>
+                        <SForm.Label>City</SForm.Label>
+                        <Styled.ErrorMessage name="city" />
+                        <Field name="city">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                      <Styled.Col>
+                        <SForm.Label>Zipcode</SForm.Label>
+                        <Styled.ErrorMessage name="zip" />
+                        <Field name="zip">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="number" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                    </Row>
+                    <Row>
+                      <Styled.Col>
+                        <SForm.Label>Max Number of Volunteers</SForm.Label>
+                        <Styled.ErrorMessage name="max_volunteers" />
+                        <Field name="max_volunteers">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="number" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                    </Row>
+                    <Row>
+                      <Styled.Col>
+                        <SForm.Label>Description</SForm.Label>
+                        <Styled.ErrorMessage name="description" />
+                        <Field name="description">
+                          {() => (
+                            <ReactQuill
                               value={content}
                               onChange={(newValue) => {
                                 setContent(newValue);
                               }}
                               ref={quill}
-                          />
-                      )}
-                    </Field>
-                  </Styled.Col>
-                </Row>
-                {/*  </SForm.FormGroup>*/}
-                {/*</Styled.Form>*/}
-
-                {isGroupEvent && (
-                  <Col>
-                    <Row
-                      style={{
-                        marginLeft: "1rem",
-                      }}
-                    >
-                      <SForm.Label>Organization Information</SForm.Label>
-                    </Row>
-                    <Row
-                      style={{
-                        backgroundColor: "#F4F4F4",
-                        marginLeft: "1rem",
-                        padding: "1rem",
-                      }}
-                    >
-                      <Row>
-                        <Styled.Col>
-                          <SForm.Label>Name</SForm.Label>
-                          <Styled.ErrorMessage name="name" />
-                          <Field name="name">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                        <Styled.Col>
-                          <SForm.Label>POC Name</SForm.Label>
-                          <Styled.ErrorMessage name="pocName" />
-                          <Field name="pocName">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                        <Styled.Col>
-                          <SForm.Label>POC Phone</SForm.Label>
-                          <Field name="pocPhone">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="number" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                        <Styled.Col>
-                          <SForm.Label>POC Email</SForm.Label>
-                          <Field name="pocEmail">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                      </Row>
-                      <Row>
-                        <Styled.Col>
-                          <SForm.Label>Address Line 1</SForm.Label>
-                          <Styled.ErrorMessage name="addressLineOne" />
-                          <Field name="addressLineOne">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                        <Styled.Col>
-                          <SForm.Label>City</SForm.Label>
-                          <Styled.ErrorMessage name="orgCity" />
-                          <Field name="orgCity">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                        <Styled.Col>
-                          <SForm.Label>State</SForm.Label>
-                          <Styled.ErrorMessage name="orgState" />
-                          <Field name="orgState">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                      </Row>
-                      <Row>
-                        <Styled.Col>
-                          <SForm.Label>Address Line 2</SForm.Label>
-                          <Styled.ErrorMessage name="addressLineTwo" />
-                          <Field name="addressLineTwo">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                        <Styled.Col>
-                          <SForm.Label>Zip Code</SForm.Label>
-                          <Styled.ErrorMessage name="orgZip" />
-                          <Field name="orgZip">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="number" />
-                            )}
-                          </Field>
-                        </Styled.Col>
-                      </Row>
+                            />
+                          )}
+                        </Field>
+                      </Styled.Col>
                     </Row>
                   </Col>
-                )}
+                  {isGroupEvent && (
+                    <Col>
+                      <Row
+                        style={{
+                          marginLeft: "1rem",
+                        }}
+                      >
+                        <SForm.Label>Organization Information</SForm.Label>
+                      </Row>
+                      <Row
+                        style={{
+                          backgroundColor: "#F4F4F4",
+                          marginLeft: "1rem",
+                          padding: "1rem",
+                        }}
+                      >
+                        <Row>
+                          <Styled.Col>
+                            <SForm.Label>Name</SForm.Label>
+                            <Styled.ErrorMessage name="name" />
+                            <Field name="name">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>POC Name</SForm.Label>
+                            <Styled.ErrorMessage name="pocName" />
+                            <Field name="pocName">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>POC Phone</SForm.Label>
+                            <Field name="pocPhone">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="number" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>POC Email</SForm.Label>
+                            <Field name="pocEmail">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                        </Row>
+                        <Row>
+                          <Styled.Col>
+                            <SForm.Label>Address Line 1</SForm.Label>
+                            <Styled.ErrorMessage name="addressLineOne" />
+                            <Field name="addressLineOne">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>City</SForm.Label>
+                            <Styled.ErrorMessage name="orgCity" />
+                            <Field name="orgCity">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>State</SForm.Label>
+                            <Styled.ErrorMessage name="orgState" />
+                            <Field name="orgState">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                        </Row>
+                        <Row>
+                          <Styled.Col>
+                            <SForm.Label>Address Line 2</SForm.Label>
+                            <Styled.ErrorMessage name="addressLineTwo" />
+                            <Field name="addressLineTwo">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>Zip Code</SForm.Label>
+                            <Styled.ErrorMessage name="orgZip" />
+                            <Field name="orgZip">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="number" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                        </Row>
+                      </Row>
+                    </Col>
+                  )}
+                </Row>
               </SForm.FormGroup>
             </Styled.Form>
             {containsExisitingEvent(event) && (
