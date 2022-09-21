@@ -15,7 +15,7 @@ const Styled = {
     ::before {
       content: "*";
     }
-    color: red;
+    color: #ef4e79;
     font-size: 14px;
     font-weight: bold;
     display: inline-block;

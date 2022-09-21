@@ -27,7 +27,7 @@ const Styled = {
     ::before {
       content: "*";
     }
-    color: red;
+    color: #ef4e79;
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
@@ -371,8 +371,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
               onClick={handleSubmit}
               disabled={!isValid || isSubmitting}
               style={{
-                backgroundColor: "red",
-                borderColor: "red",
+                backgroundColor: "ef4e79",
+                borderColor: "ef4e79",
                 // backgroundColor: variables["button-pink"],
                 // borderColor: variables["button-pink"],
                 marginLeft: "4rem",

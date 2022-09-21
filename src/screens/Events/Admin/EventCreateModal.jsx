@@ -15,7 +15,7 @@ const Styled = {
     ::before {
       content: "*";
     }
-    color: red;
+    color: #ef4e79;
     font-size: 14px;
     font-weight: bold;
     display: inline-block;
@@ -76,7 +76,7 @@ const EventCreateModal = ({ open, toggle }) => {
                   color: currentActiveTab === "1" ? "#7F1C3B" : "black",
                 }}
               >
-                Group Event
+                Standard Event
               </p>
             </Styled.HeaderText>
           </NavLink>
@@ -97,7 +97,7 @@ const EventCreateModal = ({ open, toggle }) => {
                   color: currentActiveTab === "2" ? "#7F1C3B" : "black",
                 }}
               >
-                Standard Event
+                Group Event
               </p>
             </Styled.HeaderText>
           </NavLink>
