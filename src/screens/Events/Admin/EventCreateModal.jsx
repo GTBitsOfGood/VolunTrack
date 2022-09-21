@@ -106,7 +106,7 @@ const EventCreateModal = ({ open, toggle }) => {
       <EventFormModal
         toggle={toggle}
         event={null}
-        isGroupEvent={currentActiveTab === "1"}
+        isGroupEvent={currentActiveTab === "2"}
       ></EventFormModal>
     </Modal>
   );
