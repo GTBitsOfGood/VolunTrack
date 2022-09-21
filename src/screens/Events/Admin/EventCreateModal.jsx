@@ -42,6 +42,9 @@ const Styled = {
     // text-align: center;
     // display: inline;
   `,
+  Nav: styled(Nav)`
+    padding-left: 1rem;
+  `,
 };
 
 const EventCreateModal = ({ open, toggle }) => {
@@ -56,7 +59,7 @@ const EventCreateModal = ({ open, toggle }) => {
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
       <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
-      <Nav tabs>
+      <Styled.Nav tabs>
         <NavItem>
           <NavLink
             className={classnames({
@@ -68,7 +71,13 @@ const EventCreateModal = ({ open, toggle }) => {
           >
             {" "}
             <Styled.HeaderText>
-              <p>Group Event</p>
+              <p
+                style={{
+                  color: currentActiveTab === "1" ? "#7F1C3B" : "black",
+                }}
+              >
+                Group Event
+              </p>
             </Styled.HeaderText>
           </NavLink>
         </NavItem>
@@ -83,11 +92,17 @@ const EventCreateModal = ({ open, toggle }) => {
           >
             {" "}
             <Styled.HeaderText>
-              <p>Standard Event</p>
+              <p
+                style={{
+                  color: currentActiveTab === "2" ? "#7F1C3B" : "black",
+                }}
+              >
+                Standard Event
+              </p>
             </Styled.HeaderText>
           </NavLink>
         </NavItem>
-      </Nav>
+      </Styled.Nav>
       <EventFormModal
         toggle={toggle}
         event={null}
