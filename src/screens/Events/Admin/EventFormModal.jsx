@@ -34,9 +34,11 @@ const Styled = {
   `,
   Col: styled(Col)`
     padding: 10px;
+    padding-bottom: 3px;
   `,
   ModalBody: styled(ModalBody)`
-    margin-left: 5rem;
+    margin-left: 1.5rem;
+    margin-right: -2rem;
   `,
   GenericText: styled.p`
     color: ${variables["yiq-text-dark"]};
@@ -138,9 +140,16 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
               <SForm.FormGroup>
                 <Row>
                   <Col>
+                    <Row style={{
+                          padding: "10px",
+                          fontWeight: "bold",
+                          color: "gray",
+                        }}>
+                      Event Information
+                    </Row>
                     <Row>
                       <Styled.Col>
-                        <SForm.Label>Event Title</SForm.Label>
+                        <SForm.Label>Title</SForm.Label>
                         <Styled.ErrorMessage name="title" />
                         <Field name="title">
                           {({ field }) => (
@@ -148,6 +157,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           )}
                         </Field>
                       </Styled.Col>
+                    </Row>
+                    <Row>
                       <Styled.Col>
                         <SForm.Label>Date</SForm.Label>
                         <Styled.ErrorMessage name="date" />
@@ -157,6 +168,18 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           )}
                         </Field>
                       </Styled.Col>
+                      <Styled.Col>
+                        <SForm.Label>Max # of Volunteers</SForm.Label>
+                        <Styled.ErrorMessage name="max_volunteers" />
+                        <Field name="max_volunteers">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="number" />
+                          )}
+                        </Field>
+                      </Styled.Col>
+                    </Row>
+                    <Row>
+                      
                       <Styled.Col>
                         <SForm.Label>Start Time</SForm.Label>
                         <Field name="startTime">
@@ -173,6 +196,13 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           )}
                         </Field>
                       </Styled.Col>
+                    </Row>
+                    <Row style={{
+                          padding: "10px",
+                          fontWeight: "bold",
+                          color: "gray",
+                        }}>
+                      Event Location
                     </Row>
                     <Row>
                       <Styled.Col>
@@ -194,7 +224,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Field>
                       </Styled.Col>
                       <Styled.Col>
-                        <SForm.Label>Zipcode</SForm.Label>
+                        <SForm.Label>Zip Code</SForm.Label>
                         <Styled.ErrorMessage name="zip" />
                         <Field name="zip">
                           {({ field }) => (
@@ -203,17 +233,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Field>
                       </Styled.Col>
                     </Row>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Max Number of Volunteers</SForm.Label>
-                        <Styled.ErrorMessage name="max_volunteers" />
-                        <Field name="max_volunteers">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="number" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                    </Row>
+                    
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Description</SForm.Label>
@@ -237,6 +257,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                       <Row
                         style={{
                           marginLeft: "1rem",
+                          padding: "10px",
                         }}
                       >
                         <SForm.Label>Organization Information</SForm.Label>
@@ -245,11 +266,15 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         style={{
                           backgroundColor: "#F4F4F4",
                           marginLeft: "1rem",
+                          marginRight: "-2rem",
                           padding: "1rem",
+                          paddingLeft: "1rem",
                         }}
                       >
-                        <Row>
-                          <Styled.Col>
+                        
+      
+                    <Row>
+                      <Styled.Col>
                             <SForm.Label>Name</SForm.Label>
                             <Styled.ErrorMessage name="name" />
                             <Field name="name">
@@ -258,34 +283,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>POC Name</SForm.Label>
-                            <Styled.ErrorMessage name="pocName" />
-                            <Field name="pocName">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>POC Phone</SForm.Label>
-                            <Field name="pocPhone">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="number" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>POC Email</SForm.Label>
-                            <Field name="pocEmail">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                        </Row>
-                        <Row>
-                          <Styled.Col>
+                    </Row>
+                    <Row>
+                    <Styled.Col>
                             <SForm.Label>Address Line 1</SForm.Label>
                             <Styled.ErrorMessage name="addressLineOne" />
                             <Field name="addressLineOne">
@@ -294,6 +294,18 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>Zip Code</SForm.Label>
+                            <Styled.ErrorMessage name="orgZip" />
+                            <Field name="orgZip">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="number" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                    </Row>
+                    <Row>
+                          
                           <Styled.Col>
                             <SForm.Label>City</SForm.Label>
                             <Styled.ErrorMessage name="orgCity" />
@@ -313,8 +325,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                             </Field>
                           </Styled.Col>
                         </Row>
+
                         <Row>
-                          <Styled.Col>
+                          <Styled.Col
+                          >
                             <SForm.Label>Address Line 2</SForm.Label>
                             <Styled.ErrorMessage name="addressLineTwo" />
                             <Field name="addressLineTwo">
@@ -323,16 +337,48 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
+                          
+                        </Row>
+        
+                        <Row style={{
+                          padding: "10px",
+                          fontWeight: "bold",
+                          color: "gray",
+                        }}>
+                        <Styled.Col>Point of Contact</Styled.Col>
+                        
+                    </Row>
+                        <Row>
                           <Styled.Col>
-                            <SForm.Label>Zip Code</SForm.Label>
-                            <Styled.ErrorMessage name="orgZip" />
-                            <Field name="orgZip">
+                            <SForm.Label>Name</SForm.Label>
+                            <Styled.ErrorMessage name="pocName" />
+                            <Field name="pocName">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
+                          <Styled.Col>
+                            <SForm.Label>Phone #</SForm.Label>
+                            <Field name="pocPhone">
                               {({ field }) => (
                                 <SForm.Input {...field} type="number" />
                               )}
                             </Field>
                           </Styled.Col>
+                          </Row>
+                          <Row>
+                          <Styled.Col>
+                            <SForm.Label>Email</SForm.Label>
+                            <Field name="pocEmail">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Styled.Col>
                         </Row>
+                        
+                        
                       </Row>
                     </Col>
                   )}
