@@ -38,7 +38,7 @@ const Styled = {
   `,
   ModalBody: styled(ModalBody)`
     margin-left: 1.5rem;
-    margin-right: -2rem;
+    margin-right: -10px;
   `,
   GenericText: styled.p`
     color: ${variables["yiq-text-dark"]};
@@ -340,14 +340,14 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           
                         </Row>
         
-                        <Row style={{
+                          <Row style={{
                           padding: "10px",
                           fontWeight: "bold",
                           color: "gray",
                         }}>
-                        <Styled.Col>Point of Contact</Styled.Col>
-                        
-                    </Row>
+                          <Styled.Col>Point of Contact</Styled.Col>
+                          &nbsp;
+                          </Row>
                         <Row>
                           <Styled.Col>
                             <SForm.Label>Name</SForm.Label>
