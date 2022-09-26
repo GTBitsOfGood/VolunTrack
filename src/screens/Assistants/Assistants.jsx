@@ -1,11 +1,12 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React from "react";
-import { Button } from "reactstrap";
+import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
 import ReactSearchBox from "react-search-box";
+import variables from "../../design-tokens/_variables.module.scss";
 
 const PAGE_SIZE = 10;
 
@@ -38,18 +39,21 @@ const Styled = {
     justify-content: space-between;
     margin-bottom: 1rem;
   `,
+  Col: styled(Col)`
+    margin-top: 0.5rem;
+  `,
+  Row: styled(Row)`
+    margin: 0.5rem 0.5rem 0.5rem 1rem;
+  `,
   Button: styled(Button)`
-    background: white;
+    background: ${variables.primary};
     border: none;
-    color: black;
-    &:hover {
-      background: gainsboro;
-    }
-    &:focus {
-      background: white;
-      box-shadow: none;
-    }
-    ${(props) => props.disabled && "background: white !important"}
+    color: white;
+    width: 11.5rem;
+    height: 2.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2vw;
+    margin-left: 2vw;
   `,
   ToBeginningButton: styled(Button)`
     background: white;
@@ -183,25 +187,41 @@ class Assistants extends React.Component {
   onEditUser = () => {
     /** code to update users in state at that specific index */
   };
+
+  onCreateClicked = () => {};
+
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
     return (
       <Styled.Container>
-        <Styled.Text>Employees</Styled.Text>
-        <Styled.SearchBox>
-          <ReactSearchBox
-            placeholder="Search Name"
-            data={this.getUsersAtPage()}
-            onChange={(record) => this.onChangeSearch(record)}
-          />
-        </Styled.SearchBox>
-        <Styled.TableUsers>
-          <EmployeeTable
-            users={this.getUsersAtPage()}
-            loading={loadingMoreUsers}
-            editUserCallback={this.onEditUser}
-          />
-        </Styled.TableUsers>
+        <Styled.Row>
+          <Styled.Text>Employees</Styled.Text>
+        </Styled.Row>
+        <Styled.Row>
+          <Styled.Col>
+            <Styled.SearchBox>
+              <ReactSearchBox
+                placeholder="Search Name"
+                data={this.getUsersAtPage()}
+                onChange={(record) => this.onChangeSearch(record)}
+              />
+            </Styled.SearchBox>
+          </Styled.Col>
+          <Styled.Col>
+            <Styled.Button onClick={this.onCreateClicked}>
+              <span style={{ color: "white" }}>Add an Admin</span>
+            </Styled.Button>
+          </Styled.Col>
+        </Styled.Row>
+        <Styled.Row>
+          <Styled.TableUsers>
+            <EmployeeTable
+              users={this.getUsersAtPage()}
+              loading={loadingMoreUsers}
+              editUserCallback={this.onEditUser}
+            />
+          </Styled.TableUsers>
+        </Styled.Row>
       </Styled.Container>
     );
   }
