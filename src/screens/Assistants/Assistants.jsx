@@ -1,8 +1,18 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React from "react";
-import { Button, Col, Row } from "reactstrap";
+import {
+  Button,
+  Col,
+  Row,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Container,
+} from "reactstrap";
 import styled from "styled-components";
+import * as Form from "../sharedStyles/formStyles";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
 import ReactSearchBox from "react-search-box";
@@ -109,6 +119,7 @@ class Assistants extends React.Component {
     userCount: 0,
     currentPage: 0,
     loadingMoreUsers: false,
+    showNewAdminModal: false,
   };
 
   componentDidMount = () => this.onRefresh();
@@ -188,7 +199,19 @@ class Assistants extends React.Component {
     /** code to update users in state at that specific index */
   };
 
-  onCreateClicked = () => {};
+  onCreateClicked = () => {
+    this.setState({
+      showNewAdminModal: true,
+    });
+  };
+
+  onModalClose = () => {
+    this.setState({
+      showNewAdminModal: false,
+    });
+  };
+
+  saveNewAdmin = () => {};
 
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
@@ -222,6 +245,38 @@ class Assistants extends React.Component {
             />
           </Styled.TableUsers>
         </Styled.Row>
+        <Modal
+          style={{ "max-width": "750px" }}
+          isOpen={this.state.showNewAdminModal}
+          onClose={null}
+        >
+          <ModalHeader color="#ef4e79">{"Add Admin"}</ModalHeader>
+          <Container>
+            <ModalBody>
+              <form>
+                <Form.FormGroup>
+                  <Row>
+                    <Col>
+                      <Form.Label>Email</Form.Label>
+                      <Form.Input type="text" name="Name" />
+                    </Col>
+                  </Row>
+                </Form.FormGroup>
+              </form>
+            </ModalBody>
+          </Container>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.onModalClose}>
+              Cancel
+            </Button>
+            <Button
+              style={{ backgroundColor: "#ef4e79" }}
+              onClick={this.saveNewAdmin}
+            >
+              Add as an Admin
+            </Button>
+          </ModalFooter>
+        </Modal>
       </Styled.Container>
     );
   }
