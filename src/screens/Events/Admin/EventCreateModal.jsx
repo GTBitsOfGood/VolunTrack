@@ -43,7 +43,11 @@ const Styled = {
     // display: inline;
   `,
   Nav: styled(Nav)`
-    padding-left: 1rem;
+    padding-left: 1.5rem;
+    margin-top: -2rem;
+  `,
+  EventFormModal: styled(EventFormModal)`
+    // margin-left: 2rem;
   `,
 };
 
@@ -103,11 +107,11 @@ const EventCreateModal = ({ open, toggle }) => {
           </NavLink>
         </NavItem>
       </Styled.Nav>
-      <EventFormModal
+      <Styled.EventFormModal
         toggle={toggle}
         event={null}
         isGroupEvent={currentActiveTab === "2"}
-      ></EventFormModal>
+      ></Styled.EventFormModal>
     </Modal>
   );
 };
