@@ -129,6 +129,13 @@ const EventInfo = () => {
     onRefresh();
   };
 
+  let lastUpdated =
+    "Last updated " +
+    new Date(Date.parse(event.updatedAt)).toLocaleString().replace(",", " at");
+  lastUpdated =
+    lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
+    lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
+
   const futureDate = new Date(event.date) > new Date();
   return (
     <>
@@ -141,10 +148,7 @@ const EventInfo = () => {
                 {" "}
                 {event.max_volunteers - event.volunteers.length} Slots Remaining
               </Styled.Slots>
-              <Styled.Date>
-                Updated {event.updatedAt.slice(0, 10)} @{" "}
-                {convertTime(event.updatedAt.slice(11, 16))}
-              </Styled.Date>
+              <Styled.Date>{lastUpdated}</Styled.Date>
             </Styled.EventSubhead>
             <Styled.Info>
               {" "}
