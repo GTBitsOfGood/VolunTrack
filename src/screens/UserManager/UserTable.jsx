@@ -65,7 +65,7 @@ class UserTable extends React.Component {
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{width:"100%", "max-width":"none"}}>
+      <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
           <tbody>
             <tr>
@@ -209,15 +209,16 @@ class UserTable extends React.Component {
                       />
                     </Col>
                     <Col>
-                      <Form.Label>Court Required</Form.Label>
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckDefault"
-                        />
-                      </div>
+                      <Form.Label>Court Required Hours</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.court_hours
+                            : ""
+                        }
+                        type="text"
+                        name="Total Hours"
+                      />
                     </Col>
                     <Row>
                       <Col>
