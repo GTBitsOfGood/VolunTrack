@@ -29,10 +29,19 @@ const eventSchema = new mongoose.Schema(
     },
     state: {
       type: String,
-      required: false,
+      required: true,
     },
     zip: {
       type: Number,
+      required: true,
+    },
+    // ------ event contact ------
+    eventContactPhone: {
+      type: String,
+      required: true,
+    },
+    eventContactEmail: {
+      type: String,
       required: true,
     },
     // ------ group events only ------

@@ -10,6 +10,9 @@ export const standardEventValidator = object().shape({
   zip: string().trim().required(),
   max_volunteers: string().trim().required(),
   description: string().trim(),
+
+  eventContactPhone: string().trim().required(),
+  eventContactEmail: string().trim().required(),
 });
 
 export const groupEventValidator = object().shape({
@@ -22,6 +25,9 @@ export const groupEventValidator = object().shape({
   zip: string().trim().required(),
   max_volunteers: string().trim().required(),
   description: string().trim(),
+
+  eventContactPhone: string().trim().required(),
+  eventContactEmail: string().trim().required(),
 
   pocName: string().trim().required(),
   pocEmail: string().trim().required(),

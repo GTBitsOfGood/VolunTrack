@@ -71,7 +71,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 200px;
+    width: 250px;
   `,
   InfoTableText: styled.p`
     font-size: 16px;
@@ -164,11 +164,11 @@ const EventInfo = () => {
                     {event.date.slice(0, 10)}
                   </Styled.InfoTableText>
                   <Styled.InfoTableText>
-                    <b>Contact:</b>
+                    <b>Event Contact:</b>
                     <br></br>
-                    Phone
+                    {event.eventContactPhone}
                     <br></br>
-                    Email
+                    {event.eventContactEmail}
                   </Styled.InfoTableText>
                 </Styled.InfoTableCol>
                 <Styled.InfoTableCol>
@@ -201,17 +201,17 @@ const EventInfo = () => {
                 <Styled.InfoTable>
                   <Styled.InfoTableCol>
                     <Styled.InfoTableText>
-                      <b>POC Name</b>
+                      <b>Point of Contact Name</b>
                       <br></br>
                       {event.pocName}
                     </Styled.InfoTableText>
                     <Styled.InfoTableText>
-                      <b>POC Email</b>
+                      <b>Point of Contact Email</b>
                       <br></br>
                       {event.pocEmail}
                     </Styled.InfoTableText>
                     <Styled.InfoTableText>
-                      <b>POC Phone</b>
+                      <b>Point of Contact Phone</b>
                       <br></br>
                       {event.pocPhone}
                     </Styled.InfoTableText>

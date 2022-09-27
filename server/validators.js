@@ -65,12 +65,16 @@ const CREATE_EVENT_VALIDATOR = [
   check("date").exists(),
   check("startTime").exists(),
   check("endTime").exists(),
+
   check("address").isAscii().trim(),
   check("city").isAscii().trim(),
   check("zip").isAscii().trim().escape(),
-  // check("state").optional().isAscii().trim(),
+  check("state").optional().isAscii().trim(),
   check("max_volunteers").isAscii().trim(),
   check("description").optional(),
+
+  check("eventContactPhone").isAscii().trim(),
+  check("eventContactEmail").isEmail().trim(),
 
   check("pocName").optional().isAscii().trim(),
   check("pocEmail").optional().isEmail().trim(),
