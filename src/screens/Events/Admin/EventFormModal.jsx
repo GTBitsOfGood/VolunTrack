@@ -12,7 +12,11 @@ import {
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import PropTypes from "prop-types";
-import {eventValidator, groupEventValidator, standardEventValidator} from "./eventHelpers";
+import {
+  eventValidator,
+  groupEventValidator,
+  standardEventValidator,
+} from "./eventHelpers";
 import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -33,7 +37,7 @@ const Styled = {
     display: inline-block;
   `,
   Col: styled(Col)`
-    padding: 10px;
+    padding: 5px;
     padding-bottom: 3px;
   `,
   ModalBody: styled(ModalBody)`
@@ -119,6 +123,34 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
         description: containsExistingEvent(event)
           ? event.description
           : emptyStringField,
+        pocName:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.pocName
+            : emptyStringField,
+        pocEmail:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.pocEmail
+            : emptyStringField,
+        pocPhone:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.pocPhone
+            : emptyStringField,
+        orgAddress:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.orgAddress
+            : emptyStringField,
+        orgCity:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.orgCity
+            : emptyStringField,
+        orgState:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.orgState
+            : emptyStringField,
+        orgZip:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.orgZip
+            : emptyStringField,
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
@@ -144,7 +176,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                   <Col>
                     <Row
                       style={{
-                        padding: "10px",
+                        padding: "5px",
                         fontWeight: "bold",
                         color: "gray",
                       }}
@@ -202,7 +234,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     </Row>
                     <Row
                       style={{
-                        padding: "10px",
+                        padding: "5px",
                         fontWeight: "bold",
                         color: "gray",
                       }}
@@ -261,13 +293,13 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     <Col>
                       <Row
                         style={{
-                          marginLeft: "1rem",
-                          padding: "10px",
+                          marginLeft: "0.5rem",
+                          padding: "5px",
                         }}
                       >
                         <SForm.Label>Organization Information</SForm.Label>
                       </Row>
-                      <Row
+                      <div
                         style={{
                           backgroundColor: "#F4F4F4",
                           marginLeft: "1rem",
@@ -279,8 +311,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         <Row>
                           <Styled.Col>
                             <SForm.Label>Name</SForm.Label>
-                            <Styled.ErrorMessage name="name" />
-                            <Field name="name">
+                            <Styled.ErrorMessage name="orgName" />
+                            <Field name="orgName">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
@@ -289,20 +321,11 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Row>
                         <Row>
                           <Styled.Col>
-                            <SForm.Label>Address Line 1</SForm.Label>
-                            <Styled.ErrorMessage name="addressLineOne" />
-                            <Field name="addressLineOne">
+                            <SForm.Label>Address</SForm.Label>
+                            <Styled.ErrorMessage name="orgAddress" />
+                            <Field name="orgAddress">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
-                              )}
-                            </Field>
-                          </Styled.Col>
-                          <Styled.Col>
-                            <SForm.Label>Zip Code</SForm.Label>
-                            <Styled.ErrorMessage name="orgZip" />
-                            <Field name="orgZip">
-                              {({ field }) => (
-                                <SForm.Input {...field} type="number" />
                               )}
                             </Field>
                           </Styled.Col>
@@ -326,15 +349,12 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
-                        </Row>
-
-                        <Row>
                           <Styled.Col>
-                            <SForm.Label>Address Line 2</SForm.Label>
-                            <Styled.ErrorMessage name="addressLineTwo" />
-                            <Field name="addressLineTwo">
+                            <SForm.Label>Zip Code</SForm.Label>
+                            <Styled.ErrorMessage name="orgZip" />
+                            <Field name="orgZip">
                               {({ field }) => (
-                                <SForm.Input {...field} type="text" />
+                                <SForm.Input {...field} type="number" />
                               )}
                             </Field>
                           </Styled.Col>
@@ -342,7 +362,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
 
                         <Row
                           style={{
-                            padding: "10px",
+                            padding: "5px",
                             fontWeight: "bold",
                             color: "gray",
                           }}
@@ -361,7 +381,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                             </Field>
                           </Styled.Col>
                           <Styled.Col>
-                            <SForm.Label>Phone #</SForm.Label>
+                            <SForm.Label>Phone Number</SForm.Label>
                             <Field name="pocPhone">
                               {({ field }) => (
                                 <SForm.Input {...field} type="number" />
@@ -379,7 +399,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                             </Field>
                           </Styled.Col>
                         </Row>
-                      </Row>
+                      </div>
                     </Col>
                   )}
                 </Row>

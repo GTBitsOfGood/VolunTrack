@@ -8,7 +8,6 @@ const agendaOptions = {
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      dbName: process.env.DB_NAME,
     },
   },
   processEvery: "1 minute",
@@ -18,7 +17,7 @@ export const agenda = new Agenda(agendaOptions);
 
 agenda
   .on("ready", function () {
-    agenda.start();
+    agenda.start().then(r => console.log('agenda started'));
   })
   .on("error", () => console.log("Agenda connection error!"));
 

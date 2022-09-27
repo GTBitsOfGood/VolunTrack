@@ -53,7 +53,7 @@ const EventEditModal = ({ open, toggle, event }) => {
       <Styled.HeaderText>
         <p>Edit Event</p>
       </Styled.HeaderText>
-      <EventFormModal toggle={toggle} event={event}></EventFormModal>
+      <EventFormModal toggle={toggle} event={event} isGroupEvent={event?.orgName}></EventFormModal>
     </Modal>
   );
 };

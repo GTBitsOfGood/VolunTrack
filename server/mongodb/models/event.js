@@ -27,10 +27,15 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    state: {
+      type: String,
+      required: false,
+    },
     zip: {
       type: Number,
       required: true,
     },
+    // ------ group events only ------
     pocName: {
       type: String,
       required: false,
@@ -43,11 +48,11 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
-    addressLineOne: {
+    orgName: {
       type: String,
       required: false,
     },
-    addressLineTwo: {
+    orgAddress: {
       type: String,
       required: false,
     },
@@ -63,16 +68,22 @@ const eventSchema = new mongoose.Schema(
       type: Number,
       required: false,
     },
+    // ------ end of group events only ------
     volunteers: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
       required: true,
       default: [],
     },
     minors: {
-      type: [{
-        volunteer_id: { type: mongoose.Schema.Types.ObjectId, ref: "UserData" },
-        minor: [{ type: String}]
-      }],
+      type: [
+        {
+          volunteer_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "UserData",
+          },
+          minor: [{ type: String }],
+        },
+      ],
       required: true,
       default: [],
     },
@@ -94,5 +105,4 @@ const eventSchema = new mongoose.Schema(
 );
 
 // export Event model to app
-
 module.exports = mongoose.models.Event || mongoose.model("Event", eventSchema);

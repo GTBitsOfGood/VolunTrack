@@ -1,5 +1,6 @@
 // NPM Packages
 const { check } = require("express-validator");
+const mongoose = require("mongoose");
 
 // TODO: Convert this into custom middlewares using next-connect
 
@@ -67,8 +68,20 @@ const CREATE_EVENT_VALIDATOR = [
   check("address").isAscii().trim(),
   check("city").isAscii().trim(),
   check("zip").isAscii().trim().escape(),
+  // check("state").optional().isAscii().trim(),
   check("max_volunteers").isAscii().trim(),
-  // check("description").isAscii().trim(),
+  check("description").optional(),
+
+  check("pocName").optional().isAscii().trim(),
+  check("pocEmail").optional().isEmail().trim(),
+  check("pocPhone").optional().isAscii().trim().escape(),
+
+  check("orgName").optional().isAscii().trim(),
+  check("orgAddress").optional().isAscii().trim(),
+  check("orgCity").optional().isAscii().trim(),
+  check("orgZip").optional().isAscii().trim().escape(),
+  check("orgState").optional().isAscii().trim(),
+
 ];
 
 const OBJECT_ID_REGEX = new RegExp("^[0-9a-fA-F]{24}$");
