@@ -194,7 +194,7 @@ const EventInfo = () => {
           </Row>
           <br></br>
           <br></br>
-          {event.pocName != null && (
+          {event.orgName != null && (
             <Row>
               <Styled.EventCol2 style={{ "margin-right": "auto" }}>
                 <Styled.InfoHead>Organization</Styled.InfoHead>

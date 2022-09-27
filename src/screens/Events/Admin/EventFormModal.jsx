@@ -13,7 +13,6 @@ import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import PropTypes from "prop-types";
 import {
-  eventValidator,
   groupEventValidator,
   standardEventValidator,
 } from "./eventHelpers";
