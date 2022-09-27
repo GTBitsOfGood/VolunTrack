@@ -12,7 +12,7 @@ import {
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import PropTypes from "prop-types";
-import { eventValidator } from "./eventHelpers";
+import {eventValidator, groupEventValidator, standardEventValidator} from "./eventHelpers";
 import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -74,7 +74,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     toggle();
   };
 
-  const containsExisitingEvent = (event) => {
+  const containsExistingEvent = (event) => {
     return event;
   };
 
@@ -83,9 +83,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const emptyStringField = "";
-  const submitText = containsExisitingEvent(event) ? "Submit" : "Create Event";
+  const submitText = containsExistingEvent(event) ? "Submit" : "Create Event";
   const [content, setContent] = useState(
-    containsExisitingEvent(event) ? event.description : emptyStringField
+    containsExistingEvent(event) ? event.description : emptyStringField
   );
 
   let ReactQuill;
@@ -98,34 +98,36 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   return (
     <Formik
       initialValues={{
-        title: containsExisitingEvent(event) ? event.title : emptyStringField,
-        date: containsExisitingEvent(event)
+        title: containsExistingEvent(event) ? event.title : emptyStringField,
+        date: containsExistingEvent(event)
           ? event.date.split("T")[0]
           : emptyStringField, // strips timestamp
-        startTime: containsExisitingEvent(event)
+        startTime: containsExistingEvent(event)
           ? event.startTime
           : emptyStringField,
-        endTime: containsExisitingEvent(event)
+        endTime: containsExistingEvent(event)
           ? event.endTime
           : emptyStringField,
-        address: containsExisitingEvent(event)
+        address: containsExistingEvent(event)
           ? event.address
           : emptyStringField,
-        city: containsExisitingEvent(event) ? event.city : emptyStringField,
-        zip: containsExisitingEvent(event) ? event.zip : emptyStringField,
-        max_volunteers: containsExisitingEvent(event)
+        city: containsExistingEvent(event) ? event.city : emptyStringField,
+        zip: containsExistingEvent(event) ? event.zip : emptyStringField,
+        max_volunteers: containsExistingEvent(event)
           ? event.max_volunteers
           : emptyStringField,
-        description: containsExisitingEvent(event)
+        description: containsExistingEvent(event)
           ? event.description
           : emptyStringField,
       }}
       onSubmit={(values, { setSubmitting }) => {
-        containsExisitingEvent(event)
+        containsExistingEvent(event)
           ? onSubmitEditEvent(values, setSubmitting)
           : onSubmitCreateEvent(values, setSubmitting);
       }}
-      validationSchema={eventValidator}
+      validationSchema={
+        isGroupEvent ? groupEventValidator : standardEventValidator
+      }
       render={({
         handleSubmit,
         isValid,
@@ -140,11 +142,13 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
               <SForm.FormGroup>
                 <Row>
                   <Col>
-                    <Row style={{
-                          padding: "10px",
-                          fontWeight: "bold",
-                          color: "gray",
-                        }}>
+                    <Row
+                      style={{
+                        padding: "10px",
+                        fontWeight: "bold",
+                        color: "gray",
+                      }}
+                    >
                       Event Information
                     </Row>
                     <Row>
@@ -179,7 +183,6 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                       </Styled.Col>
                     </Row>
                     <Row>
-                      
                       <Styled.Col>
                         <SForm.Label>Start Time</SForm.Label>
                         <Field name="startTime">
@@ -197,11 +200,13 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Field>
                       </Styled.Col>
                     </Row>
-                    <Row style={{
-                          padding: "10px",
-                          fontWeight: "bold",
-                          color: "gray",
-                        }}>
+                    <Row
+                      style={{
+                        padding: "10px",
+                        fontWeight: "bold",
+                        color: "gray",
+                      }}
+                    >
                       Event Location
                     </Row>
                     <Row>
@@ -233,7 +238,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Field>
                       </Styled.Col>
                     </Row>
-                    
+
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Description</SForm.Label>
@@ -271,10 +276,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           paddingLeft: "1rem",
                         }}
                       >
-                        
-      
-                    <Row>
-                      <Styled.Col>
+                        <Row>
+                          <Styled.Col>
                             <SForm.Label>Name</SForm.Label>
                             <Styled.ErrorMessage name="name" />
                             <Field name="name">
@@ -283,9 +286,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
-                    </Row>
-                    <Row>
-                    <Styled.Col>
+                        </Row>
+                        <Row>
+                          <Styled.Col>
                             <SForm.Label>Address Line 1</SForm.Label>
                             <Styled.ErrorMessage name="addressLineOne" />
                             <Field name="addressLineOne">
@@ -303,9 +306,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
-                    </Row>
-                    <Row>
-                          
+                        </Row>
+                        <Row>
                           <Styled.Col>
                             <SForm.Label>City</SForm.Label>
                             <Styled.ErrorMessage name="orgCity" />
@@ -327,8 +329,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Row>
 
                         <Row>
-                          <Styled.Col
-                          >
+                          <Styled.Col>
                             <SForm.Label>Address Line 2</SForm.Label>
                             <Styled.ErrorMessage name="addressLineTwo" />
                             <Field name="addressLineTwo">
@@ -337,17 +338,18 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
-                          
                         </Row>
-        
-                          <Row style={{
-                          padding: "10px",
-                          fontWeight: "bold",
-                          color: "gray",
-                        }}>
+
+                        <Row
+                          style={{
+                            padding: "10px",
+                            fontWeight: "bold",
+                            color: "gray",
+                          }}
+                        >
                           <Styled.Col>Point of Contact</Styled.Col>
                           &nbsp;
-                          </Row>
+                        </Row>
                         <Row>
                           <Styled.Col>
                             <SForm.Label>Name</SForm.Label>
@@ -366,8 +368,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                               )}
                             </Field>
                           </Styled.Col>
-                          </Row>
-                          <Row>
+                        </Row>
+                        <Row>
                           <Styled.Col>
                             <SForm.Label>Email</SForm.Label>
                             <Field name="pocEmail">
@@ -377,15 +379,13 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                             </Field>
                           </Styled.Col>
                         </Row>
-                        
-                        
                       </Row>
                     </Col>
                   )}
                 </Row>
               </SForm.FormGroup>
             </Styled.Form>
-            {containsExisitingEvent(event) && (
+            {containsExistingEvent(event) && (
               <Styled.Row>
                 <FormGroup>
                   <Input
