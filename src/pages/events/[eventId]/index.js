@@ -183,6 +183,10 @@ const EventInfo = () => {
                     <br></br>
                     {event.address}
                     <br></br>
+                    {event.city}, {event.state}
+                    <br></br>
+                    {event.zip}
+                    <br></br>
                   </Styled.InfoTableText>
                 </Styled.InfoTableCol>
               </Styled.InfoTable>
@@ -214,11 +218,17 @@ const EventInfo = () => {
                   </Styled.InfoTableCol>
                   <Styled.InfoTableCol>
                     <Styled.InfoTableText>
+                      <b>Organization Name</b>
+                      <br></br>
+                      {event.orgName}
+                    </Styled.InfoTableText>
+                    <Styled.InfoTableText>
                       <b>Location</b>
                       <br></br>
-                      {event.addressLineOne}
-                      {event.addressLineTwo}
+                      {event.orgAddress}
+                      <br></br>
                       {event.orgCity}, {event.orgState}
+                      <br></br>
                       {event.orgZip}
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>

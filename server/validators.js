@@ -81,7 +81,6 @@ const CREATE_EVENT_VALIDATOR = [
   check("orgCity").optional().isAscii().trim(),
   check("orgZip").optional().isAscii().trim().escape(),
   check("orgState").optional().isAscii().trim(),
-
 ];
 
 const OBJECT_ID_REGEX = new RegExp("^[0-9a-fA-F]{24}$");

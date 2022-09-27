@@ -135,6 +135,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.pocPhone
             : emptyStringField,
+        orgName:
+          containsExistingEvent(event) && isGroupEvent
+            ? event.orgName
+            : emptyStringField,
         orgAddress:
           containsExistingEvent(event) && isGroupEvent
             ? event.orgAddress
