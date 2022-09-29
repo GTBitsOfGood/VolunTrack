@@ -13,6 +13,7 @@ export const standardEventValidator = object().shape({
 
   eventContactPhone: string().trim().required(),
   eventContactEmail: string().trim().required(),
+  isPrivate: string().trim().required(),
 });
 
 export const groupEventValidator = object().shape({
@@ -38,4 +39,5 @@ export const groupEventValidator = object().shape({
   orgCity: string().trim().required(),
   orgState: string().trim().required(),
   orgZip: string().trim().required(),
+  isPrivate: string().trim().required(),
 });

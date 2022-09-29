@@ -17,7 +17,6 @@ import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import "react-quill/dist/quill.snow.css";
-import { set } from "lodash";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -65,6 +64,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     const event = {
       ...values,
       description: content,
+      isPrivate: isGroupEvent ? 'true' : 'false',
     };
     setSubmitting(true);
     createEvent(event)
@@ -169,6 +169,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.orgZip
             : emptyStringField,
+        isPrivate: isGroupEvent ? 'true' : 'false',
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)

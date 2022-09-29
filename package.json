@@ -71,6 +71,7 @@
     "react-dropdown": "^1.9.2",
     "react-google-button": "^0.7.2",
     "react-google-login": "^5.2.2",
+    "react-hot-toast": "^2.4.0",
     "react-quill": "^2.0.0",
     "react-search-box": "^2.2.1",
     "reactstrap": "^6.4.0",

@@ -109,8 +109,12 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    isPrivate: {
+      type: String,
+      required: true,
+    },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // export Event model to app

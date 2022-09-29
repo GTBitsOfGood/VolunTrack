@@ -6,6 +6,7 @@ import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { useSession } from "next-auth/react";
 import { updateEvent } from "../../../screens/Events/User/eventHelpers";
+import toast, { Toaster } from "react-hot-toast";
 
 const Styled = {
   Button: styled(Button)`
@@ -77,6 +78,19 @@ const Styled = {
     font-size: 16px;
     margin: 20px;
   `,
+  ButtonCol: styled.div`
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+  `,
+  PrivateLink: styled(Button)`
+    background-color: ${variables["primary"]};
+    color: white;
+    font-size: 15px;
+    margin: auto;
+    bottom: 0;
+    width: 60%;
+  `,
 };
 
 const convertTime = (time) => {
@@ -127,6 +141,11 @@ const EventInfo = () => {
     await updateEvent(changedEvent);
 
     onRefresh();
+  };
+
+  const copyPrivateLink = () => {
+    window.navigator.clipboard.writeText(window.location.href);
+    toast.success("Successfully Copied Private Link to Event!");
   };
 
   let lastUpdated =
@@ -237,6 +256,12 @@ const EventInfo = () => {
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
                 </Styled.InfoTable>
+                <Styled.ButtonCol>
+                  <Styled.PrivateLink onClick={copyPrivateLink}>
+                    Share private link to event
+                  </Styled.PrivateLink>
+                  <Toaster />
+                </Styled.ButtonCol>
               </Styled.EventCol2>
             </Row>
           )}
