@@ -3,10 +3,16 @@ import Error from "next/error";
 import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
+import {
+  fetchUserCount,
+  fetchUserManagementData,
+  updateUser,
+} from "../../actions/queries";
 import Icon from "../../components/Icon";
+import PageBar from "../../components/PageBar";
 import UserTable from "./UserTable";
 import ReactSearchBox from "react-search-box";
+import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
 const PAGE_SIZE = 10;
 
@@ -178,8 +184,9 @@ class UserManager extends React.Component {
   };
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
-  onEditUser = () => {
+  onEditUser = (updatedUser) => {
     /** code to update users in state at that specific index */
+    updateUser(updatedUser);
   };
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
@@ -203,6 +210,7 @@ class UserManager extends React.Component {
             editUserCallback={this.onEditUser}
           />
         </Styled.TableUsers>
+        <PageBar />
       </Styled.Container>
     );
   }

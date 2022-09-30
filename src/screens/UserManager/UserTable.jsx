@@ -62,8 +62,10 @@ class UserTable extends React.Component {
       userSelectedForEdit: null,
     });
   };
+
   render() {
     const { users, loading } = this.props;
+
     return (
       <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
@@ -122,6 +124,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>First Name</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.first_name
@@ -134,6 +137,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Last Name</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.last_name
@@ -148,6 +152,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Email</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.email
@@ -160,6 +165,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Phone</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.phone_number
@@ -175,6 +181,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Date of Birth</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.date_of_birth
@@ -187,6 +194,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Zip Code</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.zip_code
@@ -217,7 +225,7 @@ class UserTable extends React.Component {
                             : ""
                         }
                         type="text"
-                        name="Total Hours"
+                        name="Court Hours"
                       />
                     </Col>
                     <Row>
@@ -231,6 +239,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Address</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.address
@@ -243,6 +252,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>City</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.city
@@ -255,6 +265,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>State</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.state
