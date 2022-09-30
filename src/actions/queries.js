@@ -128,3 +128,5 @@ export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
 export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
+
+export const updateInvitedAdmins = (email) => axios.post(`/api/settings/${email}`);
