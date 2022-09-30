@@ -12,6 +12,7 @@ import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
+import Pagination from "../../components/PaginationComp";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -295,6 +296,11 @@ class UserTable extends React.Component {
               </Button> */}
           </ModalFooter>
         </Modal>
+        <Pagination
+        // nPages={totalPages}
+        // currentPage={currentPaginationPage}
+        // setCurrentPage={setCurrentPaginationPage}
+        />
       </Table.Container>
     );
   }

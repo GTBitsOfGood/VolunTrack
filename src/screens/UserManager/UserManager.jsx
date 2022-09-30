@@ -9,10 +9,8 @@ import {
   updateUser,
 } from "../../actions/queries";
 import Icon from "../../components/Icon";
-import PageBar from "../../components/PageBar";
 import UserTable from "./UserTable";
 import ReactSearchBox from "react-search-box";
-import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
 const PAGE_SIZE = 10;
 
@@ -185,11 +183,14 @@ class UserManager extends React.Component {
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = (updatedUser) => {
+    console.log(updatedUser);
     /** code to update users in state at that specific index */
     updateUser(updatedUser);
   };
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
+    const totalPages = PAGE_SIZE / 10;
+    // const [currentPaginationPage, setCurrentPaginationPage] = useState(1);
     return (
       <Styled.Container>
         <Styled.Text>Volunteers</Styled.Text>
@@ -210,7 +211,6 @@ class UserManager extends React.Component {
             editUserCallback={this.onEditUser}
           />
         </Styled.TableUsers>
-        <PageBar />
       </Styled.Container>
     );
   }
