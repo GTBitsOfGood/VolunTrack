@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React from "react";
+import { updateInvitedAdmins } from "../../actions/queries";
 import {
   Button,
   Col,
@@ -12,6 +13,7 @@ import {
   Container,
 } from "reactstrap";
 import styled from "styled-components";
+import { invitedAdminsValidator } from "./helpers";
 import * as Form from "../sharedStyles/formStyles";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
@@ -65,6 +67,16 @@ const Styled = {
     margin-bottom: 2vw;
     margin-left: 2vw;
   `,
+  AddAdminButton: styled(Button)`
+    background: ${variables.primary};
+    border: none;
+    color: white;
+    width: 11.5rem;
+    height: 2.5rem;
+    margin-top: 0rem;
+    margin-bottom: 2vw;
+    margin-left: 0vw;
+  `,
   ToBeginningButton: styled(Button)`
     background: white;
     border: none;
@@ -74,7 +86,7 @@ const Styled = {
   `,
   SearchBox: styled.div`
     position: relative;
-    left: 10%;
+    left: 19%;
     width: 70%;
   `,
   TableUsers: styled.div`
@@ -116,6 +128,7 @@ function authWrapper(Component) {
 class Assistants extends React.Component {
   state = {
     users: [],
+    // admins: [],
     userCount: 0,
     currentPage: 0,
     loadingMoreUsers: false,
@@ -179,6 +192,11 @@ class Assistants extends React.Component {
     const start = currentPage * PAGE_SIZE;
     return users.slice(start, start + PAGE_SIZE);
   };
+  // getInvitedAdmins = () => {
+  //   const { admins, currentPage } = this.state;
+  //   const start = currentPage * PAGE_SIZE;
+  //   return admins.slice(start, start + PAGE_SIZE);
+  // };
   onChangeSearch = (record) => {
     const { users, currentPage } = this.state;
     fetchUserManagementData().then((result) => {
@@ -205,13 +223,19 @@ class Assistants extends React.Component {
     });
   };
 
-  onModalClose = () => {
+  onModalClose = (isUpdating) => {
     this.setState({
       showNewAdminModal: false,
     });
+    if (isUpdating) {
+      this.handleSubmit();
+    }
   };
 
-  saveNewAdmin = () => {};
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    await updateInvitedAdmins("");
+  };
 
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
@@ -225,26 +249,28 @@ class Assistants extends React.Component {
             <Styled.SearchBox>
               <ReactSearchBox
                 placeholder="Search Name"
-                data={this.getUsersAtPage()}
+                data={this.getUsersAtPage()} //.concat(this.getInvitedAdmins()
                 onChange={(record) => this.onChangeSearch(record)}
               />
             </Styled.SearchBox>
           </Styled.Col>
           <Styled.Col>
-            <Styled.Button onClick={this.onCreateClicked}>
+            <Styled.AddAdminButton onClick={this.onCreateClicked}>
               <span style={{ color: "white" }}>Add an Admin</span>
-            </Styled.Button>
+            </Styled.AddAdminButton>
           </Styled.Col>
         </Styled.Row>
         <Styled.Row>
           <Styled.TableUsers>
             <EmployeeTable
               users={this.getUsersAtPage()}
+              // invitedAdmins={this.getInvitedAdmins()}
               loading={loadingMoreUsers}
               editUserCallback={this.onEditUser}
             />
           </Styled.TableUsers>
         </Styled.Row>
+
         <Modal
           style={{ "max-width": "750px" }}
           isOpen={this.state.showNewAdminModal}
@@ -266,12 +292,12 @@ class Assistants extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <Button color="secondary" onClick={this.onModalClose}>
+            <Button color="secondary" onClick={this.onModalClose(false)}>
               Cancel
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.saveNewAdmin}
+              onClick={this.handleSubmit} //this.onModalClose(true)
             >
               Add as an Admin
             </Button>
