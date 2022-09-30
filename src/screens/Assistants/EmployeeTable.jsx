@@ -94,7 +94,7 @@ class EmployeeTable extends React.Component {
     });
   };
   render() {
-    const { users, loading } = this.props;
+    const { users, invitedAdmins, loading } = this.props;
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
     return (
@@ -136,6 +136,25 @@ class EmployeeTable extends React.Component {
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
                   </td>
+                </Table.Row>
+              ))}
+
+            {!loading &&
+              invitedAdmins.map((user, index) => (
+                <Table.Row key={index} evenIndex={index % 2 === 0}>
+                  <td> </td>
+                  <td>
+                    {user}
+                    <Styled.Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(user);
+                      }}
+                    >
+                      <Icon color="grey3" name="copy" />
+                    </Styled.Button>
+                  </td>
+                  <td>{Administrator}</td>
+                  <td>{Pending}</td>
                 </Table.Row>
               ))}
           </tbody>
