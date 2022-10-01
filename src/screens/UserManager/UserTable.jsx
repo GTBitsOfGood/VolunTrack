@@ -66,7 +66,6 @@ class UserTable extends React.Component {
 
   render() {
     const { users, loading } = this.props;
-
     return (
       <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
@@ -296,11 +295,7 @@ class UserTable extends React.Component {
               </Button> */}
           </ModalFooter>
         </Modal>
-        <Pagination
-        // nPages={totalPages}
-        // currentPage={currentPaginationPage}
-        // setCurrentPage={setCurrentPaginationPage}
-        />
+        <Pagination users={users} />
       </Table.Container>
     );
   }
