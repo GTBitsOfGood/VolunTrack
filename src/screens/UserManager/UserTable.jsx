@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
 import {
@@ -47,8 +47,13 @@ class UserTable extends React.Component {
     super(props);
     this.state = {
       userSelectedForEdit: null,
+      currentPage: 0,
+      pageSize: 10,
     };
+
+    this.updateState = this.updateState.bind(this);
   }
+
   onDisplayEditUserModal = (userToEdit) => {
     this.setState({
       userSelectedForEdit: userToEdit,
@@ -64,8 +69,15 @@ class UserTable extends React.Component {
     });
   };
 
+  updateState() {
+    // Changing state
+    const changePage = this.state.currentPage + 1;
+    this.setState({ currentPage: changePage });
+  }
+
   render() {
     const { users, loading } = this.props;
+    console.log(this.state.currentPage);
     return (
       <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
@@ -76,33 +88,38 @@ class UserTable extends React.Component {
               <th style={{ color: "#960034" }}>Phone Number</th>
             </tr>
             {!loading &&
-              users.map((user, index) => (
-                <Table.Row key={index} evenIndex={index % 2 === 0}>
-                  <td>{user.name}</td>
-                  <td>
-                    {user.email}
-                    <Styled.Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(user.email);
-                      }}
-                    >
-                      <Icon color="grey3" name="copy" />
-                    </Styled.Button>
-                  </td>
-                  <td>
-                    {user.phone_number.substr(0, 3)}-
-                    {user.phone_number.substr(3, 3)}-
-                    {user.phone_number.substr(6, 4)}
-                  </td>
-                  <td>
-                    <Styled.Button
-                      onClick={() => this.onDisplayEditUserModal(user)}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.Button>
-                  </td>
-                </Table.Row>
-              ))}
+              users
+                .slice(
+                  this.state.currentPage * this.statepageSize,
+                  (this.state.currentPage + 1) * this.state.pageSize
+                )
+                .map((user, index) => (
+                  <Table.Row key={index} evenIndex={index % 2 === 0}>
+                    <td>{user.name}</td>
+                    <td>
+                      {user.email}
+                      <Styled.Button
+                        onClick={() => {
+                          navigator.clipboard.writeText(user.email);
+                        }}
+                      >
+                        <Icon color="grey3" name="copy" />
+                      </Styled.Button>
+                    </td>
+                    <td>
+                      {user.phone_number.substr(0, 3)}-
+                      {user.phone_number.substr(3, 3)}-
+                      {user.phone_number.substr(6, 4)}
+                    </td>
+                    <td>
+                      <Styled.Button
+                        onClick={() => this.onDisplayEditUserModal(user)}
+                      >
+                        <Icon color="grey3" name="create" />
+                      </Styled.Button>
+                    </td>
+                  </Table.Row>
+                ))}
           </tbody>
         </Table.Table>
         {loading && <Loading />}
@@ -286,7 +303,7 @@ class UserTable extends React.Component {
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.onModalClose}
+              onClick={this.updateState}
             >
               Update
             </Button>
@@ -295,6 +312,7 @@ class UserTable extends React.Component {
               </Button> */}
           </ModalFooter>
         </Modal>
+
         <Pagination users={users} />
       </Table.Container>
     );

@@ -17,34 +17,36 @@ const Styled = {
   `,
 };
 
+const person = {
+  name: "John Doe",
+  age: 999,
+};
+
 class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
 
-    // this.dataSet = [...Array(Math.ceil(500 + Math.random() * 500))].map(
-    //   (a, i) => "Record " + (i + 1)
-    // );
-    // this.dataSet = this.props.users;
+    this.pagesCount = Math.ceil(this.props.users.length / this.props.pageSize);
 
-    this.pageSize = 100;
-    this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
-
-    this.state = {
-      currentPage: 0,
-    };
+    // this.state = {
+    //   currentPage: 0,
+    // };
   }
 
   handleClick(e, index) {
     e.preventDefault();
-    console.log("usersl" + this.props.users.length);
-    console.log("al" + Math.ceil(this.props.users.length / this.pageSize));
+    // console.log("usersl" + this.props.users.length);
+    // console.log(
+    //   "al" + Math.ceil(this.props.users.length / this.props.pageSize)
+    // );
 
     this.setState({
       currentPage: index,
     });
   }
+
   render() {
-    const { currentPage } = this.state;
+    const { currentPage } = 0;
     const { pagesCount } = Math.ceil(this.props.users.length / this.pageSize);
 
     return (
@@ -70,7 +72,6 @@ class PaginationComp extends React.Component {
                   href="#"
                 >
                   {i + 1}
-                  {console.log("i")}
                 </Styled.PaginationLink>
               </PaginationItem>
             ))}
@@ -100,4 +101,7 @@ export default PaginationComp;
 
 PaginationComp.propTypes = {
   users: PropTypes.array.isRequired,
+  currentPages: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  passData: PropTypes.object,
 };
