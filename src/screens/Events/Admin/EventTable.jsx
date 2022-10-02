@@ -171,7 +171,9 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
             </Styled.EventContent>
           </Link>
           {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 ==
-            Date.parse(event.date) && <ManageAttendanceButton />}
+            Date.parse(event.date) && (
+            <ManageAttendanceButton eventId={event._id} />
+          )}
         </Styled.EventContainer>
       ))}
     </Styled.Container>

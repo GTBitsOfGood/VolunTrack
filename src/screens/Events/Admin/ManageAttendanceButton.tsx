@@ -1,4 +1,4 @@
-import React from "react";
+import { useRouter } from "next/router";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -14,9 +14,15 @@ const Styled = {
   `,
 };
 
-const ManageAttendanceButton: React.FC = () => {
+const ManageAttendanceButton = ({
+  eventId,
+}: {
+  eventId: string;
+}): JSX.Element => {
+  const router = useRouter();
+
   const handleClick = (): void => {
-    console.log("clicked");
+    router.push(`${router.pathname}/${eventId}/attendance`);
   };
 
   return <Styled.Button onClick={handleClick}>Manage Attendance</Styled.Button>;

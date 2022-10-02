@@ -1,10 +1,9 @@
-import React from "react";
-import styled from "styled-components";
-import { Modal, ModalHeader } from "reactstrap";
-import { Form as FForm, ErrorMessage } from "formik";
+import { ErrorMessage, Form as FForm } from "formik";
 import PropTypes from "prop-types";
-import EventFormModal from "./EventFormModal";
+import { Modal, ModalHeader } from "reactstrap";
+import styled from "styled-components";
 import variables from "../../../design-tokens/_variables.module.scss";
+import EventFormModal from "./EventFormModal";
 
 const Styled = {
   Form: styled(FForm)``,
