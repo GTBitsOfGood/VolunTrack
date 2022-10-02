@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import variables from "../design-tokens/_variables.module.scss";
 
-const PAGE_SIZE = 1;
+// const PAGE_SIZE = 1;
 
 const Styled = {
   Pagination: styled(Pagination)`
