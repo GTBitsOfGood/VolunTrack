@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { GoogleLogin } from "react-google-login";
 import PropTypes from "prop-types";
+import { Component } from "react";
+import { GoogleLogin } from "react-google-login";
 
 class Footer extends Component {
   googleResponse = (response) => {
