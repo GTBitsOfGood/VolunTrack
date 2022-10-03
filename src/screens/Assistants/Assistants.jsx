@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import React from "react";
+import React, {useState} from "react";
 import { updateInvitedAdmins } from "../../actions/queries";
 import {
   Button,
@@ -127,8 +127,9 @@ function authWrapper(Component) {
 
 class Assistants extends React.Component {
   state = {
+    newInvitedAdmin: "",
     users: [],
-    // admins: [],
+    invitedAdmins: [],
     userCount: 0,
     currentPage: 0,
     loadingMoreUsers: false,
@@ -145,6 +146,8 @@ class Assistants extends React.Component {
         });
       }
     });
+    // add getInvitedAdmins api call and then set the state
+    // this.setState({ admins: result });
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
@@ -160,43 +163,43 @@ class Assistants extends React.Component {
       }
     });
   };
-  onNextPage = () => {
-    const { currentPage, users } = this.state;
-    if ((currentPage + 1) * PAGE_SIZE === users.length) {
-      this.setState({ loadingMoreUsers: true });
-      fetchUserManagementData(users[users.length - 1]._id).then((result) => {
-        if (result && result.data && result.data.users) {
-          this.setState({
-            users: [...users, ...result.data.users].filter(
-              (user) =>
-                user.role == "admin" ||
-                user.role == "admin-assistant" ||
-                user.role == "staff"
-            ),
-            currentPage: currentPage + 1,
-            loadingMoreUsers: false,
-          });
-        }
-      });
-    } else {
-      this.setState({
-        currentPage: currentPage + 1,
-      });
-    }
-  };
-  onPreviousPage = () =>
-    this.setState({ currentPage: this.state.currentPage - 1 });
-  onToBeginning = () => this.setState({ currentPage: 0 });
+  // onNextPage = () => {
+  //   const { currentPage, users } = this.state;
+  //   if ((currentPage + 1) * PAGE_SIZE === users.length) {
+  //     this.setState({ loadingMoreUsers: true });
+  //     fetchUserManagementData(users[users.length - 1]._id).then((result) => {
+  //       if (result && result.data && result.data.users) {
+  //         this.setState({
+  //           users: [...users, ...result.data.users].filter(
+  //             (user) =>
+  //               user.role == "admin" ||
+  //               user.role == "admin-assistant" ||
+  //               user.role == "staff"
+  //           ),
+  //           currentPage: currentPage + 1,
+  //           loadingMoreUsers: false,
+  //         });
+  //       }
+  //     });
+  //   } else {
+  //     this.setState({
+  //       currentPage: currentPage + 1,
+  //     });
+  //   }
+  // };
+  // onPreviousPage = () =>
+  //   this.setState({ currentPage: this.state.currentPage - 1 });
+  // onToBeginning = () => this.setState({ currentPage: 0 });
   getUsersAtPage = () => {
     const { users, currentPage } = this.state;
     const start = currentPage * PAGE_SIZE;
     return users.slice(start, start + PAGE_SIZE);
   };
-  // getInvitedAdmins = () => {
-  //   const { admins, currentPage } = this.state;
-  //   const start = currentPage * PAGE_SIZE;
-  //   return admins.slice(start, start + PAGE_SIZE);
-  // };
+  getInvitedAdmins = () => {
+    const { invitedAdmins, currentPage } = this.state;
+    const start = currentPage * PAGE_SIZE;
+    return invitedAdmins.slice(start, start + PAGE_SIZE);
+  };
   onChangeSearch = (record) => {
     const { users, currentPage } = this.state;
     fetchUserManagementData().then((result) => {
@@ -233,8 +236,9 @@ class Assistants extends React.Component {
   };
 
   handleSubmit = async (e) => {
+    console.log(this.state.newInvitedAdmin);
     e.preventDefault();
-    await updateInvitedAdmins("");
+    await updateInvitedAdmins(this.state.newInvitedAdmin);
   };
 
   render() {
@@ -265,6 +269,7 @@ class Assistants extends React.Component {
             <EmployeeTable
               users={this.getUsersAtPage()}
               // invitedAdmins={this.getInvitedAdmins()}
+              invitedAdmins={["test"]}
               loading={loadingMoreUsers}
               editUserCallback={this.onEditUser}
             />
@@ -284,7 +289,13 @@ class Assistants extends React.Component {
                   <Row>
                     <Col>
                       <Form.Label>Email</Form.Label>
-                      <Form.Input type="text" name="Name" />
+                      <Form.Input
+                        type="text"
+                        name="email"
+                        onChange={(evt) =>
+                          this.setState({ newInvitedAdmin: evt.target.value })
+                        }
+                      />
                     </Col>
                   </Row>
                 </Form.FormGroup>
@@ -292,12 +303,12 @@ class Assistants extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <Button color="secondary" onClick={this.onModalClose(false)}>
+            <Button color="secondary" onClick={() => this.onModalClose(false)}>
               Cancel
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.handleSubmit} //this.onModalClose(true)
+              onClick={this.handleSubmit}
             >
               Add as an Admin
             </Button>
