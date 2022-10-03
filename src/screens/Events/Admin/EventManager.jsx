@@ -20,7 +20,7 @@ const Styled = {
     width: 100%;
     height: 100%;
     background: ${(props) => props.theme.grey9};
-    padding-top: 1rem;
+    padding-y: 2rem;
     display: flex;
     flex-direction: row;
     align-items: flex-start;

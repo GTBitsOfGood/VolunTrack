@@ -1,11 +1,8 @@
-
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
-import { Modal, ModalHeader } from "reactstrap";
-import styled from "styled-components";
 import variables from "../../../design-tokens/_variables.module.scss";
 import EventFormModal from "./EventFormModal";
 import classnames from "classnames";

@@ -10,9 +10,8 @@ import ManageAttendanceButton from "./ManageAttendanceButton";
 const Styled = {
   Container: styled.div`
     width: 48vw;
-
-    display: flex;
-    flex-direction: column;
+    max-height: 100vh;
+    overflow-y: scroll;
   `,
   EventContainer: styled.div`
     width: 100%;
