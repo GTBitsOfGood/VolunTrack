@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { Button } from "reactstrap";
+import { Button, Row, Col } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { useSession } from "next-auth/react";
 import { updateEvent } from "../../../screens/Events/User/eventHelpers";
+import toast, { Toaster } from "react-hot-toast";
 
 const Styled = {
   Button: styled(Button)`
@@ -71,11 +72,24 @@ const Styled = {
     display: flex;
     flex-direction: column;
     background-color: white;
-    width: 200px;
+    width: 250px;
   `,
   InfoTableText: styled.p`
     font-size: 16px;
     margin: 20px;
+  `,
+  ButtonCol: styled.div`
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+  `,
+  PrivateLink: styled(Button)`
+    background-color: ${variables["primary"]};
+    color: white;
+    font-size: 15px;
+    margin: auto;
+    bottom: 0;
+    width: 60%;
   `,
 };
 
@@ -129,60 +143,129 @@ const EventInfo = () => {
     onRefresh();
   };
 
+  const copyPrivateLink = () => {
+    window.navigator.clipboard.writeText(window.location.href);
+    toast.success("Successfully Copied Private Link to Event!");
+  };
+
+  let lastUpdated =
+    "Last updated " +
+    new Date(Date.parse(event.updatedAt)).toLocaleString().replace(",", " at");
+  lastUpdated =
+    lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
+    lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
+
   const futureDate = new Date(event.date) > new Date();
   return (
     <>
       <Styled.EventTable>
-        <Styled.EventCol>
-          <Styled.EventName>{event.title}</Styled.EventName>
-          <Styled.EventSubhead>
-            <Styled.Slots>
+        <Col>
+          <Styled.EventCol>
+            <Styled.EventName>{event.title}</Styled.EventName>
+            <Styled.EventSubhead>
+              <Styled.Slots>
+                {" "}
+                {event.max_volunteers - event.volunteers.length} Slots Remaining
+              </Styled.Slots>
+              <Styled.Date>{lastUpdated}</Styled.Date>
+            </Styled.EventSubhead>
+            <Styled.Info>
               {" "}
-              {event.max_volunteers - event.volunteers.length} Slots Remaining
-            </Styled.Slots>
-            <Styled.Date>
-              Updated {event.updatedAt.slice(0, 10)} @{" "}
-              {convertTime(event.updatedAt.slice(11, 16))}
-            </Styled.Date>
-          </Styled.EventSubhead>
-          <Styled.Info>
-            {" "}
-            <div dangerouslySetInnerHTML={{ __html: event.description }} />
-          </Styled.Info>
-        </Styled.EventCol>
-        <Styled.EventCol2 style={{ "margin-left": "auto" }}>
-          <Styled.InfoHead>Event Information</Styled.InfoHead>
-          <Styled.InfoTable>
-            <Styled.InfoTableCol>
-              <Styled.InfoTableText>
-                <b>Date:</b>
-                <br></br>
-                {event.date.slice(0, 10)}
-              </Styled.InfoTableText>
-              <Styled.InfoTableText>
-                <b>Contact:</b>
-                <br></br>
-                Phone
-                <br></br>
-                Email
-              </Styled.InfoTableText>
-            </Styled.InfoTableCol>
-
-            <Styled.InfoTableCol>
-              <Styled.InfoTableText>
-                <b>Time:</b>
-                <br></br>
-                {convertTime(event.startTime)} - {convertTime(event.endTime)}
-              </Styled.InfoTableText>
-              <Styled.InfoTableText>
-                <b>Location:</b>
-                <br></br>
-                {event.address}
-                <br></br>
-              </Styled.InfoTableText>
-            </Styled.InfoTableCol>
-          </Styled.InfoTable>
-        </Styled.EventCol2>
+              <div dangerouslySetInnerHTML={{ __html: event.description }} />
+            </Styled.Info>
+          </Styled.EventCol>
+        </Col>
+        <Col>
+          <Row>
+            <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+              <Styled.InfoHead>Event Information</Styled.InfoHead>
+              <Styled.InfoTable>
+                <Styled.InfoTableCol>
+                  <Styled.InfoTableText>
+                    <b>Date:</b>
+                    <br></br>
+                    {event.date.slice(0, 10)}
+                  </Styled.InfoTableText>
+                  <Styled.InfoTableText>
+                    <b>Event Contact:</b>
+                    <br></br>
+                    {event.eventContactPhone}
+                    <br></br>
+                    {event.eventContactEmail}
+                  </Styled.InfoTableText>
+                </Styled.InfoTableCol>
+                <Styled.InfoTableCol>
+                  <Styled.InfoTableText>
+                    <b>Time:</b>
+                    <br></br>
+                    {convertTime(event.startTime)} -{" "}
+                    {convertTime(event.endTime)}
+                  </Styled.InfoTableText>
+                  <Styled.InfoTableText>
+                    <b>Location:</b>
+                    <br></br>
+                    {event.address}
+                    <br></br>
+                    {event.city}, {event.state}
+                    <br></br>
+                    {event.zip}
+                    <br></br>
+                  </Styled.InfoTableText>
+                </Styled.InfoTableCol>
+              </Styled.InfoTable>
+            </Styled.EventCol2>
+          </Row>
+          <br></br>
+          <br></br>
+          {event.orgName !== "" && (
+            <Row>
+              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+                <Styled.InfoHead>Organization</Styled.InfoHead>
+                <Styled.InfoTable>
+                  <Styled.InfoTableCol>
+                    <Styled.InfoTableText>
+                      <b>Point of Contact Name</b>
+                      <br></br>
+                      {event.pocName}
+                    </Styled.InfoTableText>
+                    <Styled.InfoTableText>
+                      <b>Point of Contact Email</b>
+                      <br></br>
+                      {event.pocEmail}
+                    </Styled.InfoTableText>
+                    <Styled.InfoTableText>
+                      <b>Point of Contact Phone</b>
+                      <br></br>
+                      {event.pocPhone}
+                    </Styled.InfoTableText>
+                  </Styled.InfoTableCol>
+                  <Styled.InfoTableCol>
+                    <Styled.InfoTableText>
+                      <b>Organization Name</b>
+                      <br></br>
+                      {event.orgName}
+                    </Styled.InfoTableText>
+                    <Styled.InfoTableText>
+                      <b>Location</b>
+                      <br></br>
+                      {event.orgAddress}
+                      <br></br>
+                      {event.orgCity}, {event.orgState}
+                      <br></br>
+                      {event.orgZip}
+                    </Styled.InfoTableText>
+                  </Styled.InfoTableCol>
+                </Styled.InfoTable>
+                <Styled.ButtonCol>
+                  <Styled.PrivateLink onClick={copyPrivateLink}>
+                    Share private link to event
+                  </Styled.PrivateLink>
+                  <Toaster />
+                </Styled.ButtonCol>
+              </Styled.EventCol2>
+            </Row>
+          )}
+        </Col>
       </Styled.EventTable>
       {user.role == "volunteer" &&
         event.max_volunteers - event.volunteers.length != 0 &&

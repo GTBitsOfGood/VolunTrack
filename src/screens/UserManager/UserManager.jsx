@@ -132,7 +132,7 @@ class UserManager extends React.Component {
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
-          users: result.data.users.filter((user) => user.role == "volunteer"),
+          users: result.data.users.filter((user) => user.role === "volunteer"),
           currentPage: 0,
           loadingMoreUsers: false,
         });
