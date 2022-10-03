@@ -77,15 +77,15 @@ const CREATE_EVENT_VALIDATOR = [
   check("eventContactPhone").isAscii().trim(),
   check("eventContactEmail").isEmail().trim(),
 
-  check("pocName").optional().isAscii().trim(),
-  check("pocEmail").optional().isEmail().trim(),
-  check("pocPhone").optional().isAscii().trim().escape(),
+  check("pocName").optional().trim(),
+  check("pocEmail").optional().trim(),
+  check("pocPhone").optional().trim().escape(),
 
-  check("orgName").optional().isAscii().trim(),
-  check("orgAddress").optional().isAscii().trim(),
-  check("orgCity").optional().isAscii().trim(),
-  check("orgZip").optional().isAscii().trim().escape(),
-  check("orgState").optional().isAscii().trim(),
+  check("orgName").optional().trim(),
+  check("orgAddress").optional().trim(),
+  check("orgCity").optional().trim(),
+  check("orgZip").optional().trim().escape(),
+  check("orgState").optional().trim(),
 ];
 
 const OBJECT_ID_REGEX = new RegExp("^[0-9a-fA-F]{24}$");
