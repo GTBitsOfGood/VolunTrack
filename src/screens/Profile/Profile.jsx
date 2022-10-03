@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { editProfile } from "../../actions/queries";
-import variables from "../../design-tokens/_variables.module.scss";
 import * as SForm from "../sharedStyles/formStyles";
 import { profileValidator } from "./helpers";
 import { Container, Row, Col } from "reactstrap";
@@ -86,7 +85,9 @@ const Profile = () => {
           setSubmitting(true);
           editProfile(user._id, profileData)
             .then()
-            .catch(console.log())
+            .catch((e) => {
+              console.log(e);
+            })
             .finally(() => {
               setSubmitting(false);
               setSuccessText("Profile updated successfully!");
@@ -120,14 +121,18 @@ const Profile = () => {
                       <SForm.Label>First Name</SForm.Label>
                       <Styled.ErrorMessage name="first_name" />
                       <Field name="first_name">
-                        {({ field }) => <SForm.Input disabled {...field} type="text" />}
+                        {({ field }) => (
+                          <SForm.Input disabled {...field} type="text" />
+                        )}
                       </Field>
                     </Col>
                     <Col>
                       <SForm.Label>Last Name</SForm.Label>
                       <Styled.ErrorMessage name="last_name" />
                       <Field name="last_name">
-                        {({ field }) => <SForm.Input disabled {...field} type="text" />}
+                        {({ field }) => (
+                          <SForm.Input disabled {...field} type="text" />
+                        )}
                       </Field>
                     </Col>
                   </Row>
@@ -137,7 +142,9 @@ const Profile = () => {
                       <SForm.Label>Email</SForm.Label>
                       <Styled.ErrorMessage name="email" />
                       <Field name="email">
-                        {({ field }) => <SForm.Input disabled {...field} type="email" />}
+                        {({ field }) => (
+                          <SForm.Input disabled {...field} type="email" />
+                        )}
                       </Field>
                     </Col>
                     <Col>
@@ -164,15 +171,19 @@ const Profile = () => {
                         {({ field }) => <SForm.Input {...field} type="text" />}
                       </Field>
                     </Col>
-                    { (user.role == "volunteer") ?  
-                    <Col>
-                      <SForm.Label>Total Hours</SForm.Label>
-                      <Styled.ErrorMessage name="total_hours" />
-                      <Field name="total_hours">
-                        {({ field }) => <SForm.Input disabled {...field} type="text" />}
-                      </Field>
-                    </Col> : <Col></Col> 
-                    }
+                    {user.role == "volunteer" ? (
+                      <Col>
+                        <SForm.Label>Total Hours</SForm.Label>
+                        <Styled.ErrorMessage name="total_hours" />
+                        <Field name="total_hours">
+                          {({ field }) => (
+                            <SForm.Input disabled {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                    ) : (
+                      <Col></Col>
+                    )}
                     {/* <Col>
                       <SForm.Label>Court Required</SForm.Label>
                       <div class="form-check">

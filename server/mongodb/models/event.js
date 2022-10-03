@@ -27,20 +27,72 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    state: {
+      type: String,
+      required: true,
+    },
     zip: {
       type: Number,
       required: true,
     },
+    // ------ event contact ------
+    eventContactPhone: {
+      type: String,
+      required: true,
+    },
+    eventContactEmail: {
+      type: String,
+      required: true,
+    },
+    // ------ group events only ------
+    pocName: {
+      type: String,
+      required: false,
+    },
+    pocEmail: {
+      type: String,
+      required: false,
+    },
+    pocPhone: {
+      type: Number,
+      required: false,
+    },
+    orgName: {
+      type: String,
+      required: false,
+    },
+    orgAddress: {
+      type: String,
+      required: false,
+    },
+    orgCity: {
+      type: String,
+      required: false,
+    },
+    orgState: {
+      type: String,
+      required: false,
+    },
+    orgZip: {
+      type: Number,
+      required: false,
+    },
+    // ------ end of group events only ------
     volunteers: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserData" }],
       required: true,
       default: [],
     },
     minors: {
-      type: [{
-        volunteer_id: { type: mongoose.Schema.Types.ObjectId, ref: "UserData" },
-        minor: [{ type: String}]
-      }],
+      type: [
+        {
+          volunteer_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "UserData",
+          },
+          minor: [{ type: String }],
+        },
+      ],
       required: true,
       default: [],
     },
@@ -55,12 +107,15 @@ const eventSchema = new mongoose.Schema(
     },
     description: {
       type: String,
+      required: false,
+    },
+    isPrivate: {
+      type: String,
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // export Event model to app
-
 module.exports = mongoose.models.Event || mongoose.model("Event", eventSchema);
