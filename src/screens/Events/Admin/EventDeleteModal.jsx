@@ -2,15 +2,17 @@ import React, { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { deleteEvent } from "../../../actions/queries";
+import { delay } from "lodash";
 
 const EventDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
 
   const handleSubmit = () => {
+    setDeleting(true);
     deleteEvent(event._id)
       .then(() => {
-        setDeleting(true);
         toggle();
+        setDeleting(false);
       })
       .catch(console.log);
   };
