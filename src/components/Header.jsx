@@ -2,7 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Collapse,
   Container,

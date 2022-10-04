@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
 import PropTypes from "prop-types";
-import EventFormModal from "./EventFormModal";
 import variables from "../../../design-tokens/_variables.module.scss";
+import EventFormModal from "./EventFormModal";
 import classnames from "classnames";
 
 const Styled = {

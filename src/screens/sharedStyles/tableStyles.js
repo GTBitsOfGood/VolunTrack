@@ -36,7 +36,7 @@ const LoadingBody = styled.div`
 
 const EventList = styled.div`
   width: 730px;
-  height: 94px;
+  height: 100px;
   position: absolute;
   cursor: pointer;
 `;
@@ -52,6 +52,7 @@ const Inner = styled.div`
   display: flex;
   flex-direction: row;
   padding: 5px;
+  height: 100%;
 `;
 
 const Slots = styled.span`
