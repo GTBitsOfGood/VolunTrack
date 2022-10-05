@@ -17,37 +17,35 @@ const Styled = {
   `,
 };
 
-const person = {
-  name: "John Doe",
-  age: 999,
-};
-
 class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      currentPage: 0,
+    };
 
-    this.pagesCount = Math.ceil(this.props.users.length / this.props.pageSize);
+    this.pageSize = 3;
+    this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
 
+    // console.log(this.props.currentPages);
     // this.state = {
-    //   currentPage: 0,
+    //   currentPage: this.props.currentPages,
     // };
   }
 
   handleClick(e, index) {
+    // const { updateCurrentPage } = this.props.updateCurrentPage;
+    // console.log(updateCurrentPage);
     e.preventDefault();
-    // console.log("usersl" + this.props.users.length);
-    // console.log(
-    //   "al" + Math.ceil(this.props.users.length / this.props.pageSize)
-    // );
 
+    // updateCurrentPage({ currentPage: index });
     this.setState({
       currentPage: index,
     });
   }
 
   render() {
-    const { currentPage } = 0;
-    const { pagesCount } = Math.ceil(this.props.users.length / this.pageSize);
+    const { currentPage } = this.state;
 
     return (
       <React.Fragment>
@@ -60,17 +58,13 @@ class PaginationComp extends React.Component {
               <Styled.PaginationLink
                 onClick={(e) => this.handleClick(e, currentPage - 1)}
                 previous
-                href="#"
               >
                 Previous
               </Styled.PaginationLink>
             </PaginationItem>
-            {[...Array(pagesCount)].map((page, i) => (
+            {[...Array(this.pagesCount)].map((page, i) => (
               <PaginationItem active={i === currentPage} key={i}>
-                <Styled.PaginationLink
-                  onClick={(e) => this.handleClick(e, i)}
-                  href="#"
-                >
+                <Styled.PaginationLink onClick={(e) => this.handleClick(e, i)}>
                   {i + 1}
                 </Styled.PaginationLink>
               </PaginationItem>
@@ -85,13 +79,6 @@ class PaginationComp extends React.Component {
             </PaginationItem>
           </Styled.Pagination>
         </div>
-        {/* {this.dataSet
-          .slice(currentPage * this.pageSize, (currentPage + 1) * this.pageSize)
-          .map((data, i) => (
-            <div className="data-slice" key={i}>
-              {data}
-            </div>
-          ))} */}
       </React.Fragment>
     );
   }
@@ -101,7 +88,7 @@ export default PaginationComp;
 
 PaginationComp.propTypes = {
   users: PropTypes.array.isRequired,
-  currentPages: PropTypes.number.isRequired,
-  pageSize: PropTypes.number.isRequired,
-  passData: PropTypes.object,
+  // currentPages: PropTypes.number.isRequired,
+  // pageSize: PropTypes.number.isRequired,
+  updateCurrentPage: PropTypes.func.isRequired,
 };

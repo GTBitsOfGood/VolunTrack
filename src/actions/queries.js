@@ -55,7 +55,9 @@ export const updateUser = (
   hours,
   address,
   city,
-  state
+  state,
+  courtH,
+  notes
 ) => {
   var query = "";
   if (first.length != 0) {
@@ -88,6 +90,12 @@ export const updateUser = (
   if (state.length != 0) {
     query += "state=" + state + "&";
   }
+  if (courtH.length != 0) {
+    query += "courtH=" + courtH + "&";
+  }
+  if (notes.length != 0) {
+    query += "notes=" + notes + "&";
+  }
 
   if (query.length > 0) {
     query = query.slice(0, -1);
@@ -117,7 +125,11 @@ export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
 export const createEvent = (event) => axios.post("/api/events", event);
 
-export const editEvent = (event, sendConfirmationEmail) => axios.put("/api/events", { event: event, sendConfirmationEmail: sendConfirmationEmail});
+export const editEvent = (event, sendConfirmationEmail) =>
+  axios.put("/api/events", {
+    event: event,
+    sendConfirmationEmail: sendConfirmationEmail,
+  });
 
 export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
 

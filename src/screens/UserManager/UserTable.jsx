@@ -13,6 +13,7 @@ import { Container, Row, Col } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Pagination from "../../components/PaginationComp";
+import { updateUser } from "../../actions/queries";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -47,11 +48,14 @@ class UserTable extends React.Component {
     super(props);
     this.state = {
       userSelectedForEdit: null,
+      total_hours: 0,
+      court_hours: 0,
+      notes: 0,
       currentPage: 0,
       pageSize: 10,
     };
 
-    this.updateState = this.updateState.bind(this);
+    this.update = this.update.bind(this);
   }
 
   onDisplayEditUserModal = (userToEdit) => {
@@ -60,24 +64,38 @@ class UserTable extends React.Component {
     });
   };
 
-  onModalClose = (updatedUser) => {
-    if (updatedUser) {
-      this.props.editUserCallback(updatedUser);
-    }
+  onModalClose = () => {
     this.setState({
       userSelectedForEdit: null,
     });
   };
 
-  updateState() {
-    // Changing state
-    const changePage = this.state.currentPage + 1;
-    this.setState({ currentPage: changePage });
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    await updateUser(
+      this.state.userSelectedForEdit.name,
+      this.state.userSelectedForEdit.first_name,
+      this.state.userSelectedForEdit.last_name,
+      this.state.userSelectedForEdit.phone_number,
+      this.state.userSelectedForEdit.date_of_birth,
+      this.state.userSelectedForEdit.zip_code,
+      this.state.total_hours,
+      this.state.userSelectedForEdit.address,
+      this.state.userSelectedForEdit.city,
+      this.state.userSelectedForEdit.state,
+      this.state.court_hours,
+      this.state.notes
+    );
+    this.onModalClose();
+  };
+
+  update(nextState) {
+    this.setState(nextState);
   }
 
   render() {
     const { users, loading } = this.props;
-    console.log(this.state.currentPage);
+    // console.log(this.state.currentPage);
     return (
       <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
@@ -90,7 +108,7 @@ class UserTable extends React.Component {
             {!loading &&
               users
                 .slice(
-                  this.state.currentPage * this.statepageSize,
+                  this.state.currentPage * this.state.pageSize,
                   (this.state.currentPage + 1) * this.state.pageSize
                 )
                 .map((user, index) => (
@@ -231,6 +249,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Total Hours"
+                        onChange={(evt) =>
+                          this.setState({ total_hours: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -243,12 +264,20 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Court Hours"
+                        onChange={(evt) =>
+                          this.setState({ court_hours: evt.target.value })
+                        }
                       />
                     </Col>
                     <Row>
                       <Col>
                         <Form.Label>Notes</Form.Label>
-                        <Form.Input type="textarea"></Form.Input>
+                        <Form.Input
+                          type="textarea"
+                          onChange={(evt) =>
+                            this.setState({ notes: evt.target.value })
+                          }
+                        ></Form.Input>
                       </Col>
                     </Row>
                   </Row>
@@ -303,7 +332,7 @@ class UserTable extends React.Component {
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.updateState}
+              onClick={this.handleSubmit}
             >
               Update
             </Button>
@@ -313,7 +342,12 @@ class UserTable extends React.Component {
           </ModalFooter>
         </Modal>
 
-        <Pagination users={users} />
+        <Pagination
+          users={users}
+          // currentPages={this.state.currentPage}
+          // pageSize={this.state.pageSize}
+          updateCurrentPage={this.update}
+        />
       </Table.Container>
     );
   }
