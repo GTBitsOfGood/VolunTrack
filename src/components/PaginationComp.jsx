@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import variables from "../design-tokens/_variables.module.scss";
 
-const PAGE_SIZE = 1;
+// const PAGE_SIZE = 1;
 
 const Styled = {
   Pagination: styled(Pagination)`
@@ -17,6 +17,14 @@ const Styled = {
   `,
 };
 
+<<<<<<< HEAD
+=======
+// const person = {
+//   name: "John Doe",
+//   age: 999,
+// };
+
+>>>>>>> bdbc7d69782747ed9d2fde6af8bc4a336d8910ec
 class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
