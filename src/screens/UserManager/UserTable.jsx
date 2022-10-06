@@ -55,7 +55,7 @@ class UserTable extends React.Component {
       pageSize: 10,
     };
 
-    this.update = this.update.bind(this);
+    // this.update = this.update.bind(this);
   }
 
   onDisplayEditUserModal = (userToEdit) => {
@@ -73,7 +73,7 @@ class UserTable extends React.Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     await updateUser(
-      this.state.userSelectedForEdit.email,
+      this.state.userSelectedForEdit.name,
       this.state.userSelectedForEdit.first_name,
       this.state.userSelectedForEdit.last_name,
       this.state.userSelectedForEdit.phone_number,
@@ -86,12 +86,9 @@ class UserTable extends React.Component {
       this.state.court_hours,
       this.state.notes
     );
+    console.log(this.state.total_hours);
     this.onModalClose();
   };
-
-  update(nextState) {
-    this.setState(nextState);
-  }
 
   render() {
     const { users, loading } = this.props;
@@ -125,9 +122,13 @@ class UserTable extends React.Component {
                       </Styled.Button>
                     </td>
                     <td>
-                      {user.phone_number.substr(0, 3)}-
-                      {user.phone_number.substr(3, 3)}-
-                      {user.phone_number.substr(6, 4)}
+                      {user.phone_number
+                        ? user.phone_number.substr(0, 3) +
+                          "-" +
+                          user.phone_number.substr(3, 3) +
+                          "-" +
+                          user.phone_number.substr(6, 4)
+                        : ""}
                     </td>
                     <td>
                       <Styled.Button
@@ -159,7 +160,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>First Name</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.first_name
@@ -172,7 +172,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Last Name</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.last_name
@@ -200,7 +199,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Phone</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.phone_number
@@ -216,7 +214,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Date of Birth</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.date_of_birth
@@ -229,7 +226,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Zip Code</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.zip_code
@@ -285,7 +281,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Address</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.address
@@ -298,7 +293,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>City</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.city
@@ -311,7 +305,6 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>State</Form.Label>
                       <Form.Input
-                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.state
@@ -346,7 +339,7 @@ class UserTable extends React.Component {
           users={users}
           // currentPages={this.state.currentPage}
           // pageSize={this.state.pageSize}
-          updateCurrentPage={this.update}
+          // updateCurrentPage={this.updateCurrentPage}
         />
       </Table.Container>
     );

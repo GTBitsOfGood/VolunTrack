@@ -183,7 +183,7 @@ class UserManager extends React.Component {
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = (updatedUser) => {
-    // console.log(updatedUser);
+    console.log(updatedUser);
     /** code to update users in state at that specific index */
     updateUser(updatedUser);
   };
