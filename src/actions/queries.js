@@ -69,9 +69,6 @@ export const updateUser = (
   if (number) {
     query += "phone_number=" + number + "&";
   }
-  if (number) {
-    query += "phone_number=" + number + "&";
-  }
   if (birthday) {
     query += "date_of_birth=" + birthday + "&";
   }

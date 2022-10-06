@@ -487,11 +487,6 @@ export async function updateUser(
   }
 
   if (total_hours?.length !== 0) {
-    console.log(total_hours)
-    User.findOne(
-        { "bio.email": email }).then((result) => {
-      console.log(result);
-    });
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.total_hours": total_hours } }

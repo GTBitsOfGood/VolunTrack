@@ -73,7 +73,7 @@ class UserTable extends React.Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     await updateUser(
-      this.state.userSelectedForEdit.name,
+      this.state.userSelectedForEdit.email,
       this.state.userSelectedForEdit.first_name,
       this.state.userSelectedForEdit.last_name,
       this.state.userSelectedForEdit.phone_number,
