@@ -60,40 +60,40 @@ export const updateUser = (
   notes
 ) => {
   var query = "";
-  if (first.length != 0) {
+  if (first) {
     query += "first_name=" + first + "&";
   }
-  if (last.length != 0) {
+  if (last) {
     query += "last_name=" + last + "&";
   }
-  if (number.length != 0) {
+  if (number) {
     query += "phone_number=" + number + "&";
   }
-  if (number.length != 0) {
+  if (number) {
     query += "phone_number=" + number + "&";
   }
-  if (birthday.length != 0) {
+  if (birthday) {
     query += "date_of_birth=" + birthday + "&";
   }
-  if (zip.length != 0) {
+  if (zip) {
     query += "zip_code=" + zip + "&";
   }
-  if (hours.length != 0) {
+  if (hours) {
     query += "total_hours=" + hours + "&";
   }
-  if (address.length != 0) {
+  if (address) {
     query += "address=" + address + "&";
   }
-  if (city.length != 0) {
+  if (city) {
     query += "city=" + city + "&";
   }
-  if (state.length != 0) {
+  if (state) {
     query += "state=" + state + "&";
   }
-  if (courtH.length != 0) {
+  if (courtH) {
     query += "courtH=" + courtH + "&";
   }
-  if (notes.length != 0) {
+  if (notes) {
     query += "notes=" + notes + "&";
   }
 
