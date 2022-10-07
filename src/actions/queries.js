@@ -115,6 +115,9 @@ export const fetchEvents = (startDate, endDate) =>
 
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
+// not sure if this works
+export const fetchEventsByUserId = (userId) => axios.get("/api/users/volunteerstats/" + userId);
+
 export const createEvent = (event) => axios.post("/api/events", event);
 
 export const editEvent = (event, sendConfirmationEmail) =>
