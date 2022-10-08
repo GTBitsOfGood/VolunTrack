@@ -48,7 +48,15 @@ class UserTable extends React.Component {
     super(props);
     this.state = {
       userSelectedForEdit: null,
+      first_name: "",
+      last_name: "",
+      phone_number: 0,
+      date_of_birth: 0,
+      zip_code: 0,
       total_hours: 0,
+      address: "",
+      city: "",
+      state: "",
       court_hours: 0,
       notes: 0,
       currentPage: 0,
@@ -73,20 +81,43 @@ class UserTable extends React.Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     await updateUser(
-      this.state.userSelectedForEdit.name,
-      this.state.userSelectedForEdit.first_name,
-      this.state.userSelectedForEdit.last_name,
-      this.state.userSelectedForEdit.phone_number,
-      this.state.userSelectedForEdit.date_of_birth,
-      this.state.userSelectedForEdit.zip_code,
-      this.state.total_hours,
-      this.state.userSelectedForEdit.address,
-      this.state.userSelectedForEdit.city,
-      this.state.userSelectedForEdit.state,
-      this.state.court_hours,
-      this.state.notes
+      this.state.userSelectedForEdit.email,
+      this.state.userSelectedForEdit && this.state.first_name
+        ? this.state.first_name
+        : this.state.userSelectedForEdit.first_name,
+      this.state.userSelectedForEdit && this.state.last_name
+        ? this.state.last_name
+        : this.state.userSelectedForEdit.last_name,
+      this.state.userSelectedForEdit && this.state.phone_number
+        ? this.state.phone_number
+        : this.state.userSelectedForEdit.phone_number,
+      this.state.userSelectedForEdit && this.state.date_of_birth
+        ? this.state.date_of_birth
+        : this.state.userSelectedForEdit.date_of_birth,
+      this.state.userSelectedForEdit && this.state.zip_code
+        ? this.state.zip_code
+        : this.state.userSelectedForEdit.zip_code,
+      this.state.userSelectedForEdit && this.state.total_hours
+        ? this.state.total_hours
+        : this.state.userSelectedForEdit.total_hours,
+      this.state.userSelectedForEdit && this.state.address
+        ? this.state.address
+        : this.state.userSelectedForEdit.address,
+      this.state.userSelectedForEdit && this.state.city
+        ? this.state.city
+        : this.state.userSelectedForEdit.city,
+      this.state.userSelectedForEdit && this.state.state
+        ? this.state.state
+        : this.state.userSelectedForEdit.state,
+      this.state.userSelectedForEdit && this.state.court_hours
+        ? this.state.court_hours
+        : this.state.userSelectedForEdit.court_hours,
+      this.state.userSelectedForEdit && this.state.notes
+        ? this.state.notes
+        : this.state.userSelectedForEdit.notes
     );
-    console.log(this.state.total_hours);
+    // console.log(this.state.first_name);
+    // console.log(this.state.userSelectedForEdit.first_name);
     this.onModalClose();
   };
 
@@ -167,6 +198,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Name"
+                        onChange={(evt) =>
+                          this.setState({ first_name: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -179,6 +213,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Name"
+                        onChange={(evt) =>
+                          this.setState({ last_name: evt.target.value })
+                        }
                       />
                     </Col>
                   </Row>
@@ -206,6 +243,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Phone"
+                        onChange={(evt) =>
+                          this.setState({ phone_number: evt.target.value })
+                        }
                       />
                     </Col>
                   </Row>
@@ -221,6 +261,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Date of Birth"
+                        onChange={(evt) =>
+                          this.setState({ date_of_birth: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -233,6 +276,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Zip Code"
+                        onChange={(evt) =>
+                          this.setState({ zip_code: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -288,6 +334,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Address"
+                        onChange={(evt) =>
+                          this.setState({ address: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -300,6 +349,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="City"
+                        onChange={(evt) =>
+                          this.setState({ city: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -312,6 +364,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="State"
+                        onChange={(evt) =>
+                          this.setState({ state: evt.target.value })
+                        }
                       />
                     </Col>
                   </Row>
