@@ -5,7 +5,10 @@ import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../../components/Icon";
-import * as Table from "../../sharedStyles/tableStyles";
+import * as Table from "../../sharedStyles/condensedTableStyles";
+
+
+
 
 const Styled = {
   Button: styled(Button)`
@@ -18,14 +21,23 @@ const Styled = {
     width: 100%;
     height: 100%;
     margin: auto;
+    margin-bottom: 70px;
   `,
   ul: styled.div`
     display: flex;
     flex-direction: column;
     list-style-type: none;
   `,
+  Heading: styled.div`
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    font-size: 27px;
+    font-weight: bold;
+    padding: 5px;
+  `,
   List: styled.li`
-    padding-bottom: 120px;
+    
   `,
 };
 
@@ -48,6 +60,21 @@ const getMinorTotal = (minors) => {
   return total;
 };
 
+const getHours = (startTime, endTime) => {
+  var timeStart = new Date("01/01/2007 " + startTime);
+  var timeEnd = new Date("01/01/2007 " + endTime);
+  
+  
+
+  let hours = Math.abs(timeEnd - timeStart) / 36e5;
+
+  if (hours < 0) {
+    hours = 24 + hours;
+  }
+  
+  return Math.round(hours * 10) / 10.0;
+}
+
 const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -55,30 +82,53 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
   }
   return (
     <Styled.Container>
+      
       <Styled.ul>
+          <Styled.List>
+          <Table.EventList>
+                <Table.InnerTop>
+                  <Table.EventName>Event Name</Table.EventName>
+                  
+                  <Table.Creation>Date</Table.Creation>
+                  
+                  <Table.Time>
+                      Time
+                      
+                      
+                  </Table.Time>
+                  <Table.TextInfo>
+                    
+                    Hours Earned
+        
+                  </Table.TextInfo>
+                  
+                </Table.InnerTop>
+                
+              </Table.EventList>
+            </Styled.List>
         {events.map((event) => (
           <Styled.List key={event._id}>
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.TextInfo>
-                    <Table.TitleAddNums>
-                      <Table.EventName>{event.title}</Table.EventName>
-                      <Table.Text>
-                        <Table.Volunteers>
-                          {event.volunteers.length +
-                            getMinorTotal(event.minors)}
-                        </Table.Volunteers>
-                        <Table.Slots>Volunteers Attended</Table.Slots>
-                      </Table.Text>
-                    </Table.TitleAddNums>
-                    <Table.Time>
+                  <Table.EventName>{event.title}</Table.EventName>
+                  
+                  <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
+                  
+                  <Table.Time>
                       {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)}
-                    </Table.Time>
+                      {convertTime(event.endTime)} 
+                      
+                      
+                  </Table.Time>
+                  <Table.TextInfo>
+                    
+                    &emsp;{getHours(event.startTime, event.endTime)} hour(s)
+        
                   </Table.TextInfo>
+
                 </Table.Inner>
-                <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
+                
               </Table.EventList>
             </Link>
           </Styled.List>

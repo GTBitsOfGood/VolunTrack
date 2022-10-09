@@ -9,15 +9,23 @@ const ObjectId = require("mongodb").ObjectId;
 export async function getEventsByUserID(userId, next) {
   await dbConnect();
 
-  if (userId === "undefined") {
-    return { status: 400, message: { error: "Invalid userId sent" } };
-  } else {
-    return EventData.find({ volunteers: userId })
+  // //console.log("HERE" + userId)
+
+  // if (userId === "undefined") {
+  //   return { status: 400, message: { error: "Invalid userId sent" } };
+  // } else {
+  //   return EventData.find({  })
+  //     .then((events) => {
+  //       return events;
+  //     })
+  //     .catch(next);
+  // }
+
+  return EventData.find({volunteers: userId})
       .then((events) => {
         return events;
       })
       .catch(next);
-  }
 }
 
 // export async function updateEvent(updateEventData, next) {

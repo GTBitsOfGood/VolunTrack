@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import Icon from "../../../components/Icon";
 import EventTable from "./EventTable";
-import { fetchEventsByUserId } from "../../../actions/queries";
+import { fetchEventsByUserId, fetchEvents } from "../../../actions/queries";
 import { updateEvent } from "./eventHelpers";
 import variables from "../../../design-tokens/_variables.module.scss";
 import Calendar from "react-calendar";
@@ -17,9 +17,12 @@ const Styled = {
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    overflow: hidden;
+    flex-direction: column;
+    align-items: center;
+    
+    
+    
+    
   `,
   Left: styled.div`
     margin-left: 10vw;
@@ -29,7 +32,8 @@ const Styled = {
   Right: styled.div`
     display: flex;
     flex-direction: column;
-    margin-left: 3vw;
+    margin-left: 0vw;
+    
   `,
   Button: styled(Button)`
     background: ${variables.primary};
@@ -51,13 +55,8 @@ const Styled = {
     font-size: 36px;
     font-weight: bold;
   `,
-  EventContainer: styled.div`
-    width: auto;
-    max-width: 80rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    margin-bottom: 1rem;
+  Margin: styled.div`
+    
   `,
   Content: styled.div`
     width: 60%;
@@ -86,12 +85,31 @@ const Styled = {
     text-decoration: underline;
     color: ${variables.primary};
   `,
-  Bottom: styled.div`
-    display: flex;
-    flex-direction: row;
+  Header: styled.div`
+    font-size: 27px;
+    font-weight: bold;
+    padding: 5px;
+  `,
+
+  Header2: styled.div`
+    font-size: 14px;
+    color: gray;
+    padding: 5px;
   `,
   marginTable: styled.div`
-    margin-left: 40px;
+    margin-left: 0px;
+    
+  `,
+  Box: styled.div`
+    height: 250px;
+    width: 725px;
+    background-color: white;
+    border: 1px solid ${variables["gray-200"]};
+    margin-bottom: 10px;
+  `,
+  Hours: styled.div`
+    margin-bottom: 2rem;
+    
   `,
 };
 
@@ -99,6 +117,7 @@ const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [markDates, setDates] = useState([]);
+  const [length, setLength] = useState(0);
 
   if (!user) {
     const { data: session } = useSession();
@@ -108,18 +127,44 @@ const EventManager = ({ user }) => {
   useEffect(() => {
     onRefresh();
   }, []);
-
-  const onRefresh = () => {
+/**
+ * const onRefresh = () => {
     setLoading(true);
-    fetchEventsByUserId(user)
+    fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
+          // result.data.events = result.data.events.filter(function (event) {
+          //   const currentDate = new Date();
+          //   return new Date(event.date) > currentDate;
+          // });
           setEvents(result.data.events);
+          setDates(result.data.events);
         }
       })
       .finally(() => {
         setLoading(false);
       });
+  };
+ */
+  const onRefresh = () => {
+    setLoading(true);
+    console.log("EVENT MANAGER " + user._id);
+    
+    //fetchEvents(undefined, new Date().toLocaleDateString("en-US"))
+    fetchEventsByUserId(user._id)
+      .then((result) => {
+        
+        if (result && result.data && result.data.event) {
+          setEvents(result.data.event);
+          setLength(result.data.event.length);
+          console.log(result)
+        }
+      })
+      .finally(() => {
+        
+        setLoading(false);
+      });
+
   };
 
   const [value, setDate] = useState(new Date());
@@ -180,25 +225,29 @@ const EventManager = ({ user }) => {
       String(jsDate.getDate()).padStart(2, "0"),
     ].join(separator);
   };
-  const setMarkDates = ({ date, view }, markDates) => {
-    const fDate = formatJsDate(date, "-");
-    let tileClassName = "";
-    let test = [];
-    for (let i = 0; i < markDates.length; i++) {
-      test.push(markDates[i].date.slice(0, 10));
-    }
-    if (test.includes(fDate)) {
-      tileClassName = "marked";
-    }
-    return tileClassName !== "" ? tileClassName : null;
-  };
 
   return (
     <Styled.Container>
-      <Styled.Left>
-        
-        <Styled.Bottom>
-          
+      <Styled.Right>
+        <Styled.Header>
+        Totals
+        </Styled.Header>
+        <Styled.Header2>
+          MEDALS
+        </Styled.Header2>
+      <Styled.Box>
+            
+          stats in here
+          </Styled.Box> 
+          <Styled.Hours>
+          <b>Court Required Hours:</b> XXX
+          </Styled.Hours>
+          <Styled.Header>
+        History
+        </Styled.Header>
+        <Styled.Header2>
+          {length} events
+        </Styled.Header2>
           <Styled.marginTable>
             <EventTable
               events={events}
@@ -207,8 +256,12 @@ const EventManager = ({ user }) => {
               user={user}
             ></EventTable>
           </Styled.marginTable>
-        </Styled.Bottom>
-      </Styled.Left>
+      
+            <Styled.Margin>
+               
+            </Styled.Margin>
+          </Styled.Right>
+          
     </Styled.Container>
   );
 };
