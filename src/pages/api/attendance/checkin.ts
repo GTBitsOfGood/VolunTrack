@@ -17,14 +17,15 @@ export default async function handler(req, res) {
     const newAttendance = await attendance.save();
 
     const event = await Event.findById(eventId);
-    console.log(event.checkedOutVolunteers[0]);
-    event.checkedOutVolunteers = event.checkedOutVolunteers.filter(
-      (id) => id.toString() !== userId
-    );
-    event.checkedInVolunteers = event.checkedInVolunteers.concat(
-      new ObjectId(userId)
-    );
-    const newEvent = await event.save();
+    const newEvent = await Event.findByIdAndUpdate(eventId, {
+      checkedOutVolunteers: event.checkedOutVolunteers.filter(
+        (id) => id.toString() !== userId
+      ),
+      checkedInVolunteers: event.checkedInVolunteers.concat(
+        new ObjectId(userId)
+      ),
+    });
+    console.log(newEvent);
 
     return res.status(200).json({ newAttendance, newEvent });
   }

@@ -24,13 +24,14 @@ export default async function handler(req, res) {
     });
 
     const event = await Event.findById(eventId);
-    event.checkedInVolunteers = event.checkedInVolunteers.filter(
-      (id) => id.toString() !== userId
-    );
-    event.checkedOutVolunteers = event.checkedOutVolunteers.concat(
-      new ObjectId(userId)
-    );
-    const newEvent = await event.save();
+    const newEvent = await Event.findByIdAndUpdate(eventId, {
+      checkedInVolunteers: event.checkedInVolunteers.filter(
+        (id) => id.toString() !== userId
+      ),
+      checkedOutVolunteers: event.checkedOutVolunteers.concat(
+        new ObjectId(userId)
+      ),
+    });
 
     return res.status(200).json({ newAttendance, newEvent });
   }
