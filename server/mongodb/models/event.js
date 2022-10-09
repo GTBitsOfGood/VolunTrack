@@ -83,6 +83,14 @@ const eventSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
+    checkedInVolunteers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    },
+    checkedOutVolunteers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      default: [],
+    },
     minors: {
       type: [
         {
@@ -114,7 +122,7 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // export Event model to app

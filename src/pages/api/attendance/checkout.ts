@@ -1,4 +1,6 @@
+import { ObjectId } from "mongodb";
 import dbConnect from "../../../../server/mongodb";
+const Event = require("../../../../server/mongodb/models/event");
 const Attendance = require("../../../../server/mongodb/models/attendance");
 
 export default async function handler(req, res) {
@@ -17,9 +19,19 @@ export default async function handler(req, res) {
       return res.status(400);
     }
 
-    await attendance.updateOne({ timeCheckedOut: Date.now() });
-    console.log(attendance);
+    const newAttendance = await attendance.updateOne({
+      timeCheckedOut: Date.now(),
+    });
 
-    return res.status(200).json(attendance);
+    const event = await Event.findById(eventId);
+    event.checkedInVolunteers = event.checkedInVolunteers.filter(
+      (id) => id.toString() !== userId
+    );
+    event.checkedOutVolunteers = event.checkedOutVolunteers.concat(
+      new ObjectId(userId)
+    );
+    const newEvent = await event.save();
+
+    return res.status(200).json({ newAttendance, newEvent });
   }
 }
