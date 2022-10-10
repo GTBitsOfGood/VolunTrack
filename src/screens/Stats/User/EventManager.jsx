@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import Icon from "../../../components/Icon";
 import EventTable from "./EventTable";
-import { fetchEventsByUserId, fetchEvents } from "../../../actions/queries";
+import { fetchEventsByUserId, fetchEvents, getCurrentUser } from "../../../actions/queries";
 import { updateEvent } from "./eventHelpers";
 import variables from "../../../design-tokens/_variables.module.scss";
 import Calendar from "react-calendar";
@@ -19,9 +19,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
-    
-    
     
   `,
   Left: styled.div`
@@ -118,11 +115,15 @@ const EventManager = ({ user }) => {
   const [events, setEvents] = useState([]);
   const [markDates, setDates] = useState([]);
   const [length, setLength] = useState(0);
+  const [sum, setSum] = useState(0);
+  const [users, setUser] = useState("loading..");
 
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
   }
+
+  
 
   useEffect(() => {
     onRefresh();
@@ -148,8 +149,8 @@ const EventManager = ({ user }) => {
  */
   const onRefresh = () => {
     setLoading(true);
-    console.log("EVENT MANAGER " + user._id);
-    
+    //console.log("EVENT MANAGER " + user._id);
+    //console.log(user._id)
     //fetchEvents(undefined, new Date().toLocaleDateString("en-US"))
     fetchEventsByUserId(user._id)
       .then((result) => {
@@ -157,15 +158,54 @@ const EventManager = ({ user }) => {
         if (result && result.data && result.data.event) {
           setEvents(result.data.event);
           setLength(result.data.event.length);
-          console.log(result)
+          //console.log(result)
+          let i = 0;
+          let add = 0;
+          for (i = 0; i < result.data.event.length; i++) {
+            add += getHours(result.data.event[i].startTime,result.data.event[i].endTime);
+          };
+          setSum(add);
+          
+
         }
       })
       .finally(() => {
-        
+        // events.map((event) => ( {
+        //   setSum(sum + 2) 
+        // }
+        //   //console.log(event.startTime)
+          
+        // ))
         setLoading(false);
       });
 
+    getCurrentUser(user._id)
+    .then((result) => {
+        
+      if (result) {
+        setUser(result.data.result[0].mandatedHours)
+        //console.log(result)
+      }
+    })
+    .finally(() => {
+      
+      
+    });
+
   };
+
+  const getHours = (startTime, endTime) => {
+    var timeStart = new Date("01/01/2007 " + startTime);
+    var timeEnd = new Date("01/01/2007 " + endTime);
+  
+    let hours = Math.abs(timeEnd - timeStart) / 36e5;
+  
+    if (hours < 0) {
+      hours = 24 + hours;
+    }
+    
+    return Math.round(hours * 10) / 10.0;
+  }
 
   const [value, setDate] = useState(new Date());
 
@@ -236,11 +276,14 @@ const EventManager = ({ user }) => {
           MEDALS
         </Styled.Header2>
       <Styled.Box>
-            
-          stats in here
+            <br></br>
+          &emsp;{events.length} events attended
+          <br></br>
+          &emsp; {sum} hours earned
+
           </Styled.Box> 
           <Styled.Hours>
-          <b>Court Required Hours:</b> XXX
+          <b>Court Required Hours:</b> &ensp;{users}
           </Styled.Hours>
           <Styled.Header>
         History

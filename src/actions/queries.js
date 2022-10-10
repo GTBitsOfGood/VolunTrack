@@ -38,7 +38,7 @@ export const fetchUserManagementData = (lastPaginationId) =>
     }`
   );
 
-export const getCurrentUser = () => axios.get("/api/users/current");
+export const getCurrentUser = (userId) => axios.get("/api/users/current?volunteer=" + userId);
 
 export const fetchUserCount = () => axios.get("/api/users/count");
 
@@ -117,7 +117,7 @@ export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
 // not sure if this works
 export const fetchEventsByUserId = (userId) => {
-  console.log("QUERIES " + "/api/users/stats?volunteer=" + userId)
+  //console.log("QUERIES " + "/api/users/stats?volunteer=" + userId)
   return axios.get("/api/users/stats?volunteer=" + userId);
 };
 
