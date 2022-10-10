@@ -17,20 +17,14 @@ const Styled = {
   `,
 };
 
-// const person = {
-//   name: "John Doe",
-//   age: 999,
-// };
-
 class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentPage: 0,
-    };
-
-    this.pageSize = 3;
-    this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
+    // this.state = {
+    //   pagesCount: Math.ceil(this.props.users.length / this.props.pageSize),
+    // };
+    // this.pageSize = 3;
+    // this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
 
     // console.log(this.props.currentPages);
     // this.state = {
@@ -39,18 +33,30 @@ class PaginationComp extends React.Component {
   }
 
   handleClick(e, index) {
-    // const { updateCurrentPage } = this.props.updateCurrentPage;
-    // console.log(updateCurrentPage);
     e.preventDefault();
-
-    // updateCurrentPage({ currentPage: index });
-    this.setState({
-      currentPage: index,
-    });
+    this.props.updatePage(index);
   }
 
+  // renderPageNumbers = () => {
+  //   console.log("hi" + this.state.pagesCount);
+  //   // if (this.props.pageCount == 0) {
+  //   //   return 1;
+  //   // }
+  //   return [...Array(this.state.pageCount)].map((p, i) => {
+  //     return (
+  //       <>
+  //         <PaginationItem>
+  //           <Styled.PaginationLink onClick={(e) => this.handleClick(e, i)}>
+  //             {i + 1}
+  //           </Styled.PaginationLink>
+  //         </PaginationItem>
+  //       </>
+  //     );
+  //   });
+  // };
+
   render() {
-    const { currentPage } = this.state;
+    const { currentPage } = this.props;
 
     return (
       <React.Fragment>
@@ -67,13 +73,14 @@ class PaginationComp extends React.Component {
                 Previous
               </Styled.PaginationLink>
             </PaginationItem>
-            {[...Array(this.pagesCount)].map((page, i) => (
+            {[...Array(this.props.pageCount)].map((page, i) => (
               <PaginationItem active={i === currentPage} key={i}>
                 <Styled.PaginationLink onClick={(e) => this.handleClick(e, i)}>
                   {i + 1}
                 </Styled.PaginationLink>
               </PaginationItem>
             ))}
+            {/* {this.renderPageNumbers()} */}
             <PaginationItem disabled={currentPage >= this.pagesCount - 1}>
               <Styled.PaginationLink
                 onClick={(e) => this.handleClick(e, currentPage + 1)}
@@ -93,7 +100,8 @@ export default PaginationComp;
 
 PaginationComp.propTypes = {
   users: PropTypes.array.isRequired,
-  // currentPages: PropTypes.number.isRequired,
-  // pageSize: PropTypes.number.isRequired,
-  updateCurrentPage: PropTypes.func.isRequired,
+  pageSize: PropTypes.number.isRequired,
+  pageCount: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  updatePage: PropTypes.func.isRequired,
 };

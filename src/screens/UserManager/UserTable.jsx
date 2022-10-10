@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
 import {
@@ -61,9 +61,8 @@ class UserTable extends React.Component {
       notes: "",
       currentPage: 0,
       pageSize: 10,
+      pageCount: 0,
     };
-
-    // this.update = this.update.bind(this);
   }
 
   onDisplayEditUserModal = (userToEdit) => {
@@ -78,9 +77,26 @@ class UserTable extends React.Component {
     });
   };
 
+  updatePage = (pageNum) => {
+    this.setState({
+      currentPage: pageNum,
+    });
+  };
+
+  getPageCount = () => {
+    this.setState({
+      pageCount: Math.ceil(this.props.users.length / this.pageSize),
+    });
+  };
+
+  componentDidMount = () => {
+    this.setState({
+      pageCount: this.getPageCount(),
+    });
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(this.state);
     await updateUser(
       this.state.userSelectedForEdit.email,
       this.state.userSelectedForEdit && this.state.first_name
@@ -124,7 +140,7 @@ class UserTable extends React.Component {
 
   render() {
     const { users, loading } = this.props;
-    // console.log(this.state.currentPage);
+    // console.log(users);
     return (
       <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
@@ -398,9 +414,10 @@ class UserTable extends React.Component {
 
         <Pagination
           users={users}
-          // currentPages={this.state.currentPage}
-          // pageSize={this.state.pageSize}
-          // updateCurrentPage={this.updateCurrentPage}
+          pageSize={this.state.pageSize}
+          pageCount={this.state.pageCount}
+          currentPage={this.state.currentPage}
+          updatePage={this.updatePage}
         />
       </Table.Container>
     );
