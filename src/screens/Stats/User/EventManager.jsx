@@ -143,6 +143,8 @@ const EventManager = ({ user }) => {
   const [length, setLength] = useState(0);
   const [sum, setSum] = useState(0);
   const [users, setUser] = useState("loading..");
+  const [attend, setAttend] = useState("Bronze");
+  const [earn, setEarn] = useState("Bronze");
 
   if (!user) {
     const { data: session } = useSession();
@@ -166,6 +168,13 @@ const EventManager = ({ user }) => {
         if (result && result.data && result.data.event) {
           setEvents(result.data.event);
           setLength(result.data.event.length);
+
+          if (length > 1) {
+            setAttend("Silver")
+          } 
+          if (length > 3) {
+            setAttend("Gold")
+          }
           //console.log(result)
           let i = 0;
           let add = 0;
@@ -173,7 +182,14 @@ const EventManager = ({ user }) => {
             add += getHours(result.data.event[i].startTime,result.data.event[i].endTime);
           };
           setSum(add);
-          
+          if (sum > 10) {
+            setEarn("Silver")
+            //document.getElementById('earned').src = "/images/Hours Earned - Silver.png"
+          } 
+          if (sum > 20) {
+            setEarn("Gold")
+            //document.getElementById('earned').src = "/images/Hours Earned - Gold.png"
+          }
 
         }
       })
@@ -263,7 +279,7 @@ const EventManager = ({ user }) => {
             </Styled.StatText>
             <Styled.StatImage>
             <img
-            src="/images/Events Attended - Gold.png"
+            src={"/images/Events Attended - "+attend+".png"}
             alt="helping-mamas-photo"
             width="150px"
             height="150px"
@@ -282,7 +298,8 @@ const EventManager = ({ user }) => {
             </Styled.StatText>
             <Styled.StatImage>
             <img
-            src="/images/Hours Earned - Silver.png"
+            src={"/images/Hours Earned - "+ earn + ".png"}
+            id="earned"
             alt="helping-mamas-photo"
             width="150px"
             height="150px"
@@ -290,7 +307,7 @@ const EventManager = ({ user }) => {
             </Styled.StatImage>
           <Styled.StatText>
           
-          {sum} hours earned
+          {sum} hours
           </Styled.StatText>
           
           </Styled.BoxInner>
