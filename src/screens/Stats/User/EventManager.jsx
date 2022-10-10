@@ -21,6 +21,10 @@ const Styled = {
     align-items: center;
     
   `,
+  Image: styled.div`
+    width: 100%;
+    height: 100%;
+  `,
   Left: styled.div`
     margin-left: 10vw;
     display: flex;
@@ -103,6 +107,28 @@ const Styled = {
     background-color: white;
     border: 1px solid ${variables["gray-200"]};
     margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+  `,
+  BoxInner: styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    padding: 5px;
+    padding-left: 20px;
+  `,
+  StatText: styled.div`
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    padding: 3px;
+  `,
+  StatImage: styled.div`
+    
   `,
   Hours: styled.div`
     margin-bottom: 2rem;
@@ -128,25 +154,7 @@ const EventManager = ({ user }) => {
   useEffect(() => {
     onRefresh();
   }, []);
-/**
- * const onRefresh = () => {
-    setLoading(true);
-    fetchEvents()
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          // result.data.events = result.data.events.filter(function (event) {
-          //   const currentDate = new Date();
-          //   return new Date(event.date) > currentDate;
-          // });
-          setEvents(result.data.events);
-          setDates(result.data.events);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
- */
+  
   const onRefresh = () => {
     setLoading(true);
     //console.log("EVENT MANAGER " + user._id);
@@ -212,27 +220,6 @@ const EventManager = ({ user }) => {
   let splitDate = value.toDateString().split(" ");
   const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
 
-  const onChange = (value, event) => {
-    setDate(value);
-    let datestr = value.toString();
-    let splitDate = value.toDateString().split(" ");
-    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]; 
-    setDateString(date);
-
-    let selectDate = new Date(datestr).toISOString().split("T")[0];
-
-    setLoading(true);
-    fetchEvents(selectDate, selectDate)
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
-
   const onRegister = async (event) => {
     const changedEvent = {
       ...event,
@@ -258,13 +245,7 @@ const EventManager = ({ user }) => {
     onRefresh();
   };
 
-  const formatJsDate = (jsDate, separator = "/") => {
-    return [
-      String(jsDate.getFullYear()).padStart(4, "0"),
-      String(jsDate.getMonth() + 1).padStart(2, "0"),
-      String(jsDate.getDate()).padStart(2, "0"),
-    ].join(separator);
-  };
+  
 
   return (
     <Styled.Container>
@@ -276,11 +257,48 @@ const EventManager = ({ user }) => {
           MEDALS
         </Styled.Header2>
       <Styled.Box>
-            <br></br>
-          &emsp;{events.length} events attended
-          <br></br>
-          &emsp; {sum} hours earned
+          <Styled.BoxInner>
+            <Styled.StatText>
+              Events Attended
+            </Styled.StatText>
+            <Styled.StatImage>
+            <img
+            src="/images/Events Attended - Gold.png"
+            alt="helping-mamas-photo"
+            width="150px"
+            height="150px"
+          />
+            </Styled.StatImage>
+          <Styled.StatText>
+          
+          {events.length} events
+          </Styled.StatText>
+          
+          </Styled.BoxInner>
 
+          <Styled.BoxInner>
+            <Styled.StatText>
+              Hours Earned
+            </Styled.StatText>
+            <Styled.StatImage>
+            <img
+            src="/images/Hours Earned - Silver.png"
+            alt="helping-mamas-photo"
+            width="150px"
+            height="150px"
+          />
+            </Styled.StatImage>
+          <Styled.StatText>
+          
+          {sum} hours earned
+          </Styled.StatText>
+          
+          </Styled.BoxInner>
+
+
+
+          
+          
           </Styled.Box> 
           <Styled.Hours>
           <b>Court Required Hours:</b> &ensp;{users}
