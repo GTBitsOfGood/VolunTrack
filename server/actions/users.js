@@ -231,6 +231,8 @@ export async function getManagementData(
         address: "$bio.address",
         city: "$bio.city",
         state: "$bio.state",
+        courtH: "$bio.courtH",
+        notes: "$bio.notes",
         role: 1,
         status: 1,
       },
@@ -406,7 +408,9 @@ export async function updateUser(
   total_hours,
   address,
   city,
-  state
+  state,
+  courtH,
+  notes
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
@@ -549,6 +553,36 @@ export async function updateUser(
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.state": state } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+    });
+  }
+
+  if (courtH?.length !== 0) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.courtH": courtH } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+    });
+  }
+
+  if (notes?.length !== 0) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.notes": notes } }
     ).then((result) => {
       if (!result.nModified)
         return {

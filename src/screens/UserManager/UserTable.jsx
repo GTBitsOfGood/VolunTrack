@@ -57,8 +57,8 @@ class UserTable extends React.Component {
       address: "",
       city: "",
       state: "",
-      court_hours: 0,
-      notes: 0,
+      court_hours: "",
+      notes: "",
       currentPage: 0,
       pageSize: 10,
     };
@@ -80,6 +80,7 @@ class UserTable extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(this.state);
     await updateUser(
       this.state.userSelectedForEdit.email,
       this.state.userSelectedForEdit && this.state.first_name
@@ -301,7 +302,7 @@ class UserTable extends React.Component {
                       <Form.Input
                         defaultValue={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.court_hours
+                            ? this.state.userSelectedForEdit.courtH
                             : ""
                         }
                         type="text"
@@ -315,6 +316,11 @@ class UserTable extends React.Component {
                       <Col>
                         <Form.Label>Notes</Form.Label>
                         <Form.Input
+                          defaultValue={
+                            this.state.userSelectedForEdit
+                              ? this.state.userSelectedForEdit.notes
+                              : ""
+                          }
                           type="textarea"
                           onChange={(evt) =>
                             this.setState({ notes: evt.target.value })

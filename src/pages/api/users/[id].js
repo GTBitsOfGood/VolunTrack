@@ -46,7 +46,9 @@ export default async function handler(req, res, next) {
       userDataReq.total_hours,
       userDataReq.address,
       userDataReq.city,
-      userDataReq.state
+      userDataReq.state,
+      userDataReq.courtH,
+      userDataReq.notes
     );
     res.status(result.status).json(result.message);
   } else if (req.method === "DELETE") {
