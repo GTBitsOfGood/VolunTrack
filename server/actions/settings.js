@@ -1,16 +1,31 @@
+import dbConnect from "../mongodb/index";
+const AppSettings = require("../mongodb/models/settings");
+
 export const inviteAdmin = async (email) => {
-    return { status: 400, message: "Not implemented" };
-    // return { status: 200, message: "" };
+    try {
+        await dbConnect();
+        AppSettings.invitedAdmins.push(email);
+    } catch(e) {
+        return { status: 200, message: "Cannot invite admin" };
+    }
+    return { status: 400, message: "Admin successfully invited" };
 };
 
 export const getInvitedAdmins = async (email) => {
-    // this is what we should call when setting the state
-    return { status: 400, message: "Not implemented" };
-    // return { status: 200, message: "" };
+    try {
+        await dbConnect();
+        return AppSettings.find(invitedAdmins);
+    } catch(e) {
+        return { status: 200, message: "Cannot get invited admin list" };
+    }
 };
 
 export const removeInvitedAdmin = async (email) => {
-    // this should be called when an invited admin logs in and becomes an admin
-    return { status: 400, message: "Not implemented" };
-    // return { status: 200, message: "" };
+    try {
+        await dbConnect();
+        AppSettings.invitedAdmins.pull(email);
+    } catch(e) {
+        return { status: 200, message: "Cannot remove invited admin" };
+    }
+    return { status: 400, message: "Admin successfully invited" };
 };
