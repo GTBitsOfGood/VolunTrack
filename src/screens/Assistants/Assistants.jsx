@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { updateInvitedAdmins } from "../../actions/queries";
 import {
   Button,
@@ -19,6 +19,7 @@ import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
 import ReactSearchBox from "react-search-box";
 import variables from "../../design-tokens/_variables.module.scss";
+import { getInvitedAdmins } from "../../../server/actions/settings";
 
 const PAGE_SIZE = 10;
 
@@ -146,8 +147,7 @@ class Assistants extends React.Component {
         });
       }
     });
-    // add getInvitedAdmins api call and then set the state
-    // this.setState({ admins: result });
+    // this.setState({ invitedAdmins: getInvitedAdmins() });
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
@@ -159,6 +159,7 @@ class Assistants extends React.Component {
           ),
           currentPage: 0,
           loadingMoreUsers: false,
+          invitedAdmins: getInvitedAdmins(),
         });
       }
     });
@@ -195,7 +196,7 @@ class Assistants extends React.Component {
     const start = currentPage * PAGE_SIZE;
     return users.slice(start, start + PAGE_SIZE);
   };
-  getInvitedAdmins = () => {
+  getInvitedAdminList = () => {
     const { invitedAdmins, currentPage } = this.state;
     const start = currentPage * PAGE_SIZE;
     return invitedAdmins.slice(start, start + PAGE_SIZE);
@@ -253,7 +254,7 @@ class Assistants extends React.Component {
             <Styled.SearchBox>
               <ReactSearchBox
                 placeholder="Search Name"
-                data={this.getUsersAtPage()} //.concat(this.getInvitedAdmins()
+                data={this.getUsersAtPage().concat(this.getInvitedAdminList())}
                 onChange={(record) => this.onChangeSearch(record)}
               />
             </Styled.SearchBox>
@@ -268,8 +269,8 @@ class Assistants extends React.Component {
           <Styled.TableUsers>
             <EmployeeTable
               users={this.getUsersAtPage()}
-              // invitedAdmins={this.getInvitedAdmins()}
-              invitedAdmins={["test"]}
+              invitedAdmins={this.getInvitedAdminList()}
+              // invitedAdmins={["test"]}
               loading={loadingMoreUsers}
               editUserCallback={this.onEditUser}
             />
@@ -308,7 +309,7 @@ class Assistants extends React.Component {
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.handleSubmit}
+              onClick={this.onModalClose(true)}
             >
               Add as an Admin
             </Button>
