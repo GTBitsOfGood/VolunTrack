@@ -4,6 +4,7 @@ import styled from "styled-components";
 import {
   checkInVolunteer,
   checkOutVolunteer,
+  fetchEventsById,
   getEventVolunteersByAttendance,
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
@@ -50,6 +51,9 @@ const EventAttendance = () => {
   const router = useRouter();
   const eventId = router.query.eventId;
 
+  const [event, setEvent] = useState({});
+  const [minors, setMinors] = useState({});
+
   const [searchValue, setSearchValue] = useState("");
 
   const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
@@ -57,6 +61,15 @@ const EventAttendance = () => {
 
   useEffect(() => {
     (async () => {
+      const fetchedEvent = (await fetchEventsById(eventId)).data.event;
+      setEvent(fetchedEvent);
+
+      const fetchedMinors = {};
+      fetchedEvent.minors.forEach((m) => {
+        fetchedMinors[m.volunteer_id] = m.minor;
+      });
+      setMinors(fetchedMinors);
+
       setCheckedInVolunteers(
         (await getEventVolunteersByAttendance(eventId, true)).data
       );
@@ -125,6 +138,7 @@ const EventAttendance = () => {
       <AttendanceFunctionality
         checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
         checkedOutVolunteers={filteredAndSortedVolunteers(checkedOutVolunteers)}
+        minors={minors}
         checkIn={checkIn}
         checkOut={checkOut}
       />

@@ -29,16 +29,19 @@ const Styled = {
 
 const Volunteer = ({
   volunteer,
+  minors,
   onClick,
 }: {
   volunteer: { [key: string]: any };
+  minors: string[];
   onClick: (volunteer: { [key: string]: any }) => void;
 }): JSX.Element => {
   return (
     <Styled.Container onClick={() => onClick(volunteer)}>
       {/* TODO: add number of minors attatched to volunteer */}
       <Styled.Name>
-        {volunteer.bio.first_name} {volunteer.bio.last_name}
+        {volunteer.bio.first_name} {volunteer.bio.last_name}{" "}
+        {minors?.length > 0 && <>({minors.length} minors)</>}
       </Styled.Name>
       <Styled.Email>{volunteer.bio.email}</Styled.Email>
     </Styled.Container>

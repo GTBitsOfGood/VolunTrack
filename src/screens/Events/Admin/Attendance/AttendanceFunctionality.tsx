@@ -21,11 +21,13 @@ const Styled = {
 const AttendanceFunctionality = ({
   checkedInVolunteers,
   checkedOutVolunteers,
+  minors,
   checkIn,
   checkOut,
 }: {
   checkedInVolunteers: any;
   checkedOutVolunteers: any;
+  minors: { [volunteerID: string]: string[] };
   checkIn: (volunteer: any) => void;
   checkOut: (volunteer: any) => void;
 }): JSX.Element => (
@@ -37,6 +39,7 @@ const AttendanceFunctionality = ({
           <Volunteer
             key={volunteer._id}
             volunteer={volunteer}
+            minors={minors[volunteer._id]}
             onClick={checkIn}
           />
         ))}
@@ -48,6 +51,7 @@ const AttendanceFunctionality = ({
           <Volunteer
             key={volunteer._id}
             volunteer={volunteer}
+            minors={minors[volunteer._id]}
             onClick={checkOut}
           />
         ))}
