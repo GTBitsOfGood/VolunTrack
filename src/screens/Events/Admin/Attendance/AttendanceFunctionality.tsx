@@ -14,8 +14,7 @@ const Styled = {
 
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    row-gap: 1rem;
+    gap: 1rem;
   `,
 };
 
