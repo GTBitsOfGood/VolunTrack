@@ -60,7 +60,7 @@ class UserTable extends React.Component {
       court_hours: "",
       notes: "",
       currentPage: 0,
-      pageSize: 10,
+      pageSize: 3,
       pageCount: 0,
     };
   }
