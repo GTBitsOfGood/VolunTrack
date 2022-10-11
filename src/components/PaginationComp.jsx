@@ -81,7 +81,7 @@ class PaginationComp extends React.Component {
               </PaginationItem>
             ))}
             {/* {this.renderPageNumbers()} */}
-            <PaginationItem disabled={currentPage >= this.pagesCount - 1}>
+            <PaginationItem disabled={currentPage >= this.props.pageCount - 1}>
               <Styled.PaginationLink
                 onClick={(e) => this.handleClick(e, currentPage + 1)}
                 next
