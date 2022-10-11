@@ -134,24 +134,24 @@ class EmployeeTable extends React.Component {
                 </Table.Row>
               ))}
 
-            {/*{!loading &&*/}
-            {/*  invitedAdmins.map((user, index) => (*/}
-            {/*    <Table.Row key={index} evenIndex={index % 2 === 0}>*/}
-            {/*      <td> </td>*/}
-            {/*      <td>*/}
-            {/*        {user}*/}
-            {/*        <Styled.Button*/}
-            {/*          onClick={() => {*/}
-            {/*            navigator.clipboard.writeText(user);*/}
-            {/*          }}*/}
-            {/*        >*/}
-            {/*          <Icon color="grey3" name="copy" />*/}
-            {/*        </Styled.Button>*/}
-            {/*      </td>*/}
-            {/*      /!*<td>{Administrator}</td>*!/*/}
-            {/*      /!*<td>{Pending}</td>*!/*/}
-            {/*    </Table.Row>*/}
-            {/*  ))}*/}
+            {!loading &&
+              invitedAdmins.map((user, index) => (
+                <Table.Row key={index} evenIndex={index % 2 === 0}>
+                  <td></td>
+                  <td>
+                    {user.email}
+                    <Styled.Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(user.email);
+                      }}
+                    >
+                      <Icon color="grey3" name="copy" />
+                    </Styled.Button>
+                  </td>
+                  <td>Administrator</td>
+                  <td>Pending</td>
+                </Table.Row>
+              ))}
           </tbody>
         </Table.Table>
         {loading && <Loading />}
