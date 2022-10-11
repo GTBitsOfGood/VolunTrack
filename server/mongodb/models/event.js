@@ -83,14 +83,6 @@ const eventSchema = new mongoose.Schema(
       required: true,
       default: [],
     },
-    checkedInVolunteers: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-      default: [],
-    },
-    checkedOutVolunteers: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-      default: [],
-    },
     minors: {
       type: [
         {

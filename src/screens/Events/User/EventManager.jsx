@@ -121,7 +121,6 @@ const EventManager = ({ user }) => {
     const changedEvent = {
       ...event,
       volunteers: event.volunteers.concat(user._id),
-      checkedOutVolunteers: event.checkedOutVolunteers.concat(user._id),
     }; // adds userId to event
     const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
     setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
@@ -136,7 +135,6 @@ const EventManager = ({ user }) => {
       volunteers: event.volunteers.filter(
         (volunteer) => volunteer !== user._id
       ),
-      checkedIn,
     };
     const updatedEvent = await updateEvent(changedEvent);
     setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));

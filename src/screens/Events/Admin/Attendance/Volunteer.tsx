@@ -32,10 +32,10 @@ const Volunteer = ({
   onClick,
 }: {
   volunteer: { [key: string]: any };
-  onClick: (userId: string) => void;
+  onClick: (volunteer: { [key: string]: any }) => void;
 }): JSX.Element => {
   return (
-    <Styled.Container onClick={() => onClick(volunteer._id)}>
+    <Styled.Container onClick={() => onClick(volunteer)}>
       {/* TODO: add number of minors attatched to volunteer */}
       <Styled.Name>
         {volunteer.bio.first_name} {volunteer.bio.last_name}

@@ -1,7 +1,11 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../../actions/queries";
+import {
+  checkInVolunteer,
+  checkOutVolunteer,
+  getEventVolunteersByAttendance,
+} from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 
 const Styled = {
@@ -46,15 +50,39 @@ const EventAttendance = () => {
   const router = useRouter();
   const eventId = router.query.eventId;
 
-  const [event, setEvent] = useState(null);
   const [searchValue, setSearchValue] = useState("");
+
+  const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
+  const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const event = (await fetchEventsById(eventId)).data.event;
-      setEvent(event);
+      setCheckedInVolunteers(
+        (await getEventVolunteersByAttendance(eventId, true)).data
+      );
+      setCheckedOutVolunteers(
+        (await getEventVolunteersByAttendance(eventId, false)).data
+      );
     })();
   }, []);
+
+  const checkIn = (volunteer) => {
+    checkInVolunteer(volunteer._id, eventId);
+
+    setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
+    setCheckedOutVolunteers(
+      checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
+    );
+  };
+
+  const checkOut = (volunteer) => {
+    checkOutVolunteer(volunteer._id, eventId);
+
+    setCheckedOutVolunteers(checkedOutVolunteers.concat(volunteer));
+    setCheckedInVolunteers(
+      checkedInVolunteers.filter((v) => v._id !== volunteer._id)
+    );
+  };
 
   return (
     <Styled.Container>
@@ -63,10 +91,10 @@ const EventAttendance = () => {
         <Styled.CheckedInData>
           <span style={{ fontWeight: "bold" }}>
             <span style={{ fontWeight: "bold", fontSize: "3rem" }}>
-              {event?.volunteers.length}
+              {checkedInVolunteers.length}
             </span>
             <span style={{ fontWeight: "normal" }}>/</span>
-            {event?.max_volunteers}
+            {checkedInVolunteers.length + checkedOutVolunteers.length}
           </span>{" "}
           Checked In
         </Styled.CheckedInData>
@@ -78,12 +106,12 @@ const EventAttendance = () => {
         onChange={(e) => setSearchValue(e.target.value)}
       />
 
-      {event && (
-        <AttendanceFunctionality
-          volunteerIds={event.volunteers}
-          eventId={eventId}
-        />
-      )}
+      <AttendanceFunctionality
+        checkedInVolunteers={checkedInVolunteers}
+        checkedOutVolunteers={checkedOutVolunteers}
+        checkIn={checkIn}
+        checkOut={checkOut}
+      />
     </Styled.Container>
   );
 };

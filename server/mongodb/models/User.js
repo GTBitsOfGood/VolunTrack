@@ -45,10 +45,6 @@ const userSchema = new Schema(
       occupation: { type: [String] },
     },
     imageUrl: { type: String },
-    eventsCheckedIn: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
-      default: [],
-    },
   },
   {
     timestamps: true,
