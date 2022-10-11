@@ -175,6 +175,7 @@ const EventManager = ({ user }) => {
           if (length > 3) {
             setAttend("Gold")
           }
+          console.log(attend + " ")
           //console.log(result)
           let i = 0;
           let add = 0;
@@ -278,12 +279,13 @@ const EventManager = ({ user }) => {
               Events Attended
             </Styled.StatText>
             <Styled.StatImage>
-            <img
-            src={"/images/Events Attended - "+attend+".png"}
-            alt="helping-mamas-photo"
-            width="150px"
-            height="150px"
-          />
+              {(loading) ? "Loading... " : <img
+                src={"/images/Events Attended - "+attend+".png"}
+                alt="helping-mamas-photo"
+                width="150px"
+                height="150px"
+            />}
+            
             </Styled.StatImage>
           <Styled.StatText>
           
@@ -297,13 +299,14 @@ const EventManager = ({ user }) => {
               Hours Earned
             </Styled.StatText>
             <Styled.StatImage>
-            <img
+              {(loading) ? "Loading... " : <img
             src={"/images/Hours Earned - "+ earn + ".png"}
             id="earned"
             alt="helping-mamas-photo"
             width="150px"
             height="150px"
-          />
+          />}
+            
             </Styled.StatImage>
           <Styled.StatText>
           
