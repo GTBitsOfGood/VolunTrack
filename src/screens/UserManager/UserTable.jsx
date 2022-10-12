@@ -61,7 +61,7 @@ class UserTable extends React.Component {
       notes: "",
       currentPage: 0,
       pageSize: 3,
-      pageCount: 0,
+      pageCount: 1,
     };
   }
 
@@ -90,9 +90,12 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
+    console.log("componentDidMount");
+    console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
     });
+    console.log(this.state.pageCount);
   };
 
   handleSubmit = async (e) => {
@@ -150,43 +153,42 @@ class UserTable extends React.Component {
               <th style={{ color: "#960034" }}>Email Address</th>
               <th style={{ color: "#960034" }}>Phone Number</th>
             </tr>
-            {!loading &&
-              users
-                .slice(
-                  this.state.currentPage * this.state.pageSize,
-                  (this.state.currentPage + 1) * this.state.pageSize
-                )
-                .map((user, index) => (
-                  <Table.Row key={index} evenIndex={index % 2 === 0}>
-                    <td>{user.name}</td>
-                    <td>
-                      {user.email}
-                      <Styled.Button
-                        onClick={() => {
-                          navigator.clipboard.writeText(user.email);
-                        }}
-                      >
-                        <Icon color="grey3" name="copy" />
-                      </Styled.Button>
-                    </td>
-                    <td>
-                      {user.phone_number
-                        ? user.phone_number.substr(0, 3) +
-                          "-" +
-                          user.phone_number.substr(3, 3) +
-                          "-" +
-                          user.phone_number.substr(6, 4)
-                        : ""}
-                    </td>
-                    <td>
-                      <Styled.Button
-                        onClick={() => this.onDisplayEditUserModal(user)}
-                      >
-                        <Icon color="grey3" name="create" />
-                      </Styled.Button>
-                    </td>
-                  </Table.Row>
-                ))}
+            {users
+              .slice(
+                this.state.currentPage * this.state.pageSize,
+                (this.state.currentPage + 1) * this.state.pageSize
+              )
+              .map((user, index) => (
+                <Table.Row key={index} evenIndex={index % 2 === 0}>
+                  <td>{user.name}</td>
+                  <td>
+                    {user.email}
+                    <Styled.Button
+                      onClick={() => {
+                        navigator.clipboard.writeText(user.email);
+                      }}
+                    >
+                      <Icon color="grey3" name="copy" />
+                    </Styled.Button>
+                  </td>
+                  <td>
+                    {user.phone_number
+                      ? user.phone_number.substr(0, 3) +
+                        "-" +
+                        user.phone_number.substr(3, 3) +
+                        "-" +
+                        user.phone_number.substr(6, 4)
+                      : ""}
+                  </td>
+                  <td>
+                    <Styled.Button
+                      onClick={() => this.onDisplayEditUserModal(user)}
+                    >
+                      <Icon color="grey3" name="create" />
+                    </Styled.Button>
+                  </td>
+                </Table.Row>
+              ))}
           </tbody>
         </Table.Table>
         {loading && <Loading />}
@@ -415,7 +417,8 @@ class UserTable extends React.Component {
         <Pagination
           users={users}
           pageSize={this.state.pageSize}
-          pageCount={this.state.pageCount}
+          loading={this.props.loading}
+          // pageCount={this.state.pageCount}
           currentPage={this.state.currentPage}
           updatePage={this.updatePage}
         />

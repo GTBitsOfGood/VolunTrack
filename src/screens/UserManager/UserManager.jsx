@@ -12,7 +12,7 @@ import Icon from "../../components/Icon";
 import UserTable from "./UserTable";
 import ReactSearchBox from "react-search-box";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 3;
 
 const Styled = {
   Container: styled.div`
@@ -124,7 +124,7 @@ class UserManager extends React.Component {
   };
 
   componentDidMount = () => this.onRefresh();
-  onRefresh = () => {
+  onRefresh = async () => {
     this.setState({ loadingMoreUsers: true });
     fetchUserCount().then((result) => {
       if (result && result.data && result.data.count) {
@@ -133,15 +133,16 @@ class UserManager extends React.Component {
         });
       }
     });
-    fetchUserManagementData().then((result) => {
-      if (result && result.data && result.data.users) {
-        this.setState({
-          users: result.data.users.filter((user) => user.role == "volunteer"),
-          currentPage: 0,
-          loadingMoreUsers: false,
-        });
-      }
-    });
+    let result = await fetchUserManagementData();
+    if (result && result.data && result.data.users) {
+      console.log("fetchUserManagementData");
+      console.log(result.data.users);
+      this.setState({
+        users: result.data.users.filter((user) => user.role === "volunteer"),
+        currentPage: 0,
+        loadingMoreUsers: false,
+      });
+    }
   };
   onNextPage = () => {
     const { currentPage, users } = this.state;
@@ -167,8 +168,8 @@ class UserManager extends React.Component {
   onToBeginning = () => this.setState({ currentPage: 0 });
   getUsersAtPage = () => {
     const { users, currentPage } = this.state;
-    const start = currentPage * PAGE_SIZE;
-    return users.slice(start, start + PAGE_SIZE);
+    // const start = currentPage * PAGE_SIZE;
+    return users; //.slice(start, start + PAGE_SIZE);
   };
   onChangeSearch = (record) => {
     const { users, currentPage } = this.state;
