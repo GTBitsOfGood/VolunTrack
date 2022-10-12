@@ -20,9 +20,8 @@ const Styled = {
 class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {
-    //   pagesCount: Math.ceil(this.props.users.length / this.props.pageSize),
-    // };
+    this.state = { pageCount: 0, currentPage: 0 };
+    // const [pageCount, setPageCount] = useState(0);
     // this.pageSize = 3;
     // this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
 
@@ -32,9 +31,14 @@ class PaginationComp extends React.Component {
     // };
   }
 
-  handleClick(e, index) {
+  handleClick(e) {
     e.preventDefault();
-    this.props.updatePage(index);
+    // this.props.updatePage(index);
+  }
+
+  updateCurrentPage(e, index) {
+    e.preventDefault();
+    this.setState({ currentPage: index });
   }
 
   // renderPageNumbers = () => {
@@ -55,42 +59,62 @@ class PaginationComp extends React.Component {
   //   });
   // };
 
-  render() {
-    const { currentPage } = this.props;
+  componentDidMount = () => {
+    // console.log("componentDidMount");
+    // console.log(this.props.users.length, this.props.pageSize);
+    // console.log(Math.ceil(this.props.users.length / this.props.pageSize));
+    // console.log("--");
+    this.setState({
+      pageCount: Math.ceil(this.props.users.length / this.props.pageSize),
+      currentPage: this.props.currentPage,
+    });
+    // console.log(this.state.pageCount);
+  };
 
+  render() {
     return (
       <React.Fragment>
-        <div className="pagination-wrapper">
-          <Styled.Pagination
-            aria-label="Page navigation example"
-            className="pagination justify-content-center"
-          >
-            <PaginationItem disabled={currentPage <= 0}>
-              <Styled.PaginationLink
-                onClick={(e) => this.handleClick(e, currentPage - 1)}
-                previous
-              >
-                Previous
-              </Styled.PaginationLink>
-            </PaginationItem>
-            {[...Array(this.props.pageCount)].map((page, i) => (
-              <PaginationItem active={i === currentPage} key={i}>
-                <Styled.PaginationLink onClick={(e) => this.handleClick(e, i)}>
-                  {i + 1}
+        {
+          <div className="pagination-wrapper">
+            <Styled.Pagination
+              aria-label="Page navigation example"
+              className="pagination justify-content-center"
+            >
+              <PaginationItem disabled={this.state.currentPage <= 0}>
+                <Styled.PaginationLink
+                  onClick={(e) =>
+                    this.updateCurrentPage(e, this.state.currentPage - 1)
+                  }
+                  previous
+                >
+                  Previous
                 </Styled.PaginationLink>
               </PaginationItem>
-            ))}
-            {/* {this.renderPageNumbers()} */}
-            <PaginationItem disabled={currentPage >= this.props.pageCount - 1}>
-              <Styled.PaginationLink
-                onClick={(e) => this.handleClick(e, currentPage + 1)}
-                next
+              {[...Array(this.state.pageCount)].map((page, i) => (
+                <PaginationItem active={i === this.state.currentPage} key={i}>
+                  <Styled.PaginationLink
+                    onClick={(e) => this.updateCurrentPage(e, i)}
+                  >
+                    {i + 1}
+                  </Styled.PaginationLink>
+                </PaginationItem>
+              ))}
+              {/* {this.renderPageNumbers()} */}
+              <PaginationItem
+                disabled={this.state.currentPage >= this.state.pageCount - 1}
               >
-                Next
-              </Styled.PaginationLink>
-            </PaginationItem>
-          </Styled.Pagination>
-        </div>
+                <Styled.PaginationLink
+                  onClick={(e) =>
+                    this.updateCurrentPage(e, this.state.currentPage + 1)
+                  }
+                  next
+                >
+                  Next
+                </Styled.PaginationLink>
+              </PaginationItem>
+            </Styled.Pagination>
+          </div>
+        }
       </React.Fragment>
     );
   }
