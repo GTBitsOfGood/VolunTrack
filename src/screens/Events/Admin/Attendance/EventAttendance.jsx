@@ -97,14 +97,18 @@ const EventAttendance = () => {
     );
   };
 
-  const filteredAndSortedVolunteers = (volunteers) =>
-    (searchValue.length > 0
-      ? volunteers.filter(
-          (v) =>
-            v.bio.last_name.toLowerCase().includes(searchValue.toLowerCase()) ||
-            v.bio.email.toLowerCase().includes(searchValue.toLowerCase())
-        )
-      : volunteers
+  const filteredAndSortedVolunteers = (volunteers) => {
+    console.log(volunteers);
+    return (
+      searchValue.length > 0
+        ? volunteers.filter(
+            (v) =>
+              v.bio.last_name
+                ?.toLowerCase()
+                .includes(searchValue.toLowerCase()) ||
+              v.bio.email?.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        : volunteers
     ).sort((a, b) =>
       a.bio.last_name > b.bio.last_name
         ? 1
@@ -112,6 +116,7 @@ const EventAttendance = () => {
         ? -1
         : 0
     );
+  };
 
   return (
     <Styled.Container>
