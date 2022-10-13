@@ -88,9 +88,9 @@ class UserTable extends React.Component {
                     </Styled.Button>
                   </td>
                   <td>
-                    {user.phone_number.substr(0, 3)}-
-                    {user.phone_number.substr(3, 3)}-
-                    {user.phone_number.substr(6, 4)}
+                    {user.phone_number?.substr(0, 3)}-
+                    {user.phone_number?.substr(3, 3)}-
+                    {user.phone_number?.substr(6, 4)}
                   </td>
                   <td>
                     <Styled.Button
