@@ -9,6 +9,7 @@ import * as SForm from "../sharedStyles/formStyles";
 import { profileValidator } from "./helpers";
 import { Container, Row, Col } from "reactstrap";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
+import ProfileTable from "./ProfileTable";
 
 const Styled = {
   Container: styled.div`
@@ -232,6 +233,7 @@ const Profile = () => {
                 </Col>
               </Container>
             </Styled.Form>
+            <ProfileTable user={user}></ProfileTable>
           </>
         )}
       </Formik>
