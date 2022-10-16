@@ -315,37 +315,6 @@ class UserTable extends React.Component {
                         }
                       />
                     </Col>
-                    <Col>
-                      <Form.Label>Court Required Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.courtH
-                            : ""
-                        }
-                        type="text"
-                        name="Court Hours"
-                        onChange={(evt) =>
-                          this.setState({ court_hours: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Row>
-                      <Col>
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Input
-                          defaultValue={
-                            this.state.userSelectedForEdit
-                              ? this.state.userSelectedForEdit.notes
-                              : ""
-                          }
-                          type="textarea"
-                          onChange={(evt) =>
-                            this.setState({ notes: evt.target.value })
-                          }
-                        ></Form.Input>
-                      </Col>
-                    </Row>
                   </Row>
                   <Row>
                     <Col>
@@ -392,6 +361,37 @@ class UserTable extends React.Component {
                           this.setState({ state: evt.target.value })
                         }
                       />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Court Required Hours</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.courtH
+                            : ""
+                        }
+                        type="text"
+                        name="Court Hours"
+                        onChange={(evt) =>
+                          this.setState({ court_hours: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Notes</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.notes
+                            : ""
+                        }
+                        type="textarea"
+                        onChange={(evt) =>
+                          this.setState({ notes: evt.target.value })
+                        }
+                      ></Form.Input>
                     </Col>
                   </Row>
                 </Form.FormGroup>
