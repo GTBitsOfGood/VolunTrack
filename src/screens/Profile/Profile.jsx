@@ -69,7 +69,7 @@ const Profile = () => {
 
   return (
     <Styled.Container>
-      <Formik
+      {/* <Formik
         initialValues={{
           first_name,
           last_name,
@@ -184,7 +184,7 @@ const Profile = () => {
                     ) : (
                       <Col></Col>
                     )}
-                    {/* <Col>
+                    <Col>
                       <SForm.Label>Court Required</SForm.Label>
                       <div class="form-check">
                         <input
@@ -194,7 +194,7 @@ const Profile = () => {
                           id="flexCheckDefault"
                         />
                       </div>
-                    </Col> */}
+                    </Col>
                   </Row>
 
                   <Row>
@@ -233,10 +233,10 @@ const Profile = () => {
                 </Col>
               </Container>
             </Styled.Form>
-            <ProfileTable user={user}></ProfileTable>
           </>
         )}
-      </Formik>
+      </Formik> */}
+      <ProfileTable user={user}></ProfileTable>
     </Styled.Container>
   );
 };

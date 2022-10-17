@@ -2,11 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
-import {
-  mandated,
-  roles,
-  statuses,
-} from "../ApplicantViewer/applicantInfoHelpers";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
@@ -14,18 +9,8 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import { updateUser } from "../../actions/queries";
 import { Profiler } from "react";
-import { profileValidator } from "./helpers";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
-
-// const keyToValue = (key) => {
-//   key = key.replace(/_/g, " ");
-//   key = key
-//     .toLowerCase()
-//     .split(" ")
-//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-//     .join(" ");
-//   return key;
-// };
+import { useState } from "react";
 
 const Styled = {
   Button: styled(Button)`
@@ -42,6 +27,9 @@ const Styled = {
   `,
   List: styled.li`
     padding-bottom: 120px;
+  `,
+  HeaderContainer: styled.div`
+    margin-bottom: 2rem;
   `,
 };
 
@@ -61,75 +49,88 @@ class ProfileTable extends React.Component {
       state: "",
       court_hours: "",
       notes: "",
+      visibleText: false,
     };
   }
 
-  onDisplayEditUserModal = (userToEdit) => {
-    this.setState({
-      userSelectedForEdit: userToEdit,
-    });
-  };
+  // onDisplayEditUserModal = (userToEdit) => {
+  //   this.setState({
+  //     userSelectedForEdit: userToEdit,
+  //   });
+  // };
 
   handleSubmit = async (e) => {
+    this.setState({
+      visibleText: true,
+    });
     e.preventDefault();
     await updateUser(
-      this.state.userSelectedForEdit.email,
-      this.state.userSelectedForEdit && this.state.first_name
+      this.props.user.bio.email,
+      this.props.user.bio && this.state.first_name
         ? this.state.first_name
-        : this.state.userSelectedForEdit.first_name,
-      this.state.userSelectedForEdit && this.state.last_name
+        : this.props.user.bio.first_name,
+      this.props.user.bio && this.state.last_name
         ? this.state.last_name
-        : this.state.userSelectedForEdit.last_name,
-      this.state.userSelectedForEdit && this.state.phone_number
+        : this.props.user.bio.last_name,
+      this.props.user.bio && this.state.phone_number
         ? this.state.phone_number
-        : this.state.userSelectedForEdit.phone_number,
-      this.state.userSelectedForEdit && this.state.date_of_birth
+        : this.props.user.bio.phone_number,
+      this.props.user.bio && this.state.date_of_birth
         ? this.state.date_of_birth
-        : this.state.userSelectedForEdit.date_of_birth,
-      this.state.userSelectedForEdit && this.state.zip_code
+        : this.props.user.bio.date_of_birth,
+      this.props.user.bio && this.state.zip_code
         ? this.state.zip_code
-        : this.state.userSelectedForEdit.zip_code,
-      this.state.userSelectedForEdit && this.state.total_hours
+        : this.props.user.bio.zip_code,
+      this.props.user.bio && this.state.total_hours
         ? this.state.total_hours
-        : this.state.userSelectedForEdit.total_hours,
-      this.state.userSelectedForEdit && this.state.address
+        : this.props.user.bio.total_hours,
+      this.props.user.bio && this.state.address
         ? this.state.address
-        : this.state.userSelectedForEdit.address,
-      this.state.userSelectedForEdit && this.state.city
+        : this.props.user.bio.address,
+      this.props.user.bio && this.state.city
         ? this.state.city
-        : this.state.userSelectedForEdit.city,
-      this.state.userSelectedForEdit && this.state.state
+        : this.props.user.bio.city,
+      this.props.user.bio && this.state.state
         ? this.state.state
-        : this.state.userSelectedForEdit.state,
-      this.state.userSelectedForEdit && this.state.court_hours
+        : this.props.user.bio.state,
+      this.props.user.bio && this.state.court_hours
         ? this.state.court_hours
-        : this.state.userSelectedForEdit.court_hours,
-      this.state.userSelectedForEdit && this.state.notes
+        : this.props.user.bio.court_hours,
+      this.props.user.bio && this.state.notes
         ? this.state.notes
-        : this.state.userSelectedForEdit.notes
+        : this.props.user.bio.notes
     );
   };
 
   render() {
-    const { user, loading } = this.props;
-    console.log("hi" + user.bio.first_name);
+    const { user } = this.props;
+
     return (
-      <Table.Container style={{ width: "50%", "max-width": "none" }}>
-        {loading && <Loading />}
+      <Table.Container
+        style={{ width: "50%", "max-width": "none", padding: "3rem" }}
+      >
         <Container>
           <ModalBody>
-            <p
-              style={{
-                margin: "0px",
-                color: "#7F1C3B",
-                width: "240px",
-                "font-size": "24px",
-                "font-weight": "800",
-              }}
-            >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-            <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
-              user.role ?? ""
-            )}`}</p>
+            <Styled.HeaderContainer>
+              <p
+                style={{
+                  margin: "0px",
+                  color: "#7F1C3B",
+                  width: "240px",
+                  "font-size": "24px",
+                  "font-weight": "800",
+                }}
+              >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+              <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+                user.role ?? ""
+              )}`}</p>
+              <p>
+                {" "}
+                {this.state.visibleText
+                  ? "Profile is Successfully Updated!"
+                  : ""}
+              </p>
+            </Styled.HeaderContainer>
             <form>
               <Form.FormGroup>
                 <Row>
@@ -169,11 +170,7 @@ class ProfileTable extends React.Component {
                   <Col>
                     <Form.Label>Phone</Form.Label>
                     <Form.Input
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.phone_number
-                          : ""
-                      }
+                      defaultValue={user.bio ? user.bio.phone_number : ""}
                       type="text"
                       name="Phone"
                       onChange={(evt) =>
@@ -187,11 +184,7 @@ class ProfileTable extends React.Component {
                   <Col>
                     <Form.Label>Date of Birth</Form.Label>
                     <Form.Input
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.date_of_birth
-                          : ""
-                      }
+                      defaultValue={user.bio ? user.bio.date_of_birth : ""}
                       type="text"
                       name="Date of Birth"
                       onChange={(evt) =>
@@ -202,11 +195,7 @@ class ProfileTable extends React.Component {
                   <Col>
                     <Form.Label>Zip Code</Form.Label>
                     <Form.Input
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.zip_code
-                          : ""
-                      }
+                      defaultValue={user.bio ? user.bio.zip_code : ""}
                       type="text"
                       name="Zip Code"
                       onChange={(evt) =>
@@ -214,17 +203,28 @@ class ProfileTable extends React.Component {
                       }
                     />
                   </Col>
-                  <Col></Col>
+                  <Col>
+                    <Form.Label>Total Hours</Form.Label>
+                    <Form.Input
+                      disabled="disabled"
+                      defaultValue={
+                        this.state.userSelectedForEdit
+                          ? this.state.userSelectedForEdit.total_hours
+                          : ""
+                      }
+                      type="text"
+                      name="Total Hours"
+                      onChange={(evt) =>
+                        this.setState({ total_hours: evt.target.value })
+                      }
+                    />
+                  </Col>
                 </Row>
                 <Row>
                   <Col>
                     <Form.Label>Address</Form.Label>
                     <Form.Input
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.address
-                          : ""
-                      }
+                      defaultValue={user.bio ? user.bio.address : ""}
                       type="text"
                       name="Address"
                       onChange={(evt) =>
@@ -235,11 +235,7 @@ class ProfileTable extends React.Component {
                   <Col>
                     <Form.Label>City</Form.Label>
                     <Form.Input
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.city
-                          : ""
-                      }
+                      defaultValue={user.bio ? user.bio.city : ""}
                       type="text"
                       name="City"
                       onChange={(evt) =>
@@ -250,11 +246,7 @@ class ProfileTable extends React.Component {
                   <Col>
                     <Form.Label>State</Form.Label>
                     <Form.Input
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.state
-                          : ""
-                      }
+                      defaultValue={user.bio ? user.bio.state : ""}
                       type="text"
                       name="State"
                       onChange={(evt) =>
@@ -263,21 +255,55 @@ class ProfileTable extends React.Component {
                     />
                   </Col>
                 </Row>
+                <Row>
+                  <Col>
+                    <Form.Label>Court Required Hours</Form.Label>
+                    <Form.Input
+                      disabled="disabled"
+                      defaultValue={user.bio ? user.bio.court_hours : ""}
+                      type="text"
+                      name="Court Hours"
+                      onChange={(evt) =>
+                        this.setState({ court_hours: evt.target.value })
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Label>Notes</Form.Label>
+                    <Form.Input
+                      defaultValue={user.bio ? user.bio.notes : ""}
+                      type="textarea"
+                      onChange={(evt) =>
+                        this.setState({ notes: evt.target.value })
+                      }
+                    ></Form.Input>
+                  </Col>
+                </Row>
+                <Row
+                  style={{
+                    "margin-top": "1.5rem",
+                  }}
+                >
+                  <Col></Col>
+                  <Button
+                    style={{ backgroundColor: "#ef4e79" }}
+                    onClick={this.handleSubmit}
+                  >
+                    Update
+                  </Button>
+                </Row>
               </Form.FormGroup>
             </form>
           </ModalBody>
         </Container>
-        <ModalFooter>
+        {/* <ModalFooter>
           <Button
             style={{ backgroundColor: "#ef4e79" }}
             onClick={this.handleSubmit}
           >
             Update
           </Button>
-          {/* <Button color="primary" type="submit">
-                Submit
-              </Button> */}
-        </ModalFooter>
+        </ModalFooter> */}
       </Table.Container>
     );
   }
@@ -287,6 +313,5 @@ export default ProfileTable;
 
 ProfileTable.propTypes = {
   user: PropTypes.object.isRequired,
-  loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
 };

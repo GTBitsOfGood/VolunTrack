@@ -143,7 +143,6 @@ class UserTable extends React.Component {
 
   render() {
     const { users, loading } = this.props;
-    // console.log(users);
     return (
       <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
