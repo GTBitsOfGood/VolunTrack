@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Styled = {
   Container: styled.div`
-    width: 32%;
+    width: calc((100% / 3) - (2rem / 3));
     padding: 1rem;
 
     display: flex;

@@ -98,7 +98,6 @@ const EventAttendance = () => {
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {
-    console.log(volunteers);
     return (
       searchValue.length > 0
         ? volunteers.filter(
