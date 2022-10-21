@@ -19,7 +19,6 @@ import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
 import ReactSearchBox from "react-search-box";
 import variables from "../../design-tokens/_variables.module.scss";
-import { getInvitedAdmins } from "../../../server/actions/settings";
 
 const PAGE_SIZE = 10;
 
@@ -147,7 +146,7 @@ class Assistants extends React.Component {
         });
       }
     });
-    // this.setState({ invitedAdmins: getInvitedAdmins() });
+    this.setState({ invitedAdmins: this.getInvitedAdminList() });
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
@@ -159,7 +158,7 @@ class Assistants extends React.Component {
           ),
           currentPage: 0,
           loadingMoreUsers: false,
-          invitedAdmins: getInvitedAdmins(),
+          invitedAdmins: this.getInvitedAdminList(),
         });
       }
     });
@@ -231,16 +230,16 @@ class Assistants extends React.Component {
     this.setState({
       showNewAdminModal: false,
     });
-    if (isUpdating) {
-      this.handleSubmit();
-    }
+    // if (isUpdating) {
+    //   this.handleSubmit();
+    // }
   };
 
-  handleSubmit = async (e) => {
-    console.log(this.state.newInvitedAdmin);
-    e.preventDefault();
-    await updateInvitedAdmins(this.state.newInvitedAdmin);
-  };
+  // handleSubmit = async (e) => {
+  //   console.log(this.state.newInvitedAdmin);
+  //   e.preventDefault();
+  //   await updateInvitedAdmins(this.state.newInvitedAdmin);
+  // };
 
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
