@@ -1,14 +1,26 @@
 import dbConnect from "../mongodb/index";
-const AppSettings = require("../mongodb/models/settings");
+import AppSettings from "../mongodb/models/AppSettings";
 
-export const inviteAdmin = async (email) => {
-    try {
-        await dbConnect();
-        AppSettings.invitedAdmins.push(email);
-    } catch(e) {
-        return { status: 200, message: "Cannot invite admin" };
-    }
-    return { status: 400, message: "Admin successfully invited" };
+export const inviteAdmin = async (email, next) => {
+    await dbConnect();
+    return AppSettings.findOneAndUpdate(
+        {},
+        { $push: { email } }
+      )
+        .then((event) => {
+          return event;
+        })
+        .catch((err) => {
+            next(err);
+            // return { status: 200, message: "Cannot invite admin" };
+        });
+    // try {
+    //     await dbConnect();
+    //     AppSettings.invitedAdmins.push(email);
+    // } catch(e) {
+    //     return { status: 200, message: "Cannot invite admin" };
+    // }
+    // return { status: 400, message: "Admin successfully invited" };
 };
 
 export const getInvitedAdmins = async (email) => {
@@ -21,11 +33,21 @@ export const getInvitedAdmins = async (email) => {
 };
 
 export const removeInvitedAdmin = async (email) => {
-    try {
-        await dbConnect();
-        AppSettings.invitedAdmins.pull(email);
-    } catch(e) {
-        return { status: 200, message: "Cannot remove invited admin" };
-    }
-    return { status: 400, message: "Admin successfully invited" };
+    return AppSettings.findOneAndUpdate(
+        {},
+        { $pull: { email } }
+      )
+        .then((event) => {
+          return event;
+        })
+        .catch((err) => {
+            return { status: 200, message: "Cannot remove invited admin" };
+        });
+    // try {
+    //     await dbConnect();
+    //     AppSettings.invitedAdmins.pull(email);
+    // } catch(e) {
+    //     return { status: 200, message: "Cannot remove invited admin" };
+    // }
+    // return { status: 400, message: "Admin successfully invited" };
 };
