@@ -169,10 +169,10 @@ const EventManager = ({ user }) => {
           setEvents(result.data.event);
           setLength(result.data.event.length);
 
-          if (length > 1) {
+          if (result.data.event.length > 1) {
             setAttend("Silver")
           } 
-          if (length > 3) {
+          if (result.data.event.length > 3) {
             setAttend("Gold")
           }
           console.log(attend + " ")
@@ -183,11 +183,11 @@ const EventManager = ({ user }) => {
             add += getHours(result.data.event[i].startTime,result.data.event[i].endTime);
           };
           setSum(add);
-          if (sum > 10) {
+          if (add >= 10) {
             setEarn("Silver")
             //document.getElementById('earned').src = "/images/Hours Earned - Silver.png"
           } 
-          if (sum > 20) {
+          if (add >= 20) {
             setEarn("Gold")
             //document.getElementById('earned').src = "/images/Hours Earned - Gold.png"
           }
@@ -195,12 +195,6 @@ const EventManager = ({ user }) => {
         }
       })
       .finally(() => {
-        // events.map((event) => ( {
-        //   setSum(sum + 2) 
-        // }
-        //   //console.log(event.startTime)
-          
-        // ))
         setLoading(false);
       });
 
