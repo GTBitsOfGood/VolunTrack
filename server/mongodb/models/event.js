@@ -114,7 +114,7 @@ const eventSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 // export Event model to app

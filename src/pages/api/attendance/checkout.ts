@@ -17,9 +17,10 @@ export default async function handler(req, res) {
       return res.status(400);
     }
 
-    await attendance.updateOne({ timeCheckedOut: Date.now() });
-    console.log(attendance);
+    const newAttendance = await attendance.updateOne({
+      timeCheckedOut: Date.now(),
+    });
 
-    return res.status(200).json(attendance);
+    return res.status(200).json(newAttendance);
   }
 }

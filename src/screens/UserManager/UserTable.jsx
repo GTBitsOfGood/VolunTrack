@@ -12,6 +12,8 @@ import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
+import Pagination from "../../components/PaginationComp";
+import { updateUser } from "../../actions/queries";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -46,26 +48,103 @@ class UserTable extends React.Component {
     super(props);
     this.state = {
       userSelectedForEdit: null,
+      first_name: "",
+      last_name: "",
+      phone_number: 0,
+      date_of_birth: 0,
+      zip_code: 0,
+      total_hours: 0,
+      address: "",
+      city: "",
+      state: "",
+      court_hours: "",
+      notes: "",
+      currentPage: 0,
+      pageSize: 10,
+      pageCount: 1,
     };
   }
+
   onDisplayEditUserModal = (userToEdit) => {
     this.setState({
       userSelectedForEdit: userToEdit,
     });
   };
 
-  onModalClose = (updatedUser) => {
-    if (updatedUser) {
-      this.props.editUserCallback(updatedUser);
-    }
+  onModalClose = () => {
     this.setState({
       userSelectedForEdit: null,
     });
   };
+
+  updatePage = (pageNum) => {
+    this.setState({
+      currentPage: pageNum,
+    });
+  };
+
+  getPageCount = () => {
+    this.setState({
+      pageCount: Math.ceil(this.props.users.length / this.pageSize),
+    });
+  };
+
+  componentDidMount = () => {
+    console.log("componentDidMount");
+    console.log(this.props.users.length);
+    this.setState({
+      pageCount: this.getPageCount(),
+    });
+    console.log(this.state.pageCount);
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    await updateUser(
+      this.state.userSelectedForEdit.email,
+      this.state.userSelectedForEdit && this.state.first_name
+        ? this.state.first_name
+        : this.state.userSelectedForEdit.first_name,
+      this.state.userSelectedForEdit && this.state.last_name
+        ? this.state.last_name
+        : this.state.userSelectedForEdit.last_name,
+      this.state.userSelectedForEdit && this.state.phone_number
+        ? this.state.phone_number
+        : this.state.userSelectedForEdit.phone_number,
+      this.state.userSelectedForEdit && this.state.date_of_birth
+        ? this.state.date_of_birth
+        : this.state.userSelectedForEdit.date_of_birth,
+      this.state.userSelectedForEdit && this.state.zip_code
+        ? this.state.zip_code
+        : this.state.userSelectedForEdit.zip_code,
+      this.state.userSelectedForEdit && this.state.total_hours
+        ? this.state.total_hours
+        : this.state.userSelectedForEdit.total_hours,
+      this.state.userSelectedForEdit && this.state.address
+        ? this.state.address
+        : this.state.userSelectedForEdit.address,
+      this.state.userSelectedForEdit && this.state.city
+        ? this.state.city
+        : this.state.userSelectedForEdit.city,
+      this.state.userSelectedForEdit && this.state.state
+        ? this.state.state
+        : this.state.userSelectedForEdit.state,
+      this.state.userSelectedForEdit && this.state.court_hours
+        ? this.state.court_hours
+        : this.state.userSelectedForEdit.court_hours,
+      this.state.userSelectedForEdit && this.state.notes
+        ? this.state.notes
+        : this.state.userSelectedForEdit.notes
+    );
+    // console.log(this.state.first_name);
+    // console.log(this.state.userSelectedForEdit.first_name);
+    this.onModalClose();
+  };
+
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{width:"100%", "max-width":"none"}}>
+      <Table.Container style={{ width: "100%", "max-width": "none" }}>
         <Table.Table>
           <tbody>
             <tr>
@@ -73,8 +152,12 @@ class UserTable extends React.Component {
               <th style={{ color: "#960034" }}>Email Address</th>
               <th style={{ color: "#960034" }}>Phone Number</th>
             </tr>
-            {!loading &&
-              users.map((user, index) => (
+            {users
+              .slice(
+                this.state.currentPage * this.state.pageSize,
+                (this.state.currentPage + 1) * this.state.pageSize
+              )
+              .map((user, index) => (
                 <Table.Row key={index} evenIndex={index % 2 === 0}>
                   <td>{user.name}</td>
                   <td>
@@ -88,9 +171,13 @@ class UserTable extends React.Component {
                     </Styled.Button>
                   </td>
                   <td>
-                    {user.phone_number.substr(0, 3)}-
-                    {user.phone_number.substr(3, 3)}-
-                    {user.phone_number.substr(6, 4)}
+                    {user.phone_number
+                      ? user.phone_number.substr(0, 3) +
+                        "-" +
+                        user.phone_number.substr(3, 3) +
+                        "-" +
+                        user.phone_number.substr(6, 4)
+                      : ""}
                   </td>
                   <td>
                     <Styled.Button
@@ -129,6 +216,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Name"
+                        onChange={(evt) =>
+                          this.setState({ first_name: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -141,6 +231,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Name"
+                        onChange={(evt) =>
+                          this.setState({ last_name: evt.target.value })
+                        }
                       />
                     </Col>
                   </Row>
@@ -148,6 +241,7 @@ class UserTable extends React.Component {
                     <Col>
                       <Form.Label>Email</Form.Label>
                       <Form.Input
+                        disabled="disabled"
                         defaultValue={
                           this.state.userSelectedForEdit
                             ? this.state.userSelectedForEdit.email
@@ -167,6 +261,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Phone"
+                        onChange={(evt) =>
+                          this.setState({ phone_number: evt.target.value })
+                        }
                       />
                     </Col>
                   </Row>
@@ -182,6 +279,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Date of Birth"
+                        onChange={(evt) =>
+                          this.setState({ date_of_birth: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -194,6 +294,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Zip Code"
+                        onChange={(evt) =>
+                          this.setState({ zip_code: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -206,23 +309,40 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Total Hours"
+                        onChange={(evt) =>
+                          this.setState({ total_hours: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
-                      <Form.Label>Court Required</Form.Label>
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="flexCheckDefault"
-                        />
-                      </div>
+                      <Form.Label>Court Required Hours</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.courtH
+                            : ""
+                        }
+                        type="text"
+                        name="Court Hours"
+                        onChange={(evt) =>
+                          this.setState({ court_hours: evt.target.value })
+                        }
+                      />
                     </Col>
                     <Row>
                       <Col>
                         <Form.Label>Notes</Form.Label>
-                        <Form.Input type="textarea"></Form.Input>
+                        <Form.Input
+                          defaultValue={
+                            this.state.userSelectedForEdit
+                              ? this.state.userSelectedForEdit.notes
+                              : ""
+                          }
+                          type="textarea"
+                          onChange={(evt) =>
+                            this.setState({ notes: evt.target.value })
+                          }
+                        ></Form.Input>
                       </Col>
                     </Row>
                   </Row>
@@ -237,6 +357,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="Address"
+                        onChange={(evt) =>
+                          this.setState({ address: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -249,6 +372,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="City"
+                        onChange={(evt) =>
+                          this.setState({ city: evt.target.value })
+                        }
                       />
                     </Col>
                     <Col>
@@ -261,6 +387,9 @@ class UserTable extends React.Component {
                         }
                         type="text"
                         name="State"
+                        onChange={(evt) =>
+                          this.setState({ state: evt.target.value })
+                        }
                       />
                     </Col>
                   </Row>
@@ -274,7 +403,7 @@ class UserTable extends React.Component {
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.onModalClose}
+              onClick={this.handleSubmit}
             >
               Update
             </Button>
@@ -283,6 +412,15 @@ class UserTable extends React.Component {
               </Button> */}
           </ModalFooter>
         </Modal>
+
+        <Pagination
+          users={users}
+          pageSize={this.state.pageSize}
+          loading={this.props.loading}
+          // pageCount={this.state.pageCount}
+          currentPage={this.state.currentPage}
+          updatePage={this.updatePage}
+        />
       </Table.Container>
     );
   }

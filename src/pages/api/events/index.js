@@ -31,9 +31,7 @@ export default async function handler(req, res, next) {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.mapped() });
     }
-    console.log(req.body);
     const newEventData = matchedData(req, { includeOptionals: true });
-    console.log(newEventData);
 
     await createEvent(newEventData, next);
 

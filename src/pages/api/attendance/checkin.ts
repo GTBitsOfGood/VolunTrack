@@ -7,13 +7,13 @@ export default async function handler(req, res) {
     const userId = req.body.userId;
     const eventId = req.body.eventId;
 
-    const newAttendance = new Attendance({
+    const attendance = new Attendance({
       userId,
       eventId,
       timeCheckedIn: Date.now(),
     });
+    const newAttendance = await attendance.save();
 
-    const attendance = await newAttendance.save();
-    return res.status(200).json(attendance);
+    return res.status(200).json(newAttendance);
   }
 }

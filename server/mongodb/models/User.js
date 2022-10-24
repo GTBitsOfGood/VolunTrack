@@ -38,6 +38,8 @@ const userSchema = new Schema(
       address: { type: String },
       city: { type: String },
       state: { type: String },
+      courtH: { type: String },
+      notes: { type: String },
     },
     history: { type: String },
     employment: {
@@ -45,10 +47,6 @@ const userSchema = new Schema(
       occupation: { type: [String] },
     },
     imageUrl: { type: String },
-    eventsCheckedIn: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Event" }],
-      default: [],
-    },
   },
   {
     timestamps: true,

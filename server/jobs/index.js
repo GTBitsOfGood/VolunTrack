@@ -17,7 +17,7 @@ export const agenda = new Agenda(agendaOptions);
 
 agenda
   .on("ready", function () {
-    agenda.start().then(r => console.log('agenda started'));
+    agenda.start();
   })
   .on("error", () => console.log("Agenda connection error!"));
 
