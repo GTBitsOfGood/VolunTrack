@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 const Styled = {
   Container: styled.div`
-    width: 32%;
+    width: calc((100% / 3) - (2rem / 3));
     padding: 1rem;
 
     display: flex;
@@ -27,18 +27,29 @@ const Styled = {
   `,
 };
 
+const CheckedInContainer = styled.div`
+  background-color: #9cdea3;
+`;
+
 const Volunteer = ({
   volunteer,
+  minors,
   onClick,
+  isCheckedIn,
 }: {
   volunteer: { [key: string]: any };
-  onClick: (userId: string) => void;
+  minors: string[];
+  onClick: (volunteer: { [key: string]: any }) => void;
+  isCheckedIn: boolean;
 }): JSX.Element => {
   return (
-    <Styled.Container onClick={() => onClick(volunteer._id)}>
-      {/* TODO: add number of minors attatched to volunteer */}
+    <Styled.Container
+      as={isCheckedIn && CheckedInContainer}
+      onClick={() => onClick(volunteer)}
+    >
       <Styled.Name>
-        {volunteer.bio.first_name} {volunteer.bio.last_name}
+        {volunteer.bio.first_name} {volunteer.bio.last_name}{" "}
+        {minors?.length > 0 && <>({minors.length} minors)</>}
       </Styled.Name>
       <Styled.Email>{volunteer.bio.email}</Styled.Email>
     </Styled.Container>

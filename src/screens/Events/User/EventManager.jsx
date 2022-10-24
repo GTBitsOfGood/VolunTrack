@@ -6,7 +6,6 @@ import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
-import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { registerForEvent, updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
