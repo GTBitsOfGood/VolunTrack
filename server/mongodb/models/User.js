@@ -38,6 +38,8 @@ const userSchema = new Schema(
       address: { type: String },
       city: { type: String },
       state: { type: String },
+      courtH: { type: String },
+      notes: { type: String },
     },
     history: { type: String },
     employment: {
