@@ -98,6 +98,8 @@ const EventAttendance = () => {
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {
+
+    console.log(searchValue)
     return (
       searchValue.length > 0
         ? volunteers.filter(
@@ -105,7 +107,8 @@ const EventAttendance = () => {
               v.bio.last_name
                 ?.toLowerCase()
                 .includes(searchValue.toLowerCase()) ||
-              v.bio.email?.toLowerCase().includes(searchValue.toLowerCase())
+              v.bio.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.bio.first_name?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>
@@ -134,7 +137,7 @@ const EventAttendance = () => {
       </Styled.HeaderRow>
 
       <Styled.Search
-        placeholder="Search Last Name or Email"
+        placeholder="Search by Volunteer Name or Email"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
       />
