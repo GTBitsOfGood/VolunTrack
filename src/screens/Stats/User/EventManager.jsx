@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
-import Icon from "../../../components/Icon";
 import EventTable from "./EventTable";
-import { fetchEventsByUserId, fetchEvents, getCurrentUser } from "../../../actions/queries";
-import { updateEvent } from "./eventHelpers";
+import { fetchEventsByUserId, getCurrentUser } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import PropTypes from "prop-types";
+import { getHours } from "./hourParsing";
 
 const Styled = {
   Container: styled.div`
@@ -19,7 +18,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     align-items: center;
-    
   `,
   Image: styled.div`
     width: 100%;
@@ -34,7 +32,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     margin-left: 0vw;
-    
   `,
   Button: styled(Button)`
     background: ${variables.primary};
@@ -56,9 +53,7 @@ const Styled = {
     font-size: 36px;
     font-weight: bold;
   `,
-  Margin: styled.div`
-    
-  `,
+  Margin: styled.div``,
   Content: styled.div`
     width: 60%;
     height: 100%;
@@ -99,7 +94,6 @@ const Styled = {
   `,
   marginTable: styled.div`
     margin-left: 0px;
-    
   `,
   Box: styled.div`
     height: 250px;
@@ -117,7 +111,7 @@ const Styled = {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    
+
     padding: 5px;
     padding-left: 20px;
   `,
@@ -127,19 +121,15 @@ const Styled = {
     text-align: center;
     padding: 3px;
   `,
-  StatImage: styled.div`
-    
-  `,
+  StatImage: styled.div``,
   Hours: styled.div`
     margin-bottom: 2rem;
-    
   `,
 };
 
 const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
-  const [markDates, setDates] = useState([]);
   const [length, setLength] = useState(0);
   const [sum, setSum] = useState(0);
   const [users, setUser] = useState("loading..");
@@ -151,47 +141,38 @@ const EventManager = ({ user }) => {
     user = session.user;
   }
 
-  
-
   useEffect(() => {
     onRefresh();
   }, []);
-  
+
   const onRefresh = () => {
     setLoading(true);
-    //console.log("EVENT MANAGER " + user._id);
-    //console.log(user._id)
-    //fetchEvents(undefined, new Date().toLocaleDateString("en-US"))
     fetchEventsByUserId(user._id)
       .then((result) => {
-        
         if (result && result.data && result.data.event) {
           setEvents(result.data.event);
           setLength(result.data.event.length);
 
           if (result.data.event.length > 1) {
-            setAttend("Silver")
-          } 
-          if (result.data.event.length > 3) {
-            setAttend("Gold")
+            setAttend("Silver");
           }
-          console.log(attend + " ")
-          //console.log(result)
-          let i = 0;
+          if (result.data.event.length > 3) {
+            setAttend("Gold");
+          }
           let add = 0;
-          for (i = 0; i < result.data.event.length; i++) {
-            add += getHours(result.data.event[i].startTime,result.data.event[i].endTime);
-          };
+          for (let i = 0; i < result.data.event.length; i++) {
+            add += getHours(
+              result.data.event[i].startTime,
+              result.data.event[i].endTime
+            );
+          }
           setSum(add);
           if (add >= 10) {
-            setEarn("Silver")
-            //document.getElementById('earned').src = "/images/Hours Earned - Silver.png"
-          } 
-          if (add >= 20) {
-            setEarn("Gold")
-            //document.getElementById('earned').src = "/images/Hours Earned - Gold.png"
+            setEarn("Silver");
           }
-
+          if (add >= 20) {
+            setEarn("Gold");
+          }
         }
       })
       .finally(() => {
@@ -199,146 +180,70 @@ const EventManager = ({ user }) => {
       });
 
     getCurrentUser(user._id)
-    .then((result) => {
-        
-      if (result) {
-        setUser(result.data.result[0].mandatedHours)
-        //console.log(result)
-      }
-    })
-    .finally(() => {
-      
-      
-    });
-
+      .then((result) => {
+        if (result) {
+          setUser(result.data.result[0].mandatedHours);
+        }
+      })
+      .finally(() => {});
   };
-
-  const getHours = (startTime, endTime) => {
-    var timeStart = new Date("01/01/2007 " + startTime);
-    var timeEnd = new Date("01/01/2007 " + endTime);
-  
-    let hours = Math.abs(timeEnd - timeStart) / 36e5;
-  
-    if (hours < 0) {
-      hours = 24 + hours;
-    }
-    
-    return Math.round(hours * 10) / 10.0;
-  }
-
-  const [value, setDate] = useState(new Date());
-
-  let splitDate = value.toDateString().split(" ");
-  const [dateString, setDateString] = useState(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
-
-  const onRegister = async (event) => {
-    const changedEvent = {
-      ...event,
-      volunteers: event.volunteers.concat(user._id),
-    }; // adds userId to event
-    const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
-
-    onRefresh();
-  };
-
-  const onUnregister = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-
-    onRefresh();
-  };
-
-  
-
   return (
     <Styled.Container>
       <Styled.Right>
-        <Styled.Header>
-        Totals
-        </Styled.Header>
-        <Styled.Header2>
-          MEDALS
-        </Styled.Header2>
-      <Styled.Box>
+        <Styled.Header>Totals</Styled.Header>
+        <Styled.Header2>MEDALS</Styled.Header2>
+        <Styled.Box>
           <Styled.BoxInner>
-            <Styled.StatText>
-              Events Attended
-            </Styled.StatText>
+            <Styled.StatText>Events Attended</Styled.StatText>
             <Styled.StatImage>
-              {(loading) ? "Loading... " : <img
-                src={"/images/Events Attended - "+attend+".png"}
-                alt="helping-mamas-photo"
-                width="150px"
-                height="150px"
-            />}
-            
+              {loading ? (
+                "Loading... "
+              ) : (
+                <img
+                  src={"/images/Events Attended - " + attend + ".png"}
+                  alt="helping-mamas-photo"
+                  width="150px"
+                  height="150px"
+                />
+              )}
             </Styled.StatImage>
-          <Styled.StatText>
-          
-          {events.length} events
-          </Styled.StatText>
-          
+            <Styled.StatText>{events.length} events</Styled.StatText>
           </Styled.BoxInner>
 
           <Styled.BoxInner>
-            <Styled.StatText>
-              Hours Earned
-            </Styled.StatText>
+            <Styled.StatText>Hours Earned</Styled.StatText>
             <Styled.StatImage>
-              {(loading) ? "Loading... " : <img
-            src={"/images/Hours Earned - "+ earn + ".png"}
-            id="earned"
-            alt="helping-mamas-photo"
-            width="150px"
-            height="150px"
-          />}
-            
+              {loading ? (
+                "Loading... "
+              ) : (
+                <img
+                  src={"/images/Hours Earned - " + earn + ".png"}
+                  id="earned"
+                  alt="helping-mamas-photo"
+                  width="150px"
+                  height="150px"
+                />
+              )}
             </Styled.StatImage>
-          <Styled.StatText>
-          
-          {sum} hours
-          </Styled.StatText>
-          
+            <Styled.StatText>{sum} hours</Styled.StatText>
           </Styled.BoxInner>
-
-
-
-          
-          
-          </Styled.Box> 
-          <Styled.Hours>
+        </Styled.Box>
+        <Styled.Hours>
           <b>Court Required Hours:</b> &ensp;{users}
-          </Styled.Hours>
-          <Styled.Header>
-        History
-        </Styled.Header>
-        <Styled.Header2>
-          {length} events
-        </Styled.Header2>
-          <Styled.marginTable>
-            <EventTable
-              events={events}
-              onRegisterClicked={onRegister}
-              onUnregister={onUnregister}
-              user={user}
-            ></EventTable>
-          </Styled.marginTable>
-      
-            <Styled.Margin>
-               
-            </Styled.Margin>
-          </Styled.Right>
-          
+        </Styled.Hours>
+        <Styled.Header>History</Styled.Header>
+        <Styled.Header2>{length} events</Styled.Header2>
+        <Styled.marginTable>
+          <EventTable events={events} />
+        </Styled.marginTable>
+
+        <Styled.Margin></Styled.Margin>
+      </Styled.Right>
     </Styled.Container>
   );
+};
+EventManager.propTypes = {
+  user: PropTypes.object,
 };
 
 export default EventManager;

@@ -1,14 +1,9 @@
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/condensedTableStyles";
-
-
-
+import { getHours } from "./hourParsing";
 
 const Styled = {
   Button: styled(Button)`
@@ -36,9 +31,7 @@ const Styled = {
     font-weight: bold;
     padding: 5px;
   `,
-  List: styled.li`
-    
-  `,
+  List: styled.li``,
 };
 
 const convertTime = (time) => {
@@ -52,83 +45,39 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const getMinorTotal = (minors) => {
-  let total = 0;
-  minors.forEach((minorObj) => {
-    total += minorObj.minor.length;
-  });
-  return total;
-};
-
-const getHours = (startTime, endTime) => {
-  var timeStart = new Date("01/01/2007 " + startTime);
-  var timeEnd = new Date("01/01/2007 " + endTime);
-  
-  
-
-  let hours = Math.abs(timeEnd - timeStart) / 36e5;
-
-  if (hours < 0) {
-    hours = 24 + hours;
-  }
-  
-  return Math.round(hours * 10) / 10.0;
-}
-
-const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
-  if (!user) {
-    const { data: session } = useSession();
-    user = session.user;
-  }
+const EventTable = ({ events }) => {
   return (
     <Styled.Container>
-      
       <Styled.ul>
-          <Styled.List>
+        <Styled.List>
           <Table.EventList>
-                <Table.InnerTop>
-                  <Table.EventName>Event Name</Table.EventName>
-                  
-                  <Table.Creation>Date</Table.Creation>
-                  
-                  <Table.Time>
-                      Time
-                      
-                      
-                  </Table.Time>
-                  <Table.TextInfo>
-                    
-                    Hours Earned
-        
-                  </Table.TextInfo>
-                  
-                </Table.InnerTop>
-                
-              </Table.EventList>
-            </Styled.List>
+            <Table.InnerTop>
+              <Table.EventName>Event Name</Table.EventName>
+
+              <Table.Creation>Date</Table.Creation>
+
+              <Table.Time>Time</Table.Time>
+              <Table.TextInfo>Hours Earned</Table.TextInfo>
+            </Table.InnerTop>
+          </Table.EventList>
+        </Styled.List>
         {events.map((event) => (
           <Styled.List key={event._id}>
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
                   <Table.EventName>{event.title}</Table.EventName>
-                  
+
                   <Table.Creation>{event.date.slice(0, 10)}</Table.Creation>
-                  
+
                   <Table.Time>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} 
-                      
-                      
+                    {convertTime(event.startTime)} -{" "}
+                    {convertTime(event.endTime)}
                   </Table.Time>
                   <Table.TextInfo>
-                    
                     &emsp;{getHours(event.startTime, event.endTime)} hour(s)
-        
                   </Table.TextInfo>
-
                 </Table.Inner>
-                
               </Table.EventList>
             </Link>
           </Styled.List>
@@ -139,9 +88,6 @@ const EventTable = ({ events, onRegisterClicked, onUnregister, user }) => {
 };
 EventTable.propTypes = {
   events: PropTypes.Array,
-  onRegisterClicked: PropTypes.func,
-  onUnregister: PropTypes.func,
-  user: PropTypes.object,
 };
 
 export default EventTable;
