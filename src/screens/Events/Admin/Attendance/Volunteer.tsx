@@ -27,18 +27,26 @@ const Styled = {
   `,
 };
 
+const CheckedInContainer = styled.div`
+  background-color: #9cdea3;
+`;
+
 const Volunteer = ({
   volunteer,
   minors,
   onClick,
+  isCheckedIn,
 }: {
   volunteer: { [key: string]: any };
   minors: string[];
   onClick: (volunteer: { [key: string]: any }) => void;
+  isCheckedIn: boolean;
 }): JSX.Element => {
   return (
-    <Styled.Container onClick={() => onClick(volunteer)}>
-      {/* TODO: add number of minors attatched to volunteer */}
+    <Styled.Container
+      as={isCheckedIn && CheckedInContainer}
+      onClick={() => onClick(volunteer)}
+    >
       <Styled.Name>
         {volunteer.bio.first_name} {volunteer.bio.last_name}{" "}
         {minors?.length > 0 && <>({minors.length} minors)</>}

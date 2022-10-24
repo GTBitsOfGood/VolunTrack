@@ -41,6 +41,7 @@ const AttendanceFunctionality = ({
             volunteer={volunteer}
             minors={minors[volunteer._id]}
             onClick={checkIn}
+            isCheckedIn={false}
           />
         ))}
     </Styled.VolunteerContainer>
@@ -53,6 +54,7 @@ const AttendanceFunctionality = ({
             volunteer={volunteer}
             minors={minors[volunteer._id]}
             onClick={checkOut}
+            isCheckedIn={true}
           />
         ))}
     </Styled.VolunteerContainer>
