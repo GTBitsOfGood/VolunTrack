@@ -231,6 +231,8 @@ export async function getManagementData(
         address: "$bio.address",
         city: "$bio.city",
         state: "$bio.state",
+        courtH: "$bio.courtH",
+        notes: "$bio.notes",
         role: 1,
         status: 1,
       },
@@ -406,14 +408,16 @@ export async function updateUser(
   total_hours,
   address,
   city,
-  state
+  state,
+  courtH,
+  notes
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
 
-  if (phone_number) {
+  if (phone_number?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.phone_number": phone_number } }
@@ -427,7 +431,7 @@ export async function updateUser(
         };
     });
   }
-  if (first_name) {
+  if (first_name?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.first_name": first_name } }
@@ -441,7 +445,7 @@ export async function updateUser(
         };
     });
   }
-  if (last_name) {
+  if (last_name?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.last_name": last_name } }
@@ -453,11 +457,10 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
     });
   }
 
-  if (phone_number) {
+  if (phone_number?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.phone_number": phone_number } }
@@ -469,11 +472,10 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
     });
   }
 
-  if (date_of_birth) {
+  if (date_of_birth?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.date_of_birth": date_of_birth } }
@@ -485,11 +487,10 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
     });
   }
 
-  if (total_hours) {
+  if (total_hours?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.total_hours": total_hours } }
@@ -501,11 +502,10 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
     });
   }
 
-  if (zip_code) {
+  if (zip_code?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.zip_code": zip_code } }
@@ -517,11 +517,10 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
     });
   }
 
-  if (address) {
+  if (address?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.address": address } }
@@ -533,11 +532,10 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
     });
   }
 
-  if (city) {
+  if (city?.length !== 0) {
     User.updateOne({ "bio.email": email }, { $set: { "bio.city": city } }).then(
       (result) => {
         if (!result.nModified)
@@ -547,12 +545,11 @@ export async function updateUser(
               error: "Email requested for update was invalid. 0 items changed.",
             },
           };
-        return { status: 200 };
       }
     );
   }
 
-  if (state) {
+  if (state?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.state": state } }
@@ -564,7 +561,36 @@ export async function updateUser(
             error: "Email requested for update was invalid. 0 items changed.",
           },
         };
-      return { status: 200 };
+    });
+  }
+
+  if (courtH?.length !== 0) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.courtH": courtH } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
+    });
+  }
+
+  if (notes?.length !== 0) {
+    User.updateOne(
+      { "bio.email": email },
+      { $set: { "bio.notes": notes } }
+    ).then((result) => {
+      if (!result.nModified)
+        return {
+          status: 400,
+          message: {
+            error: "Email requested for update was invalid. 0 items changed.",
+          },
+        };
     });
   }
 
