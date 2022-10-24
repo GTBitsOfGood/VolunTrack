@@ -12,7 +12,9 @@ export default async function handler(req, res) {
       req.query.total_hours,
       req.query.address,
       req.query.city,
-      req.query.state
+      req.query.state,
+      req.query.courtH,
+      req.query.notes
     );
 
     if (result.status === 200) {

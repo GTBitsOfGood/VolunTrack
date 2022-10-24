@@ -33,6 +33,8 @@ const userDataSchema = new mongoose.Schema(
       address: { type: String },
       city: { type: String },
       state: { type: String },
+      courtH: { type: String },
+      notes: { type: String },
     },
     history: { type: String },
     employment: {
@@ -55,5 +57,6 @@ userDataSchema.virtual("age").get(function () {
 });
 
 // export user model to app
-module.exports = mongoose.models.UserData || mongoose.model("UserData", userDataSchema);
+module.exports =
+  mongoose.models.UserData || mongoose.model("UserData", userDataSchema);
 module.exports.UserDataSchema = userDataSchema;

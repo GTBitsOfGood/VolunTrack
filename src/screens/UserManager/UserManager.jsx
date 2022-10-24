@@ -3,12 +3,15 @@ import Error from "next/error";
 import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
-import Icon from "../../components/Icon";
+import {
+  fetchUserCount,
+  fetchUserManagementData,
+  updateUser,
+} from "../../actions/queries";
 import UserTable from "./UserTable";
 import ReactSearchBox from "react-search-box";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 3;
 
 const Styled = {
   Container: styled.div`
@@ -120,7 +123,7 @@ class UserManager extends React.Component {
   };
 
   componentDidMount = () => this.onRefresh();
-  onRefresh = () => {
+  onRefresh = async () => {
     this.setState({ loadingMoreUsers: true });
     fetchUserCount().then((result) => {
       if (result && result.data && result.data.count) {
@@ -132,7 +135,7 @@ class UserManager extends React.Component {
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
-          users: result.data.users.filter((user) => user.role == "volunteer"),
+          users: result.data.users.filter((user) => user.role === "volunteer"),
           currentPage: 0,
           loadingMoreUsers: false,
         });
@@ -163,8 +166,8 @@ class UserManager extends React.Component {
   onToBeginning = () => this.setState({ currentPage: 0 });
   getUsersAtPage = () => {
     const { users, currentPage } = this.state;
-    const start = currentPage * PAGE_SIZE;
-    return users.slice(start, start + PAGE_SIZE);
+    // const start = currentPage * PAGE_SIZE;
+    return users; //.slice(start, start + PAGE_SIZE);
   };
   onChangeSearch = (record) => {
     const { users, currentPage } = this.state;
@@ -178,8 +181,10 @@ class UserManager extends React.Component {
   };
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
-  onEditUser = () => {
+  onEditUser = (updatedUser) => {
+    console.log(updatedUser);
     /** code to update users in state at that specific index */
+    updateUser(updatedUser);
   };
   render() {
     const { currentPage, loadingMoreUsers } = this.state;

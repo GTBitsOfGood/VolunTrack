@@ -5,7 +5,6 @@ import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
-import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
 import EventCreateModal from "./EventCreateModal";
 import EventDeleteModal from "./EventDeleteModal";
@@ -21,7 +20,7 @@ const Styled = {
     width: 100%;
     height: 100%;
     background: ${(props) => props.theme.grey9};
-    padding-top: 1rem;
+    padding-y: 2rem;
     display: flex;
     flex-direction: row;
     align-items: flex-start;

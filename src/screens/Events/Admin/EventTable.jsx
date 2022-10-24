@@ -1,29 +1,79 @@
-import React from "react";
-import PropTypes from "prop-types";
-import * as Table from "../../sharedStyles/tableStyles";
-import styled from "styled-components";
-import { Button } from "reactstrap";
-import Icon from "../../../components/Icon";
 import Link from "next/link";
+import PropTypes from "prop-types";
+import React from "react";
+import { Button } from "reactstrap";
+import styled from "styled-components";
+import Icon from "../../../components/Icon";
+import variables from "../../../design-tokens/_variables.module.scss";
+import ManageAttendanceButton from "./ManageAttendanceButton";
 
 const Styled = {
-  Button: styled(Button)`
-    background: white;
-    border: none;
-    z-index: 1;
-  `,
   Container: styled.div`
-    width: 100%;
-    height: 100%;
-    margin: auto;
+    width: 48vw;
+    max-height: 100vh;
+    overflow-y: scroll;
   `,
-  ul: styled.div`
-    list-style-type: none;
+  EventContainer: styled.div`
+    width: 100%;
+    margin: 0 0 2rem 0;
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: white;
+    border: 1px solid ${variables["gray-200"]};
+    border-radius: 1rem;
+
+    cursor: pointer;
+  `,
+  EventContent: styled.div`
+    width: 100%;
+    margin: 0;
+
     display: flex;
     flex-direction: column;
   `,
-  List: styled.li`
-    padding-bottom: 120px;
+  EventContentRow: styled.div`
+    height: 50%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  `,
+  EventTitle: styled.h3`
+    margin: 0;
+    padding: 0;
+
+    font-size: 1.5rem;
+    font-weight: bold;
+  `,
+  EventSlots: styled.p`
+    margin: 0 0 0 1rem;
+
+    color: grey;
+  `,
+  EditButton: styled(Button)`
+    margin: 0 0 0 auto;
+
+    background: none;
+    border: none;
+  `,
+  DeleteButton: styled(Button)`
+    background: none;
+    border: none;
+
+    justify-self: right;
+  `,
+  Time: styled.p`
+    margin: 0 auto 0 0;
+
+    font-size: 1.2rem;
+  `,
+  Date: styled.p`
+    margin: 0 1rem 0 0;
+    color: grey;
   `,
 };
 
@@ -84,79 +134,47 @@ const compareDateString = (dateNum) => {
 const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
   return (
     <Styled.Container>
-      <Styled.ul>
-        {events.map((event) => (
-          <Styled.List key={event._id}>
-            <Link href={`events/${event._id}`}>
-              <Table.EventList>
-                <Table.Inner>
-                  <Table.Edit>
-                    <Styled.Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEditClicked(event);
-                      }}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.Button>
-                  </Table.Edit>
-                  <Table.Delete>
-                    <Styled.Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteClicked(event);
-                      }}
-                    >
-                      <Icon color="grey3" name="delete" />
-                    </Styled.Button>
-                  </Table.Delete>
-                  <Table.TextInfo>
-                    <Table.TitleAddNums>
-                      <Table.EventName>{event.title}</Table.EventName>
-                      <Table.Volunteers>
-                        {sliceEventDate(event.date) <
-                        compareDateString(dateString) ? (
-                          <Table.Text>
-                            <Table.Volunteers>
-                              {event.volunteers.length +
-                                getMinorTotal(event.minors)}
-                            </Table.Volunteers>
-                            <Table.Slots>
-                              Slots Available{" "}
-                              {console.log(
-                                sliceEventDate(event.date) <
-                                  compareDateString(dateString) +
-                                    " " +
-                                    event.date +
-                                    " " +
-                                    dateString
-                              )}
-                            </Table.Slots>
-                          </Table.Text>
-                        ) : (
-                          <Table.Text>
-                            <Table.Volunteers>
-                              {event.max_volunteers -
-                                event.volunteers.length +
-                                getMinorTotal(event.minors)}
-                            </Table.Volunteers>
-                            <Table.Slots>Volunteers Attended</Table.Slots>
-                          </Table.Text>
-                        )}
-                      </Table.Volunteers>
-                    </Table.TitleAddNums>
-                    <Table.Time>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} EST
-                    </Table.Time>
-                  </Table.TextInfo>
-                </Table.Inner>
-                <Table.Creation>{sliceEventDate(event.date)}</Table.Creation>
-              </Table.EventList>
-            </Link>
-          </Styled.List>
-        ))}
-      </Styled.ul>
+      {events.map((event) => (
+        <Styled.EventContainer key={event._id}>
+          <Link href={`events/${event._id}`}>
+            <Styled.EventContent>
+              <Styled.EventContentRow>
+                <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                <Styled.EventSlots>
+                  {event.max_volunteers - event.volunteers.length} slots
+                  available
+                </Styled.EventSlots>
+                <Styled.EditButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEditClicked(event);
+                  }}
+                >
+                  <Icon color="grey3" name="create" />
+                </Styled.EditButton>
+                <Styled.DeleteButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeleteClicked(event);
+                  }}
+                >
+                  <Icon color="grey3" name="delete" />
+                </Styled.DeleteButton>
+              </Styled.EventContentRow>
+              <Styled.EventContentRow>
+                <Styled.Time>{`${convertTime(event.startTime)} - ${convertTime(
+                  event.endTime
+                )} EST`}</Styled.Time>
+                <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+              </Styled.EventContentRow>
+            </Styled.EventContent>
+          </Link>
+          {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 ==
+            Date.parse(event.date) && (
+            <ManageAttendanceButton eventId={event._id} />
+          )}
+        </Styled.EventContainer>
+      ))}
     </Styled.Container>
   );
 };
