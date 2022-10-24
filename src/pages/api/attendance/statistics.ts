@@ -24,8 +24,7 @@ export default async function handler(req, res) {
           Math.abs(document.timeCheckedOut - document.timeCheckedIn) / 36e5;
       }
       const newDoc = {
-        userId: document.userId,
-        eventId: document.eventId,
+        ...document._doc,
         name:
           response.message.user.bio.first_name +
           " " +
