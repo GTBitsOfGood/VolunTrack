@@ -154,3 +154,5 @@ export const getEventVolunteersByAttendance = (eventId, isCheckedIn) =>
   axios.get(
     `/api/events/${eventId}/volunteersByAttendance?isCheckedIn=${isCheckedIn}`
   );
+export const getAttendanceForEvent = (eventId) => 
+  axios.post("/api/attendence/statistics", {eventId});
