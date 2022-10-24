@@ -37,7 +37,7 @@ class ProfileTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userSelectedForEdit: null,
+      user: props.user,
       first_name: "",
       last_name: "",
       phone_number: 0,
@@ -103,198 +103,237 @@ class ProfileTable extends React.Component {
   };
 
   render() {
-    const { user } = this.props;
+    console.log(this.props);
+    const { isAdmin } = this.props.isAdmin;
 
     return (
       <Table.Container
-        style={{ width: "50%", "max-width": "none", padding: "3rem" }}
+        style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
       >
         <Container>
-          <ModalBody>
-            <Styled.HeaderContainer>
-              <p
-                style={{
-                  margin: "0px",
-                  color: "#7F1C3B",
-                  width: "240px",
-                  "font-size": "24px",
-                  "font-weight": "800",
-                }}
-              >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-              <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
-                user.role ?? ""
-              )}`}</p>
-              <p>
-                {" "}
-                {this.state.visibleText
-                  ? "Profile is Successfully Updated!"
-                  : ""}
-              </p>
-            </Styled.HeaderContainer>
-            <form>
-              <Form.FormGroup>
-                <Row>
-                  <Col>
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.first_name : ""}
-                      type="text"
-                      name="Name"
-                      onChange={(evt) =>
-                        this.setState({ first_name: evt.target.value })
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.last_name : ""}
-                      type="text"
-                      name="Name"
-                      onChange={(evt) =>
-                        this.setState({ last_name: evt.target.value })
-                      }
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>Email</Form.Label>
-                    <Form.Input
-                      disabled="disabled"
-                      defaultValue={user.bio ? user.bio.email : ""}
-                      type="text"
-                      name="Email"
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.phone_number : ""}
-                      type="text"
-                      name="Phone"
-                      onChange={(evt) =>
-                        this.setState({ phone_number: evt.target.value })
-                      }
-                    />
-                  </Col>
-                </Row>
-
-                <Row>
-                  <Col>
-                    <Form.Label>Date of Birth</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.date_of_birth : ""}
-                      type="text"
-                      name="Date of Birth"
-                      onChange={(evt) =>
-                        this.setState({ date_of_birth: evt.target.value })
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Zip Code</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.zip_code : ""}
-                      type="text"
-                      name="Zip Code"
-                      onChange={(evt) =>
-                        this.setState({ zip_code: evt.target.value })
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Total Hours</Form.Label>
-                    <Form.Input
-                      disabled="disabled"
-                      defaultValue={
-                        this.state.userSelectedForEdit
-                          ? this.state.userSelectedForEdit.total_hours
-                          : ""
-                      }
-                      type="text"
-                      name="Total Hours"
-                      onChange={(evt) =>
-                        this.setState({ total_hours: evt.target.value })
-                      }
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>Address</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.address : ""}
-                      type="text"
-                      name="Address"
-                      onChange={(evt) =>
-                        this.setState({ address: evt.target.value })
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>City</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.city : ""}
-                      type="text"
-                      name="City"
-                      onChange={(evt) =>
-                        this.setState({ city: evt.target.value })
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>State</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.state : ""}
-                      type="text"
-                      name="State"
-                      onChange={(evt) =>
-                        this.setState({ state: evt.target.value })
-                      }
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <Form.Label>Court Required Hours</Form.Label>
-                    <Form.Input
-                      disabled="disabled"
-                      defaultValue={user.bio ? user.bio.court_hours : ""}
-                      type="text"
-                      name="Court Hours"
-                      onChange={(evt) =>
-                        this.setState({ court_hours: evt.target.value })
-                      }
-                    />
-                  </Col>
-                  <Col>
-                    <Form.Label>Notes</Form.Label>
-                    <Form.Input
-                      defaultValue={user.bio ? user.bio.notes : ""}
-                      type="textarea"
-                      onChange={(evt) =>
-                        this.setState({ notes: evt.target.value })
-                      }
-                    ></Form.Input>
-                  </Col>
-                </Row>
-                <Row
+          {this.state.user && (
+            <ModalBody>
+              <Styled.HeaderContainer>
+                <p
                   style={{
-                    "margin-top": "1.5rem",
+                    margin: "0px",
+                    color: "#7F1C3B",
+                    width: "240px",
+                    "font-size": "24px",
+                    "font-weight": "800",
                   }}
-                >
-                  <Col></Col>
-                  <Button
-                    style={{ backgroundColor: "#ef4e79" }}
-                    onClick={this.handleSubmit}
+                >{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
+                <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+                  this.state.user.role ?? ""
+                )}`}</p>
+                <p>
+                  {" "}
+                  {this.state.visibleText
+                    ? "Profile is Successfully Updated!"
+                    : ""}
+                </p>
+              </Styled.HeaderContainer>
+              <form>
+                <Form.FormGroup>
+                  <Row>
+                    <Col>
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio
+                            ? this.state.user.bio.first_name
+                            : ""
+                        }
+                        type="text"
+                        name="Name"
+                        onChange={(evt) =>
+                          this.setState({ first_name: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio
+                            ? this.state.user.bio.last_name
+                            : ""
+                        }
+                        type="text"
+                        name="Name"
+                        onChange={(evt) =>
+                          this.setState({ last_name: evt.target.value })
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Email</Form.Label>
+                      <Form.Input
+                        disabled="disabled"
+                        defaultValue={
+                          this.state.user.bio ? this.state.user.bio.email : ""
+                        }
+                        type="text"
+                        name="Email"
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Phone</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio
+                            ? this.state.user.bio.phone_number
+                            : ""
+                        }
+                        type="text"
+                        name="Phone"
+                        onChange={(evt) =>
+                          this.setState({ phone_number: evt.target.value })
+                        }
+                      />
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col>
+                      <Form.Label>Date of Birth</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio
+                            ? this.state.user.bio.date_of_birth
+                            : ""
+                        }
+                        type="text"
+                        name="Date of Birth"
+                        onChange={(evt) =>
+                          this.setState({ date_of_birth: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Zip Code</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio
+                            ? this.state.user.bio.zip_code
+                            : ""
+                        }
+                        type="text"
+                        name="Zip Code"
+                        onChange={(evt) =>
+                          this.setState({ zip_code: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Total Hours</Form.Label>
+                      <Form.Input
+                        disabled="disabled"
+                        defaultValue={
+                          this.state.user.SelectedForEdit
+                            ? this.state.user.SelectedForEdit.total_hours
+                            : ""
+                        }
+                        type="text"
+                        name="Total Hours"
+                        onChange={(evt) =>
+                          this.setState({ total_hours: evt.target.value })
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Address</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio ? this.state.user.bio.address : ""
+                        }
+                        type="text"
+                        name="Address"
+                        onChange={(evt) =>
+                          this.setState({ address: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>City</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio ? this.state.user.bio.city : ""
+                        }
+                        type="text"
+                        name="City"
+                        onChange={(evt) =>
+                          this.setState({ city: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>State</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.user.bio ? this.state.user.bio.state : ""
+                        }
+                        type="text"
+                        name="State"
+                        onChange={(evt) =>
+                          this.setState({ state: evt.target.value })
+                        }
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Court Required Hours</Form.Label>
+                      <Form.Input
+                        disabled="disabled"
+                        defaultValue={
+                          this.state.user.bio
+                            ? this.state.user.bio.court_hours
+                            : ""
+                        }
+                        type="text"
+                        name="Court Hours"
+                        onChange={(evt) =>
+                          this.setState({ court_hours: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    {isAdmin && (
+                      <Col>
+                        <Form.Label>Notes</Form.Label>
+                        <Form.Input
+                          defaultValue={
+                            this.state.user.bio ? this.state.user.bio.notes : ""
+                          }
+                          type="textarea"
+                          onChange={(evt) =>
+                            this.setState({ notes: evt.target.value })
+                          }
+                        />
+                      </Col>
+                    )}
+                  </Row>
+                  <Row
+                    style={{
+                      "margin-top": "1.5rem",
+                    }}
                   >
-                    Update
-                  </Button>
-                </Row>
-              </Form.FormGroup>
-            </form>
-          </ModalBody>
+                    <Col></Col>
+                    <Button
+                      style={{ backgroundColor: "#ef4e79" }}
+                      onClick={this.handleSubmit}
+                    >
+                      Update
+                    </Button>
+                  </Row>
+                </Form.FormGroup>
+              </form>
+            </ModalBody>
+          )}
         </Container>
         {/* <ModalFooter>
           <Button
@@ -313,5 +352,6 @@ export default ProfileTable;
 
 ProfileTable.propTypes = {
   user: PropTypes.object.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   editUserCallback: PropTypes.func.isRequired,
 };

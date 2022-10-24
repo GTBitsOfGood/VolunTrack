@@ -137,3 +137,9 @@ export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
 export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
+
+export const checkInVolunteer = (userId, eventId) =>
+  axios.post("/api/attendance/checkin", { userId, eventId });
+
+export const checkOutVolunteer = (userId, eventId) =>
+  axios.post("/api/attendance/checkout", { userId, eventId });

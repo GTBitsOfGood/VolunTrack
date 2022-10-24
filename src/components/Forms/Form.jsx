@@ -1,7 +1,6 @@
-import React from "react";
-import { Formik, Form as FFForm } from "formik";
-import styled from "styled-components";
+import { Form as FFForm, Formik } from "formik";
 import PropTypes from "prop-types";
+import styled from "styled-components";
 
 const FForm = styled(FFForm)`
   display: flex;

@@ -8,7 +8,6 @@ import {
   fetchUserManagementData,
   updateUser,
 } from "../../actions/queries";
-import Icon from "../../components/Icon";
 import UserTable from "./UserTable";
 import ReactSearchBox from "react-search-box";
 
@@ -133,16 +132,15 @@ class UserManager extends React.Component {
         });
       }
     });
-    let result = await fetchUserManagementData();
-    if (result && result.data && result.data.users) {
-      console.log("fetchUserManagementData");
-      console.log(result.data.users);
-      this.setState({
-        users: result.data.users.filter((user) => user.role === "volunteer"),
-        currentPage: 0,
-        loadingMoreUsers: false,
-      });
-    }
+    fetchUserManagementData().then((result) => {
+      if (result && result.data && result.data.users) {
+        this.setState({
+          users: result.data.users.filter((user) => user.role === "volunteer"),
+          currentPage: 0,
+          loadingMoreUsers: false,
+        });
+      }
+    });
   };
   onNextPage = () => {
     const { currentPage, users } = this.state;
