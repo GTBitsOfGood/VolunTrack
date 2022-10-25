@@ -8,13 +8,15 @@ import EditEventStats from "./EditEventStats";
 
 const Styled = {
   Container: styled.div`
-    width: 90vw;
-    max-width: 96rem;
-    margin: 0 auto;
-    padding: 2rem 0 0 0;
+    width: 100%;
+    height: 100%;
+    background: ${(props) => props.theme.grey9};
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
   `,
   Header: styled.h1`
-    margin: 0;
+    margin: 0 2rem;
 
     font-size: 3rem;
     font-weight: bold;
@@ -26,10 +28,13 @@ const Styled = {
     justify-content: space-between;
   `,
   TotalHours: styled.p`
-    margin: 0;
+    margin: 0 2rem;
 
     font-size: 2rem;
     vertical-align: top;
+  `,
+  Table: styled.div`
+    margin: auto;
   `,
 };
 
@@ -78,12 +83,14 @@ const EventStatistics = () => {
           {hours.toString().slice(0, 5)} Total Hours
         </Styled.TotalHours>
       </Styled.HeaderRow>
-      <EventTable
-        events={attendanceStats}
-        isVolunteer={false}
-        onDeleteClicked={onDeleteClicked}
-        onEditClicked={onEditClicked}
-      />
+      <Styled.Table>
+        <EventTable
+          events={attendanceStats}
+          isVolunteer={false}
+          onDeleteClicked={onDeleteClicked}
+          onEditClicked={onEditClicked}
+        />
+      </Styled.Table>
       <EditEventStats
         open={showEditModal}
         toggle={toggleEditModal}

@@ -4,7 +4,6 @@ import { Button } from "reactstrap";
 import styled from "styled-components";
 import * as Table from "../screens/sharedStyles/condensedTableStyles";
 import { getHours } from "../screens/Stats/User/hourParsing";
-import { useState } from "react";
 import Icon from "./Icon";
 
 const Styled = {
@@ -150,6 +149,9 @@ const EventTable = ({
 };
 EventTable.propTypes = {
   events: PropTypes.Array,
+  isVolunteer: PropTypes.Boolean,
+  onDeleteClicked: PropTypes.func,
+  onEditClicked: PropTypes.func,
 };
 
 export default EventTable;
