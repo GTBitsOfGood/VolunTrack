@@ -6,6 +6,7 @@ import { Button } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/tableStyles";
+import { getEventVolunteersByAttendance } from "../../../actions/queries";
 
 const Styled = {
   Button: styled(Button)`
@@ -86,12 +87,15 @@ const compareDateString = (dateNum) => {
 const filterEvents = (events, user) => {
   let arr = [];
   for (let i = 0; i < events.length; i++) {
-    if (events[i].isPrivate !== "true" || events[i].volunteers.includes(user._id)) {
+    if (
+      events[i].isPrivate !== "true" ||
+      events[i].volunteers.includes(user._id)
+    ) {
       arr.push(events[i]);
     }
   }
   return arr;
-}
+};
 
 const EventTable = ({
   dateString,
@@ -128,6 +132,27 @@ const EventTable = ({
                       </Styled.Button>
                     )}
                   </Table.Register>
+                  <Table.TextInfo>
+                    {event.volunteers.includes(user._id) &&
+                    getEventVolunteersByAttendance(
+                      event._id,
+                      true
+                    ).data.includes(user._id) ? (
+                      <>
+                        <Styled.Button onClick={() => onUnregister(event)}>
+                          <span>
+                            {" "}
+                            You are checked in! When it is time to check out,
+                            please check out by finding an admin.
+                          </span>
+                        </Styled.Button>
+                      </>
+                    ) : (
+                      <Styled.Button onClick={() => onRegisterClicked(event)}>
+                        <span>Please check in by finding an admin.</span>
+                      </Styled.Button>
+                    )}
+                  </Table.TextInfo>
                   <Table.TextInfo>
                     <Table.TitleAddNums>
                       <Table.EventName>{event.title}</Table.EventName>
