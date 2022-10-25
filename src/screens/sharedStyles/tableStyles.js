@@ -104,9 +104,11 @@ const Time = styled.span`
 `;
 const Checkin = styled.span`
   background-color: #E5E5E5;
-  width: 640px;
-  font-size: 16px;
+  width: 620px;
+  margin-top: -10px;
+  font-size: 14px;
   text-align: left;
+  margin-left: 10px;
 `;
 const Creation = styled.span`
   width: 154px;
