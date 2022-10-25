@@ -102,6 +102,12 @@ const EventName = styled.span`
 const Time = styled.span`
   font-size: 18px;
 `;
+const Checkin = styled.span`
+  background-color: #E5E5E5;
+  width: 640px;
+  font-size: 16px;
+  text-align: left;
+`;
 const Creation = styled.span`
   width: 154px;
   height: 22px;
@@ -144,6 +150,7 @@ export {
   Volunteers,
   EventName,
   Time,
+  Checkin,
   Creation,
   Register,
   UnRegister,
