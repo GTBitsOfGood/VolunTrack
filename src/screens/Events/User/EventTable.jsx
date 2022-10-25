@@ -7,7 +7,7 @@ import styled from "styled-components";
 import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/tableStyles";
 import { getEventVolunteersByAttendance } from "../../../actions/queries";
-import { Container, Row, Col } from "reactstrap";
+import { Row, Col } from "reactstrap";
 
 const Styled = {
   Button: styled(Button)`
@@ -170,27 +170,32 @@ const EventTable = ({
                       <Table.Creation>
                         {sliceEventDate(event.date)}
                       </Table.Creation>
-                    </Row>
-                    <Row>
-                      {event.volunteers.includes(user._id) &&
-                      getEventVolunteersByAttendance(
-                        event._id,
-                        true
-                      ).data.includes(user._id) ? (
-                        <>
-                          <Table.Checkin background-color="#9CDEA3">
-                            <text>
-                              You are checked in! When it is time to check out,
-                              please check out by finding an admin.
-                            </text>
+                    </Row>{" "}
+                    {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
+                      14400000 ==
+                    Date.parse(event.date) ? (
+                      <Row>
+                        {getEventVolunteersByAttendance(
+                          event._id,
+                          true
+                        ).data.some((v) => v._id == user._id) ? (
+                          <>
+                            <Table.Checkin background-color="#9CDEA3">
+                              <text>
+                                You are checked in! When it is time to check
+                                out, please check out by finding an admin.
+                              </text>
+                            </Table.Checkin>
+                          </>
+                        ) : (
+                          <Table.Checkin background-color="#E5E5E5">
+                            <text>Please check in by finding an admin.</text>
                           </Table.Checkin>
-                        </>
-                      ) : (
-                        <Table.Checkin background-color="#E5E5E5">
-                          <text>Please check in by finding an admin.</text>
-                        </Table.Checkin>
-                      )}
-                    </Row>
+                        )}
+                      </Row>
+                    ) : (
+                      <Row></Row>
+                    )}
                   </Col>
                 </Table.Inner>
               </Table.EventList>
