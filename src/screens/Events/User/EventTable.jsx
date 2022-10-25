@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Icon from "../../../components/Icon";
 import * as Table from "../../sharedStyles/tableStyles";
 import { getEventVolunteersByAttendance } from "../../../actions/queries";
+import { Container, Row, Col } from "reactstrap";
 
 const Styled = {
   Button: styled(Button)`
@@ -117,74 +118,81 @@ const EventTable = ({
             <Link href={`events/${event._id}`}>
               <Table.EventList>
                 <Table.Inner>
-                  <Table.Register>
-                    {event.volunteers.includes(user._id) ? (
-                      <>
-                        <Styled.Button onClick={() => onUnregister(event)}>
-                          <Icon color="grey3" name="delete" />
-                          <span>Unregister</span>
-                        </Styled.Button>
-                      </>
-                    ) : (
-                      <Styled.Button onClick={() => onRegisterClicked(event)}>
-                        <Icon color="grey3" name="add" />
-                        <span>Sign up</span>
-                      </Styled.Button>
-                    )}
-                  </Table.Register>
-                  <Table.TextInfo>
-                    {event.volunteers.includes(user._id) &&
-                    getEventVolunteersByAttendance(
-                      event._id,
-                      true
-                    ).data.includes(user._id) ? (
-                      <>
-                        <Styled.Button onClick={() => onUnregister(event)}>
-                          <span>
-                            {" "}
-                            You are checked in! When it is time to check out,
-                            please check out by finding an admin.
-                          </span>
-                        </Styled.Button>
-                      </>
-                    ) : (
-                      <Styled.Button onClick={() => onRegisterClicked(event)}>
-                        <span>Please check in by finding an admin.</span>
-                      </Styled.Button>
-                    )}
-                  </Table.TextInfo>
-                  <Table.TextInfo>
-                    <Table.TitleAddNums>
-                      <Table.EventName>{event.title}</Table.EventName>
-                      <Table.Volunteers>
-                        {sliceEventDate(event.date) <
-                        compareDateString(dateString) ? (
-                          <Table.Text>
-                            <Table.Volunteers>
-                              {event.volunteers.length +
-                                getMinorTotal(event.minors)}
-                            </Table.Volunteers>
-                            <Table.Slots>Slots Available</Table.Slots>
-                          </Table.Text>
+                  <Col>
+                    <Row>
+                      <Table.Register>
+                        {event.volunteers.includes(user._id) ? (
+                          <>
+                            <Styled.Button onClick={() => onUnregister(event)}>
+                              <Icon color="grey3" name="delete" />
+                              <span>Unregister</span>
+                            </Styled.Button>
+                          </>
                         ) : (
-                          <Table.Text>
-                            <Table.Volunteers>
-                              {event.max_volunteers -
-                                event.volunteers.length +
-                                getMinorTotal(event.minors)}
-                            </Table.Volunteers>
-                            <Table.Slots>Volunteers Attended</Table.Slots>
-                          </Table.Text>
+                          <Styled.Button
+                            onClick={() => onRegisterClicked(event)}
+                          >
+                            <Icon color="grey3" name="add" />
+                            <span>Sign up</span>
+                          </Styled.Button>
                         )}
-                      </Table.Volunteers>
-                    </Table.TitleAddNums>
-                    <Table.Time>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} EST
-                    </Table.Time>
-                  </Table.TextInfo>
+                      </Table.Register>
+                      <Table.TextInfo>
+                        <Table.TitleAddNums>
+                          <Table.EventName>{event.title}</Table.EventName>
+                          <Table.Volunteers>
+                            {sliceEventDate(event.date) <
+                            compareDateString(dateString) ? (
+                              <Table.Text>
+                                <Table.Volunteers>
+                                  {event.volunteers.length +
+                                    getMinorTotal(event.minors)}
+                                </Table.Volunteers>
+                                <Table.Slots>Slots Available</Table.Slots>
+                              </Table.Text>
+                            ) : (
+                              <Table.Text>
+                                <Table.Volunteers>
+                                  {event.max_volunteers -
+                                    event.volunteers.length +
+                                    getMinorTotal(event.minors)}
+                                </Table.Volunteers>
+                                <Table.Slots>Volunteers Attended</Table.Slots>
+                              </Table.Text>
+                            )}
+                          </Table.Volunteers>
+                        </Table.TitleAddNums>
+                        <Table.Time>
+                          {convertTime(event.startTime)} -{" "}
+                          {convertTime(event.endTime)} EST
+                        </Table.Time>
+                      </Table.TextInfo>
+                      <Table.Creation>
+                        {sliceEventDate(event.date)}
+                      </Table.Creation>
+                    </Row>
+                    <Row>
+                      {event.volunteers.includes(user._id) &&
+                      getEventVolunteersByAttendance(
+                        event._id,
+                        true
+                      ).data.includes(user._id) ? (
+                        <>
+                          <Table.Checkin background-color="#9CDEA3">
+                            <text>
+                              You are checked in! When it is time to check out,
+                              please check out by finding an admin.
+                            </text>
+                          </Table.Checkin>
+                        </>
+                      ) : (
+                        <Table.Checkin background-color="#E5E5E5">
+                          <text>Please check in by finding an admin.</text>
+                        </Table.Checkin>
+                      )}
+                    </Row>
+                  </Col>
                 </Table.Inner>
-                <Table.Creation>{sliceEventDate(event.date)}</Table.Creation>
               </Table.EventList>
             </Link>
           </Styled.List>
