@@ -38,7 +38,8 @@ export const fetchUserManagementData = (lastPaginationId) =>
     }`
   );
 
-export const getCurrentUser = (userId) => axios.get("/api/users/current?volunteer=" + userId);
+export const getCurrentUser = (userId) =>
+  axios.get("/api/users/current?volunteer=" + userId);
 
 export const fetchUserCount = () => axios.get("/api/users/count");
 
@@ -154,5 +155,12 @@ export const getEventVolunteersByAttendance = (eventId, isCheckedIn) =>
   axios.get(
     `/api/events/${eventId}/volunteersByAttendance?isCheckedIn=${isCheckedIn}`
   );
-export const getAttendanceForEvent = (eventId) => 
-  axios.post("/api/attendence/statistics", {eventId});
+
+export const getAttendanceForEvent = (eventId) =>
+  axios.post("/api/attendance/statistics", { eventId });
+
+export const deleteAttendance = (id) =>
+  axios.delete(`/api/attendance/${id}`, { id });
+
+export const updateAttendance = (id, newData) =>
+  axios.put(`/api/attendance/`, { id, newData });

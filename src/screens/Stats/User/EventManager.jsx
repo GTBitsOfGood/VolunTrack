@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
-import EventTable from "./EventTable";
+import EventTable from "../../../components/EventTable";
 import { fetchEventsByUserId, getCurrentUser } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
@@ -234,7 +234,7 @@ const EventManager = ({ user }) => {
         <Styled.Header>History</Styled.Header>
         <Styled.Header2>{length} events</Styled.Header2>
         <Styled.marginTable>
-          <EventTable events={events} />
+          <EventTable events={events} isVolunteer={true} />
         </Styled.marginTable>
 
         <Styled.Margin></Styled.Margin>

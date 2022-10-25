@@ -14,7 +14,6 @@ export default async function handler(req, res) {
     if (!attendance) {
       return res.status(400);
     }
-    console.log(attendance);
     let attendanceStats = [];
     for (let document of attendance) {
       const response = await getUserFromId(document.userId);
@@ -34,7 +33,6 @@ export default async function handler(req, res) {
       };
       attendanceStats.push(newDoc);
     }
-    console.log(attendanceStats);
     return res.status(200).json(attendanceStats);
   }
 }
