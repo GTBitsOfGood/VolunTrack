@@ -205,20 +205,6 @@ class Assistants extends React.Component {
       invitedAdmins.slice(start, start + PAGE_SIZE)
     );
   };
-  // onChangeSearch = (record) => {
-  //   const { users, currentPage } = this.state;
-  //   fetchUserManagementData().then((result) => {
-  //     this.setState({
-  //       users: result.data.users.filter(
-  //         (user) =>
-  //           user.name.toLowerCase().includes(record.toLowerCase()) &&
-  //           (user.role === "admin" ||
-  //             user.role === "admin-assistant" ||
-  //             user.role === "staff")
-  //       ),
-  //     });
-  //   });
-  // };
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
@@ -247,7 +233,6 @@ class Assistants extends React.Component {
   // };
 
   filteredAndSortedAdmins = (admins) => {
-    console.log(admins);
     return (
       this.state.searchValue.length > 0
         ? admins.filter(
