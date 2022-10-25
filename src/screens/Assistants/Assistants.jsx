@@ -13,12 +13,12 @@ import {
   Container,
 } from "reactstrap";
 import styled from "styled-components";
-import { invitedAdminsValidator } from "./helpers";
+// import { invitedAdminsValidator } from "./helpers";
 import * as Form from "../sharedStyles/formStyles";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
-import ReactSearchBox from "react-search-box";
 import variables from "../../design-tokens/_variables.module.scss";
+import fusers from "quill";
 
 const PAGE_SIZE = 10;
 
@@ -30,6 +30,8 @@ const Styled = {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
+    position: relative;
+    left: 10%;
   `,
   PaginationContainer: styled.div`
     background: white;
@@ -73,9 +75,10 @@ const Styled = {
     color: white;
     width: 11.5rem;
     height: 2.5rem;
-    margin-top: 0rem;
+    margin-top: 0.2rem;
     margin-bottom: 2vw;
-    margin-left: 0vw;
+    margin-left: auto;
+    margin-right: 0;
   `,
   ToBeginningButton: styled(Button)`
     background: white;
@@ -84,22 +87,19 @@ const Styled = {
     margin-right: 1rem;
     color: black;
   `,
-  SearchBox: styled.div`
-    position: relative;
-    left: 19%;
-    width: 70%;
+  Search: styled.input`
+    height: 3rem;
+    width: 100%;
+    font-size: 1.5rem;
+    padding-left: 0.5rem;
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
   `,
   TableUsers: styled.div`
-    position: relative;
-    left: 10%;
-    margin-top: 20px;
     width: 80%;
   `,
   Text: styled.div`
     color: #000000;
-    position: relative;
-    width: 184px;
-    left: 10%;
     font-style: normal;
     font-weight: bold;
     font-size: 32px;
@@ -134,7 +134,10 @@ class Assistants extends React.Component {
     currentPage: 0,
     loadingMoreUsers: false,
     showNewAdminModal: false,
+    searchValue: "",
   };
+
+  // const [searchValue, setSearchValue] = useState("");
 
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
@@ -193,27 +196,29 @@ class Assistants extends React.Component {
   getUsersAtPage = () => {
     const { users, currentPage } = this.state;
     const start = currentPage * PAGE_SIZE;
-    return users.slice(start, start + PAGE_SIZE);
+    return this.filteredAndSortedAdmins(users.slice(start, start + PAGE_SIZE));
   };
   getInvitedAdminList = () => {
     const { invitedAdmins, currentPage } = this.state;
     const start = currentPage * PAGE_SIZE;
-    return invitedAdmins.slice(start, start + PAGE_SIZE);
+    return this.filteredAndSortedAdmins(
+      invitedAdmins.slice(start, start + PAGE_SIZE)
+    );
   };
-  onChangeSearch = (record) => {
-    const { users, currentPage } = this.state;
-    fetchUserManagementData().then((result) => {
-      this.setState({
-        users: result.data.users.filter(
-          (user) =>
-            user.name.toLowerCase().includes(record.toLowerCase()) &&
-            (user.role == "admin" ||
-              user.role == "admin-assistant" ||
-              user.role == "staff")
-        ),
-      });
-    });
-  };
+  // onChangeSearch = (record) => {
+  //   const { users, currentPage } = this.state;
+  //   fetchUserManagementData().then((result) => {
+  //     this.setState({
+  //       users: result.data.users.filter(
+  //         (user) =>
+  //           user.name.toLowerCase().includes(record.toLowerCase()) &&
+  //           (user.role === "admin" ||
+  //             user.role === "admin-assistant" ||
+  //             user.role === "staff")
+  //       ),
+  //     });
+  //   });
+  // };
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
@@ -241,6 +246,28 @@ class Assistants extends React.Component {
   //   await updateInvitedAdmins(this.state.newInvitedAdmin);
   // };
 
+  filteredAndSortedAdmins = (admins) => {
+    console.log(admins);
+    return (
+      this.state.searchValue.length > 0
+        ? admins.filter(
+            (admin) =>
+              admin.last_name
+                ?.toLowerCase()
+                .includes(this.state.searchValue.toLowerCase()) ||
+              admin.email
+                ?.toLowerCase()
+                .includes(this.state.searchValue.toLowerCase()) ||
+              admin.first_name
+                ?.toLowerCase()
+                .includes(this.state.searchValue.toLowerCase())
+          )
+        : admins
+    ).sort((a, b) =>
+      a.last_name > b.last_name ? 1 : b.last_name > a.last_name ? -1 : 0
+    );
+  };
+
   render() {
     const { currentPage, loadingMoreUsers } = this.state;
     return (
@@ -250,13 +277,11 @@ class Assistants extends React.Component {
         </Styled.Row>
         <Styled.Row>
           <Styled.Col>
-            <Styled.SearchBox>
-              <ReactSearchBox
-                placeholder="Search Name"
-                data={this.getUsersAtPage().concat(this.getInvitedAdminList())}
-                onChange={(record) => this.onChangeSearch(record)}
-              />
-            </Styled.SearchBox>
+            <Styled.Search
+              placeholder="Search by Volunteer Name or Email"
+              value={this.state.searchValue}
+              onChange={(e) => this.setState({ searchValue: e.target.value })}
+            />
           </Styled.Col>
           <Styled.Col>
             <Styled.AddAdminButton onClick={this.onCreateClicked}>
@@ -308,7 +333,7 @@ class Assistants extends React.Component {
             </Button>
             <Button
               style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.onModalClose(true)}
+              onClick={() => this.onModalClose(true)}
             >
               Add as an Admin
             </Button>
