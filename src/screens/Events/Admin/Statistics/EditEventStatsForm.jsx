@@ -36,8 +36,10 @@ const Styled = {
 const EditEventStatsForm = ({ toggle, event }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedEvent = {
-      ...values,
+      ...event
     };
+    editedEvent.timeCheckedIn = event.timeCheckedIn.slice(0, 11) + values.checkin + ":00.000Z";
+    editedEvent.timeCheckedOut =event.timeCheckedOut.slice(0, 11) + values.checkout + ":00.000Z";
     setSubmitting(true);
     updateAttendance(event._id, editedEvent);
     toggle();
@@ -107,7 +109,7 @@ const EditEventStatsForm = ({ toggle, event }) => {
                         <Styled.ErrorMessage name="checkin" />
                         <Field name="checkin">
                           {({ field }) => (
-                            <SForm.Input {...field} type="datetime" />
+                            <SForm.Input {...field} type="time" />
                           )}
                         </Field>
                       </Styled.Col>
@@ -116,7 +118,7 @@ const EditEventStatsForm = ({ toggle, event }) => {
                         <Styled.ErrorMessage name="checkout" />
                         <Field name="checkout">
                           {({ field }) => (
-                            <SForm.Input {...field} type="datetime" />
+                            <SForm.Input {...field} type="time" />
                           )}
                         </Field>
                       </Styled.Col>

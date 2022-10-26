@@ -163,4 +163,4 @@ export const deleteAttendance = (id) =>
   axios.delete(`/api/attendance/${id}`, { id });
 
 export const updateAttendance = (id, newData) =>
-  axios.put(`/api/attendance/`, { id, newData });
+  axios.put(`/api/attendance/${id}`, { id, newData });

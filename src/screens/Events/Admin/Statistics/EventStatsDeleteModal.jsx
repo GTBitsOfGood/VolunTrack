@@ -9,8 +9,7 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
   const handleSubmit = () => {
     setDeleting(true);
     deleteAttendance(event._id, event.eventId)
-      .then((result) => {
-        console.log(result);
+      .then(() => {
         toggle();
         setDeleting(false);
       })
