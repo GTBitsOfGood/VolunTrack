@@ -140,8 +140,6 @@ class UserManager extends React.Component {
     });
     let result = await fetchUserManagementData();
     if (result && result.data && result.data.users) {
-      console.log("fetchUserManagementData");
-      console.log(result.data.users);
       this.setState({
         users: result.data.users.filter((user) => user.role === "volunteer"),
         currentPage: 0,
@@ -190,8 +188,35 @@ class UserManager extends React.Component {
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = (updatedUser) => {
     /** code to update users in state at that specific index */
-    updateUser(updatedUser);
-    this.onRefresh();
+    console.log("refresh");
+    console.log(updatedUser);
+    updateUser(
+      updatedUser.email,
+      updatedUser.first_name,
+      updatedUser.last_name,
+      updatedUser.phone_number,
+      updatedUser.date_of_birth,
+      updatedUser.zip_code,
+      updatedUser.total_hours,
+      updatedUser.address,
+      updatedUser.city,
+      updatedUser.state,
+      updatedUser.court_hours,
+      updatedUser.notes
+    );
+
+    let updatedUsers = this.state.users.map((user) => {
+      if (user.email === updatedUser.email) return updatedUser;
+      else return user;
+    });
+
+    this.setState({
+      users: updatedUsers,
+      currentPage: 0,
+      loadingMoreUsers: false,
+    });
+
+    // this.onRefresh();
   };
   filteredAndSortedVolunteers = () => {
     const filterArray = this.state.users.filter(
