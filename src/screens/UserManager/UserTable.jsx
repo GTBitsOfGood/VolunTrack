@@ -147,7 +147,6 @@ class UserTable extends React.Component {
               <th style={{ color: "#960034" }}>Volunteer Name</th>
               <th style={{ color: "#960034" }}>Email Address</th>
               <th style={{ color: "#960034" }}>Phone Number</th>
-              
             </tr>
             {users
               .slice(
@@ -184,10 +183,8 @@ class UserTable extends React.Component {
                     </Styled.Button>
                   </td>
                   <td>
-                  <Link href={`stats/${user._id}`}>
-                    <Styled.Button>
-                      Stats
-                    </Styled.Button>
+                    <Link href={`stats/${user._id}`}>
+                      <Styled.Button>Stats</Styled.Button>
                     </Link>
                   </td>
                 </Table.Row>
