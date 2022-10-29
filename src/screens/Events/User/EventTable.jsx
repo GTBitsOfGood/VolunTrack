@@ -180,15 +180,15 @@ const EventTable = ({
                           true
                         ).data.some((v) => v._id == user._id) ? (
                           <>
-                            <Table.Checkin background-color="#9CDEA3">
+                            <Table.CheckinDone>
                               <text>
                                 You are checked in! When it is time to check
                                 out, please check out by finding an admin.
                               </text>
-                            </Table.Checkin>
+                            </Table.CheckinDone>
                           </>
                         ) : (
-                          <Table.Checkin background-color="#E5E5E5">
+                          <Table.Checkin>
                             <text>Please check in by finding an admin.</text>
                           </Table.Checkin>
                         )}
