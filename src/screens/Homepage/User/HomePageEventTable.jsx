@@ -89,6 +89,12 @@ const HomePageEventTable = ({ events, onUnregister, user }) => {
     user = session.user;
   }
 
+  const isCheckedIn = (eventId, user) => {
+    return getEventVolunteersByAttendance(eventId, true).then((r) =>
+      r.data.some((v) => v._id === user._id && v.timeCheckedOut == null)
+    );
+  };
+
   var upcomingEvents = events.filter(function (event) {
     const currentDate = new Date();
     return (
@@ -151,7 +157,7 @@ const HomePageEventTable = ({ events, onUnregister, user }) => {
                     14400000 ==
                   Date.parse(event.date) ? (
                     <Row>
-                      {true ? (
+                      {isCheckedIn(event._id, user) ? (
                         <>
                           <Table.UpcomingCheckinDone>
                             <text>
