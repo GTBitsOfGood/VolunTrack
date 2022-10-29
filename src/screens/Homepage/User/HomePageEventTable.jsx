@@ -171,7 +171,7 @@ const HomePageEventTable = ({ events, onUnregister, user }) => {
                       </Table.TitleAddNums>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
-                        {convertTime(event.endTime)} EST
+                        {convertTime(event.endTime)} {event.localTime}
                       </Table.Time>
                     </Table.TextInfo>
                   </Table.Inner>
