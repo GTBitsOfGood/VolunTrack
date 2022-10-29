@@ -1,3 +1,4 @@
+import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
 import {
@@ -131,15 +132,13 @@ class UserTable extends React.Component {
         ? this.state.notes
         : this.state.userSelectedForEdit.notes
     );
-    // console.log(this.state.first_name);
-    // console.log(this.state.userSelectedForEdit.first_name);
     this.onModalClose();
   };
 
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{ width: "100%", "max-width": "none" }}>
+      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
         <Table.Table>
           <tbody>
             <tr>
@@ -180,6 +179,11 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
+                  </td>
+                  <td>
+                    <Link href={`stats/${user._id}`}>
+                      <Styled.Button>Stats</Styled.Button>
+                    </Link>
                   </td>
                 </Table.Row>
               ))}
@@ -372,9 +376,6 @@ class UserTable extends React.Component {
             >
               Update
             </Button>
-            {/* <Button color="primary" type="submit">
-                Submit
-              </Button> */}
           </ModalFooter>
         </Modal>
 
@@ -382,7 +383,6 @@ class UserTable extends React.Component {
           users={users}
           pageSize={this.state.pageSize}
           loading={this.props.loading}
-          // pageCount={this.state.pageCount}
           currentPage={this.state.currentPage}
           updatePage={this.updatePage}
         />

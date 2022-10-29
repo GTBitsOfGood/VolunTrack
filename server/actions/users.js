@@ -253,14 +253,15 @@ export async function getCount(next) {
     .catch((err) => next(err));
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUser(userId, next) {
   await dbConnect();
 
-  return UserData.find({ "bio.email": "james@jameswang.com" })
-    .then((users) => {
-      return { status: 200, message: { users } };
-    })
-    .catch((err) => next(err));
+  
+    return User.find({_id: userId})
+      .then((users) => {
+        return users;
+      })
+      .catch(next);
 }
 
 export async function searchByContent(inputText, searchType, pageSize, next) {

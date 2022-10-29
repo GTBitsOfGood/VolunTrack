@@ -189,6 +189,11 @@ const Header = () => {
     router.push("/profile");
   };
 
+  const goToStats = (e) => {
+    e.preventDefault();
+    router.push("/stats");
+  };
+
   const goToManageAdmins = (e) => {
     e.preventDefault();
     router.push("/assistants");
@@ -317,6 +322,11 @@ const Header = () => {
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
+                {user.role === "volunteer" && (
+                  <DropdownItem onClick={goToStats} href="/stats">
+                    <Styled.DropdownItem>Stats</Styled.DropdownItem>
+                  </DropdownItem>
+                )}
                 <DropdownItem onClick={logout} href="/">
                   <Styled.DropdownItem>Logout</Styled.DropdownItem>
                 </DropdownItem>

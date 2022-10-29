@@ -9,7 +9,7 @@ const EventManagerSelector = () => {
   } = useSession();
 
   return user.role === "admin" ? (
-    <AdminEventManager user={user} />
+    <AdminEventManager user={user}/>
   ) : (
     <UserEventManager user={user} />
   );
