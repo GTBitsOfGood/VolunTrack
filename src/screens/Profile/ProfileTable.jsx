@@ -9,6 +9,7 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import { updateUser } from "../../actions/queries";
 import { Profiler } from "react";
+import { useRouter, withRouter } from "next/router";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 
 const Styled = {
@@ -32,6 +33,8 @@ const Styled = {
   `,
 };
 class ProfileTable extends React.Component {
+
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -49,8 +52,10 @@ class ProfileTable extends React.Component {
       notes: "",
       visibleText: false,
     };
+    
   }
 
+  
   handleSubmit = async (e) => {
     this.setState({
       visibleText: true,
@@ -94,12 +99,14 @@ class ProfileTable extends React.Component {
     );
     this.props.context.startLoading();
     this.props.context.success("Profile successfully updated!");
+    this.props.router.reload();
   };
 
   render() {
     console.log(this.props);
     const { isAdmin } = this.props.isAdmin;
 
+    
     return (
       <Table.Container
         style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
