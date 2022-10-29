@@ -8,9 +8,7 @@ import {
   fetchUserManagementData,
   updateUser,
 } from "../../actions/queries";
-import Icon from "../../components/Icon";
 import UserTable from "./UserTable";
-import ReactSearchBox from "react-search-box";
 
 // const PAGE_SIZE = 3;
 
@@ -191,9 +189,9 @@ class UserManager extends React.Component {
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = (updatedUser) => {
-    console.log(updatedUser);
     /** code to update users in state at that specific index */
     updateUser(updatedUser);
+    this.onRefresh();
   };
   filteredAndSortedVolunteers = () => {
     const filterArray = this.state.users.filter(

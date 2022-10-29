@@ -90,7 +90,6 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log("componentDidMount");
     console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
@@ -139,6 +138,7 @@ class UserTable extends React.Component {
     // console.log(this.state.first_name);
     // console.log(this.state.userSelectedForEdit.first_name);
     this.onModalClose();
+    this.props.editUserCallback();
   };
 
   render() {
