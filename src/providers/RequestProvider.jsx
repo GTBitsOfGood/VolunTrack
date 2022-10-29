@@ -109,17 +109,11 @@ class RequestProvider extends React.Component {
         <Container {...this.state}>
           <div className="banner">
             {this.state.isLoading ? (
-              <Loading size="0.5rem" />
+              <Loading size="0.8rem" />
             ) : (
               <React.Fragment>
                 <p>{this.state.text}</p>
-                {this.state.success && (
-                  <p className="icon">
-                    <span role="img" aria-label="success">
-                      🎉
-                    </span>
-                  </p>
-                )}
+                {this.state.success}
               </React.Fragment>
             )}
           </div>
