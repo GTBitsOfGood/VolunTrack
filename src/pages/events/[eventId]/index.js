@@ -199,7 +199,7 @@ const EventInfo = () => {
                     <b>Time:</b>
                     <br></br>
                     {convertTime(event.startTime)} -{" "}
-                    {convertTime(event.endTime)}
+                    {convertTime(event.endTime)} {event.localTime}
                   </Styled.InfoTableText>
                   <Styled.InfoTableText>
                     <b>Location:</b>

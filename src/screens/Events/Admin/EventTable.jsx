@@ -162,9 +162,11 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
                 </Styled.DeleteButton>
               </Styled.EventContentRow>
               <Styled.EventContentRow>
-                <Styled.Time>{`${convertTime(event.startTime)} - ${convertTime(
-                  event.endTime
-                )} EST`}</Styled.Time>
+                <Styled.Time>
+                  {`${convertTime(event.startTime)} - ${convertTime(
+                    event.endTime
+                  )} ` + event.localTime}
+                </Styled.Time>
                 <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
               </Styled.EventContentRow>
             </Styled.EventContent>
