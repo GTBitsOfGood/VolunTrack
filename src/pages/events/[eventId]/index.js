@@ -140,8 +140,6 @@ const EventInfo = () => {
     return <div />;
   }
 
-  
-
   const onRegisterClicked = () => {
     router.replace(`${eventId}/register`);
   };
@@ -176,11 +174,10 @@ const EventInfo = () => {
     <>
       <Styled.Row>
         <Styled.BackButton onClick={() => router.back()}>
-                Back
+          Back
         </Styled.BackButton>
-        </Styled.Row>
+      </Styled.Row>
       <Styled.EventTable>
-        
         <Col>
           <Styled.EventCol>
             <Styled.EventName>{event.title}</Styled.EventName>
@@ -200,7 +197,6 @@ const EventInfo = () => {
         <Col>
           <Row>
             <Styled.EventCol2>
-              
               <Styled.InfoHead>Event Information</Styled.InfoHead>
               <Styled.InfoTable>
                 <Styled.InfoTableCol>
@@ -305,7 +301,6 @@ const EventInfo = () => {
             Unregister
           </Styled.Button>
         )}
-        
     </>
   );
 };
