@@ -2,11 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
-import {
-  mandated,
-  roles,
-  statuses,
-} from "../ApplicantViewer/applicantInfoHelpers";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
@@ -14,6 +9,7 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Pagination from "../../components/PaginationComp";
 import { updateUser } from "../../actions/queries";
+import Link from "next/link";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -154,16 +150,14 @@ class UserTable extends React.Component {
           ? this.state.notes
           : this.state.userSelectedForEdit.notes,
     };
-
     this.onModalClose();
     this.props.editUserCallback(user);
   };
 
   render() {
     const { users, loading } = this.props;
-    // console.log(users);
     return (
-      <Table.Container style={{ width: "100%", "max-width": "none" }}>
+      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
         <Table.Table>
           <tbody>
             <tr>
@@ -204,6 +198,11 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
+                  </td>
+                  <td>
+                    <Link href={`stats/${user._id}`}>
+                      <Styled.Button>Stats</Styled.Button>
+                    </Link>
                   </td>
                 </Table.Row>
               ))}
@@ -426,9 +425,6 @@ class UserTable extends React.Component {
             >
               Update
             </Button>
-            {/* <Button color="primary" type="submit">
-                Submit
-              </Button> */}
           </ModalFooter>
         </Modal>
 
@@ -436,7 +432,6 @@ class UserTable extends React.Component {
           users={users}
           pageSize={this.state.pageSize}
           loading={this.props.loading}
-          // pageCount={this.state.pageCount}
           currentPage={this.state.currentPage}
           updatePage={this.updatePage}
         />

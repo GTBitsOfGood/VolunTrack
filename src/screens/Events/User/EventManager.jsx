@@ -6,7 +6,6 @@ import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../../actions/queries";
-import Icon from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { registerForEvent, updateEvent } from "./eventHelpers";
 import EventTable from "./EventTable";
@@ -147,7 +146,7 @@ const EventManager = ({ user }) => {
 
   let splitDate = value.toDateString().split(" ");
   const [dateString, setDateString] = useState(
-    splitDate[1] + " " + splitDate[2] + " " + splitDate[3]
+    splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
   const onChange = (value, event) => {

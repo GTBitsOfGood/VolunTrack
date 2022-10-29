@@ -12,7 +12,8 @@
     "eslint:recommended",
     "plugin:prettier/recommended",
     "plugin:react/recommended",
-    "prettier"
+    "prettier",
+    "plugin:react/jsx-runtime"
   ],
   "settings": {
     "react": {
@@ -20,12 +21,20 @@
     },
     "linkComponents": [
       "Hyperlink",
-      {"name": "NavLink", "linkAttribute": "href"}
+      { "name": "NavLink", "linkAttribute": "href" }
     ]
   },
   "rules": {
     "no-underscore-dangle": "off",
     "react/jsx-props-no-spreading": "off",
     "implicit-arrow-linebreak": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "no-undef": "off"
+      }
+    }
+  ]
 }

@@ -14,25 +14,22 @@ export async function createEvent(newEventData, next) {
     .save()
     .then(async (event) => {
       await scheduler.scheduleNewEventJobs(event);
-      return;
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 }
 
 export async function getEvents(startDate, endDate, next) {
   await dbConnect();
 
-  if (startDate == "undefined" && endDate == "undefined") {
+  if (startDate === "undefined" && endDate === "undefined") {
     return EventData.find({})
       .then((events) => {
         return events;
       })
       .catch(next);
-  } else if (startDate == "undefined") {
+  } else if (startDate === "undefined") {
     endDate = new Date(endDate);
-    if (endDate == "Invalid Date") {
+    if (endDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $lte: endDate } })
@@ -41,9 +38,9 @@ export async function getEvents(startDate, endDate, next) {
         })
         .catch(next);
     }
-  } else if (endDate == "undefined") {
+  } else if (endDate === "undefined") {
     startDate = new Date(startDate);
-    if (startDate == "Invalid Date") {
+    if (startDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $gte: startDate } })
@@ -55,7 +52,7 @@ export async function getEvents(startDate, endDate, next) {
   } else {
     startDate = new Date(startDate);
     endDate = new Date(endDate);
-    if (startDate == "Invalid Date" || endDate == "Invalid Date") {
+    if (startDate === "Invalid Date" || endDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $gte: startDate, $lte: endDate } })

@@ -2,7 +2,6 @@ import "focus-visible/dist/focus-visible.min.js";
 import { SessionProvider } from "next-auth/react";
 import "normalize.css";
 import PropTypes from "prop-types";
-import React from "react";
 import styled from "styled-components";
 import "../../public/static/styles/App.css";
 import "../../public/static/styles/bootstrap.min.css";
