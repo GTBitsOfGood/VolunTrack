@@ -302,7 +302,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         <Styled.ErrorMessage name="zip" />
                         <Field name="zip">
                           {({ field }) => (
-                            <SForm.Input {...field} type="number" />
+                            <SForm.Input {...field} type="text" />
                           )}
                         </Field>
                       </Styled.ThirdCol>
