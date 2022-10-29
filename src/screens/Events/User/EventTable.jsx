@@ -61,6 +61,12 @@ const sliceEventDate = (dateNum) => {
   return eventDate;
 };
 
+const isCheckedIn = (eventId, user) => {
+  return getEventVolunteersByAttendance(eventId, true).then((r) =>
+    r.data.some((v) => v._id === user._id)
+  );
+};
+
 const monthMap = new Map([
   ["Jan", "01"],
   ["Feb", "02"],
@@ -173,12 +179,10 @@ const EventTable = ({
                     </Row>{" "}
                     {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
                       14400000 ==
-                    Date.parse(event.date) ? (
+                      Date.parse(event.date) &&
+                    event.volunteers.includes(user._id) ? (
                       <Row>
-                        {getEventVolunteersByAttendance(
-                          event._id,
-                          true
-                        ).data.some((v) => v._id == user._id) ? (
+                        {isCheckedIn(event._id, user) ? (
                           <>
                             <Table.CheckinDone>
                               <text>
