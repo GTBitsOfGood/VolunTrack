@@ -19,6 +19,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    localTime: {
+      type: String,
+      required: true,
+    },
     address: {
       type: String,
       required: true,
