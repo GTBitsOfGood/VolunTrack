@@ -56,14 +56,16 @@ const Styled = {
   `,
   EditButton: styled(Button)`
     margin: 0 0 0 auto;
-
+    padding: 9px;
     background: none;
     border: none;
   `,
   DeleteButton: styled(Button)`
     background: none;
     border: none;
-
+    padding: 9px;
+    margin-left: 5px;
+    margin-right: 8px;
     justify-self: right;
   `,
   Time: styled.p`
