@@ -22,6 +22,7 @@ const eventSchema = new mongoose.Schema(
     localTime: {
       type: String,
       required: true,
+      default: "EDT",
     },
     address: {
       type: String,
