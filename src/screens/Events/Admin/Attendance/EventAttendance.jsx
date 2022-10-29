@@ -98,6 +98,14 @@ const EventAttendance = () => {
     );
   };
 
+  const endEvent = () => {
+    checkedInVolunteers.forEach((v) => {
+      checkOutVolunteer(v._id, eventId);
+    });
+    setCheckedOutVolunteers(checkedOutVolunteers.concat(checkedInVolunteers));
+    setCheckedInVolunteers([]);
+  };
+
   const filteredAndSortedVolunteers = (volunteers) => {
     console.log(searchValue);
     return (
@@ -155,7 +163,7 @@ const EventAttendance = () => {
           checkOut={checkOut}
         />
       </Styled.Container>
-      <Footer />
+      <Footer endEvent={endEvent} eventId={eventId} />
     </>
   );
 };

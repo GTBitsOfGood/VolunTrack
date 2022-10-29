@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import variables from "../../../../design-tokens/_variables.module.scss";
@@ -38,12 +39,20 @@ const Styled = {
   `,
 };
 
-const Footer = () => {
+const Footer = ({ endEvent, eventId }) => {
+  const router = useRouter();
+
   return (
     <Styled.Background>
       <Styled.Container>
-        <Styled.EndEventButton>End Event</Styled.EndEventButton>
-        <Styled.EventPageButton>Visit Event Page</Styled.EventPageButton>
+        <Styled.EndEventButton onClick={endEvent}>
+          End Event
+        </Styled.EndEventButton>
+        <Styled.EventPageButton
+          onClick={() => router.push(`/events/${eventId}`)}
+        >
+          Visit Event Page
+        </Styled.EventPageButton>
       </Styled.Container>
     </Styled.Background>
   );
