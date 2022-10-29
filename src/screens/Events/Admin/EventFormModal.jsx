@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import styled from "styled-components";
 import {
   ModalBody,
@@ -17,6 +17,7 @@ import { editEvent } from "../../../actions/queries";
 import { createEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import "react-quill/dist/quill.snow.css";
+import { RequestContext } from "../../../providers/RequestProvider";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -57,19 +58,30 @@ const Styled = {
   `,
 };
 
+const showErrorMessage = (msg, param, context) => {
+  console.log(context);
+  context.startLoading();
+  context.failed("Could not save");
+};
+
 const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
-
-  const onSubmitCreateEvent = (values, setSubmitting) => {
+  const onSubmitCreateEvent = (values, setSubmitting, context) => {
     const event = {
       ...values,
       description: content,
-      isPrivate: isGroupEvent ? 'true' : 'false',
+      isPrivate: isGroupEvent ? "true" : "false",
     };
     setSubmitting(true);
     createEvent(event)
       .then(() => toggle())
-      .catch(console.log)
+      .catch((err) =>
+        showErrorMessage(
+          err.response.data.errors[0].msg,
+          err.response.data.errors[0].param,
+          context
+        )
+      )
       .finally(() => setSubmitting(false));
   };
 
@@ -97,6 +109,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const [content, setContent] = useState(
     containsExistingEvent(event) ? event.description : emptyStringField
   );
+  const context = useContext(RequestContext);
 
   let ReactQuill;
   // patch for build failure
@@ -169,12 +182,12 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.orgZip
             : emptyStringField,
-        isPrivate: isGroupEvent ? 'true' : 'false',
+        isPrivate: isGroupEvent ? "true" : "false",
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
           ? onSubmitEditEvent(values, setSubmitting)
-          : onSubmitCreateEvent(values, setSubmitting);
+          : onSubmitCreateEvent(values, setSubmitting, context);
       }}
       validationSchema={
         isGroupEvent ? groupEventValidator : standardEventValidator
