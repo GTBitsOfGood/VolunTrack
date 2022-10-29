@@ -1,12 +1,12 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import styled from "styled-components";
 import { Button, Row, Col } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { updateEvent } from "../../../screens/Events/User/eventHelpers";
-import toast, { Toaster } from "react-hot-toast";
+import { RequestContext } from "../../../providers/RequestProvider";
 
 const Styled = {
   Button: styled(Button)`
@@ -82,6 +82,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     background-color: white;
+    padding-bottom: 1.5rem;
   `,
   PrivateLink: styled(Button)`
     background-color: ${variables["primary"]};
@@ -119,6 +120,7 @@ const EventInfo = () => {
 
   const { data: session } = useSession();
   const user = session.user;
+  const context = useContext(RequestContext);
 
   const onRefresh = () => {
     fetchEventsById(eventId).then((result) => {
@@ -161,7 +163,8 @@ const EventInfo = () => {
 
   const copyPrivateLink = () => {
     window.navigator.clipboard.writeText(window.location.href);
-    toast.success("Successfully Copied Private Link to Event!");
+    context.startLoading();
+    context.success("Successfully Copied Private Link to Event!");
   };
 
   let lastUpdated =
@@ -243,7 +246,7 @@ const EventInfo = () => {
           <br></br>
           {event.orgName !== "" && (
             <Row>
-              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+              <Styled.EventCol2>
                 <Styled.InfoHead>Organization</Styled.InfoHead>
                 <Styled.InfoTable>
                   <Styled.InfoTableCol>
@@ -282,9 +285,8 @@ const EventInfo = () => {
                 </Styled.InfoTable>
                 <Styled.ButtonCol>
                   <Styled.PrivateLink onClick={copyPrivateLink}>
-                    Share private link to event
+                    Share Private Link to Event
                   </Styled.PrivateLink>
-                  <Toaster />
                 </Styled.ButtonCol>
               </Styled.EventCol2>
             </Row>

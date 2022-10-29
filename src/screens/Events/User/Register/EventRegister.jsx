@@ -367,7 +367,7 @@ const EventRegister = (event) => {
           />{" "}
         </FormGroup>
         <Styled.AccomodationText>
-          I require accomadation for my court required hours
+          I require accommodation for my court required hours
         </Styled.AccomodationText>
         <IconSpecial
           width="20"

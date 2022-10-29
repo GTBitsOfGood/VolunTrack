@@ -20,7 +20,7 @@ const Container = styled.div`
     align-items: center;
     border-radius: 0.5rem;
     margin: auto;
-    max-width: ${(props) => (props.success || props.failed ? "15rem" : "5rem")};
+    max-width: 30rem;
     transition: max-width 0.2s;
 
     p {
@@ -113,13 +113,7 @@ class RequestProvider extends React.Component {
             ) : (
               <React.Fragment>
                 <p>{this.state.text}</p>
-                {this.state.success && (
-                  <p className="icon">
-                    <span role="img" aria-label="success">
-                      🎉
-                    </span>
-                  </p>
-                )}
+                {this.state.success}
               </React.Fragment>
             )}
           </div>

@@ -132,8 +132,6 @@ class UserTable extends React.Component {
         ? this.state.notes
         : this.state.userSelectedForEdit.notes
     );
-    // console.log(this.state.first_name);
-    // console.log(this.state.userSelectedForEdit.first_name);
     this.onModalClose();
   };
 
@@ -408,9 +406,6 @@ class UserTable extends React.Component {
             >
               Update
             </Button>
-            {/* <Button color="primary" type="submit">
-                Submit
-              </Button> */}
           </ModalFooter>
         </Modal>
 
@@ -418,7 +413,6 @@ class UserTable extends React.Component {
           users={users}
           pageSize={this.state.pageSize}
           loading={this.props.loading}
-          // pageCount={this.state.pageCount}
           currentPage={this.state.currentPage}
           updatePage={this.updatePage}
         />

@@ -2,6 +2,8 @@ import { ErrorMessage, Form as FForm } from "formik";
 import { useSession } from "next-auth/react";
 import styled from "styled-components";
 import ProfileTable from "./ProfileTable";
+import { RequestContext } from "../../providers/RequestProvider";
+import { useContext } from "react";
 
 const Styled = {
   Container: styled.div`
@@ -49,6 +51,7 @@ const Profile = () => {
         user={session.user}
         isAdmin={false}
         editUserCallback={() => console.log("callback")}
+        context={useContext(RequestContext)}
       />
     </Styled.Container>
   );
