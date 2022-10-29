@@ -64,7 +64,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     const event = {
       ...values,
       description: content,
-      isPrivate: isGroupEvent ? 'true' : 'false',
+      isPrivate: isGroupEvent ? "true" : "false",
     };
     setSubmitting(true);
     createEvent(event)
@@ -90,6 +90,12 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
 
   const onSendConfirmationEmailCheckbox = () => {
     setSendConfirmationEmail(true);
+  };
+
+  const getLocalTime = () => {
+    return new Date()
+      .toLocaleDateString(undefined, { day: "2-digit", timeZoneName: "short" })
+      .substring(4);
   };
 
   const emptyStringField = "";
@@ -118,6 +124,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
         endTime: containsExistingEvent(event)
           ? event.endTime
           : emptyStringField,
+        localTime: containsExistingEvent(event)
+          ? event.localTime
+          : getLocalTime(),
         address: containsExistingEvent(event)
           ? event.address
           : emptyStringField,
@@ -169,7 +178,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.orgZip
             : emptyStringField,
-        isPrivate: isGroupEvent ? 'true' : 'false',
+        isPrivate: isGroupEvent ? "true" : "false",
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
