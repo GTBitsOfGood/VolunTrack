@@ -227,11 +227,9 @@ export async function getManagementData(
         phone_number: "$bio.phone_number",
         date_of_birth: "$bio.date_of_birth",
         zip_code: "$bio.zip_code",
-        total_hours: "$bio.total_hours",
         address: "$bio.address",
         city: "$bio.city",
         state: "$bio.state",
-        courtH: "$bio.courtH",
         notes: "$bio.notes",
         role: 1,
         status: 1,
@@ -281,7 +279,6 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "bio.phone_number": regexquery },
         { "bio.date_of_birth": regexquery },
         { "bio.zip_code": regexquery },
-        { "bio.total_hours": regexquery },
         { "bio.address": regexquery },
         { "bio.city": regexquery },
         { "bio.state": regexquery },
@@ -405,11 +402,9 @@ export async function updateUser(
   last_name,
   date_of_birth,
   zip_code,
-  total_hours,
   address,
   city,
   state,
-  courtH,
   notes
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
@@ -490,21 +485,6 @@ export async function updateUser(
     });
   }
 
-  if (total_hours?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.total_hours": total_hours } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
   if (zip_code?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
@@ -553,21 +533,6 @@ export async function updateUser(
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.state": state } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (courtH?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.courtH": courtH } }
     ).then((result) => {
       if (!result.nModified)
         return {

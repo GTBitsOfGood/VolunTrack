@@ -1,19 +1,22 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Loading from "../../components/Loading";
 import {
-  mandated,
-  roles,
-  statuses,
-} from "../ApplicantViewer/applicantInfoHelpers";
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import styled from "styled-components";
+import { updateUser } from "../../actions/queries";
+import Icon from "../../components/Icon";
+import Loading from "../../components/Loading";
+import Pagination from "../../components/PaginationComp";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
-import { Container, Row, Col } from "reactstrap";
-import styled from "styled-components";
-import Icon from "../../components/Icon";
-import Pagination from "../../components/PaginationComp";
-import { updateUser } from "../../actions/queries";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -53,11 +56,9 @@ class UserTable extends React.Component {
       phone_number: 0,
       date_of_birth: 0,
       zip_code: 0,
-      total_hours: 0,
       address: "",
       city: "",
       state: "",
-      court_hours: "",
       notes: "",
       currentPage: 0,
       pageSize: 10,
@@ -117,9 +118,6 @@ class UserTable extends React.Component {
       this.state.userSelectedForEdit && this.state.zip_code
         ? this.state.zip_code
         : this.state.userSelectedForEdit.zip_code,
-      this.state.userSelectedForEdit && this.state.total_hours
-        ? this.state.total_hours
-        : this.state.userSelectedForEdit.total_hours,
       this.state.userSelectedForEdit && this.state.address
         ? this.state.address
         : this.state.userSelectedForEdit.address,
@@ -129,9 +127,6 @@ class UserTable extends React.Component {
       this.state.userSelectedForEdit && this.state.state
         ? this.state.state
         : this.state.userSelectedForEdit.state,
-      this.state.userSelectedForEdit && this.state.court_hours
-        ? this.state.court_hours
-        : this.state.userSelectedForEdit.court_hours,
       this.state.userSelectedForEdit && this.state.notes
         ? this.state.notes
         : this.state.userSelectedForEdit.notes
@@ -296,36 +291,6 @@ class UserTable extends React.Component {
                         name="Zip Code"
                         onChange={(evt) =>
                           this.setState({ zip_code: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Total Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.total_hours
-                            : ""
-                        }
-                        type="text"
-                        name="Total Hours"
-                        onChange={(evt) =>
-                          this.setState({ total_hours: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Court Required Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.courtH
-                            : ""
-                        }
-                        type="text"
-                        name="Court Hours"
-                        onChange={(evt) =>
-                          this.setState({ court_hours: evt.target.value })
                         }
                       />
                     </Col>
