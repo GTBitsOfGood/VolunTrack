@@ -2,11 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
-import {
-  mandated,
-  roles,
-  statuses,
-} from "../ApplicantViewer/applicantInfoHelpers";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
@@ -145,7 +140,7 @@ class UserTable extends React.Component {
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{ width: "100%", "max-width": "none" }}>
+      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
         <Table.Table>
           <tbody>
             <tr>
