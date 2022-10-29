@@ -90,13 +90,15 @@ const HomePageEventTable = ({ events, onUnregister, user }) => {
   }
 
   const isCheckedIn = (eventId, user) => {
-    return getEventVolunteersByAttendance(eventId, true).then((r) =>
-      r.data.some((v) => v._id === user._id && v.timeCheckedOut == null)
-    );
+    getEventVolunteersByAttendance(eventId, true).then((r) => {
+      if (r.data.length === 0) {
+        return false;
+      }
+      return r.data.some((v) => v._id === user._id);
+    });
   };
 
   var upcomingEvents = events.filter(function (event) {
-    const currentDate = new Date();
     return (
       Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
       Date.parse(event.date)

@@ -62,9 +62,12 @@ const sliceEventDate = (dateNum) => {
 };
 
 const isCheckedIn = (eventId, user) => {
-  return getEventVolunteersByAttendance(eventId, true).then((r) =>
-    r.data.some((v) => v._id === user._id)
-  );
+  getEventVolunteersByAttendance(eventId, true).then((r) => {
+    if (r.data.length === 0) {
+      return false;
+    }
+    return r.data.some((v) => v._id === user._id);
+  });
 };
 
 const monthMap = new Map([
