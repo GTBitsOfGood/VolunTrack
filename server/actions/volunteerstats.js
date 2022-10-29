@@ -5,7 +5,6 @@ const User = require("../mongodb/models/User");
 const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
 
-
 export async function getEventsByUserID(userId, next) {
   await dbConnect();
 
@@ -21,12 +20,14 @@ export async function getEventsByUserID(userId, next) {
   //     .catch(next);
   // }
 
-  return AttendanceData.find({userId: userId})
-      .then((events) => {
-        
-        return events;
-      })
-      .catch(next);
+  return AttendanceData.find({ userId: userId })
+    .then((events) => {
+      const sortedEvents = events.sort(
+        (a, b) => Number(b.timeCheckedIn) - Number(a.timeCheckedIn)
+      );
+      return sortedEvents;
+    })
+    .catch(next);
 }
 
 // export async function updateEvent(updateEventData, next) {

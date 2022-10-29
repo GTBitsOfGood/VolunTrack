@@ -19,7 +19,7 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Delete Entry</ModalHeader>
-      <ModalBody>Are you sure you want to delete this entry?</ModalBody>
+      <ModalBody>Are you sure you want to delete this entry <strong>permanently</strong>?</ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={toggle}>
           Cancel

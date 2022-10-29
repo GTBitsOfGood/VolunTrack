@@ -137,7 +137,7 @@ const EventManager = ({ userId }) => {
   const [earn, setEarn] = useState("Bronze");
 
   if (!userId) {
-    console.log("here" + userId)
+    console.log("here" + userId);
     const { data: session } = useSession();
     userId = session.user._id;
   }
@@ -148,11 +148,9 @@ const EventManager = ({ userId }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    console.log(userId)
+    console.log(userId);
     fetchEventsByUserId(userId)
       .then((result) => {
-
-
         if (result && result.data && result.data.event) {
           setEvents(result.data.event);
           setLength(result.data.event.length);
@@ -164,14 +162,14 @@ const EventManager = ({ userId }) => {
             setAttend("Gold");
           }
           let add = 0;
-          // HAVE TO FIX THIS 
+          // HAVE TO FIX THIS
           for (let i = 0; i < result.data.event.length; i++) {
             if (result.data.event[i].timeCheckedOut != null) {
               add += getHours(
                 result.data.event[i].timeCheckedIn.slice(11, 16),
                 result.data.event[i].timeCheckedOut.slice(11, 16)
               );
-            }  
+            }
           }
           setSum(add);
           if (add >= 7) {

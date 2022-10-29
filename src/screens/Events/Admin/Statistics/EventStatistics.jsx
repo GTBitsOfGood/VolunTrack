@@ -79,7 +79,7 @@ const EventStatistics = () => {
 
   useEffect(() => {
     onRefresh();
-  }, []);
+  }, [attendanceStats]);
 
   const hours = attendanceStats.reduce((prev, curr) => prev + curr.hours, 0.0);
   const totalVolunteers = [
