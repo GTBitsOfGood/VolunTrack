@@ -12,7 +12,7 @@ import Icon from "../../components/Icon";
 import UserTable from "./UserTable";
 import ReactSearchBox from "react-search-box";
 
-const PAGE_SIZE = 3;
+// const PAGE_SIZE = 3;
 
 const Styled = {
   Container: styled.div`
