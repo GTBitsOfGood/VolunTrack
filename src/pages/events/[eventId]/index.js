@@ -20,10 +20,20 @@ const Styled = {
     bottom: 0;
     width: 90%;
   `,
+  BackButton: styled(Button)`
+    background-color: ${variables["primary"]};
+    color: white;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    margin-left: 4rem;
+    margin-right: 4rem;
+    font-size: 20px;
+    width: 8%;
+  `,
   EventTable: styled.div`
     display: flex;
     flex-direction: row;
-    padding-top: 2rem;
+    padding-top: 1rem;
     padding-bottom: 4rem;
     background-color: ${variables["gray-100"]};
     height: 100vh;
@@ -78,6 +88,9 @@ const Styled = {
     font-size: 16px;
     margin: 20px;
   `,
+  Row: styled.div`
+    background-color: ${variables["gray-100"]};
+  `,
   ButtonCol: styled.div`
     display: flex;
     flex-direction: column;
@@ -127,6 +140,8 @@ const EventInfo = () => {
     return <div />;
   }
 
+  
+
   const onRegisterClicked = () => {
     router.replace(`${eventId}/register`);
   };
@@ -159,7 +174,13 @@ const EventInfo = () => {
   const futureDate = new Date(event.date) > new Date();
   return (
     <>
+      <Styled.Row>
+        <Styled.BackButton onClick={() => router.back()}>
+                Back
+        </Styled.BackButton>
+        </Styled.Row>
       <Styled.EventTable>
+        
         <Col>
           <Styled.EventCol>
             <Styled.EventName>{event.title}</Styled.EventName>
@@ -179,6 +200,7 @@ const EventInfo = () => {
         <Col>
           <Row>
             <Styled.EventCol2>
+              
               <Styled.InfoHead>Event Information</Styled.InfoHead>
               <Styled.InfoTable>
                 <Styled.InfoTableCol>
@@ -283,6 +305,7 @@ const EventInfo = () => {
             Unregister
           </Styled.Button>
         )}
+        
     </>
   );
 };
