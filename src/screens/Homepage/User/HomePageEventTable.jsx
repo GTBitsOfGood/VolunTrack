@@ -147,30 +147,30 @@ const HomePageEventTable = ({ events, onUnregister, user }) => {
                     {event.date.slice(5, 7)}/{event.date.slice(8, 10)}/
                     {event.date.slice(0, 4)}{" "}
                   </Table.Creation>
+                  {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
+                    14400000 ==
+                  Date.parse(event.date) ? (
+                    <Row>
+                      {true ? (
+                        <>
+                          <Table.UpcomingCheckinDone>
+                            <text>
+                              You are checked in! When it is time to check out,
+                              please check out by finding an admin.
+                            </text>
+                          </Table.UpcomingCheckinDone>
+                        </>
+                      ) : (
+                        <Table.UpcomingCheckin>
+                          <text>Please check in by finding an admin.</text>
+                        </Table.UpcomingCheckin>
+                      )}
+                    </Row>
+                  ) : (
+                    <Row></Row>
+                  )}
                 </Table.EventList>
               </Link>
-              {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
-                14400000 ==
-              Date.parse(event.date) ? (
-                <Row>
-                  {true ? (
-                    <>
-                      <Table.CheckinDone>
-                        <text>
-                          You are checked in! When it is time to check out,
-                          please check out by finding an admin.
-                        </text>
-                      </Table.CheckinDone>
-                    </>
-                  ) : (
-                    <Table.Checkin>
-                      <text>Please check in by finding an admin.</text>
-                    </Table.Checkin>
-                  )}
-                </Row>
-              ) : (
-                <Row></Row>
-              )}
             </Styled.List>
           ))}
         </Styled.ul>

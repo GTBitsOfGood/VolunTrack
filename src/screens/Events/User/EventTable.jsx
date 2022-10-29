@@ -184,17 +184,17 @@ const EventTable = ({
                       <Row>
                         {isCheckedIn(event._id, user) ? (
                           <>
-                            <Table.CheckinDone>
+                            <Table.EventsCheckinDone>
                               <text>
                                 You are checked in! When it is time to check
                                 out, please check out by finding an admin.
                               </text>
-                            </Table.CheckinDone>
+                            </Table.EventsCheckinDone>
                           </>
                         ) : (
-                          <Table.Checkin>
+                          <Table.EventsCheckin>
                             <text>Please check in by finding an admin.</text>
-                          </Table.Checkin>
+                          </Table.EventsCheckin>
                         )}
                       </Row>
                     ) : (
