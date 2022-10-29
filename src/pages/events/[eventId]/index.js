@@ -166,15 +166,15 @@ const EventInfo = () => {
     context.startLoading();
     context.success("Successfully Copied Private Link to Event!");
   };
-
   let lastUpdated =
     "Last updated " +
     new Date(Date.parse(event.updatedAt)).toLocaleString().replace(",", " at");
   lastUpdated =
     lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
     lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
-
-  const futureDate = new Date(event.date) > new Date();
+  const futureorTodaysDate =
+    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
+    Date.parse(event.date);
   return (
     <>
       <Styled.EventTable>
@@ -296,14 +296,14 @@ const EventInfo = () => {
       {user.role == "volunteer" &&
         event.max_volunteers - event.volunteers.length != 0 &&
         !event.volunteers.includes(user._id) &&
-        futureDate && (
+        futureorTodaysDate && (
           <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
           </Styled.Button>
         )}
       {user.role == "volunteer" &&
         event.volunteers.includes(user._id) &&
-        futureDate && (
+        futureorTodaysDate && (
           <Styled.Button onClick={() => onUnregisterClicked(event)}>
             Unregister
           </Styled.Button>
