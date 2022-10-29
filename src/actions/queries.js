@@ -145,8 +145,8 @@ export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
 
-export const checkInVolunteer = (userId, eventId) =>
-  axios.post("/api/attendance/checkin", { userId, eventId });
+export const checkInVolunteer = (userId, eventId, eventName) =>
+  axios.post("/api/attendance/checkin", { userId, eventId, eventName });
 
 export const checkOutVolunteer = (userId, eventId) =>
   axios.post("/api/attendance/checkout", { userId, eventId });
