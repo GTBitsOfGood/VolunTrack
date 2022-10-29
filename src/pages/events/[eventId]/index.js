@@ -194,7 +194,7 @@ const EventInfo = () => {
         <Col>
           <Row>
             <Styled.Routing onClick={routeToRegisteredVolunteers}>
-              See Registered Volunteers
+              Manage Attendance
             </Styled.Routing>
             <Styled.Routing onClick={routeToStats}>
               View Participation Statistics
