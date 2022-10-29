@@ -24,12 +24,14 @@ const AttendanceFunctionality = ({
   minors,
   checkIn,
   checkOut,
+  isEnded,
 }: {
   checkedInVolunteers: any;
   checkedOutVolunteers: any;
   minors: { [volunteerID: string]: string[] };
   checkIn: (volunteer: any) => void;
   checkOut: (volunteer: any) => void;
+  isEnded: boolean;
 }): JSX.Element => (
   <>
     <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK IN</Styled.InfoText>
@@ -42,6 +44,7 @@ const AttendanceFunctionality = ({
             minors={minors[volunteer._id]}
             onClick={checkIn}
             isCheckedIn={false}
+            isEnded={isEnded}
           />
         ))}
     </Styled.VolunteerContainer>
@@ -55,6 +58,7 @@ const AttendanceFunctionality = ({
             minors={minors[volunteer._id]}
             onClick={checkOut}
             isCheckedIn={true}
+            isEnded={isEnded}
           />
         ))}
     </Styled.VolunteerContainer>
