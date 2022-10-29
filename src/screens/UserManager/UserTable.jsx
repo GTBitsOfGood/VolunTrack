@@ -86,7 +86,6 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log("componentDidMount");
     console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
@@ -96,43 +95,63 @@ class UserTable extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    await updateUser(
-      this.state.userSelectedForEdit.email,
-      this.state.userSelectedForEdit && this.state.first_name
-        ? this.state.first_name
-        : this.state.userSelectedForEdit.first_name,
-      this.state.userSelectedForEdit && this.state.last_name
-        ? this.state.last_name
-        : this.state.userSelectedForEdit.last_name,
-      this.state.userSelectedForEdit && this.state.phone_number
-        ? this.state.phone_number
-        : this.state.userSelectedForEdit.phone_number,
-      this.state.userSelectedForEdit && this.state.date_of_birth
-        ? this.state.date_of_birth
-        : this.state.userSelectedForEdit.date_of_birth,
-      this.state.userSelectedForEdit && this.state.zip_code
-        ? this.state.zip_code
-        : this.state.userSelectedForEdit.zip_code,
-      this.state.userSelectedForEdit && this.state.total_hours
-        ? this.state.total_hours
-        : this.state.userSelectedForEdit.total_hours,
-      this.state.userSelectedForEdit && this.state.address
-        ? this.state.address
-        : this.state.userSelectedForEdit.address,
-      this.state.userSelectedForEdit && this.state.city
-        ? this.state.city
-        : this.state.userSelectedForEdit.city,
-      this.state.userSelectedForEdit && this.state.state
-        ? this.state.state
-        : this.state.userSelectedForEdit.state,
-      this.state.userSelectedForEdit && this.state.court_hours
-        ? this.state.court_hours
-        : this.state.userSelectedForEdit.court_hours,
-      this.state.userSelectedForEdit && this.state.notes
-        ? this.state.notes
-        : this.state.userSelectedForEdit.notes
-    );
+    let user = {
+      name:
+        (this.state.userSelectedForEdit && this.state.first_name
+          ? this.state.first_name
+          : this.state.userSelectedForEdit.first_name) +
+        " " +
+        (this.state.userSelectedForEdit && this.state.last_name
+          ? this.state.last_name
+          : this.state.userSelectedForEdit.last_name),
+      email: this.state.userSelectedForEdit.email,
+      first_name:
+        this.state.userSelectedForEdit && this.state.first_name
+          ? this.state.first_name
+          : this.state.userSelectedForEdit.first_name,
+      last_name:
+        this.state.userSelectedForEdit && this.state.last_name
+          ? this.state.last_name
+          : this.state.userSelectedForEdit.last_name,
+      phone_number:
+        this.state.userSelectedForEdit && this.state.phone_number
+          ? this.state.phone_number
+          : this.state.userSelectedForEdit.phone_number,
+      date_of_birth:
+        this.state.userSelectedForEdit && this.state.date_of_birth
+          ? this.state.date_of_birth
+          : this.state.userSelectedForEdit.date_of_birth,
+      zip_code:
+        this.state.userSelectedForEdit && this.state.zip_code
+          ? this.state.zip_code
+          : this.state.userSelectedForEdit.zip_code,
+      total_hours:
+        this.state.userSelectedForEdit && this.state.total_hours
+          ? this.state.total_hours
+          : this.state.userSelectedForEdit.total_hours,
+      address:
+        this.state.userSelectedForEdit && this.state.address
+          ? this.state.address
+          : this.state.userSelectedForEdit.address,
+      city:
+        this.state.userSelectedForEdit && this.state.city
+          ? this.state.city
+          : this.state.userSelectedForEdit.city,
+      state:
+        this.state.userSelectedForEdit && this.state.state
+          ? this.state.state
+          : this.state.userSelectedForEdit.state,
+      court_hours:
+        this.state.userSelectedForEdit && this.state.court_hours
+          ? this.state.court_hours
+          : this.state.userSelectedForEdit.court_hours,
+      notes:
+        this.state.userSelectedForEdit && this.state.notes
+          ? this.state.notes
+          : this.state.userSelectedForEdit.notes,
+    };
     this.onModalClose();
+    this.props.editUserCallback(user);
   };
 
   render() {
@@ -313,37 +332,6 @@ class UserTable extends React.Component {
                         }
                       />
                     </Col>
-                    <Col>
-                      <Form.Label>Court Required Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.courtH
-                            : ""
-                        }
-                        type="text"
-                        name="Court Hours"
-                        onChange={(evt) =>
-                          this.setState({ court_hours: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Row>
-                      <Col>
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Input
-                          defaultValue={
-                            this.state.userSelectedForEdit
-                              ? this.state.userSelectedForEdit.notes
-                              : ""
-                          }
-                          type="textarea"
-                          onChange={(evt) =>
-                            this.setState({ notes: evt.target.value })
-                          }
-                        ></Form.Input>
-                      </Col>
-                    </Row>
                   </Row>
                   <Row>
                     <Col>
@@ -390,6 +378,37 @@ class UserTable extends React.Component {
                           this.setState({ state: evt.target.value })
                         }
                       />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Court Required Hours</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.courtH
+                            : ""
+                        }
+                        type="text"
+                        name="Court Hours"
+                        onChange={(evt) =>
+                          this.setState({ court_hours: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Notes</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.notes
+                            : ""
+                        }
+                        type="textarea"
+                        onChange={(evt) =>
+                          this.setState({ notes: evt.target.value })
+                        }
+                      ></Form.Input>
                     </Col>
                   </Row>
                 </Form.FormGroup>
