@@ -82,7 +82,7 @@ const EventAttendance = () => {
   }, []);
 
   const checkIn = (volunteer) => {
-    checkInVolunteer(volunteer._id, eventId);
+    checkInVolunteer(volunteer._id, eventId, event.title);
 
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(

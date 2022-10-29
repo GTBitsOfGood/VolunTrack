@@ -6,8 +6,10 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const userId = req.body.userId;
     const eventId = req.body.eventId;
+    const eventName = req.body.eventName;
 
     const attendance = new Attendance({
+      eventName,
       userId,
       eventId,
       timeCheckedIn: Date.now(),

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
-import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../../components/Icon";
@@ -11,7 +10,8 @@ const Styled = {
   Container: styled.div`
     width: 48vw;
     max-height: 100vh;
-    overflow-y: scroll;
+    min-height: min-content;
+    overflow-y: auto;
   `,
   EventContainer: styled.div`
     width: 100%;
@@ -74,6 +74,9 @@ const Styled = {
   Date: styled.p`
     margin: 0 1rem 0 0;
     color: grey;
+  `,
+  Spacer: styled.div`
+    height: 12rem;
   `,
 };
 
@@ -175,6 +178,7 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
           )}
         </Styled.EventContainer>
       ))}
+      <Styled.Spacer />
     </Styled.Container>
   );
 };
