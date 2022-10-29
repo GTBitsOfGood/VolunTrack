@@ -148,3 +148,6 @@ export const getEventVolunteersByAttendance = (eventId, isCheckedIn) =>
   axios.get(
     `/api/events/${eventId}/volunteersByAttendance?isCheckedIn=${isCheckedIn}`
   );
+
+export const updateEventById = (id, event) =>
+  axios.put(`/api/events/${id}`, event);

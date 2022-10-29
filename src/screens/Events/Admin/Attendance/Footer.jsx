@@ -37,19 +37,30 @@ const Styled = {
     font-size: 1.5rem;
     border-radius: 1rem;
   `,
+  ReopenEventButton: styled(Button)`
+    width: 100%;
+    font-size: 1.5rem;
+    border-radius: 1rem;
+  `,
 };
 
-const Footer = ({ endEvent, eventId }) => {
+const Footer = ({ endEvent, reopenEvent, event }) => {
   const router = useRouter();
 
   return (
     <Styled.Background>
       <Styled.Container>
-        <Styled.EndEventButton onClick={endEvent}>
-          End Event
-        </Styled.EndEventButton>
+        {event.isEnded ? (
+          <Styled.ReopenEventButton onClick={reopenEvent}>
+            Reopen Event
+          </Styled.ReopenEventButton>
+        ) : (
+          <Styled.EndEventButton onClick={endEvent}>
+            End Event
+          </Styled.EndEventButton>
+        )}
         <Styled.EventPageButton
-          onClick={() => router.push(`/events/${eventId}`)}
+          onClick={() => router.push(`/events/${event._id}`)}
         >
           Visit Event Page
         </Styled.EventPageButton>

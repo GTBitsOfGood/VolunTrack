@@ -6,6 +6,7 @@ import {
   checkOutVolunteer,
   fetchEventsById,
   getEventVolunteersByAttendance,
+  updateEventById,
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
@@ -99,11 +100,20 @@ const EventAttendance = () => {
   };
 
   const endEvent = () => {
+    const newEvent = { ...event, isEnded: true };
+    setEvent(newEvent);
+    updateEventById(eventId, newEvent);
     checkedInVolunteers.forEach((v) => {
       checkOutVolunteer(v._id, eventId);
     });
     setCheckedOutVolunteers(checkedOutVolunteers.concat(checkedInVolunteers));
     setCheckedInVolunteers([]);
+  };
+
+  const reopenEvent = () => {
+    const newEvent = { ...event, isEnded: false };
+    setEvent(newEvent);
+    updateEventById(eventId, newEvent);
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {
@@ -161,9 +171,10 @@ const EventAttendance = () => {
           minors={minors}
           checkIn={checkIn}
           checkOut={checkOut}
+          isEnded={event?.isEnded}
         />
       </Styled.Container>
-      <Footer endEvent={endEvent} eventId={eventId} />
+      <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} />
     </>
   );
 };
