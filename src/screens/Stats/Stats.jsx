@@ -57,7 +57,7 @@ const Stats = () => {
 
   
   return (
-    <EventManager user={user} />
+    <EventManager userId={user._id} />
   );
 };
 

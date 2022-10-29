@@ -14,6 +14,7 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Pagination from "../../components/PaginationComp";
 import { updateUser } from "../../actions/queries";
+import Link from "next/link";
 
 const keyToValue = (key) => {
   key = key.replace(/_/g, " ");
@@ -151,6 +152,7 @@ class UserTable extends React.Component {
               <th style={{ color: "#960034" }}>Volunteer Name</th>
               <th style={{ color: "#960034" }}>Email Address</th>
               <th style={{ color: "#960034" }}>Phone Number</th>
+              
             </tr>
             {users
               .slice(
@@ -185,6 +187,13 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
+                  </td>
+                  <td>
+                  <Link href={`stats/${user._id}`}>
+                    <Styled.Button>
+                      Stats
+                    </Styled.Button>
+                    </Link>
                   </td>
                 </Table.Row>
               ))}

@@ -127,7 +127,7 @@ const Styled = {
   `,
 };
 
-const EventManager = ({ user }) => {
+const EventManager = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [length, setLength] = useState(0);
@@ -136,9 +136,10 @@ const EventManager = ({ user }) => {
   const [attend, setAttend] = useState("Bronze");
   const [earn, setEarn] = useState("Bronze");
 
-  if (!user) {
+  if (!userId) {
+    console.log("here" + userId)
     const { data: session } = useSession();
-    user = session.user;
+    userId = session.user._id;
   }
 
   useEffect(() => {
@@ -147,7 +148,8 @@ const EventManager = ({ user }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEventsByUserId(user._id)
+    console.log(userId)
+    fetchEventsByUserId(userId)
       .then((result) => {
 
 
@@ -172,10 +174,10 @@ const EventManager = ({ user }) => {
             }  
           }
           setSum(add);
-          if (add >= 10) {
+          if (add >= 7) {
             setEarn("Silver");
           }
-          if (add >= 20) {
+          if (add >= 14) {
             setEarn("Gold");
           }
         }
@@ -184,7 +186,7 @@ const EventManager = ({ user }) => {
         setLoading(false);
       });
 
-    getCurrentUser(user._id)
+    getCurrentUser(userId)
       .then((result) => {
         if (result) {
           setUser(result.data.result[0].mandatedHours);
@@ -230,7 +232,7 @@ const EventManager = ({ user }) => {
                 />
               )}
             </Styled.StatImage>
-            <Styled.StatText>{sum} hours</Styled.StatText>
+            <Styled.StatText>{Math.round(sum * 10) / 10} hours</Styled.StatText>
           </Styled.BoxInner>
         </Styled.Box>
         <Styled.Hours>

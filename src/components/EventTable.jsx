@@ -102,7 +102,7 @@ const EventTable = ({
                       {event.timeCheckedOut == null ? "N/A" : convertTime(event.timeCheckedOut.slice(11, 16))}
                     </Table.Time>
                     <Table.TextInfo>
-                      &emsp;{event.timeCheckedOut == null ? "0 hour(s)" : getHours(event.timeCheckedIn.slice(11, 16), event.timeCheckedOut.slice(11, 16))} hour(s)
+                      &emsp;{event.timeCheckedOut == null ? "0 hour(s)" : getHours(event.timeCheckedIn.slice(11, 16), event.timeCheckedOut.slice(11, 16)) + " hour(s)"}
                     </Table.TextInfo>
                   </Table.Inner>
                 </Table.EventList>
