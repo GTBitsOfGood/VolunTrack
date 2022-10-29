@@ -150,16 +150,15 @@ const EventInfo = () => {
     context.startLoading();
     context.success("Successfully Copied Private Link to Event!");
   };
-
   let lastUpdated =
     "Last updated " +
     new Date(Date.parse(event.updatedAt)).toLocaleString().replace(",", " at");
   lastUpdated =
     lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
     lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
-
-    const futureorTodaysDate = Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
-    Date.parse(event.date)
+  const futureorTodaysDate =
+    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
+    Date.parse(event.date);
   return (
     <>
       <Styled.EventTable>
