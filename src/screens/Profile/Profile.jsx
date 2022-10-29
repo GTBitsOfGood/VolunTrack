@@ -4,6 +4,7 @@ import styled from "styled-components";
 import ProfileTable from "./ProfileTable";
 import { RequestContext } from "../../providers/RequestProvider";
 import { useContext } from "react";
+import { useRouter } from "next/router";
 
 const Styled = {
   Container: styled.div`
@@ -52,6 +53,7 @@ const Profile = () => {
         isAdmin={false}
         editUserCallback={() => console.log("callback")}
         context={useContext(RequestContext)}
+        router={useRouter()}
       />
     </Styled.Container>
   );
