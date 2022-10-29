@@ -82,6 +82,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     background-color: white;
+    padding-bottom: 1.5rem;
   `,
   PrivateLink: styled(Button)`
     background-color: ${variables["primary"]};
@@ -177,7 +178,7 @@ const EventInfo = () => {
         </Col>
         <Col>
           <Row>
-            <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+            <Styled.EventCol2>
               <Styled.InfoHead>Event Information</Styled.InfoHead>
               <Styled.InfoTable>
                 <Styled.InfoTableCol>
@@ -219,7 +220,7 @@ const EventInfo = () => {
           <br></br>
           {event.orgName !== "" && (
             <Row>
-              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+              <Styled.EventCol2>
                 <Styled.InfoHead>Organization</Styled.InfoHead>
                 <Styled.InfoTable>
                   <Styled.InfoTableCol>
@@ -258,7 +259,7 @@ const EventInfo = () => {
                 </Styled.InfoTable>
                 <Styled.ButtonCol>
                   <Styled.PrivateLink onClick={copyPrivateLink}>
-                    Share private link to event
+                    Share Private Link to Event
                   </Styled.PrivateLink>
                   <Toaster />
                 </Styled.ButtonCol>
