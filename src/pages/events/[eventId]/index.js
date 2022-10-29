@@ -82,7 +82,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     background-color: white;
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
   `,
   PrivateLink: styled(Button)`
     background-color: ${variables["primary"]};
