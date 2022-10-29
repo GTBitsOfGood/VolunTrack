@@ -149,6 +149,8 @@ const EventManager = ({ user }) => {
     setLoading(true);
     fetchEventsByUserId(user._id)
       .then((result) => {
+
+
         if (result && result.data && result.data.event) {
           setEvents(result.data.event);
           setLength(result.data.event.length);
@@ -160,11 +162,14 @@ const EventManager = ({ user }) => {
             setAttend("Gold");
           }
           let add = 0;
+          // HAVE TO FIX THIS 
           for (let i = 0; i < result.data.event.length; i++) {
-            add += getHours(
-              result.data.event[i].startTime,
-              result.data.event[i].endTime
-            );
+            if (result.data.event[i].timeCheckedOut != null) {
+              add += getHours(
+                result.data.event[i].timeCheckedIn.slice(11, 16),
+                result.data.event[i].timeCheckedOut.slice(11, 16)
+              );
+            }  
           }
           setSum(add);
           if (add >= 10) {

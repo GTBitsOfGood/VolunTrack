@@ -1,4 +1,4 @@
-const EventData = require("../mongodb/models/event");
+const AttendanceData = require("../mongodb/models/attendance");
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
 const User = require("../mongodb/models/User");
@@ -21,8 +21,9 @@ export async function getEventsByUserID(userId, next) {
   //     .catch(next);
   // }
 
-  return EventData.find({volunteers: userId})
+  return AttendanceData.find({userId: userId})
       .then((events) => {
+        
         return events;
       })
       .catch(next);
