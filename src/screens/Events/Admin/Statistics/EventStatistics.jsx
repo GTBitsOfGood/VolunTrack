@@ -138,7 +138,7 @@ const EventStatistics = () => {
           <Styled.StatsInfoContainer>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Hours: </strong> {hours}
+                <strong>Total Hours: </strong> {hours.toString().slice(0, 5)}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>
