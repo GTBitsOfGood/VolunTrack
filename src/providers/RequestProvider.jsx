@@ -20,7 +20,7 @@ const Container = styled.div`
     align-items: center;
     border-radius: 0.5rem;
     margin: auto;
-    max-width: ${(props) => (props.success || props.failed ? "15rem" : "5rem")};
+    max-width: 30rem;
     transition: max-width 0.2s;
 
     p {
@@ -109,7 +109,7 @@ class RequestProvider extends React.Component {
         <Container {...this.state}>
           <div className="banner">
             {this.state.isLoading ? (
-              <Loading size="0.8rem" />
+              <Loading size="0.5rem" />
             ) : (
               <React.Fragment>
                 <p>{this.state.text}</p>
