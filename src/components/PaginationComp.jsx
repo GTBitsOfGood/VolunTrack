@@ -20,25 +20,26 @@ const Styled = {
 class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { pageCount: 0, currentPage: 0 };
+    // this.state = { pageCount: 0, currentPage: 0 };
     // const [pageCount, setPageCount] = useState(0);
     // this.pageSize = 3;
     // this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
 
     // console.log(this.props.currentPages);
-    // this.state = {
-    //   currentPage: this.props.currentPages,
-    // };
+    this.state = {
+      currentPage: this.props.currentPage,
+    };
   }
 
-  handleClick(e) {
-    e.preventDefault();
-    // this.props.updatePage(index);
-  }
+  // handleClick(e) {
+  //   e.preventDefault();
+  //   // this.props.updatePage(index);
+  // }
 
   updateCurrentPage(e, index) {
     e.preventDefault();
     this.setState({ currentPage: index });
+    console.log(index);
   }
 
   // renderPageNumbers = () => {
@@ -59,17 +60,17 @@ class PaginationComp extends React.Component {
   //   });
   // };
 
-  componentDidMount = () => {
-    // console.log("componentDidMount");
-    // console.log(this.props.users.length, this.props.pageSize);
-    // console.log(Math.ceil(this.props.users.length / this.props.pageSize));
-    // console.log("--");
-    this.setState({
-      pageCount: Math.ceil(this.props.users.length / this.props.pageSize),
-      currentPage: this.props.currentPage,
-    });
-    // console.log(this.state.pageCount);
-  };
+  // componentDidMount = () => {
+  // console.log("componentDidMount");
+  // console.log(this.props.users.length, this.props.pageSize);
+  // console.log(Math.ceil(this.props.users.length / this.props.pageSize));
+  // console.log("--");
+  // this.setState({
+  //   pageCount: Math.ceil(this.props.users.length / this.props.pageSize),
+  //   currentPage: this.props.currentPage,
+  // });
+  // console.log(this.state.pageCount);
+  // };
 
   render() {
     return (
@@ -80,18 +81,18 @@ class PaginationComp extends React.Component {
               aria-label="Page navigation example"
               className="pagination justify-content-center"
             >
-              <PaginationItem disabled={this.state.currentPage <= 0}>
+              <PaginationItem disabled={this.props.currentPage <= 0}>
                 <Styled.PaginationLink
                   onClick={(e) =>
-                    this.updateCurrentPage(e, this.state.currentPage - 1)
+                    this.updateCurrentPage(e, this.props.currentPage - 1)
                   }
                   previous
                 >
                   Previous
                 </Styled.PaginationLink>
               </PaginationItem>
-              {[...Array(this.state.pageCount)].map((page, i) => (
-                <PaginationItem active={i === this.state.currentPage} key={i}>
+              {[...Array(this.props.pageCount)].map((page, i) => (
+                <PaginationItem active={i === this.props.currentPage} key={i}>
                   <Styled.PaginationLink
                     onClick={(e) => this.updateCurrentPage(e, i)}
                   >
@@ -101,11 +102,11 @@ class PaginationComp extends React.Component {
               ))}
               {/* {this.renderPageNumbers()} */}
               <PaginationItem
-                disabled={this.state.currentPage >= this.state.pageCount - 1}
+                disabled={this.props.currentPage >= this.props.pageCount - 1}
               >
                 <Styled.PaginationLink
                   onClick={(e) =>
-                    this.updateCurrentPage(e, this.state.currentPage + 1)
+                    this.updateCurrentPage(e, this.props.currentPage + 1)
                   }
                   next
                 >

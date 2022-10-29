@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { useSession, useState } from "next-auth/react";
 import Error from "next/error";
 import React from "react";
 import { Button } from "reactstrap";
@@ -22,6 +22,8 @@ const Styled = {
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
+    position: relative;
+    left: 10%;
   `,
   PaginationContainer: styled.div`
     background: white;
@@ -63,37 +65,44 @@ const Styled = {
     margin-right: 1rem;
     color: black;
   `,
-  SearchBox: styled.div`
-    position: relative;
-    left: 10%;
-    width: 70%;
-  `,
+  // SearchBox: styled.div`
+  //   position: relative;
+  //   left: 10%;
+  //   width: 70%;
+  // `,
   TableUsers: styled.div`
-    position: relative;
-    left: 10%;
-    margin-top: 20px;
     width: 80%;
   `,
   TotalVols: styled.div`
-    position: relative;
-    right: 10%;
-    top: 3%;
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
     line-height: 19px;
-    display: flex;
-    flex-flow: row-reverse;
+    margin-top: 0.3rem;
   `,
   Text: styled.div`
     color: #000000;
-    position: relative;
     width: 184px;
-    left: 10%;
     font-style: normal;
     font-weight: bold;
     font-size: 32px;
     line-height: 41px;
+  `,
+  Search: styled.input`
+    height: 2rem;
+    width: 85%;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+    font-size: 1rem;
+    border: 1px solid lightgray;
+    border-radius: 0.5rem;
+  `,
+  TopMenu: styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.7rem;
+    width: 80%;
   `,
 };
 
@@ -121,6 +130,9 @@ class UserManager extends React.Component {
     userCount: 0,
     currentPage: 0,
     loadingMoreUsers: false,
+    searchValue: "",
+    searchOn: false,
+    searchArray: [],
   };
 
   componentDidMount = () => this.onRefresh();
@@ -188,24 +200,47 @@ class UserManager extends React.Component {
     /** code to update users in state at that specific index */
     updateUser(updatedUser);
   };
+  filteredAndSortedVolunteers = () => {
+    const filterArray = this.state.users.filter(
+      (user) =>
+        user.name
+          ?.toLowerCase()
+          .includes(this.state.searchValue.toLowerCase()) ||
+        user.email?.toLowerCase().includes(this.state.searchValue.toLowerCase())
+    );
+    return filterArray;
+  };
   render() {
-    const { currentPage, loadingMoreUsers } = this.state;
+    const { currentPage, loadingMoreUsers, searchValue } = this.state;
     return (
       <Styled.Container>
         <Styled.Text>Volunteers</Styled.Text>
-        <Styled.TotalVols>
-          Total Volunteers: {this.getUsersAtPage().length}
-        </Styled.TotalVols>
-        <Styled.SearchBox>
+        <Styled.TopMenu>
+          <Styled.Search
+            placeholder="Search Name"
+            value={searchValue}
+            onChange={(evt) =>
+              this.setState({ searchValue: evt.target.value, searchOn: true })
+            }
+          />
+          <Styled.TotalVols>
+            Total Volunteers: {this.getUsersAtPage().length}
+          </Styled.TotalVols>
+        </Styled.TopMenu>
+        {/* <Styled.SearchBox>
           <ReactSearchBox
             placeholder="Search Name"
             data={this.getUsersAtPage()}
             onChange={(record) => this.onChangeSearch(record)}
           />
-        </Styled.SearchBox>
+        </Styled.SearchBox> */}
         <Styled.TableUsers>
           <UserTable
-            users={this.getUsersAtPage()}
+            users={
+              this.state.searchOn
+                ? this.filteredAndSortedVolunteers()
+                : this.getUsersAtPage()
+            }
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}
           />
