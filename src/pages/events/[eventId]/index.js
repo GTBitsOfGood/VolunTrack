@@ -196,12 +196,16 @@ const EventInfo = () => {
         </Col>
         <Col>
           <Row>
-            <Styled.Routing onClick={routeToRegisteredVolunteers}>
-              Manage Attendance
-            </Styled.Routing>
-            <Styled.Routing onClick={routeToStats}>
-              View Participation Statistics
-            </Styled.Routing>
+            {user.role === "admin" && (
+              <>
+                <Styled.Routing onClick={routeToRegisteredVolunteers}>
+                  Manage Attendance
+                </Styled.Routing>
+                <Styled.Routing onClick={routeToStats}>
+                  View Participation Statistics
+                </Styled.Routing>
+              </>
+            )}
           </Row>
           <Row>
             <Styled.EventCol2 style={{ "margin-right": "auto" }}>
