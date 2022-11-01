@@ -100,6 +100,12 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     setIsValidForCourtHours(!isValidForCourtHours);
   };
 
+  const getLocalTime = () => {
+    return new Date()
+      .toLocaleDateString(undefined, { day: "2-digit", timeZoneName: "short" })
+      .substring(4);
+  };
+
   const emptyStringField = "";
   const submitText = containsExistingEvent(event) ? "Submit" : "Create Event";
   const [content, setContent] = useState(
@@ -126,6 +132,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
         endTime: containsExistingEvent(event)
           ? event.endTime
           : emptyStringField,
+        localTime: containsExistingEvent(event)
+          ? event.localTime
+          : getLocalTime(),
         address: containsExistingEvent(event)
           ? event.address
           : emptyStringField,

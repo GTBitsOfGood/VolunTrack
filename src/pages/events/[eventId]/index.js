@@ -196,12 +196,16 @@ const EventInfo = () => {
         </Col>
         <Col>
           <Row>
-            <Styled.Routing onClick={routeToRegisteredVolunteers}>
-              Manage Attendance
-            </Styled.Routing>
-            <Styled.Routing onClick={routeToStats}>
-              View Participation Statistics
-            </Styled.Routing>
+            {user.role === "admin" && (
+              <>
+                <Styled.Routing onClick={routeToRegisteredVolunteers}>
+                  Manage Attendance
+                </Styled.Routing>
+                <Styled.Routing onClick={routeToStats}>
+                  View Participation Statistics
+                </Styled.Routing>
+              </>
+            )}
           </Row>
           <Row>
             <Styled.EventCol2 style={{ "margin-right": "auto" }}>
@@ -226,7 +230,7 @@ const EventInfo = () => {
                     <b>Time:</b>
                     <br></br>
                     {convertTime(event.startTime)} -{" "}
-                    {convertTime(event.endTime)}
+                    {convertTime(event.endTime)} {event.localTime}
                   </Styled.InfoTableText>
                   <Styled.InfoTableText>
                     <b>Location:</b>

@@ -9,6 +9,7 @@ export const standardEventValidator = object().shape({
   date: date().min(yesterday, "Date cannot be in the past").required(),
   startTime: string().required(),
   endTime: string().required(),
+  localTime: string().required(),
   address: string().trim().required(),
   city: string().trim().required(),
   zip: string().trim().matches(/^\d+$/, 'ZIP should have digits only').required("ZIP is required")
@@ -27,6 +28,7 @@ export const groupEventValidator = object().shape({
   date: date().required(),
   startTime: string().required(),
   endTime: string().required(),
+  localTime: string().required(),
   address: string().trim().required(),
   city: string().trim().required(),
   zip: string().trim().required(),

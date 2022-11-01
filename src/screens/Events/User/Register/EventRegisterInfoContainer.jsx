@@ -113,8 +113,9 @@ const EventRegisterInfoContainer = ({ event, user }) => {
               name="time"
             />
             <Styled.EventInfoText>
-              {convertTime(event.startTime)} - {convertTime(event.endTime)}
+              {convertTime(event.startTime)} - {convertTime(event.endTime)}{" "}
             </Styled.EventInfoText>
+            <Styled.DetailText>&nbsp; {event.localTime}</Styled.DetailText>
           </Row>
         </Styled.EventInfoCol>
         <Styled.EventInfoCol xs="12" lg="4">
