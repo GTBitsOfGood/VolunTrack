@@ -66,6 +66,7 @@ const CREATE_EVENT_VALIDATOR = [
   check("startTime").exists(),
   check("endTime").exists(),
   check("isPrivate").isAscii().trim(),
+  check("isValidForCourtHours").isBoolean(),
 
   check("address").isAscii().trim(),
   check("city").isAscii().trim(),

@@ -1,22 +1,21 @@
+import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import "react-quill/dist/quill.snow.css";
 import {
-  ModalBody,
-  ModalFooter,
   Button,
+  Col,
   FormGroup,
   Input,
-  Col,
+  ModalBody,
+  ModalFooter,
   Row,
 } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../sharedStyles/formStyles";
-import PropTypes from "prop-types";
-import { groupEventValidator, standardEventValidator } from "./eventHelpers";
-import { editEvent } from "../../../actions/queries";
-import { createEvent } from "../../../actions/queries";
+import styled from "styled-components";
+import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
-import "react-quill/dist/quill.snow.css";
+import * as SForm from "../../sharedStyles/formStyles";
+import { groupEventValidator, standardEventValidator } from "./eventHelpers";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -59,12 +58,16 @@ const Styled = {
 
 const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
+  const [isValidForCourtHours, setIsValidForCourtHours] = useState(
+    event.isValidForCourtHours
+  );
 
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
       ...values,
+      isValidForCourtHours,
       description: content,
-      isPrivate: isGroupEvent ? 'true' : 'false',
+      isPrivate: isGroupEvent ? "true" : "false",
     };
     setSubmitting(true);
     createEvent(event)
@@ -76,6 +79,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedEvent = {
       ...values,
+      isValidForCourtHours,
       description: content,
       _id: event._id,
     };
@@ -89,7 +93,11 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const onSendConfirmationEmailCheckbox = () => {
-    setSendConfirmationEmail(true);
+    setSendConfirmationEmail(!onSendConfirmationEmailCheckbox);
+  };
+
+  const onCourtRequiredHoursCheckbox = () => {
+    setIsValidForCourtHours(!isValidForCourtHours);
   };
 
   const emptyStringField = "";
@@ -169,7 +177,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.orgZip
             : emptyStringField,
-        isPrivate: isGroupEvent ? 'true' : 'false',
+        isPrivate: isGroupEvent ? "true" : "false",
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
@@ -479,6 +487,20 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                 </Styled.GenericText>
               </Styled.Row>
             )}
+            <Styled.Row>
+              <FormGroup>
+                <Input
+                  defaultChecked={isValidForCourtHours}
+                  type="checkbox"
+                  onChange={onCourtRequiredHoursCheckbox}
+                />
+                {""}
+              </FormGroup>
+              <Styled.GenericText>
+                This event can count towards volunteer&apos;s court required
+                hours
+              </Styled.GenericText>
+            </Styled.Row>
           </Styled.ModalBody>
           <ModalFooter>
             <Button

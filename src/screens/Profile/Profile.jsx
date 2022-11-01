@@ -51,7 +51,7 @@ const Profile = () => {
       formFields.notes ?? user.bio.notes
     );
   };
-  console.log(user.bio);
+
   return (
     <Styled.Container>
       <Container>
