@@ -181,7 +181,43 @@ class UserTable extends React.Component {
                   </td>
                   <td>
                     <Link href={`stats/${user._id}`}>
-                      <Styled.Button>Stats</Styled.Button>
+                      <Styled.Button>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clipPath="url(#clip0_2204_28336)">
+                            <path
+                              d="M5.04892 17.99L10.2446 12.7856L13.7084 16.2494L21.0689 7.97098L19.848 6.75L13.7084 13.6516L10.2446 10.1878L3.75 16.6911L5.04892 17.99Z"
+                              fill="#960034"
+                            />
+                            <line
+                              x1="0.975"
+                              y1="1"
+                              x2="0.975"
+                              y2="22.5"
+                              stroke="#960034"
+                              strokeWidth="1.7"
+                            />
+                            <line
+                              x1="0.25"
+                              y1="21.65"
+                              x2="22.75"
+                              y2="21.65"
+                              stroke="#960034"
+                              strokeWidth="1.7"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_2204_28336">
+                              <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </Styled.Button>
                     </Link>
                   </td>
                 </Table.Row>
