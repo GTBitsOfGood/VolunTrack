@@ -99,9 +99,9 @@ class UserTable extends React.Component {
     console.log(this.state.pageCount);
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    await updateUser(
+    updateUser(
       this.state.userSelectedForEdit.email,
       this.state.userSelectedForEdit && this.state.first_name
         ? this.state.first_name
@@ -132,7 +132,6 @@ class UserTable extends React.Component {
         : this.state.userSelectedForEdit.notes
     );
     this.onModalClose();
-    this.props.editUserCallback(user);
   };
 
   render() {
