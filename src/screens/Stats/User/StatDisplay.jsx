@@ -127,17 +127,16 @@ const Styled = {
   `,
 };
 
-const EventManager = ({ userId }) => {
+const StatDisplay = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [length, setLength] = useState(0);
   const [sum, setSum] = useState(0);
-  const [users, setUser] = useState("loading..");
+  const [name, setName] = useState("");
   const [attend, setAttend] = useState("Bronze");
   const [earn, setEarn] = useState("Bronze");
 
   if (!userId) {
-    console.log("here" + userId);
     const { data: session } = useSession();
     userId = session.user._id;
   }
@@ -148,7 +147,6 @@ const EventManager = ({ userId }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    console.log(userId);
     fetchEventsByUserId(userId)
       .then((result) => {
         if (result && result.data && result.data.event) {
@@ -187,7 +185,12 @@ const EventManager = ({ userId }) => {
     getCurrentUser(userId)
       .then((result) => {
         if (result) {
-          setUser(result.data.result[0].mandatedHours);
+          setName(
+            result.data.result[0].bio.first_name +
+              " " +
+              result.data.result[0].bio.last_name +
+              "'s"
+          );
         }
       })
       .finally(() => {});
@@ -195,8 +198,8 @@ const EventManager = ({ userId }) => {
   return (
     <Styled.Container>
       <Styled.Right>
-        <Styled.Header>Totals</Styled.Header>
-        <Styled.Header2>MEDALS</Styled.Header2>
+        <Styled.Header>{name} Volunteer Statistics</Styled.Header>
+        <Styled.Header2>ACHIEVEMENTS</Styled.Header2>
         <Styled.Box>
           <Styled.BoxInner>
             <Styled.StatText>Events Attended</Styled.StatText>
@@ -233,10 +236,7 @@ const EventManager = ({ userId }) => {
             <Styled.StatText>{Math.round(sum * 10) / 10} hours</Styled.StatText>
           </Styled.BoxInner>
         </Styled.Box>
-        <Styled.Hours>
-          <b>Court Required Hours:</b> &ensp;{users}
-        </Styled.Hours>
-        <Styled.Header>History</Styled.Header>
+        <Styled.Header>Volunteer History</Styled.Header>
         <Styled.Header2>{length} events</Styled.Header2>
         <Styled.marginTable>
           <EventTable events={events} isVolunteer={true} />
@@ -247,8 +247,8 @@ const EventManager = ({ userId }) => {
     </Styled.Container>
   );
 };
-EventManager.propTypes = {
+StatDisplay.propTypes = {
   user: PropTypes.object,
 };
 
-export default EventManager;
+export default StatDisplay;
