@@ -48,7 +48,7 @@ const Styled = {
   `,
   ButtonContainer: styled.div`
     width: 95%;
-    max-width: 80rem;
+    maxWidth: 80rem;
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
@@ -221,16 +221,15 @@ class Assistants extends React.Component {
     this.setState({
       showNewAdminModal: false,
     });
-    // if (isUpdating) {
-    //   this.handleSubmit();
-    // }
+    if (isUpdating) {
+      this.handleSubmit();
+    }
   };
 
-  // handleSubmit = async (e) => {
-  //   console.log(this.state.newInvitedAdmin);
-  //   e.preventDefault();
-  //   await updateInvitedAdmins(this.state.newInvitedAdmin);
-  // };
+  handleSubmit = async (e) => {
+    console.log(this.state.newInvitedAdmin);
+    await updateInvitedAdmins(this.state.newInvitedAdmin);
+  };
 
   filteredAndSortedAdmins = (admins) => {
     return (

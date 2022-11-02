@@ -138,7 +138,12 @@ export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
 
-export const updateInvitedAdmins = (email) => axios.post(`/api/settings/${email}`);
+export const updateInvitedAdmins = (email) => axios.post(`/api/settings/updateInvitedAdmin`, {email});
+
+export const getInvitedAdmins = () => axios.get(`/api/settings/getInvitedAdmin`);
+
+export const removeInvitedAdmin = (email) => axios.post(`/api/settings/removeInvitedAdmin`, {email});
+
 export const checkInVolunteer = (userId, eventId) =>
   axios.post("/api/attendance/checkin", { userId, eventId });
 
