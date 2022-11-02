@@ -197,11 +197,9 @@ class UserManager extends React.Component {
       updatedUser.phone_number,
       updatedUser.date_of_birth,
       updatedUser.zip_code,
-      updatedUser.total_hours,
       updatedUser.address,
       updatedUser.city,
       updatedUser.state,
-      updatedUser.court_hours,
       updatedUser.notes
     );
 

@@ -366,20 +366,20 @@ const EventRegister = (event) => {
             }}
           />{" "}
         </FormGroup>
-        <Styled.AccomodationText>
-          I require accommodation for my court required hours
-        </Styled.AccomodationText>
-        <IconSpecial
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          name="info"
-          href="#"
-          id="tooltipShow"
-        />
-        <UncontrolledTooltip placement="right" target="tooltipShow">
-          Here is information about your required court hours.
-        </UncontrolledTooltip>
+        {/*<Styled.AccomodationText>*/}
+        {/*  I require accommodation for my court required hours*/}
+        {/*</Styled.AccomodationText>*/}
+        {/*<IconSpecial*/}
+        {/*  width="20"*/}
+        {/*  height="20"*/}
+        {/*  viewBox="0 0 20 20"*/}
+        {/*  name="info"*/}
+        {/*  href="#"*/}
+        {/*  id="tooltipShow"*/}
+        {/*/>*/}
+        {/*<UncontrolledTooltip placement="right" target="tooltipShow">*/}
+        {/*  Here is information about your required court hours.*/}
+        {/*</UncontrolledTooltip>*/}
       </Styled.AccomodationRow>
       <Styled.Row>
         <Col xs="12" lg="3">

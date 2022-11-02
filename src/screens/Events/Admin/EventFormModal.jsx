@@ -222,32 +222,33 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Title</SForm.Label>
-                        <Styled.ErrorMessage name="title" />
+
                         <Field name="title">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="title" />
                       </Styled.Col>
                       <Styled.ThirdCol>
                         <SForm.Label>Max Volunteers</SForm.Label>
-                        <Styled.ErrorMessage name="max_volunteers" />
                         <Field name="max_volunteers">
                           {({ field }) => (
                             <SForm.Input {...field} type="number" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="max_volunteers" />
                       </Styled.ThirdCol>
                     </Row>
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Date</SForm.Label>
-                        <Styled.ErrorMessage name="date" />
                         <Field name="date">
                           {({ field }) => (
                             <SForm.Input {...field} type="date" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="date" />
                       </Styled.Col>
                       <Styled.Col>
                         <SForm.Label>Start Time</SForm.Label>
@@ -265,6 +266,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           )}
                         </Field>
                       </Styled.Col>
+                      <Row></Row>
                     </Row>
                     <Row
                       style={{

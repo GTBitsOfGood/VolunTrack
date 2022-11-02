@@ -43,11 +43,9 @@ export default async function handler(req, res, next) {
       userDataReq.last_name,
       userDataReq.date_of_birth,
       userDataReq.zip_code,
-      userDataReq.total_hours,
       userDataReq.address,
       userDataReq.city,
       userDataReq.state,
-      userDataReq.courtH,
       userDataReq.notes
     );
     res.status(result.status).json(result.message);
