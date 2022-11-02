@@ -12,7 +12,6 @@ import EventEditModal from "./Admin/EventEditModal";
 import EventTable from "./EventTable";
 
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { registerForEvent, updateEvent } from "./User/eventHelpers";
 
 const isSameDay = (a) => (b) => {
@@ -238,9 +237,6 @@ const EventManager = ({ user, role }) => {
     }
     return arr;
   }
-  if (role === 'volunteer') {
-    setEvents(filterEvents(events, user));
-  }
 
   return (
     <Styled.Container>
@@ -276,7 +272,7 @@ const EventManager = ({ user, role }) => {
           ) : (
             <EventTable
               dateString={dateString}
-              events={events}
+              events={user.role === 'admin' ? events : filterEvents(events, user)}
               onEditClicked={onEditClicked}
               onDeleteClicked={onDeleteClicked}
               onRegisterClicked={onRegister}

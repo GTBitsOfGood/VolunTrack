@@ -6,9 +6,7 @@ import Icon from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
 import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
 
-import { useSession } from "next-auth/react";
 import React from "react";
-import * as Table from "../sharedStyles/tableStyles";
 
 const Styled = {
   Container: styled.div`
@@ -82,6 +80,13 @@ const Styled = {
   Spacer: styled.div`
     height: 12rem;
   `,
+  Button: styled(Button)`
+    background: white;
+    border: none;
+    color: #000;
+    padding: 0.5rem;
+    margin: 0 0 0 auto;
+  `,
 };
 
 const convertTime = (time) => {
@@ -138,9 +143,16 @@ const compareDateString = (dateNum) => {
   return date;
 };
 
-
-
-const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked, onRegisterClicked, onUnregister, user, role }) => {
+const EventTable = ({
+  dateString,
+  events,
+  onEditClicked,
+  onDeleteClicked,
+  onRegisterClicked,
+  onUnregister,
+  user,
+  role,
+}) => {
   return (
     <Styled.Container>
       {events.map((event) => (
@@ -153,37 +165,45 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked, onRegi
                   {event.max_volunteers - event.volunteers.length} slots
                   available
                 </Styled.EventSlots>
-                {role === 'admin' && (<Styled.EditButton
+                {role === "admin" && (
+                  <Styled.EditButton
                     onClick={(e) => {
-                    e.stopPropagation();
-                    onEditClicked(event);
+                      e.stopPropagation();
+                      onEditClicked(event);
                     }}
-                >
+                  >
                     <Icon color="grey3" name="create" />
-                </Styled.EditButton>)}
-                {role === 'admin' && (<Styled.DeleteButton
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteClicked(event);
-                  }}
-                >
-                  <Icon color="grey3" name="delete" />
-                </Styled.DeleteButton>)}
-                {role === 'volunteer' && (<Table.Register>
+                  </Styled.EditButton>
+                )}
+                {role === "admin" && (
+                  <Styled.DeleteButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteClicked(event);
+                    }}
+                  >
+                    <Icon color="grey3" name="delete" />
+                  </Styled.DeleteButton>
+                )}
+                {role === "volunteer" && (
+                  <>
                     {event.volunteers.includes(user._id) ? (
-                      <>
-                        <Styled.Button onClick={() => onUnregister(event)}>
-                          <Icon color="grey3" name="delete" />
-                          <span>Unregister</span>
-                        </Styled.Button>
-                      </>
+                    <>
+                      <Styled.Button onClick={() => onUnregister(event)}>
+                        <Icon color="grey3" name="delete" />
+                        <span>Unregister</span>
+                      </Styled.Button>
+                    </>
                     ) : (
+                    <>
                       <Styled.Button onClick={() => onRegisterClicked(event)}>
                         <Icon color="grey3" name="add" />
                         <span>Sign up</span>
                       </Styled.Button>
+                    </>
                     )}
-                  </Table.Register>)}
+                  </>
+                )}
               </Styled.EventContentRow>
               <Styled.EventContentRow>
                 <Styled.Time>{`${convertTime(event.startTime)} - ${convertTime(
@@ -194,9 +214,8 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked, onRegi
             </Styled.EventContent>
           </Link>
           {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 ==
-            Date.parse(event.date) && role === 'admin' && (
-            <ManageAttendanceButton eventId={event._id} />
-          )}
+            Date.parse(event.date) &&
+            role === "admin" && <ManageAttendanceButton eventId={event._id} />}
         </Styled.EventContainer>
       ))}
       <Styled.Spacer />
