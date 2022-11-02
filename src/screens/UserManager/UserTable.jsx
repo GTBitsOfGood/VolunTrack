@@ -101,37 +101,63 @@ class UserTable extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    updateUser(
-      this.state.userSelectedForEdit.email,
-      this.state.userSelectedForEdit && this.state.first_name
-        ? this.state.first_name
-        : this.state.userSelectedForEdit.first_name,
-      this.state.userSelectedForEdit && this.state.last_name
-        ? this.state.last_name
-        : this.state.userSelectedForEdit.last_name,
-      this.state.userSelectedForEdit && this.state.phone_number
-        ? this.state.phone_number
-        : this.state.userSelectedForEdit.phone_number,
-      this.state.userSelectedForEdit && this.state.date_of_birth
-        ? this.state.date_of_birth
-        : this.state.userSelectedForEdit.date_of_birth,
-      this.state.userSelectedForEdit && this.state.zip_code
-        ? this.state.zip_code
-        : this.state.userSelectedForEdit.zip_code,
-      this.state.userSelectedForEdit && this.state.address
-        ? this.state.address
-        : this.state.userSelectedForEdit.address,
-      this.state.userSelectedForEdit && this.state.city
-        ? this.state.city
-        : this.state.userSelectedForEdit.city,
-      this.state.userSelectedForEdit && this.state.state
-        ? this.state.state
-        : this.state.userSelectedForEdit.state,
-      this.state.userSelectedForEdit && this.state.notes
-        ? this.state.notes
-        : this.state.userSelectedForEdit.notes
-    );
+    let user = {
+      name:
+        (this.state.userSelectedForEdit && this.state.first_name
+          ? this.state.first_name
+          : this.state.userSelectedForEdit.first_name) +
+        " " +
+        (this.state.userSelectedForEdit && this.state.last_name
+          ? this.state.last_name
+          : this.state.userSelectedForEdit.last_name),
+      email: this.state.userSelectedForEdit.email,
+      first_name:
+        this.state.userSelectedForEdit && this.state.first_name
+          ? this.state.first_name
+          : this.state.userSelectedForEdit.first_name,
+      last_name:
+        this.state.userSelectedForEdit && this.state.last_name
+          ? this.state.last_name
+          : this.state.userSelectedForEdit.last_name,
+      phone_number:
+        this.state.userSelectedForEdit && this.state.phone_number
+          ? this.state.phone_number
+          : this.state.userSelectedForEdit.phone_number,
+      date_of_birth:
+        this.state.userSelectedForEdit && this.state.date_of_birth
+          ? this.state.date_of_birth
+          : this.state.userSelectedForEdit.date_of_birth,
+      zip_code:
+        this.state.userSelectedForEdit && this.state.zip_code
+          ? this.state.zip_code
+          : this.state.userSelectedForEdit.zip_code,
+      total_hours:
+        this.state.userSelectedForEdit && this.state.total_hours
+          ? this.state.total_hours
+          : this.state.userSelectedForEdit.total_hours,
+      address:
+        this.state.userSelectedForEdit && this.state.address
+          ? this.state.address
+          : this.state.userSelectedForEdit.address,
+      city:
+        this.state.userSelectedForEdit && this.state.city
+          ? this.state.city
+          : this.state.userSelectedForEdit.city,
+      state:
+        this.state.userSelectedForEdit && this.state.state
+          ? this.state.state
+          : this.state.userSelectedForEdit.state,
+      court_hours:
+        this.state.userSelectedForEdit && this.state.court_hours
+          ? this.state.court_hours
+          : this.state.userSelectedForEdit.court_hours,
+      notes:
+        this.state.userSelectedForEdit && this.state.notes
+          ? this.state.notes
+          : this.state.userSelectedForEdit.notes,
+    };
     this.onModalClose();
+    this.props.editUserCallback(user);
   };
 
   render() {
