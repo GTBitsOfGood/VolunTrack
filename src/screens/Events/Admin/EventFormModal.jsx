@@ -59,7 +59,7 @@ const Styled = {
 const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
-    event.isValidForCourtHours
+    event?.isValidForCourtHours ?? false
   );
 
   const onSubmitCreateEvent = (values, setSubmitting) => {
@@ -484,20 +484,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                 </Row>
               </SForm.FormGroup>
             </Styled.Form>
-            {containsExistingEvent(event) && (
-              <Styled.Row>
-                <FormGroup>
-                  <Input
-                    type="checkbox"
-                    onChange={onSendConfirmationEmailCheckbox}
-                  />
-                  {""}
-                </FormGroup>
-                <Styled.GenericText>
-                  I would like to send a confirmation email
-                </Styled.GenericText>
-              </Styled.Row>
-            )}
+            <SForm.Label>Other</SForm.Label>
             <Styled.Row>
               <FormGroup>
                 <Input
@@ -505,12 +492,23 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                   type="checkbox"
                   onChange={onCourtRequiredHoursCheckbox}
                 />
-                {""}
+                <Styled.GenericText>
+                  This event can count towards volunteer&apos;s court required
+                  hours
+                </Styled.GenericText>
+                {containsExistingEvent(event) && (
+                  <div>
+                    <Input
+                      type="checkbox"
+                      onChange={onSendConfirmationEmailCheckbox}
+                    />
+                    <Styled.GenericText>
+                      I would like to send an email to volunteers with updated
+                      information
+                    </Styled.GenericText>
+                  </div>
+                )}
               </FormGroup>
-              <Styled.GenericText>
-                This event can count towards volunteer&apos;s court required
-                hours
-              </Styled.GenericText>
             </Styled.Row>
           </Styled.ModalBody>
           <ModalFooter>
