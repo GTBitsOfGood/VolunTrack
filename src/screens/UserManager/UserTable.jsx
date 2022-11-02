@@ -132,10 +132,6 @@ class UserTable extends React.Component {
         this.state.userSelectedForEdit && this.state.zip_code
           ? this.state.zip_code
           : this.state.userSelectedForEdit.zip_code,
-      total_hours:
-        this.state.userSelectedForEdit && this.state.total_hours
-          ? this.state.total_hours
-          : this.state.userSelectedForEdit.total_hours,
       address:
         this.state.userSelectedForEdit && this.state.address
           ? this.state.address
@@ -148,10 +144,6 @@ class UserTable extends React.Component {
         this.state.userSelectedForEdit && this.state.state
           ? this.state.state
           : this.state.userSelectedForEdit.state,
-      court_hours:
-        this.state.userSelectedForEdit && this.state.court_hours
-          ? this.state.court_hours
-          : this.state.userSelectedForEdit.court_hours,
       notes:
         this.state.userSelectedForEdit && this.state.notes
           ? this.state.notes
