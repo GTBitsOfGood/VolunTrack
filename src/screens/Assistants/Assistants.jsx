@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React, { useState } from "react";
-import { updateInvitedAdmins } from "../../actions/queries";
+import { updateInvitedAdmins, getInvitedAdmins } from "../../actions/queries";
 import {
   Button,
   Col,
@@ -13,12 +13,12 @@ import {
   Container,
 } from "reactstrap";
 import styled from "styled-components";
-// import { invitedAdminsValidator } from "./helpers";
 import * as Form from "../sharedStyles/formStyles";
 import { fetchUserCount, fetchUserManagementData } from "../../actions/queries";
 import EmployeeTable from "./EmployeeTable";
 import variables from "../../design-tokens/_variables.module.scss";
-import fusers from "quill";
+import { Formik } from "formik";
+import { invitedAdminValidator } from "./helpers";
 
 const PAGE_SIZE = 10;
 
@@ -48,7 +48,7 @@ const Styled = {
   `,
   ButtonContainer: styled.div`
     width: 95%;
-    maxWidth: 80rem;
+    maxwidth: 80rem;
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
@@ -135,6 +135,7 @@ class Assistants extends React.Component {
     loadingMoreUsers: false,
     showNewAdminModal: false,
     searchValue: "",
+    valid: false,
   };
 
   // const [searchValue, setSearchValue] = useState("");
@@ -149,7 +150,13 @@ class Assistants extends React.Component {
         });
       }
     });
-    this.setState({ invitedAdmins: this.getInvitedAdminList() });
+    getInvitedAdmins().then((result) => {
+      if (result && result.data) {
+        this.setState({
+          invitedAdmins: result.data,
+        });
+      }
+    });
     fetchUserManagementData().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
@@ -161,7 +168,6 @@ class Assistants extends React.Component {
           ),
           currentPage: 0,
           loadingMoreUsers: false,
-          invitedAdmins: this.getInvitedAdminList(),
         });
       }
     });
@@ -198,13 +204,7 @@ class Assistants extends React.Component {
     const start = currentPage * PAGE_SIZE;
     return this.filteredAndSortedAdmins(users.slice(start, start + PAGE_SIZE));
   };
-  getInvitedAdminList = () => {
-    const { invitedAdmins, currentPage } = this.state;
-    const start = currentPage * PAGE_SIZE;
-    return this.filteredAndSortedAdmins(
-      invitedAdmins.slice(start, start + PAGE_SIZE)
-    );
-  };
+
   atEnd = () =>
     (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
@@ -224,11 +224,15 @@ class Assistants extends React.Component {
     if (isUpdating) {
       this.handleSubmit();
     }
+    this.setState({
+      newInvitedAdmin: "",
+    });
   };
 
   handleSubmit = async (e) => {
     console.log(this.state.newInvitedAdmin);
     await updateInvitedAdmins(this.state.newInvitedAdmin);
+    this.onRefresh();
   };
 
   filteredAndSortedAdmins = (admins) => {
@@ -277,7 +281,7 @@ class Assistants extends React.Component {
           <Styled.TableUsers>
             <EmployeeTable
               users={this.getUsersAtPage()}
-              invitedAdmins={this.getInvitedAdminList()}
+              invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}
               loading={loadingMoreUsers}
               editUserCallback={this.onEditUser}
@@ -293,7 +297,7 @@ class Assistants extends React.Component {
           <ModalHeader color="#ef4e79">{"Add Admin"}</ModalHeader>
           <Container>
             <ModalBody>
-              <form>
+              <Formik validationSchema={invitedAdminValidator}>
                 <Form.FormGroup>
                   <Row>
                     <Col>
@@ -301,14 +305,21 @@ class Assistants extends React.Component {
                       <Form.Input
                         type="text"
                         name="email"
-                        onChange={(evt) =>
-                          this.setState({ newInvitedAdmin: evt.target.value })
-                        }
+                        onChange={(evt) => {
+                          this.setState({ newInvitedAdmin: evt.target.value });
+                          invitedAdminValidator
+                            .isValid({ email: this.state.newInvitedAdmin })
+                            .then((valid) => {
+                              this.setState({
+                                valid: valid,
+                              });
+                            });
+                        }}
                       />
                     </Col>
                   </Row>
                 </Form.FormGroup>
-              </form>
+              </Formik>
             </ModalBody>
           </Container>
           <ModalFooter>
@@ -318,6 +329,7 @@ class Assistants extends React.Component {
             <Button
               style={{ backgroundColor: "#ef4e79" }}
               onClick={() => this.onModalClose(true)}
+              disabled={!this.state.valid}
             >
               Add as an Admin
             </Button>

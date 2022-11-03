@@ -135,20 +135,20 @@ class EmployeeTable extends React.Component {
               ))}
 
             {!loading &&
-              invitedAdmins.map((user, index) => (
-                <Table.Row key={index} evenIndex={index % 2 === 0}>
+              invitedAdmins.map((email) => (
+                <Table.Row key={email} >
                   <td></td>
                   <td>
-                    {user.email}
+                    {email}
                     <Styled.Button
                       onClick={() => {
-                        navigator.clipboard.writeText(user.email);
+                        navigator.clipboard.writeText(email);
                       }}
                     >
                       <Icon color="grey3" name="copy" />
                     </Styled.Button>
                   </td>
-                  <td>Administrator</td>
+                  <td>Admin Assistant</td>
                   <td>Pending</td>
                 </Table.Row>
               ))}
