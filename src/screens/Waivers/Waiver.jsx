@@ -55,6 +55,8 @@ const ReplaceForm = styled.form`
 `;
 const ReplaceFileInput = styled.input`
   width: 16rem;
+  align-self: center;
+  margin-left: 12rem;
 `;
 const CancelButton = styled(Button)`
   height: 50%;
@@ -123,7 +125,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
     setIsUploading(false);
     setIsReplacing(false);
     context.startLoading();
-    context.success("Waiver Uploaded !");
+    context.success("Waiver Uploaded!");
   };
 
   const displayErrorMessage = () => {
