@@ -1,21 +1,21 @@
 import { ErrorMessage, Form as FForm } from "formik";
 import { useSession } from "next-auth/react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import ProfileTable from "./ProfileTable";
-import { RequestContext } from "../../providers/RequestProvider";
-import { useContext } from "react";
-import { useRouter } from "next/router";
+import EventManager from "./User/EventManager";
 
 const Styled = {
   Container: styled.div`
-    width: 100%;
-    height: 100%;
-    background: ${(props) => props.theme.grey9};
+    background: white;
+    margin-bottom: 2rem;
+    border-radius: 0.4rem;
+    padding: 2rem;
+    width: 80%;
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: ;
+    justify-content: center;
   `,
   HeaderContainer: styled.div`
     width: 95%;
@@ -42,21 +42,14 @@ const Styled = {
   `,
 };
 
-const Profile = () => {
-  const { data: session } = useSession();
-  console.log(session.user);
+const Stats = () => {
+  const [successText, setSuccessText] = useState("");
 
-  return (
-    <Styled.Container>
-      <ProfileTable
-        user={session.user}
-        isAdmin={false}
-        editUserCallback={() => console.log("callback")}
-        context={useContext(RequestContext)}
-        router={useRouter()}
-      />
-    </Styled.Container>
-  );
+  const {
+    data: { user },
+  } = useSession();
+
+  return <EventManager userId={user._id} />;
 };
 
-export default Profile;
+export default Stats;

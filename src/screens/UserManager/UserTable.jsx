@@ -2,28 +2,23 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
-import {
-  mandated,
-  roles,
-  statuses,
-} from "../ApplicantViewer/applicantInfoHelpers";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Pagination from "../../components/PaginationComp";
-import { updateUser } from "../../actions/queries";
+import Link from "next/link";
 
-const keyToValue = (key) => {
-  key = key.replace(/_/g, " ");
-  key = key
-    .toLowerCase()
-    .split(" ")
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(" ");
-  return key;
-};
+// const keyToValue = (key) => {
+//   key = key.replace(/_/g, " ");
+//   key = key
+//     .toLowerCase()
+//     .split(" ")
+//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+//     .join(" ");
+//   return key;
+// };
 
 const Styled = {
   Button: styled(Button)`
@@ -90,7 +85,6 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log("componentDidMount");
     console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
@@ -100,51 +94,69 @@ class UserTable extends React.Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    await updateUser(
-      this.state.userSelectedForEdit.email,
-      this.state.userSelectedForEdit && this.state.first_name
-        ? this.state.first_name
-        : this.state.userSelectedForEdit.first_name,
-      this.state.userSelectedForEdit && this.state.last_name
-        ? this.state.last_name
-        : this.state.userSelectedForEdit.last_name,
-      this.state.userSelectedForEdit && this.state.phone_number
-        ? this.state.phone_number
-        : this.state.userSelectedForEdit.phone_number,
-      this.state.userSelectedForEdit && this.state.date_of_birth
-        ? this.state.date_of_birth
-        : this.state.userSelectedForEdit.date_of_birth,
-      this.state.userSelectedForEdit && this.state.zip_code
-        ? this.state.zip_code
-        : this.state.userSelectedForEdit.zip_code,
-      this.state.userSelectedForEdit && this.state.total_hours
-        ? this.state.total_hours
-        : this.state.userSelectedForEdit.total_hours,
-      this.state.userSelectedForEdit && this.state.address
-        ? this.state.address
-        : this.state.userSelectedForEdit.address,
-      this.state.userSelectedForEdit && this.state.city
-        ? this.state.city
-        : this.state.userSelectedForEdit.city,
-      this.state.userSelectedForEdit && this.state.state
-        ? this.state.state
-        : this.state.userSelectedForEdit.state,
-      this.state.userSelectedForEdit && this.state.court_hours
-        ? this.state.court_hours
-        : this.state.userSelectedForEdit.court_hours,
-      this.state.userSelectedForEdit && this.state.notes
-        ? this.state.notes
-        : this.state.userSelectedForEdit.notes
-    );
-    // console.log(this.state.first_name);
-    // console.log(this.state.userSelectedForEdit.first_name);
+    let user = {
+      name:
+        (this.state.userSelectedForEdit && this.state.first_name
+          ? this.state.first_name
+          : this.state.userSelectedForEdit.first_name) +
+        " " +
+        (this.state.userSelectedForEdit && this.state.last_name
+          ? this.state.last_name
+          : this.state.userSelectedForEdit.last_name),
+      email: this.state.userSelectedForEdit.email,
+      first_name:
+        this.state.userSelectedForEdit && this.state.first_name
+          ? this.state.first_name
+          : this.state.userSelectedForEdit.first_name,
+      last_name:
+        this.state.userSelectedForEdit && this.state.last_name
+          ? this.state.last_name
+          : this.state.userSelectedForEdit.last_name,
+      phone_number:
+        this.state.userSelectedForEdit && this.state.phone_number
+          ? this.state.phone_number
+          : this.state.userSelectedForEdit.phone_number,
+      date_of_birth:
+        this.state.userSelectedForEdit && this.state.date_of_birth
+          ? this.state.date_of_birth
+          : this.state.userSelectedForEdit.date_of_birth,
+      zip_code:
+        this.state.userSelectedForEdit && this.state.zip_code
+          ? this.state.zip_code
+          : this.state.userSelectedForEdit.zip_code,
+      total_hours:
+        this.state.userSelectedForEdit && this.state.total_hours
+          ? this.state.total_hours
+          : this.state.userSelectedForEdit.total_hours,
+      address:
+        this.state.userSelectedForEdit && this.state.address
+          ? this.state.address
+          : this.state.userSelectedForEdit.address,
+      city:
+        this.state.userSelectedForEdit && this.state.city
+          ? this.state.city
+          : this.state.userSelectedForEdit.city,
+      state:
+        this.state.userSelectedForEdit && this.state.state
+          ? this.state.state
+          : this.state.userSelectedForEdit.state,
+      court_hours:
+        this.state.userSelectedForEdit && this.state.court_hours
+          ? this.state.court_hours
+          : this.state.userSelectedForEdit.court_hours,
+      notes:
+        this.state.userSelectedForEdit && this.state.notes
+          ? this.state.notes
+          : this.state.userSelectedForEdit.notes,
+    };
     this.onModalClose();
+    this.props.editUserCallback(user);
   };
 
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{ width: "100%", "max-width": "none" }}>
+      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
         <Table.Table>
           <tbody>
             <tr>
@@ -185,6 +197,11 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
+                  </td>
+                  <td>
+                    <Link href={`stats/${user._id}`}>
+                      <Styled.Button>Stats</Styled.Button>
+                    </Link>
                   </td>
                 </Table.Row>
               ))}
@@ -314,37 +331,6 @@ class UserTable extends React.Component {
                         }
                       />
                     </Col>
-                    <Col>
-                      <Form.Label>Court Required Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.courtH
-                            : ""
-                        }
-                        type="text"
-                        name="Court Hours"
-                        onChange={(evt) =>
-                          this.setState({ court_hours: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Row>
-                      <Col>
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Input
-                          defaultValue={
-                            this.state.userSelectedForEdit
-                              ? this.state.userSelectedForEdit.notes
-                              : ""
-                          }
-                          type="textarea"
-                          onChange={(evt) =>
-                            this.setState({ notes: evt.target.value })
-                          }
-                        ></Form.Input>
-                      </Col>
-                    </Row>
                   </Row>
                   <Row>
                     <Col>
@@ -393,6 +379,37 @@ class UserTable extends React.Component {
                       />
                     </Col>
                   </Row>
+                  <Row>
+                    <Col>
+                      <Form.Label>Court Required Hours</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.courtH
+                            : ""
+                        }
+                        type="text"
+                        name="Court Hours"
+                        onChange={(evt) =>
+                          this.setState({ court_hours: evt.target.value })
+                        }
+                      />
+                    </Col>
+                    <Col>
+                      <Form.Label>Notes</Form.Label>
+                      <Form.Input
+                        defaultValue={
+                          this.state.userSelectedForEdit
+                            ? this.state.userSelectedForEdit.notes
+                            : ""
+                        }
+                        type="textarea"
+                        onChange={(evt) =>
+                          this.setState({ notes: evt.target.value })
+                        }
+                      ></Form.Input>
+                    </Col>
+                  </Row>
                 </Form.FormGroup>
               </form>
             </ModalBody>
@@ -407,9 +424,6 @@ class UserTable extends React.Component {
             >
               Update
             </Button>
-            {/* <Button color="primary" type="submit">
-                Submit
-              </Button> */}
           </ModalFooter>
         </Modal>
 
@@ -417,7 +431,6 @@ class UserTable extends React.Component {
           users={users}
           pageSize={this.state.pageSize}
           loading={this.props.loading}
-          // pageCount={this.state.pageCount}
           currentPage={this.state.currentPage}
           updatePage={this.updatePage}
         />

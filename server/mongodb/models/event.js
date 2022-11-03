@@ -118,6 +118,11 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isEnded: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );

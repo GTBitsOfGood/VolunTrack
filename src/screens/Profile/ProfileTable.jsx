@@ -9,8 +9,8 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import { updateUser } from "../../actions/queries";
 import { Profiler } from "react";
+import { useRouter, withRouter } from "next/router";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
-import { useState } from "react";
 
 const Styled = {
   Button: styled(Button)`
@@ -32,8 +32,9 @@ const Styled = {
     margin-bottom: 2rem;
   `,
 };
-
 class ProfileTable extends React.Component {
+
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -51,14 +52,10 @@ class ProfileTable extends React.Component {
       notes: "",
       visibleText: false,
     };
+    
   }
 
-  // onDisplayEditUserModal = (userToEdit) => {
-  //   this.setState({
-  //     userSelectedForEdit: userToEdit,
-  //   });
-  // };
-
+  
   handleSubmit = async (e) => {
     this.setState({
       visibleText: true,
@@ -100,12 +97,16 @@ class ProfileTable extends React.Component {
         ? this.state.notes
         : this.props.user.bio.notes
     );
+    this.props.context.startLoading();
+    this.props.context.success("Profile successfully updated!");
+    this.props.router.reload();
   };
 
   render() {
     console.log(this.props);
     const { isAdmin } = this.props.isAdmin;
 
+    
     return (
       <Table.Container
         style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
@@ -126,12 +127,6 @@ class ProfileTable extends React.Component {
                 <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
                   this.state.user.role ?? ""
                 )}`}</p>
-                <p>
-                  {" "}
-                  {this.state.visibleText
-                    ? "Profile is Successfully Updated!"
-                    : ""}
-                </p>
               </Styled.HeaderContainer>
               <form>
                 <Form.FormGroup>
@@ -335,14 +330,6 @@ class ProfileTable extends React.Component {
             </ModalBody>
           )}
         </Container>
-        {/* <ModalFooter>
-          <Button
-            style={{ backgroundColor: "#ef4e79" }}
-            onClick={this.handleSubmit}
-          >
-            Update
-          </Button>
-        </ModalFooter> */}
       </Table.Container>
     );
   }
@@ -354,4 +341,5 @@ ProfileTable.propTypes = {
   user: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   editUserCallback: PropTypes.func.isRequired,
+  context: PropTypes.object.isRequired,
 };
