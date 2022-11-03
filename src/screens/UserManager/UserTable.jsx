@@ -12,22 +12,21 @@ import {
   Row,
 } from "reactstrap";
 import styled from "styled-components";
-import { updateUser } from "../../actions/queries";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 
-const keyToValue = (key) => {
-  key = key.replace(/_/g, " ");
-  key = key
-    .toLowerCase()
-    .split(" ")
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(" ");
-  return key;
-};
+// const keyToValue = (key) => {
+//   key = key.replace(/_/g, " ");
+//   key = key
+//     .toLowerCase()
+//     .split(" ")
+//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+//     .join(" ");
+//   return key;
+// };
 
 const Styled = {
   Button: styled(Button)`
