@@ -37,8 +37,8 @@ const ReplaceButton = styled(Button)`
   background: ${variables["secondary"]};
 `;
 const SubmitButton = styled(Button)`
-  margin: 0 2rem 0 auto;
   height: 50%;
+  margin-top: 2.5rem;
   background: ${variables["secondary"]};
   align-self: center;
 `;
@@ -57,8 +57,9 @@ const ReplaceFileInput = styled.input`
   width: 16rem;
 `;
 const CancelButton = styled(Button)`
+  height: 50%;
   background: ${variables["secondary"]};
-  width: 50%;
+  align-self: center;
 `;
 const WaiverUploadContainer = styled.div`
   margin: 0 auto;
@@ -71,6 +72,7 @@ const WaiverUploadButton = styled(Button)`
 `;
 const WaiverUploadForm = styled.form`
   display: flex;
+  align-self: center;
 `;
 const WaiverUploadInputContainer = styled.div`
   display: flex;
@@ -89,6 +91,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
     waiverType.charAt(0).toUpperCase() + waiverType.slice(1);
   const waiverFilePath = waiver[waiverType];
   const waiverFileName = waiverFilePath?.split("/").pop();
+  // const waiverFileType = waiverFilePath?.slice(waiverFilePath.length - 3);
 
   const handleReplace = () => {
     setIsReplacing(true);
@@ -113,13 +116,19 @@ const Waiver = ({ waiver, updateWaivers }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+    // console.log(waiverFileType);
     formData.append(waiverType, selectedFile);
     await uploadWaiver(formData);
     await updateWaivers();
     setIsUploading(false);
     setIsReplacing(false);
     context.startLoading();
-    context.success("Waiver  -- !");
+    context.success("Waiver Uploaded !");
+  };
+
+  const displayErrorMessage = () => {
+    context.startLoading();
+    context.failed("Please upload a file in .pdf format");
   };
 
   return (
@@ -155,18 +164,28 @@ const Waiver = ({ waiver, updateWaivers }) => {
         <>
           <WaiverTextContainer>
             <WaiverHeader>{waiverTypeCapitalized} Waiver</WaiverHeader>
-            <WaiverLink
-              href={waiverFilePath.replace("./public/", "")}
-              target="_blank"
-            >
-              File: {waiverFileName}
-            </WaiverLink>
+            {isReplacing ? (
+              ""
+            ) : (
+              <WaiverLink
+                href={waiverFilePath.replace("./public/", "")}
+                target="_blank"
+              >
+                File: {waiverFileName}
+              </WaiverLink>
+            )}
           </WaiverTextContainer>
           {isReplacing && (
             <ReplaceForm>
               <ReplaceFileInput
                 type="file"
-                onChange={(e) => setSelectedFile(e.target.files[0])}
+                onChange={(e) => {
+                  e.target.files[0].name.slice(
+                    e.target.files[0].name.slice.length - 5
+                  ) == "pdf"
+                    ? setSelectedFile(e.target.files[0])
+                    : displayErrorMessage();
+                }}
                 id={`${waiverType}ReplaceForm`}
               />
               <CancelButton onClick={handleCancelReplace}>Cancel</CancelButton>
@@ -183,7 +202,11 @@ const Waiver = ({ waiver, updateWaivers }) => {
           ) : (
             <ReplaceButton onClick={handleReplace}>Replace</ReplaceButton>
           )}
-          <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+          {isReplacing ? (
+            ""
+          ) : (
+            <DeleteButton onClick={handleDelete}>Delete</DeleteButton>
+          )}
         </>
       )}
     </WaiverContainer>
