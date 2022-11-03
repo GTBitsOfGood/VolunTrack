@@ -182,9 +182,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
               <ReplaceFileInput
                 type="file"
                 onChange={(e) => {
-                  e.target.files[0].name.slice(
-                    e.target.files[0].name.slice.length - 5
-                  ) == "pdf"
+                  e.target.files[0].type == "application/pdf"
                     ? setSelectedFile(e.target.files[0])
                     : displayErrorMessage();
                 }}
