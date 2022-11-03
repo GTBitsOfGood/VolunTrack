@@ -10,11 +10,25 @@ import Icon from "../../components/Icon";
 import { updateUser } from "../../actions/queries";
 import { Profiler } from "react";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
+import { ErrorMessage } from "formik";
 
 const Styled = {
   Button: styled(Button)`
     background: white;
     border: none;
+  `,
+  ErrorMessage: styled(ErrorMessage).attrs({
+    component: "span",
+  })`
+    ::before {
+      content: "*";
+    }
+    color: #ef4e79;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 0px;
+    padding-top: 0px;
+    display: inline-block;
   `,
   Container: styled.div`
     width: 100%;
@@ -96,7 +110,7 @@ class ProfileTable extends React.Component {
     this.props.context.success("Profile successfully updated!");
   };
 
-  render() {
+  render( touched) {
     console.log(this.props);
     const { isAdmin } = this.props.isAdmin;
 
@@ -138,6 +152,7 @@ class ProfileTable extends React.Component {
                           this.setState({ first_name: evt.target.value })
                         }
                       />
+                      <Styled.ErrorMessage name="Name" />
                     </Col>
                     <Col>
                       <Form.Label>Last Name</Form.Label>
