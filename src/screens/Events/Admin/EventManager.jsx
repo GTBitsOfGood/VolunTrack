@@ -38,8 +38,6 @@ const Styled = {
     color: white;
     width: 9.5rem;
     height: 2.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
   `,
   Content: styled.div``,
   EventContainer: styled.div`
@@ -72,6 +70,8 @@ const Styled = {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-top: 2rem;
+    margin-bottom: 2vw;
   `,
   DateRow: styled.div`
     display: flex;
@@ -268,13 +268,13 @@ const EventManager = ({ user }) => {
             <DropdownToggle caret>{dropdownVal}</DropdownToggle>
             <DropdownMenu>
               <DropdownItem>
+                <div onClick={changeValue}>All Events</div>
+              </DropdownItem>
+              <DropdownItem>
                 <div onClick={changeValue}>Public Events</div>
               </DropdownItem>
               <DropdownItem>
                 <div onClick={changeValue}>Private Group Events</div>
-              </DropdownItem>
-              <DropdownItem>
-                <div onClick={changeValue}>All Events</div>
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
