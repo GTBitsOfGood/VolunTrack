@@ -93,7 +93,6 @@ const Waiver = ({ waiver, updateWaivers }) => {
     waiverType.charAt(0).toUpperCase() + waiverType.slice(1);
   const waiverFilePath = waiver[waiverType];
   const waiverFileName = waiverFilePath?.split("/").pop();
-  // const waiverFileType = waiverFilePath?.slice(waiverFilePath.length - 3);
 
   const handleReplace = () => {
     setIsReplacing(true);
@@ -118,7 +117,6 @@ const Waiver = ({ waiver, updateWaivers }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    // console.log(waiverFileType);
     formData.append(waiverType, selectedFile);
     await uploadWaiver(formData);
     await updateWaivers();
