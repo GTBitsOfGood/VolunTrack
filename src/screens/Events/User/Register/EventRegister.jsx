@@ -292,11 +292,6 @@ const EventRegister = (event) => {
                     Please check your mailbox for a confirmation email.
                   </Styled.MainText>
                 </Styled.Row>
-                <Styled.Row>
-                  <Button color="primary" onClick={onReturnToHomeClicked}>
-                    Return to Home
-                  </Button>
-                </Styled.Row>
                 <Styled.Row style={{ flex: 1 }}>
                   <Styled.LinkedText>Resend Confirmation</Styled.LinkedText>
                   <Styled.SectionText />
@@ -305,6 +300,11 @@ const EventRegister = (event) => {
                   <Styled.LinkedTextRight>
                     Cancel Registration
                   </Styled.LinkedTextRight>
+                </Styled.Row>
+                <Styled.Row>
+                  <Button color="primary" onClick={onReturnToHomeClicked}>
+                    Return to Home
+                  </Button>
                 </Styled.Row>
               </Styled.EventContainer>
             </Col>
