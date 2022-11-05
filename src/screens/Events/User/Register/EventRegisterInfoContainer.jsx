@@ -142,7 +142,7 @@ const EventRegisterInfoContainer = ({ event, user }) => {
               viewBox="0 0 24 24"
               name="email"
             />
-            <Styled.ContactText>info@helpingmamas.org</Styled.ContactText>
+            <Styled.ContactText>{event.eventContactEmail}</Styled.ContactText>
           </Row>
         </Col>
         <Col xs="12" lg="4">
@@ -153,7 +153,7 @@ const EventRegisterInfoContainer = ({ event, user }) => {
               viewBox="0 0 22 22"
               name="phone"
             />
-            <Styled.ContactText>(770) 985-8010</Styled.ContactText>
+            <Styled.ContactText>{event.eventContactPhone}</Styled.ContactText>
           </Row>
         </Col>
       </Styled.EventRow>

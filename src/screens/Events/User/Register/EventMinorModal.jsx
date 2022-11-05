@@ -83,11 +83,11 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
     setFirstName("");
     setLastName("");
     toggle();
-  }
+  };
 
   const toggleCheck = (e) => {
     setCheck(e.target.checked);
-  }
+  };
 
   return (
     <Formik
@@ -97,7 +97,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-        
+
         if (checked && firstName !== "" && lastName !== "") {
           setHasMinorTrue(firstName, lastName);
           setShowSuccess(true);
@@ -124,29 +124,60 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
                   <Styled.Text>First Name</Styled.Text>
                   <Field name="firstName">
                     {({ field }) => (
-                      <SForm.Input {...field} type="text" onBlur={handleBlur} value={firstName} onChange={(e) => {setFirstName(e.target.value)}} />
+                      <SForm.Input
+                        {...field}
+                        type="text"
+                        onBlur={handleBlur}
+                        value={firstName}
+                        onChange={(e) => {
+                          setFirstName(e.target.value);
+                        }}
+                      />
                     )}
                   </Field>
                 </Styled.Col>
                 <Styled.Col>
                   <Styled.Text>Last Name</Styled.Text>
                   <Field name="lastName">
-                    {({ field }) => <SForm.Input {...field} type="text" value={lastName} onChange={(e) => {setLastName(e.target.value)}} />}
+                    {({ field }) => (
+                      <SForm.Input
+                        {...field}
+                        type="text"
+                        value={lastName}
+                        onChange={(e) => {
+                          setLastName(e.target.value);
+                        }}
+                      />
+                    )}
                   </Field>
                 </Styled.Col>
               </Styled.Row>
               <Styled.Row>
                 <FormGroup check>
-                  <Input type="checkbox" checked={checked} onClick={(e) => { toggleCheck(e); }} />{" "}
+                  <Input
+                    type="checkbox"
+                    checked={checked}
+                    onClick={(e) => {
+                      toggleCheck(e);
+                    }}
+                  />{" "}
                 </FormGroup>
                 <Styled.Text>This volunteer is under the age of 13</Styled.Text>
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" disabled={!checked || firstName == "" || lastName == ""} onClick={addAndClose}>
+              <Button
+                color="secondary"
+                disabled={!checked || firstName == "" || lastName == ""}
+                onClick={addAndClose}
+              >
                 Add and Close
               </Button>
-              <Button color="primary" disabled={!checked || firstName == "" || lastName == ""} onClick={handleSubmit}>
+              <Button
+                color="primary"
+                disabled={!checked || firstName == "" || lastName == ""}
+                onClick={handleSubmit}
+              >
                 Add Another
               </Button>
             </ModalFooter>

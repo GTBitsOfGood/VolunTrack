@@ -35,7 +35,7 @@ const Styled = {
     &:focus {
       background: gainsboro;
       box-shadow: none;
-    } 
+    }
   `,
   DropdownToggle: styled(DropdownToggle)`
     background: white;
@@ -134,7 +134,12 @@ class ApplicantSearch extends React.Component {
             </DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
-        <Styled.Button onClick={this.onShowFilterModal} style={{ color: "black" }}>Filter</Styled.Button>
+        <Styled.Button
+          onClick={this.onShowFilterModal}
+          style={{ color: "black" }}
+        >
+          Filter
+        </Styled.Button>
 
         <Filters
           show={this.state.showFilterModal}

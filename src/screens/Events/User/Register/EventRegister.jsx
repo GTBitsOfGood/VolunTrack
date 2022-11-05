@@ -166,6 +166,7 @@ const EventRegister = (event) => {
   const [hasMinor, setHasMinor] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [disabledCheck, setDisabledCheck] = useState(true);
 
   useEffect(() => {
     onLoadEvent();
@@ -258,6 +259,8 @@ const EventRegister = (event) => {
         events.mandated_volunteers.splice(index, 1);
       }
     }
+    //enable or disable button register
+    setDisabledCheck(!disabledCheck);
   };
 
   return (
@@ -275,7 +278,7 @@ const EventRegister = (event) => {
         <React.Fragment>
           <Styled.Row>
             <Col xs="12" lg="6">
-              <Styled.MainText>Registration Confirmed</Styled.MainText>
+              <Styled.MainText>You've signed up successfully!"</Styled.MainText>
             </Col>
           </Styled.Row>
           <Styled.Row>
@@ -288,7 +291,7 @@ const EventRegister = (event) => {
                 <Styled.Row />
                 <Styled.Row>
                   <Styled.MainText>
-                    We’ve sent a confirmation email. See you soon!
+                    Please check your mailbox for a confirmation email.
                   </Styled.MainText>
                 </Styled.Row>
                 <Styled.Row>
@@ -408,7 +411,10 @@ const EventRegister = (event) => {
                           </Styled.SectionHeaderText>
                         </Styled.VolunteerRow>
                         <Styled.VolunteerRow>
-                          <Styled.DetailText>Minor</Styled.DetailText>
+                          <Styled.DetailText>
+                            Minor with {user.bio.first_name}{" "}
+                            {user.bio.last_name}
+                          </Styled.DetailText>
                         </Styled.VolunteerRow>
                       </Styled.VolunteerContainer>
                     </Styled.MinorRow>
@@ -419,7 +425,10 @@ const EventRegister = (event) => {
       </Styled.Row>
       {!isRegistered && (
         <Styled.ModalFooter>
-          <Styled.Button onClick={onCompleteRegistrationClicked}>
+          <Styled.Button
+            onClick={onCompleteRegistrationClicked}
+            disabled={disabledCheck}
+          >
             Complete Registration
           </Styled.Button>
         </Styled.ModalFooter>
