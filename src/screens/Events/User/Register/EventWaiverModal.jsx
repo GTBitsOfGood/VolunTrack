@@ -83,11 +83,13 @@ const EventWaiverModal = ({
   toggle,
   hasMinor,
   onRegisterAfterWaiverClicked,
-  eventId
+  eventId,
 }) => {
   const [showGuardian, setShowGuardian] = useState(true);
 
   const [waiverCheckboxSelected, setWaiverCheckboxSelected] = useState(false);
+  const [waiverMinorCheckboxSelected, setMinorWaiverCheckboxSelected] =
+    useState(false);
 
   const onGuardianClicked = () => {
     setShowGuardian(true);
@@ -109,10 +111,14 @@ const EventWaiverModal = ({
     setWaiverCheckboxSelected(e.target.checked);
   };
 
+  const onWaiverMinorCheckboxClicked = (e) => {
+    setMinorWaiverCheckboxSelected(e.target.checked);
+  };
+
   const [showMe, setShowMe] = useState(false);
   const togglePdf = () => {
     setShowMe((prev) => !prev);
-  }
+  };
 
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
@@ -202,33 +208,52 @@ const EventWaiverModal = ({
       )}
 
       <Styled.Row>
-        <Styled.MainButton onClick = {togglePdf}>
+        <Styled.MainButton onClick={togglePdf}>
           <IconSpecial width="25" height="24" viewBox="0 0 25 24" name="link" />
           Read Waiver
         </Styled.MainButton>
-        <Styled.Row style={{
-          display: showMe?"block":"none"
-        }}>
+        <Styled.Row
+          style={{
+            display: showMe ? "block" : "none",
+          }}
+        >
           <iframe
             style={{ width: "563px", height: "666px" }}
-            src={showGuardian?"/files/adult.pdf": "/files/minor.pdf"}
-            type='application/pdf'
-            title='title'
+            src={showGuardian ? "/files/adult.pdf" : "/files/minor.pdf"}
+            type="application/pdf"
+            title="title"
           />
         </Styled.Row>
       </Styled.Row>
-      <Styled.Row>
-        <FormGroup check>
-          <Input
-            type="checkbox"
-            onChange={onWaiverCheckboxClicked}
-            checked={waiverCheckboxSelected}
-          />{" "}
-        </FormGroup>
-        <Styled.Text>
-          I have read the waiver and agree to its terms and conditions
-        </Styled.Text>
-      </Styled.Row>
+      {showGuardian && (
+        <Styled.Row>
+          <FormGroup check>
+            <Input
+              type="checkbox"
+              onChange={onWaiverMinorCheckboxClicked}
+              checked={waiverMinorCheckboxSelected}
+            />{" "}
+          </FormGroup>
+          <Styled.Text>
+            I have read the waiver and agree to its terms and conditions
+          </Styled.Text>
+        </Styled.Row>
+      )}
+
+      {!showGuardian && (
+        <Styled.Row>
+          <FormGroup check>
+            <Input
+              type="checkbox"
+              onChange={onWaiverCheckboxClicked}
+              checked={waiverCheckboxSelected}
+            />{" "}
+          </FormGroup>
+          <Styled.Text>
+            I have read the waiver and agree to its terms and conditions
+          </Styled.Text>
+        </Styled.Row>
+      )}
       <ModalFooter>
         {!hasMinor && (
           <Button
