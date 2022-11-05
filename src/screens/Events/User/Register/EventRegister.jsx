@@ -337,26 +337,32 @@ const EventRegister = (event) => {
       </Styled.Row>
       <Styled.Row>
         <Styled.SectionText>Your Group</Styled.SectionText>
-        <Link href={`/events/${eventId}/register`}>
-          <Styled.LinkedText
-            style={{ cursor: "pointer" }}
-            onClick={onAddMinorClicked}
-          >
-            Add Minor (under 13 years old)
-          </Styled.LinkedText>
-        </Link>
-        <IconSpecial
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          name="info"
-          href="#"
-          id="minorMaxTipTool"
-        />
-        <UncontrolledTooltip placement="right" target="minorMaxTipTool">
-          The maximum number of minors per guardian is 5. Minors above 13 years
-          need to make their account and register.
-        </UncontrolledTooltip>
+        {!isRegistered && (
+          <Link href={`/events/${eventId}/register`}>
+            <Styled.LinkedText
+              style={{ cursor: "pointer" }}
+              onClick={onAddMinorClicked}
+            >
+              Add Minor (under 13 years old)
+            </Styled.LinkedText>
+          </Link>
+        )}
+        {!isRegistered && (
+          <IconSpecial
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            name="info"
+            href="#"
+            id="minorMaxTipTool"
+          />
+        )}
+        {!isRegistered && (
+          <UncontrolledTooltip placement="right" target="minorMaxTipTool">
+            The maximum number of minors per guardian is 5. Minors above 13
+            years need to make their account and register.
+          </UncontrolledTooltip>
+        )}
       </Styled.Row>
       <Styled.AccomodationRow>
         <FormGroup check>
