@@ -109,6 +109,7 @@ const EventWaiverModal = ({
 
   const onWaiverCheckboxClicked = (e) => {
     setWaiverCheckboxSelected(e.target.checked);
+    console.log(e.target.checked);
   };
 
   const onWaiverMinorCheckboxClicked = (e) => {
@@ -230,8 +231,8 @@ const EventWaiverModal = ({
           <FormGroup check>
             <Input
               type="checkbox"
-              onChange={onWaiverMinorCheckboxClicked}
-              checked={waiverMinorCheckboxSelected}
+              onChange={onWaiverCheckboxClicked}
+              checked={waiverCheckboxSelected}
             />{" "}
           </FormGroup>
           <Styled.Text>
@@ -245,8 +246,8 @@ const EventWaiverModal = ({
           <FormGroup check>
             <Input
               type="checkbox"
-              onChange={onWaiverCheckboxClicked}
-              checked={waiverCheckboxSelected}
+              onChange={onWaiverMinorCheckboxClicked}
+              checked={waiverMinorCheckboxSelected}
             />{" "}
           </FormGroup>
           <Styled.Text>
@@ -265,7 +266,11 @@ const EventWaiverModal = ({
           </Button>
         )}
         {hasMinor && showGuardian && (
-          <Button color="primary" onClick={onNextClicked}>
+          <Button
+            color="primary"
+            onClick={onNextClicked}
+            disabled={!waiverCheckboxSelected}
+          >
             Next
           </Button>
         )}
@@ -276,7 +281,7 @@ const EventWaiverModal = ({
             </Styled.Button>
             <Styled.Button
               color="primary"
-              disabled={!waiverCheckboxSelected}
+              disabled={!waiverMinorCheckboxSelected && !waiverCheckboxSelected}
               onClick={() => onRegisterAfterWaiverClicked()}
             >
               Register
