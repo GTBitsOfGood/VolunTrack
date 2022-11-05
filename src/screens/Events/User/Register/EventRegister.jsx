@@ -166,7 +166,6 @@ const EventRegister = (event) => {
   const [hasMinor, setHasMinor] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [disabledCheck, setDisabledCheck] = useState(true);
 
   useEffect(() => {
     onLoadEvent();
@@ -260,7 +259,6 @@ const EventRegister = (event) => {
       }
     }
     //enable or disable button register
-    setDisabledCheck(!disabledCheck);
   };
 
   return (
@@ -425,10 +423,7 @@ const EventRegister = (event) => {
       </Styled.Row>
       {!isRegistered && (
         <Styled.ModalFooter>
-          <Styled.Button
-            onClick={onCompleteRegistrationClicked}
-            disabled={disabledCheck}
-          >
+          <Styled.Button onClick={onCompleteRegistrationClicked}>
             Complete Registration
           </Styled.Button>
         </Styled.ModalFooter>
