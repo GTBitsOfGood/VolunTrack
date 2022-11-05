@@ -9,12 +9,12 @@ export const profileValidator = object().shape({
   first_name: string().trim().required(" First name is required"),
   last_name: string().trim().required(" Last name is required"),
   email: string().trim().email('Invalid email'),
-  phone_number: string().trim(),
-  date_of_birth: string().trim(),
+  // phone_number: string().trim(),
+  // date_of_birth: string().trim(),
   zip_code: string().trim().matches(/^\d+$/, " ZIP should have digits only"),
-  address: string().trim(),
-  city: string().trim(),
-  state: string().trim(),
+  // address: string().trim(),
+  // city: string().trim(),
+  // state: string().trim(),
 });
 
 /*

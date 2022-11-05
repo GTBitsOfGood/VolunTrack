@@ -1,18 +1,31 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import {
+  ModalBody,
+  ModalFooter,
+  Container,
+  Button,
+  FormGroup,
+  Input,
+  Col,
+  Row,
+  Form,
+} from "reactstrap";
+import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import Loading from "../../components/Loading";
-import * as Form from "../sharedStyles/formStyles";
+import * as SForm from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
-import { Container, Row, Col } from "reactstrap";
+
 import styled from "styled-components";
 import Icon from "../../components/Icon";
 import { updateUser } from "../../actions/queries";
 import { Profiler } from "react";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
-import { ErrorMessage } from "formik";
+import { profileValidator } from "./helpers";
+
 
 const Styled = {
+  Form: styled(FForm)``,
   Button: styled(Button)`
     background: white;
     border: none;
@@ -49,6 +62,7 @@ class ProfileTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      disable: true,
       user: props.user,
       first_name: "",
       last_name: "",
@@ -110,15 +124,62 @@ class ProfileTable extends React.Component {
     this.props.context.success("Profile successfully updated!");
   };
 
-  render( touched) {
+  render() {
     console.log(this.props);
     const { isAdmin } = this.props.isAdmin;
-
+    
     return (
-      <Table.Container
-        style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
-      >
-        <Container>
+      <React.Fragment>
+        <Formik
+          initialValues={{
+            first_name: this.state.user.bio
+              ? this.state.user.bio.first_name
+              : "",
+            last_name: this.state.user.bio
+            ? this.state.user.bio.last_name
+            : "",
+            email: this.state.user.bio ? this.state.user.bio.email : "",
+            phone_number: this.state.user.bio
+            ? this.state.user.bio.phone_number
+            : "",
+            date_of_birth: this.state.user.bio
+            ? this.state.user.bio.date_of_birth
+            : "",
+            zip_code: this.state.user.bio
+            ? this.state.user.bio.zip_code
+            : "",
+            total_hours: this.state.user.SelectedForEdit
+            ? this.state.user.SelectedForEdit.total_hours
+            : "",
+            address: this.state.user.bio ? this.state.user.bio.address : "",
+            city: this.state.user.bio ? this.state.user.bio.city : "",
+            state: this.state.user.bio ? this.state.user.bio.state : "",
+            court_hours: this.state.user.bio
+            ? this.state.user.bio.court_hours
+            : "",
+            notes: this.state.user.bio ? this.state.user.bio.notes : "",
+      }}
+      onSubmit={(values, { setSubmitting }) => {
+        handleSubmit()
+      }}
+      validationSchema={
+        profileValidator
+      }
+      render={({
+        handleSubmit,
+        isValid,
+        isSubmitting,
+        values,
+        setFieldValue,
+        handleBlur,
+        errors, 
+        touched
+      }) => (
+        <React.Fragment>
+          <Table.Container
+          style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
+          >
+          <Container>
           {this.state.user && (
             <ModalBody>
               <Styled.HeaderContainer>
@@ -136,187 +197,125 @@ class ProfileTable extends React.Component {
                 )}`}</p>
               </Styled.HeaderContainer>
               <form>
-                <Form.FormGroup>
+                <SForm.FormGroup>
                   <Row>
                     <Col>
-                      <Form.Label>First Name</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio
-                            ? this.state.user.bio.first_name
-                            : ""
-                        }
-                        type="text"
-                        name="Name"
-                        onChange={(evt) =>
-                          this.setState({ first_name: evt.target.value })
-                        }
-                      />
-                      <Styled.ErrorMessage name="Name" />
+                      <SForm.Label>First Name</SForm.Label>
+                      <Field name="first_name">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="first_name" />
                     </Col>
                     <Col>
-                      <Form.Label>Last Name</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio
-                            ? this.state.user.bio.last_name
-                            : ""
-                        }
-                        type="text"
-                        name="Name"
-                        onChange={(evt) =>
-                          this.setState({ last_name: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Last Name</SForm.Label>
+                      <Field name="last_name">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="last_name" />
                     </Col>
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label>Email</Form.Label>
-                      <Form.Input
-                        disabled="disabled"
-                        defaultValue={
-                          this.state.user.bio ? this.state.user.bio.email : ""
-                        }
-                        type="text"
-                        name="Email"
-                      />
+                      <SForm.Label>Email</SForm.Label>
+                      <Field name="email">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="email" />
                     </Col>
                     <Col>
-                      <Form.Label>Phone</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio
-                            ? this.state.user.bio.phone_number
-                            : ""
-                        }
-                        type="text"
-                        name="Phone"
-                        onChange={(evt) =>
-                          this.setState({ phone_number: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Phone</SForm.Label>
+                      <Field name="phone_number">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="phone_number" />
                     </Col>
                   </Row>
 
                   <Row>
                     <Col>
-                      <Form.Label>Date of Birth</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio
-                            ? this.state.user.bio.date_of_birth
-                            : ""
-                        }
-                        type="text"
-                        name="Date of Birth"
-                        onChange={(evt) =>
-                          this.setState({ date_of_birth: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Date of Birth</SForm.Label>
+                      <Field name="date_of_birth">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="date_of_birth" />
                     </Col>
                     <Col>
-                      <Form.Label>Zip Code</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio
-                            ? this.state.user.bio.zip_code
-                            : ""
-                        }
-                        type="text"
-                        name="Zip Code"
-                        onChange={(evt) =>
-                          this.setState({ zip_code: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Zip Code</SForm.Label>
+                      <Field name="zip_code">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="zip_code" />
                     </Col>
                     <Col>
-                      <Form.Label>Total Hours</Form.Label>
-                      <Form.Input
-                        disabled="disabled"
-                        defaultValue={
-                          this.state.user.SelectedForEdit
-                            ? this.state.user.SelectedForEdit.total_hours
-                            : ""
-                        }
-                        type="text"
-                        name="Total Hours"
-                        onChange={(evt) =>
-                          this.setState({ total_hours: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Total Hours</SForm.Label>
+                      <Field name="total_hours" disabled={this.state.disable}>
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="total_hours" />
                     </Col>
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label>Address</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio ? this.state.user.bio.address : ""
-                        }
-                        type="text"
-                        name="Address"
-                        onChange={(evt) =>
-                          this.setState({ address: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Address</SForm.Label>
+                      <Field name="address">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="address" />
                     </Col>
                     <Col>
-                      <Form.Label>City</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio ? this.state.user.bio.city : ""
-                        }
-                        type="text"
-                        name="City"
-                        onChange={(evt) =>
-                          this.setState({ city: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>City</SForm.Label>
+                      <Field name="city">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="city" />
                     </Col>
                     <Col>
-                      <Form.Label>State</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.user.bio ? this.state.user.bio.state : ""
-                        }
-                        type="text"
-                        name="State"
-                        onChange={(evt) =>
-                          this.setState({ state: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>State</SForm.Label>
+                      <Field name="state">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="state" />
                     </Col>
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label>Court Required Hours</Form.Label>
-                      <Form.Input
-                        disabled="disabled"
-                        defaultValue={
-                          this.state.user.bio
-                            ? this.state.user.bio.court_hours
-                            : ""
-                        }
-                        type="text"
-                        name="Court Hours"
-                        onChange={(evt) =>
-                          this.setState({ court_hours: evt.target.value })
-                        }
-                      />
+                      <SForm.Label>Court Required Hours</SForm.Label>
+                      <Field name="court_hours" disabled={true}>
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="court_hours" />
                     </Col>
                     {isAdmin && (
                       <Col>
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Input
-                          defaultValue={
-                            this.state.user.bio ? this.state.user.bio.notes : ""
-                          }
-                          type="textarea"
-                          onChange={(evt) =>
-                            this.setState({ notes: evt.target.value })
-                          }
-                        />
+                        <SForm.Label>Notes</SForm.Label>
+                        <Field name="notes">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="notes" />
                       </Col>
                     )}
                   </Row>
@@ -329,16 +328,23 @@ class ProfileTable extends React.Component {
                     <Button
                       style={{ backgroundColor: "#ef4e79" }}
                       onClick={this.handleSubmit}
+                      disabled={!isValid}
                     >
                       Update
                     </Button>
                   </Row>
-                </Form.FormGroup>
+                </SForm.FormGroup>
               </form>
             </ModalBody>
           )}
         </Container>
       </Table.Container>
+        </React.Fragment>
+      )}
+    />
+
+      
+      </React.Fragment>
     );
   }
 }
