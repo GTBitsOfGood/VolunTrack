@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Row, Col, Container } from "reactstrap";
 import IconSpecial from "../../../../components/IconSpecial";
-
+import Link from "next/link";
 import PropTypes from "prop-types";
 import variables from "../../../../design-tokens/_variables.module.scss";
 
@@ -65,6 +65,7 @@ const Styled = {
 const convertTime = (time) => {
   console.log(time);
   console.log(typeof time);
+  // console.log(this.props.eventId);
   let [hour, min] = time.split(":");
   let hours = parseInt(hour);
   let suffix = time[-2];
@@ -75,9 +76,10 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventRegisterInfoContainer = ({ event, user }) => {
+const EventRegisterInfoContainer = ({ event, user, eventId }) => {
   const { email = "", phone_number = "" } = user?.bio ?? {};
 
+  console.log(eventId);
   if (!event || !event.date) {
     return <div />;
   }
@@ -86,6 +88,11 @@ const EventRegisterInfoContainer = ({ event, user }) => {
     <Styled.EventContainer>
       <Styled.EventRow>
         <Styled.EventTitleText>{event.title}</Styled.EventTitleText>
+        {/* <Link href={eventId}>
+          <Styled.LinkedText style={{ cursor: "pointer" }}>
+            Visit Event Page
+          </Styled.LinkedText>
+        </Link> */}
       </Styled.EventRow>
       <Styled.EventRow>
         <Styled.DetailText>{event.description}</Styled.DetailText>
@@ -126,7 +133,9 @@ const EventRegisterInfoContainer = ({ event, user }) => {
               viewBox="0 0 31 31"
               name="location"
             />
-            <Styled.EventInfoText>{event.address}</Styled.EventInfoText>
+            <Styled.EventInfoText>
+              {event.address}, {event.city}, {event.state}, {event.zip}
+            </Styled.EventInfoText>
           </Row>
         </Styled.EventInfoCol>
       </Styled.EventRow>
@@ -164,6 +173,8 @@ const EventRegisterInfoContainer = ({ event, user }) => {
 EventRegisterInfoContainer.propTypes = {
   event: PropTypes.object,
   user: PropTypes.object,
+  eventId: PropTypes.string,
+  confirmRegPage: PropTypes.bool,
 };
 
 export default EventRegisterInfoContainer;

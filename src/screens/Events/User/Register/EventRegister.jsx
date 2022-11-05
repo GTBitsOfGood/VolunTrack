@@ -32,18 +32,19 @@ const Styled = {
   `,
   Row: styled(Row)`
     margin: 0 2rem 0.5rem 2rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   `,
   Button: styled(Button)`
     background-color: ${variables["primary"]};
     color: ${variables["white"]};
-    width: 80%;
+    width: 90%;
     margin: auto;
   `,
   ModalFooter: styled(ModalFooter)`
-    background-color: ${variables["white"]};
-    position: sticky;
-    bottom: 0;
-    margin: 0 -1rem 0 -1rem;
+    margin: 1rem -1rem 1rem -1rem;
+    border: transparent;
   `,
   Title: styled.div`
     margin-top: 2rem;
@@ -123,6 +124,7 @@ const Styled = {
   `,
   AccomodationRow: styled(Row)`
     margin: -1rem 1rem 0 3.2rem;
+    margin-bottom: 1rem;
   `,
   VolunteerContainer: styled(Col)`
     background-color: ${variables["white"]};
@@ -152,6 +154,12 @@ const Styled = {
   `,
   MinorRow: styled.div`
     width: 18rem;
+  `,
+  MinorButton: styled.button`
+    background-color: ${variables["primary"]};
+    color: ${variables["white"]};
+    padding: 0.5rem;
+    border: transparent;
   `,
 };
 
@@ -281,7 +289,7 @@ const EventRegister = (event) => {
           </Styled.Row>
           <Styled.Row>
             <Col xs="12" lg="2">
-              <Styled.CheckGif src="/images/check.gif" alt="check" />
+              <Styled.CheckGif src="/images/check.gif" alt="check" loop="-1" />
             </Col>
             <Col xs="12" lg="10">
               <Styled.EventContainer>
@@ -301,7 +309,7 @@ const EventRegister = (event) => {
                     Cancel Registration
                   </Styled.LinkedTextRight>
                 </Styled.Row>
-                <Styled.Row>
+                <Styled.Row style={{ margin: "2rem" }}>
                   <Button color="primary" onClick={onReturnToHomeClicked}>
                     Return to Home
                   </Button>
@@ -333,11 +341,15 @@ const EventRegister = (event) => {
         </Link>
       </Styled.Row>
       <Styled.Row>
-        <EventRegisterInfoContainer event={events} user={user} />
+        <EventRegisterInfoContainer
+          event={events}
+          user={user}
+          // eventId={eventId}
+        />
       </Styled.Row>
       <Styled.Row>
         <Styled.SectionText>Your Group</Styled.SectionText>
-        {!isRegistered && (
+        {/* {!isRegistered && (
           <Link href={`/events/${eventId}/register`}>
             <Styled.LinkedText
               style={{ cursor: "pointer" }}
@@ -362,10 +374,10 @@ const EventRegister = (event) => {
             The maximum number of minors per guardian is 5. Minors above 13
             years need to make their account and register.
           </UncontrolledTooltip>
-        )}
+        )} */}
       </Styled.Row>
       <Styled.AccomodationRow>
-        <FormGroup check>
+        {/* <FormGroup check>
           <Input
             type="checkbox"
             onClick={(e) => {
@@ -386,7 +398,10 @@ const EventRegister = (event) => {
         />
         <UncontrolledTooltip placement="right" target="tooltipShow">
           Here is information about your required court hours.
-        </UncontrolledTooltip>
+        </UncontrolledTooltip> */}
+        If a minor under 13-year-old will volunteer with you, please add their
+        information below. <br></br>Note: Minors at or above 13-year-old need to
+        sign up using their own account.
       </Styled.AccomodationRow>
       <Styled.Row>
         <Col xs="12" lg="3">
@@ -426,11 +441,23 @@ const EventRegister = (event) => {
                 ))}
             </Row>
           ))}
+        <Col>
+          {!isRegistered && (
+            <Link href={`/events/${eventId}/register`}>
+              <Styled.MinorButton
+                style={{ cursor: "pointer" }}
+                onClick={onAddMinorClicked}
+              >
+                Add a Minor
+              </Styled.MinorButton>
+            </Link>
+          )}
+        </Col>
       </Styled.Row>
       {!isRegistered && (
         <Styled.ModalFooter>
           <Styled.Button onClick={onCompleteRegistrationClicked}>
-            Complete Registration
+            Sign up
           </Styled.Button>
         </Styled.ModalFooter>
       )}

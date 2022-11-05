@@ -171,14 +171,14 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
                 disabled={!checked || firstName == "" || lastName == ""}
                 onClick={addAndClose}
               >
-                Add and Close
+                Cancel
               </Button>
               <Button
                 color="primary"
                 disabled={!checked || firstName == "" || lastName == ""}
                 onClick={handleSubmit}
               >
-                Add Another
+                Add
               </Button>
             </ModalFooter>
           </Modal>

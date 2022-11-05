@@ -203,7 +203,8 @@ const EventWaiverModal = ({
         <Styled.Row>
           <Styled.HighlightText>
             Before you can finish registration. Please review the following
-            waiver.
+            waiver. <br></br>If you are under 18, the waiver must be signed by
+            your parent.
           </Styled.HighlightText>
         </Styled.Row>
       )}
