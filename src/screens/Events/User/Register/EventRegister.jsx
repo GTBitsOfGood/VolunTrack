@@ -304,7 +304,12 @@ const EventRegister = (event) => {
                 <Styled.Row style={{ flex: 1 }}>
                   <Styled.LinkedText>Resend Confirmation</Styled.LinkedText>
                   <Styled.SectionText />
-                  <Styled.LinkedText>View Waivers</Styled.LinkedText>
+                  <Styled.LinkedText
+                    style={{ cursor: "pointer" }}
+                    onClick={onCompleteRegistrationClicked}
+                  >
+                    View Waivers
+                  </Styled.LinkedText>
                   <Styled.SectionText />
                   <Styled.LinkedTextRight>
                     Cancel Registration
@@ -474,6 +479,7 @@ const EventRegister = (event) => {
         hasMinor={hasMinor}
         onRegisterAfterWaiverClicked={onRegisterAfterWaiverClicked}
         eventId={eventId}
+        isRegistered={isRegistered}
       />
     </Styled.Container>
   );

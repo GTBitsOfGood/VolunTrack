@@ -84,13 +84,13 @@ const EventWaiverModal = ({
   hasMinor,
   onRegisterAfterWaiverClicked,
   eventId,
+  isRegistered,
 }) => {
   const [showGuardian, setShowGuardian] = useState(true);
 
   const [waiverCheckboxSelected, setWaiverCheckboxSelected] = useState(false);
   const [waiverMinorCheckboxSelected, setMinorWaiverCheckboxSelected] =
     useState(false);
-  const [afterReg, setAfterReg] = useState(false);
 
   const onGuardianClicked = () => {
     setShowGuardian(true);
@@ -125,10 +125,14 @@ const EventWaiverModal = ({
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
       <Styled.ModalHeader>
-        <Styled.MainText>Complete Registration</Styled.MainText>
+        {!isRegistered ? (
+          <Styled.MainText>Complete Registration</Styled.MainText>
+        ) : (
+          <Styled.MainText>View Waiver</Styled.MainText>
+        )}
       </Styled.ModalHeader>
       <Styled.Row />
-      {hasMinor && (
+      {hasMinor && !isRegistered && (
         <React.Fragment>
           <Styled.Row>
             <Styled.HighlightText>
@@ -167,7 +171,7 @@ const EventWaiverModal = ({
                 </Link>
               </React.Fragment>
             )}
-            {!showGuardian && (
+            {!showGuardian && !isRegistered && (
               <React.Fragment>
                 <Link href={`/events/${eventId}/register`}>
                   <Styled.SecondaryTab>
@@ -200,7 +204,7 @@ const EventWaiverModal = ({
           </Styled.Row>
         </React.Fragment>
       )}
-      {!hasMinor && (
+      {!hasMinor && !isRegistered && (
         <Styled.Row>
           <Styled.HighlightText>
             Before you can finish registration. Please review the following
@@ -228,7 +232,7 @@ const EventWaiverModal = ({
           />
         </Styled.Row>
       </Styled.Row>
-      {showGuardian && (
+      {showGuardian && !isRegistered && (
         <Styled.Row>
           <FormGroup check>
             <Input
@@ -243,7 +247,7 @@ const EventWaiverModal = ({
         </Styled.Row>
       )}
 
-      {!showGuardian && (
+      {!showGuardian && !isRegistered && (
         <Styled.Row>
           <FormGroup check>
             <Input
@@ -258,7 +262,7 @@ const EventWaiverModal = ({
         </Styled.Row>
       )}
       <ModalFooter>
-        {!hasMinor && (
+        {!hasMinor && !isRegistered && (
           <Button
             color="primary"
             disabled={!waiverCheckboxSelected}
@@ -267,7 +271,7 @@ const EventWaiverModal = ({
             Register
           </Button>
         )}
-        {hasMinor && showGuardian && (
+        {hasMinor && !isRegistered && showGuardian && (
           <Button
             color="primary"
             onClick={onNextClicked}
@@ -276,7 +280,7 @@ const EventWaiverModal = ({
             Next
           </Button>
         )}
-        {hasMinor && !showGuardian && (
+        {hasMinor && !isRegistered && !showGuardian && (
           <React.Fragment>
             <Styled.Button color="primary" onClick={onPrevClicked}>
               Previous
