@@ -90,6 +90,7 @@ const EventWaiverModal = ({
   const [waiverCheckboxSelected, setWaiverCheckboxSelected] = useState(false);
   const [waiverMinorCheckboxSelected, setMinorWaiverCheckboxSelected] =
     useState(false);
+  const [afterReg, setAfterReg] = useState(false);
 
   const onGuardianClicked = () => {
     setShowGuardian(true);

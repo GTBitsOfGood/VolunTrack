@@ -38,13 +38,18 @@ const Styled = {
     color: ${variables["dark"]};
     font-size: 1.5rem;
     font-weight: 900;
-    margin-top: 1rem;
-    margin-bottom: 0rem;
     text-align: left;
     overflow-wrap: break-word;
   `,
   EventRow: styled(Row)`
     margin: 0 1rem 0 1rem;
+  `,
+  EventRowHeader: styled.div`
+    margin: 1rem 1rem 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
   `,
   SectionHeaderText: styled.p`
     color: ${variables["yiq-text-dark"]};
@@ -59,6 +64,15 @@ const Styled = {
     padding-top: 0.8rem;
     padding-left: 1.6rem;
     border-radius: 0.5rem;
+  `,
+  LinkedText: styled.p`
+    color: ${variables["primary"]};
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-align: left;
+    text-decoration: underline;
+    padding-top: 0.4rem;
+    overflow-wrap: break-word;
   `,
 };
 
@@ -86,14 +100,14 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
 
   return (
     <Styled.EventContainer>
-      <Styled.EventRow>
+      <Styled.EventRowHeader>
         <Styled.EventTitleText>{event.title}</Styled.EventTitleText>
-        {/* <Link href={eventId}>
+        <Link href={`/events/${eventId}`}>
           <Styled.LinkedText style={{ cursor: "pointer" }}>
-            Visit Event Page
+            See Full Event Information
           </Styled.LinkedText>
-        </Link> */}
-      </Styled.EventRow>
+        </Link>
+      </Styled.EventRowHeader>
       <Styled.EventRow>
         <Styled.DetailText>{event.description}</Styled.DetailText>
       </Styled.EventRow>

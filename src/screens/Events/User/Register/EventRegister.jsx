@@ -159,6 +159,7 @@ const Styled = {
     background-color: ${variables["primary"]};
     color: ${variables["white"]};
     padding: 0.5rem;
+    margin-left: 1rem;
     border: transparent;
   `,
 };
@@ -332,19 +333,19 @@ const EventRegister = (event) => {
         </React.Fragment>
       )}
       <Styled.Row />
-      <Styled.Row>
+      {/* <Styled.Row>
         <Styled.SectionText>Event Information</Styled.SectionText>
         <Link href={`/events/${eventId}`}>
           <Styled.LinkedText style={{ cursor: "pointer" }}>
             Visit Event Page
           </Styled.LinkedText>
         </Link>
-      </Styled.Row>
+      </Styled.Row> */}
       <Styled.Row>
         <EventRegisterInfoContainer
           event={events}
           user={user}
-          // eventId={eventId}
+          eventId={eventId}
         />
       </Styled.Row>
       <Styled.Row>
