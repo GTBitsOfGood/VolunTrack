@@ -138,6 +138,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   //     setErrors("title")
   //   }
   // };
+  //
 
   return (
     <Formik
