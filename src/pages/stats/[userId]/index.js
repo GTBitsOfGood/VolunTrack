@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import EventManager from "../../../screens/Stats/User/EventManager";
+import StatDisplay from "../../../screens/Stats/User/StatDisplay";
 
 const UserStats = () => {
   const router = useRouter();
@@ -7,7 +7,7 @@ const UserStats = () => {
 
   return (
     <>
-      <EventManager userId={userId} />
+      <StatDisplay userId={userId} />
     </>
   );
 };

@@ -1,22 +1,21 @@
+import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
-import styled from "styled-components";
+import "react-quill/dist/quill.snow.css";
 import {
-  ModalBody,
-  ModalFooter,
   Button,
+  Col,
   FormGroup,
   Input,
-  Col,
+  ModalBody,
+  ModalFooter,
   Row,
 } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../sharedStyles/formStyles";
-import PropTypes from "prop-types";
-import { groupEventValidator, standardEventValidator } from "./eventHelpers";
-import { editEvent } from "../../../actions/queries";
-import { createEvent } from "../../../actions/queries";
+import styled from "styled-components";
+import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
-import "react-quill/dist/quill.snow.css";
+import * as SForm from "../../sharedStyles/formStyles";
+import { groupEventValidator, standardEventValidator } from "./eventHelpers";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -59,10 +58,14 @@ const Styled = {
 
 const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
+  const [isValidForCourtHours, setIsValidForCourtHours] = useState(
+    event?.isValidForCourtHours ?? false
+  );
 
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
       ...values,
+      isValidForCourtHours,
       description: content,
       isPrivate: isGroupEvent ? "true" : "false",
     };
@@ -76,6 +79,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedEvent = {
       ...values,
+      isValidForCourtHours,
       description: content,
       _id: event._id,
     };
@@ -89,7 +93,11 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const onSendConfirmationEmailCheckbox = () => {
-    setSendConfirmationEmail(true);
+    setSendConfirmationEmail(!onSendConfirmationEmailCheckbox);
+  };
+
+  const onCourtRequiredHoursCheckbox = () => {
+    setIsValidForCourtHours(!isValidForCourtHours);
   };
 
   const getLocalTime = () => {
@@ -214,32 +222,33 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Title</SForm.Label>
-                        <Styled.ErrorMessage name="title" />
+
                         <Field name="title">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="title" />
                       </Styled.Col>
                       <Styled.ThirdCol>
                         <SForm.Label>Max Volunteers</SForm.Label>
-                        <Styled.ErrorMessage name="max_volunteers" />
                         <Field name="max_volunteers">
                           {({ field }) => (
                             <SForm.Input {...field} type="number" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="max_volunteers" />
                       </Styled.ThirdCol>
                     </Row>
                     <Row>
                       <Styled.Col>
                         <SForm.Label>Date</SForm.Label>
-                        <Styled.ErrorMessage name="date" />
                         <Field name="date">
                           {({ field }) => (
                             <SForm.Input {...field} type="date" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="date" />
                       </Styled.Col>
                       <Styled.Col>
                         <SForm.Label>Start Time</SForm.Label>
@@ -257,6 +266,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                           )}
                         </Field>
                       </Styled.Col>
+                      <Row></Row>
                     </Row>
                     <Row
                       style={{
@@ -474,20 +484,32 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                 </Row>
               </SForm.FormGroup>
             </Styled.Form>
-            {containsExistingEvent(event) && (
-              <Styled.Row>
-                <FormGroup>
-                  <Input
-                    type="checkbox"
-                    onChange={onSendConfirmationEmailCheckbox}
-                  />
-                  {""}
-                </FormGroup>
+            <SForm.Label>Other</SForm.Label>
+            <Styled.Row>
+              <FormGroup>
+                <Input
+                  defaultChecked={isValidForCourtHours}
+                  type="checkbox"
+                  onChange={onCourtRequiredHoursCheckbox}
+                />
                 <Styled.GenericText>
-                  I would like to send a confirmation email
+                  This event can count towards volunteer&apos;s court required
+                  hours
                 </Styled.GenericText>
-              </Styled.Row>
-            )}
+                {containsExistingEvent(event) && (
+                  <div>
+                    <Input
+                      type="checkbox"
+                      onChange={onSendConfirmationEmailCheckbox}
+                    />
+                    <Styled.GenericText>
+                      I would like to send an email to volunteers with updated
+                      information
+                    </Styled.GenericText>
+                  </div>
+                )}
+              </FormGroup>
+            </Styled.Row>
           </Styled.ModalBody>
           <ModalFooter>
             <Button

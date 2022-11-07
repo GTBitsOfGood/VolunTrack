@@ -53,11 +53,9 @@ export const updateUser = (
   number,
   birthday,
   zip,
-  hours,
   address,
   city,
   state,
-  courtH,
   notes
 ) => {
   var query = "";
@@ -76,9 +74,6 @@ export const updateUser = (
   if (zip) {
     query += "zip_code=" + zip + "&";
   }
-  if (hours) {
-    query += "total_hours=" + hours + "&";
-  }
   if (address) {
     query += "address=" + address + "&";
   }
@@ -87,9 +82,6 @@ export const updateUser = (
   }
   if (state) {
     query += "state=" + state + "&";
-  }
-  if (courtH) {
-    query += "courtH=" + courtH + "&";
   }
   if (notes) {
     query += "notes=" + notes + "&";

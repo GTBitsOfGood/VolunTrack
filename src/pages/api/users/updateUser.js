@@ -9,11 +9,9 @@ export default async function handler(req, res) {
       req.query.last_name,
       req.query.date_of_birth,
       req.query.zip_code,
-      req.query.total_hours,
       req.query.address,
       req.query.city,
       req.query.state,
-      req.query.courtH,
       req.query.notes
     );
 

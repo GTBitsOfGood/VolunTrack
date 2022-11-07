@@ -123,6 +123,11 @@ const eventSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    isValidForCourtHours: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );
