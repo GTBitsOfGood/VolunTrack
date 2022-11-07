@@ -5,6 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import dbConnect from "../../../../server/mongodb/index";
 import User from "../../../../server/mongodb/models/User";
 import CredentialsProvider from "next-auth/providers/credentials";
+import AppSettings from "../../../../server/mongodb/models/AppSettings";
 
 const uri = process.env.MONGO_DB;
 const options = {
@@ -135,10 +136,26 @@ export default NextAuth({
 
       const _id = new ObjectId(user.id);
       const currentUser = await User.findOne({ _id });
-
+      console.log(currentUser.role);
+      let userData = {
+        ...currentUser._doc,
+      };
+      const invitedAdmins = await AppSettings.find({});
+      if (
+        invitedAdmins[0].invitedAdmins &&
+        invitedAdmins[0].invitedAdmins.includes(userData.bio.email)
+      ) {
+        userData.role = "admin";
+        await User.findOneAndUpdate({ _id }, { role: "admin" });
+        await AppSettings.findOneAndUpdate(
+          {},
+          { $pull: { invitedAdmins: userData.bio.email } },
+          { new: true }
+        );
+      }
       return {
         ...session,
-        user: currentUser,
+        user: userData,
       };
     },
     async redirect({ baseUrl }) {
