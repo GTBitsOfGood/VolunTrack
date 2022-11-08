@@ -136,7 +136,6 @@ export default NextAuth({
 
       const _id = new ObjectId(user.id);
       const currentUser = await User.findOne({ _id });
-      console.log(currentUser.role);
       let userData = {
         ...currentUser._doc,
       };

@@ -1,7 +1,11 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React, { useState } from "react";
-import { updateInvitedAdmins, getInvitedAdmins } from "../../actions/queries";
+import {
+  updateInvitedAdmins,
+  getInvitedAdmins,
+  removeInvitedAdmin,
+} from "../../actions/queries";
 import {
   Button,
   Col,
@@ -211,6 +215,12 @@ class Assistants extends React.Component {
     /** code to update users in state at that specific index */
   };
 
+  onDeletePending = (email) => {
+    removeInvitedAdmin(email).then(() => {
+      this.componentDidMount();
+    });
+  };
+
   onCreateClicked = () => {
     this.setState({
       showNewAdminModal: true,
@@ -285,6 +295,7 @@ class Assistants extends React.Component {
               // invitedAdmins={["test"]}
               loading={loadingMoreUsers}
               editUserCallback={this.onEditUser}
+              deletePendingCallback={this.onDeletePending}
             />
           </Styled.TableUsers>
         </Styled.Row>
