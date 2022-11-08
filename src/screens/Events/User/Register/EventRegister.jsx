@@ -146,7 +146,7 @@ const Styled = {
     height: 15rem;
     margin-top: -3rem;
   `,
-  EventContainer: styled(Container)`
+  EventContainer: styled.div`
     background-color: ${variables["white"]};
     border-radius: 0.5rem;
     height: 100%;
@@ -285,7 +285,7 @@ const EventRegister = (event) => {
         <React.Fragment>
           <Styled.Row>
             <Col xs="12" lg="6">
-              <Styled.MainText>You've signed up successfully!"</Styled.MainText>
+              <Styled.MainText>You've signed up successfully!</Styled.MainText>
             </Col>
           </Styled.Row>
           <Styled.Row>
@@ -315,7 +315,7 @@ const EventRegister = (event) => {
                     Cancel Registration
                   </Styled.LinkedTextRight>
                 </Styled.Row>
-                <Styled.Row style={{ margin: "2rem" }}>
+                <Styled.Row>
                   <Button color="primary" onClick={onReturnToHomeClicked}>
                     Return to Home
                   </Button>
