@@ -1,12 +1,12 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
-import { Button, Row, Col } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
-import { updateEvent } from "../../../screens/Events/User/eventHelpers";
 import { RequestContext } from "../../../providers/RequestProvider";
+import { updateEvent } from "../../../screens/Events/User/eventHelpers";
 
 const Styled = {
   Button: styled(Button)`
@@ -188,6 +188,13 @@ const EventInfo = () => {
               </Styled.Slots>
               <Styled.Date>{lastUpdated}</Styled.Date>
             </Styled.EventSubhead>
+            <Styled.Info>
+              {event.isValidForCourtHours && (
+                <span style={{ fontWeight: "bold" }}>
+                  {"This event can count toward court required hours"}
+                </span>
+              )}
+            </Styled.Info>
             <Styled.Info>
               {" "}
               <div dangerouslySetInnerHTML={{ __html: event.description }} />

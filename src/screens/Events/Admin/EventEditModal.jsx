@@ -1,11 +1,11 @@
+import { ErrorMessage, Form as FForm } from "formik";
 import React from "react";
-import styled from "styled-components";
 import { Modal, ModalHeader } from "reactstrap";
-import { Form as FForm, ErrorMessage } from "formik";
+import styled from "styled-components";
 
 import PropTypes from "prop-types";
-import EventFormModal from "./EventFormModal";
 import variables from "../../../design-tokens/_variables.module.scss";
+import EventFormModal from "./EventFormModal";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -53,7 +53,11 @@ const EventEditModal = ({ open, toggle, event }) => {
       <Styled.HeaderText>
         <p>Edit Event</p>
       </Styled.HeaderText>
-      <EventFormModal toggle={toggle} event={event} isGroupEvent={event?.orgName}></EventFormModal>
+      <EventFormModal
+        toggle={toggle}
+        event={event}
+        isGroupEvent={event?.orgName}
+      ></EventFormModal>
     </Modal>
   );
 };

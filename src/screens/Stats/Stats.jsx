@@ -2,7 +2,7 @@ import { ErrorMessage, Form as FForm } from "formik";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import styled from "styled-components";
-import EventManager from "./User/EventManager";
+import StatDisplay from "./User/StatDisplay";
 
 const Styled = {
   Container: styled.div`
@@ -49,7 +49,7 @@ const Stats = () => {
     data: { user },
   } = useSession();
 
-  return <EventManager userId={user._id} />;
+  return <StatDisplay userId={user._id} />;
 };
 
 export default Stats;

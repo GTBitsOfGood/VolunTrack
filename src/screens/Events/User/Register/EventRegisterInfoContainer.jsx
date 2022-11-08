@@ -88,7 +88,11 @@ const EventRegisterInfoContainer = ({ event, user }) => {
         <Styled.EventTitleText>{event.title}</Styled.EventTitleText>
       </Styled.EventRow>
       <Styled.EventRow>
-        <Styled.DetailText>{event.description}</Styled.DetailText>
+        {event.isValidForCourtHours && (
+          <Styled.DetailText>
+            This event can count toward court required hours
+          </Styled.DetailText>
+        )}
       </Styled.EventRow>
       <Styled.EventRow>
         <Styled.EventInfoCol xs="12" lg="3">
