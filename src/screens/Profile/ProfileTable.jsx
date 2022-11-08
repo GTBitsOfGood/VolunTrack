@@ -186,7 +186,7 @@ class ProfileTable extends React.Component {
                               <SForm.Label>Email</SForm.Label>
                               <Field name="email">
                                 {({ field }) => (
-                                  <SForm.Input {...field} type="text" />
+                                  <SForm.Input {...field} disabled={true} type="text" />
                                 )}
                               </Field>
                               <Styled.ErrorMessage name="email" />
