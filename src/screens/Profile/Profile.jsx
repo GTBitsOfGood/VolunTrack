@@ -43,7 +43,6 @@ const Styled = {
 
 const Profile = () => {
   const { data: session } = useSession();
-  console.log(session.user);
 
   return (
     <Styled.Container>

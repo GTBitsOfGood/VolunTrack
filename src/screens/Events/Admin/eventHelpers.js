@@ -1,4 +1,4 @@
-import { string, object, number, date, array } from "yup";
+import { string, object, number, date } from "yup";
 
 const today = new Date();
 const yesterday = new Date(today);
@@ -12,10 +12,10 @@ export const standardEventValidator = object().shape({
   address: string().trim().required(" Address is required"),
   city: string().trim().required(" City is required"),
   state: string().trim().required(" State is required"),
-  zip: string().trim().matches(/^\d+$/, " ZIP should have digits only").required(" ZIP is required")
-,
-  
-  max_volunteers: number().moreThan(-1, " Max volunteers must be 0 or more").required(" Max volunteers is required"),
+  zip: string().trim().matches(/^\d+$/, " ZIP should have digits only").required(" ZIP is required"),
+  max_volunteers: number()
+    .moreThan(-1, " Max volunteers must be 0 or more")
+    .required(" Max volunteers is required"),
   description: string().trim(),
 
   eventContactPhone: string().trim().required(" Phone number is required"),
