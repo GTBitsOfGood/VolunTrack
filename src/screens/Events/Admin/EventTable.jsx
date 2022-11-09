@@ -1,6 +1,5 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
-import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../../components/Icon";
@@ -11,7 +10,8 @@ const Styled = {
   Container: styled.div`
     width: 48vw;
     max-height: 100vh;
-    overflow-y: scroll;
+    min-height: min-content;
+    overflow-y: auto;
   `,
   EventContainer: styled.div`
     width: 100%;
@@ -56,14 +56,16 @@ const Styled = {
   `,
   EditButton: styled(Button)`
     margin: 0 0 0 auto;
-
+    padding: 9px;
     background: none;
     border: none;
   `,
   DeleteButton: styled(Button)`
     background: none;
     border: none;
-
+    padding: 9px;
+    margin-left: 5px;
+    margin-right: 8px;
     justify-self: right;
   `,
   Time: styled.p`
@@ -74,6 +76,9 @@ const Styled = {
   Date: styled.p`
     margin: 0 1rem 0 0;
     color: grey;
+  `,
+  Spacer: styled.div`
+    height: 12rem;
   `,
 };
 
@@ -162,9 +167,11 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
                 </Styled.DeleteButton>
               </Styled.EventContentRow>
               <Styled.EventContentRow>
-                <Styled.Time>{`${convertTime(event.startTime)} - ${convertTime(
-                  event.endTime
-                )} EST`}</Styled.Time>
+                <Styled.Time>
+                  {`${convertTime(event.startTime)} - ${convertTime(
+                    event.endTime
+                  )} ` + event.localTime}
+                </Styled.Time>
                 <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
               </Styled.EventContentRow>
             </Styled.EventContent>
@@ -175,6 +182,7 @@ const EventTable = ({ dateString, events, onEditClicked, onDeleteClicked }) => {
           )}
         </Styled.EventContainer>
       ))}
+      <Styled.Spacer />
     </Styled.Container>
   );
 };

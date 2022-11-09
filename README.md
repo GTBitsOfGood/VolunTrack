@@ -4,8 +4,8 @@ Refactor list:
 
 - route to correct eventmanager based on auth level
 - figure out a way to make helpers consistent
-- see if anything bled through when converting App.jsx to _app.jsx
-  - make _app.jsx handle less logic.
+- see if anything bled through when converting App.jsx to \_app.jsx
+  - make \_app.jsx handle less logic.
 - break up actions/queries.js into multple files
 - readd validation back into server actions using next-connect and express-validator
 - I think splash is a weird component to have, just have all of that logic be handled inside of the index page or promote splash to its own screens folder.
@@ -85,6 +85,18 @@ To understand this code better, read the [Code Tour](/CODETOUR.md).
 3. Run `yarn start`
 
 ## Other Info
+
+Adding a success pop-up to any new actions
+
+1. Add imports\
+   `import { useContext } from "react";`\
+   `import { RequestContext } from "../../../providers/RequestProvider";` (adjust path accordingly)
+2. Define the context\
+   `const context = useContext(RequestContext);`
+3. Create a context success instance and display your message\
+    `context.startLoading();`\
+    `context.success("<Insert Success Message Here>");`\
+   NOTE: If doing this in a class component, define context as a prop and send this information in where you call the class. See [Profile](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/Profile.jsx) and [ProfileForm](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/ProfileTable.jsx) for examples.
 
 ### Styling
 

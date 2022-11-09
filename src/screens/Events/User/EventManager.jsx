@@ -146,7 +146,7 @@ const EventManager = ({ user }) => {
 
   let splitDate = value.toDateString().split(" ");
   const [dateString, setDateString] = useState(
-    splitDate[1] + " " + splitDate[2] + " " + splitDate[3]
+    splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
   const onChange = (value, event) => {

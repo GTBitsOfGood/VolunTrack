@@ -86,12 +86,15 @@ const compareDateString = (dateNum) => {
 const filterEvents = (events, user) => {
   let arr = [];
   for (let i = 0; i < events.length; i++) {
-    if (events[i].isPrivate !== "true" || events[i].volunteers.includes(user._id)) {
+    if (
+      events[i].isPrivate !== "true" ||
+      events[i].volunteers.includes(user._id)
+    ) {
       arr.push(events[i]);
     }
   }
   return arr;
-}
+};
 
 const EventTable = ({
   dateString,
@@ -155,7 +158,7 @@ const EventTable = ({
                     </Table.TitleAddNums>
                     <Table.Time>
                       {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} EST
+                      {convertTime(event.endTime)} {event.localTime}
                     </Table.Time>
                   </Table.TextInfo>
                 </Table.Inner>

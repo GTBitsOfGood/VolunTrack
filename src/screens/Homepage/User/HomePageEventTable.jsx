@@ -36,15 +36,15 @@ const Styled = {
     width: 50%;
   `,
   LinkedText: styled.p`
-  color: ${variables["primary"]};
-  font-size: 0.9rem;
-  font-weight: 900;
-  text-align: left;
-  text-decoration: underline;
-  padding-top: 0.4rem;
-  overflow-wrap: break-word;
-  cursor: pointer;
-  `
+    color: ${variables["primary"]};
+    font-size: 0.9rem;
+    font-weight: 900;
+    text-align: left;
+    text-decoration: underline;
+    padding-top: 0.4rem;
+    overflow-wrap: break-word;
+    cursor: pointer;
+  `,
 };
 
 const convertTime = (time) => {
@@ -67,25 +67,21 @@ const getMinorTotal = (minors) => {
 };
 
 const registerButtonStyle = {
-  "right": 0,
-  "left": "unset"
-}
+  right: 0,
+  left: "unset",
+};
 
 const eventListStyle = {
-  "width": "unset"
-}
+  width: "unset",
+};
 
 const creationStyle = {
   "text-align": "left",
-  "right": 0,
-  "left": "unset"
-}
+  right: 0,
+  left: "unset",
+};
 
-const HomePageEventTable = ({
-  events,
-  onUnregister,
-  user,
-}) => {
+const HomePageEventTable = ({ events, onUnregister, user }) => {
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -122,7 +118,7 @@ const HomePageEventTable = ({
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
                 <Table.EventList style={eventListStyle}>
-                  <Table.Inner style={{width: "55vw"}}>
+                  <Table.Inner style={{ width: "55vw" }}>
                     <Table.Register style={registerButtonStyle}>
                       <>
                         <Styled.Button onClick={() => onUnregister(event)}>
@@ -137,7 +133,7 @@ const HomePageEventTable = ({
                       </Table.TitleAddNums>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
-                        {convertTime(event.endTime)} EST
+                        {convertTime(event.endTime)} {event.localTime}
                       </Table.Time>
                     </Table.TextInfo>
                   </Table.Inner>
@@ -153,16 +149,15 @@ const HomePageEventTable = ({
         </Styled.ul>
 
         <Styled.ul>
-          <Styled.Events>
-            New Events 
-          </Styled.Events>
+          <Styled.Events>New Events</Styled.Events>
           {upcomingEvents.map((event) => (
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
                 <Table.EventList style={eventListStyle}>
-                  <Table.Inner style={{width: "55vw"}}>
-                    <Table.Register style={registerButtonStyle}>
-                    </Table.Register>
+                  <Table.Inner style={{ width: "55vw" }}>
+                    <Table.Register
+                      style={registerButtonStyle}
+                    ></Table.Register>
                     <Table.TextInfo>
                       <Table.TitleAddNums>
                         <Table.EventName>{event.title}</Table.EventName>
@@ -175,10 +170,10 @@ const HomePageEventTable = ({
                         </Table.Volunteers>
                       </Table.TitleAddNums>
                       <Table.Time>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} EST
-                    </Table.Time>
-                   </Table.TextInfo>
+                        {convertTime(event.startTime)} -{" "}
+                        {convertTime(event.endTime)} {event.localTime}
+                      </Table.Time>
+                    </Table.TextInfo>
                   </Table.Inner>
                   <Table.Creation style={creationStyle}>
                     {" "}
@@ -189,9 +184,9 @@ const HomePageEventTable = ({
               </Link>
             </Styled.List>
           ))}
-        <Link href={`/events`}>
-          <Styled.LinkedText>View More</Styled.LinkedText>
-        </Link>
+          <Link href={`/events`}>
+            <Styled.LinkedText>View More</Styled.LinkedText>
+          </Link>
         </Styled.ul>
       </Styled.Container>
     );
@@ -204,7 +199,7 @@ const HomePageEventTable = ({
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
                 <Table.EventList style={eventListStyle}>
-                  <Table.Inner style={{width: "55vw"}}>
+                  <Table.Inner style={{ width: "55vw" }}>
                     <Table.Register style={registerButtonStyle}>
                       <>
                         <Styled.Button onClick={() => onUnregister(event)}>
@@ -221,7 +216,6 @@ const HomePageEventTable = ({
                         {convertTime(event.startTime)} -{" "}
                         {convertTime(event.endTime)} EST
                       </Table.Time>
-
                     </Table.TextInfo>
                   </Table.Inner>
                   <Table.Creation style={creationStyle}>
@@ -245,7 +239,7 @@ const HomePageEventTable = ({
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
                 <Table.EventList style={eventListStyle}>
-                  <Table.Inner style={{width: "55vw"}}>
+                  <Table.Inner style={{ width: "55vw" }}>
                     <Table.TextInfo>
                       <Table.TitleAddNums>
                         <Table.EventName>{event.title}</Table.EventName>
@@ -259,7 +253,7 @@ const HomePageEventTable = ({
                       </Table.TitleAddNums>
                       <Table.Time>
                         {convertTime(event.startTime)} -{" "}
-                        {convertTime(event.endTime)} EST
+                        {convertTime(event.endTime)} {event.localTime}
                       </Table.Time>
                     </Table.TextInfo>
                   </Table.Inner>
