@@ -5,6 +5,7 @@ import {
   updateInvitedAdmins,
   getInvitedAdmins,
   removeInvitedAdmin,
+  deleteUser,
 } from "../../actions/queries";
 import {
   Button,
@@ -204,9 +205,16 @@ class Assistants extends React.Component {
   //   this.setState({ currentPage: this.state.currentPage - 1 });
   // onToBeginning = () => this.setState({ currentPage: 0 });
   getUsersAtPage = () => {
-    const { users, currentPage } = this.state;
+    const { users, currentPage, invitedAdmins } = this.state;
+    const modifiedInvitedAdmins = invitedAdmins.map((admin) => ({
+      email: admin,
+      role: "admin-assistant",
+    }));
+    const allUsers = users.concat(modifiedInvitedAdmins);
     const start = currentPage * PAGE_SIZE;
-    return this.filteredAndSortedAdmins(users.slice(start, start + PAGE_SIZE));
+    return this.filteredAndSortedAdmins(
+      allUsers.slice(start, start + PAGE_SIZE)
+    );
   };
 
   atEnd = () =>
@@ -217,6 +225,12 @@ class Assistants extends React.Component {
 
   onDeletePending = (email) => {
     removeInvitedAdmin(email).then(() => {
+      this.componentDidMount();
+    });
+  };
+
+  onDeleteUser = (id, user) => {
+    deleteUser(id, user).then(() => {
       this.componentDidMount();
     });
   };
@@ -276,7 +290,7 @@ class Assistants extends React.Component {
         <Styled.Row>
           <Styled.Col>
             <Styled.Search
-              placeholder="Search by Volunteer Name or Email"
+              placeholder="Search by Employee Name or Email"
               value={this.state.searchValue}
               onChange={(e) => this.setState({ searchValue: e.target.value })}
             />
@@ -296,6 +310,7 @@ class Assistants extends React.Component {
               loading={loadingMoreUsers}
               editUserCallback={this.onEditUser}
               deletePendingCallback={this.onDeletePending}
+              deleteUserCallback={this.onDeleteUser}
             />
           </Styled.TableUsers>
         </Styled.Row>

@@ -61,6 +61,18 @@ class EmployeeTable extends React.Component {
     });
   };
 
+  onDisplayDeleteUserModal = (userToDelete) => {
+    this.setState({
+      userSelectedForDelete: userToDelete,
+    });
+  };
+
+  closeDeleteUserModal = () => {
+    this.setState({
+      userSelectedForDelete: null,
+    });
+  };
+
   onDisplayEditUserModal = (userToEdit) => {
     this.setState({
       userSelectedForEdit: userToEdit,
@@ -109,6 +121,14 @@ class EmployeeTable extends React.Component {
     this.closePendingModal();
   };
 
+  handleSubmitForDeleteUser = () => {
+    this.props.deleteUserCallback(
+      this.state.userSelectedForDelete._id,
+      this.state.userSelectedForDelete
+    );
+    this.closeDeleteUserModal();
+  };
+
   render() {
     const { users, invitedAdmins, loading } = this.props;
     const roles = ["Administrator", "Admin Assistant", "Staff"];
@@ -145,44 +165,35 @@ class EmployeeTable extends React.Component {
                       ? "Staff"
                       : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                   </td>
-                  <td>
-                    <Styled.Button
-                      onClick={() => this.onDisplayEditUserModal(user)}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.Button>
-                  </td>
-                </Table.Row>
-              ))}
-
-            {!loading &&
-              invitedAdmins.map((email) => (
-                <Table.Row key={email}>
-                  <td></td>
-                  <td>
-                    {email}
-                    <Styled.Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(email);
-                      }}
-                    >
-                      <Icon color="grey3" name="copy" />
-                    </Styled.Button>
-                  </td>
-                  <td>Admin Assistant</td>
-                  <td>
-                    Pending
-                    <Styled.Button
-                      onClick={() => this.onDisplayDeletePending(email)}
-                    >
-                      <Icon color="grey3" name="delete" />
-                    </Styled.Button>
-                  </td>
+                  {!invitedAdmins.includes(user.email) ? (
+                    <td>
+                      <Styled.Button
+                        onClick={() => this.onDisplayEditUserModal(user)}
+                      >
+                        <Icon color="grey3" name="create" />
+                      </Styled.Button>
+                      <Styled.Button
+                        onClick={() => this.onDisplayDeleteUserModal(user)}
+                      >
+                        <Icon color="grey3" name="delete" />
+                      </Styled.Button>
+                    </td>
+                  ) : (
+                    <td>
+                      Pending
+                      <Styled.Button
+                        onClick={() => this.onDisplayDeletePending(user.email)}
+                      >
+                        <Icon color="grey3" name="delete" />
+                      </Styled.Button>
+                    </td>
+                  )}
                 </Table.Row>
               ))}
           </tbody>
         </Table.Table>
         {loading && <Loading />}
+        {/* Edit Modal */}
         <Modal
           style={{ "max-width": "750px" }}
           isOpen={this.state.userSelectedForEdit}
@@ -361,6 +372,7 @@ class EmployeeTable extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
+        {/* Delete Invited Admin Modal */}
         <Modal
           isOpen={this.state.pendingSelectedForDelete}
           onClose={null}
@@ -376,6 +388,26 @@ class EmployeeTable extends React.Component {
               Cancel
             </Button>
             <Button color="primary" onClick={this.handleSubmitForPending}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </Modal>
+        {/* Delete Current Admin Modal */}
+        <Modal
+          isOpen={this.state.userSelectedForDelete}
+          onClose={null}
+          backdrop="static"
+        >
+          <ModalHeader>Delete Admin</ModalHeader>
+          <ModalBody>
+            Are you sure you want to <b>permanently</b> delete pending admin:{" "}
+            {this.state.userSelectedForDelete?.name}?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.closeDeleteUserModal}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={this.handleSubmitForDeleteUser}>
               Delete
             </Button>
           </ModalFooter>

@@ -130,6 +130,8 @@ export const editEvent = (event, sendConfirmationEmail) =>
 
 export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
 
+export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user)
+
 export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
 
 export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
