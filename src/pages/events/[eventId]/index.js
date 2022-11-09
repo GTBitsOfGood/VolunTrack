@@ -38,7 +38,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
-    margin-right: 3rem;
   `,
   EventName: styled.h1`
     color: black;
@@ -90,7 +89,7 @@ const Styled = {
     font-size: 15px;
     margin: auto;
     bottom: 0;
-    width: 60%;
+    width: 50%;
   `,
   Routing: styled(Button)`
     background-color: ${variables["primary"]};
@@ -98,7 +97,7 @@ const Styled = {
     font-size: 15px;
     margin: 1rem;
     bottom: 0;
-    width: 40%;
+    width: 32%;
   `,
 };
 

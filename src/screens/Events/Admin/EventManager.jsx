@@ -231,13 +231,13 @@ const EventManager = ({ user }) => {
   const changeValue = (e) => {
     setDropdownVal(e.currentTarget.textContent);
     const value = e.currentTarget.textContent;
-    if (value == "Public Events") {
-      setFilterOn(true);
-      setFilteredEvents(events.filter((event) => !event.isPrivate));
-    } else if (value == "Private Group Events") {
+    if (value === "Public Events") {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => event.isPrivate));
-    } else if (value == "All Events") {
+    } else if (value === "Private Group Events") {
+      setFilterOn(true);
+      setFilteredEvents(events.filter((event) => !event.isPrivate));
+    } else if (value === "All Events") {
       setFilterOn(false);
     }
   };
