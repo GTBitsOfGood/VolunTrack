@@ -83,7 +83,7 @@ const EventWaiverModal = ({
   toggle,
   hasMinor,
   onRegisterAfterWaiverClicked,
-  eventId
+  eventId,
 }) => {
   const [showGuardian, setShowGuardian] = useState(true);
 
@@ -112,7 +112,7 @@ const EventWaiverModal = ({
   const [showMe, setShowMe] = useState(false);
   const togglePdf = () => {
     setShowMe((prev) => !prev);
-  }
+  };
 
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
@@ -202,18 +202,20 @@ const EventWaiverModal = ({
       )}
 
       <Styled.Row>
-        <Styled.MainButton onClick = {togglePdf}>
+        <Styled.MainButton onClick={togglePdf}>
           <IconSpecial width="25" height="24" viewBox="0 0 25 24" name="link" />
           Read Waiver
         </Styled.MainButton>
-        <Styled.Row style={{
-          display: showMe?"block":"none"
-        }}>
+        <Styled.Row
+          style={{
+            display: showMe ? "block" : "none",
+          }}
+        >
           <iframe
             style={{ width: "563px", height: "666px" }}
-            src={showGuardian?"/files/adult.pdf": "/files/minor.pdf"}
-            type='application/pdf'
-            title='title'
+            src={showGuardian ? "/files/adult.pdf" : "/files/minor.pdf"}
+            type="application/pdf"
+            title="title"
           />
         </Styled.Row>
       </Styled.Row>
