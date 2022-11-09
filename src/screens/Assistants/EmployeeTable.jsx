@@ -378,10 +378,10 @@ class EmployeeTable extends React.Component {
           onClose={null}
           backdrop="static"
         >
-          <ModalHeader>Delete Pending Admin</ModalHeader>
+          <ModalHeader>Delete Pending Admin Invitation</ModalHeader>
           <ModalBody>
-            Are you sure you want to <b>permanently</b> delete this pending
-            admin: {this.state.pendingSelectedForDelete}?
+            Are you sure you want to <b>delete</b> the invitation for this
+            pending admin: {this.state.pendingSelectedForDelete}?
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={this.closePendingModal}>
@@ -400,7 +400,7 @@ class EmployeeTable extends React.Component {
         >
           <ModalHeader>Delete Admin</ModalHeader>
           <ModalBody>
-            Are you sure you want to <b>permanently</b> delete pending admin:{" "}
+            Are you sure you want to <b>permanently</b> delete this admin:{" "}
             {this.state.userSelectedForDelete?.name}?
           </ModalBody>
           <ModalFooter>
