@@ -10,6 +10,12 @@ import EventCreateModal from "./EventCreateModal";
 import EventDeleteModal from "./EventDeleteModal";
 import EventEditModal from "./EventEditModal";
 import EventTable from "./EventTable";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 
 const isSameDay = (a) => (b) => {
   return differenceInCalendarDays(a, b) === 0;
@@ -32,9 +38,6 @@ const Styled = {
     color: white;
     width: 9.5rem;
     height: 2.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-    margin-right: 2vw;
   `,
   Content: styled.div``,
   EventContainer: styled.div`
@@ -65,6 +68,10 @@ const Styled = {
   ButtonRow: styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    margin-bottom: 2vw;
   `,
   DateRow: styled.div`
     display: flex;
@@ -79,11 +86,21 @@ const Styled = {
     color: ${variables.primary};
     cursor: pointer;
   `,
+  EventFilter: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 2rem;
+  `,
 };
 
 const EventManager = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [filterOn, setFilterOn] = useState(false);
+  const [dropdownOn, setDropdownOn] = useState(false);
+  const [dropdownVal, setDropdownVal] = useState("All Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
@@ -207,6 +224,24 @@ const EventManager = ({ user }) => {
     onRefresh();
   };
 
+  const toggle = () => {
+    setDropdownOn(!dropdownOn);
+  };
+
+  const changeValue = (e) => {
+    setDropdownVal(e.currentTarget.textContent);
+    const value = e.currentTarget.textContent;
+    if (value === "Public Events") {
+      setFilterOn(true);
+      setFilteredEvents(events.filter((event) => event.isPrivate));
+    } else if (value === "Private Group Events") {
+      setFilterOn(true);
+      setFilteredEvents(events.filter((event) => !event.isPrivate));
+    } else if (value === "All Events") {
+      setFilterOn(false);
+    }
+  };
+
   return (
     <Styled.Container>
       <Styled.Left>
@@ -229,6 +264,20 @@ const EventManager = ({ user }) => {
       </Styled.Left>
       <Styled.Right>
         <Styled.ButtonRow>
+          <Dropdown isOpen={dropdownOn} toggle={toggle}>
+            <DropdownToggle caret>{dropdownVal}</DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem>
+                <div onClick={changeValue}>All Events</div>
+              </DropdownItem>
+              <DropdownItem>
+                <div onClick={changeValue}>Public Events</div>
+              </DropdownItem>
+              <DropdownItem>
+                <div onClick={changeValue}>Private Group Events</div>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
           <Styled.Button onClick={onCreateClicked}>
             <span style={{ color: "white" }}>Create new event</span>
           </Styled.Button>
@@ -239,7 +288,7 @@ const EventManager = ({ user }) => {
           ) : (
             <EventTable
               dateString={dateString}
-              events={events}
+              events={filterOn ? filteredEvents : events}
               onEditClicked={onEditClicked}
               onDeleteClicked={onDeleteClicked}
             ></EventTable>
