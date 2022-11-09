@@ -9,6 +9,8 @@ import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 import { profileValidator } from "./helpers";
+import { useRouter, withRouter } from "next/router";
+
 
 const Styled = {
   Form: styled(FForm)``,
@@ -70,19 +72,10 @@ class ProfileForm extends React.Component {
       values.state,
       values.notes
     );
-    this.props.editUserCallback({
-      first_name: values.first_name,
-      last_name: values.last_name,
-      phone_number: values.phone_number,
-      date_of_birth: values.date_of_birth,
-      zip_code: values.zip_code,
-      address: values.address,
-      city: values.city,
-      state: values.state,
-      notes: values.notes,
-    });
+
     this.props.context.startLoading();
     this.props.context.success("Profile successfully updated!");
+    this.props.router.reload();
   };
 
   render() {
@@ -272,6 +265,6 @@ export default ProfileForm;
 ProfileForm.propTypes = {
   user: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
-  editUserCallback: PropTypes.func.isRequired,
+  router: PropTypes.object.isRequired,
   context: PropTypes.object.isRequired,
 };

@@ -3,6 +3,8 @@ import {useContext, useState} from "react";
 import styled from "styled-components";
 import ProfileForm from "./ProfileForm";
 import { RequestContext } from "../../providers/RequestProvider";
+import { useRouter } from "next/router";
+
 
 const Styled = {
   Container: styled.div`
@@ -33,10 +35,7 @@ const Profile = () => {
       <ProfileForm
         user={user}
         isAdmin={session.user.role === "admin"}
-        editUserCallback={(user) => {
-          setUser(user)
-          console.log(user);
-        }}
+        router={useRouter()}
         context={useContext(RequestContext)}
       />
     </Styled.Container>
