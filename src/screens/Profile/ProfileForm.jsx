@@ -1,12 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import {
-  ModalBody,
-  Container,
-  Button,
-  Col,
-  Row,
-} from "reactstrap";
+import { ModalBody, Container, Button, Col, Row } from "reactstrap";
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
@@ -50,23 +44,12 @@ const Styled = {
     margin-bottom: 2rem;
   `,
 };
-class ProfileTable extends React.Component {
+class ProfileForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       disable: true,
       user: props.user,
-      first_name: "",
-      last_name: "",
-      phone_number: 0,
-      date_of_birth: 0,
-      zip_code: 0,
-      total_hours: 0,
-      address: "",
-      city: "",
-      state: "",
-      court_hours: "",
-      notes: "",
       visibleText: false,
     };
   }
@@ -82,62 +65,50 @@ class ProfileTable extends React.Component {
       values.phone_number,
       values.date_of_birth,
       values.zip_code,
-      values.total_hours,
       values.address,
       values.city,
       values.state,
-      values.court_hours,
       values.notes
     );
+    this.props.editUserCallback({
+      first_name: values.first_name,
+      last_name: values.last_name,
+      phone_number: values.phone_number,
+      date_of_birth: values.date_of_birth,
+      zip_code: values.zip_code,
+      address: values.address,
+      city: values.city,
+      state: values.state,
+      notes: values.notes,
+    });
     this.props.context.startLoading();
     this.props.context.success("Profile successfully updated!");
   };
 
   render() {
-    const { isAdmin } = this.props.isAdmin;
+    const isAdmin = this.props.isAdmin;
 
     return (
       <React.Fragment>
         <Formik
           initialValues={{
-            first_name: this.state.user.bio
-              ? this.state.user.bio.first_name
-              : "",
-            last_name: this.state.user.bio ? this.state.user.bio.last_name : "",
-            email: this.state.user.bio ? this.state.user.bio.email : "",
-            phone_number: this.state.user.bio
-              ? this.state.user.bio.phone_number
-              : "",
-            date_of_birth: this.state.user.bio
-              ? this.state.user.bio.date_of_birth
-              : "",
-            zip_code: this.state.user.bio ? this.state.user.bio.zip_code : "",
-            total_hours: this.state.user.bio
-              ? this.state.user.bio.total_hours
-              : "",
-            address: this.state.user.bio ? this.state.user.bio.address : "",
-            city: this.state.user.bio ? this.state.user.bio.city : "",
-            state: this.state.user.bio ? this.state.user.bio.state : "",
-            court_hours: this.state.user.bio
-              ? this.state.user.bio.court_hours
-              : "",
-            notes: this.state.user.bio ? this.state.user.bio.notes : "",
+            first_name: this.state.user.bio.first_name ?? "",
+            last_name: this.state.user.bio.last_name ?? "",
+            email: this.state.user.bio.email ?? "",
+            phone_number: this.state.user.bio.phone_number ?? "",
+            date_of_birth: this.state.user.bio.date_of_birth ?? "",
+            zip_code: this.state.user.bio.zip_code ?? "",
+            address: this.state.user.bio.address ?? "",
+            city: this.state.user.bio.city ?? "",
+            state: this.state.user.bio.state ?? "",
+            notes: this.state.user.bio.notes ?? "",
           }}
           onSubmit={(values, { setSubmitting }) => {
             this.handleSubmit(values);
             setSubmitting(true);
           }}
           validationSchema={profileValidator}
-          render={({
-            handleSubmit,
-            isValid,
-            isSubmitting,
-            values,
-            setFieldValue,
-            handleBlur,
-            errors,
-            touched,
-          }) => (
+          render={({ handleSubmit, isValid, isSubmitting }) => (
             <React.Fragment>
               <Table.Container
                 style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
@@ -186,7 +157,11 @@ class ProfileTable extends React.Component {
                               <SForm.Label>Email</SForm.Label>
                               <Field name="email">
                                 {({ field }) => (
-                                  <SForm.Input {...field} disabled={true} type="text" />
+                                  <SForm.Input
+                                    {...field}
+                                    disabled={true}
+                                    type="text"
+                                  />
                                 )}
                               </Field>
                               <Styled.ErrorMessage name="email" />
@@ -221,18 +196,6 @@ class ProfileTable extends React.Component {
                               </Field>
                               <Styled.ErrorMessage name="zip_code" />
                             </Col>
-                            <Col>
-                              <SForm.Label>Total Hours</SForm.Label>
-                              <Field
-                                name="total_hours"
-                                disabled={this.state.disable}
-                              >
-                                {({ field }) => (
-                                  <SForm.Input {...field} type="text" />
-                                )}
-                              </Field>
-                              <Styled.ErrorMessage name="total_hours" />
-                            </Col>
                           </Row>
                           <Row>
                             <Col>
@@ -264,15 +227,6 @@ class ProfileTable extends React.Component {
                             </Col>
                           </Row>
                           <Row>
-                            <Col>
-                              <SForm.Label>Court Required Hours</SForm.Label>
-                              <Field name="court_hours" disabled={true}>
-                                {({ field }) => (
-                                  <SForm.Input {...field} type="text" />
-                                )}
-                              </Field>
-                              <Styled.ErrorMessage name="court_hours" />
-                            </Col>
                             {isAdmin && (
                               <Col>
                                 <SForm.Label>Notes</SForm.Label>
@@ -313,9 +267,9 @@ class ProfileTable extends React.Component {
   }
 }
 
-export default ProfileTable;
+export default ProfileForm;
 
-ProfileTable.propTypes = {
+ProfileForm.propTypes = {
   user: PropTypes.object.isRequired,
   isAdmin: PropTypes.bool.isRequired,
   editUserCallback: PropTypes.func.isRequired,

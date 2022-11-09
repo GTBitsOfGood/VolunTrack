@@ -85,6 +85,13 @@ class EmployeeTable extends React.Component {
     return;
   };
 
+  cancel = () => {
+    this.props.editUserCallback(this.props.editUserCallback(null))
+    this.setState({
+      userSelectedForEdit: null,
+    });
+  };
+
   onModalClose = (updatedUser) => {
     if (updatedUser) {
       this.props.editUserCallback(updatedUser);
@@ -308,7 +315,7 @@ class EmployeeTable extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <Button color="secondary" onClick={this.onModalClose}>
+            <Button color="secondary" onClick={this.cancel}>
               Cancel
             </Button>
             <Button

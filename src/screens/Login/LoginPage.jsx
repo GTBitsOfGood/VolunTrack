@@ -51,7 +51,7 @@ const LoginPage = () => {
         <Styled.Left>
           <h1>Sign In</h1>
           <p>
-            Become a volunteer - you&apos;ll be able to help mothers nationwide
+            Become a volunteer for Helping Mamas - you&apos;ll be able to help mothers nationwide
             by joining events!
           </p>
           <GoogleButton onClick={login} />

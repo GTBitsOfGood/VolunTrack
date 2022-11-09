@@ -6,6 +6,7 @@ export const eventValidator = object().shape({
   date: date().required(),
   startTime: string().required(),
   endTime: string().required(),
+  localTime: string().required(),
   address: string().trim().required(),
   city: string().trim().required(),
   zip: string().trim().required(),
