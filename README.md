@@ -96,7 +96,7 @@ Adding a success pop-up to any new actions
 3. Create a context success instance and display your message\
     `context.startLoading();`\
     `context.success("<Insert Success Message Here>");`\
-   NOTE: If doing this in a class component, define context as a prop and send this information in where you call the class. See [Profile](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/Profile.jsx) and [ProfileTable](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/ProfileTable.jsx) for examples.
+   NOTE: If doing this in a class component, define context as a prop and send this information in where you call the class. See [Profile](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/Profile.jsx) and [ProfileForm](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/ProfileTable.jsx) for examples.
 
 ### Styling
 
