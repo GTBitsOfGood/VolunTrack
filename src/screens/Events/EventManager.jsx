@@ -86,9 +86,19 @@ const Styled = {
     color: ${variables.primary};
     cursor: pointer;
   `,
+  HomePage: styled.div`
+    width: 54%;
+    height: 100%;
+    background: ${(props) => props.theme.grey9};
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: start;
+  `,
 };
 
-const EventManager = ({ user, role }) => {
+const EventManager = ({ user, role, isHomePage }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -247,64 +257,87 @@ const EventManager = ({ user, role }) => {
 
   return (
     <Styled.Container>
-      <Styled.Left>
-        <Styled.EventContainer>
-          <Styled.Events>Events</Styled.Events>
-          <Styled.DateRow>
-            <Styled.Date>{dateString}</Styled.Date>
-            {showBack && (
-              <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
-            )}
-          </Styled.DateRow>
-        </Styled.EventContainer>
-        <Calendar
-          onChange={onChange}
-          value={value}
-          tileClassName={({ date, view }) =>
-            setMarkDates({ date, view }, markDates)
-          }
-        />
-      </Styled.Left>
-      <Styled.Right>
-        {role === "admin" ? (
-          <Styled.ButtonRow>
-            <Styled.Button onClick={onCreateClicked}>
-              <span style={{ color: "white" }}>Create new event</span>
-            </Styled.Button>
-          </Styled.ButtonRow>
-        ) : (
-          <Styled.TablePadding></Styled.TablePadding>
-        )}
-        <Styled.Content>
-          {events.length == 0 ? (
-            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+      {!isHomePage && (
+        <Styled.Left>
+          <Styled.EventContainer>
+            <Styled.Events>Events</Styled.Events>
+            <Styled.DateRow>
+              <Styled.Date>{dateString}</Styled.Date>
+              {showBack && (
+                <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+              )}
+            </Styled.DateRow>
+          </Styled.EventContainer>
+          <Calendar
+            onChange={onChange}
+            value={value}
+            tileClassName={({ date, view }) =>
+              setMarkDates({ date, view }, markDates)
+            }
+          />
+        </Styled.Left>
+      )}
+      {!isHomePage && (
+        <Styled.Right>
+          {role === "admin" ? (
+            <Styled.ButtonRow>
+              <Styled.Button onClick={onCreateClicked}>
+                <span style={{ color: "white" }}>Create new event</span>
+              </Styled.Button>
+            </Styled.ButtonRow>
           ) : (
-            <EventTable
-              dateString={dateString}
-              events={
-                user.role === "admin" ? events : filterEvents(events, user)
-              }
-              onEditClicked={onEditClicked}
-              onDeleteClicked={onDeleteClicked}
-              onRegisterClicked={onRegister}
-              onUnregister={onUnregister}
-              user={user}
-              role={role}
-            ></EventTable>
+            <Styled.TablePadding></Styled.TablePadding>
           )}
-          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-          <EventEditModal
-            open={showEditModal}
-            toggle={toggleEditModal}
-            event={currEvent}
-          />
-          <EventDeleteModal
-            open={showDeleteModal}
-            toggle={toggleDeleteModal}
-            event={currEvent}
-          />
-        </Styled.Content>
-      </Styled.Right>
+          <Styled.Content>
+            {events.length == 0 ? (
+              <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+            ) : (
+              <EventTable
+                dateString={dateString}
+                events={
+                  user.role === "admin" ? events : filterEvents(events, user)
+                }
+                onEditClicked={onEditClicked}
+                onDeleteClicked={onDeleteClicked}
+                onRegisterClicked={onRegister}
+                onUnregister={onUnregister}
+                user={user}
+                role={role}
+                isHomePage={isHomePage}
+              ></EventTable>
+            )}
+            <EventCreateModal
+              open={showCreateModal}
+              toggle={toggleCreateModal}
+            />
+            <EventEditModal
+              open={showEditModal}
+              toggle={toggleEditModal}
+              event={currEvent}
+            />
+            <EventDeleteModal
+              open={showDeleteModal}
+              toggle={toggleDeleteModal}
+              event={currEvent}
+            />
+          </Styled.Content>
+        </Styled.Right>
+      )}
+      {isHomePage && (
+        <Styled.HomePage>
+          <EventTable
+            dateString={dateString}
+            events={user.role === "admin" ? events : filterEvents(events, user)}
+            onEditClicked={onEditClicked}
+            onDeleteClicked={onDeleteClicked}
+            onRegisterClicked={onRegister}
+            onUnregister={onUnregister}
+            user={user}
+            role={role}
+            isHomePage={isHomePage}
+          ></EventTable>
+        </Styled.HomePage>
+      )}
     </Styled.Container>
   );
 };
