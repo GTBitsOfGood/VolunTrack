@@ -39,6 +39,10 @@ const Styled = {
     margin-bottom: 2vw;
     margin-right: 2vw;
   `,
+  TablePadding: styled.div`
+    margin-top: 2rem;
+    margin-bottom: 2vw;
+  `,
   Content: styled.div``,
   EventContainer: styled.div`
     display: flex;
@@ -231,12 +235,15 @@ const EventManager = ({ user, role }) => {
   const filterEvents = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
-      if (events[i].isPrivate !== "true" || events[i].volunteers.includes(user._id)) {
+      if (
+        events[i].isPrivate !== "true" ||
+        events[i].volunteers.includes(user._id)
+      ) {
         arr.push(events[i]);
       }
     }
     return arr;
-  }
+  };
 
   return (
     <Styled.Container>
@@ -259,12 +266,14 @@ const EventManager = ({ user, role }) => {
         />
       </Styled.Left>
       <Styled.Right>
-        {role === "admin" && (
+        {role === "admin" ? (
           <Styled.ButtonRow>
             <Styled.Button onClick={onCreateClicked}>
               <span style={{ color: "white" }}>Create new event</span>
             </Styled.Button>
           </Styled.ButtonRow>
+        ) : (
+          <Styled.TablePadding></Styled.TablePadding>
         )}
         <Styled.Content>
           {events.length == 0 ? (
@@ -272,7 +281,9 @@ const EventManager = ({ user, role }) => {
           ) : (
             <EventTable
               dateString={dateString}
-              events={user.role === 'admin' ? events : filterEvents(events, user)}
+              events={
+                user.role === "admin" ? events : filterEvents(events, user)
+              }
               onEditClicked={onEditClicked}
               onDeleteClicked={onDeleteClicked}
               onRegisterClicked={onRegister}
