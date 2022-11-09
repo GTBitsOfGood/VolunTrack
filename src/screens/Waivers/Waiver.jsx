@@ -119,7 +119,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
     setIsUploading(false);
     setIsReplacing(false);
     context.startLoading();
-    context.success("Waiver uploaded!");
+    context.success("Waiver  -- !");
   };
 
   return (

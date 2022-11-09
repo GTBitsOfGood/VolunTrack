@@ -10,6 +10,12 @@ import EventCreateModal from "./Admin/EventCreateModal";
 import EventDeleteModal from "./Admin/EventDeleteModal";
 import EventEditModal from "./Admin/EventEditModal";
 import EventTable from "./EventTable";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+} from "reactstrap";
 
 import { useSession } from "next-auth/react";
 import { registerForEvent, updateEvent } from "./User/eventHelpers";
@@ -35,9 +41,6 @@ const Styled = {
     color: white;
     width: 9.5rem;
     height: 2.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-    margin-right: 2vw;
   `,
   TablePadding: styled.div`
     margin-top: 2rem;
@@ -72,6 +75,10 @@ const Styled = {
   ButtonRow: styled.div`
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2rem;
+    margin-bottom: 2vw;
   `,
   DateRow: styled.div`
     display: flex;
@@ -96,11 +103,21 @@ const Styled = {
     margin: 0 auto;
     align-items: start;
   `,
+  EventFilter: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 2rem;
+  `,
 };
 
 const EventManager = ({ user, role, isHomePage }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [filterOn, setFilterOn] = useState(false);
+  const [dropdownOn, setDropdownOn] = useState(false);
+  const [dropdownVal, setDropdownVal] = useState("All Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
@@ -246,13 +263,31 @@ const EventManager = ({ user, role, isHomePage }) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
       if (
-        events[i].isPrivate !== "true" ||
+        events[i].isPrivate ||
         events[i].volunteers.includes(user._id)
       ) {
         arr.push(events[i]);
       }
     }
     return arr;
+  };
+
+  const toggle = () => {
+    setDropdownOn(!dropdownOn);
+  };
+
+  const changeValue = (e) => {
+    setDropdownVal(e.currentTarget.textContent);
+    const value = e.currentTarget.textContent;
+    if (value === "Public Events") {
+      setFilterOn(true);
+      setFilteredEvents(events.filter((event) => !event.isPrivate));
+    } else if (value === "Private Group Events") {
+      setFilterOn(true);
+      setFilteredEvents(events.filter((event) => event.isPrivate));
+    } else if (value === "All Events") {
+      setFilterOn(false);
+    }
   };
 
   return (
@@ -281,6 +316,20 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.Right>
           {role === "admin" ? (
             <Styled.ButtonRow>
+              <Dropdown isOpen={dropdownOn} toggle={toggle}>
+                <DropdownToggle caret>{dropdownVal}</DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem>
+                    <div onClick={changeValue}>All Events</div>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <div onClick={changeValue}>Public Events</div>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <div onClick={changeValue}>Private Group Events</div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
               <Styled.Button onClick={onCreateClicked}>
                 <span style={{ color: "white" }}>Create new event</span>
               </Styled.Button>
@@ -289,13 +338,17 @@ const EventManager = ({ user, role, isHomePage }) => {
             <Styled.TablePadding></Styled.TablePadding>
           )}
           <Styled.Content>
-            {events.length == 0 ? (
+            {events.length === 0 ? (
               <Styled.Events>No Events Scheduled on This Date</Styled.Events>
             ) : (
               <EventTable
                 dateString={dateString}
                 events={
-                  user.role === "admin" ? events : filterEvents(events, user)
+                  user.role === "admin"
+                    ? filterOn
+                      ? filteredEvents
+                      : events
+                    : filterEvents(events, user)
                 }
                 onEditClicked={onEditClicked}
                 onDeleteClicked={onDeleteClicked}
@@ -304,7 +357,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                 user={user}
                 role={role}
                 isHomePage={isHomePage}
-              ></EventTable>
+              />
             )}
             <EventCreateModal
               open={showCreateModal}
@@ -327,7 +380,11 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.HomePage>
           <EventTable
             dateString={dateString}
-            events={user.role === "admin" ? events : filterEvents(events, user)}
+            events={
+              user.role === "admin"
+                ? filteredEvents
+                : filterEvents(events, user)
+            }
             onEditClicked={onEditClicked}
             onDeleteClicked={onDeleteClicked}
             onRegisterClicked={onRegister}
@@ -335,7 +392,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             user={user}
             role={role}
             isHomePage={isHomePage}
-          ></EventTable>
+          />
         </Styled.HomePage>
       )}
     </Styled.Container>

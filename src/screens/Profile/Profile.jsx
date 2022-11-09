@@ -1,9 +1,10 @@
-import { ErrorMessage, Form as FForm } from "formik";
 import { useSession } from "next-auth/react";
+import {useContext, useState} from "react";
 import styled from "styled-components";
-import ProfileTable from "./ProfileTable";
+import ProfileForm from "./ProfileForm";
 import { RequestContext } from "../../providers/RequestProvider";
-import { useContext } from "react";
+import { useRouter } from "next/router";
+
 
 const Styled = {
   Container: styled.div`
@@ -23,34 +24,18 @@ const Styled = {
     justify-content: space-between;
     margin-bottom: 1rem;
   `,
-  Form: styled(FForm)`
-    width: 50%;
-    background: white;
-    padding: 5%;
-  `,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: red;
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
-  `,
 };
 
 const Profile = () => {
   const { data: session } = useSession();
-  console.log(session.user);
+  const [user, setUser] = useState(session.user);
 
   return (
     <Styled.Container>
-      <ProfileTable
-        user={session.user}
-        isAdmin={false}
-        editUserCallback={() => console.log("callback")}
+      <ProfileForm
+        user={user}
+        isAdmin={session.user.role === "admin"}
+        router={useRouter()}
         context={useContext(RequestContext)}
       />
     </Styled.Container>

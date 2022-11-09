@@ -19,6 +19,11 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    localTime: {
+      type: String,
+      required: true,
+      default: "EDT",
+    },
     address: {
       type: String,
       required: true,
@@ -110,8 +115,18 @@ const eventSchema = new mongoose.Schema(
       required: false,
     },
     isPrivate: {
-      type: String,
+      type: Boolean,
       required: true,
+    },
+    isEnded: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isValidForCourtHours: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   { timestamps: true }

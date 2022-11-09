@@ -5,19 +5,16 @@ export default async function handler(req, res) {
   await dbConnect();
   if (req.method === "PUT") {
     const attendanceId = req.query.id;
-
-    const attendance = await Attendance.findOneAndReplace(
+    const attendance = await Attendance.updateOne(
       { _id: attendanceId },
-      new Attendance(req.body)
+      req.body.newData
     );
-
     return res.status(200).json(attendance);
   }
   if (req.method === "DELETE") {
     const attendanceId = req.query.id;
-
-    Attendance.findOneAndDelete({ _id: attendanceId });
-
-    return res.status(200);
+    Attendance.findOneAndDelete({ _id: attendanceId }).then(() => {
+      return res.status(200).send();
+    });
   }
 }
