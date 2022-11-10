@@ -303,15 +303,21 @@ const EventInfo = () => {
           )}
         </Col>
       </Styled.EventTable>
-      {user.role == "volunteer" &&
-        event.max_volunteers - event.volunteers.length != 0 &&
+      {user.role === "volunteer" &&
+        event.max_volunteers - event.volunteers.length !== 0 &&
         !event.volunteers.includes(user._id) &&
         futureorTodaysDate && (
           <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
           </Styled.Button>
         )}
-      {user.role == "volunteer" &&
+      {user.role === "volunteer" &&
+        event.max_volunteers - event.volunteers.length === 0 &&
+        !event.volunteers.includes(user._id) &&
+        futureorTodaysDate && (
+          <Styled.Button disabled={true}>Registration Closed</Styled.Button>
+        )}
+      {user.role === "volunteer" &&
         event.volunteers.includes(user._id) &&
         futureorTodaysDate && (
           <Styled.Button onClick={() => onUnregisterClicked(event)}>
