@@ -124,7 +124,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const emptyStringField = "";
-  const submitText = containsExistingEvent(event) ? "Submit" : "Create Event";
+  const submitText = containsExistingEvent(event) ? "Save" : "Create Event";
   const [content, setContent] = useState(
     containsExistingEvent(event) ? event.description : emptyStringField
   );
