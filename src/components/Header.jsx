@@ -233,14 +233,14 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
-              {user.role === "admin" && (
-                <Link
-                  href="/applicant-viewer"
-                  selected={currPageMatches("/applicant-viewer")}
-                >
-                  <Styled.PageLink>Applicant Viewer</Styled.PageLink>
-                </Link>
-              )}
+              {/*{user.role === "admin" && (*/}
+              {/*  <Link*/}
+              {/*    href="/applicant-viewer"*/}
+              {/*    selected={currPageMatches("/applicant-viewer")}*/}
+              {/*  >*/}
+              {/*    <Styled.PageLink>Applicant Viewer</Styled.PageLink>*/}
+              {/*  </Link>*/}
+              {/*)}*/}
               {user.role === "volunteer" && (
                 <Link href="/home" selected={currPageMatches("/home")}>
                   <Styled.PageLink>Home</Styled.PageLink>
