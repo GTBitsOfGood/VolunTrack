@@ -212,6 +212,13 @@ const EventInfo = () => {
                 </Styled.Routing>
               </>
             )}
+            {user.role === "volunteer" &&
+              event.volunteers.includes(user._id) &&
+              futureorTodaysDate && (
+                <Styled.Routing onClick={() => onUnregisterClicked(event)}>
+                  Unregister
+                </Styled.Routing>
+              )}
           </Row>
           <Row>
             <Styled.EventCol2 style={{ "margin-right": "auto" }}>
@@ -320,8 +327,8 @@ const EventInfo = () => {
       {user.role === "volunteer" &&
         event.volunteers.includes(user._id) &&
         futureorTodaysDate && (
-          <Styled.Button onClick={() => onUnregisterClicked(event)}>
-            Unregister
+          <Styled.Button disabled={true}>
+            You are registered for this event!
           </Styled.Button>
         )}
     </>

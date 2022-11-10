@@ -119,10 +119,8 @@ const EventTable = ({
                   <Table.Register>
                     {event.volunteers.includes(user._id) ? (
                       <>
-                        <Styled.Button onClick={() => onUnregister(event)}>
-                          <Icon color="grey3" name="delete" />
-                          <span>Unregister</span>
-                        </Styled.Button>
+                        <Icon name="check" viewBox={"0 0 96 96"} />
+                        <span>Signed up!</span>
                       </>
                     ) : (
                       <Styled.Button onClick={() => onRegisterClicked(event)}>
