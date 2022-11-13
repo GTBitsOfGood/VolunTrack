@@ -7,6 +7,7 @@ import variables from "../../design-tokens/_variables.module.scss";
 import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
 
 import React from "react";
+import DateDisplayComponent from "../../components/DateDisplay";
 
 const Styled = {
   Container: styled.div`
@@ -18,7 +19,7 @@ const Styled = {
   EventContainer: styled.div`
     width: 100%;
     margin: 0 0 2rem 0;
-    padding: 1rem;
+    padding: 0.75rem;
 
     display: flex;
     flex-direction: column;
@@ -28,6 +29,11 @@ const Styled = {
     border-radius: 1rem;
 
     cursor: pointer;
+  `,
+  EventGrid: styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
   `,
   EventContent: styled.div`
     width: 100%;
@@ -210,69 +216,73 @@ const EventTable = ({
       <Styled.Container>
         {events.map((event) => (
           <Styled.EventContainer key={event._id}>
-            <Link href={`events/${event._id}`}>
-              <Styled.EventContent>
-                <Styled.EventContentRow>
-                  <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                  <Styled.EventSlots>
-                    {event.max_volunteers - event.volunteers.length} slots
-                    available
-                  </Styled.EventSlots>
-                  {role === "admin" && (
-                    <Styled.EditButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEditClicked(event);
-                      }}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.EditButton>
-                  )}
-                  {role === "admin" && (
-                    <Styled.DeleteButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteClicked(event);
-                      }}
-                    >
-                      <Icon color="grey3" name="delete" />
-                    </Styled.DeleteButton>
-                  )}
-                  {role === "volunteer" && (
-                    <>
-                      {event.volunteers.includes(user._id) ? (
-                        <>
-                          <Styled.EventSpace>
-                            <Icon name="check" viewBox={"0 0 96 96"} />
-                            <span>Signed up!</span>
-                          </Styled.EventSpace>
-                        </>
-                      ) : (
-                        <>
-                          <Styled.Button
-                            onClick={() => onRegisterClicked(event)}
-                          >
-                            <Icon color="grey3" name="add" />
-                            <span>Sign up</span>
-                          </Styled.Button>
-                        </>
-                      )}
-                    </>
-                  )}
-                </Styled.EventContentRow>
-                <Styled.EventContentRow>
-                  <Styled.Time>{`${convertTime(
-                    event.startTime
-                  )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                  <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
-                </Styled.EventContentRow>
-              </Styled.EventContent>
-            </Link>
-            {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 ==
-              Date.parse(event.date) &&
-              role === "admin" && (
-                <ManageAttendanceButton eventId={event._id} />
-              )}
+            <Styled.EventGrid>
+              <DateDisplayComponent date={event.date} color={"Primary"} />
+              <Link href={`events/${event._id}`}>
+                <Styled.EventContent>
+                  <Styled.EventContentRow>
+                    <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                    <Styled.EventSlots>
+                      {event.max_volunteers - event.volunteers.length} slots
+                      available
+                    </Styled.EventSlots>
+                    {role === "admin" && (
+                      <Styled.EditButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEditClicked(event);
+                        }}
+                      >
+                        <Icon color="grey3" name="create" />
+                      </Styled.EditButton>
+                    )}
+                    {role === "admin" && (
+                      <Styled.DeleteButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteClicked(event);
+                        }}
+                      >
+                        <Icon color="grey3" name="delete" />
+                      </Styled.DeleteButton>
+                    )}
+                    {role === "volunteer" && (
+                      <>
+                        {event.volunteers.includes(user._id) ? (
+                          <>
+                            <Styled.EventSpace>
+                              <Icon name="check" viewBox={"0 0 96 96"} />
+                              <span>Signed up!</span>
+                            </Styled.EventSpace>
+                          </>
+                        ) : (
+                          <>
+                            <Styled.Button
+                              onClick={() => onRegisterClicked(event)}
+                            >
+                              <Icon color="grey3" name="add" />
+                              <span>Sign up</span>
+                            </Styled.Button>
+                          </>
+                        )}
+                      </>
+                    )}
+                  </Styled.EventContentRow>
+                  <Styled.EventContentRow>
+                    <Styled.Time>{`${convertTime(
+                      event.startTime
+                    )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                    <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                  </Styled.EventContentRow>
+                </Styled.EventContent>
+              </Link>
+              {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
+                14400000 ==
+                Date.parse(event.date) &&
+                role === "admin" && (
+                  <ManageAttendanceButton eventId={event._id} />
+                )}
+            </Styled.EventGrid>
           </Styled.EventContainer>
         ))}
         <Styled.Spacer />
@@ -286,6 +296,80 @@ const EventTable = ({
             <Styled.Events>Your Upcoming Events</Styled.Events>
             {registeredEvents.map((event) => (
               <Styled.EventContainer key={event._id}>
+                <Styled.EventGrid>
+                  <DateDisplayComponent date={event.date} color={"Primary"} />
+                  <Link href={`events/${event._id}`}>
+                    <Styled.EventContent>
+                      <Styled.EventContentRow>
+                        <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                        <Styled.EventSlots>
+                          {event.max_volunteers - event.volunteers.length} slots
+                          available
+                        </Styled.EventSlots>
+
+                        <Styled.EventSpace>
+                          <Icon name="check" viewBox={"0 0 96 96"} />
+                          <span>Signed up!</span>
+                        </Styled.EventSpace>
+                      </Styled.EventContentRow>
+                      <Styled.EventContentRow>
+                        <Styled.Time>{`${convertTime(
+                          event.startTime
+                        )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                        <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                      </Styled.EventContentRow>
+                    </Styled.EventContent>
+                  </Link>
+                </Styled.EventGrid>
+              </Styled.EventContainer>
+            ))}
+          </Styled.ul>
+
+          <Styled.ul>
+            <Styled.Events>New Events</Styled.Events>
+            {upcomingEvents.map((event) => (
+              <Styled.EventContainer key={event._id}>
+                <Styled.EventGrid>
+                  <DateDisplayComponent date={event.date} color={"Secondary"} />
+                  <Link href={`events/${event._id}`}>
+                    <Styled.EventContent>
+                      <Styled.EventContentRow>
+                        <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                        <Styled.EventSlots>
+                          {event.max_volunteers - event.volunteers.length} slots
+                          available
+                        </Styled.EventSlots>
+                        <Styled.Button onClick={() => onRegisterClicked(event)}>
+                          <Icon color="grey3" name="add" />
+                          <span>Sign up</span>
+                        </Styled.Button>
+                      </Styled.EventContentRow>
+                      <Styled.EventContentRow>
+                        <Styled.Time>{`${convertTime(
+                          event.startTime
+                        )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                        <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                      </Styled.EventContentRow>
+                    </Styled.EventContent>
+                  </Link>
+                </Styled.EventGrid>
+              </Styled.EventContainer>
+            ))}
+            <Link href={`/events`}>
+              <Styled.LinkedText>View More</Styled.LinkedText>
+            </Link>
+          </Styled.ul>
+          <Styled.Spacer />
+        </Styled.Container>
+      );
+    } else if (registeredEvents.length > 0) {
+      return (
+        <Styled.Container>
+          <Styled.Events>Your Upcoming Events</Styled.Events>
+          {registeredEvents.map((event) => (
+            <Styled.EventContainer key={event._id}>
+              <Styled.EventGrid>
+                <DateDisplayComponent date={event.date} color={"Primary"} />
                 <Link href={`events/${event._id}`}>
                   <Styled.EventContent>
                     <Styled.EventContentRow>
@@ -308,14 +392,20 @@ const EventTable = ({
                     </Styled.EventContentRow>
                   </Styled.EventContent>
                 </Link>
-              </Styled.EventContainer>
-            ))}
-          </Styled.ul>
-
-          <Styled.ul>
-            <Styled.Events>New Events</Styled.Events>
-            {upcomingEvents.map((event) => (
-              <Styled.EventContainer key={event._id}>
+              </Styled.EventGrid>
+            </Styled.EventContainer>
+          ))}
+          <Styled.Spacer />
+        </Styled.Container>
+      );
+    } else if (upcomingEvents.length > 0) {
+      return (
+        <Styled.Container>
+          <Styled.Events>New Events</Styled.Events>
+          {upcomingEvents.map((event) => (
+            <Styled.EventContainer key={event._id}>
+              <Styled.EventGrid>
+                <DateDisplayComponent date={event.date} color={"Primary"} />
                 <Link href={`events/${event._id}`}>
                   <Styled.EventContent>
                     <Styled.EventContentRow>
@@ -337,75 +427,7 @@ const EventTable = ({
                     </Styled.EventContentRow>
                   </Styled.EventContent>
                 </Link>
-              </Styled.EventContainer>
-            ))}
-            <Link href={`/events`}>
-              <Styled.LinkedText>View More</Styled.LinkedText>
-            </Link>
-          </Styled.ul>
-          <Styled.Spacer />
-        </Styled.Container>
-      );
-    } else if (registeredEvents.length > 0) {
-      return (
-        <Styled.Container>
-          <Styled.Events>Your Upcoming Events</Styled.Events>
-          {registeredEvents.map((event) => (
-            <Styled.EventContainer key={event._id}>
-              <Link href={`events/${event._id}`}>
-                <Styled.EventContent>
-                  <Styled.EventContentRow>
-                    <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                    <Styled.EventSlots>
-                      {event.max_volunteers - event.volunteers.length} slots
-                      available
-                    </Styled.EventSlots>
-
-                    <Styled.EventSpace>
-                      <Icon name="check" viewBox={"0 0 96 96"} />
-                      <span>Signed up!</span>
-                    </Styled.EventSpace>
-                  </Styled.EventContentRow>
-                  <Styled.EventContentRow>
-                    <Styled.Time>{`${convertTime(
-                      event.startTime
-                    )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                    <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
-                  </Styled.EventContentRow>
-                </Styled.EventContent>
-              </Link>
-            </Styled.EventContainer>
-          ))}
-          <Styled.Spacer />
-        </Styled.Container>
-      );
-    } else if (upcomingEvents.length > 0) {
-      return (
-        <Styled.Container>
-          <Styled.Events>New Events</Styled.Events>
-          {upcomingEvents.map((event) => (
-            <Styled.EventContainer key={event._id}>
-              <Link href={`events/${event._id}`}>
-                <Styled.EventContent>
-                  <Styled.EventContentRow>
-                    <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                    <Styled.EventSlots>
-                      {event.max_volunteers - event.volunteers.length} slots
-                      available
-                    </Styled.EventSlots>
-                    <Styled.Button onClick={() => onRegisterClicked(event)}>
-                      <Icon color="grey3" name="add" />
-                      <span>Sign up</span>
-                    </Styled.Button>
-                  </Styled.EventContentRow>
-                  <Styled.EventContentRow>
-                    <Styled.Time>{`${convertTime(
-                      event.startTime
-                    )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                    <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
-                  </Styled.EventContentRow>
-                </Styled.EventContent>
-              </Link>
+              </Styled.EventGrid>
             </Styled.EventContainer>
           ))}
           <Link href={`/events`}>
