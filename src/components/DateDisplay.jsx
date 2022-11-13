@@ -65,14 +65,20 @@ class DateDisplayComponent extends React.Component {
       >
         <Styled.MonthText
           style={{
-            color: this.state.color.toLowerCase() === "primary" ? variables["dark"] : "black",
+            color:
+              this.state.color.toLowerCase() === "primary"
+                ? variables["dark"]
+                : "black",
           }}
         >
           {this.state.month.toUpperCase()}
         </Styled.MonthText>
         <Styled.DayText
           style={{
-            color: this.state.color.toLowerCase() === "primary" ? variables["dark"] : "black",
+            color:
+              this.state.color.toLowerCase() === "primary"
+                ? variables["dark"]
+                : "black",
           }}
         >
           {this.state.day}
