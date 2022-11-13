@@ -300,11 +300,13 @@ const EventInfo = () => {
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
                 </Styled.InfoTable>
-                <Styled.ButtonCol>
-                  <Styled.PrivateLink onClick={copyPrivateLink}>
-                    Share Private Link to Event
-                  </Styled.PrivateLink>
-                </Styled.ButtonCol>
+                {user.role === "volunteer" && (
+                  <Styled.ButtonCol>
+                    <Styled.PrivateLink onClick={copyPrivateLink}>
+                      Share Private Event Link
+                    </Styled.PrivateLink>
+                  </Styled.ButtonCol>
+                )}
               </Styled.EventCol2>
             </Row>
           )}
