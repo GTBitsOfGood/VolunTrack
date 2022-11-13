@@ -132,6 +132,9 @@ const EventManager = ({ user }) => {
     const changedEvent = {
       // remove current user id from event volunteers
       ...event,
+      minors: event.volunteers.filter(
+        (minor) => minor.volunteer_id !== user._id
+      ),
       volunteers: event.volunteers.filter(
         (volunteer) => volunteer !== user._id
       ),
