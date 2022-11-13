@@ -2,11 +2,6 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
-import {
-  mandated,
-  roles,
-  statuses,
-} from "../ApplicantViewer/applicantInfoHelpers";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 import { Container, Row, Col } from "reactstrap";
@@ -16,15 +11,15 @@ import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import { updateApplicantRole } from "../../actions/queries";
 
-const keyToValue = (key) => {
-  key = key.replace(/_/g, " ");
-  key = key
-    .toLowerCase()
-    .split(" ")
-    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-    .join(" ");
-  return key;
-};
+// const keyToValue = (key) => {
+//   key = key.replace(/_/g, " ");
+//   key = key
+//     .toLowerCase()
+//     .split(" ")
+//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+//     .join(" ");
+//   return key;
+// };
 
 const Styled = {
   Button: styled(Button)`
@@ -49,8 +44,35 @@ class EmployeeTable extends React.Component {
     super(props);
     this.state = {
       userSelectedForEdit: null,
+      userSelectedForDelete: null,
+      pendingSelectedForDelete: null,
     };
   }
+
+  onDisplayDeletePending = (pending) => {
+    this.setState({
+      pendingSelectedForDelete: pending,
+    });
+  };
+
+  closePendingModal = () => {
+    this.setState({
+      pendingSelectedForDelete: null,
+    });
+  };
+
+  onDisplayDeleteUserModal = (userToDelete) => {
+    this.setState({
+      userSelectedForDelete: userToDelete,
+    });
+  };
+
+  closeDeleteUserModal = () => {
+    this.setState({
+      userSelectedForDelete: null,
+    });
+  };
+
   onDisplayEditUserModal = (userToEdit) => {
     this.setState({
       userSelectedForEdit: userToEdit,
@@ -58,28 +80,28 @@ class EmployeeTable extends React.Component {
   };
 
   handleStatus = (event) => {
-    if (event.value == "Administrator") {
+    if (event.value === "Administrator") {
       const newRoleName = "admin";
       this.props.users
-        .filter((user) => user == this.state.userSelectedForEdit)
+        .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
       updateApplicantRole(this.state.userSelectedForEdit.email, "admin");
     }
-    if (event.value == "Admin Assistant") {
+    if (event.value === "Admin Assistant") {
       const newRoleName = "admin-assistant";
       this.props.users
-        .filter((user) => user == this.state.userSelectedForEdit)
+        .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
       updateApplicantRole(
         this.state.userSelectedForEdit.email,
         "admin-assistant"
       );
     }
-    if (event.value == "Staff") {
+    if (event.value === "Staff") {
       updateApplicantRole(this.state.userSelectedForEdit.email, "staff");
       const newRoleName = "staff";
       this.props.users
-        .filter((user) => user == this.state.userSelectedForEdit)
+        .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
     }
     return;
@@ -100,12 +122,26 @@ class EmployeeTable extends React.Component {
       userSelectedForEdit: null,
     });
   };
+
+  handleSubmitForPending = () => {
+    this.props.deletePendingCallback(this.state.pendingSelectedForDelete);
+    this.closePendingModal();
+  };
+
+  handleSubmitForDeleteUser = () => {
+    this.props.deleteUserCallback(
+      this.state.userSelectedForDelete._id,
+      this.state.userSelectedForDelete
+    );
+    this.closeDeleteUserModal();
+  };
+
   render() {
-    const { users, loading } = this.props;
+    const { users, invitedAdmins, loading } = this.props;
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
     return (
-      <Table.Container style={{ width: "100%", "max-width": "none" }}>
+      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
         <Table.Table>
           <tbody>
             <tr>
@@ -136,18 +172,35 @@ class EmployeeTable extends React.Component {
                       ? "Staff"
                       : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                   </td>
-                  <td>
-                    <Styled.Button
-                      onClick={() => this.onDisplayEditUserModal(user)}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.Button>
-                  </td>
+                  {!invitedAdmins.includes(user.email) ? (
+                    <td>
+                      <Styled.Button
+                        onClick={() => this.onDisplayEditUserModal(user)}
+                      >
+                        <Icon color="grey3" name="create" />
+                      </Styled.Button>
+                      <Styled.Button
+                        onClick={() => this.onDisplayDeleteUserModal(user)}
+                      >
+                        <Icon color="grey3" name="delete" />
+                      </Styled.Button>
+                    </td>
+                  ) : (
+                    <td>
+                      Pending
+                      <Styled.Button
+                        onClick={() => this.onDisplayDeletePending(user.email)}
+                      >
+                        <Icon color="grey3" name="delete" />
+                      </Styled.Button>
+                    </td>
+                  )}
                 </Table.Row>
               ))}
           </tbody>
         </Table.Table>
         {loading && <Loading />}
+        {/* Edit Modal */}
         <Modal
           style={{ "max-width": "750px" }}
           isOpen={this.state.userSelectedForEdit}
@@ -326,6 +379,46 @@ class EmployeeTable extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
+        {/* Delete Invited Admin Modal */}
+        <Modal
+          isOpen={this.state.pendingSelectedForDelete}
+          onClose={null}
+          backdrop="static"
+        >
+          <ModalHeader>Delete Pending Admin Invitation</ModalHeader>
+          <ModalBody>
+            Are you sure you want to <b>delete</b> the invitation for this
+            pending admin: {this.state.pendingSelectedForDelete}?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.closePendingModal}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={this.handleSubmitForPending}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </Modal>
+        {/* Delete Current Admin Modal */}
+        <Modal
+          isOpen={this.state.userSelectedForDelete}
+          onClose={null}
+          backdrop="static"
+        >
+          <ModalHeader>Delete Admin</ModalHeader>
+          <ModalBody>
+            Are you sure you want to <b>permanently</b> delete this admin:{" "}
+            {this.state.userSelectedForDelete?.name}?
+          </ModalBody>
+          <ModalFooter>
+            <Button color="secondary" onClick={this.closeDeleteUserModal}>
+              Cancel
+            </Button>
+            <Button color="primary" onClick={this.handleSubmitForDeleteUser}>
+              Delete
+            </Button>
+          </ModalFooter>
+        </Modal>
       </Table.Container>
     );
   }
@@ -335,6 +428,7 @@ export default EmployeeTable;
 
 EmployeeTable.propTypes = {
   users: PropTypes.array.isRequired,
+  invitedAdmins: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
 };
