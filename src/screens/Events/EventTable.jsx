@@ -87,6 +87,10 @@ const Styled = {
     padding: 0.5rem;
     margin: 0 0 0 auto;
   `,
+  EventSpace: styled.div`
+    padding: 0.5rem;
+    margin: 0 0 0 auto;
+  `,
   Events: styled.div`
     text-align: left;
     font-size: 36px;
@@ -238,10 +242,10 @@ const EventTable = ({
                     <>
                       {event.volunteers.includes(user._id) ? (
                         <>
-                          <Styled.Button onClick={() => onUnregister(event)}>
-                            <Icon color="grey3" name="delete" />
-                            <span>Unregister</span>
-                          </Styled.Button>
+                          <Styled.EventSpace>
+                            <Icon name="check" viewBox={"0 0 96 96"} />
+                            <span>Signed up!</span>
+                          </Styled.EventSpace>
                         </>
                       ) : (
                         <>
@@ -291,10 +295,10 @@ const EventTable = ({
                         available
                       </Styled.EventSlots>
 
-                      <Styled.Button onClick={() => onUnregister(event)}>
-                        <Icon color="grey3" name="delete" />
-                        <span>Unregister</span>
-                      </Styled.Button>
+                      <Styled.EventSpace>
+                        <Icon name="check" viewBox={"0 0 96 96"} />
+                        <span>Signed up!</span>
+                      </Styled.EventSpace>
                     </Styled.EventContentRow>
                     <Styled.EventContentRow>
                       <Styled.Time>{`${convertTime(
@@ -357,10 +361,10 @@ const EventTable = ({
                       available
                     </Styled.EventSlots>
 
-                    <Styled.Button onClick={() => onUnregister(event)}>
-                      <Icon color="grey3" name="delete" />
-                      <span>Unregister</span>
-                    </Styled.Button>
+                    <Styled.EventSpace>
+                      <Icon name="check" viewBox={"0 0 96 96"} />
+                      <span>Signed up!</span>
+                    </Styled.EventSpace>
                   </Styled.EventContentRow>
                   <Styled.EventContentRow>
                     <Styled.Time>{`${convertTime(
