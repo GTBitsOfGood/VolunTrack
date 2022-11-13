@@ -1,4 +1,4 @@
-import { string, object, number, date } from "yup";
+import {string, object, number, date, boolean} from "yup";
 
 const today = new Date();
 const yesterday = new Date(today);
@@ -29,7 +29,7 @@ export const standardEventValidator = object().shape({
     .trim()
     .email("Invalid email")
     .required(" Email is required"),
-  isPrivate: string().trim().required(),
+  // isPrivate: boolean().optional(),
 });
 
 export const groupEventValidator = object().shape({
@@ -74,5 +74,5 @@ export const groupEventValidator = object().shape({
     .trim()
     .matches(/^\d+$/, " ZIP should have digits only")
     .required(" Org ZIP is required"),
-  isPrivate: string().trim().required(),
+  // isPrivate: boolean().optional(),
 });

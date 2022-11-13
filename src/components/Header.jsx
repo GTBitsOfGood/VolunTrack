@@ -233,14 +233,14 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
-              {user.role === "admin" && (
-                <Link
-                  href="/applicant-viewer"
-                  selected={currPageMatches("/applicant-viewer")}
-                >
-                  <Styled.PageLink>Applicant Viewer</Styled.PageLink>
-                </Link>
-              )}
+              {/*{user.role === "admin" && (*/}
+              {/*  <Link*/}
+              {/*    href="/applicant-viewer"*/}
+              {/*    selected={currPageMatches("/applicant-viewer")}*/}
+              {/*  >*/}
+              {/*    <Styled.PageLink>Applicant Viewer</Styled.PageLink>*/}
+              {/*  </Link>*/}
+              {/*)}*/}
               {user.role === "volunteer" && (
                 <Link href="/home" selected={currPageMatches("/home")}>
                   <Styled.PageLink>Home</Styled.PageLink>
@@ -257,6 +257,11 @@ const Header = () => {
               <Link href="/events" selected={currPageMatches("/events")}>
                 <Styled.PageLink>Events</Styled.PageLink>
               </Link>
+              {user.role === "volunteer" && (
+                <Link onClick={goToStats} href="/stats">
+                  <Styled.PageLink>Participation History</Styled.PageLink>
+                </Link>
+              )}
               {user.role === "admin" && (
                 <Styled.Dropdown nav inNavbar className="navbar-nav">
                   <Styled.Toggle color="white">
@@ -322,11 +327,6 @@ const Header = () => {
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
-                {user.role === "volunteer" && (
-                  <DropdownItem onClick={goToStats} href="/stats">
-                    <Styled.DropdownItem>Stats</Styled.DropdownItem>
-                  </DropdownItem>
-                )}
                 <DropdownItem onClick={logout} href="/">
                   <Styled.DropdownItem>Logout</Styled.DropdownItem>
                 </DropdownItem>
