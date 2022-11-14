@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Modal,
   ModalHeader,
-  ModalBody,
   ModalFooter,
   Button,
   Input,
@@ -12,10 +11,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../../sharedStyles/formStyles";
 import variables from "../../../../design-tokens/_variables.module.scss";
-import router from "next/router";
 import IconSpecial from "../../../../components/IconSpecial";
 
 const Styled = {
@@ -110,7 +106,6 @@ const EventWaiverModal = ({
 
   const onWaiverCheckboxClicked = (e) => {
     setWaiverCheckboxSelected(e.target.checked);
-    console.log(e.target.checked);
   };
 
   const onWaiverMinorCheckboxClicked = (e) => {
@@ -287,7 +282,7 @@ const EventWaiverModal = ({
             </Styled.Button>
             <Styled.Button
               color="primary"
-              disabled={!waiverMinorCheckboxSelected && !waiverCheckboxSelected}
+              disabled={!waiverMinorCheckboxSelected || !waiverCheckboxSelected}
               onClick={() => onRegisterAfterWaiverClicked()}
             >
               Register

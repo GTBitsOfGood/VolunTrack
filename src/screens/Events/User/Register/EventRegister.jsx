@@ -220,10 +220,6 @@ const EventRegister = (event) => {
     setShowWaiverModal((prev) => !prev);
   };
 
-  const toggleHasMinor = () => {
-    setHasMinor((prev) => !prev);
-  };
-
   const setHasMinorTrue = (firstName, lastName) => {
     let added = false;
     for (let minor of events.minors) {
@@ -243,25 +239,12 @@ const EventRegister = (event) => {
     setHasMinor(true);
   };
 
-  const addMandated = (e) => {
-    const checked = e.target.checked;
-    if (checked) {
-      events.mandated_volunteers.push(user._id);
-    } else {
-      const index = events.mandated_volunteers.indexOf(user._id);
-      if (index !== -1) {
-        events.mandated_volunteers.splice(index, 1);
-      }
-    }
-    //enable or disable button register
-  };
-
   const onUnregister = async (event) => {
     const changedEvent = {
       // remove current user id from event volunteers
       ...event,
-      minors: event.minors.filter((minor) => minor.volunteer_id !== user._id),
-      volunteers: event.volunteers.filter(
+      minors: event.minors?.filter((minor) => minor.volunteer_id !== user._id),
+      volunteers: event.volunteers?.filter(
         (volunteer) => volunteer !== user._id
       ),
     };
@@ -286,7 +269,7 @@ const EventRegister = (event) => {
         <React.Fragment>
           <Styled.Row>
             <Col xs="12" lg="6">
-              <Styled.MainText>You've signed up successfully!</Styled.MainText>
+              <Styled.MainText>You've registered successfully!</Styled.MainText>
             </Col>
           </Styled.Row>
           <Styled.Row>
@@ -303,7 +286,7 @@ const EventRegister = (event) => {
                   </Styled.MainText>
                 </Styled.Row>
                 <Styled.Row style={{ flex: 1 }}>
-                  <Styled.LinkedText>Resend Confirmation</Styled.LinkedText>
+                  {/*<Styled.LinkedText>Resend Confirmation</Styled.LinkedText>*/}
                   <Styled.SectionText />
                   <Styled.LinkedText
                     style={{ cursor: "pointer" }}
@@ -312,15 +295,16 @@ const EventRegister = (event) => {
                     View Waivers
                   </Styled.LinkedText>
                   <Styled.SectionText />
-                  <Styled.LinkedTextRight onClick={() => onUnregister(event)}>
-                    Cancel Registration
-                  </Styled.LinkedTextRight>
+                  {/*<Styled.LinkedTextRight onClick={() => onUnregister(event)}>*/}
+                  {/*  Cancel Registration*/}
+                  {/*</Styled.LinkedTextRight>*/}
                 </Styled.Row>
                 <Styled.Row>
                   <Button color="primary" onClick={onReturnToHomeClicked}>
                     Return to Home
                   </Button>
                 </Styled.Row>
+                <Styled.Row></Styled.Row>
               </Styled.EventContainer>
             </Col>
           </Styled.Row>
@@ -351,9 +335,13 @@ const EventRegister = (event) => {
           <Styled.SectionText>Your Group</Styled.SectionText>
         </Styled.Row>
         <Styled.AccomodationRow>
-          If a minor under 13-year-old will volunteer with you, please add their
-          information below. <br></br>Note: Minors at or above 13-year-old need
-          to sign up using their own account.
+          If a minor below 13 years of age will volunteer with you, please add
+          their information below. <br></br>
+          <br></br>
+          <em>
+            Note: Minors at or above 13 years of age need to register using
+            their own account.
+          </em>
         </Styled.AccomodationRow>
         <Styled.Row>
           <Styled.VolunteerContainer>
@@ -403,7 +391,7 @@ const EventRegister = (event) => {
       {!isRegistered && (
         <Styled.ModalFooter>
           <Styled.Button onClick={onCompleteRegistrationClicked}>
-            Sign up
+            Register
           </Styled.Button>
         </Styled.ModalFooter>
       )}

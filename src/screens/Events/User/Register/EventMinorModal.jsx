@@ -14,7 +14,6 @@ import { Col, Row, Container } from "reactstrap";
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../../../sharedStyles/formStyles";
 import variables from "../../../../design-tokens/_variables.module.scss";
-import { RequestContext } from "../../../../providers/RequestProvider";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -62,21 +61,9 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
     firstName: "",
     lastName: "",
   };
-  const context = useContext(RequestContext);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [checked, setCheck] = useState(false);
-
-  const handleSubmit = (values) => {
-    const name = {
-      ...values,
-    };
-  };
-
-  const onCloseClicked = () => {
-    setShowSuccess(false);
-  };
 
   const close = () => {
     toggle();
