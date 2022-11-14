@@ -23,6 +23,7 @@ export async function getEvents(startDate, endDate, next) {
 
   if (startDate === "undefined" && endDate === "undefined") {
     return EventData.find({})
+    .sort({ date: -1})
       .then((events) => {
         return events;
       })
@@ -33,6 +34,7 @@ export async function getEvents(startDate, endDate, next) {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $lte: endDate } })
+      .sort({ date: -1})
         .then((events) => {
           return events;
         })
@@ -44,6 +46,7 @@ export async function getEvents(startDate, endDate, next) {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $gte: startDate } })
+      .sort({ date: -1})
         .then((events) => {
           return events;
         })
@@ -56,6 +59,7 @@ export async function getEvents(startDate, endDate, next) {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $gte: startDate, $lte: endDate } })
+      .sort({ date: -1})
         .then((events) => {
           return events;
         })
