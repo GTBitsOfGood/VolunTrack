@@ -64,7 +64,8 @@ class UserTable extends React.Component {
   };
 
   deleteUser = (id) => {
-    deleteUser(id);
+    // deleteUser(id);
+    this.props.deleteUserCallback(id);
   };
 
   onModalClose = () => {
@@ -449,4 +450,5 @@ UserTable.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
+  deleteUserCallback: PropTypes.func.isRequired,
 };

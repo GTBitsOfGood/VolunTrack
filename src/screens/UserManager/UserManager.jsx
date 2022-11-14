@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import {
+  deleteUser,
   fetchUserCount,
   fetchUserManagementData,
   updateUser,
@@ -226,6 +227,24 @@ class UserManager extends React.Component {
 
     // this.onRefresh();
   };
+  onDeleteUser = (userId) => {
+    console.log(userId);
+    deleteUser(userId);
+
+    let updatedUsers = [];
+
+    this.state.users.map((user) => {
+      if (user._id !== userId) {
+        updatedUsers.push(user);
+      }
+    });
+
+    this.setState({
+      users: updatedUsers,
+      currentPage: 0,
+      loadingMoreUsers: false,
+    });
+  };
   filteredAndSortedVolunteers = () => {
     const filterArray = this.state.users.filter(
       (user) =>
@@ -272,6 +291,7 @@ class UserManager extends React.Component {
             }
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}
+            deleteUserCallback={this.onDeleteUser}
           />
         </Styled.TableUsers>
       </Styled.Container>
