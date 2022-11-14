@@ -17,7 +17,6 @@ import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
-import { deleteUser } from "../../actions/queries";
 
 const Styled = {
   Button: styled(Button)`
@@ -191,13 +190,9 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
-                  </td>
-                  <td>
                     <Styled.Button onClick={() => this.deleteUser(user._id)}>
                       <Icon color="grey3" name="delete" />
                     </Styled.Button>
-                  </td>
-                  <td>
                     <Link href={`stats/${user._id}`}>
                       <Styled.Button>
                         <svg
