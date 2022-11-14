@@ -90,7 +90,6 @@ class UserTable extends React.Component {
     this.setState({
       pageCount: this.getPageCount(),
     });
-    console.log(this.state.pageCount);
   };
 
   handleSubmit = (e) => {
@@ -194,7 +193,7 @@ class UserTable extends React.Component {
                   </td>
                   <td>
                     <Styled.Button onClick={() => this.deleteUser(user._id)}>
-                      <Icon color="#960034" name="delete" />
+                      <Icon color="grey3" name="delete" />
                     </Styled.Button>
                   </td>
                   <td>

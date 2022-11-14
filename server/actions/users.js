@@ -658,7 +658,7 @@ export async function deleteUserId(user, id, next) {
   //   return { status: 403, message: { error: "Cannot delete yourself!" } };
   // }
 
-  return User.findByIdAndRemove(id)
+  return User.findOneAndRemove({ _id: id })
     .then((removed) => {
       if (!removed) {
         return {

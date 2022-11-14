@@ -93,8 +93,6 @@ export const updateUser = (
   }
 };
 
-export const deleteUser = (id) => axios.post(`/api/users/deleteUser?id=${id}`);
-
 export const updateApplicantRole = (email, role) =>
   axios.post(`/api/users/updateRole?email=${email}&role=${role}`);
 
