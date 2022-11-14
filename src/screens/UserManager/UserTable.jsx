@@ -17,6 +17,7 @@ import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
+import { deleteUser } from "../../actions/queries";
 
 const Styled = {
   Button: styled(Button)`
@@ -60,6 +61,10 @@ class UserTable extends React.Component {
     this.setState({
       userSelectedForEdit: userToEdit,
     });
+  };
+
+  deleteUser = (id) => {
+    deleteUser(id);
   };
 
   onModalClose = () => {
@@ -185,6 +190,11 @@ class UserTable extends React.Component {
                       onClick={() => this.onDisplayEditUserModal(user)}
                     >
                       <Icon color="grey3" name="create" />
+                    </Styled.Button>
+                  </td>
+                  <td>
+                    <Styled.Button onClick={() => this.deleteUser(user._id)}>
+                      <Icon color="#960034" name="delete" />
                     </Styled.Button>
                   </td>
                   <td>

@@ -95,10 +95,11 @@ const Styled = {
     flex-direction: row;
     justify-content: space-between;
   `,
-  ButtonDownload: styled(Button)`
+  CSVLink: styled(CSVLink)`
     position: relative;
-    height: 3rem;
+    height: 2.5rem;
     right: 20%;
+    text-align: center;
   `,
   TopMenu: styled.div`
     display: flex;
@@ -235,26 +236,20 @@ class UserManager extends React.Component {
     );
     return filterArray;
   };
-  saveIntoCSV = (data) => {
-    return;
-  };
   render() {
     const { currentPage, loadingMoreUsers, searchValue } = this.state;
     return (
       <Styled.Container>
         <Styled.HeaderTitle>
           <Styled.Text>Volunteers</Styled.Text>
-          {/* <Styled.ButtonDownload onClick={{}}>
-            Download to CSV
-          </Styled.ButtonDownload> */}
-          <CSVLink
+          <Styled.CSVLink
             data={this.state.users}
-            filename={"my-file.csv"}
+            filename={"volunteer-list.csv"}
             className="btn btn-primary"
             target="_blank"
           >
             Download to CSV
-          </CSVLink>
+          </Styled.CSVLink>
         </Styled.HeaderTitle>
         <Styled.TopMenu>
           <Styled.Search

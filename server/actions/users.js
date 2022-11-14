@@ -256,12 +256,11 @@ export async function getCount(next) {
 export async function getCurrentUser(userId, next) {
   await dbConnect();
 
-  
-    return User.find({_id: userId})
-      .then((users) => {
-        return users;
-      })
-      .catch(next);
+  return User.find({ _id: userId })
+    .then((users) => {
+      return users;
+    })
+    .catch(next);
 }
 
 export async function searchByContent(inputText, searchType, pageSize, next) {
@@ -412,8 +411,20 @@ export async function updateUser(
   await dbConnect();
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
-  if (!phone_number || !first_name || !last_name || !date_of_birth || !zip_code || !address || !city || !state)
-    return { status: 400, message: { error: "Please include all required fields" } };
+  if (
+    !phone_number ||
+    !first_name ||
+    !last_name ||
+    !date_of_birth ||
+    !zip_code ||
+    !address ||
+    !city ||
+    !state
+  )
+    return {
+      status: 400,
+      message: { error: "Please include all required fields" },
+    };
 
   if (phone_number?.length !== 0) {
     User.updateOne(
@@ -642,10 +653,10 @@ export async function updateUserId(userDataReq, events, id, action, next) {
 }
 
 export async function deleteUserId(user, id, next) {
-  if (user && user.userDataId === id) {
-    // User is trying to remove themselves, don't let that happen...
-    return { status: 403, message: { error: "Cannot delete yourself!" } };
-  }
+  // if (user && user.userDataId === id) {
+  //   // User is trying to remove themselves, don't let that happen...
+  //   return { status: 403, message: { error: "Cannot delete yourself!" } };
+  // }
 
   return User.findByIdAndRemove(id)
     .then((removed) => {
