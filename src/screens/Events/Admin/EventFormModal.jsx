@@ -82,10 +82,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
       ...values,
       isValidForCourtHours,
       description: content,
-      isPrivate: isGroupEvent ? "true" : "false",
+      isPrivate: isGroupEvent,
     };
     setSubmitting(true);
-    console.log("IM HERE");
 
     createEvent(event)
       .then(() => toggle())
@@ -124,7 +123,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const emptyStringField = "";
-  const submitText = containsExistingEvent(event) ? "Submit" : "Create Event";
+  const submitText = containsExistingEvent(event) ? "Save" : "Create Event";
   const [content, setContent] = useState(
     containsExistingEvent(event) ? event.description : emptyStringField
   );
@@ -216,7 +215,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.orgZip
             : emptyStringField,
-        isPrivate: isGroupEvent ? "true" : "false",
+        isPrivate: isGroupEvent,
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
