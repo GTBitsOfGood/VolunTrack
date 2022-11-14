@@ -301,7 +301,7 @@ const EventRegister = (event) => {
           </Styled.Row>
           <Styled.Row>
             <Col xs="12" lg="2">
-              <Styled.CheckGif src="/images/check.gif" alt="check" loop="-1" />
+              <Styled.CheckGif src="/images/check.gif" alt="check" loop="0" />
             </Col>
             <Col xs="12" lg="10">
               <Styled.EventContainer>
