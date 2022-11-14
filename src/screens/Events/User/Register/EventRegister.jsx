@@ -2,19 +2,9 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Container,
-  FormGroup,
-  Input,
-  ModalFooter,
-  Row,
-  UncontrolledTooltip,
-} from "reactstrap";
+import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../../actions/queries";
-import IconSpecial from "../../../../components/IconSpecial";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";

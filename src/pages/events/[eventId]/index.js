@@ -1,12 +1,12 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
-import { Button, Row, Col } from "reactstrap";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
+import { RequestContext } from "../../../providers/RequestProvider";
 import { updateEvent } from "../../../screens/Events/User/eventHelpers";
-import toast, { Toaster } from "react-hot-toast";
 
 const Styled = {
   Button: styled(Button)`
@@ -38,7 +38,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
-    margin-right: 3rem;
   `,
   EventName: styled.h1`
     color: black;
@@ -82,6 +81,7 @@ const Styled = {
     display: flex;
     flex-direction: column;
     background-color: white;
+    padding-bottom: 1.5rem;
   `,
   PrivateLink: styled(Button)`
     background-color: ${variables["primary"]};
@@ -89,7 +89,15 @@ const Styled = {
     font-size: 15px;
     margin: auto;
     bottom: 0;
-    width: 60%;
+    width: 50%;
+  `,
+  Routing: styled(Button)`
+    background-color: ${variables["primary"]};
+    color: white;
+    font-size: 15px;
+    margin: 1rem;
+    bottom: 0;
+    width: 32%;
   `,
 };
 
@@ -111,6 +119,7 @@ const EventInfo = () => {
 
   const { data: session } = useSession();
   const user = session.user;
+  const context = useContext(RequestContext);
 
   const onRefresh = () => {
     fetchEventsById(eventId).then((result) => {
@@ -130,6 +139,14 @@ const EventInfo = () => {
     router.replace(`${eventId}/register`);
   };
 
+  const routeToRegisteredVolunteers = () => {
+    router.replace(`${eventId}/attendance`);
+  };
+
+  const routeToStats = () => {
+    router.replace(`${eventId}/statistics`);
+  };
+
   const onUnregisterClicked = async (event) => {
     const changedEvent = {
       // remove current user id from event volunteers
@@ -145,17 +162,18 @@ const EventInfo = () => {
 
   const copyPrivateLink = () => {
     window.navigator.clipboard.writeText(window.location.href);
-    toast.success("Successfully Copied Private Link to Event!");
+    context.startLoading();
+    context.success("Successfully Copied Private Link to Event!");
   };
-
   let lastUpdated =
     "Last updated " +
     new Date(Date.parse(event.updatedAt)).toLocaleString().replace(",", " at");
   lastUpdated =
     lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
     lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
-
-  const futureDate = new Date(event.date) > new Date();
+  const futureorTodaysDate =
+    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
+    Date.parse(event.date);
   return (
     <>
       <Styled.EventTable>
@@ -170,12 +188,38 @@ const EventInfo = () => {
               <Styled.Date>{lastUpdated}</Styled.Date>
             </Styled.EventSubhead>
             <Styled.Info>
+              {event.isValidForCourtHours && (
+                <span style={{ fontWeight: "bold" }}>
+                  {"This event can count toward court required hours"}
+                </span>
+              )}
+            </Styled.Info>
+            <Styled.Info>
               {" "}
               <div dangerouslySetInnerHTML={{ __html: event.description }} />
             </Styled.Info>
           </Styled.EventCol>
         </Col>
         <Col>
+          <Row>
+            {user.role === "admin" && (
+              <>
+                <Styled.Routing onClick={routeToRegisteredVolunteers}>
+                  Manage Attendance
+                </Styled.Routing>
+                <Styled.Routing onClick={routeToStats}>
+                  View Participation Statistics
+                </Styled.Routing>
+              </>
+            )}
+            {user.role === "volunteer" &&
+              event.volunteers.includes(user._id) &&
+              futureorTodaysDate && (
+                <Styled.Routing onClick={() => onUnregisterClicked(event)}>
+                  Unregister
+                </Styled.Routing>
+              )}
+          </Row>
           <Row>
             <Styled.EventCol2 style={{ "margin-right": "auto" }}>
               <Styled.InfoHead>Event Information</Styled.InfoHead>
@@ -219,7 +263,7 @@ const EventInfo = () => {
           <br></br>
           {event.orgName !== "" && (
             <Row>
-              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+              <Styled.EventCol2>
                 <Styled.InfoHead>Organization</Styled.InfoHead>
                 <Styled.InfoTable>
                   <Styled.InfoTableCol>
@@ -256,30 +300,37 @@ const EventInfo = () => {
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
                 </Styled.InfoTable>
-                <Styled.ButtonCol>
-                  <Styled.PrivateLink onClick={copyPrivateLink}>
-                    Share private link to event
-                  </Styled.PrivateLink>
-                  <Toaster />
-                </Styled.ButtonCol>
+                {user.role === "volunteer" && (
+                  <Styled.ButtonCol>
+                    <Styled.PrivateLink onClick={copyPrivateLink}>
+                      Share Private Event Link
+                    </Styled.PrivateLink>
+                  </Styled.ButtonCol>
+                )}
               </Styled.EventCol2>
             </Row>
           )}
         </Col>
       </Styled.EventTable>
-      {user.role == "volunteer" &&
-        event.max_volunteers - event.volunteers.length != 0 &&
+      {user.role === "volunteer" &&
+        event.max_volunteers - event.volunteers.length !== 0 &&
         !event.volunteers.includes(user._id) &&
-        futureDate && (
+        futureorTodaysDate && (
           <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
           </Styled.Button>
         )}
-      {user.role == "volunteer" &&
+      {user.role === "volunteer" &&
+        event.max_volunteers - event.volunteers.length === 0 &&
+        !event.volunteers.includes(user._id) &&
+        futureorTodaysDate && (
+          <Styled.Button disabled={true}>Registration Closed</Styled.Button>
+        )}
+      {user.role === "volunteer" &&
         event.volunteers.includes(user._id) &&
-        futureDate && (
-          <Styled.Button onClick={() => onUnregisterClicked(event)}>
-            Unregister
+        futureorTodaysDate && (
+          <Styled.Button disabled={true}>
+            You are registered for this event!
           </Styled.Button>
         )}
     </>

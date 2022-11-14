@@ -115,8 +115,18 @@ const eventSchema = new mongoose.Schema(
       required: false,
     },
     isPrivate: {
-      type: String,
+      type: Boolean,
       required: true,
+    },
+    isEnded: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    isValidForCourtHours: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   { timestamps: true }

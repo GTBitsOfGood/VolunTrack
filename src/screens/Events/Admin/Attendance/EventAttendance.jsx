@@ -6,8 +6,10 @@ import {
   checkOutVolunteer,
   fetchEventsById,
   getEventVolunteersByAttendance,
+  updateEventById,
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
+import Footer from "./Footer";
 
 const Styled = {
   Container: styled.div`
@@ -80,7 +82,7 @@ const EventAttendance = () => {
   }, []);
 
   const checkIn = (volunteer) => {
-    checkInVolunteer(volunteer._id, eventId);
+    checkInVolunteer(volunteer._id, eventId, event.title);
 
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(
@@ -97,9 +99,24 @@ const EventAttendance = () => {
     );
   };
 
-  const filteredAndSortedVolunteers = (volunteers) => {
+  const endEvent = () => {
+    const newEvent = { ...event, isEnded: true };
+    setEvent(newEvent);
+    updateEventById(eventId, newEvent);
+    checkedInVolunteers.forEach((v) => {
+      checkOutVolunteer(v._id, eventId);
+    });
+    setCheckedOutVolunteers(checkedOutVolunteers.concat(checkedInVolunteers));
+    setCheckedInVolunteers([]);
+  };
 
-    console.log(searchValue)
+  const reopenEvent = () => {
+    const newEvent = { ...event, isEnded: false };
+    setEvent(newEvent);
+    updateEventById(eventId, newEvent);
+  };
+
+  const filteredAndSortedVolunteers = (volunteers) => {
     return (
       searchValue.length > 0
         ? volunteers.filter(
@@ -108,7 +125,9 @@ const EventAttendance = () => {
                 ?.toLowerCase()
                 .includes(searchValue.toLowerCase()) ||
               v.bio.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.bio.first_name?.toLowerCase().includes(searchValue.toLowerCase())
+              v.bio.first_name
+                ?.toLowerCase()
+                .includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>
@@ -121,35 +140,41 @@ const EventAttendance = () => {
   };
 
   return (
-    <Styled.Container>
-      <Styled.HeaderRow>
-        <Styled.Header>Attendance</Styled.Header>
-        <Styled.CheckedInData>
-          <span style={{ fontWeight: "bold" }}>
-            <span style={{ fontWeight: "bold", fontSize: "3rem" }}>
-              {checkedInVolunteers.length}
-            </span>
-            <span style={{ fontWeight: "normal" }}>/</span>
-            {checkedInVolunteers.length + checkedOutVolunteers.length}
-          </span>{" "}
-          Checked In
-        </Styled.CheckedInData>
-      </Styled.HeaderRow>
+    <>
+      <Styled.Container>
+        <Styled.HeaderRow>
+          <Styled.Header>Attendance</Styled.Header>
+          <Styled.CheckedInData>
+            <span style={{ fontWeight: "bold" }}>
+              <span style={{ fontWeight: "bold", fontSize: "3rem" }}>
+                {checkedInVolunteers.length}
+              </span>
+              <span style={{ fontWeight: "normal" }}>/</span>
+              {checkedInVolunteers.length + checkedOutVolunteers.length}
+            </span>{" "}
+            Checked In
+          </Styled.CheckedInData>
+        </Styled.HeaderRow>
 
-      <Styled.Search
-        placeholder="Search by Volunteer Name or Email"
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-      />
+        <Styled.Search
+          placeholder="Search by Volunteer Name or Email"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
 
-      <AttendanceFunctionality
-        checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
-        checkedOutVolunteers={filteredAndSortedVolunteers(checkedOutVolunteers)}
-        minors={minors}
-        checkIn={checkIn}
-        checkOut={checkOut}
-      />
-    </Styled.Container>
+        <AttendanceFunctionality
+          checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
+          checkedOutVolunteers={filteredAndSortedVolunteers(
+            checkedOutVolunteers
+          )}
+          minors={minors}
+          checkIn={checkIn}
+          checkOut={checkOut}
+          isEnded={event?.isEnded}
+        />
+      </Styled.Container>
+      <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} />
+    </>
   );
 };
 

@@ -38,7 +38,8 @@ export const fetchUserManagementData = (lastPaginationId) =>
     }`
   );
 
-export const getCurrentUser = () => axios.get("/api/users/current");
+export const getCurrentUser = (userId) =>
+  axios.get("/api/users/current?volunteer=" + userId);
 
 export const fetchUserCount = () => axios.get("/api/users/count");
 
@@ -52,11 +53,9 @@ export const updateUser = (
   number,
   birthday,
   zip,
-  hours,
   address,
   city,
   state,
-  courtH,
   notes
 ) => {
   var query = "";
@@ -75,9 +74,6 @@ export const updateUser = (
   if (zip) {
     query += "zip_code=" + zip + "&";
   }
-  if (hours) {
-    query += "total_hours=" + hours + "&";
-  }
   if (address) {
     query += "address=" + address + "&";
   }
@@ -86,9 +82,6 @@ export const updateUser = (
   }
   if (state) {
     query += "state=" + state + "&";
-  }
-  if (courtH) {
-    query += "courtH=" + courtH + "&";
   }
   if (notes) {
     query += "notes=" + notes + "&";
@@ -120,6 +113,12 @@ export const fetchEvents = (startDate, endDate) =>
 
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
+// not sure if this works
+export const fetchEventsByUserId = (userId) => {
+  //console.log("QUERIES " + "/api/users/stats?volunteer=" + userId)
+  return axios.get("/api/users/stats?volunteer=" + userId);
+};
+
 export const createEvent = (event) => axios.post("/api/events", event);
 
 export const editEvent = (event, sendConfirmationEmail) =>
@@ -130,6 +129,8 @@ export const editEvent = (event, sendConfirmationEmail) =>
 
 export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
 
+export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
+
 export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
 
 export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
@@ -138,8 +139,17 @@ export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
 
-export const checkInVolunteer = (userId, eventId) =>
-  axios.post("/api/attendance/checkin", { userId, eventId });
+export const updateInvitedAdmins = (email) =>
+  axios.post(`/api/settings/updateInvitedAdmin`, { email });
+
+export const getInvitedAdmins = () =>
+  axios.get(`/api/settings/getInvitedAdmin`);
+
+export const removeInvitedAdmin = (email) =>
+  axios.post(`/api/settings/removeInvitedAdmin`, { email });
+
+export const checkInVolunteer = (userId, eventId, eventName) =>
+  axios.post("/api/attendance/checkin", { userId, eventId, eventName });
 
 export const checkOutVolunteer = (userId, eventId) =>
   axios.post("/api/attendance/checkout", { userId, eventId });
@@ -148,3 +158,15 @@ export const getEventVolunteersByAttendance = (eventId, isCheckedIn) =>
   axios.get(
     `/api/events/${eventId}/volunteersByAttendance?isCheckedIn=${isCheckedIn}`
   );
+
+export const updateEventById = (id, event) =>
+  axios.put(`/api/events/${id}`, event);
+
+export const getAttendanceForEvent = (eventId) =>
+  axios.post("/api/attendance/statistics", { eventId });
+
+export const deleteAttendance = (id) =>
+  axios.delete(`/api/attendance/${id}`, { id });
+
+export const updateAttendance = (id, newData) =>
+  axios.put(`/api/attendance/${id}`, { id, newData });

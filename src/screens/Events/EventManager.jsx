@@ -4,11 +4,11 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import { fetchEvents } from "../../../actions/queries";
-import variables from "../../../design-tokens/_variables.module.scss";
-import EventCreateModal from "./EventCreateModal";
-import EventDeleteModal from "./EventDeleteModal";
-import EventEditModal from "./EventEditModal";
+import { fetchEvents } from "../../actions/queries";
+import variables from "../../design-tokens/_variables.module.scss";
+import EventCreateModal from "./Admin/EventCreateModal";
+import EventDeleteModal from "./Admin/EventDeleteModal";
+import EventEditModal from "./Admin/EventEditModal";
 import EventTable from "./EventTable";
 import {
   Dropdown,
@@ -16,6 +16,9 @@ import {
   DropdownMenu,
   DropdownItem,
 } from "reactstrap";
+
+import { useSession } from "next-auth/react";
+import { registerForEvent, updateEvent } from "./User/eventHelpers";
 
 const isSameDay = (a) => (b) => {
   return differenceInCalendarDays(a, b) === 0;
@@ -38,6 +41,8 @@ const Styled = {
     color: white;
     width: 9.5rem;
     height: 2.5rem;
+  `,
+  TablePadding: styled.div`
     margin-top: 2rem;
     margin-bottom: 2vw;
   `,
@@ -72,6 +77,8 @@ const Styled = {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin-top: 2rem;
+    margin-bottom: 2vw;
   `,
   DateRow: styled.div`
     display: flex;
@@ -86,6 +93,16 @@ const Styled = {
     color: ${variables.primary};
     cursor: pointer;
   `,
+  HomePage: styled.div`
+    width: 54%;
+    height: 100%;
+    background: ${(props) => props.theme.grey9};
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    align-items: start;
+  `,
   EventFilter: styled.div`
     display: flex;
     flex-direction: row;
@@ -94,7 +111,7 @@ const Styled = {
   `,
 };
 
-const EventManager = ({ user }) => {
+const EventManager = ({ user, role, isHomePage }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -109,19 +126,12 @@ const EventManager = ({ user }) => {
     const { data: session } = useSession();
     user = session.user;
   }
-  useEffect(() => {
-    onRefresh();
-  }, []);
 
   const onRefresh = () => {
     setLoading(true);
     fetchEvents()
       .then((result) => {
         if (result && result.data && result.data.events) {
-          // result.data.events = result.data.events.filter(function (event) {
-          //   const currentDate = new Date();
-          //   return new Date(event.date) > currentDate;
-          // });
           setEvents(result.data.events);
           setDates(result.data.events);
         }
@@ -161,6 +171,34 @@ const EventManager = ({ user }) => {
   };
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
+    onRefresh();
+  };
+
+  const onRegister = async (event) => {
+    const changedEvent = {
+      ...event,
+      volunteers: event.volunteers.concat(user._id),
+    }; // adds userId to event
+    const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
+    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
+
+    onRefresh();
+  };
+
+  const onUnregister = async (event) => {
+    const changedEvent = {
+      // remove current user id from event volunteers
+      ...event,
+      minors: event.volunteers.filter(
+        (minor) => minor.volunteer_id !== user._id
+      ),
+      volunteers: event.volunteers.filter(
+        (volunteer) => volunteer !== user._id
+      ),
+    };
+    const updatedEvent = await updateEvent(changedEvent);
+    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
+
     onRefresh();
   };
 
@@ -224,6 +262,16 @@ const EventManager = ({ user }) => {
     onRefresh();
   };
 
+  const filterEvents = (events, user) => {
+    let arr = [];
+    for (let i = 0; i < events.length; i++) {
+      if (events[i].isPrivate || events[i].volunteers.includes(user._id)) {
+        arr.push(events[i]);
+      }
+    }
+    return arr;
+  };
+
   const toggle = () => {
     setDropdownOn(!dropdownOn);
   };
@@ -231,81 +279,122 @@ const EventManager = ({ user }) => {
   const changeValue = (e) => {
     setDropdownVal(e.currentTarget.textContent);
     const value = e.currentTarget.textContent;
-    if (value == "Public Events") {
+    if (value === "Public Events") {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => !event.isPrivate));
-    } else if (value == "Private Group Events") {
+    } else if (value === "Private Group Events") {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => event.isPrivate));
-    } else if (value == "All Events") {
+    } else if (value === "All Events") {
       setFilterOn(false);
     }
   };
 
   return (
     <Styled.Container>
-      <Styled.Left>
-        <Styled.EventContainer>
-          <Styled.Events>Events</Styled.Events>
-          <Styled.DateRow>
-            <Styled.Date>{dateString}</Styled.Date>
-            {showBack && (
-              <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
-            )}
-          </Styled.DateRow>
-        </Styled.EventContainer>
-        <Calendar
-          onChange={onChange}
-          value={value}
-          tileClassName={({ date, view }) =>
-            setMarkDates({ date, view }, markDates)
-          }
-        />
-      </Styled.Left>
-      <Styled.Right>
-        <Styled.ButtonRow>
-          <Dropdown isOpen={dropdownOn} toggle={toggle}>
-            <DropdownToggle caret>{dropdownVal}</DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem>
-                <div onClick={changeValue}>Public Events</div>
-              </DropdownItem>
-              <DropdownItem>
-                <div onClick={changeValue}>Private Group Events</div>
-              </DropdownItem>
-              <DropdownItem>
-                <div onClick={changeValue}>All Events</div>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-          <Styled.Button onClick={onCreateClicked}>
-            <span style={{ color: "white" }}>Create new event</span>
-          </Styled.Button>
-        </Styled.ButtonRow>
-        <Styled.Content>
-          {events.length == 0 ? (
-            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+      {!isHomePage && (
+        <Styled.Left>
+          <Styled.EventContainer>
+            <Styled.Events>Events</Styled.Events>
+            <Styled.DateRow>
+              <Styled.Date>{dateString}</Styled.Date>
+              {showBack && (
+                <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+              )}
+            </Styled.DateRow>
+          </Styled.EventContainer>
+          <Calendar
+            onChange={onChange}
+            value={value}
+            tileClassName={({ date, view }) =>
+              setMarkDates({ date, view }, markDates)
+            }
+          />
+        </Styled.Left>
+      )}
+      {!isHomePage && (
+        <Styled.Right>
+          {role === "admin" ? (
+            <Styled.ButtonRow>
+              <Dropdown isOpen={dropdownOn} toggle={toggle}>
+                <DropdownToggle caret>{dropdownVal}</DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem>
+                    <div onClick={changeValue}>All Events</div>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <div onClick={changeValue}>Public Events</div>
+                  </DropdownItem>
+                  <DropdownItem>
+                    <div onClick={changeValue}>Private Group Events</div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              <Styled.Button onClick={onCreateClicked}>
+                <span style={{ color: "white" }}>Create new event</span>
+              </Styled.Button>
+            </Styled.ButtonRow>
           ) : (
-            <EventTable
-              dateString={dateString}
-              events={filterOn ? filteredEvents : events}
-              onEditClicked={onEditClicked}
-              onDeleteClicked={onDeleteClicked}
-            ></EventTable>
+            <Styled.TablePadding></Styled.TablePadding>
           )}
-          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-          <EventEditModal
-            open={showEditModal}
-            toggle={toggleEditModal}
-            event={currEvent}
+          <Styled.Content>
+            {events.length === 0 ? (
+              <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+            ) : (
+              <EventTable
+                dateString={dateString}
+                events={
+                  user.role === "admin"
+                    ? filterOn
+                      ? filteredEvents
+                      : events
+                    : filterEvents(events, user)
+                }
+                onEditClicked={onEditClicked}
+                onDeleteClicked={onDeleteClicked}
+                onRegisterClicked={onRegister}
+                onUnregister={onUnregister}
+                user={user}
+                role={role}
+                isHomePage={isHomePage}
+              />
+            )}
+            <EventCreateModal
+              open={showCreateModal}
+              toggle={toggleCreateModal}
+            />
+            <EventEditModal
+              open={showEditModal}
+              toggle={toggleEditModal}
+              event={currEvent}
+            />
+            <EventDeleteModal
+              open={showDeleteModal}
+              toggle={toggleDeleteModal}
+              event={currEvent}
+            />
+          </Styled.Content>
+        </Styled.Right>
+      )}
+      {isHomePage && (
+        <Styled.HomePage>
+          <EventTable
+            dateString={dateString}
+            events={
+              user.role === "admin"
+                ? filteredEvents
+                : filterEvents(events, user)
+            }
+            onEditClicked={onEditClicked}
+            onDeleteClicked={onDeleteClicked}
+            onRegisterClicked={onRegister}
+            onUnregister={onUnregister}
+            user={user}
+            role={role}
+            isHomePage={isHomePage}
           />
-          <EventDeleteModal
-            open={showDeleteModal}
-            toggle={toggleDeleteModal}
-            event={currEvent}
-          />
-        </Styled.Content>
-      </Styled.Right>
+        </Styled.HomePage>
+      )}
     </Styled.Container>
   );
 };

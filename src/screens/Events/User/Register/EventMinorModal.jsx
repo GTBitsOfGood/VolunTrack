@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import {
   Modal,
@@ -14,6 +14,7 @@ import { Col, Row, Container } from "reactstrap";
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
 import * as SForm from "../../../sharedStyles/formStyles";
 import variables from "../../../../design-tokens/_variables.module.scss";
+import { RequestContext } from "../../../../providers/RequestProvider";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -61,6 +62,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
     firstName: "",
     lastName: "",
   };
+  const context = useContext(RequestContext);
   const [showSuccess, setShowSuccess] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -76,12 +78,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
     setShowSuccess(false);
   };
 
-  const addAndClose = () => {
-    if (checked && firstName !== "" && lastName !== "") {
-      setHasMinorTrue(firstName, lastName);
-    }
-    setFirstName("");
-    setLastName("");
+  const close = () => {
     toggle();
   };
 
@@ -100,10 +97,10 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
 
         if (checked && firstName !== "" && lastName !== "") {
           setHasMinorTrue(firstName, lastName);
-          setShowSuccess(true);
         }
         setFirstName("");
         setLastName("");
+        toggle();
       }}
       render={({ handleSubmit, isSubmitting, handleBlur }) => (
         <React.Fragment>
@@ -168,8 +165,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
             <ModalFooter>
               <Button
                 color="secondary"
-                disabled={!checked || firstName == "" || lastName == ""}
-                onClick={addAndClose}
+                onClick={close}
               >
                 Cancel
               </Button>
@@ -182,24 +178,6 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Button>
             </ModalFooter>
           </Modal>
-          <React.Fragment>
-            {showSuccess && (
-              <Styled.ConfirmationModal isOpen={open} toggle={toggle} size="lg">
-                <Styled.Container>
-                  <Row>
-                    <Styled.Col xs="11">
-                      <Styled.Text>
-                        Added one minor. Close popup to add more volunteers.
-                      </Styled.Text>
-                    </Styled.Col>
-                    <Styled.Col xs="1">
-                      <Button close onClick={onCloseClicked} />
-                    </Styled.Col>
-                  </Row>
-                </Styled.Container>
-              </Styled.ConfirmationModal>
-            )}
-          </React.Fragment>
         </React.Fragment>
       )}
     />

@@ -109,7 +109,11 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
         </Link>
       </Styled.EventRowHeader>
       <Styled.EventRow>
-        <Styled.DetailText>{event.description}</Styled.DetailText>
+        {event.isValidForCourtHours && (
+          <Styled.DetailText>
+            This event can count toward court required hours
+          </Styled.DetailText>
+        )}
       </Styled.EventRow>
       <Styled.EventRow>
         <Styled.EventInfoCol xs="12" lg="3">
@@ -135,8 +139,8 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
             />
             <Styled.EventInfoText>
               {convertTime(event.startTime)} - {convertTime(event.endTime)}{" "}
-              {event.localTime}
             </Styled.EventInfoText>
+            <Styled.DetailText>&nbsp; {event.localTime}</Styled.DetailText>
           </Row>
         </Styled.EventInfoCol>
         <Styled.EventInfoCol xs="12" lg="4">
