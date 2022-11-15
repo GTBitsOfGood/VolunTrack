@@ -86,13 +86,13 @@ const Waiver = ({ waiver, updateWaivers }) => {
   const [isReplacing, setIsReplacing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [waiverName, setWaiverName] = useState(null);
   const context = useContext(RequestContext);
 
   const waiverType = Object.keys(waiver)[0];
   const waiverTypeCapitalized =
     waiverType.charAt(0).toUpperCase() + waiverType.slice(1);
   const waiverFilePath = waiver[waiverType];
-  const waiverFileName = waiverFilePath?.split("/").pop();
 
   const handleReplace = () => {
     setIsReplacing(true);
@@ -118,6 +118,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append(waiverType, selectedFile);
+    setWaiverName(selectedFile.name);
     await uploadWaiver(formData);
     await updateWaivers();
     setIsUploading(false);
@@ -171,7 +172,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
                 href={waiverFilePath.replace("./public/", "")}
                 target="_blank"
               >
-                File: {waiverFileName}
+                File: {waiverName}
               </WaiverLink>
             )}
           </WaiverTextContainer>
