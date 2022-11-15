@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   Modal,
   ModalHeader,
-  ModalBody,
   ModalFooter,
   Button,
   Input,
@@ -12,10 +11,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../../sharedStyles/formStyles";
 import variables from "../../../../design-tokens/_variables.module.scss";
-import router from "next/router";
 import IconSpecial from "../../../../components/IconSpecial";
 
 const Styled = {
@@ -83,11 +79,14 @@ const EventWaiverModal = ({
   toggle,
   hasMinor,
   onRegisterAfterWaiverClicked,
-  eventId
+  eventId,
+  isRegistered,
 }) => {
   const [showGuardian, setShowGuardian] = useState(true);
 
   const [waiverCheckboxSelected, setWaiverCheckboxSelected] = useState(false);
+  const [waiverMinorCheckboxSelected, setMinorWaiverCheckboxSelected] =
+    useState(false);
 
   const onGuardianClicked = () => {
     setShowGuardian(true);
@@ -109,18 +108,26 @@ const EventWaiverModal = ({
     setWaiverCheckboxSelected(e.target.checked);
   };
 
+  const onWaiverMinorCheckboxClicked = (e) => {
+    setMinorWaiverCheckboxSelected(e.target.checked);
+  };
+
   const [showMe, setShowMe] = useState(false);
   const togglePdf = () => {
     setShowMe((prev) => !prev);
-  }
+  };
 
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
       <Styled.ModalHeader>
-        <Styled.MainText>Complete Registration</Styled.MainText>
+        {!isRegistered ? (
+          <Styled.MainText>Complete Registration</Styled.MainText>
+        ) : (
+          <Styled.MainText>View Waiver</Styled.MainText>
+        )}
       </Styled.ModalHeader>
       <Styled.Row />
-      {hasMinor && (
+      {hasMinor && !isRegistered && (
         <React.Fragment>
           <Styled.Row>
             <Styled.HighlightText>
@@ -159,7 +166,7 @@ const EventWaiverModal = ({
                 </Link>
               </React.Fragment>
             )}
-            {!showGuardian && (
+            {!showGuardian && !isRegistered && (
               <React.Fragment>
                 <Link href={`/events/${eventId}/register`}>
                   <Styled.SecondaryTab>
@@ -192,45 +199,65 @@ const EventWaiverModal = ({
           </Styled.Row>
         </React.Fragment>
       )}
-      {!hasMinor && (
+      {!hasMinor && !isRegistered && (
         <Styled.Row>
           <Styled.HighlightText>
             Before you can finish registration. Please review the following
-            waiver.
+            waiver. <br></br>If you are under 18, the waiver must be signed by
+            your parent.
           </Styled.HighlightText>
         </Styled.Row>
       )}
 
       <Styled.Row>
-        <Styled.MainButton onClick = {togglePdf}>
+        <Styled.MainButton onClick={togglePdf}>
           <IconSpecial width="25" height="24" viewBox="0 0 25 24" name="link" />
           Read Waiver
         </Styled.MainButton>
-        <Styled.Row style={{
-          display: showMe?"block":"none"
-        }}>
+        <Styled.Row
+          style={{
+            display: showMe ? "block" : "none",
+          }}
+        >
           <iframe
             style={{ width: "563px", height: "666px" }}
-            src={showGuardian?"/files/adult.pdf": "/files/minor.pdf"}
-            type='application/pdf'
-            title='title'
+            src={showGuardian ? "/files/adult.pdf" : "/files/minor.pdf"}
+            type="application/pdf"
+            title="title"
           />
         </Styled.Row>
       </Styled.Row>
-      <Styled.Row>
-        <FormGroup check>
-          <Input
-            type="checkbox"
-            onChange={onWaiverCheckboxClicked}
-            checked={waiverCheckboxSelected}
-          />{" "}
-        </FormGroup>
-        <Styled.Text>
-          I have read the waiver and agree to its terms and conditions
-        </Styled.Text>
-      </Styled.Row>
+      {showGuardian && !isRegistered && (
+        <Styled.Row>
+          <FormGroup check>
+            <Input
+              type="checkbox"
+              onChange={onWaiverCheckboxClicked}
+              checked={waiverCheckboxSelected}
+            />{" "}
+          </FormGroup>
+          <Styled.Text>
+            I have read the waiver and agree to its terms and conditions
+          </Styled.Text>
+        </Styled.Row>
+      )}
+
+      {!showGuardian && !isRegistered && (
+        <Styled.Row>
+          <FormGroup check>
+            <Input
+              type="checkbox"
+              onChange={onWaiverMinorCheckboxClicked}
+              checked={waiverMinorCheckboxSelected}
+            />{" "}
+          </FormGroup>
+          <Styled.Text>
+            I have read the waiver and agree to its terms and conditions
+          </Styled.Text>
+        </Styled.Row>
+      )}
       <ModalFooter>
-        {!hasMinor && (
+        {!hasMinor && !isRegistered && (
           <Button
             color="primary"
             disabled={!waiverCheckboxSelected}
@@ -239,19 +266,23 @@ const EventWaiverModal = ({
             Register
           </Button>
         )}
-        {hasMinor && showGuardian && (
-          <Button color="primary" onClick={onNextClicked}>
+        {hasMinor && !isRegistered && showGuardian && (
+          <Button
+            color="primary"
+            onClick={onNextClicked}
+            disabled={!waiverCheckboxSelected}
+          >
             Next
           </Button>
         )}
-        {hasMinor && !showGuardian && (
+        {hasMinor && !isRegistered && !showGuardian && (
           <React.Fragment>
             <Styled.Button color="primary" onClick={onPrevClicked}>
               Previous
             </Styled.Button>
             <Styled.Button
               color="primary"
-              disabled={!waiverCheckboxSelected}
+              disabled={!waiverMinorCheckboxSelected || !waiverCheckboxSelected}
               onClick={() => onRegisterAfterWaiverClicked()}
             >
               Register
