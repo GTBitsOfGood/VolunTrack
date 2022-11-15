@@ -86,12 +86,14 @@ const Waiver = ({ waiver, updateWaivers }) => {
   const [isReplacing, setIsReplacing] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [waiverName, setWaiverName] = useState(null);
+  const [waiverName, setWaiverName] = useState(
+    waiver[Object.keys(waiver)[0]]?.split("/").pop()
+  );
   const context = useContext(RequestContext);
-
   const waiverType = Object.keys(waiver)[0];
   const waiverTypeCapitalized =
     waiverType.charAt(0).toUpperCase() + waiverType.slice(1);
+
   const waiverFilePath = waiver[waiverType];
 
   const handleReplace = () => {
