@@ -190,9 +190,9 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
-                    // <Styled.Button onClick={() => this.deleteUser(user._id)}>
-                    //   <Icon color="grey3" name="delete" />
-                    // </Styled.Button>
+                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                    {/*  <Icon color="grey3" name="delete" />*/}
+                    {/*</Styled.Button>*/}
                     <Link href={`stats/${user._id}`}>
                       <Styled.Button>
                         <svg
