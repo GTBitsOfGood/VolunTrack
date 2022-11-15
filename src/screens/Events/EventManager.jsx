@@ -189,6 +189,9 @@ const EventManager = ({ user, role, isHomePage }) => {
     const changedEvent = {
       // remove current user id from event volunteers
       ...event,
+      minors: event.volunteers.filter(
+        (minor) => minor.volunteer_id !== user._id
+      ),
       volunteers: event.volunteers.filter(
         (volunteer) => volunteer !== user._id
       ),
@@ -262,10 +265,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const filterEvents = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
-      if (
-        events[i].isPrivate ||
-        events[i].volunteers.includes(user._id)
-      ) {
+      if (events[i].isPrivate || events[i].volunteers.includes(user._id)) {
         arr.push(events[i]);
       }
     }

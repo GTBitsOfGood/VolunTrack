@@ -252,7 +252,7 @@ const EventTable = ({
                           <>
                             <Styled.EventSpace>
                               <Icon name="check" viewBox={"0 0 96 96"} />
-                              <span>Signed up!</span>
+                              <span>Registered!</span>
                             </Styled.EventSpace>
                           </>
                         ) : (
@@ -261,7 +261,7 @@ const EventTable = ({
                               onClick={() => onRegisterClicked(event)}
                             >
                               <Icon color="grey3" name="add" />
-                              <span>Sign up</span>
+                              <span>Register</span>
                             </Styled.Button>
                           </>
                         )}
@@ -309,7 +309,7 @@ const EventTable = ({
 
                         <Styled.EventSpace>
                           <Icon name="check" viewBox={"0 0 96 96"} />
-                          <span>Signed up!</span>
+                          <span>Registered!</span>
                         </Styled.EventSpace>
                       </Styled.EventContentRow>
                       <Styled.EventContentRow>
@@ -341,7 +341,7 @@ const EventTable = ({
                         </Styled.EventSlots>
                         <Styled.Button onClick={() => onRegisterClicked(event)}>
                           <Icon color="grey3" name="add" />
-                          <span>Sign up</span>
+                          <span>Register</span>
                         </Styled.Button>
                       </Styled.EventContentRow>
                       <Styled.EventContentRow>
@@ -381,7 +381,7 @@ const EventTable = ({
 
                       <Styled.EventSpace>
                         <Icon name="check" viewBox={"0 0 96 96"} />
-                        <span>Signed up!</span>
+                        <span>Registered!</span>
                       </Styled.EventSpace>
                     </Styled.EventContentRow>
                     <Styled.EventContentRow>
@@ -416,7 +416,7 @@ const EventTable = ({
                       </Styled.EventSlots>
                       <Styled.Button onClick={() => onRegisterClicked(event)}>
                         <Icon color="grey3" name="add" />
-                        <span>Sign up</span>
+                        <span>Register</span>
                       </Styled.Button>
                     </Styled.EventContentRow>
                     <Styled.EventContentRow>
