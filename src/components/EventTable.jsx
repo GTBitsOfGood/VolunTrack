@@ -1,10 +1,12 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import * as Table from "../screens/sharedStyles/condensedTableStyles";
 import { getHours } from "../screens/Stats/User/hourParsing";
 import Icon from "./Icon";
+import Pagination from "./PaginationComp";
 
 const Styled = {
   Button: styled(Button)`
@@ -71,6 +73,11 @@ const EventTable = ({
   const creation = isVolunteer ? "Date" : "Email Address";
   const time = isVolunteer ? "Time" : "Hours Participated";
   const textInfo = isVolunteer ? "Hours Earned" : "";
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const updatePage = (pageNum) => {
+    setCurrentPage(pageNum);
+  };
 
   return (
     <Styled.Container>
@@ -88,72 +95,86 @@ const EventTable = ({
           </Table.EventList>
         </Styled.List>
         {isVolunteer &&
-          events.map((event) => (
-            <Styled.List key={event._id}>
-              <Link href={`events/${event.eventId}`}>
+          events
+            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+            .map((event) => (
+              <Styled.List key={event._id}>
+                <Link href={`events/${event.eventId}`}>
+                  <Table.EventList>
+                    <Table.Inner>
+                      <Table.EventName>{event.eventName}</Table.EventName>
+
+                      <Table.Creation>
+                        {event.timeCheckedIn.slice(0, 10)}
+                      </Table.Creation>
+
+                      <Table.Time>
+                        {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
+                        {event.timeCheckedOut == null
+                          ? "N/A"
+                          : convertTime(event.timeCheckedOut.slice(11, 16))}
+                      </Table.Time>
+                      <Table.TextInfo>
+                        &emsp;
+                        {event.timeCheckedOut == null
+                          ? "0 hour(s)"
+                          : getHours(
+                              event.timeCheckedIn.slice(11, 16),
+                              event.timeCheckedOut.slice(11, 16)
+                            ) + " hour(s)"}
+                      </Table.TextInfo>
+                    </Table.Inner>
+                  </Table.EventList>
+                </Link>
+              </Styled.List>
+            ))}
+        {isVolunteer == false &&
+          events
+            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+            .map((event) => (
+              <Styled.List key={event._id}>
                 <Table.EventList>
                   <Table.Inner>
-                    <Table.EventName>{event.eventName}</Table.EventName>
+                    <Table.EventName>{event.name}</Table.EventName>
 
-                    <Table.Creation>
-                      {event.timeCheckedIn.slice(0, 10)}
-                    </Table.Creation>
+                    <Table.Creation>{event.email}</Table.Creation>
 
                     <Table.Time>
-                      {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
-                      {event.timeCheckedOut == null
-                        ? "N/A"
-                        : convertTime(event.timeCheckedOut.slice(11, 16))}
+                      {event.hours.toString().slice(0, 5)}
                     </Table.Time>
                     <Table.TextInfo>
-                      &emsp;
-                      {event.timeCheckedOut == null
-                        ? "0 hour(s)"
-                        : getHours(
-                            event.timeCheckedIn.slice(11, 16),
-                            event.timeCheckedOut.slice(11, 16)
-                          ) + " hour(s)"}
+                      <Styled.Buttons>
+                        <Styled.EditButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditClicked(event);
+                          }}
+                        >
+                          <Icon color="grey3" name="create" />
+                        </Styled.EditButton>
+                        <Styled.DeleteButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteClicked(event);
+                          }}
+                        >
+                          <Icon color="grey3" name="delete" />
+                        </Styled.DeleteButton>
+                      </Styled.Buttons>
                     </Table.TextInfo>
                   </Table.Inner>
                 </Table.EventList>
-              </Link>
-            </Styled.List>
-          ))}
-        {isVolunteer == false &&
-          events.map((event) => (
-            <Styled.List key={event._id}>
-              <Table.EventList>
-                <Table.Inner>
-                  <Table.EventName>{event.name}</Table.EventName>
-
-                  <Table.Creation>{event.email}</Table.Creation>
-
-                  <Table.Time>{event.hours.toString().slice(0, 5)}</Table.Time>
-                  <Table.TextInfo>
-                    <Styled.Buttons>
-                      <Styled.EditButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onEditClicked(event);
-                        }}
-                      >
-                        <Icon color="grey3" name="create" />
-                      </Styled.EditButton>
-                      <Styled.DeleteButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDeleteClicked(event);
-                        }}
-                      >
-                        <Icon color="grey3" name="delete" />
-                      </Styled.DeleteButton>
-                    </Styled.Buttons>
-                  </Table.TextInfo>
-                </Table.Inner>
-              </Table.EventList>
-            </Styled.List>
-          ))}
+              </Styled.List>
+            ))}
       </Styled.ul>
+      {events.length !== 0 && (
+        <Pagination
+          items={events}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          updatePageCallback={updatePage}
+        />
+      )}
     </Styled.Container>
   );
 };
