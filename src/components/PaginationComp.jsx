@@ -69,7 +69,6 @@ class PaginationComp extends React.Component {
   }
 
   render() {
-    
     return (
       <React.Fragment>
         {
@@ -125,5 +124,5 @@ PaginationComp.propTypes = {
   pageSize: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
-  updatePage: PropTypes.func.isRequired,
+  updatePageCallback: PropTypes.func.isRequired,
 };

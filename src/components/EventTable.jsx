@@ -74,7 +74,7 @@ const EventTable = ({
   const time = isVolunteer ? "Time" : "Hours Participated";
   const textInfo = isVolunteer ? "Hours Earned" : "";
   const [currentPage, setCurrentPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const pageSize = 10;
   const updatePage = (pageNum) => {
     setCurrentPage(pageNum);
   };
