@@ -51,7 +51,7 @@ class UserTable extends React.Component {
       state: "",
       notes: "",
       currentPage: 0,
-      pageSize: 3,
+      pageSize: 10,
       pageCount: 1,
     };
   }
