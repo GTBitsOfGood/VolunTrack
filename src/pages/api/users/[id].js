@@ -57,7 +57,7 @@ export default async function handler(req, res, next) {
       return res.status(400).json({ errors: errors.mapped() });
     }
 
-    let result = await deleteUserId(req.user, req.params.id, next);
+    let result = await deleteUserId(req.body.user, req.query.id, next);
     res.status(result.status).json(result.message);
   }
 }

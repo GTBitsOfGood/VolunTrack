@@ -115,7 +115,7 @@ const eventSchema = new mongoose.Schema(
       required: false,
     },
     isPrivate: {
-      type: String,
+      type: Boolean,
       required: true,
     },
     isEnded: {

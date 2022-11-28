@@ -56,7 +56,7 @@ const EventEditModal = ({ open, toggle, event }) => {
       <EventFormModal
         toggle={toggle}
         event={event}
-        isGroupEvent={event?.orgName}
+        isGroupEvent={event?.orgName != "" && event?.orgName != null}
       ></EventFormModal>
     </Modal>
   );

@@ -10,6 +10,7 @@ import {
   ModalBody,
   ModalFooter,
   Row,
+  Form,
 } from "reactstrap";
 import styled from "styled-components";
 import { createEvent, editEvent } from "../../../actions/queries";
@@ -28,6 +29,8 @@ const Styled = {
     color: #ef4e79;
     font-size: 14px;
     font-weight: bold;
+    margin-top: 0px;
+    padding-top: 0px;
     display: inline-block;
   `,
   Col: styled(Col)`
@@ -51,8 +54,20 @@ const Styled = {
   GenericText: styled.p`
     color: ${variables["yiq-text-dark"]};
   `,
+  RedText: styled.i`
+    color: red;
+  `,
   Row: styled(Row)`
     margin: 0.5rem 2rem 0.5rem 1rem;
+  `,
+  Errors: styled.div`
+    background-color: #f3f3f3;
+    border-radius: 6px;
+    max-width: 350px;
+    padding: 8px;
+  `,
+  ErrorBox: styled.ul`
+    margin: 0rem 2rem 0.5rem 1rem;
   `,
 };
 
@@ -67,9 +82,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
       ...values,
       isValidForCourtHours,
       description: content,
-      isPrivate: isGroupEvent ? "true" : "false",
+      isPrivate: isGroupEvent,
     };
     setSubmitting(true);
+
     createEvent(event)
       .then(() => toggle())
       .catch(console.log)
@@ -107,10 +123,12 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const emptyStringField = "";
-  const submitText = containsExistingEvent(event) ? "Submit" : "Create Event";
+  const submitText = containsExistingEvent(event) ? "Save" : "Create Event";
   const [content, setContent] = useState(
     containsExistingEvent(event) ? event.description : emptyStringField
   );
+
+  const [press, setPressed] = useState(false);
 
   let ReactQuill;
   // patch for build failure
@@ -118,6 +136,17 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     ReactQuill = require("react-quill");
   }
   const quill = useRef(null);
+
+  // const [errorArray, setErrors] = useState([])
+
+  // const setTouched = ({ errors, touched }) => {
+  //   const requi = []
+  //   if (errors.title && touched.title) {
+  //     requi.push("Title")
+  //     setErrors("title")
+  //   }
+  // };
+  //
 
   return (
     <Formik
@@ -186,7 +215,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           containsExistingEvent(event) && isGroupEvent
             ? event.orgZip
             : emptyStringField,
-        isPrivate: isGroupEvent ? "true" : "false",
+        isPrivate: isGroupEvent,
       }}
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
@@ -203,6 +232,8 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
         values,
         setFieldValue,
         handleBlur,
+        errors,
+        touched,
       }) => (
         <React.Fragment>
           <Styled.ModalBody>
@@ -221,8 +252,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     </Row>
                     <Row>
                       <Styled.Col>
-                        <SForm.Label>Title</SForm.Label>
-
+                        <SForm.Label>
+                          Title<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
                         <Field name="title">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
@@ -231,7 +263,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         <Styled.ErrorMessage name="title" />
                       </Styled.Col>
                       <Styled.ThirdCol>
-                        <SForm.Label>Max Volunteers</SForm.Label>
+                        <SForm.Label>
+                          Max Volunteers<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="max_volunteers">
                           {({ field }) => (
                             <SForm.Input {...field} type="number" />
@@ -242,7 +277,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     </Row>
                     <Row>
                       <Styled.Col>
-                        <SForm.Label>Date</SForm.Label>
+                        <SForm.Label>
+                          Date<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="date">
                           {({ field }) => (
                             <SForm.Input {...field} type="date" />
@@ -251,20 +289,26 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         <Styled.ErrorMessage name="date" />
                       </Styled.Col>
                       <Styled.Col>
-                        <SForm.Label>Start Time</SForm.Label>
+                        <SForm.Label>
+                          Start Time<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
                         <Field name="startTime">
                           {({ field }) => (
                             <SForm.Input {...field} type="time" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="startTime" />
                       </Styled.Col>
                       <Styled.Col>
-                        <SForm.Label>End Time</SForm.Label>
+                        <SForm.Label>
+                          End Time<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
                         <Field name="endTime">
                           {({ field }) => (
                             <SForm.Input {...field} type="time" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="endTime" />
                       </Styled.Col>
                       <Row></Row>
                     </Row>
@@ -279,42 +323,54 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     </Row>
                     <Row>
                       <Styled.Col>
-                        <SForm.Label>Address</SForm.Label>
-                        <Styled.ErrorMessage name="address" />
+                        <SForm.Label>
+                          Address<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="address">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="address" />
                       </Styled.Col>
                     </Row>
                     <Row>
                       <Styled.Col>
-                        <SForm.Label>City</SForm.Label>
-                        <Styled.ErrorMessage name="city" />
+                        <SForm.Label>
+                          City<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="city">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="city" />
                       </Styled.Col>
                       <Styled.FifthCol>
-                        <SForm.Label>State</SForm.Label>
-                        <Styled.ErrorMessage name="state" />
+                        <SForm.Label>
+                          State<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="state">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="state" />
                       </Styled.FifthCol>
                       <Styled.ThirdCol>
-                        <SForm.Label>Zip Code</SForm.Label>
-                        <Styled.ErrorMessage name="zip" />
+                        <SForm.Label>
+                          Zip Code<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="zip">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="zip" />
                       </Styled.ThirdCol>
                     </Row>
                     <Row
@@ -329,22 +385,28 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                     </Row>
                     <Row>
                       <Styled.Col>
-                        <SForm.Label>Phone Number</SForm.Label>
-                        <Styled.ErrorMessage name="eventContactPhone" />
+                        <SForm.Label>
+                          Phone Number<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="eventContactPhone">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="eventContactPhone" />
                       </Styled.Col>
                       <Styled.Col>
-                        <SForm.Label>Email Address</SForm.Label>
-                        <Styled.ErrorMessage name="eventContactEmail" />
+                        <SForm.Label>
+                          Email Address<Styled.RedText>*</Styled.RedText>
+                        </SForm.Label>
+
                         <Field name="eventContactEmail">
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="eventContactEmail" />
                       </Styled.Col>
                     </Row>
                   </Col>
@@ -369,53 +431,68 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                       >
                         <Row>
                           <Styled.Col>
-                            <SForm.Label>Name</SForm.Label>
-                            <Styled.ErrorMessage name="orgName" />
+                            <SForm.Label>
+                              Name<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
+
                             <Field name="orgName">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="orgName" />
                           </Styled.Col>
                         </Row>
                         <Row>
                           <Styled.Col>
-                            <SForm.Label>Address</SForm.Label>
-                            <Styled.ErrorMessage name="orgAddress" />
+                            <SForm.Label>
+                              Address<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
+
                             <Field name="orgAddress">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="orgAddress" />
                           </Styled.Col>
                         </Row>
                         <Row>
                           <Styled.Col>
-                            <SForm.Label>City</SForm.Label>
-                            <Styled.ErrorMessage name="orgCity" />
+                            <SForm.Label>
+                              City<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
+
                             <Field name="orgCity">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="orgCity" />
                           </Styled.Col>
                           <Styled.FifthCol>
-                            <SForm.Label>State</SForm.Label>
-                            <Styled.ErrorMessage name="orgState" />
+                            <SForm.Label>
+                              State<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
+
                             <Field name="orgState">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="orgState" />
                           </Styled.FifthCol>
                           <Styled.ThirdCol>
-                            <SForm.Label>Zip Code</SForm.Label>
-                            <Styled.ErrorMessage name="orgZip" />
+                            <SForm.Label>
+                              Zip Code<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
+
                             <Field name="orgZip">
                               {({ field }) => (
                                 <SForm.Input {...field} type="number" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="orgZip" />
                           </Styled.ThirdCol>
                         </Row>
                         <Row
@@ -430,31 +507,40 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Row>
                         <Row>
                           <Styled.Col>
-                            <SForm.Label>Name</SForm.Label>
-                            <Styled.ErrorMessage name="pocName" />
+                            <SForm.Label>
+                              Name<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
+
                             <Field name="pocName">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="pocName" />
                           </Styled.Col>
                           <Styled.Col>
-                            <SForm.Label>Phone Number</SForm.Label>
+                            <SForm.Label>
+                              Phone Number<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
                             <Field name="pocPhone">
                               {({ field }) => (
                                 <SForm.Input {...field} type="number" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="pocPhone" />
                           </Styled.Col>
                         </Row>
                         <Row>
                           <Styled.Col>
-                            <SForm.Label>Email Address</SForm.Label>
+                            <SForm.Label>
+                              Email Address<Styled.RedText>*</Styled.RedText>
+                            </SForm.Label>
                             <Field name="pocEmail">
                               {({ field }) => (
                                 <SForm.Input {...field} type="text" />
                               )}
                             </Field>
+                            <Styled.ErrorMessage name="pocEmail" />
                           </Styled.Col>
                         </Row>
                       </div>
@@ -468,7 +554,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                 >
                   <Styled.Col>
                     <SForm.Label>Description</SForm.Label>
-                    <Styled.ErrorMessage name="description" />
+
                     <Field name="description">
                       {() => (
                         <ReactQuill
@@ -480,6 +566,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         />
                       )}
                     </Field>
+                    <Styled.ErrorMessage name="description" />
                   </Styled.Col>
                 </Row>
               </SForm.FormGroup>
@@ -525,7 +612,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
             </Button>
             <Button
               color="primary"
-              onClick={handleSubmit}
+              onClick={() => {
+                handleSubmit();
+                setPressed(true);
+              }}
               disabled={!isValid || isSubmitting}
               style={{
                 backgroundColor: "ef4e79",

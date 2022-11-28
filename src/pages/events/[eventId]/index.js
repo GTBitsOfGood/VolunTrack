@@ -38,7 +38,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
-    margin-right: 3rem;
   `,
   EventName: styled.h1`
     color: black;
@@ -90,7 +89,7 @@ const Styled = {
     font-size: 15px;
     margin: auto;
     bottom: 0;
-    width: 60%;
+    width: 50%;
   `,
   Routing: styled(Button)`
     background-color: ${variables["primary"]};
@@ -98,7 +97,7 @@ const Styled = {
     font-size: 15px;
     margin: 1rem;
     bottom: 0;
-    width: 40%;
+    width: 32%;
   `,
 };
 
@@ -213,6 +212,13 @@ const EventInfo = () => {
                 </Styled.Routing>
               </>
             )}
+            {user.role === "volunteer" &&
+              event.volunteers.includes(user._id) &&
+              futureorTodaysDate && (
+                <Styled.Routing onClick={() => onUnregisterClicked(event)}>
+                  Unregister
+                </Styled.Routing>
+              )}
           </Row>
           <Row>
             <Styled.EventCol2 style={{ "margin-right": "auto" }}>
@@ -294,29 +300,37 @@ const EventInfo = () => {
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
                 </Styled.InfoTable>
-                <Styled.ButtonCol>
-                  <Styled.PrivateLink onClick={copyPrivateLink}>
-                    Share Private Link to Event
-                  </Styled.PrivateLink>
-                </Styled.ButtonCol>
+                {user.role === "volunteer" && (
+                  <Styled.ButtonCol>
+                    <Styled.PrivateLink onClick={copyPrivateLink}>
+                      Share Private Event Link
+                    </Styled.PrivateLink>
+                  </Styled.ButtonCol>
+                )}
               </Styled.EventCol2>
             </Row>
           )}
         </Col>
       </Styled.EventTable>
-      {user.role == "volunteer" &&
-        event.max_volunteers - event.volunteers.length != 0 &&
+      {user.role === "volunteer" &&
+        event.max_volunteers - event.volunteers.length !== 0 &&
         !event.volunteers.includes(user._id) &&
         futureorTodaysDate && (
           <Styled.Button onClick={() => onRegisterClicked(event)}>
             Register
           </Styled.Button>
         )}
-      {user.role == "volunteer" &&
+      {user.role === "volunteer" &&
+        event.max_volunteers - event.volunteers.length === 0 &&
+        !event.volunteers.includes(user._id) &&
+        futureorTodaysDate && (
+          <Styled.Button disabled={true}>Registration Closed</Styled.Button>
+        )}
+      {user.role === "volunteer" &&
         event.volunteers.includes(user._id) &&
         futureorTodaysDate && (
-          <Styled.Button onClick={() => onUnregisterClicked(event)}>
-            Unregister
+          <Styled.Button disabled={true}>
+            You are registered for this event!
           </Styled.Button>
         )}
     </>

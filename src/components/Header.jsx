@@ -109,6 +109,7 @@ const Styled = {
     margin-right: 2rem;
     text-decoration: none;
     :hover {
+      color: ${variables["dark"]};
       cursor: pointer;
     }
   `,
@@ -168,6 +169,10 @@ const Styled = {
   `,
 };
 
+let SelectedPageLink = styled(Styled.PageLink)`
+  color: ${variables["dark"]};
+`;
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -216,7 +221,7 @@ const Header = () => {
           display: "flex",
         }}
       >
-        <NavbarBrand tag={(props) => <Link {...props} />} href="/">
+        <NavbarBrand tag={(props) => <Link {...props} />} href="/home">
           <div style={{ width: "175px", cursor: "pointer" }}>
             <Image
               objectFit="contain"
@@ -233,38 +238,64 @@ const Header = () => {
         <Collapse isOpen={isOpen} navbar>
           <Styled.FlexContainer className="navbar-nav">
             <Styled.PageSwitch currPathName={router.pathname}>
-              {user.role === "admin" && (
-                <Link
-                  href="/applicant-viewer"
-                  selected={currPageMatches("/applicant-viewer")}
-                >
-                  <Styled.PageLink>Applicant Viewer</Styled.PageLink>
-                </Link>
-              )}
-              {user.role === "volunteer" && (
-                <Link href="/home" selected={currPageMatches("/home")}>
+              {/*{user.role === "admin" && (*/}
+              {/*  <Link*/}
+              {/*    href="/applicant-viewer"*/}
+              {/*    selected={currPageMatches("/applicant-viewer")}*/}
+              {/*  >*/}
+              {/*    <Styled.PageLink>Applicant Viewer</Styled.PageLink>*/}
+              {/*  </Link>*/}
+              {/*)}*/}
+              <Link href="/home">
+                {currPageMatches("/home") ? (
+                  <SelectedPageLink>Home</SelectedPageLink>
+                ) : (
                   <Styled.PageLink>Home</Styled.PageLink>
-                </Link>
-              )}
+                )}
+              </Link>
               {user.role === "admin" && (
                 <Link
                   href="/user-manager"
                   selected={currPageMatches("/user-manager")}
                 >
-                  <Styled.PageLink>Volunteers</Styled.PageLink>
+                  {currPageMatches("/user-manager") ? (
+                    <SelectedPageLink>Volunteers</SelectedPageLink>
+                  ) : (
+                    <Styled.PageLink>Volunteers</Styled.PageLink>
+                  )}
                 </Link>
               )}
               <Link href="/events" selected={currPageMatches("/events")}>
-                <Styled.PageLink>Events</Styled.PageLink>
+                {currPageMatches("/events") ? (
+                  <SelectedPageLink>Events</SelectedPageLink>
+                ) : (
+                  <Styled.PageLink>Events</Styled.PageLink>
+                )}
               </Link>
+              {user.role === "volunteer" && (
+                <Link onClick={goToStats} href="/stats">
+                  {currPageMatches("/stats") ? (
+                    <SelectedPageLink>Participation History</SelectedPageLink>
+                  ) : (
+                    <Styled.PageLink>Participation History</Styled.PageLink>
+                  )}
+                </Link>
+              )}
               {user.role === "admin" && (
                 <Styled.Dropdown nav inNavbar className="navbar-nav">
                   <Styled.Toggle color="white">
                     <Styled.UserContainer>
                       <Styled.TxtContainer>
-                        <Styled.PageLink style={{ "font-size": "108%" }}>
-                          Settings
-                        </Styled.PageLink>
+                        {currPageMatches("/assistants") ||
+                        currPageMatches("/manage-waivers") ? (
+                          <SelectedPageLink style={{ "font-size": "108%" }}>
+                            Settings
+                          </SelectedPageLink>
+                        ) : (
+                          <Styled.PageLink style={{ "font-size": "108%" }}>
+                            Settings
+                          </Styled.PageLink>
+                        )}
                       </Styled.TxtContainer>
                       <Styled.ImgContainer>
                         <Icon name="dropdown-arrow" size="1.5rem" />
@@ -301,7 +332,7 @@ const Header = () => {
                         style={{ marginRight: "20px" }}
                         src={user.imageUrl ?? "/images/test.jpg"}
                         alt="icon"
-                      ></Styled.UserIcon>
+                      />
                     </Styled.ImgContainer>
                     <Styled.TxtContainer>
                       <p
@@ -322,11 +353,6 @@ const Header = () => {
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
-                {user.role === "volunteer" && (
-                  <DropdownItem onClick={goToStats} href="/stats">
-                    <Styled.DropdownItem>Stats</Styled.DropdownItem>
-                  </DropdownItem>
-                )}
                 <DropdownItem onClick={logout} href="/">
                   <Styled.DropdownItem>Logout</Styled.DropdownItem>
                 </DropdownItem>

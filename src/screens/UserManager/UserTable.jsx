@@ -18,16 +18,6 @@ import Pagination from "../../components/PaginationComp";
 import * as Form from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 
-// const keyToValue = (key) => {
-//   key = key.replace(/_/g, " ");
-//   key = key
-//     .toLowerCase()
-//     .split(" ")
-//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-//     .join(" ");
-//   return key;
-// };
-
 const Styled = {
   Button: styled(Button)`
     background: white;
