@@ -10,9 +10,6 @@ const historyEventSchema = new mongoose.Schema(
     },
     keyword: {
       type: String,
-      enum: ["ASSIGNED", "MODIFIED", "CREATED", "DELETED"],
-      default: "CREATED",
-      required: true,
     },
     description: {
       type: String,
