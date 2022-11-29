@@ -172,3 +172,7 @@ export const deleteAttendance = (id) =>
 
 export const updateAttendance = (id, newData) =>
   axios.put(`/api/attendance/${id}`, { id, newData });
+
+export const getHistoryEvents = () => axios.get("/api/historyEvents");
+
+export const getUserFromId = (id) => axios.get(`/api/users/${id}`);

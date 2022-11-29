@@ -7,7 +7,8 @@ import {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   switch (req.method) {
     case "GET": {
-      const historyEvents = getAllHistoryEvents;
+      const historyEvents = await getAllHistoryEvents();
+
       res.status(200).json(historyEvents);
 
       break;
