@@ -38,3 +38,17 @@ export const createHistoryEventDeleteEvent = (eventId, userId) => {
     eventId,
   });
 };
+
+export const createHistoryEventEditProfile = (userId) => {
+  createHistoryEvent({
+    userId,
+    keyword: "MODIFIED",
+  });
+};
+
+export const createHistoryEventDeleteProfile = (userId) => {
+  createHistoryEvent({
+    userId,
+    keyword: "DELETED",
+  });
+};
