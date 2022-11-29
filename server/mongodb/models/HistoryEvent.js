@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// define schema
 const historyEventSchema = new mongoose.Schema(
   {
     userId: {
@@ -15,6 +14,7 @@ const historyEventSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    // optional fields, every field won't go on every HistoryEvent document
     eventId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Event",
@@ -22,8 +22,6 @@ const historyEventSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// export Event model to app
 
 module.exports =
   mongoose.models.HistoryEvent ||

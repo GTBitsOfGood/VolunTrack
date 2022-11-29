@@ -14,3 +14,11 @@ export const createHistoryEvent = async (historyEventData) => {
   const historyEvent = await HistoryEvent.create(historyEventData);
   return historyEvent;
 };
+
+export const createHistoryEventFromEventData = (eventData) => {
+  createHistoryEvent({
+    userId: eventData.userId,
+    keyword: "CREATED",
+    eventId: eventData._id,
+  });
+};

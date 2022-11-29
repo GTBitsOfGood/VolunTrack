@@ -1,4 +1,5 @@
 import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import React, { useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
@@ -10,7 +11,6 @@ import {
   ModalBody,
   ModalFooter,
   Row,
-  Form,
 } from "reactstrap";
 import styled from "styled-components";
 import { createEvent, editEvent } from "../../../actions/queries";
@@ -76,6 +76,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.isValidForCourtHours ?? false
   );
+  const {
+    data: { user },
+  } = useSession();
 
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
@@ -83,6 +86,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
       isValidForCourtHours,
       description: content,
       isPrivate: isGroupEvent,
+      userId: user._id,
     };
     setSubmitting(true);
 
