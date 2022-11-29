@@ -75,7 +75,7 @@ const History = () => {
         : historyEvents
     ).sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
   };
-  console.log(historyEvents);
+
   return (
     <Styled.Container>
       <Styled.HeaderRow>
