@@ -146,6 +146,7 @@ const Styled = {
     color: ${variables["white"]};
     padding: 0.5rem;
     border: transparent;
+    border-radius: 0.5rem;
   `,
   BottomContainer: styled.div`
     margin-left: 1rem;
