@@ -102,6 +102,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
       isValidForCourtHours,
       description: content,
       _id: event._id,
+      userId: user._id,
     };
     setSubmitting(true);
     editEvent(editedEvent, sendConfirmationEmail);

@@ -1,7 +1,7 @@
 const EventData = require("../mongodb/models/event");
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
-import { createHistoryEventFromEventData } from "./historyEvent";
+import { createHistoryEventCreateEvent, createHistoryEventEditEvent } from "./historyEvent";
 const User = require("../mongodb/models/User");
 const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
@@ -15,7 +15,7 @@ export async function createEvent(newEventData, next) {
     .save()
     .then(async (event) => {
       await scheduler.scheduleNewEventJobs(event);
-      createHistoryEventFromEventData(newEventData);
+      createHistoryEventCreateEvent(newEventData);
     })
     .catch(next);
 }
@@ -81,6 +81,7 @@ export async function updateEvent(updateEventData, next) {
     }
   )
     .then((event) => {
+      createHistoryEventEditEvent(updateEventData);
       return event;
     })
     .catch((err) => {

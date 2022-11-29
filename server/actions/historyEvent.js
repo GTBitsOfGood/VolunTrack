@@ -15,10 +15,26 @@ export const createHistoryEvent = async (historyEventData) => {
   return historyEvent;
 };
 
-export const createHistoryEventFromEventData = (eventData) => {
+export const createHistoryEventCreateEvent = (eventData) => {
   createHistoryEvent({
     userId: eventData.userId,
     keyword: "CREATED",
     eventId: eventData._id,
+  });
+};
+
+export const createHistoryEventEditEvent = (eventData) => {
+  createHistoryEvent({
+    userId: eventData.userId,
+    keyword: "MODIFIED",
+    eventId: eventData._id,
+  });
+};
+
+export const createHistoryEventDeleteEvent = (eventId, userId) => {
+  createHistoryEvent({
+    userId,
+    keyword: "DELETED",
+    eventId,
   });
 };

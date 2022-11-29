@@ -127,7 +127,8 @@ export const editEvent = (event, sendConfirmationEmail) =>
     sendConfirmationEmail: sendConfirmationEmail,
   });
 
-export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
+export const deleteEvent = (_id, userId) =>
+  axios.delete(`/api/events/${_id}?userId=${userId}`);
 
 export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
 
