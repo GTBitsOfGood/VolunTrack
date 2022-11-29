@@ -209,6 +209,7 @@ const Header = () => {
     router.push("/manage-waivers");
   };
 
+
   const currPageMatches = (page) => router.pathname === page;
 
   return (
@@ -278,6 +279,18 @@ const Header = () => {
                     <SelectedPageLink>Participation History</SelectedPageLink>
                   ) : (
                     <Styled.PageLink>Participation History</Styled.PageLink>
+                  )}
+                </Link>
+              )}
+              {user.role === "admin" && (
+                <Link
+                  href="/rangeStats"
+                  selected={currPageMatches("/rangeStats")}
+                >
+                  {currPageMatches("/rangeStats") ? (
+                    <SelectedPageLink>Stats</SelectedPageLink>
+                  ) : (
+                    <Styled.PageLink>Stats</Styled.PageLink>
                   )}
                 </Link>
               )}
