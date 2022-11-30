@@ -164,6 +164,9 @@ export const updateEventById = (id, event) =>
 
 export const getAttendanceForEvent = (eventId) =>
   axios.post("/api/attendance/statistics", { eventId });
+  
+  export const getSimpleAttendanceForEvent = (eventId) =>
+  axios.post("/api/attendance/simplestatistics", { eventId });
 
 export const deleteAttendance = (id) =>
   axios.delete(`/api/attendance/${id}`, { id });
