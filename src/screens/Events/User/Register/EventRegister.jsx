@@ -118,7 +118,7 @@ const Styled = {
     background-color: ${variables["white"]};
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
-    margin-right: 3rem;
+    margin-right: 2rem;
     width: 16rem;
   `,
   VolunteerCol: styled.div`
@@ -274,15 +274,29 @@ const EventRegister = (event) => {
   };
 
   const deleteMinor = async (event, deleteName) => {
-    let newMinor = event.minors[0].minor.filter((name) => name !== deleteName);
-    event.minors[0].minor = newMinor;
+    let allMinors = event.minors;
+    let posMinor = 0;
+    console.log(allMinors);
+    for (let i = 0; i < allMinors.length; i++) {
+      // console.log(allMinors[i].volunteer_id);
+      // console.log(user._id);
+      // console.log("-");
+      if (allMinors[i].volunteer_id === user._id) {
+        posMinor = i;
+      }
+    }
+
+    let newMinor = event.minors[posMinor].minor.filter(
+      (name) => name !== deleteName
+    );
+    event.minors[posMinor].minor = newMinor;
 
     const changedEvent = {
       ...event,
     };
 
-    // console.log(event);
-    // console.log(changedEvent);
+    console.log(event);
+    console.log(changedEvent);
     setEvents(changedEvent);
   };
 
