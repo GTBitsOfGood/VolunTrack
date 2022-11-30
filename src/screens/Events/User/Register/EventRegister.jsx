@@ -118,7 +118,7 @@ const Styled = {
     background-color: ${variables["white"]};
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
-    margin-right: 4rem;
+    margin-right: 3rem;
     width: 16rem;
   `,
   VolunteerCol: styled.div`
@@ -165,6 +165,10 @@ const Styled = {
     border: none;
 
     margin: 0 0 0 auto;
+  `,
+  MinorRow: styled.div`
+    display: flex;
+    flex-direction: row;
   `,
 };
 
@@ -384,7 +388,7 @@ const EventRegister = (event) => {
           </Styled.VolunteerContainer>
           {events.minors &&
             events.minors.map((minor) => (
-              <Row>
+              <Styled.MinorRow>
                 {minor.volunteer_id === user._id &&
                   minor.minor.map((names) => (
                     <Styled.VolunteerContainer>
@@ -394,8 +398,6 @@ const EventRegister = (event) => {
                             <Styled.SectionHeaderText>
                               {names}
                             </Styled.SectionHeaderText>
-                            {/* </Styled.VolunteerRow>
-                          <Styled.VolunteerRow> */}
                             <Styled.DetailText>
                               Minor with {user.bio.first_name}{" "}
                               {user.bio.last_name}
@@ -416,7 +418,7 @@ const EventRegister = (event) => {
                       </Styled.VolunteerCol>
                     </Styled.VolunteerContainer>
                   ))}
-              </Row>
+              </Styled.MinorRow>
             ))}
           <Col>
             {!isRegistered && (
