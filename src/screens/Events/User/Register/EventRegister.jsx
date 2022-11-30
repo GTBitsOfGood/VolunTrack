@@ -4,12 +4,13 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../../actions/queries";
+import { deleteUser, fetchEventsById } from "../../../../actions/queries";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
 import { updateEvent } from "../eventHelpers";
+import Icon from "../../../../components/Icon";
 
 import PropTypes from "prop-types";
 import variables from "../../../../design-tokens/_variables.module.scss";
@@ -120,6 +121,13 @@ const Styled = {
     margin-right: 4rem;
     width: 16rem;
   `,
+  VolunteerCol: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+  `,
   VolunteerRow: styled.div`
     margin: 1rem;
   `,
@@ -151,6 +159,12 @@ const Styled = {
   BottomContainer: styled.div`
     margin-left: 1rem;
     margin-top: 2rem;
+  `,
+  DeleteButton: styled(Button)`
+    background: none;
+    border: none;
+
+    margin: 0 0 0 auto;
   `,
 };
 
@@ -253,6 +267,19 @@ const EventRegister = (event) => {
     setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
 
     onRefresh();
+  };
+
+  const deleteMinor = async (event, deleteName) => {
+    let newMinor = event.minors[0].minor.filter((name) => name !== deleteName);
+    event.minors[0].minor = newMinor;
+
+    const changedEvent = {
+      ...event,
+    };
+
+    // console.log(event);
+    // console.log(changedEvent);
+    setEvents(changedEvent);
   };
 
   return (
@@ -361,16 +388,32 @@ const EventRegister = (event) => {
                 {minor.volunteer_id === user._id &&
                   minor.minor.map((names) => (
                     <Styled.VolunteerContainer>
-                      <Styled.VolunteerRow>
-                        <Styled.SectionHeaderText>
-                          {names}
-                        </Styled.SectionHeaderText>
-                      </Styled.VolunteerRow>
-                      <Styled.VolunteerRow>
-                        <Styled.DetailText>
-                          Minor with {user.bio.first_name} {user.bio.last_name}
-                        </Styled.DetailText>
-                      </Styled.VolunteerRow>
+                      <Styled.VolunteerCol>
+                        <div>
+                          <Styled.VolunteerRow>
+                            <Styled.SectionHeaderText>
+                              {names}
+                            </Styled.SectionHeaderText>
+                            {/* </Styled.VolunteerRow>
+                          <Styled.VolunteerRow> */}
+                            <Styled.DetailText>
+                              Minor with {user.bio.first_name}{" "}
+                              {user.bio.last_name}
+                            </Styled.DetailText>
+                          </Styled.VolunteerRow>
+                        </div>
+                        {!isRegistered && (
+                          <div>
+                            <Styled.DeleteButton
+                              onClick={() => {
+                                deleteMinor(events, names);
+                              }}
+                            >
+                              <Icon color="grey3" name="delete" />
+                            </Styled.DeleteButton>
+                          </div>
+                        )}
+                      </Styled.VolunteerCol>
                     </Styled.VolunteerContainer>
                   ))}
               </Row>
