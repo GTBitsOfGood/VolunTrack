@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
@@ -8,6 +8,9 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
 import PropTypes from "prop-types";
 import { getHours } from "./hourParsing";
+import * as SForm from "../../sharedStyles/formStyles";
+import { Field, Formik } from "formik";
+import { Row, Col } from "reactstrap";
 
 const Styled = {
   Container: styled.div`
@@ -135,37 +138,81 @@ const StatDisplay = ({ userId }) => {
   const [name, setName] = useState("");
   const [attend, setAttend] = useState("Bronze");
   const [earn, setEarn] = useState("Bronze");
+  const [startDate, setStartDate] = useState("undefined");
+  const [endDate, setEndDate] = useState("undefined");
 
   if (!userId) {
     const { data: session } = useSession();
     userId = session.user._id;
   }
 
-  useEffect(() => {
-    onRefresh();
-  }, []);
+  const filterEvents = (eventsToFilter, start, end) => {
+    let result = [];
+    console.log(eventsToFilter, start, end);
+    if (start === "undefined" && end === "undefined") {
+      return eventsToFilter;
+    } else if (start === "undefined") {
+      for (const event of eventsToFilter) {
+        if (event.timeCheckedOut <= end) {
+          result.push(event);
+        }
+      }
+    } else if (end === "undefined") {
+      for (const event of eventsToFilter) {
+        if (event.timeCheckedIn >= start) {
+          result.push(event);
+        }
+      }
+    } else {
+      for (const event of eventsToFilter) {
+        if (event.timeCheckedIn >= start && event.timeCheckedOut <= end) {
+          result.push(event);
+        }
+      }
+    }
+    return result;
+  };
 
-  const onRefresh = () => {
+  const onSubmitValues = (values, setSubmitting) => {
+    if (!values.startD) {
+      setStartDate("undefined");
+    } else {
+      setStartDate(new Date(values.startD).toISOString());
+    }
+
+    if (!values.endD) {
+      setEndDate("undefined");
+    } else {
+      setEndDate(new Date(values.endD).toISOString());
+    }
+  };
+
+  useEffect(() => {
     setLoading(true);
     fetchEventsByUserId(userId)
       .then((result) => {
         if (result && result.data && result.data.event) {
-          setEvents(result.data.event);
-          setLength(result.data.event.length);
+          const filteredEvents = filterEvents(
+            result.data.event,
+            startDate,
+            endDate
+          );
+          setEvents(filteredEvents);
+          setLength(filteredEvents.length);
 
-          if (result.data.event.length > 1) {
+          if (filteredEvents.length > 1) {
             setAttend("Silver");
           }
-          if (result.data.event.length > 3) {
+          if (filteredEvents.length > 3) {
             setAttend("Gold");
           }
           let add = 0;
           // HAVE TO FIX THIS
-          for (let i = 0; i < result.data.event.length; i++) {
-            if (result.data.event[i].timeCheckedOut != null) {
+          for (let i = 0; i < filteredEvents.length; i++) {
+            if (filteredEvents[i].timeCheckedOut != null) {
               add += getHours(
-                result.data.event[i].timeCheckedIn.slice(11, 16),
-                result.data.event[i].timeCheckedOut.slice(11, 16)
+                filteredEvents[i].timeCheckedIn.slice(11, 16),
+                filteredEvents[i].timeCheckedOut.slice(11, 16)
               );
             }
           }
@@ -194,7 +241,8 @@ const StatDisplay = ({ userId }) => {
         }
       })
       .finally(() => {});
-  };
+  }, [startDate, endDate]);
+
   return (
     <Styled.Container>
       <Styled.Right>
@@ -236,6 +284,52 @@ const StatDisplay = ({ userId }) => {
             <Styled.StatText>{Math.round(sum * 10) / 10} hours</Styled.StatText>
           </Styled.BoxInner>
         </Styled.Box>
+        <Formik
+          initialValues={{}}
+          onSubmit={(values, { setSubmitting }) => {
+            onSubmitValues(values, setSubmitting);
+          }}
+          render={({ handleSubmit }) => (
+            <React.Fragment>
+              <Row>
+                <Col>
+                  <SForm.Label>From</SForm.Label>
+                  <Field name="startD">
+                    {({ field }) => (
+                      <SForm.Input {...field} type="datetime-local" />
+                    )}
+                  </Field>
+                </Col>
+                <Col>
+                  <SForm.Label>To</SForm.Label>
+
+                  <Field name="endD">
+                    {({ field }) => (
+                      <SForm.Input {...field} type="datetime-local" />
+                    )}
+                  </Field>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      handleSubmit();
+                    }}
+                    style={{
+                      backgroundColor: "ef4e79",
+                      borderColor: "ef4e79",
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    Search
+                  </Button>
+                </Col>
+              </Row>
+            </React.Fragment>
+          )}
+        />
         <Styled.Header>Volunteer History</Styled.Header>
         <Styled.Header2>{length} events</Styled.Header2>
         <Styled.marginTable>

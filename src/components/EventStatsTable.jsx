@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import * as Table from "../screens/sharedStyles/condensedTableStyles";
-import { getHours } from "../screens/Stats/User/hourParsing";
-import Icon from "./Icon";
+// import { getHours } from "../screens/Stats/User/hourParsing";
+// import Icon from "./Icon";
 
 const Styled = {
   Button: styled(Button)`
@@ -50,22 +50,22 @@ const Styled = {
   `,
 };
 
-const convertTime = (time) => {
-  let [hour, min] = time.split(":");
-  let hours = parseInt(hour);
-  let suffix = time[-2];
-  if (!(suffix in ["pm", "am", "PM", "AM"])) {
-    suffix = hours > 11 ? "pm" : "am";
-  }
-  hours = ((hours + 11) % 12) + 1;
-  return hours.toString() + ":" + min + suffix;
-};
+// const convertTime = (time) => {
+//   let [hour, min] = time.split(":");
+//   let hours = parseInt(hour);
+//   let suffix = time[-2];
+//   if (!(suffix in ["pm", "am", "PM", "AM"])) {
+//     suffix = hours > 11 ? "pm" : "am";
+//   }
+//   hours = ((hours + 11) % 12) + 1;
+//   return hours.toString() + ":" + min + suffix;
+// };
 
 const EventStatsTable = ({
   events,
   isVolunteer,
-  onDeleteClicked,
-  onEditClicked,
+  // onDeleteClicked,
+  // onEditClicked,
 }) => {
   const eventName = isVolunteer ? "Event Name" : "Volunteer Name";
   const creation = isVolunteer ? "Date" : "Email Address";
@@ -87,21 +87,20 @@ const EventStatsTable = ({
             </Table.InnerTop>
           </Table.EventList>
         </Styled.List>
-        
+
         {isVolunteer == false &&
           events.map((event) => (
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
-              <Table.EventList>
-                <Table.Inner>
-                  <Table.EventName>{event.title}</Table.EventName>
+                <Table.EventList>
+                  <Table.Inner>
+                    <Table.EventName>{event.title}</Table.EventName>
 
-                  <Table.Creation>{event.date}</Table.Creation>
+                    <Table.Creation>{event.date}</Table.Creation>
 
-                  <Table.Time>{event.time}</Table.Time>
-                  
-                </Table.Inner>
-              </Table.EventList>
+                    <Table.Time>{event.time}</Table.Time>
+                  </Table.Inner>
+                </Table.EventList>
               </Link>
             </Styled.List>
           ))}

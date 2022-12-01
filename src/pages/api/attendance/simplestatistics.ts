@@ -1,6 +1,5 @@
 import dbConnect from "../../../../server/mongodb";
 const Attendance = require("../../../../server/mongodb/models/attendance");
-const { getUserFromId } = require("../../../../server/actions/users");
 
 export default async function handler(req, res) {
   await dbConnect();
@@ -16,7 +15,6 @@ export default async function handler(req, res) {
     }
     let attendanceStats = [];
     for (let document of attendance) {
-      
       let hours = -1;
       if (document.timeCheckedOut != null) {
         hours =

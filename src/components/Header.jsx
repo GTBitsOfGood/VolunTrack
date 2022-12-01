@@ -209,7 +209,6 @@ const Header = () => {
     router.push("/manage-waivers");
   };
 
-
   const currPageMatches = (page) => router.pathname === page;
 
   return (
