@@ -140,11 +140,11 @@ const EventInfo = () => {
   };
 
   const routeToRegisteredVolunteers = () => {
-    router.replace(`${eventId}/attendance`);
+    router.push(`${eventId}/attendance`);
   };
 
   const routeToStats = () => {
-    router.replace(`${eventId}/statistics`);
+    router.push(`${eventId}/statistics`);
   };
 
   const onUnregisterClicked = async (event) => {
