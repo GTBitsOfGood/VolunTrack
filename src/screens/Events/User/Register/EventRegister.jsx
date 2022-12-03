@@ -4,12 +4,11 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
-import { deleteUser, fetchEventsById } from "../../../../actions/queries";
-import { registerForEvent } from "../eventHelpers";
+import { fetchEventsById } from "../../../../actions/queries";
+import { registerForEvent, updateEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-import { updateEvent } from "../eventHelpers";
 import Icon from "../../../../components/Icon";
 
 import PropTypes from "prop-types";
@@ -276,27 +275,20 @@ const EventRegister = (event) => {
   const deleteMinor = async (event, deleteName) => {
     let allMinors = event.minors;
     let posMinor = 0;
-    console.log(allMinors);
     for (let i = 0; i < allMinors.length; i++) {
-      // console.log(allMinors[i].volunteer_id);
-      // console.log(user._id);
-      // console.log("-");
       if (allMinors[i].volunteer_id === user._id) {
         posMinor = i;
       }
     }
 
-    let newMinor = event.minors[posMinor].minor.filter(
+    event.minors[posMinor].minor = event.minors[posMinor].minor.filter(
       (name) => name !== deleteName
     );
-    event.minors[posMinor].minor = newMinor;
 
     const changedEvent = {
       ...event,
     };
 
-    console.log(event);
-    console.log(changedEvent);
     setEvents(changedEvent);
   };
 
