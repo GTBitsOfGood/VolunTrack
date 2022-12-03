@@ -89,7 +89,7 @@ export async function updateEvent(updateEventData, next) {
 export async function deleteEventID(eventID, next) {
   await dbConnect();
 
-  return EventData.findOneAndDelete({ _id: eventID })
+  return EventData.findByIdAndDelete({ _id: eventID })
     .then(() => {
       return;
     })

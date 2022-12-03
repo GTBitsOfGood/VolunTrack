@@ -4,11 +4,13 @@ import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import {
+  deleteUser,
   fetchUserCount,
   fetchUserManagementData,
   updateUser,
 } from "../../actions/queries";
 import UserTable from "./UserTable";
+import { CSVLink } from "react-csv";
 
 // const PAGE_SIZE = 3;
 
@@ -73,13 +75,11 @@ const Styled = {
     line-height: 19px;
     margin-top: 0.3rem;
   `,
-  Text: styled.div`
+  Text: styled.p`
     color: #000000;
-    width: 184px;
     font-style: normal;
     font-weight: bold;
     font-size: 32px;
-    line-height: 41px;
   `,
   Search: styled.input`
     height: 2rem;
@@ -90,6 +90,17 @@ const Styled = {
     font-size: 1rem;
     border: 1px solid lightgray;
     border-radius: 0.5rem;
+  `,
+  HeaderTitle: styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  `,
+  CSVLink: styled(CSVLink)`
+    position: relative;
+    height: 2.5rem;
+    right: 20%;
+    text-align: center;
   `,
   TopMenu: styled.div`
     display: flex;
@@ -216,6 +227,24 @@ class UserManager extends React.Component {
 
     // this.onRefresh();
   };
+  onDeleteUser = (userId) => {
+    console.log(userId);
+    deleteUser(userId);
+
+    let updatedUsers = [];
+
+    this.state.users.map((user) => {
+      if (user._id !== userId) {
+        updatedUsers.push(user);
+      }
+    });
+
+    this.setState({
+      users: updatedUsers,
+      currentPage: 0,
+      loadingMoreUsers: false,
+    });
+  };
   filteredAndSortedVolunteers = () => {
     const filterArray = this.state.users.filter(
       (user) =>
@@ -230,7 +259,17 @@ class UserManager extends React.Component {
     const { currentPage, loadingMoreUsers, searchValue } = this.state;
     return (
       <Styled.Container>
-        <Styled.Text>Volunteers</Styled.Text>
+        <Styled.HeaderTitle>
+          <Styled.Text>Volunteers</Styled.Text>
+          <Styled.CSVLink
+            data={this.state.users}
+            filename={"volunteer-list.csv"}
+            className="btn btn-primary"
+            target="_blank"
+          >
+            Download to CSV
+          </Styled.CSVLink>
+        </Styled.HeaderTitle>
         <Styled.TopMenu>
           <Styled.Search
             placeholder="Search Name"
@@ -252,6 +291,7 @@ class UserManager extends React.Component {
             }
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}
+            deleteUserCallback={this.onDeleteUser}
           />
         </Styled.TableUsers>
       </Styled.Container>
