@@ -1,10 +1,11 @@
-
 import { useSession } from "next-auth/react";
 import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
-import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import { fetchEvents, getSimpleAttendanceForEvent } from "../../../actions/queries";
+import {
+  fetchEvents,
+  getSimpleAttendanceForEvent,
+} from "../../../actions/queries";
 import EventTable from "../../../components/EventStatsTable";
 import { useEffect } from "react";
 import { getHours } from "../../Stats/User/hourParsing";
@@ -19,11 +20,8 @@ import {
   Form,
 } from "reactstrap";
 import styled from "styled-components";
-import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../sharedStyles/formStyles";
-// import { groupEventValidator, standardEventValidator } from "./eventHelpers";
-
 
 const Styled = {
   Container: styled.div`
@@ -34,17 +32,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     align-items: center;
-  `,
-  Header: styled.div`
-    font-size: 27px;
-    font-weight: bold;
-    padding: 5px;
-  `,
-
-  Header2: styled.div`
-    font-size: 14px;
-    color: gray;
-    padding: 5px;
   `,
   marginTable: styled.div`
     margin-left: 0px;
@@ -121,7 +108,6 @@ const Styled = {
 };
 
 const Stats = () => {
-
   const [events, setEvents] = useState([]);
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
@@ -131,63 +117,47 @@ const Stats = () => {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [loading, setLoading] = useState(false);
-  
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setLoading(true);
-    //console.log("hello")
     fetchEvents(startDate, endDate)
-      .then((result) => {
-        //console.log(result)
+      .then(async (result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
           setNumEvents(result.data.events.length);
 
           let count = 0;
           for (let i = 0; i < events.length; i++) {
-            updateAttendance(events[i]._id)
-            
+            await updateAttendance(events[i]._id);
           }
-          //setAttend(count);
-          //console.log(events);
-          //console.log("hello1")
         }
       })
       .finally(() => {
         setLoading(false);
-        //console.log("hello3")
       });
-      //console.log("hello2")
   };
 
   async function updateAttendance(eventID) {
-    getSimpleAttendanceForEvent(eventID) 
-      .then((result) => {
-        console.log("here")
-        console.log(attend)
-        setAttend(attend + result.data.length)
-        console.log(attend)
+    getSimpleAttendanceForEvent(eventID).then((result) => {
+      setAttend(attend + result.data.length);
     });
-  };
- 
-  const onSubmitValues = (values, setSubmitting) => {
+  }
 
-    //console.log("hi")
-    //console.log(values);
+  const onSubmitValues = (values, setSubmitting) => {
     if (values.startD == null) {
       setStartDate("undefined");
     } else {
       setStartDate(new Date(values.startD));
     }
 
-    if(values.endD == null) {
-      setEndDate("undefined")
+    if (values.endD == null) {
+      setEndDate("undefined");
     } else {
-      setEndDate(new Date(values.endD));      
+      setEndDate(new Date(values.endD));
     }
-    
+
     //console.log(startDate)
-    
+
     onRefresh();
   };
 
@@ -200,47 +170,35 @@ const Stats = () => {
   const {
     data: { user },
   } = useSession();
- 
-  return (<Styled.Container>
 
-    <Styled.Header>
-          Event Attendance Summary
-        </Styled.Header> 
+  return (
+    <Styled.Container>
+      <Styled.Header>Event Attendance Summary</Styled.Header>
 
-    <Formik
-    initialValues={{
-      
-    }}
-    
-    onSubmit={(values, { setSubmitting }) => {
-      
-      onSubmitValues(values, setSubmitting);
-    }}
-    render={({
-      handleSubmit,
-      isValid,
-      isSubmitting,
-      values,
-      setFieldValue,
-      handleBlur,
-      errors,
-      touched,
-    }) => (
-      <React.Fragment>
-        
-        <Row>
-          
-                        <SForm.Label>
-                          From
-                        </SForm.Label>
+      <Formik
+        initialValues={{}}
+        onSubmit={(values, { setSubmitting }) => {
+          onSubmitValues(values, setSubmitting);
+        }}
+        render={({
+          handleSubmit,
+          isValid,
+          isSubmitting,
+          values,
+          setFieldValue,
+          handleBlur,
+          errors,
+          touched,
+        }) => (
+          <React.Fragment>
+            <Row>
+              <SForm.Label>From</SForm.Label>
 
-                        <Field name="startD">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="date" />
-                          )}
-                        </Field>
+              <Field name="startD">
+                {({ field }) => <SForm.Input {...field} type="date" />}
+              </Field>
 
-                     {/* <SForm.Label>
+              {/* <SForm.Label>
                           Start Time<Styled.RedText>*</Styled.RedText>
                         </SForm.Label>
                         <Field name="startTime">
@@ -249,35 +207,31 @@ const Stats = () => {
                           )}
                         </Field> */}
 
-                        <SForm.Label>
-                          To
-                        </SForm.Label>
+              <SForm.Label>To</SForm.Label>
 
-                        <Field name="endD">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="date" />
-                          )}
-                        </Field>
+              <Field name="endD">
+                {({ field }) => <SForm.Input {...field} type="date" />}
+              </Field>
 
-                        <Button
-                          color="primary"
-                          onClick={() => {
-                            handleSubmit();
-                          }}
-                          style={{
-                            backgroundColor: "ef4e79",
-                            borderColor: "ef4e79",
-                            // backgroundColor: variables["button-pink"],
-                            // borderColor: variables["button-pink"],
-                            
-                            marginBottom: "1rem",
-                          }}
-                        >
-                          Search
-                        </Button>
-                        </Row>
+              <Button
+                color="primary"
+                onClick={() => {
+                  handleSubmit();
+                }}
+                style={{
+                  backgroundColor: "ef4e79",
+                  borderColor: "ef4e79",
+                  // backgroundColor: variables["button-pink"],
+                  // borderColor: variables["button-pink"],
 
-                        {/* <SForm.Label>
+                  marginBottom: "1rem",
+                }}
+              >
+                Search
+              </Button>
+            </Row>
+
+            {/* <SForm.Label>
                           End Time<Styled.RedText>*</Styled.RedText>
                         </SForm.Label>
                         <Field name="endTime">
@@ -285,25 +239,20 @@ const Stats = () => {
                             <SForm.Input {...field} type="time" />
                           )}
                         </Field> */}
-          
-          
-      </React.Fragment>
-    )}
-  />
-  <SForm.Label>Statistics</SForm.Label>
-  <Row>
-    
-  
-
-  <Col>Total Events: {numEvents}</Col>
-  <Col>Total Attendance: {attend}</Col>
-  <Col>Total Hours Worked: {hours}</Col>
-  </Row>
-    <Styled.marginTable>
-         <EventTable events={events} isVolunteer={false} />
-    </Styled.marginTable>
-  </Styled.Container>
-  )
+          </React.Fragment>
+        )}
+      />
+      <SForm.Label>Statistics</SForm.Label>
+      <Row>
+        <Col>Total Events: {numEvents}</Col>
+        <Col>Total Attendance: {attend}</Col>
+        <Col>Total Hours Worked: {hours}</Col>
+      </Row>
+      <Styled.marginTable>
+        <EventTable events={events} isVolunteer={false} />
+      </Styled.marginTable>
+    </Styled.Container>
+  );
 };
 
 export default Stats;
