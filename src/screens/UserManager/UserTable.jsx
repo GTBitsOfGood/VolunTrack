@@ -86,7 +86,6 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
     });
@@ -426,14 +425,15 @@ class UserTable extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-
-        <Pagination
-          users={users}
-          pageSize={this.state.pageSize}
-          loading={this.props.loading}
-          currentPage={this.state.currentPage}
-          updatePage={this.updatePage}
-        />
+        {users.length !== 0 && (
+          <Pagination
+            items={users}
+            pageSize={this.state.pageSize}
+            loading={this.props.loading}
+            currentPage={this.state.currentPage}
+            updatePageCallback={this.updatePage}
+          />
+        )}
       </Table.Container>
     );
   }
