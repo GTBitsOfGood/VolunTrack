@@ -10,6 +10,7 @@ import Icon from "../../components/Icon";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import { updateApplicantRole } from "../../actions/queries";
+import Pagination from "../../components/PaginationComp";
 
 // const keyToValue = (key) => {
 //   key = key.replace(/_/g, " ");
@@ -46,12 +47,20 @@ class EmployeeTable extends React.Component {
       userSelectedForEdit: null,
       userSelectedForDelete: null,
       pendingSelectedForDelete: null,
+      pageSize: 10,
+      currentPage: 0,
     };
   }
 
   onDisplayDeletePending = (pending) => {
     this.setState({
       pendingSelectedForDelete: pending,
+    });
+  };
+
+  updatePage = (pageNum) => {
+    this.setState({
+      currentPage: pageNum,
     });
   };
 
@@ -108,7 +117,7 @@ class EmployeeTable extends React.Component {
   };
 
   cancel = () => {
-    this.props.editUserCallback(this.props.editUserCallback(null))
+    this.props.editUserCallback(this.props.editUserCallback(null));
     this.setState({
       userSelectedForEdit: null,
     });
@@ -150,53 +159,61 @@ class EmployeeTable extends React.Component {
               <th style={{ color: "#960034" }}>Role</th>
             </tr>
             {!loading &&
-              users.map((user, index) => (
-                <Table.Row key={index} evenIndex={index % 2 === 0}>
-                  <td>{user.name}</td>
-                  <td>
-                    {user.email}
-                    <Styled.Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(user.email);
-                      }}
-                    >
-                      <Icon color="grey3" name="copy" />
-                    </Styled.Button>
-                  </td>
-                  <td>
-                    {user.role == "admin"
-                      ? "Administrator"
-                      : user.role == "admin-assistant"
-                      ? "Admin Assistant"
-                      : user.role == "staff"
-                      ? "Staff"
-                      : user.role.charAt(0).toUpperCase() + user.role.slice(1)}
-                  </td>
-                  {!invitedAdmins.includes(user.email) ? (
+              users
+                .slice(
+                  this.state.currentPage * this.state.pageSize,
+                  (this.state.currentPage + 1) * this.state.pageSize
+                )
+                .map((user, index) => (
+                  <Table.Row key={index} evenIndex={index % 2 === 0}>
+                    <td>{user.name}</td>
                     <td>
+                      {user.email}
                       <Styled.Button
-                        onClick={() => this.onDisplayEditUserModal(user)}
+                        onClick={() => {
+                          navigator.clipboard.writeText(user.email);
+                        }}
                       >
-                        <Icon color="grey3" name="create" />
-                      </Styled.Button>
-                      <Styled.Button
-                        onClick={() => this.onDisplayDeleteUserModal(user)}
-                      >
-                        <Icon color="grey3" name="delete" />
+                        <Icon color="grey3" name="copy" />
                       </Styled.Button>
                     </td>
-                  ) : (
                     <td>
-                      Pending
-                      <Styled.Button
-                        onClick={() => this.onDisplayDeletePending(user.email)}
-                      >
-                        <Icon color="grey3" name="delete" />
-                      </Styled.Button>
+                      {user.role == "admin"
+                        ? "Administrator"
+                        : user.role == "admin-assistant"
+                        ? "Admin Assistant"
+                        : user.role == "staff"
+                        ? "Staff"
+                        : user.role.charAt(0).toUpperCase() +
+                          user.role.slice(1)}
                     </td>
-                  )}
-                </Table.Row>
-              ))}
+                    {!invitedAdmins.includes(user.email) ? (
+                      <td>
+                        <Styled.Button
+                          onClick={() => this.onDisplayEditUserModal(user)}
+                        >
+                          <Icon color="grey3" name="create" />
+                        </Styled.Button>
+                        <Styled.Button
+                          onClick={() => this.onDisplayDeleteUserModal(user)}
+                        >
+                          <Icon color="grey3" name="delete" />
+                        </Styled.Button>
+                      </td>
+                    ) : (
+                      <td>
+                        Pending
+                        <Styled.Button
+                          onClick={() =>
+                            this.onDisplayDeletePending(user.email)
+                          }
+                        >
+                          <Icon color="grey3" name="delete" />
+                        </Styled.Button>
+                      </td>
+                    )}
+                  </Table.Row>
+                ))}
           </tbody>
         </Table.Table>
         {loading && <Loading />}
@@ -419,6 +436,14 @@ class EmployeeTable extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
+        {users.length !== 0 && (
+          <Pagination
+            items={users}
+            pageSize={this.state.pageSize}
+            currentPage={this.state.currentPage}
+            updatePageCallback={this.updatePage}
+          />
+        )}
       </Table.Container>
     );
   }

@@ -11,8 +11,7 @@ const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/User";
 import {
-  createHistoryEventDeleteProfile,
-  createHistoryEventEditProfile,
+  createHistoryEventEditProfile
 } from "./historyEvent";
 
 // Local Imports
@@ -659,13 +658,12 @@ export async function updateUserId(userDataReq, events, id, action, next) {
 }
 
 export async function deleteUserId(user, id, next) {
-  if (user && user.userDataId === id) {
-    // User is trying to remove themselves, don't let that happen...
-    return { status: 403, message: { error: "Cannot delete yourself!" } };
-  }
+  // if (user && user.userDataId === id) {
+  //   // User is trying to remove themselves, don't let that happen...
+  //   return { status: 403, message: { error: "Cannot delete yourself!" } };
+  // }
 
-  createHistoryEventDeleteProfile(user._id);
-  return User.findByIdAndRemove(id)
+  return User.findOneAndRemove({ _id: id })
     .then((removed) => {
       if (!removed) {
         return {
