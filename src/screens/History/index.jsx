@@ -73,7 +73,7 @@ const History = () => {
               h.description?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : historyEvents
-    ).sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+    ).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   };
 
   return (
@@ -83,7 +83,7 @@ const History = () => {
       </Styled.HeaderRow>
 
       <Styled.Search
-        placeholder="Search by Volunteer Name or Email"
+        placeholder="Search by Admin Name or Actions"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
       />
@@ -101,7 +101,7 @@ const History = () => {
                 {event.firstName} {event.lastName}
               </td>
               <td>{event.description}</td>
-              <td>{event.createdAt}</td>
+              <td>{new Date(event.createdAt).toLocaleString()}</td>
             </Table.Row>
           ))}
         </tbody>
