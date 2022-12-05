@@ -1,7 +1,7 @@
+import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { ModalBody, Container, Button, Col, Row } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
+import { Button, Col, Container, ModalBody, Row } from "reactstrap";
 import * as SForm from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 
@@ -9,8 +9,6 @@ import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
 import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 import { profileValidator } from "./helpers";
-import { useRouter, withRouter } from "next/router";
-
 
 const Styled = {
   Form: styled(FForm)``,
@@ -70,7 +68,8 @@ class ProfileForm extends React.Component {
       values.address,
       values.city,
       values.state,
-      values.notes
+      values.notes,
+      this.state.user._id
     );
 
     this.props.context.startLoading();

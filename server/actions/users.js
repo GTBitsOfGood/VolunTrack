@@ -10,6 +10,9 @@ const {
 const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/User";
+import {
+  createHistoryEventEditProfile
+} from "./historyEvent";
 
 // Local Imports
 const { SendEmailError, EmailInUseError } = require("../errors");
@@ -405,10 +408,12 @@ export async function updateUser(
   address,
   city,
   state,
-  notes
+  notes,
+  userId
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
+  createHistoryEventEditProfile(userId);
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
   if (

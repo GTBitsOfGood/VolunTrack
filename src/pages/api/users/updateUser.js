@@ -14,7 +14,8 @@ export default async function handler(req, res) {
       req.query.address,
       req.query.city,
       req.query.state,
-      req.query.notes
+      req.query.notes,
+      req.body.userId
     );
 
     if (result.status === 200) {

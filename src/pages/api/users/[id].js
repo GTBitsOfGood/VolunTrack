@@ -23,7 +23,7 @@ export default async function handler(req, res, next) {
       return res.status(400).json({ errors: errors.mapped() });
     }
 
-    let result = getUserFromId(req.params.id, next);
+    let result = await getUserFromId(req.query.id, next);
     res.status(result.status).json(result.message);
   } else if (req.method === "PUT") {
     check("id").isMongoId();
