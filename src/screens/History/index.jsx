@@ -70,7 +70,14 @@ const History = () => {
             (h) =>
               h.firstName?.toLowerCase().includes(searchValue.toLowerCase()) ||
               h.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              h.description?.toLowerCase().includes(searchValue.toLowerCase())
+              (h.firstName + " " + h.lastName)
+                ?.toLowerCase()
+                .trim()
+                .includes(searchValue.toLowerCase().trim()) ||
+              h.description
+                ?.toLowerCase()
+                .trim()
+                .includes(searchValue.toLowerCase().trim())
           )
         : historyEvents
     ).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
