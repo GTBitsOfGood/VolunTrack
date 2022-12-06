@@ -195,14 +195,15 @@ const EventTable = ({
     user = session.user;
   }
 
+  events.sort(function (a, b) {
+    var c = new Date(a.date);
+    var d = new Date(b.date);
+    return d - c;
+  });
+
   var upcomingEvents = events.filter(function (event) {
     const currentDate = new Date();
     return new Date(event.date) > currentDate;
-  });
-  upcomingEvents.sort(function (a, b) {
-    var c = new Date(a.date);
-    var d = new Date(b.date);
-    return c - d;
   });
 
   const registeredEvents = upcomingEvents.filter(function (event) {
