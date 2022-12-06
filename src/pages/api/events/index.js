@@ -1,3 +1,5 @@
+import { sendEventEditedEmail } from "../../../utils/mailersend-email";
+
 const { validationResult, matchedData } = require("express-validator");
 const { CREATE_EVENT_VALIDATOR } = require("../../../../server/validators");
 const {
@@ -11,7 +13,7 @@ import initMiddleware from "../../../../lib/init-middleware";
 import validateMiddleware from "../../../../lib/validate-middleware";
 import { agenda } from "../../../../server/jobs";
 import { scheduler } from "../../../../server/jobs/scheduler";
-// import { sendEventEmail } from "../../../utils/email.ts";
+import { getUserFromId } from "../../../../server/actions/users";
 
 const validateBody = initMiddleware(
   validateMiddleware(CREATE_EVENT_VALIDATOR, validationResult)
@@ -39,8 +41,7 @@ export default async function handler(req, res, next) {
       message: "Event successfully created!",
     });
   } else if (req.method === "PUT") {
-    // const sendConfirmationEmail = req.body.sendConfirmationEmail;
-
+    let sendConfirmationEmail = req.body.sendConfirmationEmail;
     req.body = req.body.event;
 
     await validateBody(req, res);
@@ -53,19 +54,19 @@ export default async function handler(req, res, next) {
 
     let event = await updateEvent(updateEventData, next);
 
+    if (sendConfirmationEmail) {
+      for (let userId of event.volunteers) {
+        if (ObjectId.isValid(userId)) {
+          let resp = await getUserFromId(userId, next);
+          if (resp && resp.message.user)
+            sendEventEditedEmail(resp.message.user, req.body);
+        }
+      }
+    }
+
     await agenda.start();
     await agenda.cancel({ data: new ObjectId(event._id) });
     await scheduler.scheduleNewEventJobs(event);
-
-    // const emailTemplateVariables = [
-    //   {
-    //     name: "eventTitle",
-    //     content: `${event.title}`,
-    //   },
-    // ];
-    // if (sendConfirmationEmail) {
-    //   await sendEventEmail(event, "event-update", emailTemplateVariables);
-    // }
 
     res.json({
       event,
