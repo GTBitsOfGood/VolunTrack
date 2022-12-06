@@ -1,6 +1,7 @@
 const EventData = require("../mongodb/models/event");
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
+import { createHistoryEventCreateEvent, createHistoryEventEditEvent } from "./historyEvent";
 const User = require("../mongodb/models/User");
 const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
@@ -14,6 +15,7 @@ export async function createEvent(newEventData, next) {
     .save()
     .then(async (event) => {
       await scheduler.scheduleNewEventJobs(event);
+      createHistoryEventCreateEvent(newEventData);
     })
     .catch(next);
 }
@@ -23,7 +25,7 @@ export async function getEvents(startDate, endDate, next) {
 
   if (startDate === "undefined" && endDate === "undefined") {
     return EventData.find({})
-    .sort({ date: 1})
+      .sort({ date: 1 })
       .then((events) => {
         return events;
       })
@@ -34,7 +36,7 @@ export async function getEvents(startDate, endDate, next) {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $lte: endDate } })
-      .sort({ date: 1})
+        .sort({ date: 1 })
         .then((events) => {
           return events;
         })
@@ -46,7 +48,7 @@ export async function getEvents(startDate, endDate, next) {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $gte: startDate } })
-      .sort({ date: 1})
+        .sort({ date: 1 })
         .then((events) => {
           return events;
         })
@@ -59,7 +61,7 @@ export async function getEvents(startDate, endDate, next) {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
       return EventData.find({ date: { $gte: startDate, $lte: endDate } })
-      .sort({ date: 1})
+        .sort({ date: 1 })
         .then((events) => {
           return events;
         })
@@ -79,6 +81,7 @@ export async function updateEvent(updateEventData, next) {
     }
   )
     .then((event) => {
+      createHistoryEventEditEvent(updateEventData);
       return event;
     })
     .catch((err) => {
@@ -89,7 +92,7 @@ export async function updateEvent(updateEventData, next) {
 export async function deleteEventID(eventID, next) {
   await dbConnect();
 
-  return EventData.findOneAndDelete({ _id: eventID })
+  return EventData.findByIdAndDelete({ _id: eventID })
     .then(() => {
       return;
     })

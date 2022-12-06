@@ -38,10 +38,12 @@ const EditEventStatsForm = ({ toggle, event }) => {
     const editedEvent = {
       ...event,
     };
-    editedEvent.timeCheckedIn =
-      event.timeCheckedIn.slice(0, 11) + values.checkin + ":00.000Z";
-    editedEvent.timeCheckedOut =
-      event.timeCheckedOut.slice(0, 11) + values.checkout + ":00.000Z";
+    editedEvent.timeCheckedIn = new Date(
+      event.timeCheckedIn.slice(0, 11) + values.checkin
+    ).toISOString();
+    editedEvent.timeCheckedOut = new Date(
+      event.timeCheckedIn.slice(0, 11) + values.checkout
+    ).toISOString();
     setSubmitting(true);
     updateAttendance(event._id, editedEvent);
     toggle();
@@ -52,8 +54,8 @@ const EditEventStatsForm = ({ toggle, event }) => {
       initialValues={{
         name: event.name,
         email: event.email,
-        checkin: event.timeCheckedIn.slice(11, 16),
-        checkout: event.timeCheckedOut.slice(11, 16),
+        checkin: new Date(event.timeCheckedIn).toLocaleTimeString("en-GB"),
+        checkout: new Date(event.timeCheckedOut).toLocaleTimeString("en-GB"),
       }}
       onSubmit={(values, { setSubmitting }) => {
         onSubmitEditEvent(values, setSubmitting);

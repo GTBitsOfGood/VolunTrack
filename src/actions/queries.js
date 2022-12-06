@@ -56,7 +56,8 @@ export const updateUser = (
   address,
   city,
   state,
-  notes
+  notes,
+  userId
 ) => {
   var query = "";
   if (first) {
@@ -89,7 +90,7 @@ export const updateUser = (
 
   if (query.length > 0) {
     query = query.slice(0, -1);
-    axios.post(`/api/users/updateUser?email=${email}&${query}`);
+    axios.post(`/api/users/updateUser?email=${email}&${query}`, { userId });
   }
 };
 
@@ -127,7 +128,8 @@ export const editEvent = (event, sendConfirmationEmail) =>
     sendConfirmationEmail: sendConfirmationEmail,
   });
 
-export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
+export const deleteEvent = (_id, userId) =>
+  axios.delete(`/api/events/${_id}?userId=${userId}`);
 
 export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
 
@@ -173,3 +175,7 @@ export const deleteAttendance = (id) =>
 
 export const updateAttendance = (id, newData) =>
   axios.put(`/api/attendance/${id}`, { id, newData });
+
+export const getHistoryEvents = () => axios.get("/api/historyEvents");
+
+export const getUserFromId = (id) => axios.get(`/api/users/${id}`);

@@ -1,3 +1,5 @@
+import { createHistoryEventDeleteEvent } from "../../../../server/actions/historyEvent";
+
 const {
   deleteEventID,
   updateEventID,
@@ -23,6 +25,7 @@ export default async function handler(req, res, next) {
     // for some reason after migration, the id ends up in req.query???
     // i have no idea why
     const id = req.query.id;
+    const userId = req.query.userId;
     if (!isValidObjectID(id)) {
       res.status(400).json({ error: "Object ID not valid" });
     }
@@ -30,6 +33,7 @@ export default async function handler(req, res, next) {
     // const event = await getEventByID(id, next);
 
     await deleteEventID(id, next);
+    createHistoryEventDeleteEvent(id, userId);
 
     // const emailTemplateVariables = [
     //   {
