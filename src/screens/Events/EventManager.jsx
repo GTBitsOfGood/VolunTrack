@@ -19,6 +19,8 @@ import {
 
 import { useSession } from "next-auth/react";
 import { registerForEvent, updateEvent } from "./User/eventHelpers";
+import StatDisplay from "../Stats/User/StatDisplay";
+import router from "next/router";
 
 const isSameDay = (a) => (b) => {
   return differenceInCalendarDays(a, b) === 0;
@@ -94,14 +96,14 @@ const Styled = {
     cursor: pointer;
   `,
   HomePage: styled.div`
-    width: 54%;
+    width: 100%;
     height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: 0 auto;
-    align-items: start;
+    align-items: center;
   `,
   EventFilter: styled.div`
     display: flex;
@@ -174,15 +176,10 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
 
-  const onRegister = async (event) => {
-    const changedEvent = {
-      ...event,
-      volunteers: event.volunteers.concat(user._id),
-    }; // adds userId to event
-    const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
-
-    onRefresh();
+  const goToRegistrationPage = async (event) => {
+    if (event?.eventId) {
+      await router.push(`/events/${event.eventId}/register`);
+    }
   };
 
   const onUnregister = async (event) => {
@@ -265,7 +262,11 @@ const EventManager = ({ user, role, isHomePage }) => {
   const filterEvents = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
-      if (events[i].isPrivate || events[i].volunteers.includes(user._id)) {
+      if (
+          // hide past events for volunteers
+        new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
+        (!events[i].isPrivate || events[i].volunteers.includes(user._id))
+      ) {
         arr.push(events[i]);
       }
     }
@@ -352,7 +353,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                 }
                 onEditClicked={onEditClicked}
                 onDeleteClicked={onDeleteClicked}
-                onRegisterClicked={onRegister}
+                onRegisterClicked={goToRegistrationPage}
                 onUnregister={onUnregister}
                 user={user}
                 role={role}
@@ -378,6 +379,7 @@ const EventManager = ({ user, role, isHomePage }) => {
       )}
       {isHomePage && (
         <Styled.HomePage>
+          <StatDisplay onlyAchievements={true} />
           <EventTable
             dateString={dateString}
             events={
@@ -387,7 +389,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             }
             onEditClicked={onEditClicked}
             onDeleteClicked={onDeleteClicked}
-            onRegisterClicked={onRegister}
+            onRegisterClicked={goToRegistrationPage}
             onUnregister={onUnregister}
             user={user}
             role={role}

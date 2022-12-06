@@ -255,8 +255,8 @@ class Assistants extends React.Component {
   };
 
   handleSubmit = async (e) => {
-    console.log(this.state.newInvitedAdmin);
-    await updateInvitedAdmins(this.state.newInvitedAdmin);
+    if (this.state.newInvitedAdmin?.length > 0)
+      await updateInvitedAdmins(this.state.newInvitedAdmin);
     this.onRefresh();
   };
 

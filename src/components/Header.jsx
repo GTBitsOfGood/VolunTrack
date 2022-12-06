@@ -358,11 +358,13 @@ const Header = () => {
                 <DropdownItem onClick={goToProfile} href="/profile">
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
-                <DropdownItem onClick={goToHistory} href="/history">
-                  <Styled.DropdownItem>History</Styled.DropdownItem>
-                </DropdownItem>
+                {user.role === "admin" && (
+                  <DropdownItem onClick={goToHistory} href="/history">
+                    <Styled.DropdownItem>History</Styled.DropdownItem>
+                  </DropdownItem>
+                )}
                 <DropdownItem onClick={logout} href="/">
-                  <Styled.DropdownItem>Logout</Styled.DropdownItem>
+                  <Styled.DropdownItem>Sign Out</Styled.DropdownItem>
                 </DropdownItem>
               </DropdownMenu>
             </Styled.Dropdown>

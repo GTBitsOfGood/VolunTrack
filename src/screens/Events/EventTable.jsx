@@ -204,6 +204,10 @@ const EventTable = ({
     return event.volunteers.includes(user._id);
   });
 
+  upcomingEvents = upcomingEvents.filter(function (event) {
+    return !event.volunteers.includes(user._id);
+  });
+
   if (upcomingEvents.length > 5) {
     upcomingEvents = upcomingEvents.slice(0, 5);
   }
@@ -222,10 +226,6 @@ const EventTable = ({
                 <Styled.EventContent>
                   <Styled.EventContentRow>
                     <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                    <Styled.EventSlots>
-                      {event.max_volunteers - event.volunteers.length} slots
-                      available
-                    </Styled.EventSlots>
                     {role === "admin" && (
                       <Styled.EditButton
                         onClick={(e) => {
@@ -272,12 +272,15 @@ const EventTable = ({
                     <Styled.Time>{`${convertTime(
                       event.startTime
                     )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                    <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                    <Styled.EventSlots>
+                      {event.max_volunteers - event.volunteers.length} slots
+                      available
+                    </Styled.EventSlots>
                   </Styled.EventContentRow>
                 </Styled.EventContent>
               </Link>
               {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
-                14400000 ==
+                14400000 ===
                 Date.parse(event.date) &&
                 role === "admin" && (
                   <ManageAttendanceButton eventId={event._id} />
@@ -302,10 +305,6 @@ const EventTable = ({
                     <Styled.EventContent>
                       <Styled.EventContentRow>
                         <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                        <Styled.EventSlots>
-                          {event.max_volunteers - event.volunteers.length} slots
-                          available
-                        </Styled.EventSlots>
 
                         <Styled.EventSpace>
                           <Icon name="check" viewBox={"0 0 96 96"} />
@@ -316,7 +315,10 @@ const EventTable = ({
                         <Styled.Time>{`${convertTime(
                           event.startTime
                         )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                        <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                        <Styled.EventSlots>
+                          {event.max_volunteers - event.volunteers.length} slots
+                          available
+                        </Styled.EventSlots>
                       </Styled.EventContentRow>
                     </Styled.EventContent>
                   </Link>
@@ -335,10 +337,6 @@ const EventTable = ({
                     <Styled.EventContent>
                       <Styled.EventContentRow>
                         <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                        <Styled.EventSlots>
-                          {event.max_volunteers - event.volunteers.length} slots
-                          available
-                        </Styled.EventSlots>
                         <Styled.Button onClick={() => onRegisterClicked(event)}>
                           <Icon color="grey3" name="add" />
                           <span>Register</span>
@@ -348,7 +346,10 @@ const EventTable = ({
                         <Styled.Time>{`${convertTime(
                           event.startTime
                         )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                        <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                        <Styled.EventSlots>
+                          {event.max_volunteers - event.volunteers.length} slots
+                          available
+                        </Styled.EventSlots>
                       </Styled.EventContentRow>
                     </Styled.EventContent>
                   </Link>
@@ -374,10 +375,6 @@ const EventTable = ({
                   <Styled.EventContent>
                     <Styled.EventContentRow>
                       <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                      <Styled.EventSlots>
-                        {event.max_volunteers - event.volunteers.length} slots
-                        available
-                      </Styled.EventSlots>
 
                       <Styled.EventSpace>
                         <Icon name="check" viewBox={"0 0 96 96"} />
@@ -388,7 +385,10 @@ const EventTable = ({
                       <Styled.Time>{`${convertTime(
                         event.startTime
                       )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                      <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                      <Styled.EventSlots>
+                        {event.max_volunteers - event.volunteers.length} slots
+                        available
+                      </Styled.EventSlots>
                     </Styled.EventContentRow>
                   </Styled.EventContent>
                 </Link>
@@ -410,10 +410,6 @@ const EventTable = ({
                   <Styled.EventContent>
                     <Styled.EventContentRow>
                       <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                      <Styled.EventSlots>
-                        {event.max_volunteers - event.volunteers.length} slots
-                        available
-                      </Styled.EventSlots>
                       <Styled.Button onClick={() => onRegisterClicked(event)}>
                         <Icon color="grey3" name="add" />
                         <span>Register</span>
@@ -423,7 +419,10 @@ const EventTable = ({
                       <Styled.Time>{`${convertTime(
                         event.startTime
                       )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                      <Styled.Date>{sliceEventDate(event.date)}</Styled.Date>
+                      <Styled.EventSlots>
+                        {event.max_volunteers - event.volunteers.length} slots
+                        available
+                      </Styled.EventSlots>
                     </Styled.EventContentRow>
                   </Styled.EventContent>
                 </Link>

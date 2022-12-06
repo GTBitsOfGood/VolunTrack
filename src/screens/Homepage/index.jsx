@@ -1,6 +1,4 @@
 import { useSession } from "next-auth/react";
-import React from "react";
-// import UserEventManager from "./User";
 import EventManager from "../Events/EventManager";
 
 const EventManagerSelector = () => {

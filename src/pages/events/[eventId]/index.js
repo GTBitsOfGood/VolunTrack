@@ -172,7 +172,7 @@ const EventInfo = () => {
     lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
     lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
   const futureorTodaysDate =
-    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
+    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 86400000 <=
     Date.parse(event.date);
   return (
     <>

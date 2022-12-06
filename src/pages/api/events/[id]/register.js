@@ -14,6 +14,7 @@ export default async function handler(req, res, next) {
       {
         name: "eventTitle",
         content: `${event.title}`,
+        date: event.date,
       },
     ];
 
