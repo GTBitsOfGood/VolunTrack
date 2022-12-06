@@ -42,11 +42,12 @@ export const createHistoryEventDeleteEvent = (eventId, userId) => {
   });
 };
 
+// TODO pass the edited/deleted user details
 export const createHistoryEventEditProfile = (userId) => {
   createHistoryEvent({
     userId,
     keyword: "MODIFIED",
-    description: `Edited profile of userId ${userId}`,
+    description: `Edited profile of user`,
   });
 };
 

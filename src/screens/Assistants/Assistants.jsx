@@ -178,33 +178,6 @@ class Assistants extends React.Component {
       }
     });
   };
-  // onNextPage = () => {
-  //   const { currentPage, users } = this.state;
-  //   if ((currentPage + 1) * PAGE_SIZE === users.length) {
-  //     this.setState({ loadingMoreUsers: true });
-  //     fetchUserManagementData(users[users.length - 1]._id).then((result) => {
-  //       if (result && result.data && result.data.users) {
-  //         this.setState({
-  //           users: [...users, ...result.data.users].filter(
-  //             (user) =>
-  //               user.role == "admin" ||
-  //               user.role == "admin-assistant" ||
-  //               user.role == "staff"
-  //           ),
-  //           currentPage: currentPage + 1,
-  //           loadingMoreUsers: false,
-  //         });
-  //       }
-  //     });
-  //   } else {
-  //     this.setState({
-  //       currentPage: currentPage + 1,
-  //     });
-  //   }
-  // };
-  // onPreviousPage = () =>
-  //   this.setState({ currentPage: this.state.currentPage - 1 });
-  // onToBeginning = () => this.setState({ currentPage: 0 });
   getUsersAtPage = () => {
     const { users, currentPage, invitedAdmins } = this.state;
     const modifiedInvitedAdmins = invitedAdmins.map((admin) => ({

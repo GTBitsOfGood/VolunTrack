@@ -413,7 +413,7 @@ export async function updateUser(
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
-  createHistoryEventEditProfile(userId);
+  if (userId) createHistoryEventEditProfile(userId);
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
   if (

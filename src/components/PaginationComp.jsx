@@ -23,34 +23,11 @@ class PaginationComp extends React.Component {
     this.state = { pageCount: 0, currentPage: 0 };
   }
 
-  handleClick(e) {
-    e.preventDefault();
-    // this.props.updatePage(index);
-  }
-
   updateCurrentPage(e, index) {
     e.preventDefault();
     this.setState({ currentPage: index });
     this.props.updatePageCallback(index);
   }
-
-  // renderPageNumbers = () => {
-  //   console.log("hi" + this.state.pagesCount);
-  //   // if (this.props.pageCount == 0) {
-  //   //   return 1;
-  //   // }
-  //   return [...Array(this.state.pageCount)].map((p, i) => {
-  //     return (
-  //       <>
-  //         <PaginationItem>
-  //           <Styled.PaginationLink onClick={(e) => this.handleClick(e, i)}>
-  //             {i + 1}
-  //           </Styled.PaginationLink>
-  //         </PaginationItem>
-  //       </>
-  //     );
-  //   });
-  // };
 
   componentDidMount = () => {
     this.setState({
