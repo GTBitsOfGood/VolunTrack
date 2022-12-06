@@ -62,6 +62,11 @@ class UserTable extends React.Component {
     });
   };
 
+  deleteUser = (id) => {
+    // deleteUser(id);
+    this.props.deleteUserCallback(id);
+  };
+
   onModalClose = () => {
     this.setState({
       userSelectedForEdit: null,
@@ -81,11 +86,9 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
     });
-    console.log(this.state.pageCount);
   };
 
   handleSubmit = (e) => {
@@ -186,8 +189,9 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
-                  </td>
-                  <td>
+                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                    {/*  <Icon color="grey3" name="delete" />*/}
+                    {/*</Styled.Button>*/}
                     <Link href={`stats/${user._id}`}>
                       <Styled.Button>
                         <svg
@@ -421,14 +425,15 @@ class UserTable extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-
-        <Pagination
-          users={users}
-          pageSize={this.state.pageSize}
-          loading={this.props.loading}
-          currentPage={this.state.currentPage}
-          updatePage={this.updatePage}
-        />
+        {users.length !== 0 && (
+          <Pagination
+            items={users}
+            pageSize={this.state.pageSize}
+            loading={this.props.loading}
+            currentPage={this.state.currentPage}
+            updatePageCallback={this.updatePage}
+          />
+        )}
       </Table.Container>
     );
   }
@@ -440,4 +445,5 @@ UserTable.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
+  deleteUserCallback: PropTypes.func.isRequired,
 };

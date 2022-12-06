@@ -123,10 +123,76 @@ const EventWaiverModal = ({
         {!isRegistered ? (
           <Styled.MainText>Complete Registration</Styled.MainText>
         ) : (
-          <Styled.MainText>View Waiver</Styled.MainText>
+          <Styled.MainText>View Waivers</Styled.MainText>
         )}
       </Styled.ModalHeader>
       <Styled.Row />
+      {hasMinor && isRegistered && (
+        <React.Fragment>
+          <Styled.Row>
+            {showGuardian && (
+              <React.Fragment>
+                <Link href={`/events/${eventId}/register`}>
+                  <Styled.Tab>
+                    <Styled.PrimaryText onClick={onGuardianClicked}>
+                      Guardian
+                    </Styled.PrimaryText>
+                    <IconSpecial
+                      width="8"
+                      height="8"
+                      viewBox="0 0 8 8"
+                      name="highlightTab"
+                    />
+                  </Styled.Tab>
+                </Link>
+                <Link href={`/events/${eventId}/register`}>
+                  <Styled.SecondaryTab>
+                    <Styled.PrimaryText onClick={onMinorsClicked}>
+                      Minors
+                    </Styled.PrimaryText>
+                    <IconSpecial
+                      width="8"
+                      height="8"
+                      viewBox="0 0 8 8"
+                      name="highlightTab"
+                    />
+                  </Styled.SecondaryTab>
+                </Link>
+              </React.Fragment>
+            )}
+            {!showGuardian && isRegistered && (
+              <React.Fragment>
+                <Link href={`/events/${eventId}/register`}>
+                  <Styled.SecondaryTab>
+                    <Styled.PrimaryText onClick={onGuardianClicked}>
+                      Guardian
+                    </Styled.PrimaryText>
+                    <IconSpecial
+                      width="8"
+                      height="8"
+                      viewBox="0 0 8 8"
+                      name="highlightTab"
+                    />
+                  </Styled.SecondaryTab>
+                </Link>
+                <Link href={`/events/${eventId}/register`}>
+                  <Styled.Tab>
+                    <Styled.PrimaryText onClick={onMinorsClicked}>
+                      Minors
+                    </Styled.PrimaryText>
+                    <IconSpecial
+                      width="8"
+                      height="8"
+                      viewBox="0 0 8 8"
+                      name="highlightTab"
+                    />
+                  </Styled.Tab>
+                </Link>
+              </React.Fragment>
+            )}
+          </Styled.Row>
+        </React.Fragment>
+      )}
       {hasMinor && !isRegistered && (
         <React.Fragment>
           <Styled.Row>

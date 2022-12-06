@@ -10,6 +10,9 @@ const {
 const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/User";
+import {
+  createHistoryEventEditProfile
+} from "./historyEvent";
 
 // Local Imports
 const { SendEmailError, EmailInUseError } = require("../errors");
@@ -256,12 +259,11 @@ export async function getCount(next) {
 export async function getCurrentUser(userId, next) {
   await dbConnect();
 
-  
-    return User.find({_id: userId})
-      .then((users) => {
-        return users;
-      })
-      .catch(next);
+  return User.find({ _id: userId })
+    .then((users) => {
+      return users;
+    })
+    .catch(next);
 }
 
 export async function searchByContent(inputText, searchType, pageSize, next) {
@@ -406,14 +408,28 @@ export async function updateUser(
   address,
   city,
   state,
-  notes
+  notes,
+  userId
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
+  createHistoryEventEditProfile(userId);
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
-  if (!phone_number || !first_name || !last_name || !date_of_birth || !zip_code || !address || !city || !state)
-    return { status: 400, message: { error: "Please include all required fields" } };
+  if (
+    !phone_number ||
+    !first_name ||
+    !last_name ||
+    !date_of_birth ||
+    !zip_code ||
+    !address ||
+    !city ||
+    !state
+  )
+    return {
+      status: 400,
+      message: { error: "Please include all required fields" },
+    };
 
   if (phone_number?.length !== 0) {
     User.updateOne(
@@ -642,12 +658,12 @@ export async function updateUserId(userDataReq, events, id, action, next) {
 }
 
 export async function deleteUserId(user, id, next) {
-  if (user && user.userDataId === id) {
-    // User is trying to remove themselves, don't let that happen...
-    return { status: 403, message: { error: "Cannot delete yourself!" } };
-  }
+  // if (user && user.userDataId === id) {
+  //   // User is trying to remove themselves, don't let that happen...
+  //   return { status: 403, message: { error: "Cannot delete yourself!" } };
+  // }
 
-  return User.findByIdAndRemove(id)
+  return User.findOneAndRemove({ _id: id })
     .then((removed) => {
       if (!removed) {
         return {

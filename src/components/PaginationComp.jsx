@@ -21,14 +21,6 @@ class PaginationComp extends React.Component {
   constructor(props) {
     super(props);
     this.state = { pageCount: 0, currentPage: 0 };
-    // const [pageCount, setPageCount] = useState(0);
-    // this.pageSize = 3;
-    // this.pagesCount = Math.ceil(this.props.users.length / this.pageSize);
-
-    // console.log(this.props.currentPages);
-    // this.state = {
-    //   currentPage: this.props.currentPages,
-    // };
   }
 
   handleClick(e) {
@@ -39,6 +31,7 @@ class PaginationComp extends React.Component {
   updateCurrentPage(e, index) {
     e.preventDefault();
     this.setState({ currentPage: index });
+    this.props.updatePageCallback(index);
   }
 
   // renderPageNumbers = () => {
@@ -60,16 +53,20 @@ class PaginationComp extends React.Component {
   // };
 
   componentDidMount = () => {
-    // console.log("componentDidMount");
-    // console.log(this.props.users.length, this.props.pageSize);
-    // console.log(Math.ceil(this.props.users.length / this.props.pageSize));
-    // console.log("--");
     this.setState({
-      pageCount: Math.ceil(this.props.users.length / this.props.pageSize),
+      pageCount: Math.ceil(this.props.items.length / this.props.pageSize),
       currentPage: this.props.currentPage,
     });
-    // console.log(this.state.pageCount);
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.items != [] && this.props.items !== prevProps.items) {
+      this.setState({
+        pageCount: Math.ceil(this.props.items.length / this.props.pageSize),
+        currentPage: this.props.currentPage,
+      });
+    }
+  }
 
   render() {
     return (
@@ -123,9 +120,9 @@ class PaginationComp extends React.Component {
 export default PaginationComp;
 
 PaginationComp.propTypes = {
-  users: PropTypes.array.isRequired,
+  items: PropTypes.array.isRequired,
   pageSize: PropTypes.number.isRequired,
   pageCount: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
-  updatePage: PropTypes.func.isRequired,
+  updatePageCallback: PropTypes.func.isRequired,
 };
