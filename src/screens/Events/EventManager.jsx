@@ -307,7 +307,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             <Styled.DateRow>
               <Styled.Date>{dateString}</Styled.Date>
               {showBack && (
-                <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+                <Styled.Back onClick={setDateBack}>View All Events</Styled.Back>
               )}
             </Styled.DateRow>
           </Styled.EventContainer>
