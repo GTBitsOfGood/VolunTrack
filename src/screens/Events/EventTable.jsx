@@ -12,6 +12,9 @@ import DateDisplayComponent from "../../components/DateDisplay";
 const Styled = {
   Container: styled.div`
     width: 48vw;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
     max-height: 100vh;
     min-height: min-content;
     overflow-y: auto;
@@ -20,7 +23,6 @@ const Styled = {
     width: 100%;
     margin: 0 0 2rem 0;
     padding: 0.75rem;
-
     display: flex;
     flex-direction: column;
 
@@ -102,6 +104,9 @@ const Styled = {
     font-size: 36px;
     font-weight: bold;
     width: 70%;
+    @media (max-width: 768px) {
+      font-size: 24px;
+    }
   `,
   LinkedText: styled.p`
     color: ${variables["primary"]};

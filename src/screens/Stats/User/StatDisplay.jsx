@@ -106,6 +106,7 @@ const Styled = {
     flex-direction: row;
     justify-content: left;
     align-items: center;
+    margin: auto;
   `,
   BoxInner: styled.div`
     display: flex;
@@ -121,6 +122,9 @@ const Styled = {
     font-size: 20px;
     text-align: center;
     padding: 3px;
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
   `,
   StatImage: styled.div``,
   Hours: styled.div`

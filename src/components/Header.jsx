@@ -60,7 +60,22 @@ const Styled = {
     background-color: #ffffff;
     height: 60px;
     font-size: larger;
+    @media (max-width: 768px) {
+      height: 70px;
+    }
   `,
+
+  MobileBackground: styled.div`
+    @media (max-width: 768px) {
+      background-color: #ffffff;
+      position: absolute;
+      display: flex;
+      z-index: 1000;
+      padding: 10px;
+      left: 0;
+      right: 0;
+      top: 70px
+      `,
   NavItem: styled(NavItem)`
     margin-left: 0.3rem;
     margin-right: 0.3rem;
@@ -88,6 +103,10 @@ const Styled = {
     display: flex;
     position: relative;
     align-items: center;
+    @media (max-width: 768px) {
+      margin-left: 0rem;
+    }
+
     margin-left: 2rem;
     margin-right: 3rem;
 
@@ -107,6 +126,9 @@ const Styled = {
     font-size: 90%;
     font-weight: 550;
     margin-right: 2rem;
+    @media (max-width: 768px) {
+      margin-right: 1rem;
+    }
     text-decoration: none;
     :hover {
       color: ${variables["dark"]};
@@ -139,6 +161,9 @@ const Styled = {
     border-radius: 50%;
     width: 34px;
     height: 34px;
+    @media (max-width: 768px) {
+      display: none;
+    }
   `,
   ImgContainer: styled.div`
     display: flex;
@@ -146,6 +171,9 @@ const Styled = {
     align-items: center;
     padding-right: 0px;
     padding-left: 10px;
+    @media (max-width: 768px) {
+      width: 48px;
+    }\`
   `,
   TxtContainer: styled.div`
     display: flex;
@@ -166,6 +194,10 @@ const Styled = {
     list-style: none;
     padding-left: 80px;
     margin-left: 2rem;
+    @media (max-width: 768px) {
+      margin-left: 0rem;
+      padding-left: 0px;
+    }
   `,
 };
 
@@ -241,135 +273,142 @@ const Header = () => {
 
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
-          <Styled.FlexContainer className="navbar-nav">
-            <Styled.PageSwitch currPathName={router.pathname}>
-              {/*{user.role === "admin" && (*/}
-              {/*  <Link*/}
-              {/*    href="/applicant-viewer"*/}
-              {/*    selected={currPageMatches("/applicant-viewer")}*/}
-              {/*  >*/}
-              {/*    <Styled.PageLink>Applicant Viewer</Styled.PageLink>*/}
-              {/*  </Link>*/}
-              {/*)}*/}
-              <Link href="/home">
-                {currPageMatches("/home") ? (
-                  <SelectedPageLink>Home</SelectedPageLink>
-                ) : (
-                  <Styled.PageLink>Home</Styled.PageLink>
-                )}
-              </Link>
-              {user.role === "admin" && (
-                <Link
-                  href="/user-manager"
-                  selected={currPageMatches("/user-manager")}
-                >
-                  {currPageMatches("/user-manager") ? (
-                    <SelectedPageLink>Volunteers</SelectedPageLink>
+          <Styled.MobileBackground>
+            <Styled.FlexContainer className="navbar-nav">
+              <Styled.PageSwitch currPathName={router.pathname}>
+                {/*{user.role === "admin" && (*/}
+                {/*  <Link*/}
+                {/*    href="/applicant-viewer"*/}
+                {/*    selected={currPageMatches("/applicant-viewer")}*/}
+                {/*  >*/}
+                {/*    <Styled.PageLink>Applicant Viewer</Styled.PageLink>*/}
+                {/*  </Link>*/}
+                {/*)}*/}
+                <Link href="/home">
+                  {currPageMatches("/home") ? (
+                    <SelectedPageLink>Home</SelectedPageLink>
                   ) : (
-                    <Styled.PageLink>Volunteers</Styled.PageLink>
+                    <Styled.PageLink>Home</Styled.PageLink>
                   )}
                 </Link>
-              )}
-              <Link href="/events" selected={currPageMatches("/events")}>
-                {currPageMatches("/events") ? (
-                  <SelectedPageLink>Events</SelectedPageLink>
-                ) : (
-                  <Styled.PageLink>Events</Styled.PageLink>
+                {user.role === "admin" && (
+                  <Link
+                    href="/user-manager"
+                    selected={currPageMatches("/user-manager")}
+                  >
+                    {currPageMatches("/user-manager") ? (
+                      <SelectedPageLink>Volunteers</SelectedPageLink>
+                    ) : (
+                      <Styled.PageLink>Volunteers</Styled.PageLink>
+                    )}
+                  </Link>
                 )}
-              </Link>
-              {user.role === "volunteer" && (
-                <Link onClick={goToStats} href="/stats">
-                  {currPageMatches("/stats") ? (
-                    <SelectedPageLink>Participation History</SelectedPageLink>
+                <Link href="/events" selected={currPageMatches("/events")}>
+                  {currPageMatches("/events") ? (
+                    <SelectedPageLink>Events</SelectedPageLink>
                   ) : (
-                    <Styled.PageLink>Participation History</Styled.PageLink>
+                    <Styled.PageLink>Events</Styled.PageLink>
                   )}
                 </Link>
-              )}
-              {user.role === "admin" && (
-                <Styled.Dropdown nav inNavbar className="navbar-nav">
-                  <Styled.Toggle color="white">
-                    <Styled.UserContainer>
+                {user.role === "volunteer" && (
+                  <Link onClick={goToStats} href="/stats">
+                    {currPageMatches("/stats") ? (
+                      <SelectedPageLink>Participation History</SelectedPageLink>
+                    ) : (
+                      <Styled.PageLink>Participation History</Styled.PageLink>
+                    )}
+                  </Link>
+                )}
+                {user.role === "admin" && (
+                  <Styled.Dropdown nav inNavbar className="navbar-nav">
+                    <Styled.Toggle color="white">
+                      <Styled.UserContainer>
+                        <Styled.TxtContainer>
+                          {currPageMatches("/assistants") ||
+                          currPageMatches("/manage-waivers") ? (
+                            <SelectedPageLink style={{ "font-size": "108%" }}>
+                              Settings
+                            </SelectedPageLink>
+                          ) : (
+                            <Styled.PageLink style={{ "font-size": "108%" }}>
+                              Settings
+                            </Styled.PageLink>
+                          )}
+                        </Styled.TxtContainer>
+                        <Styled.ImgContainer>
+                          <Icon name="dropdown-arrow" size="1.5rem" />
+                        </Styled.ImgContainer>
+                      </Styled.UserContainer>
+                    </Styled.Toggle>
+
+                    <DropdownMenu
+                      style={{
+                        width: "100%",
+                        marginTop: "0.6rem",
+                        border: "none",
+                      }}
+                    >
+                      <DropdownItem
+                        onClick={goToManageAdmins}
+                        href="/assistants"
+                      >
+                        <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
+                      </DropdownItem>
+                      <DropdownItem
+                        onClick={goToManageWaivers}
+                        href="/manage-waivers"
+                      >
+                        <Styled.DropdownItem>
+                          Manage Waivers
+                        </Styled.DropdownItem>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Styled.Dropdown>
+                )}
+              </Styled.PageSwitch>
+              <Styled.Dropdown nav inNavbar className="navbar-nav">
+                <Styled.Toggle color="white">
+                  <Styled.UserContainer>
+                    <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
+                      <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
+                        <Styled.UserIcon
+                          style={{ marginRight: "20px" }}
+                          src={user.imageUrl ?? "/images/test.jpg"}
+                          alt="icon"
+                        />
+                      </Styled.ImgContainer>
                       <Styled.TxtContainer>
-                        {currPageMatches("/assistants") ||
-                        currPageMatches("/manage-waivers") ? (
-                          <SelectedPageLink style={{ "font-size": "108%" }}>
-                            Settings
-                          </SelectedPageLink>
-                        ) : (
-                          <Styled.PageLink style={{ "font-size": "108%" }}>
-                            Settings
-                          </Styled.PageLink>
-                        )}
+                        <p
+                          style={{ margin: "0px" }}
+                        >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                        <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+                          user.role ?? ""
+                        )}`}</p>
                       </Styled.TxtContainer>
-                      <Styled.ImgContainer>
+                      <Styled.ImgContainer style={{ paddingRight: "0px" }}>
                         <Icon name="dropdown-arrow" size="1.5rem" />
                       </Styled.ImgContainer>
                     </Styled.UserContainer>
-                  </Styled.Toggle>
-
-                  <DropdownMenu
-                    style={{
-                      width: "100%",
-                      marginTop: "0.6rem",
-                      border: "none",
-                    }}
-                  >
-                    <DropdownItem onClick={goToManageAdmins} href="/assistants">
-                      <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={goToManageWaivers}
-                      href="/manage-waivers"
-                    >
-                      <Styled.DropdownItem>Manage Waivers</Styled.DropdownItem>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Styled.Dropdown>
-              )}
-            </Styled.PageSwitch>
-            <Styled.Dropdown nav inNavbar className="navbar-nav">
-              <Styled.Toggle color="white">
-                <Styled.UserContainer>
-                  <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
-                    <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
-                      <Styled.UserIcon
-                        style={{ marginRight: "20px" }}
-                        src={user.imageUrl ?? "/images/test.jpg"}
-                        alt="icon"
-                      />
-                    </Styled.ImgContainer>
-                    <Styled.TxtContainer>
-                      <p
-                        style={{ margin: "0px" }}
-                      >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                      <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
-                        user.role ?? ""
-                      )}`}</p>
-                    </Styled.TxtContainer>
-                    <Styled.ImgContainer style={{ paddingRight: "0px" }}>
-                      <Icon name="dropdown-arrow" size="1.5rem" />
-                    </Styled.ImgContainer>
                   </Styled.UserContainer>
-                </Styled.UserContainer>
-              </Styled.Toggle>
+                </Styled.Toggle>
 
-              <DropdownMenu style={{ width: "100%" }}>
-                <DropdownItem onClick={goToProfile} href="/profile">
-                  <Styled.DropdownItem>Profile</Styled.DropdownItem>
-                </DropdownItem>
-                {user.role === "admin" && (
-                  <DropdownItem onClick={goToHistory} href="/history">
-                    <Styled.DropdownItem>History</Styled.DropdownItem>
+                <DropdownMenu style={{ width: "100%" }}>
+                  <DropdownItem onClick={goToProfile} href="/profile">
+                    <Styled.DropdownItem>Profile</Styled.DropdownItem>
                   </DropdownItem>
-                )}
-                <DropdownItem onClick={logout} href="/">
-                  <Styled.DropdownItem>Sign Out</Styled.DropdownItem>
-                </DropdownItem>
-              </DropdownMenu>
-            </Styled.Dropdown>
-          </Styled.FlexContainer>
-          <Nav navbar></Nav>
+                  {user.role === "admin" && (
+                    <DropdownItem onClick={goToHistory} href="/history">
+                      <Styled.DropdownItem>History</Styled.DropdownItem>
+                    </DropdownItem>
+                  )}
+                  <DropdownItem onClick={logout} href="/">
+                    <Styled.DropdownItem>Sign Out</Styled.DropdownItem>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Styled.Dropdown>
+            </Styled.FlexContainer>
+            <Nav navbar></Nav>
+          </Styled.MobileBackground>
         </Collapse>
       </Container>
     </Styled.Navbar>

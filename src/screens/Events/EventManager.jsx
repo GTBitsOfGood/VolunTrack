@@ -68,11 +68,17 @@ const Styled = {
     margin-left: 10vw;
     display: flex;
     flex-direction: column;
+    @media (max-width: 768px) {
+      display: none;
+    }
   `,
   Right: styled.div`
     display: flex;
     flex-direction: column;
     margin-left: 3vw;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   `,
   ButtonRow: styled.div`
     display: flex;
@@ -104,6 +110,7 @@ const Styled = {
     flex-direction: column;
     margin: 0 auto;
     align-items: center;
+    row-gap: 10px;
   `,
   EventFilter: styled.div`
     display: flex;
@@ -263,7 +270,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
       if (
-          // hide past events for volunteers
+        // hide past events for volunteers
         new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
         (!events[i].isPrivate || events[i].volunteers.includes(user._id))
       ) {
@@ -338,47 +345,43 @@ const EventManager = ({ user, role, isHomePage }) => {
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
           )}
-          <Styled.Content>
-            {events.length === 0 ? (
-              <Styled.Events>No Events Scheduled on This Date</Styled.Events>
-            ) : (
-              <EventTable
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filterOn
-                      ? filteredEvents
-                      : events
-                    : filterEvents(events, user)
-                }
-                onEditClicked={onEditClicked}
-                onDeleteClicked={onDeleteClicked}
-                onRegisterClicked={goToRegistrationPage}
-                onUnregister={onUnregister}
-                user={user}
-                role={role}
-                isHomePage={isHomePage}
-              />
-            )}
-            <EventCreateModal
-              open={showCreateModal}
-              toggle={toggleCreateModal}
+          {events.length === 0 ? (
+            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+          ) : (
+            <EventTable
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filterOn
+                    ? filteredEvents
+                    : events
+                  : filterEvents(events, user)
+              }
+              onEditClicked={onEditClicked}
+              onDeleteClicked={onDeleteClicked}
+              onRegisterClicked={goToRegistrationPage}
+              onUnregister={onUnregister}
+              user={user}
+              role={role}
+              isHomePage={isHomePage}
             />
-            <EventEditModal
-              open={showEditModal}
-              toggle={toggleEditModal}
-              event={currEvent}
-            />
-            <EventDeleteModal
-              open={showDeleteModal}
-              toggle={toggleDeleteModal}
-              event={currEvent}
-            />
-          </Styled.Content>
+          )}
+          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
+          <EventEditModal
+            open={showEditModal}
+            toggle={toggleEditModal}
+            event={currEvent}
+          />
+          <EventDeleteModal
+            open={showDeleteModal}
+            toggle={toggleDeleteModal}
+            event={currEvent}
+          />
         </Styled.Right>
       )}
       {isHomePage && (
         <Styled.HomePage>
+          {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
           <StatDisplay onlyAchievements={true} />
           <EventTable
             dateString={dateString}
