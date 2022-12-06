@@ -199,6 +199,11 @@ const Header = () => {
     router.push("/history");
   };
 
+  const gotToSummary = (e) => {
+    e.preventDefault();
+    router.push("/rangeStats");
+  };
+
   const goToStats = (e) => {
     e.preventDefault();
     router.push("/stats");
@@ -287,18 +292,6 @@ const Header = () => {
                 </Link>
               )}
               {user.role === "admin" && (
-                <Link
-                  href="/rangeStats"
-                  selected={currPageMatches("/rangeStats")}
-                >
-                  {currPageMatches("/rangeStats") ? (
-                    <SelectedPageLink>Stats</SelectedPageLink>
-                  ) : (
-                    <Styled.PageLink>Stats</Styled.PageLink>
-                  )}
-                </Link>
-              )}
-              {user.role === "admin" && (
                 <Styled.Dropdown nav inNavbar className="navbar-nav">
                   <Styled.Toggle color="white">
                     <Styled.UserContainer>
@@ -372,6 +365,9 @@ const Header = () => {
                 </DropdownItem>
                 <DropdownItem onClick={goToHistory} href="/history">
                   <Styled.DropdownItem>History</Styled.DropdownItem>
+                </DropdownItem>
+                <DropdownItem onClick={gotToSummary} href="/history">
+                  <Styled.DropdownItem>Event Summaries</Styled.DropdownItem>
                 </DropdownItem>
                 <DropdownItem onClick={logout} href="/">
                   <Styled.DropdownItem>Logout</Styled.DropdownItem>

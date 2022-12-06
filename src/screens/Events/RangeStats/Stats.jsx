@@ -248,9 +248,9 @@ const Stats = () => {
         <Col>Total Attendance: {attend}</Col>
         <Col>Total Hours Worked: {hours}</Col>
       </Row>
-      <Styled.marginTable>
-        <EventTable events={events} isVolunteer={false} />
-      </Styled.marginTable>
+      {/*<Styled.marginTable>*/}
+      {/*  <EventTable events={events} isVolunteer={false} />*/}
+      {/*</Styled.marginTable>*/}
     </Styled.Container>
   );
 };
