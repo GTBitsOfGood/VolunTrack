@@ -114,7 +114,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const onSendConfirmationEmailCheckbox = () => {
-    setSendConfirmationEmail(!onSendConfirmationEmailCheckbox);
+    setSendConfirmationEmail(!sendConfirmationEmail);
   };
 
   const onCourtRequiredHoursCheckbox = () => {

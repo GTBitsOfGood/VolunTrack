@@ -80,7 +80,7 @@ const EventCreateModal = ({ open, toggle }) => {
                   color: currentActiveTab === "1" ? "#7F1C3B" : "black",
                 }}
               >
-                Standard Event
+                Public Event
               </p>
             </Styled.HeaderText>
           </NavLink>
@@ -101,7 +101,7 @@ const EventCreateModal = ({ open, toggle }) => {
                   color: currentActiveTab === "2" ? "#7F1C3B" : "black",
                 }}
               >
-                Group Event
+                Private Group Event
               </p>
             </Styled.HeaderText>
           </NavLink>

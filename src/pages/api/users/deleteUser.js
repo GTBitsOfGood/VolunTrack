@@ -5,7 +5,6 @@ export default async function handler(req, res) {
     console.log("Delete user POST");
   }
 
-  console.log(req.query.id);
   let result = await deleteUserId(req.query.id);
 
   if (result.status === 200) {

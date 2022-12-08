@@ -6,7 +6,7 @@ const EventManagerSelector = () => {
   const {
     data: { user },
   } = useSession();
-  return <EventManager user={user} role={user.role} isHomePage={false} />
+  return <EventManager user={user} role={user.role} isHomePage={false} />;
 };
 
 export default EventManagerSelector;

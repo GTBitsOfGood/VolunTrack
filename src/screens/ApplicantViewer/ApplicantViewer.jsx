@@ -114,7 +114,6 @@ class AdminDash extends Component {
     const lastPaginationId = applicants.length
       ? applicants[applicants.length - 1]._id
       : 0;
-    console.log(lastPaginationId);
 
     fetchMoreApplicants(lastPaginationId).then((res) =>
       this.setState({

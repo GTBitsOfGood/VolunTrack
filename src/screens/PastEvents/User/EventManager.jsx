@@ -200,7 +200,7 @@ const EventManager = ({ user }) => {
           <Styled.Events>Events</Styled.Events>
           <Styled.DateRow>
             <Styled.Date>{dateString}</Styled.Date>
-            <Styled.Back>Back to Today</Styled.Back>
+            <Styled.Back>View All Events</Styled.Back>
           </Styled.DateRow>
         </Styled.EventContainer>
         <Styled.Bottom>
