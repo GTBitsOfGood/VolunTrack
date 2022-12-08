@@ -19,6 +19,8 @@ import {
 
 import { useSession } from "next-auth/react";
 import { registerForEvent, updateEvent } from "./User/eventHelpers";
+import StatDisplay from "../Stats/User/StatDisplay";
+import router from "next/router";
 
 const isSameDay = (a) => (b) => {
   return differenceInCalendarDays(a, b) === 0;
@@ -66,11 +68,17 @@ const Styled = {
     margin-left: 10vw;
     display: flex;
     flex-direction: column;
+    @media (max-width: 768px) {
+      display: none;
+    }
   `,
   Right: styled.div`
     display: flex;
     flex-direction: column;
     margin-left: 3vw;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   `,
   ButtonRow: styled.div`
     display: flex;
@@ -94,14 +102,15 @@ const Styled = {
     cursor: pointer;
   `,
   HomePage: styled.div`
-    width: 54%;
+    width: 100%;
     height: 100%;
     background: ${(props) => props.theme.grey9};
     padding-top: 1rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin: 0 auto;
-    align-items: start;
+    align-items: center;
+    row-gap: 10px;
   `,
   EventFilter: styled.div`
     display: flex;
@@ -174,15 +183,10 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
 
-  const onRegister = async (event) => {
-    const changedEvent = {
-      ...event,
-      volunteers: event.volunteers.concat(user._id),
-    }; // adds userId to event
-    const updatedEvent = await registerForEvent({ user, event: changedEvent }); // updates event in backend
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e))); // set event state to reflect new event
-
-    onRefresh();
+  const goToRegistrationPage = async (event) => {
+    if (event?.eventId) {
+      await router.push(`/events/${event.eventId}/register`);
+    }
   };
 
   const onUnregister = async (event) => {
@@ -265,7 +269,11 @@ const EventManager = ({ user, role, isHomePage }) => {
   const filterEvents = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
-      if (events[i].isPrivate || events[i].volunteers.includes(user._id)) {
+      if (
+        // hide past events for volunteers
+        new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
+        (!events[i].isPrivate || events[i].volunteers.includes(user._id))
+      ) {
         arr.push(events[i]);
       }
     }
@@ -299,7 +307,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             <Styled.DateRow>
               <Styled.Date>{dateString}</Styled.Date>
               {showBack && (
-                <Styled.Back onClick={setDateBack}>Back to Today</Styled.Back>
+                <Styled.Back onClick={setDateBack}>View All Events</Styled.Back>
               )}
             </Styled.DateRow>
           </Styled.EventContainer>
@@ -337,47 +345,44 @@ const EventManager = ({ user, role, isHomePage }) => {
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
           )}
-          <Styled.Content>
-            {events.length === 0 ? (
-              <Styled.Events>No Events Scheduled on This Date</Styled.Events>
-            ) : (
-              <EventTable
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filterOn
-                      ? filteredEvents
-                      : events
-                    : filterEvents(events, user)
-                }
-                onEditClicked={onEditClicked}
-                onDeleteClicked={onDeleteClicked}
-                onRegisterClicked={onRegister}
-                onUnregister={onUnregister}
-                user={user}
-                role={role}
-                isHomePage={isHomePage}
-              />
-            )}
-            <EventCreateModal
-              open={showCreateModal}
-              toggle={toggleCreateModal}
+          {events.length === 0 ? (
+            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+          ) : (
+            <EventTable
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filterOn
+                    ? filteredEvents
+                    : events
+                  : filterEvents(events, user)
+              }
+              onEditClicked={onEditClicked}
+              onDeleteClicked={onDeleteClicked}
+              onRegisterClicked={goToRegistrationPage}
+              onUnregister={onUnregister}
+              user={user}
+              role={role}
+              isHomePage={isHomePage}
             />
-            <EventEditModal
-              open={showEditModal}
-              toggle={toggleEditModal}
-              event={currEvent}
-            />
-            <EventDeleteModal
-              open={showDeleteModal}
-              toggle={toggleDeleteModal}
-              event={currEvent}
-            />
-          </Styled.Content>
+          )}
+          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
+          <EventEditModal
+            open={showEditModal}
+            toggle={toggleEditModal}
+            event={currEvent}
+          />
+          <EventDeleteModal
+            open={showDeleteModal}
+            toggle={toggleDeleteModal}
+            event={currEvent}
+          />
         </Styled.Right>
       )}
       {isHomePage && (
         <Styled.HomePage>
+          {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
+          <StatDisplay onlyAchievements={true} />
           <EventTable
             dateString={dateString}
             events={
@@ -387,7 +392,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             }
             onEditClicked={onEditClicked}
             onDeleteClicked={onDeleteClicked}
-            onRegisterClicked={onRegister}
+            onRegisterClicked={goToRegistrationPage}
             onUnregister={onUnregister}
             user={user}
             role={role}

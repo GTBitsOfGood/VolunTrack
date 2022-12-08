@@ -54,7 +54,6 @@ const Volunteer = ({
   isCheckedIn: boolean;
   isEnded: boolean;
 }): JSX.Element => {
-  console.log(isEnded);
   return (
     <>
       {isEnded ? (

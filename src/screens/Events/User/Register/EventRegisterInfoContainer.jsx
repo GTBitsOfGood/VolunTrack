@@ -77,9 +77,6 @@ const Styled = {
 };
 
 const convertTime = (time) => {
-  console.log(time);
-  console.log(typeof time);
-  // console.log(this.props.eventId);
   let [hour, min] = time.split(":");
   let hours = parseInt(hour);
   let suffix = time[-2];
@@ -93,7 +90,6 @@ const convertTime = (time) => {
 const EventRegisterInfoContainer = ({ event, user, eventId }) => {
   const { email = "", phone_number = "" } = user?.bio ?? {};
 
-  console.log(eventId);
   if (!event || !event.date) {
     return <div />;
   }
