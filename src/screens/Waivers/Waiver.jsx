@@ -30,6 +30,7 @@ const WaiverHeader = styled.h3`
 `;
 const WaiverLink = styled.a`
   margin: 0;
+  text-decoration: underline;
 `;
 const ReplaceButton = styled(Button)`
   margin: 0 2rem 0 auto;
@@ -145,7 +146,11 @@ const Waiver = ({ waiver, updateWaivers }) => {
                 <WaiverUploadInputContainer>
                   <ReplaceFileInput
                     type="file"
-                    onChange={(e) => setSelectedFile(e.target.files[0])}
+                    onChange={(e) => {
+                      e.target.files[0].type === "application/pdf"
+                        ? setSelectedFile(e.target.files[0])
+                        : displayErrorMessage();
+                    }}
                   />
                   <CancelButton onClick={handleUploadCancel}>
                     Cancel
@@ -174,7 +179,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
                 href={waiverFilePath.replace("./public/", "")}
                 target="_blank"
               >
-                File: {waiverName}
+                View {waiverType} waiver
               </WaiverLink>
             )}
           </WaiverTextContainer>
@@ -183,7 +188,7 @@ const Waiver = ({ waiver, updateWaivers }) => {
               <ReplaceFileInput
                 type="file"
                 onChange={(e) => {
-                  e.target.files[0].type == "application/pdf"
+                  e.target.files[0].type === "application/pdf"
                     ? setSelectedFile(e.target.files[0])
                     : displayErrorMessage();
                 }}

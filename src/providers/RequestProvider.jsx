@@ -100,13 +100,15 @@ class RequestProvider extends React.Component {
             });
             this.delayedFall();
           },
-          failed: (text) =>
+          failed: (text) => {
             this.setState({
               isLoading: false,
               success: false,
               failed: true,
               text: text,
-            }),
+            });
+            this.delayedFall();
+          },
         }}
       >
         {this.props.children}
