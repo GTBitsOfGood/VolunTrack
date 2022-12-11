@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getAttendanceForEvent,
   fetchEventsById,
@@ -79,7 +79,7 @@ const EventStatistics = () => {
 
   useEffect(() => {
     onRefresh();
-  }, [attendanceStats]);
+  }, []);
 
   const hours = attendanceStats.reduce((prev, curr) => prev + curr.hours, 0.0);
   const totalVolunteers = [

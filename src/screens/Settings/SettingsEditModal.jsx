@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../sharedStyles/formStyles";
+import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import { eventValidator } from "./settingsHelper";
+import React from "react";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
+import * as SForm from "../sharedStyles/formStyles";
+import { eventValidator } from "./settingsHelper";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -37,7 +37,6 @@ const SettingsEditModal = ({ open, toggle }) => {
           phoneNumber: "",
           dateOfBirth: "",
           zipCode: "",
-          totalHours: "",
           address: "",
           city: "",
           state: "",
@@ -51,7 +50,6 @@ const SettingsEditModal = ({ open, toggle }) => {
             values.phoneNumber,
             values.dateOfBirth,
             values.zipCode,
-            values.totalHours,
             values.address,
             values.city,
             values.state

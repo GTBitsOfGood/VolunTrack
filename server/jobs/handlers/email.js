@@ -1,4 +1,4 @@
-import { sendEventEmail } from "../../../src/utils/email.ts";
+import { sendEventEmail } from "../../../src/utils/mailchimp-email.ts";
 import { getEventByID } from "../../actions/events";
 
 // Handlers for email job definitions

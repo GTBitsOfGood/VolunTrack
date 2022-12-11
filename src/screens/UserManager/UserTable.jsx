@@ -1,24 +1,22 @@
+import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Loading from "../../components/Loading";
-import * as Form from "../sharedStyles/formStyles";
-import * as Table from "../sharedStyles/tableStyles";
-import { Container, Row, Col } from "reactstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import Link from "next/link";
-
-// const keyToValue = (key) => {
-//   key = key.replace(/_/g, " ");
-//   key = key
-//     .toLowerCase()
-//     .split(" ")
-//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-//     .join(" ");
-//   return key;
-// };
+import * as Form from "../sharedStyles/formStyles";
+import * as Table from "../sharedStyles/tableStyles";
 
 const Styled = {
   Button: styled(Button)`
@@ -48,11 +46,9 @@ class UserTable extends React.Component {
       phone_number: 0,
       date_of_birth: 0,
       zip_code: 0,
-      total_hours: 0,
       address: "",
       city: "",
       state: "",
-      court_hours: "",
       notes: "",
       currentPage: 0,
       pageSize: 10,
@@ -64,6 +60,11 @@ class UserTable extends React.Component {
     this.setState({
       userSelectedForEdit: userToEdit,
     });
+  };
+
+  deleteUser = (id) => {
+    // deleteUser(id);
+    this.props.deleteUserCallback(id);
   };
 
   onModalClose = () => {
@@ -85,16 +86,15 @@ class UserTable extends React.Component {
   };
 
   componentDidMount = () => {
-    console.log(this.props.users.length);
     this.setState({
       pageCount: this.getPageCount(),
     });
-    console.log(this.state.pageCount);
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
-    let user = {
+    let newUser = {
+      _id: this.state.userSelectedForEdit._id,
       name:
         (this.state.userSelectedForEdit && this.state.first_name
           ? this.state.first_name
@@ -124,10 +124,6 @@ class UserTable extends React.Component {
         this.state.userSelectedForEdit && this.state.zip_code
           ? this.state.zip_code
           : this.state.userSelectedForEdit.zip_code,
-      total_hours:
-        this.state.userSelectedForEdit && this.state.total_hours
-          ? this.state.total_hours
-          : this.state.userSelectedForEdit.total_hours,
       address:
         this.state.userSelectedForEdit && this.state.address
           ? this.state.address
@@ -140,17 +136,13 @@ class UserTable extends React.Component {
         this.state.userSelectedForEdit && this.state.state
           ? this.state.state
           : this.state.userSelectedForEdit.state,
-      court_hours:
-        this.state.userSelectedForEdit && this.state.court_hours
-          ? this.state.court_hours
-          : this.state.userSelectedForEdit.court_hours,
       notes:
         this.state.userSelectedForEdit && this.state.notes
           ? this.state.notes
           : this.state.userSelectedForEdit.notes,
     };
     this.onModalClose();
-    this.props.editUserCallback(user);
+    this.props.editUserCallback(newUser);
   };
 
   render() {
@@ -197,10 +189,47 @@ class UserTable extends React.Component {
                     >
                       <Icon color="grey3" name="create" />
                     </Styled.Button>
-                  </td>
-                  <td>
+                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                    {/*  <Icon color="grey3" name="delete" />*/}
+                    {/*</Styled.Button>*/}
                     <Link href={`stats/${user._id}`}>
-                      <Styled.Button>Stats</Styled.Button>
+                      <Styled.Button>
+                        <svg
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g clipPath="url(#clip0_2204_28336)">
+                            <path
+                              d="M5.04892 17.99L10.2446 12.7856L13.7084 16.2494L21.0689 7.97098L19.848 6.75L13.7084 13.6516L10.2446 10.1878L3.75 16.6911L5.04892 17.99Z"
+                              fill="#960034"
+                            />
+                            <line
+                              x1="0.975"
+                              y1="1"
+                              x2="0.975"
+                              y2="22.5"
+                              stroke="#960034"
+                              strokeWidth="1.7"
+                            />
+                            <line
+                              x1="0.25"
+                              y1="21.65"
+                              x2="22.75"
+                              y2="21.65"
+                              stroke="#960034"
+                              strokeWidth="1.7"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_2204_28336">
+                              <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </Styled.Button>
                     </Link>
                   </td>
                 </Table.Row>
@@ -316,21 +345,6 @@ class UserTable extends React.Component {
                         }
                       />
                     </Col>
-                    <Col>
-                      <Form.Label>Total Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.total_hours
-                            : ""
-                        }
-                        type="text"
-                        name="Total Hours"
-                        onChange={(evt) =>
-                          this.setState({ total_hours: evt.target.value })
-                        }
-                      />
-                    </Col>
                   </Row>
                   <Row>
                     <Col>
@@ -381,21 +395,6 @@ class UserTable extends React.Component {
                   </Row>
                   <Row>
                     <Col>
-                      <Form.Label>Court Required Hours</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.courtH
-                            : ""
-                        }
-                        type="text"
-                        name="Court Hours"
-                        onChange={(evt) =>
-                          this.setState({ court_hours: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
                       <Form.Label>Notes</Form.Label>
                       <Form.Input
                         defaultValue={
@@ -407,7 +406,7 @@ class UserTable extends React.Component {
                         onChange={(evt) =>
                           this.setState({ notes: evt.target.value })
                         }
-                      ></Form.Input>
+                      />
                     </Col>
                   </Row>
                 </Form.FormGroup>
@@ -426,14 +425,15 @@ class UserTable extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-
-        <Pagination
-          users={users}
-          pageSize={this.state.pageSize}
-          loading={this.props.loading}
-          currentPage={this.state.currentPage}
-          updatePage={this.updatePage}
-        />
+        {users.length !== 0 && (
+          <Pagination
+            items={users}
+            pageSize={this.state.pageSize}
+            loading={this.props.loading}
+            currentPage={this.state.currentPage}
+            updatePageCallback={this.updatePage}
+          />
+        )}
       </Table.Container>
     );
   }
@@ -445,4 +445,5 @@ UserTable.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
+  deleteUserCallback: PropTypes.func.isRequired,
 };

@@ -4,11 +4,13 @@ import React from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import {
+  deleteUser,
   fetchUserCount,
   fetchUserManagementData,
   updateUser,
 } from "../../actions/queries";
 import UserTable from "./UserTable";
+import { CSVLink } from "react-csv";
 
 // const PAGE_SIZE = 3;
 
@@ -73,13 +75,11 @@ const Styled = {
     line-height: 19px;
     margin-top: 0.3rem;
   `,
-  Text: styled.div`
+  Text: styled.p`
     color: #000000;
-    width: 184px;
     font-style: normal;
     font-weight: bold;
     font-size: 32px;
-    line-height: 41px;
   `,
   Search: styled.input`
     height: 2rem;
@@ -90,6 +90,17 @@ const Styled = {
     font-size: 1rem;
     border: 1px solid lightgray;
     border-radius: 0.5rem;
+  `,
+  HeaderTitle: styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  `,
+  CSVLink: styled(CSVLink)`
+    position: relative;
+    height: 2.5rem;
+    right: 20%;
+    text-align: center;
   `,
   TopMenu: styled.div`
     display: flex;
@@ -147,49 +158,9 @@ class UserManager extends React.Component {
       });
     }
   };
-  onNextPage = () => {
-    const { currentPage, users } = this.state;
-    if ((currentPage + 1) * PAGE_SIZE === users.length) {
-      this.setState({ loadingMoreUsers: true });
-      fetchUserManagementData(users[users.length - 1]._id).then((result) => {
-        if (result && result.data && result.data.users) {
-          this.setState({
-            users: [...users, ...result.data.users],
-            currentPage: currentPage + 1,
-            loadingMoreUsers: false,
-          });
-        }
-      });
-    } else {
-      this.setState({
-        currentPage: currentPage + 1,
-      });
-    }
-  };
-  onPreviousPage = () =>
-    this.setState({ currentPage: this.state.currentPage - 1 });
-  onToBeginning = () => this.setState({ currentPage: 0 });
-  getUsersAtPage = () => {
-    const { users, currentPage } = this.state;
-    // const start = currentPage * PAGE_SIZE;
-    return users; //.slice(start, start + PAGE_SIZE);
-  };
-  onChangeSearch = (record) => {
-    const { users, currentPage } = this.state;
-    fetchUserManagementData().then((result) => {
-      this.setState({
-        users: result.data.users.filter((user) =>
-          user.name.toLowerCase().includes(record.toLowerCase())
-        ),
-      });
-    });
-  };
-  atEnd = () =>
-    (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
+
   onEditUser = (updatedUser) => {
     /** code to update users in state at that specific index */
-    console.log("refresh");
-    console.log(updatedUser);
     updateUser(
       updatedUser.email,
       updatedUser.first_name,
@@ -197,12 +168,11 @@ class UserManager extends React.Component {
       updatedUser.phone_number,
       updatedUser.date_of_birth,
       updatedUser.zip_code,
-      updatedUser.total_hours,
       updatedUser.address,
       updatedUser.city,
       updatedUser.state,
-      updatedUser.court_hours,
-      updatedUser.notes
+      updatedUser.notes,
+      this.props.user._id
     );
 
     let updatedUsers = this.state.users.map((user) => {
@@ -218,6 +188,23 @@ class UserManager extends React.Component {
 
     // this.onRefresh();
   };
+  onDeleteUser = (userId) => {
+    deleteUser(userId);
+
+    let updatedUsers = [];
+
+    this.state.users.map((user) => {
+      if (user._id !== userId) {
+        updatedUsers.push(user);
+      }
+    });
+
+    this.setState({
+      users: updatedUsers,
+      currentPage: 0,
+      loadingMoreUsers: false,
+    });
+  };
   filteredAndSortedVolunteers = () => {
     const filterArray = this.state.users.filter(
       (user) =>
@@ -232,7 +219,17 @@ class UserManager extends React.Component {
     const { currentPage, loadingMoreUsers, searchValue } = this.state;
     return (
       <Styled.Container>
-        <Styled.Text>Volunteers</Styled.Text>
+        <Styled.HeaderTitle>
+          <Styled.Text>Volunteers</Styled.Text>
+          <Styled.CSVLink
+            data={this.state.users}
+            filename={"volunteer-list.csv"}
+            className="btn btn-primary"
+            target="_blank"
+          >
+            Download to CSV
+          </Styled.CSVLink>
+        </Styled.HeaderTitle>
         <Styled.TopMenu>
           <Styled.Search
             placeholder="Search Name"
@@ -242,7 +239,7 @@ class UserManager extends React.Component {
             }
           />
           <Styled.TotalVols>
-            Total Volunteers: {this.getUsersAtPage().length}
+            Total Volunteers: {this.state.users.length}
           </Styled.TotalVols>
         </Styled.TopMenu>
         <Styled.TableUsers>
@@ -250,10 +247,11 @@ class UserManager extends React.Component {
             users={
               this.state.searchOn
                 ? this.filteredAndSortedVolunteers()
-                : this.getUsersAtPage()
+                : this.state.users
             }
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}
+            deleteUserCallback={this.onDeleteUser}
           />
         </Styled.TableUsers>
       </Styled.Container>

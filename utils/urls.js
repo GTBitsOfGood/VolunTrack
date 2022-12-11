@@ -8,7 +8,7 @@ export default {
     events: "/events",
     "applicant-view": "/applicant-view",
     "user-manager": "/user-manager",
-    "assistants": "/assistants",
+    assistants: "/assistants",
     settings: "/settings",
     profile: "/profile",
     register: "/register",

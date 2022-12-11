@@ -6,7 +6,6 @@ export const filterApplicants = (filterGroups) => {
     (queryString, [group, { values }]) => {
       Object.entries(values).forEach(([filter, filterValue]) => {
         if (filterValue) {
-          console.log(filterValue);
           if (!filtersToApply[group]) filtersToApply[group] = {};
           filtersToApply[group][filter] = filterValue;
         }
@@ -53,12 +52,11 @@ export const updateUser = (
   number,
   birthday,
   zip,
-  hours,
   address,
   city,
   state,
-  courtH,
-  notes
+  notes,
+  userId
 ) => {
   var query = "";
   if (first) {
@@ -76,9 +74,6 @@ export const updateUser = (
   if (zip) {
     query += "zip_code=" + zip + "&";
   }
-  if (hours) {
-    query += "total_hours=" + hours + "&";
-  }
   if (address) {
     query += "address=" + address + "&";
   }
@@ -88,16 +83,13 @@ export const updateUser = (
   if (state) {
     query += "state=" + state + "&";
   }
-  if (courtH) {
-    query += "courtH=" + courtH + "&";
-  }
   if (notes) {
     query += "notes=" + notes + "&";
   }
 
   if (query.length > 0) {
     query = query.slice(0, -1);
-    axios.post(`/api/users/updateUser?email=${email}&${query}`);
+    axios.post(`/api/users/updateUser?email=${email}&${query}`, { userId });
   }
 };
 
@@ -135,7 +127,10 @@ export const editEvent = (event, sendConfirmationEmail) =>
     sendConfirmationEmail: sendConfirmationEmail,
   });
 
-export const deleteEvent = (_id) => axios.delete("/api/events/" + _id);
+export const deleteEvent = (_id, userId) =>
+  axios.delete(`/api/events/${_id}?userId=${userId}`);
+
+export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
 
 export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
 
@@ -144,6 +139,15 @@ export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
 export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
+
+export const updateInvitedAdmins = (email) =>
+  axios.post(`/api/settings/updateInvitedAdmin`, { email });
+
+export const getInvitedAdmins = () =>
+  axios.get(`/api/settings/getInvitedAdmin`);
+
+export const removeInvitedAdmin = (email) =>
+  axios.post(`/api/settings/removeInvitedAdmin`, { email });
 
 export const checkInVolunteer = (userId, eventId, eventName) =>
   axios.post("/api/attendance/checkin", { userId, eventId, eventName });
@@ -167,3 +171,7 @@ export const deleteAttendance = (id) =>
 
 export const updateAttendance = (id, newData) =>
   axios.put(`/api/attendance/${id}`, { id, newData });
+
+export const getHistoryEvents = () => axios.get("/api/historyEvents");
+
+export const getUserFromId = (id) => axios.get(`/api/users/${id}`);

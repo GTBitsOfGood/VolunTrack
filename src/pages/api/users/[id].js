@@ -23,7 +23,7 @@ export default async function handler(req, res, next) {
       return res.status(400).json({ errors: errors.mapped() });
     }
 
-    let result = getUserFromId(req.params.id, next);
+    let result = await getUserFromId(req.query.id, next);
     res.status(result.status).json(result.message);
   } else if (req.method === "PUT") {
     check("id").isMongoId();
@@ -43,11 +43,9 @@ export default async function handler(req, res, next) {
       userDataReq.last_name,
       userDataReq.date_of_birth,
       userDataReq.zip_code,
-      userDataReq.total_hours,
       userDataReq.address,
       userDataReq.city,
       userDataReq.state,
-      userDataReq.courtH,
       userDataReq.notes
     );
     res.status(result.status).json(result.message);
@@ -59,7 +57,7 @@ export default async function handler(req, res, next) {
       return res.status(400).json({ errors: errors.mapped() });
     }
 
-    let result = await deleteUserId(req.user, req.params.id, next);
+    let result = await deleteUserId(req.body.user, req.query.id, next);
     res.status(result.status).json(result.message);
   }
 }

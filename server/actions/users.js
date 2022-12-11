@@ -10,6 +10,9 @@ const {
 const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/User";
+import {
+  createHistoryEventEditProfile
+} from "./historyEvent";
 
 // Local Imports
 const { SendEmailError, EmailInUseError } = require("../errors");
@@ -227,11 +230,9 @@ export async function getManagementData(
         phone_number: "$bio.phone_number",
         date_of_birth: "$bio.date_of_birth",
         zip_code: "$bio.zip_code",
-        total_hours: "$bio.total_hours",
         address: "$bio.address",
         city: "$bio.city",
         state: "$bio.state",
-        courtH: "$bio.courtH",
         notes: "$bio.notes",
         role: 1,
         status: 1,
@@ -258,12 +259,11 @@ export async function getCount(next) {
 export async function getCurrentUser(userId, next) {
   await dbConnect();
 
-  
-    return User.find({_id: userId})
-      .then((users) => {
-        return users;
-      })
-      .catch(next);
+  return User.find({ _id: userId })
+    .then((users) => {
+      return users;
+    })
+    .catch(next);
 }
 
 export async function searchByContent(inputText, searchType, pageSize, next) {
@@ -282,7 +282,6 @@ export async function searchByContent(inputText, searchType, pageSize, next) {
         { "bio.phone_number": regexquery },
         { "bio.date_of_birth": regexquery },
         { "bio.zip_code": regexquery },
-        { "bio.total_hours": regexquery },
         { "bio.address": regexquery },
         { "bio.city": regexquery },
         { "bio.state": regexquery },
@@ -406,17 +405,31 @@ export async function updateUser(
   last_name,
   date_of_birth,
   zip_code,
-  total_hours,
   address,
   city,
   state,
-  courtH,
-  notes
+  notes,
+  userId
 ) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
+  if (userId) createHistoryEventEditProfile(userId);
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
+  if (
+    !phone_number ||
+    !first_name ||
+    !last_name ||
+    !date_of_birth ||
+    !zip_code ||
+    !address ||
+    !city ||
+    !state
+  )
+    return {
+      status: 400,
+      message: { error: "Please include all required fields" },
+    };
 
   if (phone_number?.length !== 0) {
     User.updateOne(
@@ -491,21 +504,6 @@ export async function updateUser(
     });
   }
 
-  if (total_hours?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.total_hours": total_hours } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
   if (zip_code?.length !== 0) {
     User.updateOne(
       { "bio.email": email },
@@ -554,21 +552,6 @@ export async function updateUser(
     User.updateOne(
       { "bio.email": email },
       { $set: { "bio.state": state } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (courtH?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.courtH": courtH } }
     ).then((result) => {
       if (!result.nModified)
         return {
@@ -675,12 +658,12 @@ export async function updateUserId(userDataReq, events, id, action, next) {
 }
 
 export async function deleteUserId(user, id, next) {
-  if (user && user.userDataId === id) {
-    // User is trying to remove themselves, don't let that happen...
-    return { status: 403, message: { error: "Cannot delete yourself!" } };
-  }
+  // if (user && user.userDataId === id) {
+  //   // User is trying to remove themselves, don't let that happen...
+  //   return { status: 403, message: { error: "Cannot delete yourself!" } };
+  // }
 
-  return User.findByIdAndRemove(id)
+  return User.findOneAndRemove({ _id: id })
     .then((removed) => {
       if (!removed) {
         return {

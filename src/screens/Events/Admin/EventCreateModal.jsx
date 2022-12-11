@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
-import { Form as FForm, ErrorMessage } from "formik";
+import classnames from "classnames";
+import { ErrorMessage, Form as FForm } from "formik";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
+import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
+import styled from "styled-components";
 import variables from "../../../design-tokens/_variables.module.scss";
 import EventFormModal from "./EventFormModal";
-import classnames from "classnames";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -80,7 +80,7 @@ const EventCreateModal = ({ open, toggle }) => {
                   color: currentActiveTab === "1" ? "#7F1C3B" : "black",
                 }}
               >
-                Standard Event
+                Public Event
               </p>
             </Styled.HeaderText>
           </NavLink>
@@ -101,7 +101,7 @@ const EventCreateModal = ({ open, toggle }) => {
                   color: currentActiveTab === "2" ? "#7F1C3B" : "black",
                 }}
               >
-                Group Event
+                Private Group Event
               </p>
             </Styled.HeaderText>
           </NavLink>
