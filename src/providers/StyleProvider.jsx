@@ -4,6 +4,7 @@ import { ThemeProvider } from "styled-components";
 
 const theme = {
   primary: "#b35fd0",
+  error: "#F06B6B",
   grey1: "hsl(0, 0%, 10%)",
   grey3: "hsl(0, 0%, 30%)",
   grey5: "hsl(0, 0%, 50%)",

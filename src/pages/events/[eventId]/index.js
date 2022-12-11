@@ -163,7 +163,7 @@ const EventInfo = () => {
   const copyPrivateLink = () => {
     window.navigator.clipboard.writeText(window.location.href);
     context.startLoading();
-    context.success("Successfully Copied Private Link to Event!");
+    context.success("Successfully copied the event private link!");
   };
   let lastUpdated =
     "Last updated " +
