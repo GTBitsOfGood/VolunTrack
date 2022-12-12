@@ -416,20 +416,6 @@ export async function updateUser(
   if (userId) createHistoryEventEditProfile(userId);
 
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
-  if (
-    !phone_number ||
-    !first_name ||
-    !last_name ||
-    !date_of_birth ||
-    !zip_code ||
-    !address ||
-    !city ||
-    !state
-  )
-    return {
-      status: 400,
-      message: { error: "Please include all required fields" },
-    };
 
   if (phone_number?.length !== 0) {
     User.updateOne(
