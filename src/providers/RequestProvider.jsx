@@ -15,7 +15,11 @@ const Container = styled.div`
   .banner {
     padding: 0.5rem;
     background: ${(props) =>
-      props.success ? "hsla(127, 100%, 32%, 90%)" : props.theme.grey9};
+      props.success
+        ? "hsla(127, 100%, 32%, 90%)"
+        : props.failed
+        ? props.theme.error
+        : props.theme.grey9};
     display: flex;
     align-items: center;
     border-radius: 0.5rem;
@@ -96,13 +100,15 @@ class RequestProvider extends React.Component {
             });
             this.delayedFall();
           },
-          failed: (text) =>
+          failed: (text) => {
             this.setState({
               isLoading: false,
               success: false,
               failed: true,
               text: text,
-            }),
+            });
+            this.delayedFall();
+          },
         }}
       >
         {this.props.children}
