@@ -1,5 +1,4 @@
-import { useSession } from "next-auth/react";
-import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { Field, Form as FForm, Formik } from "formik";
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import {
@@ -12,16 +11,11 @@ import { getHours } from "../../Stats/User/hourParsing";
 import {
   Button,
   Col,
-  FormGroup,
-  Input,
-  ModalBody,
-  ModalFooter,
   Row,
-  Form,
 } from "reactstrap";
 import styled from "styled-components";
-import variables from "../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../sharedStyles/formStyles";
+import Loading from "../../../components/Loading";
 
 const Styled = {
   Container: styled.div`
@@ -37,27 +31,6 @@ const Styled = {
     margin-left: 0px;
     margin-top: 1rem;
   `,
-  HeaderContainer: styled.div`
-    width: 95%;
-    max-width: 80rem;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  `,
-  Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 0px;
-    padding-top: 0px;
-    display: inline-block;
-  `,
   Col: styled(Col)`
     padding: 5px;
     padding-bottom: 3px;
@@ -67,43 +40,13 @@ const Styled = {
     font-weight: bold;
     padding: 5px;
   `,
-
   Header2: styled.div`
     font-size: 14px;
     color: gray;
     padding: 5px;
   `,
-  FifthCol: styled(Col)`
-    padding: 5px;
-    padding-bottom: 3px;
-    max-width: 20%;
-  `,
-  ThirdCol: styled(Col)`
-    padding: 5px;
-    padding-bottom: 3px;
-    max-width: 33%;
-  `,
-  ModalBody: styled(ModalBody)`
-    margin-left: 1.5rem;
-    margin-right: -10px;
-  `,
-  GenericText: styled.p`
-    color: ${variables["yiq-text-dark"]};
-  `,
-  RedText: styled.i`
-    color: red;
-  `,
   Row: styled(Row)`
     margin: 0.5rem 2rem 0.5rem 1rem;
-  `,
-  Errors: styled.div`
-    background-color: #f3f3f3;
-    border-radius: 6px;
-    max-width: 350px;
-    padding: 8px;
-  `,
-  ErrorBox: styled.ul`
-    margin: 0rem 2rem 0.5rem 1rem;
   `,
 };
 
@@ -114,9 +57,11 @@ const Stats = () => {
   const [hours, setHours] = useState(0);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    onRefresh();
+  }, [startDate, endDate]);
 
   const onRefresh = async () => {
     setLoading(true);
@@ -143,114 +88,84 @@ const Stats = () => {
     });
   }
 
-  const onSubmitValues = (values, setSubmitting) => {
-    if (values.startD == null) {
+  const onSubmitValues = (values) => {
+    if (values.startDate == null && startDate !== "undefined") {
       setStartDate("undefined");
     } else {
-      setStartDate(new Date(values.startD));
+      setStartDate(new Date(values.startDate).toISOString());
     }
 
-    if (values.endD == null) {
+    if (values.endDate == null && endDate !== "undefined") {
       setEndDate("undefined");
     } else {
-      setEndDate(new Date(values.endD));
+      setEndDate(new Date(values.endDate).toISOString());
     }
-
-    //console.log(startDate)
-
-    onRefresh();
   };
-
-  useEffect(() => {
-    onRefresh();
-  }, []);
-
-  const [successText, setSuccessText] = useState("");
-
-  const {
-    data: { user },
-  } = useSession();
 
   return (
     <Styled.Container>
       <Styled.Header>Event Attendance Summary</Styled.Header>
-
       <Formik
         initialValues={{}}
         onSubmit={(values, { setSubmitting }) => {
           onSubmitValues(values, setSubmitting);
         }}
-        render={({
-          handleSubmit,
-          isValid,
-          isSubmitting,
-          values,
-          setFieldValue,
-          handleBlur,
-          errors,
-          touched,
-        }) => (
+        render={({ handleSubmit }) => (
           <React.Fragment>
             <Row>
-              <SForm.Label>From</SForm.Label>
+              <Col>
+                <SForm.Label>From</SForm.Label>
+                <Field name="startDate">
+                  {({ field }) => (
+                    <SForm.Input {...field} type="datetime-local" />
+                  )}
+                </Field>
+              </Col>
+              <Col>
+                <SForm.Label>To</SForm.Label>
 
-              <Field name="startD">
-                {({ field }) => <SForm.Input {...field} type="date" />}
-              </Field>
-
-              {/* <SForm.Label>
-                          Start Time<Styled.RedText>*</Styled.RedText>
-                        </SForm.Label>
-                        <Field name="startTime">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field> */}
-
-              <SForm.Label>To</SForm.Label>
-
-              <Field name="endD">
-                {({ field }) => <SForm.Input {...field} type="date" />}
-              </Field>
-
-              <Button
-                color="primary"
-                onClick={() => {
-                  handleSubmit();
-                }}
-                style={{
-                  backgroundColor: "ef4e79",
-                  borderColor: "ef4e79",
-                  // backgroundColor: variables["button-pink"],
-                  // borderColor: variables["button-pink"],
-
-                  marginBottom: "1rem",
-                }}
-              >
-                Search
-              </Button>
+                <Field name="endDate">
+                  {({ field }) => (
+                    <SForm.Input {...field} type="datetime-local" />
+                  )}
+                </Field>
+              </Col>
             </Row>
-
-            {/* <SForm.Label>
-                          End Time<Styled.RedText>*</Styled.RedText>
-                        </SForm.Label>
-                        <Field name="endTime">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field> */}
+            <Row>
+              <Col>
+                <Button
+                  color="primary"
+                  onClick={() => {
+                    handleSubmit();
+                  }}
+                  style={{
+                    backgroundColor: "ef4e79",
+                    borderColor: "ef4e79",
+                    marginBottom: "1rem",
+                  }}
+                >
+                  Search
+                </Button>
+              </Col>
+            </Row>
           </React.Fragment>
         )}
       />
-      <SForm.Label>Statistics</SForm.Label>
-      <Row>
-        <Col>Total Events: {numEvents}</Col>
-        <Col>Total Attendance: {attend}</Col>
-        <Col>Total Hours Worked: {hours}</Col>
-      </Row>
-      {/*<Styled.marginTable>*/}
-      {/*  <EventTable events={events} isVolunteer={false} />*/}
-      {/*</Styled.marginTable>*/}
+      <Styled.Header2>Statistics</Styled.Header2>
+      {loading && <Loading />}
+
+      {!loading && (
+        <Row>
+          <Col>Total Events: {numEvents}</Col>
+          <Col>Total Attendance: {attend}</Col>
+          <Col>Total Hours Worked: {hours}</Col>
+        </Row>
+      )}
+      {/*{!loading && (*/}
+      {/*  <Styled.marginTable>*/}
+      {/*    <EventTable events={events} isVolunteer={false} />*/}
+      {/*  </Styled.marginTable>*/}
+      {/*)}*/}
     </Styled.Container>
   );
 };

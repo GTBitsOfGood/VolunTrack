@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import EventTable from "../../../components/EventTable";
-import { fetchEventsByUserId, getCurrentUser } from "../../../actions/queries";
+import { fetchAttendanceByUserId, getCurrentUser } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
 import PropTypes from "prop-types";
@@ -21,15 +21,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     align-items: center;
-  `,
-  Image: styled.div`
-    width: 100%;
-    height: 100%;
-  `,
-  Left: styled.div`
-    margin-left: 10vw;
-    display: flex;
-    flex-direction: column;
   `,
   Right: styled.div`
     display: flex;
@@ -67,29 +58,11 @@ const Styled = {
     margin: 0 auto;
     align-items: start;
   `,
-  Date: styled.div`
-    text-align: left;
-    font-size: 28px;
-    font-weight: bold;
-  `,
-  DateRow: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  `,
-  Back: styled.p`
-    font-size: 14px;
-    margin-left: 10px;
-    padding-top: 8px;
-    text-decoration: underline;
-    color: ${variables.primary};
-  `,
   Header: styled.div`
     font-size: 27px;
     font-weight: bold;
     padding: 5px;
   `,
-
   Header2: styled.div`
     font-size: 14px;
     color: gray;
@@ -148,7 +121,6 @@ const StatDisplay = ({ userId }) => {
 
   const filterEvents = (eventsToFilter, start, end) => {
     let result = [];
-    console.log(eventsToFilter, start, end);
     if (start === "undefined" && end === "undefined") {
       return eventsToFilter;
     } else if (start === "undefined") {
@@ -189,7 +161,7 @@ const StatDisplay = ({ userId }) => {
 
   useEffect(() => {
     setLoading(true);
-    fetchEventsByUserId(userId)
+    fetchAttendanceByUserId(userId)
       .then((result) => {
         if (result && result.data && result.data.event) {
           const filteredEvents = filterEvents(

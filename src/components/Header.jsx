@@ -364,10 +364,10 @@ const Header = () => {
                   <Styled.DropdownItem>Profile</Styled.DropdownItem>
                 </DropdownItem>
                 <DropdownItem onClick={goToHistory} href="/history">
-                  <Styled.DropdownItem>History</Styled.DropdownItem>
+                  <Styled.DropdownItem>Change History</Styled.DropdownItem>
                 </DropdownItem>
                 <DropdownItem onClick={gotToSummary} href="/history">
-                  <Styled.DropdownItem>Event Summaries</Styled.DropdownItem>
+                  <Styled.DropdownItem>Events Summary</Styled.DropdownItem>
                 </DropdownItem>
                 <DropdownItem onClick={logout} href="/">
                   <Styled.DropdownItem>Logout</Styled.DropdownItem>

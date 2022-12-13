@@ -115,10 +115,14 @@ export const fetchEvents = (startDate, endDate) =>
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
 // not sure if this works
-export const fetchEventsByUserId = (userId) => {
-  //console.log("QUERIES " + "/api/users/stats?volunteer=" + userId)
+export const fetchAttendanceByUserId = (userId) => {
   return axios.get("/api/users/stats?volunteer=" + userId);
 };
+
+export const fetchAttendanceRange = (startDate, endDate, userId) =>
+  axios.get(
+    `/api/events?startDate=${startDate}&endDate=${endDate}&userId=${userId}`
+  );
 
 export const createEvent = (event) => axios.post("/api/events", event);
 
@@ -166,8 +170,8 @@ export const updateEventById = (id, event) =>
 
 export const getAttendanceForEvent = (eventId) =>
   axios.post("/api/attendance/statistics", { eventId });
-  
-  export const getSimpleAttendanceForEvent = (eventId) =>
+
+export const getSimpleAttendanceForEvent = (eventId) =>
   axios.post("/api/attendance/simplestatistics", { eventId });
 
 export const deleteAttendance = (id) =>

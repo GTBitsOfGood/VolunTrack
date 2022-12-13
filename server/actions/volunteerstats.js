@@ -1,7 +1,7 @@
 const AttendanceData = require("../mongodb/models/attendance");
 import dbConnect from "../mongodb/index";
 
-export async function getEventsByUserID(userId, next) {
+export async function getAttendanceByUserID(userId, next) {
   await dbConnect();
   return AttendanceData.find({ userId: userId })
     .then((events) => {
