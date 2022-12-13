@@ -3,18 +3,17 @@ import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import EventTable from "../../../components/EventTable";
-import { fetchAttendanceByUserId, getCurrentUser } from "../../../actions/queries";
+import {
+  fetchAttendanceByUserId,
+  getCurrentUser,
+} from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
 import PropTypes from "prop-types";
 import { getHours } from "./hourParsing";
-<<<<<<< HEAD
 import * as SForm from "../../sharedStyles/formStyles";
 import { Field, Formik } from "formik";
 import { Row, Col } from "reactstrap";
-=======
-import React from "react";
->>>>>>> dev
 
 const Styled = {
   Container: styled.div`
@@ -113,7 +112,7 @@ const Styled = {
 
 const StatDisplay = ({ userId, onlyAchievements }) => {
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
+  const [attendance, setAttendance] = useState([]);
   const [length, setLength] = useState(0);
   const [sum, setSum] = useState(0);
   const [name, setName] = useState("");
@@ -127,26 +126,26 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
     userId = session.user._id;
   }
 
-  const filterEvents = (eventsToFilter, start, end) => {
+  const filterAttendance = (allAttendance, start, end) => {
     let result = [];
     if (start === "undefined" && end === "undefined") {
-      return eventsToFilter;
+      return allAttendance;
     } else if (start === "undefined") {
-      for (const event of eventsToFilter) {
-        if (event.timeCheckedOut <= end) {
-          result.push(event);
+      for (const attendance of allAttendance) {
+        if (attendance.timeCheckedOut <= end) {
+          result.push(attendance);
         }
       }
     } else if (end === "undefined") {
-      for (const event of eventsToFilter) {
-        if (event.timeCheckedIn >= start) {
-          result.push(event);
+      for (const attendance of allAttendance) {
+        if (attendance.timeCheckedIn >= start) {
+          result.push(attendance);
         }
       }
     } else {
-      for (const event of eventsToFilter) {
-        if (event.timeCheckedIn >= start && event.timeCheckedOut <= end) {
-          result.push(event);
+      for (const attendance of allAttendance) {
+        if (attendance.timeCheckedIn >= start && attendance.timeCheckedOut <= end) {
+          result.push(attendance);
         }
       }
     }
@@ -172,35 +171,33 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
     fetchAttendanceByUserId(userId)
       .then((result) => {
         if (result && result.data && result.data.event) {
-          const filteredEvents = filterEvents(
+          const filteredAttendance = filterAttendance(
             result.data.event,
             startDate,
             endDate
           );
-          setEvents(filteredEvents);
-          setLength(filteredEvents.length);
+          setAttendance(filteredAttendance);
+          setLength(filteredAttendance.length);
 
-          if (filteredEvents.length > 1) {
+          if (filteredAttendance.length > 1) {
             setAttend("Silver");
-          }
-          if (filteredEvents.length > 3) {
+          } else if (filteredAttendance.length > 3) {
             setAttend("Gold");
           }
           let add = 0;
           // HAVE TO FIX THIS
-          for (let i = 0; i < filteredEvents.length; i++) {
-            if (filteredEvents[i].timeCheckedOut != null) {
+          for (let i = 0; i < filteredAttendance.length; i++) {
+            if (filteredAttendance[i].timeCheckedOut != null) {
               add += getHours(
-                filteredEvents[i].timeCheckedIn.slice(11, 16),
-                filteredEvents[i].timeCheckedOut.slice(11, 16)
+                filteredAttendance[i].timeCheckedIn.slice(11, 16),
+                filteredAttendance[i].timeCheckedOut.slice(11, 16)
               );
             }
           }
           setSum(add);
           if (add >= 7) {
             setEarn("Silver");
-          }
-          if (add >= 14) {
+          } else if (add >= 14) {
             setEarn("Gold");
           }
         }
@@ -239,7 +236,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
             />
           )}
         </Styled.StatImage>
-        <Styled.StatText>{events.length} events</Styled.StatText>
+        <Styled.StatText>{attendance.length} events</Styled.StatText>
       </Styled.BoxInner>
 
       <Styled.BoxInner>
@@ -272,56 +269,56 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
             {achievements}
 
             <Formik
-                initialValues={{}}
-                onSubmit={(values, { setSubmitting }) => {
-                  onSubmitValues(values, setSubmitting);
-                }}
-                render={({ handleSubmit }) => (
-                    <React.Fragment>
-                      <Row>
-                        <Col>
-                          <SForm.Label>From</SForm.Label>
-                          <Field name="startD">
-                            {({ field }) => (
-                                <SForm.Input {...field} type="datetime-local" />
-                            )}
-                          </Field>
-                        </Col>
-                        <Col>
-                          <SForm.Label>To</SForm.Label>
+              initialValues={{}}
+              onSubmit={(values, { setSubmitting }) => {
+                onSubmitValues(values, setSubmitting);
+              }}
+              render={({ handleSubmit }) => (
+                <React.Fragment>
+                  <Row>
+                    <Col>
+                      <SForm.Label>From</SForm.Label>
+                      <Field name="startD">
+                        {({ field }) => (
+                          <SForm.Input {...field} type="datetime-local" />
+                        )}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>To</SForm.Label>
 
-                          <Field name="endD">
-                            {({ field }) => (
-                                <SForm.Input {...field} type="datetime-local" />
-                            )}
-                          </Field>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <Button
-                              color="primary"
-                              onClick={() => {
-                                handleSubmit();
-                              }}
-                              style={{
-                                backgroundColor: "ef4e79",
-                                borderColor: "ef4e79",
-                                marginBottom: "1rem",
-                              }}
-                          >
-                            Search
-                          </Button>
-                        </Col>
-                      </Row>
-                    </React.Fragment>
-                )}
+                      <Field name="endD">
+                        {({ field }) => (
+                          <SForm.Input {...field} type="datetime-local" />
+                        )}
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          handleSubmit();
+                        }}
+                        style={{
+                          backgroundColor: "ef4e79",
+                          borderColor: "ef4e79",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        Search
+                      </Button>
+                    </Col>
+                  </Row>
+                </React.Fragment>
+              )}
             />
             <div>
               <Styled.Header>Volunteer History</Styled.Header>
               <Styled.Header2>{length} events</Styled.Header2>
               <Styled.marginTable>
-                <EventTable events={events} isVolunteer={true} />
+                <EventTable events={attendance} isVolunteer={true} />
               </Styled.marginTable>
 
               <Styled.Margin></Styled.Margin>

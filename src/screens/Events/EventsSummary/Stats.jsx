@@ -1,18 +1,13 @@
-import { Field, Form as FForm, Formik } from "formik";
+import { Field, Formik } from "formik";
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import {
   fetchEvents,
   getSimpleAttendanceForEvent,
 } from "../../../actions/queries";
-import EventTable from "../../../components/EventStatsTable";
 import { useEffect } from "react";
 import { getHours } from "../../Stats/User/hourParsing";
-import {
-  Button,
-  Col,
-  Row,
-} from "reactstrap";
+import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
 import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";

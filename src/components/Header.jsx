@@ -2,7 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Collapse,
   Container,
@@ -20,23 +20,6 @@ import styled from "styled-components";
 import variables from "../design-tokens/_variables.module.scss";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import Icon from "./Icon";
-
-// const pageSwitchWidth = (currPath) => {
-//   switch (currPath) {
-//     case "/applicant-viewer":
-//       return "9.6rem";
-//     case "/user-manager":
-//       return "8.6rem";
-//     case "/assistants":
-//       return "8.6rem";
-//     case "/settings":
-//       return "8.6rem";
-//     case "/events":
-//       return "4.8rem";
-//     default:
-//       return "0";
-//   }
-// };
 
 const pageSwitchLeft = (currPath) => {
   switch (currPath) {
@@ -233,7 +216,7 @@ const Header = () => {
 
   const gotToSummary = (e) => {
     e.preventDefault();
-    router.push("/rangeStats");
+    router.push("/events-summary");
   };
 
   const goToStats = (e) => {
@@ -404,7 +387,7 @@ const Header = () => {
                   {user.role === "admin" && (
                     <React.Fragment>
                       <DropdownItem onClick={goToHistory} href="/history">
-                        <Styled.DropdownItem>History</Styled.DropdownItem>
+                        <Styled.DropdownItem>Change History</Styled.DropdownItem>
                       </DropdownItem>
                       <DropdownItem onClick={gotToSummary} href="/summary">
                         <Styled.DropdownItem>
