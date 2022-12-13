@@ -158,49 +158,9 @@ class UserManager extends React.Component {
       });
     }
   };
-  onNextPage = () => {
-    const { currentPage, users } = this.state;
-    if ((currentPage + 1) * PAGE_SIZE === users.length) {
-      this.setState({ loadingMoreUsers: true });
-      fetchUserManagementData(users[users.length - 1]._id).then((result) => {
-        if (result && result.data && result.data.users) {
-          this.setState({
-            users: [...users, ...result.data.users],
-            currentPage: currentPage + 1,
-            loadingMoreUsers: false,
-          });
-        }
-      });
-    } else {
-      this.setState({
-        currentPage: currentPage + 1,
-      });
-    }
-  };
-  onPreviousPage = () =>
-    this.setState({ currentPage: this.state.currentPage - 1 });
-  onToBeginning = () => this.setState({ currentPage: 0 });
-  getUsersAtPage = () => {
-    const { users, currentPage } = this.state;
-    // const start = currentPage * PAGE_SIZE;
-    return users; //.slice(start, start + PAGE_SIZE);
-  };
-  onChangeSearch = (record) => {
-    const { users, currentPage } = this.state;
-    fetchUserManagementData().then((result) => {
-      this.setState({
-        users: result.data.users.filter((user) =>
-          user.name.toLowerCase().includes(record.toLowerCase())
-        ),
-      });
-    });
-  };
-  atEnd = () =>
-    (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
+
   onEditUser = (updatedUser) => {
     /** code to update users in state at that specific index */
-    console.log("refresh");
-    console.log(updatedUser);
     updateUser(
       updatedUser.email,
       updatedUser.first_name,
@@ -211,7 +171,8 @@ class UserManager extends React.Component {
       updatedUser.address,
       updatedUser.city,
       updatedUser.state,
-      updatedUser.notes
+      updatedUser.notes,
+      this.props.user._id
     );
 
     let updatedUsers = this.state.users.map((user) => {
@@ -228,7 +189,6 @@ class UserManager extends React.Component {
     // this.onRefresh();
   };
   onDeleteUser = (userId) => {
-    console.log(userId);
     deleteUser(userId);
 
     let updatedUsers = [];
@@ -279,7 +239,7 @@ class UserManager extends React.Component {
             }
           />
           <Styled.TotalVols>
-            Total Volunteers: {this.getUsersAtPage().length}
+            Total Volunteers: {this.state.users.length}
           </Styled.TotalVols>
         </Styled.TopMenu>
         <Styled.TableUsers>
@@ -287,7 +247,7 @@ class UserManager extends React.Component {
             users={
               this.state.searchOn
                 ? this.filteredAndSortedVolunteers()
-                : this.getUsersAtPage()
+                : this.state.users
             }
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}

@@ -8,9 +8,13 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
 import PropTypes from "prop-types";
 import { getHours } from "./hourParsing";
+<<<<<<< HEAD
 import * as SForm from "../../sharedStyles/formStyles";
 import { Field, Formik } from "formik";
 import { Row, Col } from "reactstrap";
+=======
+import React from "react";
+>>>>>>> dev
 
 const Styled = {
   Container: styled.div`
@@ -81,6 +85,7 @@ const Styled = {
     flex-direction: row;
     justify-content: left;
     align-items: center;
+    margin: auto;
   `,
   BoxInner: styled.div`
     display: flex;
@@ -96,6 +101,9 @@ const Styled = {
     font-size: 20px;
     text-align: center;
     padding: 3px;
+    @media (max-width: 768px) {
+      font-size: 15px;
+    }
   `,
   StatImage: styled.div``,
   Hours: styled.div`
@@ -103,7 +111,7 @@ const Styled = {
   `,
 };
 
-const StatDisplay = ({ userId }) => {
+const StatDisplay = ({ userId, onlyAchievements }) => {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [length, setLength] = useState(0);
@@ -215,106 +223,119 @@ const StatDisplay = ({ userId }) => {
       .finally(() => {});
   }, [startDate, endDate]);
 
-  return (
-    <Styled.Container>
-      <Styled.Right>
-        <Styled.Header>{name} Volunteer Statistics</Styled.Header>
-        <Styled.Header2>ACHIEVEMENTS</Styled.Header2>
-        <Styled.Box>
-          <Styled.BoxInner>
-            <Styled.StatText>Events Attended</Styled.StatText>
-            <Styled.StatImage>
-              {loading ? (
-                "Loading... "
-              ) : (
-                <img
-                  src={"/images/Events Attended - " + attend + ".png"}
-                  alt="helping-mamas-photo"
-                  width="150px"
-                  height="150px"
-                />
-              )}
-            </Styled.StatImage>
-            <Styled.StatText>{events.length} events</Styled.StatText>
-          </Styled.BoxInner>
-
-          <Styled.BoxInner>
-            <Styled.StatText>Hours Earned</Styled.StatText>
-            <Styled.StatImage>
-              {loading ? (
-                "Loading... "
-              ) : (
-                <img
-                  src={"/images/Hours Earned - " + earn + ".png"}
-                  id="earned"
-                  alt="helping-mamas-photo"
-                  width="150px"
-                  height="150px"
-                />
-              )}
-            </Styled.StatImage>
-            <Styled.StatText>{Math.round(sum * 10) / 10} hours</Styled.StatText>
-          </Styled.BoxInner>
-        </Styled.Box>
-        <Formik
-          initialValues={{}}
-          onSubmit={(values, { setSubmitting }) => {
-            onSubmitValues(values, setSubmitting);
-          }}
-          render={({ handleSubmit }) => (
-            <React.Fragment>
-              <Row>
-                <Col>
-                  <SForm.Label>From</SForm.Label>
-                  <Field name="startD">
-                    {({ field }) => (
-                      <SForm.Input {...field} type="datetime-local" />
-                    )}
-                  </Field>
-                </Col>
-                <Col>
-                  <SForm.Label>To</SForm.Label>
-
-                  <Field name="endD">
-                    {({ field }) => (
-                      <SForm.Input {...field} type="datetime-local" />
-                    )}
-                  </Field>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <Button
-                    color="primary"
-                    onClick={() => {
-                      handleSubmit();
-                    }}
-                    style={{
-                      backgroundColor: "ef4e79",
-                      borderColor: "ef4e79",
-                      marginBottom: "1rem",
-                    }}
-                  >
-                    Search
-                  </Button>
-                </Col>
-              </Row>
-            </React.Fragment>
+  let achievements = (
+    <Styled.Box>
+      <Styled.BoxInner>
+        <Styled.StatText>Events Attended</Styled.StatText>
+        <Styled.StatImage>
+          {loading ? (
+            "Loading... "
+          ) : (
+            <img
+              src={"/images/Events Attended - " + attend + ".png"}
+              alt="helping-mamas-photo"
+              width="150px"
+              height="150px"
+            />
           )}
-        />
-        <Styled.Header>Volunteer History</Styled.Header>
-        <Styled.Header2>{length} events</Styled.Header2>
-        <Styled.marginTable>
-          <EventTable events={events} isVolunteer={true} />
-        </Styled.marginTable>
+        </Styled.StatImage>
+        <Styled.StatText>{events.length} events</Styled.StatText>
+      </Styled.BoxInner>
 
-        <Styled.Margin></Styled.Margin>
-      </Styled.Right>
-    </Styled.Container>
+      <Styled.BoxInner>
+        <Styled.StatText>Hours Earned</Styled.StatText>
+        <Styled.StatImage>
+          {loading ? (
+            "Loading... "
+          ) : (
+            <img
+              src={"/images/Hours Earned - " + earn + ".png"}
+              id="earned"
+              alt="helping-mamas-photo"
+              width="150px"
+              height="150px"
+            />
+          )}
+        </Styled.StatImage>
+        <Styled.StatText>{Math.round(sum * 10) / 10} hours</Styled.StatText>
+      </Styled.BoxInner>
+    </Styled.Box>
+  );
+
+  return (
+    <React.Fragment>
+      {!onlyAchievements && (
+        <Styled.Container>
+          <Styled.Right>
+            <Styled.Header>{name} Volunteer Statistics</Styled.Header>
+            <Styled.Header2>ACHIEVEMENTS</Styled.Header2>
+            {achievements}
+
+            <Formik
+                initialValues={{}}
+                onSubmit={(values, { setSubmitting }) => {
+                  onSubmitValues(values, setSubmitting);
+                }}
+                render={({ handleSubmit }) => (
+                    <React.Fragment>
+                      <Row>
+                        <Col>
+                          <SForm.Label>From</SForm.Label>
+                          <Field name="startD">
+                            {({ field }) => (
+                                <SForm.Input {...field} type="datetime-local" />
+                            )}
+                          </Field>
+                        </Col>
+                        <Col>
+                          <SForm.Label>To</SForm.Label>
+
+                          <Field name="endD">
+                            {({ field }) => (
+                                <SForm.Input {...field} type="datetime-local" />
+                            )}
+                          </Field>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Button
+                              color="primary"
+                              onClick={() => {
+                                handleSubmit();
+                              }}
+                              style={{
+                                backgroundColor: "ef4e79",
+                                borderColor: "ef4e79",
+                                marginBottom: "1rem",
+                              }}
+                          >
+                            Search
+                          </Button>
+                        </Col>
+                      </Row>
+                    </React.Fragment>
+                )}
+            />
+            <div>
+              <Styled.Header>Volunteer History</Styled.Header>
+              <Styled.Header2>{length} events</Styled.Header2>
+              <Styled.marginTable>
+                <EventTable events={events} isVolunteer={true} />
+              </Styled.marginTable>
+
+              <Styled.Margin></Styled.Margin>
+            </div>
+          </Styled.Right>
+        </Styled.Container>
+      )}
+      {onlyAchievements && achievements}
+    </React.Fragment>
   );
 };
 StatDisplay.propTypes = {
-  user: PropTypes.object,
+  userId: PropTypes.string,
+  onlyAchievements: PropTypes.bool,
 };
 
 export default StatDisplay;

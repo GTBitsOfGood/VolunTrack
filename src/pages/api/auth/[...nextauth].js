@@ -141,6 +141,7 @@ export default NextAuth({
       };
       const invitedAdmins = await AppSettings.find({});
       if (
+        invitedAdmins[0] &&
         invitedAdmins[0].invitedAdmins &&
         invitedAdmins[0].invitedAdmins.includes(userData.bio.email)
       ) {

@@ -6,7 +6,6 @@ export const filterApplicants = (filterGroups) => {
     (queryString, [group, { values }]) => {
       Object.entries(values).forEach(([filter, filterValue]) => {
         if (filterValue) {
-          console.log(filterValue);
           if (!filtersToApply[group]) filtersToApply[group] = {};
           filtersToApply[group][filter] = filterValue;
         }

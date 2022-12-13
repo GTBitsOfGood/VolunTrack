@@ -163,7 +163,7 @@ const EventInfo = () => {
   const copyPrivateLink = () => {
     window.navigator.clipboard.writeText(window.location.href);
     context.startLoading();
-    context.success("Successfully Copied Private Link to Event!");
+    context.success("Successfully copied the event private link!");
   };
   let lastUpdated =
     "Last updated " +
@@ -172,7 +172,7 @@ const EventInfo = () => {
     lastUpdated.substring(0, lastUpdated.lastIndexOf(":")) +
     lastUpdated.substring(lastUpdated.lastIndexOf(":") + 3);
   const futureorTodaysDate =
-    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 14400000 <=
+    Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 86400000 <=
     Date.parse(event.date);
   return (
     <>

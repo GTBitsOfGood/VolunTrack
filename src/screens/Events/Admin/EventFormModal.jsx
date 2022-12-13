@@ -114,7 +114,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   };
 
   const onSendConfirmationEmailCheckbox = () => {
-    setSendConfirmationEmail(!onSendConfirmationEmailCheckbox);
+    setSendConfirmationEmail(!sendConfirmationEmail);
   };
 
   const onCourtRequiredHoursCheckbox = () => {
@@ -173,7 +173,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
           ? event.address
           : emptyStringField,
         city: containsExistingEvent(event) ? event.city : emptyStringField,
-        state: containsExistingEvent(event) ? event.state : "GA",
+        state: containsExistingEvent(event) ? event.state : "TN",
         zip: containsExistingEvent(event) ? event.zip : emptyStringField,
         max_volunteers: containsExistingEvent(event)
           ? event.max_volunteers
