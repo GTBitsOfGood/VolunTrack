@@ -83,29 +83,35 @@ apiRoute.get("/api/waivers/", async (req, res) => {
   }
   let minor = req.query.minor.toLowerCase() === "true";
   let adult = req.query.adult.toLowerCase() === "true";
-  let result = {};
-  let paths = glob.sync("./public/files/*");
-  if (adult) {
-    for (const filePath of paths) {
-      const splits = filePath.split("/");
-      const fileName = splits[3].split(".")[0];
-      if (fileName === "adult") {
-        result.adult = filePath;
-      }
-    }
-    if (!result.adult) result.adult = null;
-  }
-  if (minor) {
-    for (const filePath of paths) {
-      const splits = filePath.split("/");
-      const fileName = splits[3].split(".")[0];
-      if (fileName === "minor") {
-        result.minor = filePath;
-      }
-    }
-    if (!result.minor) result.minor = null;
-  }
+  let result = {
+    minor: "./public/files/minor.pdf",
+    adult: "./public/files/adult.pdf",
+  };
+
   return res.status(200).json(result);
+
+  // let paths = glob.sync("./public/files/*");
+  // if (adult) {
+  //   for (const filePath of paths) {
+  //     const splits = filePath.split("/");
+  //     const fileName = splits[3].split(".")[0];
+  //     if (fileName === "adult") {
+  //       result.adult = filePath;
+  //     }
+  //   }
+  //   if (!result.adult) result.adult = null;
+  // }
+  // if (minor) {
+  //   for (const filePath of paths) {
+  //     const splits = filePath.split("/");
+  //     const fileName = splits[3].split(".")[0];
+  //     if (fileName === "minor") {
+  //       result.minor = filePath;
+  //     }
+  //   }
+  //   if (!result.minor) result.minor = null;
+  // }
+  // return res.status(200).json(result);
 });
 
 export default apiRoute;
