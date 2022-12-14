@@ -65,14 +65,14 @@ const convertTime = (time) => {
 
 const EventTable = ({
   events,
-  isVolunteer,
+  isIndividualStats,
   onDeleteClicked,
   onEditClicked,
 }) => {
-  const eventName = isVolunteer ? "Event Name" : "Volunteer Name";
-  const creation = isVolunteer ? "Date" : "Email Address";
-  const time = isVolunteer ? "Time" : "Hours Participated";
-  const textInfo = isVolunteer ? "Hours Earned" : "";
+  const eventName = isIndividualStats ? "Event Name" : "Volunteer Name";
+  const creation = isIndividualStats ? "Date" : "Email Address";
+  const time = isIndividualStats ? "Time" : "Hours Participated";
+  const textInfo = isIndividualStats ? "Hours Earned" : "";
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
   const updatePage = (pageNum) => {
@@ -94,7 +94,7 @@ const EventTable = ({
             </Table.InnerTop>
           </Table.EventList>
         </Styled.List>
-        {isVolunteer &&
+        {isIndividualStats &&
           events
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
@@ -128,7 +128,7 @@ const EventTable = ({
                 </Link>
               </Styled.List>
             ))}
-        {isVolunteer == false &&
+        {!isIndividualStats &&
           events
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
@@ -180,7 +180,7 @@ const EventTable = ({
 };
 EventTable.propTypes = {
   events: PropTypes.Array,
-  isVolunteer: PropTypes.Boolean,
+  isIndividualStats: PropTypes.Boolean,
   onDeleteClicked: PropTypes.func,
   onEditClicked: PropTypes.func,
 };

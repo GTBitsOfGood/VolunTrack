@@ -147,7 +147,7 @@ const EventStatistics = () => {
       <Styled.Table>
         <EventTable
           events={attendanceStats}
-          isVolunteer={false}
+          isIndividualStats={false}
           onDeleteClicked={onDeleteClicked}
           onEditClicked={onEditClicked}
         />

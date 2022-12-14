@@ -2,6 +2,7 @@ import { Field, Formik } from "formik";
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import {
+  fetchAttendanceByUserId,
   fetchEvents,
   getSimpleAttendanceForEvent,
 } from "../../../actions/queries";
@@ -11,6 +12,7 @@ import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
 import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";
+import { filterAttendance } from "../../Stats/helper";
 
 const Styled = {
   Container: styled.div`
@@ -60,21 +62,38 @@ const Stats = () => {
 
   const onRefresh = async () => {
     setLoading(true);
-    fetchEvents(startDate, endDate)
-      .then(async (result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-          setNumEvents(result.data.events.length);
-
-          let count = 0;
-          for (let i = 0; i < events.length; i++) {
-            await updateAttendance(events[i]._id);
-          }
-        }
+    fetchAttendanceByUserId(null)
+      .then((result) => {
+        const filteredAttendance = filterAttendance(
+          result.data.event,
+          startDate,
+          endDate
+        );
+        console.log(filteredAttendance);
       })
       .finally(() => {
         setLoading(false);
       });
+
+    // fetch attendance data
+    // filter it given dates
+    // parse it for unique eventIds and total # of hours
+    // setLoading(true);
+    // fetchEvents(startDate, endDate)
+    //   .then(async (result) => {
+    //     if (result && result.data && result.data.events) {
+    //       setEvents(result.data.events);
+    //       setNumEvents(result.data.events.length);
+    //
+    //       let count = 0;
+    //       for (let i = 0; i < events.length; i++) {
+    //         await updateAttendance(events[i]._id);
+    //       }
+    //     }
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   };
 
   async function updateAttendance(eventID) {
@@ -83,17 +102,23 @@ const Stats = () => {
     });
   }
 
-  const onSubmitValues = (values) => {
-    if (values.startDate == null && startDate !== "undefined") {
+  const onSubmitValues = (values, setSubmitting) => {
+    let offset = new Date().getTimezoneOffset();
+
+    if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      setStartDate(new Date(values.startDate).toISOString());
+      let start = new Date(values.startDate);
+      start.setMinutes(start.getMinutes() - offset);
+      setStartDate(start);
     }
 
-    if (values.endDate == null && endDate !== "undefined") {
+    if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      setEndDate(new Date(values.endDate).toISOString());
+      let end = new Date(values.endDate);
+      end.setMinutes(end.getMinutes() - offset);
+      setEndDate(end);
     }
   };
 

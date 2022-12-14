@@ -14,6 +14,7 @@ import { getHours } from "./hourParsing";
 import * as SForm from "../../sharedStyles/formStyles";
 import { Field, Formik } from "formik";
 import { Row, Col } from "reactstrap";
+import { filterAttendance } from "../helper";
 
 const Styled = {
   Container: styled.div`
@@ -126,43 +127,23 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
     userId = session.user._id;
   }
 
-  const filterAttendance = (allAttendance, start, end) => {
-    let result = [];
-    if (start === "undefined" && end === "undefined") {
-      return allAttendance;
-    } else if (start === "undefined") {
-      for (const attendance of allAttendance) {
-        if (attendance.timeCheckedOut <= end) {
-          result.push(attendance);
-        }
-      }
-    } else if (end === "undefined") {
-      for (const attendance of allAttendance) {
-        if (attendance.timeCheckedIn >= start) {
-          result.push(attendance);
-        }
-      }
-    } else {
-      for (const attendance of allAttendance) {
-        if (attendance.timeCheckedIn >= start && attendance.timeCheckedOut <= end) {
-          result.push(attendance);
-        }
-      }
-    }
-    return result;
-  };
-
   const onSubmitValues = (values, setSubmitting) => {
-    if (!values.startD) {
+    let offset = new Date().getTimezoneOffset();
+
+    if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      setStartDate(new Date(values.startD).toISOString());
+      let start = new Date(values.startDate);
+      start.setMinutes(start.getMinutes() - offset);
+      setStartDate(start);
     }
 
-    if (!values.endD) {
+    if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      setEndDate(new Date(values.endD).toISOString());
+      let end = new Date(values.endDate);
+      end.setMinutes(end.getMinutes() - offset);
+      setEndDate(end);
     }
   };
 
@@ -278,7 +259,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
                   <Row>
                     <Col>
                       <SForm.Label>From</SForm.Label>
-                      <Field name="startD">
+                      <Field name="startDate">
                         {({ field }) => (
                           <SForm.Input {...field} type="datetime-local" />
                         )}
@@ -287,7 +268,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
                     <Col>
                       <SForm.Label>To</SForm.Label>
 
-                      <Field name="endD">
+                      <Field name="endDate">
                         {({ field }) => (
                           <SForm.Input {...field} type="datetime-local" />
                         )}
@@ -318,7 +299,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
               <Styled.Header>Volunteer History</Styled.Header>
               <Styled.Header2>{length} events</Styled.Header2>
               <Styled.marginTable>
-                <EventTable events={attendance} isVolunteer={true} />
+                <EventTable events={attendance} isIndividualStats={true} />
               </Styled.marginTable>
 
               <Styled.Margin></Styled.Margin>
