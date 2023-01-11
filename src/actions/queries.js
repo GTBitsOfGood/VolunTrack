@@ -1,35 +1,5 @@
 import axios from "axios";
 
-export const filterApplicants = (filterGroups) => {
-  let filtersToApply = {};
-  const query = Object.entries(filterGroups).reduce(
-    (queryString, [group, { values }]) => {
-      Object.entries(values).forEach(([filter, filterValue]) => {
-        if (filterValue) {
-          if (!filtersToApply[group]) filtersToApply[group] = {};
-          filtersToApply[group][filter] = filterValue;
-        }
-      });
-      if (!filtersToApply[group]) {
-        return queryString;
-      } else {
-        return `${queryString}${group}=${JSON.stringify(
-          filtersToApply[group]
-        )}&`;
-      }
-    },
-    ""
-  );
-  return axios.get("/api/users?" + query);
-};
-
-export const fetchMoreApplicants = (lastPaginationId) =>
-  axios.get(
-    `/api/users?${
-      lastPaginationId ? "lastPaginationId=" + lastPaginationId : ""
-    }`
-  );
-
 export const fetchUserManagementData = (lastPaginationId) =>
   axios.get(
     `/api/users/managementData?${
@@ -41,9 +11,6 @@ export const getCurrentUser = (userId) =>
   axios.get("/api/users/current?volunteer=" + userId);
 
 export const fetchUserCount = () => axios.get("/api/users/count");
-
-export const updateApplicantStatus = (email, status) =>
-  axios.post(`/api/users/updateStatus?email=${email}&status=${status}`);
 
 export const updateUser = (
   email,
@@ -93,14 +60,8 @@ export const updateUser = (
   }
 };
 
-export const updateApplicantRole = (email, role) =>
+export const updateRole = (email, role) =>
   axios.post(`/api/users/updateRole?email=${email}&role=${role}`);
-
-export const searchApplicants = (textinput, searchType) => {
-  return axios.get("/api/users/searchByContent", {
-    params: { searchquery: textinput, searchtype: searchType },
-  });
-};
 
 export const fetchVolunteers = (eventVolunteers) => {
   return axios.get(
@@ -115,7 +76,6 @@ export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
 // not sure if this works
 export const fetchEventsByUserId = (userId) => {
-  //console.log("QUERIES " + "/api/users/stats?volunteer=" + userId)
   return axios.get("/api/users/stats?volunteer=" + userId);
 };
 
@@ -130,8 +90,15 @@ export const editEvent = (event, sendConfirmationEmail) =>
 export const deleteEvent = (_id, userId) =>
   axios.delete(`/api/events/${_id}?userId=${userId}`);
 
+// credentials signup
+export const createUserFromCredentials = (user) =>
+  axios.post(`/api/users`, user);
+
+export const getUserFromId = (id) => axios.get(`/api/users/${id}`);
+
 export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
 
+//TODO combine this with updateUser
 export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
 
 export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
@@ -173,5 +140,3 @@ export const updateAttendance = (id, newData) =>
   axios.put(`/api/attendance/${id}`, { id, newData });
 
 export const getHistoryEvents = () => axios.get("/api/historyEvents");
-
-export const getUserFromId = (id) => axios.get(`/api/users/${id}`);

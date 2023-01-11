@@ -1,10 +1,9 @@
 import { useSession } from "next-auth/react";
-import {useContext, useState} from "react";
+import { useContext } from "react";
 import styled from "styled-components";
 import ProfileForm from "./ProfileForm";
 import { RequestContext } from "../../providers/RequestProvider";
 import { useRouter } from "next/router";
-
 
 const Styled = {
   Container: styled.div`
@@ -28,12 +27,11 @@ const Styled = {
 
 const Profile = () => {
   const { data: session } = useSession();
-  const [user, setUser] = useState(session.user);
 
   return (
     <Styled.Container>
       <ProfileForm
-        user={user}
+        user={session.user}
         isAdmin={session.user.role === "admin"}
         router={useRouter()}
         context={useContext(RequestContext)}

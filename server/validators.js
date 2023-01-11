@@ -5,14 +5,6 @@ const { check } = require("express-validator");
 
 // TODO: maybe just delete this because it results in fatal, hard to trace errors
 
-const USER_DATA_VALIDATOR = [
-  check("bio.first_name").isAlpha().trim().escape(),
-  check("bio.last_name").isAlpha().trim().escape(),
-  check("bio.phone_number").isAscii().trim().escape(),
-  check("bio.email").isEmail().trim(),
-  check("bio.date_of_birth").exists().trim().escape(),
-];
-
 // TODO Add validations for volunteers Array
 const CREATE_EVENT_VALIDATOR = [
   check("_id").optional(),
@@ -52,7 +44,6 @@ const OBJECT_ID_REGEX = new RegExp("^[0-9a-fA-F]{24}$");
 const isValidObjectID = (id) => OBJECT_ID_REGEX.test(id);
 
 module.exports = {
-  USER_DATA_VALIDATOR,
   CREATE_EVENT_VALIDATOR,
   isValidObjectID,
 };

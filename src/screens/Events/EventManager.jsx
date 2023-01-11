@@ -18,7 +18,7 @@ import {
 } from "reactstrap";
 
 import { useSession } from "next-auth/react";
-import { registerForEvent, updateEvent } from "./User/eventHelpers";
+import { updateEvent } from "./eventHelpers";
 import StatDisplay from "../Stats/User/StatDisplay";
 import router from "next/router";
 
