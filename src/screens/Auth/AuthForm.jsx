@@ -31,25 +31,39 @@ const Styled = {
 class AuthForm extends React.Component {
   constructor(props) {
     super(props);
+    this.error = false;
+
+    let url = new URL(window.location.href);
+
+    if (url.searchParams.has("error")) {
+      this.props.context.startLoading();
+      this.props.context.failed("Your username or password is incorrect.");
+    }
   }
 
   handleSubmit = async (values) => {
     if (this.props.createAccount) {
-      let response = await createUserFromCredentials(values);
-      console.log(response.data);
-
-      if (response.status !== 200) {
-        this.props.context.startLoading();
-        // todo merge shweta's context ticket in
-        this.props.context.failed(response.data);
-      }
+      createUserFromCredentials(values)
+        .then((response) => {
+          signIn("credentials", {
+            email: values.email,
+            password: values.password,
+            callbackUrl: `${window.location.origin}/home`,
+          });
+        })
+        .catch((error) => {
+          if (error.response.status !== 200) {
+            this.props.context.startLoading();
+            this.props.context.failed(error.response.data);
+          }
+        });
+    } else {
+      signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        callbackUrl: `${window.location.origin}/home`,
+      });
     }
-
-    await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      callbackUrl: `${window.location.origin}/home`,
-    });
   };
 
   render() {
