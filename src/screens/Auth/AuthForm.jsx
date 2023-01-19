@@ -88,6 +88,13 @@ class AuthForm extends React.Component {
           {({ handleSubmit, isValid, isSubmitting }) => (
             <form>
               <Styled.FormGroup>
+                {/*<Row>*/}
+                {/*  <Field as="select" name="nonprofit">*/}
+                {/*    <option value="1">Helping Mamas</option>*/}
+                {/*    <option value="2">Nonprofit 2</option>*/}
+                {/*    <option value="3">Nonprofit 3</option>*/}
+                {/*  </Field>*/}
+                {/*</Row>*/}
                 {this.props.createAccount && (
                   <Row>
                     <Col>

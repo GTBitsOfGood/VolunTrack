@@ -1,4 +1,4 @@
-import {string, object, number, date, boolean} from "yup";
+import { string, object, number, date, boolean } from "yup";
 
 const today = new Date();
 const yesterday = new Date(today);
@@ -27,6 +27,7 @@ export const standardEventValidator = object().shape({
   eventContactPhone: string().trim().required(" Phone number is required"),
   eventContactEmail: string()
     .trim()
+    .email("Invalid email")
     .required(" Email is required"),
   // isPrivate: boolean().optional(),
 });
