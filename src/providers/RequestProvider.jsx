@@ -18,7 +18,7 @@ const Container = styled.div`
       props.success
         ? "hsla(127, 100%, 32%, 90%)"
         : props.failed
-        ? props.theme.error
+        ? "hsla(0, 100%, 50%, 80%)"
         : props.theme.grey9};
     display: flex;
     align-items: center;

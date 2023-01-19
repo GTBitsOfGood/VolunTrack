@@ -1,7 +1,7 @@
 import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "react-quill/dist/quill.snow.css";
 import {
   Button,
@@ -17,6 +17,7 @@ import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator, standardEventValidator } from "./eventHelpers";
+import { RequestContext } from "../../../providers/RequestProvider";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -79,6 +80,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const {
     data: { user },
   } = useSession();
+  const context = useContext(RequestContext);
 
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
@@ -92,7 +94,16 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
 
     createEvent(event)
       .then(() => toggle())
-      .catch(console.log)
+      .catch((error) => {
+        if (error.response.status !== 200) {
+          context.startLoading();
+          let message =
+            error.response.data.errors[0].msg +
+            " for " +
+            error.response.data.errors[0].param;
+          context.failed(message);
+        }
+      })
       .finally(() => setSubmitting(false));
   };
 

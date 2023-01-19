@@ -21,28 +21,9 @@ import variables from "../design-tokens/_variables.module.scss";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import Icon from "./Icon";
 
-// const pageSwitchWidth = (currPath) => {
-//   switch (currPath) {
-//     case "/applicant-viewer":
-//       return "9.6rem";
-//     case "/user-manager":
-//       return "8.6rem";
-//     case "/assistants":
-//       return "8.6rem";
-//     case "/settings":
-//       return "8.6rem";
-//     case "/events":
-//       return "4.8rem";
-//     default:
-//       return "0";
-//   }
-// };
-
 const pageSwitchLeft = (currPath) => {
   switch (currPath) {
-    case "/applicant-viewer":
-      return "-1rem";
-    case "/user-manager":
+    case "/volunteers":
       return "8.3rem";
     case "/assistants":
       return "8.6rem";
@@ -255,7 +236,6 @@ const Header = () => {
           marginLeft: "0px",
           marginRight: "0px",
           maxWidth: "100%",
-          display: "flex",
         }}
       >
         <NavbarBrand tag={(props) => <Link {...props} />} href="/home">
@@ -276,14 +256,6 @@ const Header = () => {
           <Styled.MobileBackground>
             <Styled.FlexContainer className="navbar-nav">
               <Styled.PageSwitch currPathName={router.pathname}>
-                {/*{user.role === "admin" && (*/}
-                {/*  <Link*/}
-                {/*    href="/applicant-viewer"*/}
-                {/*    selected={currPageMatches("/applicant-viewer")}*/}
-                {/*  >*/}
-                {/*    <Styled.PageLink>Applicant Viewer</Styled.PageLink>*/}
-                {/*  </Link>*/}
-                {/*)}*/}
                 <Link href="/home">
                   {currPageMatches("/home") ? (
                     <SelectedPageLink>Home</SelectedPageLink>
@@ -293,10 +265,10 @@ const Header = () => {
                 </Link>
                 {user.role === "admin" && (
                   <Link
-                    href="/user-manager"
-                    selected={currPageMatches("/user-manager")}
+                    href="/volunteers"
+                    selected={currPageMatches("/volunteers")}
                   >
-                    {currPageMatches("/user-manager") ? (
+                    {currPageMatches("/volunteers") ? (
                       <SelectedPageLink>Volunteers</SelectedPageLink>
                     ) : (
                       <Styled.PageLink>Volunteers</Styled.PageLink>
@@ -373,7 +345,7 @@ const Header = () => {
                       <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
                         <Styled.UserIcon
                           style={{ marginRight: "20px" }}
-                          src={user.imageUrl ?? "/images/test.jpg"}
+                          src={user.imageUrl ?? "/images/gradient-avatar.png"}
                           alt="icon"
                         />
                       </Styled.ImgContainer>

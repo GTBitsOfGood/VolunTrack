@@ -1,6 +1,7 @@
 const {
   getEventVolunteersList,
 } = require("../../../../../server/actions/events");
+
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const eventId = req.query.id;

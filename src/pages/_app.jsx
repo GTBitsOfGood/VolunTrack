@@ -34,16 +34,16 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
         async
         crossOrigin={"true"}
       />
-      <AuthProvider>
-        <StyleProvider>
-          <RequestProvider>
+      <RequestProvider>
+        <AuthProvider>
+          <StyleProvider>
             <Styled.Container>
               <Header />
               <Component {...pageProps} />
             </Styled.Container>
-          </RequestProvider>
-        </StyleProvider>
-      </AuthProvider>
+          </StyleProvider>
+        </AuthProvider>
+      </RequestProvider>
     </SessionProvider>
   );
 };

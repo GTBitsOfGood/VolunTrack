@@ -23,7 +23,7 @@ import {
 } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
-import EmployeeTable from "./EmployeeTable";
+import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
 
 const PAGE_SIZE = 10;
@@ -277,7 +277,7 @@ class Assistants extends React.Component {
         </Styled.Row>
         <Styled.Row>
           <Styled.TableUsers>
-            <EmployeeTable
+            <AssistantTable
               users={this.getUsersAtPage()}
               invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}
