@@ -255,8 +255,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
               <Styled.marginTable>
                 <EventTable events={events} isVolunteer={true} />
               </Styled.marginTable>
-
-              <Styled.Margin></Styled.Margin>
+              <Styled.Margin />
             </div>
           </Styled.Right>
         </Styled.Container>
