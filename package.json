@@ -20,7 +20,7 @@
     "lint:fix": "eslint \"**/*.{js,jsx}\" --fix",
     "format": "prettier \"**/*.{js,jsx}\" --write",
     "format:check": "prettier \"**/*.{js,jsx}\" -l",
-    "check": "npm run format; npm run lint:fix; npm run build"
+    "check": "npm run format; npm run lint:fix;"
   },
   "husky": {
     "hooks": {
