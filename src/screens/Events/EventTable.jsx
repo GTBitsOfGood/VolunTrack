@@ -6,8 +6,8 @@ import Icon from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
 import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
 
-import React from "react";
 import DateDisplayComponent from "../../components/DateDisplay";
+import { useSession } from "next-auth/react";
 
 const Styled = {
   Container: styled.div`
@@ -136,48 +136,29 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const getMinorTotal = (minors) => {
-  let total = 0;
-  minors.forEach((minorObj) => {
-    total += minorObj.minor.length;
-  });
-  return total;
-};
+// const monthMap = new Map([
+//   ["Jan", "01"],
+//   ["Feb", "02"],
+//   ["Mar", "03"],
+//   ["Apr", "04"],
+//   ["May", "05"],
+//   ["Jun", "06"],
+//   ["Jul", "07"],
+//   ["Aug", "08"],
+//   ["Sep", "09"],
+//   ["Oct", "10"],
+//   ["Nov", "11"],
+//   ["Dec", "12"],
+// ]);
 
-const sliceEventDate = (dateNum) => {
-  let eventDate = "";
-  eventDate =
-    dateNum.slice(5, 7) +
-    "/" +
-    dateNum.slice(8, 10) +
-    "/" +
-    dateNum.slice(0, 4);
-  return eventDate;
-};
-
-const monthMap = new Map([
-  ["Jan", "01"],
-  ["Feb", "02"],
-  ["Mar", "03"],
-  ["Apr", "04"],
-  ["May", "05"],
-  ["Jun", "06"],
-  ["Jul", "07"],
-  ["Aug", "08"],
-  ["Sep", "09"],
-  ["Oct", "10"],
-  ["Nov", "11"],
-  ["Dec", "12"],
-]);
-
-const compareDateString = (dateNum) => {
-  let date = "";
-  let dateArr = dateNum.split(" ");
-  date = monthMap.get(dateArr[0]);
-  date += "/" + dateArr[1];
-  date += "/" + dateArr[2];
-  return date;
-};
+// const compareDateString = (dateNum) => {
+//   let date = "";
+//   let dateArr = dateNum.split(" ");
+//   date = monthMap.get(dateArr[0]);
+//   date += "/" + dateArr[1];
+//   date += "/" + dateArr[2];
+//   return date;
+// };
 
 const EventTable = ({
   dateString,

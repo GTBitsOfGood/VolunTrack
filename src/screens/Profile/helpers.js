@@ -19,4 +19,3 @@ export const profileValidator = object().shape({
   city: string().trim().required(" City is required"),
   state: string().trim().required(" State is required"),
 });
-

@@ -1,4 +1,4 @@
-import { string, object, number } from "yup";
+import { string, object } from "yup";
 
 export const eventValidator = object().shape({
   firstName: string().trim(),

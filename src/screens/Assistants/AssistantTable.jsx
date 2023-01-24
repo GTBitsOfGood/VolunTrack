@@ -101,10 +101,7 @@ class AssistantTable extends React.Component {
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
-      updateRole(
-        this.state.userSelectedForEdit.email,
-        "admin-assistant"
-      );
+      updateRole(this.state.userSelectedForEdit.email, "admin-assistant");
     }
     if (event.value === "Staff") {
       updateRole(this.state.userSelectedForEdit.email, "staff");
@@ -456,4 +453,6 @@ AssistantTable.propTypes = {
   invitedAdmins: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
+  deletePendingCallback: PropTypes.func.isRequired,
+  deleteUserCallback: PropTypes.func.isRequired,
 };

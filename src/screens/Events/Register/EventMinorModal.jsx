@@ -1,9 +1,8 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import {
   Modal,
   ModalHeader,
-  ModalBody,
   ModalFooter,
   Button,
   Input,
@@ -11,7 +10,7 @@ import {
 } from "reactstrap";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
+import { Formik, Field } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";
 
@@ -150,10 +149,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button
-                color="secondary"
-                onClick={close}
-              >
+              <Button color="secondary" onClick={close}>
                 Cancel
               </Button>
               <Button
@@ -172,7 +168,9 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
 };
 
 EventMinorModal.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired,
+  setHasMinorTrue: PropTypes.func.isRequired,
 };
 export default EventMinorModal;

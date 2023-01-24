@@ -37,7 +37,7 @@ const LoadingBody = styled.div`
 const EventList = styled.div`
   width: 730px;
   height: 70px;
-  
+
   cursor: pointer;
 `;
 
@@ -120,10 +120,10 @@ const EventName = styled.div`
   font-size: 15px;
   text-align: left;
   margin-right: 10px;
-  width: 25%
+  width: 25%;
 `;
 const Time = styled.div`
-font-size: 15px;
+  font-size: 15px;
   width: 25%;
   text-align: center;
 `;

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Loading from "../components/Loading";
+import PropTypes from "prop-types";
 
 const Container = styled.div`
   width: 100%;
@@ -130,3 +131,7 @@ class RequestProvider extends React.Component {
 }
 
 export default RequestProvider;
+
+RequestProvider.propTypes = {
+  children: PropTypes.node,
+};

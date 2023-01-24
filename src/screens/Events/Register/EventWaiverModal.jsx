@@ -361,7 +361,11 @@ const EventWaiverModal = ({
 };
 
 EventWaiverModal.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  hasMinor: PropTypes.bool.isRequired,
+  onRegisterAfterWaiverClicked: PropTypes.func.isRequired,
+  eventId: PropTypes.object.isRequired,
+  isRegistered: PropTypes.bool.isRequired,
 };
 export default EventWaiverModal;

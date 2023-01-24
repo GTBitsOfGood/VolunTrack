@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { deleteEvent } from "../../../actions/queries";
 
@@ -36,8 +36,10 @@ const EventDeleteModal = ({ open, toggle, event }) => {
   );
 };
 
-EventDeleteModal.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
-};
 export default EventDeleteModal;
+
+EventDeleteModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired,
+};

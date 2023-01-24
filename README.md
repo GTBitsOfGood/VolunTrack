@@ -1,4 +1,4 @@
-# nextjs-starter
+# Volunteer and Event Management Platform
 
 Refactor list:
 

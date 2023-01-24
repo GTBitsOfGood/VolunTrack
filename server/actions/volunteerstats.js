@@ -1,5 +1,3 @@
-import { ObjectId } from "mongodb";
-
 const AttendanceData = require("../mongodb/models/attendance");
 import dbConnect from "../mongodb/index";
 

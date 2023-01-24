@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
 
-export async function createUserFromCredentials(user, next) {
+export async function createUserFromCredentials(user) {
   await dbConnect();
 
   const existingUser = await User.findOne({ "bio.email": user.email });

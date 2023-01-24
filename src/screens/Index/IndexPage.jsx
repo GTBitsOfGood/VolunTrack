@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import "normalize.css";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 const IndexPage = () => {
   const {
