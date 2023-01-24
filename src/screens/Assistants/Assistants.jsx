@@ -227,7 +227,7 @@ class Assistants extends React.Component {
     });
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = async () => {
     if (this.state.newInvitedAdmin?.length > 0)
       await updateInvitedAdmins(this.state.newInvitedAdmin);
     this.onRefresh();
@@ -255,7 +255,7 @@ class Assistants extends React.Component {
   };
 
   render() {
-    const { currentPage, loadingMoreUsers } = this.state;
+    const { loadingMoreUsers } = this.state;
     return (
       <Styled.Container>
         <Styled.Row>

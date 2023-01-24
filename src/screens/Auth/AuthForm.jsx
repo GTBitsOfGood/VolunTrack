@@ -44,7 +44,7 @@ class AuthForm extends React.Component {
   handleSubmit = async (values) => {
     if (this.props.createAccount) {
       createUserFromCredentials(values)
-        .then((response) => {
+        .then(() => {
           signIn("credentials", {
             email: values.email,
             password: values.password,

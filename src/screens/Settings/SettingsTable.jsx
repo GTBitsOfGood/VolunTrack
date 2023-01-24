@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import * as Table from "../sharedStyles/tableStyles";
 import Loading from "../../components/Loading";
@@ -31,9 +30,7 @@ const SettingsTable = ({ user, loading }) => {
 };
 SettingsTable.propTypes = {
   loading: PropTypes.bool,
-  users: PropTypes.array,
-  onEditClicked: PropTypes.func,
-  onDeleteClicked: PropTypes.func,
+  user: PropTypes.object,
 };
 
 export default SettingsTable;

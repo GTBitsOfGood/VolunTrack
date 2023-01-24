@@ -39,7 +39,7 @@ export async function removeInvitedAdmin(email) {
     .then((event) => {
       return event;
     })
-    .catch((err) => {
+    .catch(() => {
       return { status: 400, message: "Cannot remove invited admin" };
     });
   // try {

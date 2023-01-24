@@ -1,7 +1,10 @@
 const EventData = require("../mongodb/models/event");
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
-import { createHistoryEventCreateEvent, createHistoryEventEditEvent } from "./historyEvent";
+import {
+  createHistoryEventCreateEvent,
+  createHistoryEventEditEvent,
+} from "./historyEvent";
 const User = require("../mongodb/models/user");
 const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;

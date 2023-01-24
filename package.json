@@ -1,17 +1,17 @@
 {
-  "name": "volunteer-management-platform",
+  "name": "volunteer-and-event-management-platform",
   "version": "2.0.0",
-  "description": "A NextJS starter with API routes using MongoDB",
+  "description": "A multi-tenant platform for nonprofits to manage volunteer and events.",
   "author": "Bits of Good <hello@bitsofgood.org>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GTBitsOfGood/nextjs-starter.git"
+    "url": "git+https://github.com/GTBitsOfGood/helping-mamas.git"
   },
   "bugs": {
-    "url": "https://github.com/GTBitsOfGood/nextjs-starter/issues"
+    "url": "https://github.com/GTBitsOfGood/helping-mamas/issues"
   },
-  "homepage": "https://github.com/GTBitsOfGood/nextjs-starter#readme",
+  "homepage": "https://github.com/GTBitsOfGood/helping-mamas#readme",
   "scripts": {
     "dev": "next -p 3000",
     "build": "next build",
@@ -19,7 +19,8 @@
     "lint": "eslint \"**/*.{js,jsx}\"",
     "lint:fix": "eslint \"**/*.{js,jsx}\" --fix",
     "format": "prettier \"**/*.{js,jsx}\" --write",
-    "format:check": "prettier \"**/*.{js,jsx}\" -l"
+    "format:check": "prettier \"**/*.{js,jsx}\" -l",
+    "check": "npm run format; npm run lint:fix;"
   },
   "husky": {
     "hooks": {

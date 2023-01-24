@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
-import React from "react";
 import AuthPage from "../screens/Auth";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app

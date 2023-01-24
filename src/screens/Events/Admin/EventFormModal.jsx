@@ -72,7 +72,7 @@ const Styled = {
   `,
 };
 
-const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
+const EventFormModal = ({ toggle, event, isGroupEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.isValidForCourtHours ?? false
@@ -144,6 +144,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     containsExistingEvent(event) ? event.description : emptyStringField
   );
 
+  // eslint-disable-next-line no-unused-vars
   const [press, setPressed] = useState(false);
 
   let ReactQuill;
@@ -241,16 +242,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
       validationSchema={
         isGroupEvent ? groupEventValidator : standardEventValidator
       }
-      render={({
-        handleSubmit,
-        isValid,
-        isSubmitting,
-        values,
-        setFieldValue,
-        handleBlur,
-        errors,
-        touched,
-      }) => (
+      render={({ handleSubmit, isValid, isSubmitting }) => (
         <React.Fragment>
           <Styled.ModalBody>
             <Styled.Form>
@@ -326,7 +318,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Field>
                         <Styled.ErrorMessage name="endTime" />
                       </Styled.Col>
-                      <Row></Row>
+                      <Row />
                     </Row>
                     <Row
                       style={{
@@ -651,8 +643,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
 };
 
 EventFormModal.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
+  event: PropTypes.object.isRequired,
+  toggle: PropTypes.func.isRequired,
+  isGroupEvent: PropTypes.bool.isRequired,
 };
 
 export default EventFormModal;

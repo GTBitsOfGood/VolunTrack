@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
-import { registerForEvent, updateEvent } from "../eventHelpers";
+import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
@@ -257,20 +257,20 @@ const EventRegister = (event) => {
     setHasMinor(true);
   };
 
-  const onUnregister = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      minors: event.minors?.filter((minor) => minor.volunteer_id !== user._id),
-      volunteers: event.volunteers?.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-
-    onRefresh();
-  };
+  // const onUnregister = async (event) => {
+  //   const changedEvent = {
+  //     // remove current user id from event volunteers
+  //     ...event,
+  //     minors: event.minors?.filter((minor) => minor.volunteer_id !== user._id),
+  //     volunteers: event.volunteers?.filter(
+  //       (volunteer) => volunteer !== user._id
+  //     ),
+  //   };
+  //   const updatedEvent = await updateEvent(changedEvent);
+  //   setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
+  //
+  //   onRefresh();
+  // };
 
   const deleteMinor = async (event, deleteName) => {
     let allMinors = event.minors;
@@ -307,6 +307,7 @@ const EventRegister = (event) => {
         <React.Fragment>
           <Styled.Row>
             <Col xs="12" lg="6">
+              {/* eslint-disable-next-line react/no-unescaped-entities */}
               <Styled.MainText>You've registered successfully!</Styled.MainText>
             </Col>
           </Styled.Row>
@@ -394,10 +395,10 @@ const EventRegister = (event) => {
           </Styled.VolunteerContainer>
           {events.minors &&
             events.minors.map((minor) => (
-              <Styled.MinorRow>
+              <Styled.MinorRow key={minor}>
                 {minor.volunteer_id === user._id &&
                   minor.minor.map((names) => (
-                    <Styled.VolunteerContainer>
+                    <Styled.VolunteerContainer key={names}>
                       <Styled.VolunteerCol>
                         <div>
                           <Styled.VolunteerRow>

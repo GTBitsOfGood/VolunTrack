@@ -11,7 +11,7 @@ class EmailInUseError extends Error {
 
 // placeholder
 class SendEmailError extends Error {
-  constructor(message) {
+  constructor() {
     super("Send email error");
   }
 }

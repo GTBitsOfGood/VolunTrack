@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Row, Col, Container } from "reactstrap";
 import IconSpecial from "../../../components/IconSpecial";
@@ -88,7 +87,7 @@ const convertTime = (time) => {
 };
 
 const EventRegisterInfoContainer = ({ event, user, eventId }) => {
-  const { email = "", phone_number = "" } = user?.bio ?? {};
+  // const { email = "", phone_number = "" } = user?.bio ?? {};
 
   if (!event || !event.date) {
     return <div />;

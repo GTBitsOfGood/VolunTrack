@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import React from "react";
+import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import {
@@ -260,3 +261,7 @@ class Volunteers extends React.Component {
 }
 
 export default authWrapper(Volunteers);
+
+Volunteers.propTypes = {
+  user: PropTypes.object.isRequired,
+};

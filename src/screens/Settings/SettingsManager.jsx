@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { getCurrentUser } from "../../actions/queries";
