@@ -1,5 +1,5 @@
-import { differenceInCalendarDays } from "date-fns";
-import React, { useEffect, useState } from "react";
+// import { differenceInCalendarDays } from "date-fns";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { Button } from "reactstrap";
@@ -18,13 +18,14 @@ import {
 } from "reactstrap";
 
 import { useSession } from "next-auth/react";
-import { registerForEvent, updateEvent } from "./User/eventHelpers";
+import { updateEvent } from "./eventHelpers";
 import StatDisplay from "../Stats/User/StatDisplay";
 import router from "next/router";
+import PropTypes from "prop-types";
 
-const isSameDay = (a) => (b) => {
-  return differenceInCalendarDays(a, b) === 0;
-};
+// const isSameDay = (a) => (b) => {
+//   return differenceInCalendarDays(a, b) === 0;
+// };
 
 const Styled = {
   Container: styled.div`
@@ -121,6 +122,7 @@ const Styled = {
 };
 
 const EventManager = ({ user, role, isHomePage }) => {
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -213,7 +215,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
-  const onChange = (value, event) => {
+  const onChange = (value) => {
     if (Date.now() !== value) setShowBack(true);
     setDate(value);
     let datestr = value.toString();
@@ -242,6 +244,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     ].join(separator);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
@@ -405,3 +408,9 @@ const EventManager = ({ user, role, isHomePage }) => {
 };
 
 export default EventManager;
+
+EventManager.propTypes = {
+  isHomePage: PropTypes.bool.isRequired,
+  role: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
+};

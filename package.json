@@ -1,17 +1,17 @@
 {
-  "name": "nextjs-starter",
+  "name": "volunteer-and-event-management-platform",
   "version": "2.0.0",
-  "description": "A NextJS starter with API routes using MongoDB",
+  "description": "A multi-tenant platform for nonprofits to manage volunteer and events.",
   "author": "Bits of Good <hello@bitsofgood.org>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GTBitsOfGood/nextjs-starter.git"
+    "url": "git+https://github.com/GTBitsOfGood/helping-mamas.git"
   },
   "bugs": {
-    "url": "https://github.com/GTBitsOfGood/nextjs-starter/issues"
+    "url": "https://github.com/GTBitsOfGood/helping-mamas/issues"
   },
-  "homepage": "https://github.com/GTBitsOfGood/nextjs-starter#readme",
+  "homepage": "https://github.com/GTBitsOfGood/helping-mamas#readme",
   "scripts": {
     "dev": "next -p 3000",
     "build": "next build",
@@ -20,10 +20,7 @@
     "lint:fix": "eslint \"**/*.{js,jsx}\" --fix",
     "format": "prettier \"**/*.{js,jsx}\" --write",
     "format:check": "prettier \"**/*.{js,jsx}\" -l",
-    "secrets": "npm run secrets:logout && cross-env-shell BW_SESSION=`bw login product@bitsofgood.org --raw` \"npm run secrets:sync\"",
-    "secrets:logout": "(bw logout || exit 0)",
-    "secrets:login": "bw login product@bitsofgood.org",
-    "secrets:sync": "bw sync && bw get item b8594f56-00eb-4bbd-a446-ad9c0149ecc2 | fx .notes > \".env\""
+    "check": "npm run format; npm run lint:fix;"
   },
   "husky": {
     "hooks": {
@@ -39,23 +36,18 @@
     ]
   },
   "dependencies": {
-    "@mailchimp/mailchimp_transactional": "^1.0.47",
     "@next-auth/mongodb-adapter": "^1.0.1",
     "agenda": "^4.2.1",
     "axios": "^0.24.0",
-    "bcryptjs": "^2.4.3",
+    "bcrypt": "^5.1.0",
     "bootstrap": "^5.2.1",
     "classnames": "^2.3.1",
-    "clsx": "^1.1.1",
     "date-fns": "^2.28.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "express-validator": "^6.14.0",
     "focus-visible": "^5.2.0",
     "formik": "^2.2.9",
-    "isomorphic-unfetch": "^3.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.21",
     "mailersend": "^1.4.5",
     "mongodb": "^4.3.1",
     "mongoose": "^5.13.2",
@@ -71,8 +63,6 @@
     "react-calendar": "^3.7.0",
     "react-csv": "^2.2.2",
     "react-dropdown": "^1.9.2",
-    "react-google-button": "^0.7.2",
-    "react-google-login": "^5.2.2",
     "react-quill": "^2.0.0",
     "react-search-box": "^2.2.1",
     "reactstrap": "^6.4.0",
@@ -80,7 +70,6 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@bitwarden/cli": "^2022.8.0",
     "@types/node": "^17.0.21",
     "@types/react": "^17.0.40",
     "babel-eslint": "^10.1.0",

@@ -1,14 +1,9 @@
-## PR Title/Tagline
+### PR Title
 
-What does this PR change and why?
+One liner about what this PR changes and why
 
-### Important Changes
 
-- Database change / migration to run
-- Environment config change
-- Breaking API change
-
-### Related Github Issues
-
-- #[Number of Issue]
-- Or, remember to link to an issue on the sidebar
+#### Dev Checklist
+- [ ] If there was a database change, did you create an upgrade script.
+- [ ] Did you link the related github issue(s)?
+- [ ] Did you list any known issues/questions with the PR?

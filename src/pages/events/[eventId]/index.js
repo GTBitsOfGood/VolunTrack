@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
-import { updateEvent } from "../../../screens/Events/User/eventHelpers";
+import { updateEvent } from "../../../screens/Events/eventHelpers";
 
 const Styled = {
   Button: styled(Button)`

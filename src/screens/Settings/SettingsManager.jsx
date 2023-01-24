@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { getCurrentUser } from "../../actions/queries";
@@ -78,7 +78,7 @@ const SettingsManager = () => {
         <Styled.HeaderContainer>
           <Styled.Button onClick={onCreateClicked}>
             <Icon color="grey3" name="add" />
-            <span style={{ color: "black" }}>Edit</span>
+            <spanp style={{ color: "black" }}>Edit</spanp>
           </Styled.Button>
         </Styled.HeaderContainer>
       </div>

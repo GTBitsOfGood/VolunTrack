@@ -72,6 +72,7 @@ class ProfileForm extends React.Component {
       this.state.user._id
     );
 
+    // todo: this will always run
     this.props.context.startLoading();
     this.props.context.success("Profile successfully updated!");
     this.props.router.reload();

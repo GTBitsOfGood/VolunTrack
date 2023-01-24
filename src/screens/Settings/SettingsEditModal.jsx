@@ -22,7 +22,7 @@ const Styled = {
   `,
 };
 
-const handleChange = (event) => {};
+const handleChange = () => {};
 
 const SettingsEditModal = ({ open, toggle }) => {
   return (
@@ -57,14 +57,7 @@ const SettingsEditModal = ({ open, toggle }) => {
           window.location.reload();
         }}
         validationSchema={eventValidator}
-        render={({
-          handleSubmit,
-          isValid,
-          isSubmitting,
-          values,
-          setFieldValue,
-          handleBlur,
-        }) => (
+        render={({ handleSubmit, isValid, isSubmitting }) => (
           <React.Fragment>
             <ModalBody>
               <Styled.Form>

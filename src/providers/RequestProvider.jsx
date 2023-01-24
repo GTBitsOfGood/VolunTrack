@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Loading from "../components/Loading";
+import PropTypes from "prop-types";
 
 const Container = styled.div`
   width: 100%;
@@ -18,7 +19,7 @@ const Container = styled.div`
       props.success
         ? "hsla(127, 100%, 32%, 90%)"
         : props.failed
-        ? props.theme.error
+        ? "hsla(0, 100%, 50%, 80%)"
         : props.theme.grey9};
     display: flex;
     align-items: center;
@@ -130,3 +131,7 @@ class RequestProvider extends React.Component {
 }
 
 export default RequestProvider;
+
+RequestProvider.propTypes = {
+  children: PropTypes.node,
+};
