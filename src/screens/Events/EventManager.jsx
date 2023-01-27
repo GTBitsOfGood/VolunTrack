@@ -119,6 +119,15 @@ const Styled = {
     align-items: center;
     margin-right: 2rem;
   `,
+  LegendText: styled.p`
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+  `,
+  LegendImage: styled.img`
+    width: 20rem;
+    height: 5rem;
+  `,
 };
 
 const EventManager = ({ user, role, isHomePage }) => {
@@ -321,6 +330,8 @@ const EventManager = ({ user, role, isHomePage }) => {
               setMarkDates({ date, view }, markDates)
             }
           />
+          <Styled.LegendText>How to read the calendar?</Styled.LegendText>
+          <Styled.LegendImage src="/images/calendar_legend.png" alt="legend" />
         </Styled.Left>
       )}
       {!isHomePage && (
