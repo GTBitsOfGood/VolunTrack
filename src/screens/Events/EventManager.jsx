@@ -331,7 +331,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             }
           />
           <Styled.LegendText>How to read the calendar?</Styled.LegendText>
-          <Styled.LegendImage src="/images/calendar_legend.png" alt="legend" />
+          <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
         </Styled.Left>
       )}
       {!isHomePage && (
