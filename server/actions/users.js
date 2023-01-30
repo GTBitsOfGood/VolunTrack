@@ -72,21 +72,18 @@ export async function verifyUserWithCredentials(email, password) {
     };
 }
 
-export async function getEventVolunteers(parsedVolunteers, next) {
+export async function getEventVolunteers(parsedVolunteers, organizationId) {
   await dbConnect();
 
-  let volunteers = parsedVolunteers.map(mongoose.Types.ObjectId);
+  let volunteerIds = parsedVolunteers.map(mongoose.Types.ObjectId);
+  const volunteers = await User.find({
+    _id: { $in: volunteerIds },
+    organizationId,
+  });
 
-  return User.find({
-    _id: { $in: volunteers },
-  })
-    .then((users) => {
-      if (!users) {
-        return { status: 404, message: { error: `No Users found` } };
-      }
-      return { status: 200, message: { users } };
-    })
-    .catch((err) => next(err));
+  return volunteers
+    ? { status: 200, message: { volunteers } }
+    : { status: 404, message: { error: "No Users found" } };
 }
 
 export async function getManagementData(

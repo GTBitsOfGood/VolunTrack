@@ -64,9 +64,11 @@ export const updateUser = (
 export const updateRole = (email, role) =>
   axios.post(`/api/users/updateRole?email=${email}&role=${role}`);
 
-export const fetchVolunteers = (eventVolunteers) => {
+export const fetchVolunteers = (eventVolunteers, organizationId) => {
   return axios.get(
-    `/api/users/eventVolunteers?volunteers=${JSON.stringify(eventVolunteers)}`
+    `/api/users/eventVolunteers?volunteers=${JSON.stringify(
+      eventVolunteers
+    )}&organizationId=${organizationId}`
   );
 };
 
