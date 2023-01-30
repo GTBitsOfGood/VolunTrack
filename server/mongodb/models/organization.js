@@ -11,5 +11,5 @@ const organizationSchema = new mongoose.Schema(
 );
 
 module.exports =
-  mongoose.models.HistoryEvent ||
-  mongoose.model("HistoryEvent", historyEventSchema);
+  mongoose.models.Organization ||
+  mongoose.model("Organization", organizationSchema);
