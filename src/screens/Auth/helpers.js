@@ -7,6 +7,8 @@ export const createAccountValidator = object().shape({
   password: string()
     .required("No password provided.")
     .min(10, "Password is too short - should be 10 chars minimum."),
+  password_confirm: string().required("Confirm your password."),
+
   // .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
   // yup-password
 });
