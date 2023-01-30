@@ -1,12 +1,12 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import dbConnect from "../../../../server/mongodb/index";
-import User from "../../../../server/mongodb/models/user";
 import CredentialsProvider from "next-auth/providers/credentials";
-import AppSettings from "../../../../server/mongodb/models/AppSettings";
+import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users";
+import dbConnect from "../../../../server/mongodb/index";
+import AppSettings from "../../../../server/mongodb/models/AppSettings";
+import User from "../../../../server/mongodb/models/user";
 
 const uri = process.env.MONGO_DB;
 const options = {

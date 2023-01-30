@@ -10,7 +10,8 @@ export const fetchUserManagementData = (lastPaginationId) =>
 export const getCurrentUser = (userId) =>
   axios.get("/api/users/current?volunteer=" + userId);
 
-export const fetchUserCount = () => axios.get("/api/users/count");
+export const fetchUserCount = (organizationId) =>
+  axios.get(`/api/users/count?organizationId=${organizationId}`);
 
 export const updateUser = (
   email,

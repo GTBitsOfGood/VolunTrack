@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
-
-const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/user";
+
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
@@ -145,15 +145,11 @@ export async function getManagementData(
     .catch((err) => next(err));
 }
 
-export async function getCount(next) {
+export async function getCount(organizationId) {
   await dbConnect();
 
-  return User.estimatedDocumentCount()
-    .exec()
-    .then((count) => {
-      return { status: 200, message: { count } };
-    })
-    .catch((err) => next(err));
+  const count = await User.count({ organizationId });
+  return { status: 200, message: { count } };
 }
 
 export async function getCurrentUser(userId, next) {

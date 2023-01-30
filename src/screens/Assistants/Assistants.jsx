@@ -149,7 +149,7 @@ class Assistants extends React.Component {
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
     this.setState({ loadingMoreUsers: true });
-    fetchUserCount().then((result) => {
+    fetchUserCount(this.props.user.organizationId).then((result) => {
       if (result && result.data && result.data.count) {
         this.setState({
           userCount: result.data.count,
