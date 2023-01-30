@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -43,19 +44,24 @@ const Styled = {
 };
 
 const History = () => {
+  const {
+    data: { user },
+  } = useSession();
+
   const [searchValue, setSearchValue] = useState("");
   const [historyEvents, setHistoryEvents] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const fetchedHistoryEvents = (await getHistoryEvents()).data;
+      const fetchedHistoryEvents = (await getHistoryEvents(user.organizationId))
+        .data;
       const mappedHistoryEvents = await Promise.all(
         fetchedHistoryEvents.map(async (event) => {
-          const user = (await getUserFromId(event.userId)).data.user;
+          const eventUser = (await getUserFromId(event.userId)).data.user;
           return {
             ...event,
-            firstName: user.bio.first_name,
-            lastName: user.bio.last_name,
+            firstName: eventUser.bio.first_name,
+            lastName: eventUser.bio.last_name,
           };
         })
       );
