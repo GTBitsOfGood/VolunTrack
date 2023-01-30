@@ -23,39 +23,36 @@ export async function createEvent(newEventData, next) {
     .catch(next);
 }
 
-export async function getEvents(startDate, endDate, next) {
+export async function getEvents(startDate, endDate, organizationId) {
   await dbConnect();
 
   if (startDate === "undefined" && endDate === "undefined") {
-    return EventData.find({})
+    return EventData.find({ organizationId })
       .sort({ date: 1 })
       .then((events) => {
         return events;
-      })
-      .catch(next);
+      });
   } else if (startDate === "undefined") {
     endDate = new Date(endDate);
     if (endDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
-      return EventData.find({ date: { $lte: endDate } })
+      return EventData.find({ date: { $lte: endDate }, organizationId })
         .sort({ date: 1 })
         .then((events) => {
           return events;
-        })
-        .catch(next);
+        });
     }
   } else if (endDate === "undefined") {
     startDate = new Date(startDate);
     if (startDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
-      return EventData.find({ date: { $gte: startDate } })
+      return EventData.find({ date: { $gte: startDate }, organizationId })
         .sort({ date: 1 })
         .then((events) => {
           return events;
-        })
-        .catch(next);
+        });
     }
   } else {
     startDate = new Date(startDate);
@@ -63,12 +60,14 @@ export async function getEvents(startDate, endDate, next) {
     if (startDate === "Invalid Date" || endDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
-      return EventData.find({ date: { $gte: startDate, $lte: endDate } })
+      return EventData.find({
+        date: { $gte: startDate, $lte: endDate },
+        organizationId,
+      })
         .sort({ date: 1 })
         .then((events) => {
           return events;
-        })
-        .catch(next);
+        });
     }
   }
 }
