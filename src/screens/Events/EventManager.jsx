@@ -122,7 +122,7 @@ const Styled = {
   LegendText: styled.p`
     font-size: 20px;
     font-weight: bold;
-    margin-top: 20px;
+    margin-top: 30px;
   `,
   LegendImage: styled.img`
     width: 20rem;
