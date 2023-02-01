@@ -5,9 +5,10 @@ import {
   fetchAttendanceByUserId,
   fetchEvents,
   getSimpleAttendanceForEvent,
+  getEventStatistics,
 } from "../../../actions/queries";
 import { useEffect } from "react";
-import { getHours } from "../../Stats/User/hourParsing";
+//import { getHours } from "../../Stats/User/hourParsing";
 import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
 import * as SForm from "../../sharedStyles/formStyles";
@@ -56,24 +57,66 @@ const Stats = () => {
   const [endDate, setEndDate] = useState("undefined");
   const [loading, setLoading] = useState(false);
 
+  const getHours = (startTime, endTime) => {
+    var timeStart = new Date("01/01/2007 " + startTime);
+    var timeEnd = new Date("01/01/2007 " + endTime);
+  
+    let hours = Math.abs(timeEnd - timeStart) / 36e5;
+  
+    if (hours < 0) {
+      hours = 24 + hours;
+    }
+  
+    return Math.round(hours * 10) / 10.0;
+  };
+
   useEffect(() => {
     onRefresh();
+    console.log("hello1")
   }, [startDate, endDate]);
 
   const onRefresh = async () => {
     setLoading(true);
-    fetchAttendanceByUserId(null)
+    // console.log("hello")
+    console.log("hello3")
+    getEventStats()
+    fetchAttendanceByUserId("null")
       .then((result) => {
+        console.log("hello33212")
+        // console.log(result)
         const filteredAttendance = filterAttendance(
-          result.data.event,
+          result.data.attendances,
           startDate,
           endDate
         );
-        console.log(filteredAttendance);
+        // console.log(result.data)
+        // console.log(filteredAttendance)
+        // console.log("filtered");
+        setAttend(filteredAttendance.length)
+        var addedHours = 0 
+        for (const attendance of filteredAttendance) {
+          // console.log(attendance.timeCheckedIn)
+          // console.log(attendance.timeCheckedOut)
+          //console.log("one")
+          //console.log(getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11)))
+          
+          if (attendance.timeCheckedIn && attendance.timeCheckedOut) {
+            //console.log(getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11)))
+            addedHours = addedHours + getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11))
+            //console.log(addedHours)
+          }
+          
+          
+        }
+        setHours(Math.round(addedHours * 10) / 10);
+
       })
       .finally(() => {
         setLoading(false);
+        
       });
+
+
 
     // fetch attendance data
     // filter it given dates
@@ -96,6 +139,15 @@ const Stats = () => {
     //   });
   };
 
+  async function getEventStats() {
+    console.log("event before")
+    getEventStatistics()
+      .then((result) => {
+      console.log("EVENT STATS")
+      console.log(result)
+    });
+  }
+
   async function updateAttendance(eventID) {
     getSimpleAttendanceForEvent(eventID).then((result) => {
       setAttend(attend + result.data.length);
@@ -104,7 +156,7 @@ const Stats = () => {
 
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
-
+    //console.log("hello45678888")
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
@@ -181,11 +233,12 @@ const Stats = () => {
           <Col>Total Hours Worked: {hours}</Col>
         </Row>
       )}
-      {/*{!loading && (*/}
-      {/*  <Styled.marginTable>*/}
-      {/*    <EventTable events={events} isVolunteer={false} />*/}
-      {/*  </Styled.marginTable>*/}
-      {/*)}*/}
+{/*       
+      {!loading && (
+        <Styled.marginTable>
+          <EventTable events={events} isVolunteer={false} />
+        </Styled.marginTable> )}
+       */}
     </Styled.Container>
   );
 };

@@ -376,7 +376,9 @@ const Header = () => {
                   {user.role === "admin" && (
                     <React.Fragment>
                       <DropdownItem onClick={goToHistory} href="/history">
-                        <Styled.DropdownItem>Change History</Styled.DropdownItem>
+                        <Styled.DropdownItem>
+                          Change History
+                        </Styled.DropdownItem>
                       </DropdownItem>
                       <DropdownItem onClick={gotToSummary} href="/summary">
                         <Styled.DropdownItem>
