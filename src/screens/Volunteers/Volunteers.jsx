@@ -163,17 +163,7 @@ class Volunteers extends React.Component {
   onEditUser = (updatedUser) => {
     /** code to update users in state at that specific index */
     updateUser(
-      updatedUser.email,
-      updatedUser.first_name,
-      updatedUser.last_name,
-      updatedUser.phone_number,
-      updatedUser.date_of_birth,
-      updatedUser.zip_code,
-      updatedUser.address,
-      updatedUser.city,
-      updatedUser.state,
-      updatedUser.notes,
-      this.props.user._id
+      this.props.user._id, updatedUser
     );
 
     let updatedUsers = this.state.users.map((user) => {

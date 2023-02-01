@@ -9,7 +9,7 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
-import { updateRole } from "../../actions/queries";
+import { updateUser } from "../../actions/queries";
 import Pagination from "../../components/PaginationComp";
 
 // const keyToValue = (key) => {
@@ -94,17 +94,17 @@ class AssistantTable extends React.Component {
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
-      updateRole(this.state.userSelectedForEdit.email, "admin");
+      updateUser(this.state.userSelectedForEdit._id, { role:"admin" });
     }
     if (event.value === "Admin Assistant") {
       const newRoleName = "admin-assistant";
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
-      updateRole(this.state.userSelectedForEdit.email, "admin-assistant");
+      updateUser(this.state.userSelectedForEdit._id, { role:"admin-assistant" });
     }
     if (event.value === "Staff") {
-      updateRole(this.state.userSelectedForEdit.email, "staff");
+      updateUser(this.state.userSelectedForEdit._id, { role:"staff" });
       const newRoleName = "staff";
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)

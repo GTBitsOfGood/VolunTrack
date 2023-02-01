@@ -58,19 +58,19 @@ class ProfileForm extends React.Component {
     this.setState({
       visibleText: true,
     });
-    await updateUser(
-      this.props.user.bio.email,
-      values.first_name,
-      values.last_name,
-      values.phone_number,
-      values.date_of_birth,
-      values.zip_code,
-      values.address,
-      values.city,
-      values.state,
-      values.notes,
-      this.state.user._id
-    );
+    let bio = {
+      email: this.props.user.bio.email,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      phone_number: values.phone_number,
+      date_of_birth: values.date_of_birth,
+      zip_code: values.zip_code,
+      address: values.address,
+      city: values.city,
+      state: values.state,
+      notes: values.notes,
+    }
+    await updateUser(this.state.user._id, { bio: bio });
 
     // todo: this will always run
     this.props.context.startLoading();

@@ -18,22 +18,11 @@ export default async function handler(req, res, next) {
 
     let result = await getUserFromId(req.query.id, next);
     res.status(result.status).json(result.message);
-  } else if (req.method === "PUT") {
+  } else if (req.method === "POST") {
     check("id").isMongoId();
-
-    const user = req.body.bio;
-    let result = await updateUser(
-      user.email,
-      user.phone_number,
-      user.first_name,
-      user.last_name,
-      user.date_of_birth,
-      user.zip_code,
-      user.address,
-      user.city,
-      user.state,
-      user.notes
-    );
+    const id = req.query.id
+    const user = req.body;
+    let result = await updateUser(id, user);
     res.status(result.status).json(result.message);
   } else if (req.method === "DELETE") {
     check("id").isMongoId();

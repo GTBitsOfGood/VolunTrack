@@ -168,191 +168,22 @@ export async function getCurrentUser(userId, next) {
 
 // multiple updates, not sure how to handle
 // maybe run in parallel with Promise.all?
-export async function updateUser(
-  email,
-  phone_number,
-  first_name,
-  last_name,
-  date_of_birth,
-  zip_code,
-  address,
-  city,
-  state,
-  notes,
-  userId
-) {
+export async function updateUser(id, user) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
-  if (userId) createHistoryEventEditProfile(userId);
-
+  if (id) createHistoryEventEditProfile(id);
+  const { role } = user
+  const { email } = user.bio
   if (!email) return { status: 400, message: { error: "Invalid email sent" } };
 
-  if (phone_number?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.phone_number": phone_number } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
+  if (user.bio) {
+    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, {bio: {...user.bio}})
   }
-  if (first_name?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.first_name": first_name } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
+  
+  if (role) {
+    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, {role: role})
   }
-  if (last_name?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.last_name": last_name } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (phone_number?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.phone_number": phone_number } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (date_of_birth?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.date_of_birth": date_of_birth } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (zip_code?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.zip_code": zip_code } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (address?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.address": address } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (city?.length !== 0) {
-    User.updateOne({ "bio.email": email }, { $set: { "bio.city": city } }).then(
-      (result) => {
-        if (!result.nModified)
-          return {
-            status: 400,
-            message: {
-              error: "Email requested for update was invalid. 0 items changed.",
-            },
-          };
-      }
-    );
-  }
-
-  if (state?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.state": state } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
-  if (notes?.length !== 0) {
-    User.updateOne(
-      { "bio.email": email },
-      { $set: { "bio.notes": notes } }
-    ).then((result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-    });
-  }
-
   return { status: 200 };
-}
-
-export async function updateRole(email, role) {
-  if (!email || !role)
-    return { status: 400, message: { error: "Invalid email or role sent" } };
-
-  return User.updateOne({ "bio.email": email }, { $set: { role: role } }).then(
-    (result) => {
-      if (!result.nModified)
-        return {
-          status: 400,
-          message: {
-            error: "Email requested for update was invalid. 0 items changed.",
-          },
-        };
-      return { status: 200 };
-    }
-  );
 }
 
 export async function getUserFromId(id, next) {
