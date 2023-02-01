@@ -374,6 +374,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             open={showEditModal}
             toggle={toggleEditModal}
             event={currEvent}
+            setEvent={setCurrEvent}
           />
           <EventDeleteModal
             open={showDeleteModal}
