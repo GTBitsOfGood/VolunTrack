@@ -5,7 +5,11 @@ import { Button, Col, FormGroup as BFormGroup, Row } from "reactstrap";
 import * as SForm from "../sharedStyles/formStyles";
 
 import styled from "styled-components";
-import { createAccountValidator, loginValidator } from "./helpers";
+import {
+  createAccountValidator,
+  validationSchema,
+  loginValidator,
+} from "./helpers";
 import { signIn } from "next-auth/react";
 import { createUserFromCredentials } from "../../actions/queries";
 
@@ -83,7 +87,9 @@ class AuthForm extends React.Component {
             setSubmitting(false);
           }}
           validationSchema={
-            this.props.createAccount ? createAccountValidator : loginValidator
+            this.props.createAccount
+              ? createAccountValidator && validationSchema
+              : loginValidator
           }
         >
           {({ handleSubmit, isValid, isSubmitting }) => (
