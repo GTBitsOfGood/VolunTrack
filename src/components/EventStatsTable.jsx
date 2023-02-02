@@ -48,29 +48,36 @@ const Styled = {
 
     margin: 0 0 0 auto;
   `,
+
+  EventName: styled.div`
+    font-size: 15px;
+    text-align: center;
+    margin-right: 10px;
+    width: 30%;
+  `,
   Date: styled.div`
     font-size: 15px;
-    text-align: left;
+    text-align: center;
     margin-right: 10px;
-    width: 25%;
+    width: 20%;
   `,
   Time: styled.div`
     font-size: 15px;
-    text-align: left;
+    text-align: center;
     margin-right: 10px;
     width: 25%;
   `,
   Attendance: styled.div`
     font-size: 15px;
-    text-align: left;
+    text-align: center;
     margin-right: 10px;
-    width: 25%;
+    width: 15%;
   `,
   Hours: styled.div`
     font-size: 15px;
-    text-align: left;
+    text-align: center;
     margin-right: 10px;
-    width: 25%;
+    width: 15%;
   `,
 };
 
@@ -84,6 +91,17 @@ const Styled = {
 //   hours = ((hours + 11) % 12) + 1;
 //   return hours.toString() + ":" + min + suffix;
 // };
+
+const convertTime = (time) => {
+  let [hour, min] = time.split(":");
+  let hours = parseInt(hour);
+  let suffix = time[-2];
+  if (!(suffix in ["pm", "am", "PM", "AM"])) {
+    suffix = hours > 11 ? "pm" : "am";
+  }
+  hours = ((hours + 11) % 12) + 1;
+  return hours.toString() + ":" + min + suffix;
+};
 
 const EventStatsTable = ({
   events,
@@ -102,7 +120,7 @@ const EventStatsTable = ({
         <Styled.List>
           <Table.EventList>
             <Table.InnerTop>
-              <Table.EventName>Event Name</Table.EventName>
+              <Styled.EventName>Event Name</Styled.EventName>
 
               <Styled.Date>Date</Styled.Date>
 
@@ -119,14 +137,17 @@ const EventStatsTable = ({
               <Link href={`events/${event._id}`}>
                 <Table.EventList>
                   <Table.Inner>
-                    <Table.EventName>{event.title}</Table.EventName>
+                    <Styled.EventName>{event.title}</Styled.EventName>
 
                     <Styled.Date>{event.date.substring(0, 10)}</Styled.Date>
 
                     <Styled.Time>
-                      {event.startTime} - {event.endTime}
+                      {convertTime(event.startTime)} -{" "}
+                      {convertTime(event.endTime)} {event.localTime}
                     </Styled.Time>
+
                     <Styled.Attendance>{event.attendance}</Styled.Attendance>
+
                     <Styled.Hours>{event.hours}</Styled.Hours>
                   </Table.Inner>
                 </Table.EventList>

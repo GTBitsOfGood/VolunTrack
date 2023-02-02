@@ -39,13 +39,29 @@ const Styled = {
     font-weight: bold;
     padding: 5px;
   `,
+  StatHeader: styled.div`
+    font-size: 15px;
+    text-align: center;
+    font-weight:
+    padding: 1px;
+  `,
+  OverallStat: styled.div`
+    font-size: 23px;
+    text-align: center;
+    padding: 1px;
+  `,
   Header2: styled.div`
-    font-size: 14px;
-    color: gray;
+    font-size: 20px;
+    color: dark-gray;
+    font-weight: bold;
     padding: 5px;
   `,
   Row: styled(Row)`
     margin: 0.5rem 2rem 0.5rem 1rem;
+  `,
+  StatRow: styled(Row)`
+    margin: 0.3rem 1rem 0.3rem 0.5rem;
+    bottom: 0;
   `,
 };
 
@@ -185,12 +201,6 @@ const Stats = () => {
   //   });
   // }
 
-  async function updateAttendance(eventID) {
-    getSimpleAttendanceForEvent(eventID).then((result) => {
-      setAttend(attend + result.data.length);
-    });
-  }
-
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
     //console.log("hello45678888")
@@ -264,11 +274,24 @@ const Stats = () => {
       {loading && <Loading />}
 
       {!loading && (
-        <Row>
-          <Col>Total Events: {numEvents}</Col>
-          <Col>Total Attendance: {attend}</Col>
-          <Col>Total Hours Worked: {hours}</Col>
-        </Row>
+        <>
+          <Styled.StatRow>
+            <Col>
+              <Styled.StatHeader>
+                <br></br>Total Events:
+              </Styled.StatHeader>
+              <Styled.OverallStat>{numEvents}</Styled.OverallStat>
+            </Col>
+            <Col>
+              <Styled.StatHeader>Total Attendance:</Styled.StatHeader>{" "}
+              <Styled.OverallStat>{attend}</Styled.OverallStat>
+            </Col>
+            <Col>
+              <Styled.StatHeader>Total Hours Worked:</Styled.StatHeader>
+              <Styled.OverallStat>{hours}</Styled.OverallStat>
+            </Col>
+          </Styled.StatRow>
+        </>
       )}
 
       {!loading && (
