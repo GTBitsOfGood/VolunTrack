@@ -96,15 +96,14 @@ const Stats = () => {
 
 
         getEventStatistics()
-        .then((result) => {
+        .then((result2) => {
             
-          setEventStats(result)
+          setEventStats(result2)
           console.log("TWO HERE")
           console.log(result)
-        })
 
-        let returnArray = []
-          for (let document of events) {
+          let returnArray = []
+          for (let document of result.data.events) {
           //let currEvent = []
           
           //let hours = getHours(event.timeCheckedIn.substring(11), event.timeCheckedOut.substring(11))
@@ -112,7 +111,7 @@ const Stats = () => {
           var attendance = 0
           var hours = 0
           
-          for (let document of eventStats.data) {
+          for (let document of result2.data) {
             if (document._id == eventID) {
               attendance = document.num;
               hours = document.hours;
@@ -137,6 +136,9 @@ const Stats = () => {
         setEvents(returnArray)
         console.log("THREE HERE")
         console.log(returnArray)
+        })
+
+        
 
       })
       .finally(() => {
