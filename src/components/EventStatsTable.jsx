@@ -49,28 +49,28 @@ const Styled = {
     margin: 0 0 0 auto;
   `,
   Date: styled.div`
-  font-size: 15px;
-  text-align: left;
-  margin-right: 10px;
-  width: 25%;
+    font-size: 15px;
+    text-align: left;
+    margin-right: 10px;
+    width: 25%;
   `,
   Time: styled.div`
-  font-size: 15px;
-  text-align: left;
-  margin-right: 10px;
-  width: 25%;
+    font-size: 15px;
+    text-align: left;
+    margin-right: 10px;
+    width: 25%;
   `,
   Attendance: styled.div`
-  font-size: 15px;
-  text-align: left;
-  margin-right: 10px;
-  width: 25%;
+    font-size: 15px;
+    text-align: left;
+    margin-right: 10px;
+    width: 25%;
   `,
   Hours: styled.div`
-  font-size: 15px;
-  text-align: left;
-  margin-right: 10px;
-  width: 25%;
+    font-size: 15px;
+    text-align: left;
+    margin-right: 10px;
+    width: 25%;
   `,
 };
 
@@ -87,12 +87,11 @@ const Styled = {
 
 const EventStatsTable = ({
   events,
-  eventStats, 
   isVolunteer,
   // onDeleteClicked,
   // onEditClicked,
 }) => {
-  const eventName =  "Event Name";
+  const eventName = "Event Name";
   const creation = "Email Address";
   const time = "Hours Participated";
   const textInfo = "";
@@ -116,18 +115,18 @@ const EventStatsTable = ({
 
         {isVolunteer == false &&
           events.map((event) => (
-            
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
                 <Table.EventList>
                   <Table.Inner>
                     <Table.EventName>{event.title}</Table.EventName>
 
-                    <Styled.Date>{event.date.substring(0,10)}</Styled.Date>
+                    <Styled.Date>{event.date.substring(0, 10)}</Styled.Date>
 
-                    <Styled.Time>{event.startTime} - {event.endTime}</Styled.Time>
-                    <Styled.Attendance>{event.attendance}
-</Styled.Attendance>
+                    <Styled.Time>
+                      {event.startTime} - {event.endTime}
+                    </Styled.Time>
+                    <Styled.Attendance>{event.attendance}</Styled.Attendance>
                     <Styled.Hours>{event.hours}</Styled.Hours>
                   </Table.Inner>
                 </Table.EventList>

@@ -62,13 +62,13 @@ const Stats = () => {
   const getHours = (startTime, endTime) => {
     var timeStart = new Date("01/01/2007 " + startTime);
     var timeEnd = new Date("01/01/2007 " + endTime);
-  
+
     let hours = Math.abs(timeEnd - timeStart) / 36e5;
-  
+
     if (hours < 0) {
       hours = 24 + hours;
     }
-  
+
     return Math.round(hours * 10) / 10.0;
   };
 
@@ -80,7 +80,7 @@ const Stats = () => {
   const onRefresh = async () => {
     setLoading(true);
     // console.log("hello")
-    console.log("hello3")
+    console.log("hello3");
     // grab the events
     setLoading(true);
     fetchEvents(startDate, endDate)
@@ -88,38 +88,32 @@ const Stats = () => {
         if (result && result.data && result.data.events) {
           //setEvents(result.data.events);
           setNumEvents(result.data.events.length);
-    
-          
         }
-        console.log("ONE HERE")
-        console.log(result)
+        console.log("ONE HERE");
+        console.log(result);
 
+        getEventStatistics().then((result2) => {
+          setEventStats(result2);
+          console.log("TWO HERE");
+          console.log(result);
 
-        getEventStatistics()
-        .then((result2) => {
-            
-          setEventStats(result2)
-          console.log("TWO HERE")
-          console.log(result)
-
-          let returnArray = []
+          let returnArray = [];
           for (let document of result.data.events) {
-          //let currEvent = []
-          
-          //let hours = getHours(event.timeCheckedIn.substring(11), event.timeCheckedOut.substring(11))
-          var eventID = document._id;
-          var attendance = 0
-          var hours = 0
-          
-          for (let document of result2.data) {
-            if (document._id == eventID) {
-              attendance = document.num;
-              hours = document.hours;
+            //let currEvent = []
+
+            //let hours = getHours(event.timeCheckedIn.substring(11), event.timeCheckedOut.substring(11))
+            var eventID = document._id;
+            var attendance = 0;
+            var hours = 0;
+
+            for (let document of result2.data) {
+              if (document._id == eventID) {
+                attendance = document.num;
+                hours = document.hours;
+              }
             }
-          }
 
-
-          const newDoc = {
+            const newDoc = {
               _id: document._id,
               title: document.title,
               date: document.date,
@@ -127,27 +121,19 @@ const Stats = () => {
               endTime: document.endTime,
               attendance: attendance,
               hours: hours,
-               
+            };
+
+            returnArray.push(newDoc);
           }
-
-            returnArray.push(newDoc)
-
-        }
-        setEvents(returnArray)
-        console.log("THREE HERE")
-        console.log(returnArray)
-        })
-
-        
-
+          setEvents(returnArray);
+          console.log("THREE HERE");
+          console.log(returnArray);
+        });
       })
       .finally(() => {
         setLoading(false);
       });
-    
-    
-    
-    
+
     fetchAttendanceByUserId("null")
       .then((result) => {
         //console.log("hello33212")
@@ -160,36 +146,34 @@ const Stats = () => {
         // console.log(result.data)
         // console.log(filteredAttendance)
         // console.log("filtered");
-        setAttend(filteredAttendance.length)
-        var addedHours = 0 
+        setAttend(filteredAttendance.length);
+        var addedHours = 0;
         for (const attendance of filteredAttendance) {
           // console.log(attendance.timeCheckedIn)
           // console.log(attendance.timeCheckedOut)
           //console.log("one")
           //console.log(getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11)))
-          
+
           if (attendance.timeCheckedIn && attendance.timeCheckedOut) {
             //console.log(getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11)))
-            addedHours = addedHours + getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11))
+            addedHours =
+              addedHours +
+              getHours(
+                attendance.timeCheckedIn.substring(11),
+                attendance.timeCheckedOut.substring(11)
+              );
             //console.log(addedHours)
           }
-          
-          
         }
         setHours(Math.round(addedHours * 10) / 10);
-
       })
       .finally(() => {
         setLoading(false);
-        
       });
-
-
 
     // fetch attendance data
     // filter it given dates
     // parse it for unique eventIds and total # of hours
-    
   };
 
   // async function getEventStats() {
@@ -286,12 +270,12 @@ const Stats = () => {
           <Col>Total Hours Worked: {hours}</Col>
         </Row>
       )}
-      
+
       {!loading && (
         <Styled.marginTable>
-          <EventTable events={events} isVolunteer={false} eventStats={eventStats}/>
-        </Styled.marginTable> )}
-      
+          <EventTable events={events} isVolunteer={false} />
+        </Styled.marginTable>
+      )}
     </Styled.Container>
   );
 };

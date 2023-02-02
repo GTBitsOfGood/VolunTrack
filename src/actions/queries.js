@@ -144,8 +144,8 @@ export const getSimpleAttendanceForEvent = (eventId) =>
 //export const getEventStatistics = (startDate, endDate) =>
 export const getEventStatistics = () =>
   axios.get(
-  //  `/api/attendance/eventstatistics?startDate=${startDate}&endDate=${endDate}`
-  `/api/attendance/eventstatistics`
+    //  `/api/attendance/eventstatistics?startDate=${startDate}&endDate=${endDate}`
+    `/api/attendance/eventstatistics`
   );
 
 export const deleteAttendance = (id) =>

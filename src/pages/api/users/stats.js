@@ -1,4 +1,4 @@
-import {getAllAttendanceObjects} from "../../../../server/actions/volunteerstats";
+import { getAllAttendanceObjects } from "../../../../server/actions/volunteerstats";
 
 const {
   getAttendanceByUserID,
@@ -7,7 +7,8 @@ const {
 export default async function handler(req, res, next) {
   if (req.method === "GET") {
     let attendances;
-    if (req.query.volunteer != "null") attendances = await getAttendanceByUserID(req.query.volunteer, next);
+    if (req.query.volunteer != "null")
+      attendances = await getAttendanceByUserID(req.query.volunteer, next);
     else attendances = await getAllAttendanceObjects(next);
 
     return res.status(200).json({
