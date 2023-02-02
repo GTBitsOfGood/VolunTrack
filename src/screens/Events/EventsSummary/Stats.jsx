@@ -8,6 +8,7 @@ import {
   getEventStatistics,
 } from "../../../actions/queries";
 import { useEffect } from "react";
+import EventTable from "../../../components/EventStatsTable";
 //import { getHours } from "../../Stats/User/hourParsing";
 import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
@@ -50,6 +51,7 @@ const Styled = {
 
 const Stats = () => {
   const [events, setEvents] = useState([]);
+  const [eventStats, setEventStats] = useState([]);
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
   const [hours, setHours] = useState(0);
@@ -72,17 +74,81 @@ const Stats = () => {
 
   useEffect(() => {
     onRefresh();
-    console.log("hello1")
+    //console.log("hello1")
   }, [startDate, endDate]);
 
   const onRefresh = async () => {
     setLoading(true);
     // console.log("hello")
     console.log("hello3")
-    getEventStats()
+    // grab the events
+    setLoading(true);
+    fetchEvents(startDate, endDate)
+      .then(async (result) => {
+        if (result && result.data && result.data.events) {
+          //setEvents(result.data.events);
+          setNumEvents(result.data.events.length);
+    
+          
+        }
+        console.log("ONE HERE")
+        console.log(result)
+
+
+        getEventStatistics()
+        .then((result) => {
+            
+          setEventStats(result)
+          console.log("TWO HERE")
+          console.log(result)
+        })
+
+        let returnArray = []
+          for (let document of events) {
+          //let currEvent = []
+          
+          //let hours = getHours(event.timeCheckedIn.substring(11), event.timeCheckedOut.substring(11))
+          var eventID = document._id;
+          var attendance = 0
+          var hours = 0
+          
+          for (let document of eventStats.data) {
+            if (document._id == eventID) {
+              attendance = document.num;
+              hours = document.hours;
+            }
+          }
+
+
+          const newDoc = {
+              _id: document._id,
+              title: document.title,
+              date: document.date,
+              startTime: document.startTime,
+              endTime: document.endTime,
+              attendance: attendance,
+              hours: hours,
+               
+          }
+
+            returnArray.push(newDoc)
+
+        }
+        setEvents(returnArray)
+        console.log("THREE HERE")
+        console.log(returnArray)
+
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+    
+    
+    
+    
     fetchAttendanceByUserId("null")
       .then((result) => {
-        console.log("hello33212")
+        //console.log("hello33212")
         // console.log(result)
         const filteredAttendance = filterAttendance(
           result.data.attendances,
@@ -121,32 +187,17 @@ const Stats = () => {
     // fetch attendance data
     // filter it given dates
     // parse it for unique eventIds and total # of hours
-    // setLoading(true);
-    // fetchEvents(startDate, endDate)
-    //   .then(async (result) => {
-    //     if (result && result.data && result.data.events) {
-    //       setEvents(result.data.events);
-    //       setNumEvents(result.data.events.length);
-    //
-    //       let count = 0;
-    //       for (let i = 0; i < events.length; i++) {
-    //         await updateAttendance(events[i]._id);
-    //       }
-    //     }
-    //   })
-    //   .finally(() => {
-    //     setLoading(false);
-    //   });
+    
   };
 
-  async function getEventStats() {
-    console.log("event before")
-    getEventStatistics()
-      .then((result) => {
-      console.log("EVENT STATS")
-      console.log(result)
-    });
-  }
+  // async function getEventStats() {
+  //   console.log("event before")
+  //   getEventStatistics()
+  //     .then((result) => {
+  //     console.log("EVENT STATS")
+  //     console.log(result)
+  //   });
+  // }
 
   async function updateAttendance(eventID) {
     getSimpleAttendanceForEvent(eventID).then((result) => {
@@ -233,12 +284,12 @@ const Stats = () => {
           <Col>Total Hours Worked: {hours}</Col>
         </Row>
       )}
-{/*       
+      
       {!loading && (
         <Styled.marginTable>
-          <EventTable events={events} isVolunteer={false} />
+          <EventTable events={events} isVolunteer={false} eventStats={eventStats}/>
         </Styled.marginTable> )}
-       */}
+      
     </Styled.Container>
   );
 };

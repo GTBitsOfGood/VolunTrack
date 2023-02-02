@@ -48,6 +48,30 @@ const Styled = {
 
     margin: 0 0 0 auto;
   `,
+  Date: styled.div`
+  font-size: 15px;
+  text-align: left;
+  margin-right: 10px;
+  width: 25%;
+  `,
+  Time: styled.div`
+  font-size: 15px;
+  text-align: left;
+  margin-right: 10px;
+  width: 25%;
+  `,
+  Attendance: styled.div`
+  font-size: 15px;
+  text-align: left;
+  margin-right: 10px;
+  width: 25%;
+  `,
+  Hours: styled.div`
+  font-size: 15px;
+  text-align: left;
+  margin-right: 10px;
+  width: 25%;
+  `,
 };
 
 // const convertTime = (time) => {
@@ -63,14 +87,15 @@ const Styled = {
 
 const EventStatsTable = ({
   events,
+  eventStats, 
   isVolunteer,
   // onDeleteClicked,
   // onEditClicked,
 }) => {
-  const eventName = isVolunteer ? "Event Name" : "Volunteer Name";
-  const creation = isVolunteer ? "Date" : "Email Address";
-  const time = isVolunteer ? "Time" : "Hours Participated";
-  const textInfo = isVolunteer ? "Hours Earned" : "";
+  const eventName =  "Event Name";
+  const creation = "Email Address";
+  const time = "Hours Participated";
+  const textInfo = "";
 
   return (
     <Styled.Container>
@@ -78,27 +103,32 @@ const EventStatsTable = ({
         <Styled.List>
           <Table.EventList>
             <Table.InnerTop>
-              <Table.EventName>{eventName}</Table.EventName>
+              <Table.EventName>Event Name</Table.EventName>
 
-              <Table.Creation>{creation}</Table.Creation>
+              <Styled.Date>Date</Styled.Date>
 
-              <Table.Time>{time}</Table.Time>
-              <Table.TextInfo>{textInfo}</Table.TextInfo>
+              <Styled.Time>Time</Styled.Time>
+              <Styled.Attendance>Attendance</Styled.Attendance>
+              <Styled.Hours>Hours</Styled.Hours>
             </Table.InnerTop>
           </Table.EventList>
         </Styled.List>
 
         {isVolunteer == false &&
           events.map((event) => (
+            
             <Styled.List key={event._id}>
               <Link href={`events/${event._id}`}>
                 <Table.EventList>
                   <Table.Inner>
                     <Table.EventName>{event.title}</Table.EventName>
 
-                    <Table.Creation>{event.date}</Table.Creation>
+                    <Styled.Date>{event.date.substring(0,10)}</Styled.Date>
 
-                    <Table.Time>{event.time}</Table.Time>
+                    <Styled.Time>{event.startTime} - {event.endTime}</Styled.Time>
+                    <Styled.Attendance>{event.attendance}
+</Styled.Attendance>
+                    <Styled.Hours>{event.hours}</Styled.Hours>
                   </Table.Inner>
                 </Table.EventList>
               </Link>
@@ -116,3 +146,7 @@ EventStatsTable.propTypes = {
 };
 
 export default EventStatsTable;
+
+/*
+{(Object.values(eventStats).find(stats => stats._id === eventId).attendance > 0 )}
+*/
