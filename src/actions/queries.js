@@ -12,12 +12,9 @@ export const getCurrentUser = (userId) =>
 
 export const fetchUserCount = () => axios.get("/api/users/count");
 
-export const updateUser = (id, user, role) => {
-  axios.post(`/api/users/${id}`, user, role);;
+export const updateUser = (userId, userInfo) => {
+  axios.post(`/api/users/${userId}`, userInfo);;
 };
-
-export const updateRole = (email, role) =>
-  axios.post(`/api/users/updateRole?email=${email}&role=${role}`);
 
 export const fetchVolunteers = (eventVolunteers) => {
   return axios.get(

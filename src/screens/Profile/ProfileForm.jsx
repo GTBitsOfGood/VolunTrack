@@ -70,7 +70,7 @@ class ProfileForm extends React.Component {
       state: values.state,
       notes: values.notes,
     }
-    await updateUser(this.state.user._id, { bio: bio });
+    await updateUser(this.state.user._id, { adminId: this.state.user._id, bio: bio });
 
     // todo: this will always run
     this.props.context.startLoading();

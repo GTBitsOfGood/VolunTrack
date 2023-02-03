@@ -278,6 +278,7 @@ class Assistants extends React.Component {
         <Styled.Row>
           <Styled.TableUsers>
             <AssistantTable
+              sessionUser={this.props.user}
               users={this.getUsersAtPage()}
               invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}

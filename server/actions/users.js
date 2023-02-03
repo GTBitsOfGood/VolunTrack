@@ -168,16 +168,20 @@ export async function getCurrentUser(userId, next) {
 
 // multiple updates, not sure how to handle
 // maybe run in parallel with Promise.all?
-export async function updateUser(id, user) {
+export async function updateUser(id, userInfo) {
   //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
-  if (id) createHistoryEventEditProfile(id);
-  const { role } = user
-  const { email } = user.bio
-  if (!email) return { status: 400, message: { error: "Invalid email sent" } };
+  const { adminId } = userInfo
+  console.log(adminId)
+  if (adminId) createHistoryEventEditProfile(adminId);
+  const { role } = userInfo
+  const { bio } = userInfo
+  
 
-  if (user.bio) {
-    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, {bio: {...user.bio}})
+  if (bio) {
+    if (!bio.email) return { status: 400, message: { error: "Invalid email sent" } };
+
+    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, {bio: {...bio}})
   }
   
   if (role) {
