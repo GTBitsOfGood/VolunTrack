@@ -105,6 +105,11 @@ const Stats = () => {
         console.log("ONE HERE");
         console.log(result);
 
+        console.log("DATE HERE");
+        console.log(startDate);
+        console.log(endDate);
+        console.log(new Date(startDate));
+        console.log(new Date(endDate));
         getEventStatistics(startDate, endDate).then((result2) => {
           setEventStats(result2);
           console.log("TWO HERE");

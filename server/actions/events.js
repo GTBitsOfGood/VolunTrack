@@ -60,6 +60,9 @@ export async function getEvents(startDate, endDate, next) {
   } else {
     startDate = new Date(startDate);
     endDate = new Date(endDate);
+    console.log("DATE TEST ONE");
+    console.log(startDate);
+    console.log(endDate);
     if (startDate === "Invalid Date" || endDate === "Invalid Date") {
       return { status: 400, message: { error: "Invalid Date sent" } };
     } else {
