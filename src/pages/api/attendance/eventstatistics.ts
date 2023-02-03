@@ -38,8 +38,7 @@ export default async function handler(req, res) {
           }
       ]);
     } else if (start !== "undefined") {
-        start = new Date(start);
-      
+      start = new Date(start);
       
       attendance = await Attendance.aggregate([
           {
@@ -63,7 +62,6 @@ export default async function handler(req, res) {
           }
       ]);
     } else if (end !== "undefined") {
-      
       end = new Date(end);
       
       attendance = await Attendance.aggregate([
