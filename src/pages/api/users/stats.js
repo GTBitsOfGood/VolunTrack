@@ -7,9 +7,9 @@ const {
 export default async function handler(req, res, next) {
   if (req.method === "GET") {
     let attendances;
-    if (req.query.volunteer != "null")
+    if (req.query.volunteer != null)
       attendances = await getAttendanceByUserID(req.query.volunteer, next);
-    else attendances = await getAllAttendanceObjects(next);
+    else return res.status(200).json({});
 
     return res.status(200).json({
       attendances,

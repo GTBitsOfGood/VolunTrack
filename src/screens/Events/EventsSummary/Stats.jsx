@@ -90,30 +90,29 @@ const Stats = () => {
 
   useEffect(() => {
     onRefresh();
-    //console.log("hello1")
   }, [startDate, endDate]);
 
   const onRefresh = async () => {
     setLoading(true);
-    // console.log("hello")
     console.log("hello3");
     // grab the events
     setLoading(true);
     fetchEvents(startDate, endDate)
       .then(async (result) => {
         if (result && result.data && result.data.events) {
-          //setEvents(result.data.events);
           setNumEvents(result.data.events.length);
         }
         console.log("ONE HERE");
         console.log(result);
 
-        getEventStatistics().then((result2) => {
+        getEventStatistics(startDate, endDate).then((result2) => {
           setEventStats(result2);
           console.log("TWO HERE");
           console.log(result);
 
           let returnArray = [];
+          var totalAttendance = 0;
+          var totalHours = 0;
           for (let document of result.data.events) {
             //let currEvent = []
 
@@ -125,7 +124,9 @@ const Stats = () => {
             for (let document of result2.data) {
               if (document._id == eventID) {
                 attendance = document.num;
+                totalAttendance += document.num;
                 hours = document.hours;
+                totalHours += document.hours;
               }
             }
 
@@ -141,6 +142,9 @@ const Stats = () => {
 
             returnArray.push(newDoc);
           }
+
+          setAttend(totalAttendance);
+          setHours(totalHours);
           setEvents(returnArray);
           console.log("THREE HERE");
           console.log(returnArray);
@@ -149,57 +153,7 @@ const Stats = () => {
       .finally(() => {
         setLoading(false);
       });
-
-    fetchAttendanceByUserId("null")
-      .then((result) => {
-        //console.log("hello33212")
-        // console.log(result)
-        const filteredAttendance = filterAttendance(
-          result.data.attendances,
-          startDate,
-          endDate
-        );
-        // console.log(result.data)
-        // console.log(filteredAttendance)
-        // console.log("filtered");
-        setAttend(filteredAttendance.length);
-        var addedHours = 0;
-        for (const attendance of filteredAttendance) {
-          // console.log(attendance.timeCheckedIn)
-          // console.log(attendance.timeCheckedOut)
-          //console.log("one")
-          //console.log(getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11)))
-
-          if (attendance.timeCheckedIn && attendance.timeCheckedOut) {
-            //console.log(getHours(attendance.timeCheckedIn.substring(11), attendance.timeCheckedOut.substring(11)))
-            addedHours =
-              addedHours +
-              getHours(
-                attendance.timeCheckedIn.substring(11),
-                attendance.timeCheckedOut.substring(11)
-              );
-            //console.log(addedHours)
-          }
-        }
-        setHours(Math.round(addedHours * 10) / 10);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-
-    // fetch attendance data
-    // filter it given dates
-    // parse it for unique eventIds and total # of hours
   };
-
-  // async function getEventStats() {
-  //   console.log("event before")
-  //   getEventStatistics()
-  //     .then((result) => {
-  //     console.log("EVENT STATS")
-  //     console.log(result)
-  //   });
-  // }
 
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
