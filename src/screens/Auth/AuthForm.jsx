@@ -87,9 +87,7 @@ class AuthForm extends React.Component {
             setSubmitting(false);
           }}
           validationSchema={
-            this.props.createAccount
-              ? createAccountValidator && validationSchema
-              : loginValidator
+            this.props.createAccount ? createAccountValidator : loginValidator
           }
         >
           {({ handleSubmit, isValid, isSubmitting }) => (
