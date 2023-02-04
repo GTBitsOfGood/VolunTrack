@@ -94,7 +94,6 @@ class VolunteerTable extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     let newUser = {
-      _id: this.state.userSelectedForEdit._id,
       name:
         (this.state.userSelectedForEdit && this.state.first_name
           ? this.state.first_name
@@ -142,7 +141,7 @@ class VolunteerTable extends React.Component {
           : this.state.userSelectedForEdit.notes,
     };
     this.onModalClose();
-    this.props.editUserCallback(newUser);
+    this.props.editUserCallback(this.state.userSelectedForEdit._id, newUser);
   };
 
   render() {

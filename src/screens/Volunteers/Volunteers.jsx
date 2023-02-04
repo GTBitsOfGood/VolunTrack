@@ -160,11 +160,12 @@ class Volunteers extends React.Component {
     }
   };
 
-  onEditUser = (updatedUser) => {
+  onEditUser = (userId, updatedUser) => {
     /** code to update users in state at that specific index */
-    updateUser(
-      this.props.user._id, updatedUser
-    );
+    const adminId = this.props.user._id;
+    const userInfo = { adminId, bio: updatedUser }
+    console.log(updatedUser);
+    updateUser(userId, userInfo);
 
     let updatedUsers = this.state.users.map((user) => {
       if (user.email === updatedUser.email) return updatedUser;
