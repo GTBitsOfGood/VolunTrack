@@ -156,7 +156,7 @@ class Assistants extends React.Component {
         });
       }
     });
-    getInvitedAdmins().then((result) => {
+    getInvitedAdmins(this.props.user.organizationId).then((result) => {
       if (result && result.data) {
         this.setState({
           invitedAdmins: result.data,
@@ -198,7 +198,7 @@ class Assistants extends React.Component {
   };
 
   onDeletePending = (email) => {
-    removeInvitedAdmin(email).then(() => {
+    removeInvitedAdmin(email, this.props.user.organizationId).then(() => {
       this.componentDidMount();
     });
   };
@@ -229,7 +229,10 @@ class Assistants extends React.Component {
 
   handleSubmit = async () => {
     if (this.state.newInvitedAdmin?.length > 0)
-      await updateInvitedAdmins(this.state.newInvitedAdmin);
+      await updateInvitedAdmins(
+        this.state.newInvitedAdmin,
+        this.props.user.organizationId
+      );
     this.onRefresh();
   };
 
