@@ -156,7 +156,7 @@ class AuthForm extends React.Component {
                             {...field}
                             type="password"
                             autoComplete="current-password"
-                            placeholder="Your password"
+                            placeholder="Your Password"
                           />
                         )}
                       </Field>
@@ -192,7 +192,9 @@ class AuthForm extends React.Component {
                       onClick={handleSubmit}
                       disabled={!isValid || isSubmitting}
                     >
-                      {this.props.createAccount ? "Sign up" : "Sign in"}
+                      {this.props.createAccount
+                        ? "Create an account"
+                        : "Sign In"}
                     </Button>
                   </Row>
                 </Styled.FormGroup>

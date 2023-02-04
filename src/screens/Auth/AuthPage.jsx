@@ -56,7 +56,7 @@ const AuthPage = (props) => {
           style={{ width: "100%", marginBottom: "2px" }}
         /> */}
         <Styled.TopText>
-          {props.createAccount ? "Create an account" : "Sign In"}
+          {props.createAccount ? "Create an Account" : "Sign In"}
         </Styled.TopText>
         <Button
           style={{
@@ -70,7 +70,7 @@ const AuthPage = (props) => {
             src="/images/google.svg"
             className="mr-3 h-full w-auto py-2"
           />
-          {props.createAccount ? "Sign up" : "Sign in"} with Google
+          Continue with Google
         </Button>
         <Styled.OrDiv>
           <hr size="150" width="150" color="#6C757D"></hr>
@@ -97,7 +97,7 @@ const AuthPage = (props) => {
               props.createAccount ? "login" : "create-account"
             }`}
           >
-            {props.createAccount ? "Sign in" : "Create an Account"}
+            {props.createAccount ? "Sign In" : "Create an account"}
           </a>
         </div>
       </Styled.Container>
