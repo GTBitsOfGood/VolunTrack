@@ -15,5 +15,4 @@ export default async function handler(req, res, next) {
     result = await getUserFromId(req.query.id, next);
   }
   res.status(result.status).json(result.message);
-
 }

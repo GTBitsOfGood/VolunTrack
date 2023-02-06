@@ -4,14 +4,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import {
-  deleteUser,
-  getVolunteers,
-  updateUser,
-} from "../../actions/queries";
+import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
 import { CSVLink } from "react-csv";
-
 
 const Styled = {
   Container: styled.div`
@@ -111,7 +106,7 @@ class Volunteers extends React.Component {
   componentDidMount = () => this.onRefresh();
   onRefresh = async () => {
     this.setState({ loadingMoreUsers: true });
-    let result = await getVolunteers();
+    let result = await getUsers("volunteer");
     if (result && result.data && result.data.users) {
       this.setState({
         users: result.data.users,
@@ -133,7 +128,7 @@ class Volunteers extends React.Component {
           name: updatedUser.first_name + " " + updatedUser.last_name,
           _id: user._id,
           status: user.status,
-          role: user.role
+          role: user.role,
         };
       }
       return user;

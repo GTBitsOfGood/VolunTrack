@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getVolunteers = () => axios.get("/api/users/getVolunteers");
+export const getUsers = (role) => axios.get(`/api/users/getUsers?role=${role}`);
 
 export const getCurrentUser = (userId) =>
   axios.get("/api/users/current?volunteer=" + userId);

@@ -460,7 +460,7 @@ export default AssistantTable;
 AssistantTable.propTypes = {
   sessionUser: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
-  invitedAdmins: PropTypes.array.isRequired,
+  invitedAdmins: PropTypes.array,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
   deletePendingCallback: PropTypes.func.isRequired,

@@ -89,13 +89,13 @@ export async function getEventVolunteers(parsedVolunteers, next) {
     .catch((err) => next(err));
 }
 
-export async function getVolunteers(
-  next
-) {
+export async function getUsers(role, next) {
   await dbConnect();
+  let filter = {};
+  if (role && role !== "undefined") filter = { role: role };
   return User.aggregate([
     { $sort: { _id: -1 } },
-    { $match: { role: "volunteer" } },
+    { $match: filter },
     {
       $project: {
         name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
