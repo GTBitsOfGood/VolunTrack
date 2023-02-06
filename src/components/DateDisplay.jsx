@@ -53,11 +53,11 @@ class DateDisplayComponent extends React.Component {
     return (
       <Styled.Container
         style={{
-          "background-color":
+          backgroundColor:
             this.state.color.toLowerCase() === "primary"
               ? variables["secondary"]
               : variables["gray-200"],
-          "border-color":
+          borderColor:
             this.state.color.toLowerCase() === "primary"
               ? variables["primary"]
               : variables["gray-400"],

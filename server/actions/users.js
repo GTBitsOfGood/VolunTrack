@@ -89,38 +89,13 @@ export async function getEventVolunteers(parsedVolunteers, next) {
     .catch((err) => next(err));
 }
 
-export async function getManagementData(
-  role,
-  lastPaginationId,
-  pageSize,
+export async function getVolunteers(
   next
 ) {
   await dbConnect();
-
-  const filter = {};
-  if (role) {
-    try {
-      // Each role is sent as an object key
-      // For mongo '$or' query, these keys need to be reduced to an array
-      const roleFilter = Object.keys(JSON.parse(role)).reduce(
-        (query, key) => [...query, { role: key }],
-        []
-      );
-      if (!roleFilter.length) {
-        return { status: 400, message: { error: "Invalid role param" } };
-      }
-      filter.$or = roleFilter;
-    } catch (e) {
-      return { status: 400, message: { error: "Invalid role param" } };
-    }
-  }
-  if (lastPaginationId) {
-    filter._id = { $lt: mongoose.Types.ObjectId(lastPaginationId) };
-  }
   return User.aggregate([
     { $sort: { _id: -1 } },
-    { $match: filter },
-    { $limit: parseInt(pageSize, 10) || 10 },
+    { $match: { role: "volunteer" } },
     {
       $project: {
         name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
@@ -166,26 +141,25 @@ export async function getCurrentUser(userId, next) {
     .catch(next);
 }
 
-// multiple updates, not sure how to handle
-// maybe run in parallel with Promise.all?
 export async function updateUser(id, userInfo) {
-  //This command only works if a user with the email "david@davidwong.com currently exists in the db"
   await dbConnect();
-  const { adminId } = userInfo
-  console.log(adminId)
+  const { adminId } = userInfo;
   if (adminId) createHistoryEventEditProfile(adminId);
-  const { role } = userInfo
-  const { bio } = userInfo
-  
+  const { role } = userInfo;
+  const { bio } = userInfo;
 
   if (bio) {
-    if (!bio.email) return { status: 400, message: { error: "Invalid email sent" } };
+    if (!bio.email)
+      return { status: 400, message: { error: "Invalid email sent" } };
 
-    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, {bio: {...bio}})
+    await User.updateOne(
+      { _id: mongoose.Types.ObjectId(id) },
+      { bio: { ...bio } }
+    );
   }
-  
+
   if (role) {
-    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, {role: role})
+    await User.updateOne({ _id: mongoose.Types.ObjectId(id) }, { role: role });
   }
   return { status: 200 };
 }

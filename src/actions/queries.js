@@ -1,19 +1,12 @@
 import axios from "axios";
 
-export const fetchUserManagementData = (lastPaginationId) =>
-  axios.get(
-    `/api/users/managementData?${
-      lastPaginationId ? "lastPaginationId=" + lastPaginationId : ""
-    }`
-  );
+export const getVolunteers = () => axios.get("/api/users/getVolunteers");
 
 export const getCurrentUser = (userId) =>
   axios.get("/api/users/current?volunteer=" + userId);
 
-export const fetchUserCount = () => axios.get("/api/users/count");
-
 export const updateUser = (userId, userInfo) => {
-  axios.post(`/api/users/${userId}`, userInfo);;
+  axios.post(`/api/users/${userId}`, userInfo);
 };
 
 export const fetchVolunteers = (eventVolunteers) => {
@@ -49,7 +42,7 @@ export const createUserFromCredentials = (user) =>
 
 export const getUserFromId = (id) => axios.get(`/api/users/${id}`);
 
-export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user)
+export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
 
 export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
 

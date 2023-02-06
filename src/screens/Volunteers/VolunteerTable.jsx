@@ -15,8 +15,9 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import * as Form from "../sharedStyles/formStyles";
+import * as SForm from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
+import { Field, Formik, Form } from "formik";
 
 const Styled = {
   Button: styled(Button)`
@@ -41,24 +42,16 @@ class VolunteerTable extends React.Component {
     super(props);
     this.state = {
       userSelectedForEdit: null,
-      first_name: "",
-      last_name: "",
-      phone_number: 0,
-      date_of_birth: 0,
-      zip_code: 0,
-      address: "",
-      city: "",
-      state: "",
-      notes: "",
+      modalOpen: false,
       currentPage: 0,
       pageSize: 10,
-      pageCount: 1,
     };
   }
 
   onDisplayEditUserModal = (userToEdit) => {
     this.setState({
       userSelectedForEdit: userToEdit,
+      modalOpen: true,
     });
   };
 
@@ -70,6 +63,7 @@ class VolunteerTable extends React.Component {
   onModalClose = () => {
     this.setState({
       userSelectedForEdit: null,
+      modalOpen: false,
     });
   };
 
@@ -79,69 +73,9 @@ class VolunteerTable extends React.Component {
     });
   };
 
-  getPageCount = () => {
-    this.setState({
-      pageCount: Math.ceil(this.props.users.length / this.pageSize),
-    });
-  };
-
-  componentDidMount = () => {
-    this.setState({
-      pageCount: this.getPageCount(),
-    });
-  };
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    let newUser = {
-      name:
-        (this.state.userSelectedForEdit && this.state.first_name
-          ? this.state.first_name
-          : this.state.userSelectedForEdit.first_name) +
-        " " +
-        (this.state.userSelectedForEdit && this.state.last_name
-          ? this.state.last_name
-          : this.state.userSelectedForEdit.last_name),
-      email: this.state.userSelectedForEdit.email,
-      first_name:
-        this.state.userSelectedForEdit && this.state.first_name
-          ? this.state.first_name
-          : this.state.userSelectedForEdit.first_name,
-      last_name:
-        this.state.userSelectedForEdit && this.state.last_name
-          ? this.state.last_name
-          : this.state.userSelectedForEdit.last_name,
-      phone_number:
-        this.state.userSelectedForEdit && this.state.phone_number
-          ? this.state.phone_number
-          : this.state.userSelectedForEdit.phone_number,
-      date_of_birth:
-        this.state.userSelectedForEdit && this.state.date_of_birth
-          ? this.state.date_of_birth
-          : this.state.userSelectedForEdit.date_of_birth,
-      zip_code:
-        this.state.userSelectedForEdit && this.state.zip_code
-          ? this.state.zip_code
-          : this.state.userSelectedForEdit.zip_code,
-      address:
-        this.state.userSelectedForEdit && this.state.address
-          ? this.state.address
-          : this.state.userSelectedForEdit.address,
-      city:
-        this.state.userSelectedForEdit && this.state.city
-          ? this.state.city
-          : this.state.userSelectedForEdit.city,
-      state:
-        this.state.userSelectedForEdit && this.state.state
-          ? this.state.state
-          : this.state.userSelectedForEdit.state,
-      notes:
-        this.state.userSelectedForEdit && this.state.notes
-          ? this.state.notes
-          : this.state.userSelectedForEdit.notes,
-    };
+  handleSubmit = (values) => {
+    this.props.editUserCallback(this.state.userSelectedForEdit?._id, values);
     this.onModalClose();
-    this.props.editUserCallback(this.state.userSelectedForEdit._id, newUser);
   };
 
   render() {
@@ -236,194 +170,137 @@ class VolunteerTable extends React.Component {
           </tbody>
         </Table.Table>
         {loading && <Loading />}
-        <Modal
-          style={{ "max-width": "750px" }}
-          isOpen={this.state.userSelectedForEdit}
-          onClose={null}
+        <Formik
+          enableReinitialize
+          initialValues={{
+            first_name: this.state.userSelectedForEdit?.first_name ?? "",
+            last_name: this.state.userSelectedForEdit?.last_name ?? "",
+            email: this.state.userSelectedForEdit?.email ?? "",
+            phone_number: this.state.userSelectedForEdit?.phone_number ?? "",
+            date_of_birth: this.state.userSelectedForEdit?.date_of_birth ?? "",
+            zip_code: this.state.userSelectedForEdit?.zip_code ?? "",
+            address: this.state.userSelectedForEdit?.address ?? "",
+            city: this.state.userSelectedForEdit?.city ?? "",
+            state: this.state.userSelectedForEdit?.state ?? "",
+            notes: this.state.userSelectedForEdit?.notes ?? "",
+          }}
+          onSubmit={(values) => {
+            this.handleSubmit(values);
+          }}
         >
-          <ModalHeader color="#ef4e79">
-            {this.state.userSelectedForEdit
-              ? this.state.userSelectedForEdit.name
-              : ""}
-          </ModalHeader>
-          <Container>
-            <ModalBody>
-              <form>
-                <Form.FormGroup>
-                  <Row>
-                    <Col>
-                      <Form.Label>First Name</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.first_name
-                            : ""
-                        }
-                        type="text"
-                        name="Name"
-                        onChange={(evt) =>
-                          this.setState({ first_name: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Last Name</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.last_name
-                            : ""
-                        }
-                        type="text"
-                        name="Name"
-                        onChange={(evt) =>
-                          this.setState({ last_name: evt.target.value })
-                        }
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Form.Label>Email</Form.Label>
-                      <Form.Input
-                        disabled="disabled"
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.email
-                            : ""
-                        }
-                        type="text"
-                        name="Email"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Phone</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.phone_number
-                            : ""
-                        }
-                        type="text"
-                        name="Phone"
-                        onChange={(evt) =>
-                          this.setState({ phone_number: evt.target.value })
-                        }
-                      />
-                    </Col>
-                  </Row>
+          <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
+            <Form>
+              <ModalHeader color="#ef4e79">
+                {this.state.userSelectedForEdit?.name ?? ""}
+              </ModalHeader>
+              <Container>
+                <ModalBody>
+                  <SForm.FormGroup>
+                    <Row>
+                      <Col>
+                        <SForm.Label>First Name</SForm.Label>
+                        <Field name="first_name">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                      <Col>
+                        <SForm.Label>Last Name</SForm.Label>
+                        <Field name="last_name">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <SForm.Label>Email</SForm.Label>
+                        <Field name="email">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                      <Col>
+                        <SForm.Label>Phone</SForm.Label>
+                        <Field name="phone_number">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                    </Row>
 
-                  <Row>
-                    <Col>
-                      <Form.Label>Date of Birth</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.date_of_birth
-                            : ""
-                        }
-                        type="text"
-                        name="Date of Birth"
-                        onChange={(evt) =>
-                          this.setState({ date_of_birth: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Zip Code</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.zip_code
-                            : ""
-                        }
-                        type="text"
-                        name="Zip Code"
-                        onChange={(evt) =>
-                          this.setState({ zip_code: evt.target.value })
-                        }
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Form.Label>Address</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.address
-                            : ""
-                        }
-                        type="text"
-                        name="Address"
-                        onChange={(evt) =>
-                          this.setState({ address: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>City</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.city
-                            : ""
-                        }
-                        type="text"
-                        name="City"
-                        onChange={(evt) =>
-                          this.setState({ city: evt.target.value })
-                        }
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>State</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.state
-                            : ""
-                        }
-                        type="text"
-                        name="State"
-                        onChange={(evt) =>
-                          this.setState({ state: evt.target.value })
-                        }
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Form.Label>Notes</Form.Label>
-                      <Form.Input
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.notes
-                            : ""
-                        }
-                        type="textarea"
-                        onChange={(evt) =>
-                          this.setState({ notes: evt.target.value })
-                        }
-                      />
-                    </Col>
-                  </Row>
-                </Form.FormGroup>
-              </form>
-            </ModalBody>
-          </Container>
-          <ModalFooter>
-            <Button color="secondary" onClick={this.onModalClose}>
-              Cancel
-            </Button>
-            <Button
-              style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.handleSubmit}
-            >
-              Update
-            </Button>
-          </ModalFooter>
-        </Modal>
+                    <Row>
+                      <Col>
+                        <SForm.Label>Date of Birth</SForm.Label>
+                        <Field name="date_of_birth">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                      <Col>
+                        <SForm.Label>Zip Code</SForm.Label>
+                        <Field name="zip_code">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <SForm.Label>Address</SForm.Label>
+                        <Field name="address">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                      <Col>
+                        <SForm.Label>City</SForm.Label>
+                        <Field name="city">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                      <Col>
+                        <SForm.Label>State</SForm.Label>
+                        <Field name="state">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col>
+                        <SForm.Label>Notes</SForm.Label>
+                        <Field name="notes">
+                          {({ field }) => (
+                            <SForm.Input {...field} type="text" />
+                          )}
+                        </Field>
+                      </Col>
+                    </Row>
+                  </SForm.FormGroup>
+                </ModalBody>
+              </Container>
+              <ModalFooter>
+                <Button color="secondary" onClick={this.onModalClose}>
+                  Cancel
+                </Button>
+                <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
+                  Update
+                </Button>
+              </ModalFooter>
+            </Form>
+          </Modal>
+        </Formik>
         {users.length !== 0 && (
           <Pagination
             items={users}

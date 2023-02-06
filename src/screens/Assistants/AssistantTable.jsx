@@ -94,17 +94,26 @@ class AssistantTable extends React.Component {
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
-      updateUser(this.state.userSelectedForEdit._id, { adminId: this.props.sessionUser._id, role:"admin" });
+      updateUser(this.state.userSelectedForEdit._id, {
+        adminId: this.props.sessionUser._id,
+        role: "admin",
+      });
     }
     if (event.value === "Admin Assistant") {
       const newRoleName = "admin-assistant";
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
-      updateUser(this.state.userSelectedForEdit._id, { adminId: this.props.sessionUser._id, role:"admin-assistant" });
+      updateUser(this.state.userSelectedForEdit._id, {
+        adminId: this.props.sessionUser._id,
+        role: "admin-assistant",
+      });
     }
     if (event.value === "Staff") {
-      updateUser(this.state.userSelectedForEdit._id, { adminId: this.props.sessionUser._id, role:"staff" });
+      updateUser(this.state.userSelectedForEdit._id, {
+        adminId: this.props.sessionUser._id,
+        role: "staff",
+      });
       const newRoleName = "staff";
       this.props.users
         .filter((user) => user === this.state.userSelectedForEdit)
@@ -216,7 +225,7 @@ class AssistantTable extends React.Component {
         {loading && <Loading />}
         {/* Edit Modal */}
         <Modal
-          style={{ "max-width": "750px" }}
+          style={{ maxWidth: "750px" }}
           isOpen={this.state.userSelectedForEdit}
           onClose={null}
         >

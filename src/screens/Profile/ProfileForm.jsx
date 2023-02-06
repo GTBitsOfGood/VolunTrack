@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { ErrorMessage, Field, Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Col, Container, ModalBody, Row } from "reactstrap";
@@ -11,7 +11,6 @@ import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 import { profileValidator } from "./helpers";
 
 const Styled = {
-  Form: styled(FForm)``,
   Button: styled(Button)`
     background: white;
     border: none;
@@ -69,8 +68,11 @@ class ProfileForm extends React.Component {
       city: values.city,
       state: values.state,
       notes: values.notes,
-    }
-    await updateUser(this.state.user._id, { adminId: this.state.user._id, bio: bio });
+    };
+    await updateUser(this.state.user._id, {
+      adminId: this.state.user._id,
+      bio: bio,
+    });
 
     // todo: this will always run
     this.props.context.startLoading();
@@ -115,8 +117,8 @@ class ProfileForm extends React.Component {
                             margin: "0px",
                             color: "#7F1C3B",
                             width: "240px",
-                            "font-size": "24px",
-                            "font-weight": "800",
+                            fontSize: "24px",
+                            fontWeight: "800",
                           }}
                         >{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
                         <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
@@ -234,7 +236,7 @@ class ProfileForm extends React.Component {
                           </Row>
                           <Row
                             style={{
-                              "margin-top": "1.5rem",
+                              marginTop: "1.5rem",
                             }}
                           >
                             <Col></Col>
