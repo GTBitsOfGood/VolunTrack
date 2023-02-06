@@ -5,11 +5,7 @@ import { Button, Col, FormGroup as BFormGroup, Row } from "reactstrap";
 import * as SForm from "../sharedStyles/formStyles";
 
 import styled from "styled-components";
-import {
-  createAccountValidator,
-  validationSchema,
-  loginValidator,
-} from "./helpers";
+import { createAccountValidator, loginValidator } from "./helpers";
 import { signIn } from "next-auth/react";
 import { createUserFromCredentials } from "../../actions/queries";
 
@@ -140,7 +136,7 @@ class AuthForm extends React.Component {
                             {...field}
                             type="text"
                             autoComplete="email"
-                            placeholder="Example@email.com"
+                            placeholder="Your Email"
                           />
                         )}
                       </Field>

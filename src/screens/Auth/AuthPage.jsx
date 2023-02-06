@@ -7,7 +7,6 @@ import { Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
-// import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Main: styled.div`
@@ -82,11 +81,6 @@ const AuthPage = (props) => {
           createAccount={props.createAccount}
           context={useContext(RequestContext)}
         />
-        <div style={{ display: "flex", marginBottom: "6px", marginTop: "2px" }}>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "black" }} />
-          <div style={{ width: "40px", textAlign: "center" }}></div>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "black" }} />
-        </div>{" "}
         <div style={{ display: "flex" }}>
           {props.createAccount
             ? "Already have an account?"
