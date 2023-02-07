@@ -4,11 +4,11 @@ import "react-quill/dist/quill.snow.css";
 import { fetchEvents, getEventStatistics } from "../../../actions/queries";
 import { useEffect } from "react";
 import EventTable from "../../../components/EventStatsTable";
-//import { getHours } from "../../Stats/User/hourParsing";
 import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
 import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";
+import { useSession } from "next-auth/react";
 
 const Styled = {
   Container: styled.div`
@@ -60,8 +60,7 @@ const Styled = {
 };
 
 const Stats = () => {
-  const [events, setEvents] = useState([]);
-  const [eventStats, setEventStats] = useState([]);
+  const [computedStats, setComputedStats] = useState([]);
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
   const [hours, setHours] = useState(0);
@@ -69,59 +68,45 @@ const Stats = () => {
   const [endDate, setEndDate] = useState("undefined");
   const [loading, setLoading] = useState(false);
 
+  const { data: session } = useSession();
+  let user = session.user;
+
   useEffect(() => {
     onRefresh();
   }, [startDate, endDate]);
 
   const onRefresh = async () => {
-    setLoading(true);
     // grab the events
     setLoading(true);
-    fetchEvents(startDate, endDate)
+    fetchEvents(startDate, endDate, user.organizationId)
       .then(async (result) => {
-        if (result && result.data && result.data.events) {
-          setNumEvents(result.data.events.length);
-        }
+        if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getEventStatistics(startDate, endDate).then((result2) => {
-          setEventStats(result2);
-
-          let returnArray = [];
+        getEventStatistics(startDate, endDate).then((stats) => {
+          let computedStats = [];
           var totalAttendance = 0;
           var totalHours = 0;
-          for (let document of result.data.events) {
-            //let currEvent = []
+          for (let event of result.data.events) {
+            let stat = stats.data.find((s) => s._id === event._id);
+            if (stat) {
+              totalAttendance += stat.uniqueUsers.length;
+              totalHours += stat.minutes / 60.0;
 
-            //let hours = getHours(event.timeCheckedIn.substring(11), event.timeCheckedOut.substring(11))
-            var eventID = document._id;
-            var attendance = 0;
-            var hours = 0;
-
-            for (let document of result2.data) {
-              if (document._id == eventID) {
-                attendance = document.num;
-                totalAttendance += document.num;
-                hours = document.hours;
-                totalHours += document.hours;
-              }
+              computedStats.push({
+                _id: event._id,
+                title: event.title,
+                date: event.date,
+                startTime: event.startTime,
+                endTime: event.endTime,
+                attendance: stat.uniqueUsers.length,
+                hours: Math.round((stat.minutes / 60.0) * 100) / 100,
+              });
             }
-
-            const newDoc = {
-              _id: document._id,
-              title: document.title,
-              date: document.date,
-              startTime: document.startTime,
-              endTime: document.endTime,
-              attendance: attendance,
-              hours: hours,
-            };
-
-            returnArray.push(newDoc);
           }
 
           setAttend(totalAttendance);
-          setHours(totalHours);
-          setEvents(returnArray);
+          setHours(Math.round(totalHours * 100) / 100);
+          setComputedStats(computedStats);
         });
       })
       .finally(() => {
@@ -223,7 +208,7 @@ const Stats = () => {
 
       {!loading && (
         <Styled.marginTable>
-          <EventTable events={events} isVolunteer={false} />
+          <EventTable events={computedStats} isVolunteer={false} />
         </Styled.marginTable>
       )}
     </Styled.Container>

@@ -86,9 +86,7 @@ const EventTable = ({
           <Table.EventList>
             <Table.InnerTop>
               <Table.EventName>{eventName}</Table.EventName>
-
               <Table.Creation>{creation}</Table.Creation>
-
               <Table.Time>{time}</Table.Time>
               <Table.TextInfo>{textInfo}</Table.TextInfo>
             </Table.InnerTop>
@@ -135,9 +133,11 @@ const EventTable = ({
               <Styled.List key={event._id}>
                 <Table.EventList>
                   <Table.Inner>
-                    <Table.EventName>{event.name}</Table.EventName>
+                    <Table.EventName>{event.volunteerName}</Table.EventName>
 
-                    <Table.Creation>{event.email}</Table.Creation>
+                    <Table.Creation>
+                      {event.volunteerEmail.substring(0, 24) + "..."}
+                    </Table.Creation>
 
                     <Table.Time>
                       {event.hours.toString().slice(0, 5)}
@@ -179,8 +179,8 @@ const EventTable = ({
   );
 };
 EventTable.propTypes = {
-  events: PropTypes.Array,
-  isIndividualStats: PropTypes.Boolean,
+  events: PropTypes.array,
+  isIndividualStats: PropTypes.bool,
   onDeleteClicked: PropTypes.func,
   onEditClicked: PropTypes.func,
 };

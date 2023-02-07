@@ -18,6 +18,16 @@ const attendanceSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    volunteerName: {
+      type: String,
+      required: true,
+      default: "Volunteer",
+    },
+    volunteerEmail: {
+      type: String,
+      required: true,
+      default: "volunteer@gmail.com",
+    },
     timeCheckedIn: {
       type: Date,
       required: true,
@@ -29,8 +39,6 @@ const attendanceSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-// export Event model to app
 
 module.exports =
   mongoose.models.Attendance || mongoose.model("Attendance", attendanceSchema);

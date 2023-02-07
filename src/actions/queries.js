@@ -29,11 +29,6 @@ export const fetchAttendanceByUserId = (userId) => {
   return axios.get("/api/users/stats?volunteer=" + userId);
 };
 
-export const fetchAttendanceRange = (startDate, endDate, userId) =>
-  axios.get(
-    `/api/events?startDate=${startDate}&endDate=${endDate}&userId=${userId}`
-  );
-
 export const createEvent = (event) => axios.post("/api/events", event);
 
 export const editEvent = (event, sendConfirmationEmail) =>
@@ -68,8 +63,14 @@ export const getInvitedAdmins = (organizationId) =>
 export const removeInvitedAdmin = (email) =>
   axios.post(`/api/settings/removeInvitedAdmin`, { email });
 
-export const checkInVolunteer = (userId, eventId, eventName) =>
-  axios.post("/api/attendance/checkin", { userId, eventId, eventName });
+export const checkInVolunteer = (userId, eventId, eventName, volunteerName, volunteerEmail) =>
+  axios.post("/api/attendance/checkin", {
+    userId,
+    eventId,
+    eventName,
+    volunteerName,
+    volunteerEmail,
+  });
 
 export const checkOutVolunteer = (userId, eventId) =>
   axios.post("/api/attendance/checkout", { userId, eventId });
@@ -86,10 +87,8 @@ export const getAttendanceForEvent = (eventId) =>
   axios.post("/api/attendance/statistics", { eventId });
 
 export const getEventStatistics = (startDate, endDate) =>
-  //export const getEventStatistics = () =>
   axios.get(
     `/api/attendance/eventstatistics?startDate=${startDate}&endDate=${endDate}`
-    //`/api/attendance/eventstatistics`
   );
 
 export const deleteAttendance = (id) =>

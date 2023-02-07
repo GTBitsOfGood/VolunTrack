@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     if (isCheckedIn) {
       const checkedInVolunteers = (
         await getEventVolunteers(checkedInVolunteerIds)
-      ).message.users;
+      ).message;
 
       return res.status(200).json(checkedInVolunteers);
     } else {
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
       const checkedOutVolunteers = (
         await getEventVolunteers(checkedOutVolunteerIds)
-      ).message.users;
+      ).message;
 
       return res.status(200).json(checkedOutVolunteers);
     }

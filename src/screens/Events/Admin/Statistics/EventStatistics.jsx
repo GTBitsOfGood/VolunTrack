@@ -70,7 +70,11 @@ const EventStatistics = () => {
 
   const onRefresh = () => {
     getAttendanceForEvent(eventId).then((result) => {
-      setAttendanceStats(result.data);
+      let stats = result.data.map((stat) => {
+        stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
+        return stat;
+      });
+      setAttendanceStats(stats);
     });
     fetchEventsById(eventId).then((result) => {
       setEvent(result.data.event);
