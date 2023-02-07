@@ -1,14 +1,20 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { Button } from "reactstrap";
 import EventTable from "../../../components/EventTable";
-import { fetchEventsByUserId, getCurrentUser } from "../../../actions/queries";
+import {
+  fetchAttendanceByUserId,
+  getCurrentUser,
+} from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
 import PropTypes from "prop-types";
 import { getHours } from "./hourParsing";
-import React from "react";
+import * as SForm from "../../sharedStyles/formStyles";
+import { Field, Formik } from "formik";
+import { Row, Col } from "reactstrap";
+import { filterAttendance } from "../helper";
 
 const Styled = {
   Container: styled.div`
@@ -19,15 +25,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     align-items: center;
-  `,
-  Image: styled.div`
-    width: 100%;
-    height: 100%;
-  `,
-  Left: styled.div`
-    margin-left: 10vw;
-    display: flex;
-    flex-direction: column;
   `,
   Right: styled.div`
     display: flex;
@@ -65,29 +62,11 @@ const Styled = {
     margin: 0 auto;
     align-items: start;
   `,
-  Date: styled.div`
-    text-align: left;
-    font-size: 28px;
-    font-weight: bold;
-  `,
-  DateRow: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  `,
-  Back: styled.p`
-    font-size: 14px;
-    margin-left: 10px;
-    padding-top: 8px;
-    text-decoration: underline;
-    color: ${variables.primary};
-  `,
   Header: styled.div`
     font-size: 27px;
     font-weight: bold;
     padding: 5px;
   `,
-
   Header2: styled.div`
     font-size: 14px;
     color: gray;
@@ -134,51 +113,72 @@ const Styled = {
 
 const StatDisplay = ({ userId, onlyAchievements }) => {
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
+  const [attendance, setAttendance] = useState([]);
   const [length, setLength] = useState(0);
   const [sum, setSum] = useState(0);
   const [name, setName] = useState("");
   const [attend, setAttend] = useState("Bronze");
   const [earn, setEarn] = useState("Bronze");
+  const [startDate, setStartDate] = useState("undefined");
+  const [endDate, setEndDate] = useState("undefined");
 
   if (!userId) {
     const { data: session } = useSession();
     userId = session.user._id;
   }
 
+  const onSubmitValues = (values, setSubmitting) => {
+    let offset = new Date().getTimezoneOffset();
+
+    if (!values.startDate) {
+      setStartDate("undefined");
+    } else {
+      let start = new Date(values.startDate);
+      start.setMinutes(start.getMinutes() - offset);
+      setStartDate(start);
+    }
+
+    if (!values.endDate) {
+      setEndDate("undefined");
+    } else {
+      let end = new Date(values.endDate);
+      end.setMinutes(end.getMinutes() - offset);
+      setEndDate(end);
+    }
+  };
+
   useEffect(() => {
-    onRefresh();
-  }, []);
-
-  const onRefresh = () => {
     setLoading(true);
-    fetchEventsByUserId(userId)
+    fetchAttendanceByUserId(userId)
       .then((result) => {
-        if (result && result.data && result.data.event) {
-          setEvents(result.data.event);
-          setLength(result.data.event.length);
+        if (result?.data?.attendances) {
+          const filteredAttendance = filterAttendance(
+            result.data.attendances,
+            startDate,
+            endDate
+          );
+          setAttendance(filteredAttendance);
+          setLength(filteredAttendance.length);
 
-          if (result.data.event.length > 1) {
+          if (filteredAttendance.length > 1) {
             setAttend("Silver");
-          }
-          if (result.data.event.length > 3) {
+          } else if (filteredAttendance.length > 3) {
             setAttend("Gold");
           }
           let add = 0;
           // HAVE TO FIX THIS
-          for (let i = 0; i < result.data.event.length; i++) {
-            if (result.data.event[i].timeCheckedOut != null) {
+          for (let i = 0; i < filteredAttendance.length; i++) {
+            if (filteredAttendance[i].timeCheckedOut != null) {
               add += getHours(
-                result.data.event[i].timeCheckedIn.slice(11, 16),
-                result.data.event[i].timeCheckedOut.slice(11, 16)
+                filteredAttendance[i].timeCheckedIn.slice(11, 16),
+                filteredAttendance[i].timeCheckedOut.slice(11, 16)
               );
             }
           }
           setSum(add);
           if (add >= 7) {
             setEarn("Silver");
-          }
-          if (add >= 14) {
+          } else if (add >= 14) {
             setEarn("Gold");
           }
         }
@@ -199,7 +199,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
         }
       })
       .finally(() => {});
-  };
+  }, [startDate, endDate]);
 
   let achievements = (
     <Styled.Box>
@@ -217,7 +217,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
             />
           )}
         </Styled.StatImage>
-        <Styled.StatText>{events.length} events</Styled.StatText>
+        <Styled.StatText>{attendance.length} events</Styled.StatText>
       </Styled.BoxInner>
 
       <Styled.BoxInner>
@@ -249,18 +249,63 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
             <Styled.Header2>ACHIEVEMENTS</Styled.Header2>
             {achievements}
 
+            <Formik
+              initialValues={{}}
+              onSubmit={(values, { setSubmitting }) => {
+                onSubmitValues(values, setSubmitting);
+              }}
+              render={({ handleSubmit }) => (
+                <React.Fragment>
+                  <Row>
+                    <Col>
+                      <SForm.Label>From</SForm.Label>
+                      <Field name="startDate">
+                        {({ field }) => (
+                          <SForm.Input {...field} type="datetime-local" />
+                        )}
+                      </Field>
+                    </Col>
+                    <Col>
+                      <SForm.Label>To</SForm.Label>
+
+                      <Field name="endDate">
+                        {({ field }) => (
+                          <SForm.Input {...field} type="datetime-local" />
+                        )}
+                      </Field>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <Button
+                        color="primary"
+                        onClick={() => {
+                          handleSubmit();
+                        }}
+                        style={{
+                          backgroundColor: "ef4e79",
+                          borderColor: "ef4e79",
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        Search
+                      </Button>
+                    </Col>
+                  </Row>
+                </React.Fragment>
+              )}
+            />
             <div>
               <Styled.Header>Volunteer History</Styled.Header>
               <Styled.Header2>{length} events</Styled.Header2>
               <Styled.marginTable>
-                <EventTable events={events} isVolunteer={true} />
+                <EventTable events={attendance} isIndividualStats={true} />
               </Styled.marginTable>
               <Styled.Margin />
             </div>
           </Styled.Right>
         </Styled.Container>
       )}
-
       {onlyAchievements && achievements}
     </React.Fragment>
   );

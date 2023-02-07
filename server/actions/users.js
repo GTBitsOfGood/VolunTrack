@@ -72,13 +72,12 @@ export async function verifyUserWithCredentials(email, password) {
     };
 }
 
-export async function getEventVolunteers(parsedVolunteers, organizationId) {
+export async function getEventVolunteers(parsedVolunteers) {
   await dbConnect();
 
   let volunteerIds = parsedVolunteers.map(mongoose.Types.ObjectId);
   const volunteers = await User.find({
     _id: { $in: volunteerIds },
-    organizationId,
   });
 
   return volunteers
@@ -116,7 +115,6 @@ export async function getUsers(role, next) {
     })
     .catch((err) => next(err));
 }
-
 
 export async function getCurrentUser(userId, next) {
   await dbConnect();

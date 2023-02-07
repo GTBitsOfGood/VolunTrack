@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   getHistoryEvents,
-  getUserFromId,
   getUsers,
 } from "../../actions/queries";
 import * as Table from "../sharedStyles/tableStyles";

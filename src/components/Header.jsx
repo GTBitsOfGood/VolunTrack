@@ -2,7 +2,7 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Collapse,
   Container,
@@ -212,6 +212,11 @@ const Header = () => {
     router.push("/history");
   };
 
+  const gotToSummary = (e) => {
+    e.preventDefault();
+    router.push("/events-summary");
+  };
+
   const goToStats = (e) => {
     e.preventDefault();
     router.push("/stats");
@@ -369,9 +374,18 @@ const Header = () => {
                     <Styled.DropdownItem>Profile</Styled.DropdownItem>
                   </DropdownItem>
                   {user.role === "admin" && (
-                    <DropdownItem onClick={goToHistory} href="/history">
-                      <Styled.DropdownItem>History</Styled.DropdownItem>
-                    </DropdownItem>
+                    <React.Fragment>
+                      <DropdownItem onClick={goToHistory} href="/history">
+                        <Styled.DropdownItem>
+                          Change History
+                        </Styled.DropdownItem>
+                      </DropdownItem>
+                      <DropdownItem onClick={gotToSummary} href="/summary">
+                        <Styled.DropdownItem>
+                          Events Summary
+                        </Styled.DropdownItem>
+                      </DropdownItem>
+                    </React.Fragment>
                   )}
                   <DropdownItem onClick={logout} href="/">
                     <Styled.DropdownItem>Sign Out</Styled.DropdownItem>

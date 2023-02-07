@@ -52,8 +52,8 @@ const EditEventStatsForm = ({ toggle, event }) => {
   return (
     <Formik
       initialValues={{
-        name: event.name,
-        email: event.email,
+        name: event.volunteerName,
+        email: event.volunteerEmail,
         checkin: new Date(event.timeCheckedIn).toLocaleTimeString("en-GB"),
         checkout: new Date(event.timeCheckedOut).toLocaleTimeString("en-GB"),
       }}

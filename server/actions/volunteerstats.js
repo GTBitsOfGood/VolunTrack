@@ -1,14 +1,13 @@
-const AttendanceData = require("../mongodb/models/attendance");
 import dbConnect from "../mongodb/index";
+const AttendanceData = require("../mongodb/models/attendance");
 
-export async function getEventsByUserID(userId, next) {
+export async function getAttendanceByUserID(userId, next) {
   await dbConnect();
   return AttendanceData.find({ userId: userId })
     .then((events) => {
-      const sortedEvents = events.sort(
+      return events.sort(
         (a, b) => Number(b.timeCheckedIn) - Number(a.timeCheckedIn)
       );
-      return sortedEvents;
     })
     .catch(next);
 }

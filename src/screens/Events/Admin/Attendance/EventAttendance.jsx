@@ -73,16 +73,22 @@ const EventAttendance = () => {
       setMinors(fetchedMinors);
 
       setCheckedInVolunteers(
-        (await getEventVolunteersByAttendance(eventId, true)).data
+        (await getEventVolunteersByAttendance(eventId, true)).data.volunteers
       );
       setCheckedOutVolunteers(
-        (await getEventVolunteersByAttendance(eventId, false)).data
+        (await getEventVolunteersByAttendance(eventId, false)).data.volunteers
       );
     })();
   }, []);
 
   const checkIn = (volunteer) => {
-    checkInVolunteer(volunteer._id, eventId, event.title);
+    checkInVolunteer(
+      volunteer._id,
+      eventId,
+      event.title,
+      volunteer.bio.first_name + " " + volunteer.bio.last_name,
+      volunteer.bio.email
+    );
 
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(
@@ -117,6 +123,7 @@ const EventAttendance = () => {
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {
+    if (volunteers?.length === 0) return [];
     return (
       searchValue.length > 0
         ? volunteers.filter(

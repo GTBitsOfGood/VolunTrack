@@ -65,14 +65,14 @@ const convertTime = (time) => {
 
 const EventTable = ({
   events,
-  isVolunteer,
+  isIndividualStats,
   onDeleteClicked,
   onEditClicked,
 }) => {
-  const eventName = isVolunteer ? "Event Name" : "Volunteer Name";
-  const creation = isVolunteer ? "Date" : "Email Address";
-  const time = isVolunteer ? "Time" : "Hours Participated";
-  const textInfo = isVolunteer ? "Hours Earned" : "";
+  const eventName = isIndividualStats ? "Event Name" : "Volunteer Name";
+  const creation = isIndividualStats ? "Date" : "Email Address";
+  const time = isIndividualStats ? "Time" : "Hours Participated";
+  const textInfo = isIndividualStats ? "Hours Earned" : "";
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
   const updatePage = (pageNum) => {
@@ -86,15 +86,13 @@ const EventTable = ({
           <Table.EventList>
             <Table.InnerTop>
               <Table.EventName>{eventName}</Table.EventName>
-
               <Table.Creation>{creation}</Table.Creation>
-
               <Table.Time>{time}</Table.Time>
               <Table.TextInfo>{textInfo}</Table.TextInfo>
             </Table.InnerTop>
           </Table.EventList>
         </Styled.List>
-        {isVolunteer &&
+        {isIndividualStats &&
           events
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
@@ -128,16 +126,18 @@ const EventTable = ({
                 </Link>
               </Styled.List>
             ))}
-        {isVolunteer == false &&
+        {!isIndividualStats &&
           events
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
               <Styled.List key={event._id}>
                 <Table.EventList>
                   <Table.Inner>
-                    <Table.EventName>{event.name}</Table.EventName>
+                    <Table.EventName>{event.volunteerName}</Table.EventName>
 
-                    <Table.Creation>{event.email}</Table.Creation>
+                    <Table.Creation>
+                      {event.volunteerEmail?.substring(0, 24) + "..."}
+                    </Table.Creation>
 
                     <Table.Time>
                       {event.hours.toString().slice(0, 5)}
@@ -179,8 +179,8 @@ const EventTable = ({
   );
 };
 EventTable.propTypes = {
-  events: PropTypes.Array,
-  isVolunteer: PropTypes.Boolean,
+  events: PropTypes.array,
+  isIndividualStats: PropTypes.bool,
   onDeleteClicked: PropTypes.func,
   onEditClicked: PropTypes.func,
 };

@@ -25,8 +25,7 @@ export const fetchEvents = (startDate, endDate, organizationId) =>
 
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
-// not sure if this works
-export const fetchEventsByUserId = (userId) => {
+export const fetchAttendanceByUserId = (userId) => {
   return axios.get("/api/users/stats?volunteer=" + userId);
 };
 
@@ -64,8 +63,20 @@ export const getInvitedAdmins = (organizationId) =>
 export const removeInvitedAdmin = (email) =>
   axios.post(`/api/settings/removeInvitedAdmin`, { email });
 
-export const checkInVolunteer = (userId, eventId, eventName) =>
-  axios.post("/api/attendance/checkin", { userId, eventId, eventName });
+export const checkInVolunteer = (
+  userId,
+  eventId,
+  eventName,
+  volunteerName,
+  volunteerEmail
+) =>
+  axios.post("/api/attendance/checkin", {
+    userId,
+    eventId,
+    eventName,
+    volunteerName,
+    volunteerEmail,
+  });
 
 export const checkOutVolunteer = (userId, eventId) =>
   axios.post("/api/attendance/checkout", { userId, eventId });
@@ -80,6 +91,11 @@ export const updateEventById = (id, event) =>
 
 export const getAttendanceForEvent = (eventId) =>
   axios.post("/api/attendance/statistics", { eventId });
+
+export const getEventStatistics = (startDate, endDate) =>
+  axios.get(
+    `/api/attendance/eventstatistics?startDate=${startDate}&endDate=${endDate}`
+  );
 
 export const deleteAttendance = (id) =>
   axios.delete(`/api/attendance/${id}`, { id });

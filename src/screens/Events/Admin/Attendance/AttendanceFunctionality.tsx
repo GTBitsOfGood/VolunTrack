@@ -36,7 +36,7 @@ const AttendanceFunctionality = ({
   <>
     <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK IN</Styled.InfoText>
     <Styled.VolunteerContainer>
-      {checkedOutVolunteers &&
+      {checkedOutVolunteers?.length > 0 &&
         checkedOutVolunteers.map((volunteer) => (
           <Volunteer
             key={volunteer._id}
@@ -50,7 +50,7 @@ const AttendanceFunctionality = ({
     </Styled.VolunteerContainer>
     <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK OUT</Styled.InfoText>
     <Styled.VolunteerContainer>
-      {checkedInVolunteers &&
+      {checkedInVolunteers?.length > 0 &&
         checkedInVolunteers.map((volunteer) => (
           <Volunteer
             key={volunteer._id}
