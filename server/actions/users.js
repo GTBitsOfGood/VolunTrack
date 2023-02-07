@@ -117,12 +117,6 @@ export async function getUsers(role, next) {
     .catch((err) => next(err));
 }
 
-export async function getCount(organizationId) {
-  await dbConnect();
-
-  const count = await User.count({ organizationId });
-  return { status: 200, message: { count } };
-}
 
 export async function getCurrentUser(userId, next) {
   await dbConnect();

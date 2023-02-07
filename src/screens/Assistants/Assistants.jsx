@@ -24,6 +24,7 @@ import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
+import PropTypes from "prop-types";
 
 const PAGE_SIZE = 10;
 
@@ -333,3 +334,7 @@ class Assistants extends React.Component {
 }
 
 export default authWrapper(Assistants);
+
+Assistants.propTypes = {
+  user: PropTypes.object.isRequired,
+};

@@ -234,7 +234,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    fetchEvents(selectDate, selectDate)
+    fetchEvents(selectDate, selectDate, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);

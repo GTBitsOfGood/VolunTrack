@@ -106,7 +106,7 @@ class Volunteers extends React.Component {
   componentDidMount = () => this.onRefresh();
   onRefresh = async () => {
     this.setState({ loadingMoreUsers: true });
-    let result = await getUsers("volunteer");
+    let result = await getUsers(this.props.user.organizationId, "volunteer");
     if (result && result.data && result.data.users) {
       this.setState({
         users: result.data.users,
