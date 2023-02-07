@@ -1,12 +1,7 @@
 import { Field, Formik } from "formik";
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import {
-  fetchAttendanceByUserId,
-  fetchEvents,
-  getSimpleAttendanceForEvent,
-  getEventStatistics,
-} from "../../../actions/queries";
+import { fetchEvents, getEventStatistics } from "../../../actions/queries";
 import { useEffect } from "react";
 import EventTable from "../../../components/EventStatsTable";
 //import { getHours } from "../../Stats/User/hourParsing";
@@ -14,7 +9,6 @@ import { Button, Col, Row } from "reactstrap";
 import styled from "styled-components";
 import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";
-import { filterAttendance } from "../../Stats/helper";
 
 const Styled = {
   Container: styled.div`
@@ -74,19 +68,6 @@ const Stats = () => {
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
   const [loading, setLoading] = useState(false);
-
-  const getHours = (startTime, endTime) => {
-    var timeStart = new Date("01/01/2007 " + startTime);
-    var timeEnd = new Date("01/01/2007 " + endTime);
-
-    let hours = Math.abs(timeEnd - timeStart) / 36e5;
-
-    if (hours < 0) {
-      hours = 24 + hours;
-    }
-
-    return Math.round(hours * 10) / 10.0;
-  };
 
   useEffect(() => {
     onRefresh();

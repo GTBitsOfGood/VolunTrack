@@ -74,7 +74,6 @@ export const fetchEvents = (startDate, endDate) =>
 
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
-// not sure if this works
 export const fetchAttendanceByUserId = (userId) => {
   return axios.get("/api/users/stats?volunteer=" + userId);
 };
