@@ -24,6 +24,7 @@ import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
+import PropTypes from "prop-types";
 
 const PAGE_SIZE = 10;
 
@@ -143,12 +144,10 @@ class Assistants extends React.Component {
     valid: false,
   };
 
-  // const [searchValue, setSearchValue] = useState("");
-
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
     this.setState({ loadingMoreUsers: true });
-    getInvitedAdmins().then((result) => {
+    getInvitedAdmins(this.props.user.organizationId).then((result) => {
       if (result && result.data) {
         this.setState({
           invitedAdmins: result.data,
@@ -188,7 +187,7 @@ class Assistants extends React.Component {
   };
 
   onDeletePending = (email) => {
-    removeInvitedAdmin(email).then(() => {
+    removeInvitedAdmin(email, this.props.user.organizationId).then(() => {
       this.componentDidMount();
     });
   };
@@ -219,7 +218,10 @@ class Assistants extends React.Component {
 
   handleSubmit = async () => {
     if (this.state.newInvitedAdmin?.length > 0)
-      await updateInvitedAdmins(this.state.newInvitedAdmin);
+      await updateInvitedAdmins(
+        this.state.newInvitedAdmin,
+        this.props.user.organizationId
+      );
     this.onRefresh();
   };
 
@@ -332,3 +334,7 @@ class Assistants extends React.Component {
 }
 
 export default authWrapper(Assistants);
+
+Assistants.propTypes = {
+  user: PropTypes.object.isRequired,
+};

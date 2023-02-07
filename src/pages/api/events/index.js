@@ -11,17 +11,21 @@ const {
 import { ObjectId } from "mongodb";
 import initMiddleware from "../../../../lib/init-middleware";
 import validateMiddleware from "../../../../lib/validate-middleware";
+import { getUserFromId } from "../../../../server/actions/users";
 import { agenda } from "../../../../server/jobs";
 import { scheduler } from "../../../../server/jobs/scheduler";
-import { getUserFromId } from "../../../../server/actions/users";
 
 const validateBody = initMiddleware(
   validateMiddleware(CREATE_EVENT_VALIDATOR, validationResult)
 );
 
-export default async function handler(req, res, next) {
+export default async function handler(req, res) {
   if (req.method === "GET") {
-    let events = await getEvents(req.query.startDate, req.query.endDate, next);
+    let events = await getEvents(
+      req.query.startDate,
+      req.query.endDate,
+      req.query.organizationId
+    );
 
     return res.status(200).json({
       events,
@@ -35,7 +39,7 @@ export default async function handler(req, res, next) {
     }
     const newEventData = matchedData(req, { includeOptionals: true });
 
-    await createEvent(newEventData, next);
+    await createEvent(newEventData);
 
     res.json({
       message: "Event successfully created!",
@@ -52,12 +56,12 @@ export default async function handler(req, res, next) {
     }
     const updateEventData = matchedData(req);
 
-    let event = await updateEvent(updateEventData, next);
+    let event = await updateEvent(updateEventData);
 
     if (sendConfirmationEmail) {
       for (let userId of event.volunteers) {
         if (ObjectId.isValid(userId)) {
-          let resp = await getUserFromId(userId, next);
+          let resp = await getUserFromId(userId);
           if (resp && resp.message.user)
             sendEventEditedEmail(resp.message.user, req.body);
         }

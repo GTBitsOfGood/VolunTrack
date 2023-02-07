@@ -15,6 +15,10 @@ const waiverSchema = new mongoose.Schema(
       data: Buffer,
       contentType: String,
     },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+    },
   },
   { timestamps: true }
 );

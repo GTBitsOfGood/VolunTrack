@@ -1,8 +1,8 @@
 import { ObjectId } from "mongodb";
-
-const mongoose = require("mongoose");
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/user";
+
+const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
@@ -72,21 +72,18 @@ export async function verifyUserWithCredentials(email, password) {
     };
 }
 
-export async function getEventVolunteers(parsedVolunteers, next) {
+export async function getEventVolunteers(parsedVolunteers, organizationId) {
   await dbConnect();
 
-  let volunteers = parsedVolunteers.map(mongoose.Types.ObjectId);
+  let volunteerIds = parsedVolunteers.map(mongoose.Types.ObjectId);
+  const volunteers = await User.find({
+    _id: { $in: volunteerIds },
+    organizationId,
+  });
 
-  return User.find({
-    _id: { $in: volunteers },
-  })
-    .then((users) => {
-      if (!users) {
-        return { status: 404, message: { error: `No Users found` } };
-      }
-      return { status: 200, message: { users } };
-    })
-    .catch((err) => next(err));
+  return volunteers
+    ? { status: 200, message: { volunteers } }
+    : { status: 404, message: { error: "No Users found" } };
 }
 
 export async function getUsers(role, next) {
@@ -120,16 +117,6 @@ export async function getUsers(role, next) {
     .catch((err) => next(err));
 }
 
-export async function getCount(next) {
-  await dbConnect();
-
-  return User.estimatedDocumentCount()
-    .exec()
-    .then((count) => {
-      return { status: 200, message: { count } };
-    })
-    .catch((err) => next(err));
-}
 
 export async function getCurrentUser(userId, next) {
   await dbConnect();

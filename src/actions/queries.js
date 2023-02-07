@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const getUsers = (role) => axios.get(`/api/users/getUsers?role=${role}`);
+export const getUsers = (organizationId, role) =>
+  axios.get(`/api/users/getUsers?role=${role}`);
 
 export const getCurrentUser = (userId) =>
   axios.get("/api/users/current?volunteer=" + userId);
@@ -9,14 +10,18 @@ export const updateUser = (userId, userInfo) => {
   axios.post(`/api/users/${userId}`, userInfo);
 };
 
-export const fetchVolunteers = (eventVolunteers) => {
+export const fetchVolunteers = (eventVolunteers, organizationId) => {
   return axios.get(
-    `/api/users/eventVolunteers?volunteers=${JSON.stringify(eventVolunteers)}`
+    `/api/users/eventVolunteers?volunteers=${JSON.stringify(
+      eventVolunteers
+    )}&organizationId=${organizationId}`
   );
 };
 
-export const fetchEvents = (startDate, endDate) =>
-  axios.get(`/api/events?startDate=${startDate}&endDate=${endDate}`);
+export const fetchEvents = (startDate, endDate, organizationId) =>
+  axios.get(
+    `/api/events?startDate=${startDate}&endDate=${endDate}&organizationId=${organizationId}`
+  );
 
 export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
 
@@ -50,11 +55,11 @@ export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
 
 export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
 
-export const updateInvitedAdmins = (email) =>
-  axios.post(`/api/settings/updateInvitedAdmin`, { email });
+export const updateInvitedAdmins = (email, organizationId) =>
+  axios.post(`/api/settings/updateInvitedAdmin`, { email, organizationId });
 
-export const getInvitedAdmins = () =>
-  axios.get(`/api/settings/getInvitedAdmin`);
+export const getInvitedAdmins = (organizationId) =>
+  axios.get(`/api/settings/getInvitedAdmin?organizationId=${organizationId}`);
 
 export const removeInvitedAdmin = (email) =>
   axios.post(`/api/settings/removeInvitedAdmin`, { email });
@@ -82,4 +87,5 @@ export const deleteAttendance = (id) =>
 export const updateAttendance = (id, newData) =>
   axios.put(`/api/attendance/${id}`, { id, newData });
 
-export const getHistoryEvents = () => axios.get("/api/historyEvents");
+export const getHistoryEvents = (organizationId) =>
+  axios.get(`/api/historyEvents?organizationId=${organizationId}`);
