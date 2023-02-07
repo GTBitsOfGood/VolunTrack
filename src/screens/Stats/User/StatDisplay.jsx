@@ -151,9 +151,9 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
     setLoading(true);
     fetchAttendanceByUserId(userId)
       .then((result) => {
-        if (result && result.data && result.data.event) {
+        if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
-            result.data.event,
+            result.data.attendances,
             startDate,
             endDate
           );

@@ -136,7 +136,7 @@ const EventTable = ({
                     <Table.EventName>{event.volunteerName}</Table.EventName>
 
                     <Table.Creation>
-                      {event.volunteerEmail.substring(0, 24) + "..."}
+                      {event.volunteerEmail?.substring(0, 24) + "..."}
                     </Table.Creation>
 
                     <Table.Time>
