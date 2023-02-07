@@ -20,12 +20,23 @@ const Styled = {
   Container: styled.div`
     width: 500px;
     height: 600px;
-    background: white;
     display: flex;
     padding: 4em;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  `,
+  TopText: styled.p`
+    font-size: 32px;
+    font-weight: bold;
+  `,
+  OrDiv: styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 1.5vw;
   `,
 };
 
@@ -38,25 +49,14 @@ const AuthPage = (props) => {
   return (
     <Styled.Main>
       <Styled.Container>
-        <img
+        {/* <img
           alt="Bits of Good Logo"
           src="/images/bog_logo.png"
           style={{ width: "100%", marginBottom: "2px" }}
-        />
-        <p>
-          {props.createAccount
-            ? "Create an account"
-            : "Sign in to your account"}
-        </p>
-        <AuthForm
-          createAccount={props.createAccount}
-          context={useContext(RequestContext)}
-        />
-        <div style={{ display: "flex", marginBottom: "6px", marginTop: "2px" }}>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "black" }} />
-          <div style={{ width: "40px", textAlign: "center" }}>OR</div>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "black" }} />
-        </div>{" "}
+        /> */}
+        <Styled.TopText>
+          {props.createAccount ? "Create an Account" : "Sign In"}
+        </Styled.TopText>
         <Button
           style={{
             width: "100%",
@@ -69,15 +69,31 @@ const AuthPage = (props) => {
             src="/images/google.svg"
             className="mr-3 h-full w-auto py-2"
           />
-          {props.createAccount ? "Sign up" : "Sign in"} with Google
+          Continue with Google
         </Button>
-        <a
-          href={`${window.location.origin}/${
-            props.createAccount ? "login" : "create-account"
-          }`}
-        >
-          Or {props.createAccount ? "sign in" : "sign up"}
-        </a>
+        <Styled.OrDiv>
+          <hr size="150" width="150" color="#6C757D"></hr>
+          OR
+          <hr size="150" width="150" color="#6C757D"></hr>
+        </Styled.OrDiv>
+        <br></br>
+        <AuthForm
+          createAccount={props.createAccount}
+          context={useContext(RequestContext)}
+        />
+        <div style={{ display: "flex" }}>
+          {props.createAccount
+            ? "Already have an account?"
+            : "Don't have an account?"}
+          <a
+            style={{ marginLeft: "5px" }}
+            href={`${window.location.origin}/${
+              props.createAccount ? "login" : "create-account"
+            }`}
+          >
+            {props.createAccount ? "Sign In" : "Create an account"}
+          </a>
+        </div>
       </Styled.Container>
     </Styled.Main>
   );
