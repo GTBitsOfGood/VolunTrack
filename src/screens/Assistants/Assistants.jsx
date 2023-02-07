@@ -15,9 +15,8 @@ import {
 import styled from "styled-components";
 import {
   deleteUser,
-  fetchUserCount,
-  fetchUserManagementData,
   getInvitedAdmins,
+  getUsers,
   removeInvitedAdmin,
   updateInvitedAdmins,
 } from "../../actions/queries";
@@ -149,13 +148,6 @@ class Assistants extends React.Component {
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
     this.setState({ loadingMoreUsers: true });
-    fetchUserCount().then((result) => {
-      if (result && result.data && result.data.count) {
-        this.setState({
-          userCount: result.data.count,
-        });
-      }
-    });
     getInvitedAdmins().then((result) => {
       if (result && result.data) {
         this.setState({
@@ -163,14 +155,14 @@ class Assistants extends React.Component {
         });
       }
     });
-    fetchUserManagementData().then((result) => {
+    getUsers().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
           users: result.data.users.filter(
             (user) =>
-              user.role == "admin" ||
-              user.role == "admin-assistant" ||
-              user.role == "staff"
+              user.role === "admin" ||
+              user.role === "admin-assistant" ||
+              user.role === "staff"
           ),
           currentPage: 0,
           loadingMoreUsers: false,
@@ -191,8 +183,6 @@ class Assistants extends React.Component {
     );
   };
 
-  atEnd = () =>
-    (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
     /** code to update users in state at that specific index */
   };
@@ -278,6 +268,7 @@ class Assistants extends React.Component {
         <Styled.Row>
           <Styled.TableUsers>
             <AssistantTable
+              sessionUser={this.props.user}
               users={this.getUsersAtPage()}
               invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}

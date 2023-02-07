@@ -99,7 +99,6 @@ export default PaginationComp;
 PaginationComp.propTypes = {
   items: PropTypes.array.isRequired,
   pageSize: PropTypes.number.isRequired,
-  pageCount: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   updatePageCallback: PropTypes.func.isRequired,
 };
