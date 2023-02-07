@@ -4,16 +4,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import {
-  deleteUser,
-  fetchUserCount,
-  fetchUserManagementData,
-  updateUser,
-} from "../../actions/queries";
+import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
 import { CSVLink } from "react-csv";
-
-// const PAGE_SIZE = 3;
 
 const Styled = {
   Container: styled.div`
@@ -25,26 +18,6 @@ const Styled = {
     flex-direction: column;
     position: relative;
     left: 10%;
-  `,
-  PaginationContainer: styled.div`
-    background: white;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    height: 3rem;
-
-    p {
-      color: ${(props) => props.theme.grey5};
-      margin: 0 1rem;
-      font-size: 1.2rem;
-    }
-  `,
-  ButtonContainer: styled.div`
-    width: 95%;
-    max-width: 80rem;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
   `,
   Button: styled(Button)`
     background: white;
@@ -58,13 +31,6 @@ const Styled = {
       box-shadow: none;
     }
     ${(props) => props.disabled && "background: white !important"}
-  `,
-  ToBeginningButton: styled(Button)`
-    background: white;
-    border: none;
-    margin-left: auto;
-    margin-right: 1rem;
-    color: black;
   `,
   TableUsers: styled.div`
     width: 80%;
@@ -132,58 +98,44 @@ function authWrapper(Component) {
 class Volunteers extends React.Component {
   state = {
     users: [],
-    userCount: 0,
-    currentPage: 0,
     loadingMoreUsers: false,
     searchValue: "",
     searchOn: false,
-    searchArray: [],
   };
 
   componentDidMount = () => this.onRefresh();
   onRefresh = async () => {
     this.setState({ loadingMoreUsers: true });
-    fetchUserCount().then((result) => {
-      if (result && result.data && result.data.count) {
-        this.setState({
-          userCount: result.data.count,
-        });
-      }
-    });
-    let result = await fetchUserManagementData();
+    let result = await getUsers(this.props.user.organizationId, "volunteer");
     if (result && result.data && result.data.users) {
       this.setState({
-        users: result.data.users.filter((user) => user.role === "volunteer"),
-        currentPage: 0,
+        users: result.data.users,
         loadingMoreUsers: false,
       });
     }
   };
 
-  onEditUser = (updatedUser) => {
+  onEditUser = (userId, updatedUser) => {
     /** code to update users in state at that specific index */
-    updateUser(
-      updatedUser.email,
-      updatedUser.first_name,
-      updatedUser.last_name,
-      updatedUser.phone_number,
-      updatedUser.date_of_birth,
-      updatedUser.zip_code,
-      updatedUser.address,
-      updatedUser.city,
-      updatedUser.state,
-      updatedUser.notes,
-      this.props.user._id
-    );
+    const adminId = this.props.user._id;
+    const userInfo = { adminId, bio: updatedUser };
+    updateUser(userId, userInfo);
 
     let updatedUsers = this.state.users.map((user) => {
-      if (user.email === updatedUser.email) return updatedUser;
-      else return user;
+      if (user.email === updatedUser.email) {
+        return {
+          ...updatedUser,
+          name: updatedUser.first_name + " " + updatedUser.last_name,
+          _id: user._id,
+          status: user.status,
+          role: user.role,
+        };
+      }
+      return user;
     });
 
     this.setState({
       users: updatedUsers,
-      currentPage: 0,
       loadingMoreUsers: false,
     });
 
@@ -202,7 +154,6 @@ class Volunteers extends React.Component {
 
     this.setState({
       users: updatedUsers,
-      currentPage: 0,
       loadingMoreUsers: false,
     });
   };
@@ -217,7 +168,7 @@ class Volunteers extends React.Component {
     return filterArray;
   };
   render() {
-    const { currentPage, loadingMoreUsers, searchValue } = this.state;
+    const { loadingMoreUsers, searchValue } = this.state;
     return (
       <Styled.Container>
         <Styled.HeaderTitle>

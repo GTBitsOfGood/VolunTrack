@@ -28,6 +28,10 @@ const userSchema = new Schema(
     },
     passwordHash: { type: String },
     imageUrl: { type: String },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+    },
   },
   {
     timestamps: true,

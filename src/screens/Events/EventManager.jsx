@@ -2,7 +2,13 @@
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Button } from "reactstrap";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+} from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
@@ -10,18 +16,12 @@ import EventCreateModal from "./Admin/EventCreateModal";
 import EventDeleteModal from "./Admin/EventDeleteModal";
 import EventEditModal from "./Admin/EventEditModal";
 import EventTable from "./EventTable";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
 
 import { useSession } from "next-auth/react";
-import { updateEvent } from "./eventHelpers";
-import StatDisplay from "../Stats/User/StatDisplay";
 import router from "next/router";
 import PropTypes from "prop-types";
+import StatDisplay from "../Stats/User/StatDisplay";
+import { updateEvent } from "./eventHelpers";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -119,6 +119,15 @@ const Styled = {
     align-items: center;
     margin-right: 2rem;
   `,
+  LegendText: styled.p`
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 30px;
+  `,
+  LegendImage: styled.img`
+    width: 20rem;
+    height: 5rem;
+  `,
 };
 
 const EventManager = ({ user, role, isHomePage }) => {
@@ -140,7 +149,7 @@ const EventManager = ({ user, role, isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents()
+    fetchEvents(undefined, undefined, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -225,7 +234,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    fetchEvents(selectDate, selectDate)
+    fetchEvents(selectDate, selectDate, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -321,6 +330,8 @@ const EventManager = ({ user, role, isHomePage }) => {
               setMarkDates({ date, view }, markDates)
             }
           />
+          <Styled.LegendText>How to read the calendar?</Styled.LegendText>
+          <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
         </Styled.Left>
       )}
       {!isHomePage && (
@@ -374,6 +385,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             open={showEditModal}
             toggle={toggleEditModal}
             event={currEvent}
+            setEvent={setCurrEvent}
           />
           <EventDeleteModal
             open={showDeleteModal}

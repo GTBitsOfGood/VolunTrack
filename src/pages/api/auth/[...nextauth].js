@@ -1,12 +1,12 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import dbConnect from "../../../../server/mongodb/index";
-import User from "../../../../server/mongodb/models/user";
 import CredentialsProvider from "next-auth/providers/credentials";
-import AppSettings from "../../../../server/mongodb/models/AppSettings";
+import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users";
+import dbConnect from "../../../../server/mongodb/index";
+import Organization from "../../../../server/mongodb/models/organization";
+import User from "../../../../server/mongodb/models/user";
 
 const uri = process.env.MONGO_DB;
 const options = {
@@ -103,7 +103,9 @@ export default NextAuth({
       let user_data = {
         ...currentUser._doc,
       };
-      const invitedAdmins = await AppSettings.find({});
+      const invitedAdmins = await Organization.find({
+        _id: user_data.organizationId,
+      });
       if (
         invitedAdmins[0] &&
         invitedAdmins[0].invitedAdmins &&
@@ -111,8 +113,8 @@ export default NextAuth({
       ) {
         user_data.role = "admin";
         await User.findOneAndUpdate({ _id }, { role: "admin" });
-        await AppSettings.findOneAndUpdate(
-          {},
+        await Organization.findOneAndUpdate(
+          { _id: user_data.organizationid },
           { $pull: { invitedAdmins: user_data.bio.email } },
           { new: true }
         );

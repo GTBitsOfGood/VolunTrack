@@ -1,7 +1,12 @@
+import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getHistoryEvents, getUserFromId } from "../../actions/queries";
+import {
+  getHistoryEvents,
+  getUserFromId,
+  getUsers,
+} from "../../actions/queries";
 import * as Table from "../sharedStyles/tableStyles";
 
 const Styled = {
@@ -43,19 +48,27 @@ const Styled = {
 };
 
 const History = () => {
+  const {
+    data: { user },
+  } = useSession();
+
   const [searchValue, setSearchValue] = useState("");
   const [historyEvents, setHistoryEvents] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const fetchedHistoryEvents = (await getHistoryEvents()).data;
+      const fetchedHistoryEvents = (await getHistoryEvents(user.organizationId))
+        .data;
+      const admins = (await getUsers(user.organizationId, "admin")).data.users;
       const mappedHistoryEvents = await Promise.all(
         fetchedHistoryEvents.map(async (event) => {
-          const user = (await getUserFromId(event.userId)).data.user;
+          const matchedAdmin = admins.find(
+            (element) => element._id === event.userId
+          );
           return {
             ...event,
-            firstName: user.bio.first_name,
-            lastName: user.bio.last_name,
+            firstName: matchedAdmin?.first_name ?? "Unknown",
+            lastName: matchedAdmin?.last_name ?? "Admin",
           };
         })
       );
