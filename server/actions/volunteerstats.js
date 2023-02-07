@@ -13,7 +13,6 @@ export async function getAttendanceByUserID(userId, next) {
 }
 
 export async function getAllAttendanceObjects(next) {
-  console.log("get all attendance objects");
   await dbConnect();
   return AttendanceData.find()
     .then((events) => {

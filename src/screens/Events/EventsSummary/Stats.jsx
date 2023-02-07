@@ -94,7 +94,6 @@ const Stats = () => {
 
   const onRefresh = async () => {
     setLoading(true);
-    console.log("hello3");
     // grab the events
     setLoading(true);
     fetchEvents(startDate, endDate)
@@ -102,18 +101,9 @@ const Stats = () => {
         if (result && result.data && result.data.events) {
           setNumEvents(result.data.events.length);
         }
-        console.log("ONE HERE");
-        console.log(result);
 
-        console.log("DATE HERE");
-        console.log(startDate);
-        console.log(endDate);
-        console.log(new Date(startDate));
-        console.log(new Date(endDate));
         getEventStatistics(startDate, endDate).then((result2) => {
           setEventStats(result2);
-          console.log("TWO HERE");
-          console.log(result);
 
           let returnArray = [];
           var totalAttendance = 0;
@@ -151,8 +141,6 @@ const Stats = () => {
           setAttend(totalAttendance);
           setHours(totalHours);
           setEvents(returnArray);
-          console.log("THREE HERE");
-          console.log(returnArray);
         });
       })
       .finally(() => {
@@ -162,7 +150,6 @@ const Stats = () => {
 
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
-    //console.log("hello45678888")
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
