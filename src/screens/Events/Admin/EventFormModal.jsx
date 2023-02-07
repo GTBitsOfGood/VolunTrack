@@ -72,7 +72,7 @@ const Styled = {
   `,
 };
 
-const EventFormModal = ({ toggle, event, isGroupEvent }) => {
+const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.isValidForCourtHours ?? false
@@ -117,6 +117,9 @@ const EventFormModal = ({ toggle, event, isGroupEvent }) => {
     };
     setSubmitting(true);
     editEvent(editedEvent, sendConfirmationEmail);
+    if (setEvent) {
+      setEvent(editedEvent);
+    }
     toggle();
   };
 
@@ -646,6 +649,7 @@ EventFormModal.propTypes = {
   event: PropTypes.object.isRequired,
   toggle: PropTypes.func.isRequired,
   isGroupEvent: PropTypes.bool.isRequired,
+  setEvent: PropTypes.func.isRequired,
 };
 
 export default EventFormModal;
