@@ -1,67 +1,13 @@
 import axios from "axios";
 
-export const fetchUserManagementData = (lastPaginationId) =>
-  axios.get(
-    `/api/users/managementData?${
-      lastPaginationId ? "lastPaginationId=" + lastPaginationId : ""
-    }`
-  );
+export const getUsers = (role) => axios.get(`/api/users/getUsers?role=${role}`);
 
 export const getCurrentUser = (userId) =>
   axios.get("/api/users/current?volunteer=" + userId);
 
-export const fetchUserCount = () => axios.get("/api/users/count");
-
-export const updateUser = (
-  email,
-  first,
-  last,
-  number,
-  birthday,
-  zip,
-  address,
-  city,
-  state,
-  notes,
-  userId
-) => {
-  var query = "";
-  if (first) {
-    query += "first_name=" + first + "&";
-  }
-  if (last) {
-    query += "last_name=" + last + "&";
-  }
-  if (number) {
-    query += "phone_number=" + number + "&";
-  }
-  if (birthday) {
-    query += "date_of_birth=" + birthday + "&";
-  }
-  if (zip) {
-    query += "zip_code=" + zip + "&";
-  }
-  if (address) {
-    query += "address=" + address + "&";
-  }
-  if (city) {
-    query += "city=" + city + "&";
-  }
-  if (state) {
-    query += "state=" + state + "&";
-  }
-  if (notes) {
-    query += "notes=" + notes + "&";
-  }
-
-  if (query.length > 0) {
-    query = query.slice(0, -1);
-    axios.post(`/api/users/updateUser?email=${email}&${query}`, { userId });
-  }
+export const updateUser = (userId, userInfo) => {
+  axios.post(`/api/users/${userId}`, userInfo);
 };
-
-export const updateRole = (email, role) =>
-  axios.post(`/api/users/updateRole?email=${email}&role=${role}`);
 
 export const fetchVolunteers = (eventVolunteers) => {
   return axios.get(
@@ -97,9 +43,6 @@ export const createUserFromCredentials = (user) =>
 export const getUserFromId = (id) => axios.get(`/api/users/${id}`);
 
 export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
-
-//TODO combine this with updateUser
-export const editProfile = (id, user) => axios.put(`/api/users/${id}`, user);
 
 export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
 

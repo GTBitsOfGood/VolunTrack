@@ -298,11 +298,11 @@ const Header = () => {
                         <Styled.TxtContainer>
                           {currPageMatches("/assistants") ||
                           currPageMatches("/manage-waivers") ? (
-                            <SelectedPageLink style={{ "font-size": "108%" }}>
+                            <SelectedPageLink style={{ fontSize: "108%" }}>
                               Settings
                             </SelectedPageLink>
                           ) : (
-                            <Styled.PageLink style={{ "font-size": "108%" }}>
+                            <Styled.PageLink style={{ fontSize: "108%" }}>
                               Settings
                             </Styled.PageLink>
                           )}
