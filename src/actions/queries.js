@@ -63,7 +63,13 @@ export const getInvitedAdmins = (organizationId) =>
 export const removeInvitedAdmin = (email) =>
   axios.post(`/api/settings/removeInvitedAdmin`, { email });
 
-export const checkInVolunteer = (userId, eventId, eventName, volunteerName, volunteerEmail) =>
+export const checkInVolunteer = (
+  userId,
+  eventId,
+  eventName,
+  volunteerName,
+  volunteerEmail
+) =>
   axios.post("/api/attendance/checkin", {
     userId,
     eventId,

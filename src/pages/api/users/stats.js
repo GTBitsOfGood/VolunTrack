@@ -1,5 +1,3 @@
-import { getAllAttendanceObjects } from "../../../../server/actions/volunteerstats";
-
 const {
   getAttendanceByUserID,
 } = require("../../../../server/actions/volunteerstats");

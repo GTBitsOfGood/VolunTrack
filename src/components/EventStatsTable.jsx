@@ -59,10 +59,7 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventStatsTable = ({
-  events,
-  isVolunteer,
-}) => {
+const EventStatsTable = ({ events, isVolunteer }) => {
   return (
     <Styled.Container>
       <Styled.ul>

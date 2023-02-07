@@ -77,7 +77,7 @@ export async function getEventVolunteers(parsedVolunteers) {
 
   let volunteerIds = parsedVolunteers.map(mongoose.Types.ObjectId);
   const volunteers = await User.find({
-    _id: { $in: volunteerIds }
+    _id: { $in: volunteerIds },
   });
 
   return volunteers
@@ -115,7 +115,6 @@ export async function getUsers(role, next) {
     })
     .catch((err) => next(err));
 }
-
 
 export async function getCurrentUser(userId, next) {
   await dbConnect();
