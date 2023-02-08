@@ -31,6 +31,8 @@ const userSchema = new Schema(
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
+      required: true,
+      default: mongoose.Types.ObjectId("63d6dcc4e1fb5fd6e69b1738")
     },
   },
   {
