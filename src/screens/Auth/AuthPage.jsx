@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 import "normalize.css";
 import styled from "styled-components";
 import AuthForm from "./AuthForm";
-import { Button } from "reactstrap";
+import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
@@ -57,20 +57,16 @@ const AuthPage = (props) => {
         <Styled.TopText>
           {props.createAccount ? "Create an Account" : "Sign In"}
         </Styled.TopText>
-        <Button
-          style={{
-            width: "100%",
-            backgroundColor: "#FFFFFF",
-          }}
-          onClick={login}
-        >
-          <img
-            alt="Google Logo"
-            src="/images/google.svg"
-            className="mr-3 h-full w-auto py-2"
-          />
-          Continue with Google
-        </Button>
+        <div className="flex flex-wrap w-full gap-2 items-center">
+          <Button color="light" className="w-full py-1" onClick={login}>
+            <img
+              alt="Google Logo"
+              src="/images/google.svg"
+              className="mr-2 h-6 w-6"
+            />
+            <p className="text-lg my-0">Continue with Google</p>
+          </Button>
+        </div>
         <Styled.OrDiv>
           <hr size="150" width="150" color="#6C757D"></hr>
           OR
