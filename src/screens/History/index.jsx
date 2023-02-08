@@ -2,10 +2,7 @@ import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  getHistoryEvents,
-  getUsers,
-} from "../../actions/queries";
+import { getHistoryEvents, getUsers } from "../../actions/queries";
 import * as Table from "../sharedStyles/tableStyles";
 
 const Styled = {

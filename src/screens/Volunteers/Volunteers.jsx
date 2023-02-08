@@ -7,7 +7,6 @@ import styled from "styled-components";
 import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
 import { CSVLink } from "react-csv";
-import { Dropdown, RangeSlider } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -174,16 +173,6 @@ class Volunteers extends React.Component {
       <Styled.Container>
         <Styled.HeaderTitle>
           <Styled.Text>Volunteers</Styled.Text>
-          <RangeSlider/>
-          <Dropdown label="Dropdown button" dismissOnClick={false}>
-            <Dropdown.Item>Dashboard</Dropdown.Item>
-            <Dropdown.Item>Settings</Dropdown.Item>
-            <Dropdown.Item>Earnings</Dropdown.Item>
-            <Dropdown.Item>Sign out</Dropdown.Item>
-          </Dropdown>
-          <h1 className="text-3xl font-bold underline text-red-800">
-            Hello world!
-          </h1>
           <Styled.CSVLink
             data={this.state.users}
             filename={"volunteer-list.csv"}
