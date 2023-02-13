@@ -15,9 +15,14 @@ const waiverSchema = new mongoose.Schema(
       data: Buffer,
       contentType: String,
     },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+    },
   },
   { timestamps: true }
 );
 
 // export Event model to app
-module.exports = mongoose.models.Waiver || mongoose.model("Waiver", waiverSchema);
+module.exports =
+  mongoose.models.Waiver || mongoose.model("Waiver", waiverSchema);

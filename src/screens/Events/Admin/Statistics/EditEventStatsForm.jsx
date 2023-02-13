@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { ModalBody, ModalFooter, Button, Col, Row } from "reactstrap";
 import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
@@ -52,22 +52,15 @@ const EditEventStatsForm = ({ toggle, event }) => {
   return (
     <Formik
       initialValues={{
-        name: event.name,
-        email: event.email,
+        name: event.volunteerName,
+        email: event.volunteerEmail,
         checkin: new Date(event.timeCheckedIn).toLocaleTimeString("en-GB"),
         checkout: new Date(event.timeCheckedOut).toLocaleTimeString("en-GB"),
       }}
       onSubmit={(values, { setSubmitting }) => {
         onSubmitEditEvent(values, setSubmitting);
       }}
-      render={({
-        handleSubmit,
-        isValid,
-        isSubmitting,
-        values,
-        setFieldValue,
-        handleBlur,
-      }) => (
+      render={({ handleSubmit, isValid, isSubmitting }) => (
         <React.Fragment>
           <Styled.ModalBody>
             <Styled.Form>
@@ -166,8 +159,8 @@ const EditEventStatsForm = ({ toggle, event }) => {
 };
 
 EditEventStatsForm.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
+  event: PropTypes.object.isRequired,
+  toggle: PropTypes.func.isRequired,
 };
 
 export default EditEventStatsForm;

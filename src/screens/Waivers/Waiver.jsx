@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { deleteWaiver, uploadWaiver } from "../../actions/queries";

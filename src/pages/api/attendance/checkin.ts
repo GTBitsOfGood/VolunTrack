@@ -4,18 +4,10 @@ const Attendance = require("../../../../server/mongodb/models/attendance");
 export default async function handler(req, res) {
   await dbConnect();
   if (req.method === "POST") {
-    const userId = req.body.userId;
-    const eventId = req.body.eventId;
-    const eventName = req.body.eventName;
-
-    const attendance = new Attendance({
-      eventName,
-      userId,
-      eventId,
+    const newAttendance = await Attendance.create({
+      ...req.body,
       timeCheckedIn: Date.now(),
     });
-    const newAttendance = await attendance.save();
-
     return res.status(200).json(newAttendance);
   }
 }

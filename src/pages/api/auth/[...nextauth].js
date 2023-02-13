@@ -1,11 +1,12 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import dbConnect from "../../../../server/mongodb/index";
-import User from "../../../../server/mongodb/models/User";
 import CredentialsProvider from "next-auth/providers/credentials";
-import AppSettings from "../../../../server/mongodb/models/AppSettings";
+import GoogleProvider from "next-auth/providers/google";
+import { verifyUserWithCredentials } from "../../../../server/actions/users";
+import dbConnect from "../../../../server/mongodb/index";
+import Organization from "../../../../server/mongodb/models/organization";
+import User from "../../../../server/mongodb/models/user";
 
 const uri = process.env.MONGO_DB;
 const options = {
@@ -13,100 +14,68 @@ const options = {
   useNewUrlParser: true,
 };
 
-let currRole = "admin";
-
-const testAdminUser = {
-  _id: {
-    $oid: "6233855faf0f4550501b60e4",
-  },
-  employment: {
-    occupation: [],
-  },
-  role: "admin",
-  status: "new",
-  mandated: "not_mandated",
-  mandatedHours: 0,
-  imageUrl:
-    "https://lh3.googleusercontent.com/a-/AFdZucq8x07XKdgm8QTglypFQbHY3vDuFP4sDHIQ7-Hw5w=s83-c-mo",
-  bio: {
-    first_name: "Test",
-    last_name: "User",
-    phone_number: "",
-    email: "test.user@gmail.com",
-  },
-  createdAt: "2022-03-17T19:00:47.571Z",
-  updatedAt: "2022-04-12T23:08:32.167Z",
-  __v: 0,
-};
-
-const testVolunteerUser = {
-  _id: {
-    $oid: "6233855faf0f4550501b60e4",
-  },
-  employment: {
-    occupation: [],
-  },
-  role: "volunteer",
-  status: "new",
-  mandated: "not_mandated",
-  mandatedHours: 0,
-  imageUrl:
-    "https://lh3.googleusercontent.com/a-/AOh14GhVmAI6HfcFLXc1pXoRW2bd58WSgTPDjqeu7SjqDA=s96-c",
-  bio: {
-    first_name: "Test",
-    last_name: "User",
-    phone_number: "",
-    email: "test.user@gmail.com",
-  },
-  createdAt: "2022-03-17T19:00:47.571Z",
-  updatedAt: "2022-04-12T23:08:32.167Z",
-  __v: 0,
-};
-
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
 
 export default NextAuth({
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
+  },
   providers: [
-    process.env.VERCEL_ENV === "preview"
-      ? CredentialsProvider({
-          name: "Credentials",
-          credentials: {
-            username: {
-              label: "Username",
-              type: "text",
-            },
-            password: { label: "Password", type: "password" },
-          },
-          async authorize(credentials) {
-            if (credentials.username === "admin") {
-              currRole = "admin";
-              return testAdminUser;
-            } else {
-              currRole = "volunteer";
-              return testVolunteerUser;
-            }
-          },
-        })
-      : GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_ID,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        }),
+    CredentialsProvider({
+      id: "credentials",
+      name: "Login with Username and Password",
+      async authorize(credentials) {
+        const response = await verifyUserWithCredentials(
+          credentials.email,
+          credentials.password
+        );
+
+        if (response.status === 200) {
+          // this is the user object of the JWT
+          return {
+            id: response.message._id,
+            bio: response.message.bio,
+            role: response.message.role,
+            status: response.message.status,
+            imageUrl: response.message.imageUrl,
+          };
+        } else {
+          // If you return null then an error will be displayed advising the user to check their details.
+          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+          // TODO: reject this callback with an error with the message as response.error
+          return Error(response.message);
+        }
+      },
+      credentials: {
+        first_name: { label: "First Name", type: "text" },
+        last_name: { label: "Last Name", type: "text" },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
   ],
   secret: process.env.SECRET,
-  adapter:
-    process.env.VERCEL_ENV === "preview" ? null : MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(clientPromise),
   events: {
     // NextJS creates a default user with name, email, and user fields
     // We can delete this and then add a new User from the defined User schema
     createUser: async (message) => {
+      // this is only called for google auth
       await dbConnect();
 
       const _id = new ObjectId(message.user.id);
 
       await User.deleteOne({ _id });
 
-      const userData = {
+      const user_data = {
         _id,
         imageUrl: message.user.image,
         bio: {
@@ -117,45 +86,42 @@ export default NextAuth({
         },
       };
 
-      const user = new User(userData);
-
+      const user = new User(user_data);
       await user.save();
     },
   },
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) token.id = user.id;
+      return token;
+    },
     // This determines what is returned from useSession and getSession calls
-    async session({ session, user }) {
-      if (process.env.VERCEL_ENV === "preview") {
-        return {
-          ...session,
-          user: currRole === "admin" ? testAdminUser : testVolunteerUser,
-        };
-      }
-
+    async session({ session, token }) {
       await dbConnect();
-
-      const _id = new ObjectId(user.id);
+      const _id = new ObjectId(token.id);
       const currentUser = await User.findOne({ _id });
-      let userData = {
+      let user_data = {
         ...currentUser._doc,
       };
-      const invitedAdmins = await AppSettings.find({});
+      const invitedAdmins = await Organization.find({
+        _id: user_data.organizationId,
+      });
       if (
         invitedAdmins[0] &&
         invitedAdmins[0].invitedAdmins &&
-        invitedAdmins[0].invitedAdmins.includes(userData.bio.email)
+        invitedAdmins[0].invitedAdmins.includes(user_data.bio.email)
       ) {
-        userData.role = "admin";
+        user_data.role = "admin";
         await User.findOneAndUpdate({ _id }, { role: "admin" });
-        await AppSettings.findOneAndUpdate(
-          {},
-          { $pull: { invitedAdmins: userData.bio.email } },
+        await Organization.findOneAndUpdate(
+          { _id: user_data.organizationid },
+          { $pull: { invitedAdmins: user_data.bio.email } },
           { new: true }
         );
       }
       return {
         ...session,
-        user: userData,
+        user: user_data,
       };
     },
     async redirect({ baseUrl }) {

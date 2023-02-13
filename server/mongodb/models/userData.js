@@ -39,6 +39,10 @@ const userDataSchema = new mongoose.Schema(
       industry: { type: String },
       occupation: { type: [String] },
     },
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+    },
   },
   {
     timestamps: true,

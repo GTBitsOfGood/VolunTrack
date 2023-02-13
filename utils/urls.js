@@ -6,13 +6,12 @@ export default {
   pages: {
     index: "/",
     events: "/events",
-    "applicant-view": "/applicant-view",
-    "user-manager": "/user-manager",
+    volunteers: "/volunteers",
     assistants: "/assistants",
     settings: "/settings",
     profile: "/profile",
     register: "/register",
-    home: "/home"
+    home: "/home",
   },
   api: {
     auth: {},

@@ -1,8 +1,14 @@
-import { differenceInCalendarDays } from "date-fns";
-import React, { useEffect, useState } from "react";
+// import { differenceInCalendarDays } from "date-fns";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Button } from "reactstrap";
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+} from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
@@ -10,21 +16,16 @@ import EventCreateModal from "./Admin/EventCreateModal";
 import EventDeleteModal from "./Admin/EventDeleteModal";
 import EventEditModal from "./Admin/EventEditModal";
 import EventTable from "./EventTable";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from "reactstrap";
 
 import { useSession } from "next-auth/react";
-import { registerForEvent, updateEvent } from "./User/eventHelpers";
-import StatDisplay from "../Stats/User/StatDisplay";
 import router from "next/router";
+import PropTypes from "prop-types";
+import StatDisplay from "../Stats/User/StatDisplay";
+import { updateEvent } from "./eventHelpers";
 
-const isSameDay = (a) => (b) => {
-  return differenceInCalendarDays(a, b) === 0;
-};
+// const isSameDay = (a) => (b) => {
+//   return differenceInCalendarDays(a, b) === 0;
+// };
 
 const Styled = {
   Container: styled.div`
@@ -118,9 +119,19 @@ const Styled = {
     align-items: center;
     margin-right: 2rem;
   `,
+  LegendText: styled.p`
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 30px;
+  `,
+  LegendImage: styled.img`
+    width: 20rem;
+    height: 5rem;
+  `,
 };
 
 const EventManager = ({ user, role, isHomePage }) => {
+  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -138,7 +149,7 @@ const EventManager = ({ user, role, isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents()
+    fetchEvents(undefined, undefined, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -213,7 +224,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
-  const onChange = (value, event) => {
+  const onChange = (value) => {
     if (Date.now() !== value) setShowBack(true);
     setDate(value);
     let datestr = value.toString();
@@ -223,7 +234,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    fetchEvents(selectDate, selectDate)
+    fetchEvents(selectDate, selectDate, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -242,6 +253,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     ].join(separator);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
@@ -318,6 +330,8 @@ const EventManager = ({ user, role, isHomePage }) => {
               setMarkDates({ date, view }, markDates)
             }
           />
+          <Styled.LegendText>How to read the calendar?</Styled.LegendText>
+          <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
         </Styled.Left>
       )}
       {!isHomePage && (
@@ -371,6 +385,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             open={showEditModal}
             toggle={toggleEditModal}
             event={currEvent}
+            setEvent={setCurrEvent}
           />
           <EventDeleteModal
             open={showDeleteModal}
@@ -405,3 +420,9 @@ const EventManager = ({ user, role, isHomePage }) => {
 };
 
 export default EventManager;
+
+EventManager.propTypes = {
+  isHomePage: PropTypes.bool.isRequired,
+  role: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
+};

@@ -27,7 +27,8 @@
   "rules": {
     "no-underscore-dangle": "off",
     "react/jsx-props-no-spreading": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "no-unused-vars": "warn"
   },
   "overrides": [
     {

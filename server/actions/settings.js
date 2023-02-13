@@ -1,52 +1,30 @@
 import dbConnect from "../mongodb/index";
-import AppSettings from "../mongodb/models/AppSettings";
+import Organization from "../mongodb/models/organization";
 
-export async function inviteAdmin(email, next) {
+export async function inviteAdmin(email, organizationId) {
   await dbConnect();
-  return AppSettings.findOneAndUpdate(
-    {},
+
+  return await Organization.findOneAndUpdate(
+    {
+      _id: organizationId,
+    },
     { $push: { invitedAdmins: email } },
     { new: true, upsert: true }
-  )
-    .then((event) => {
-      return event;
-    })
-    .catch((err) => {
-      next(err);
-    });
+  );
 }
 
-export async function getInvitedAdmins() {
-  try {
-    await dbConnect();
-    return AppSettings.find({}).then((result) => {
-      return {
-        status: 200,
-        result: result,
-      };
-    });
-  } catch (e) {
-    return { status: 400, message: "Cannot get invited admin list" };
-  }
+export async function getInvitedAdmins(organizationId) {
+  await dbConnect();
+
+  return (await Organization.findOne({ _id: organizationId })).invitedAdmins;
 }
 
-export async function removeInvitedAdmin(email) {
-  return AppSettings.findOneAndUpdate(
-    {},
+export async function removeInvitedAdmin(email, organizationId) {
+  await dbConnect();
+
+  return await Organization.findOneAndUpdate(
+    { _id: organizationId },
     { $pull: { invitedAdmins: email } },
     { new: true }
-  )
-    .then((event) => {
-      return event;
-    })
-    .catch((err) => {
-      return { status: 400, message: "Cannot remove invited admin" };
-    });
-  // try {
-  //     await dbConnect();
-  //     AppSettings.invitedAdmins.pull(email);
-  // } catch(e) {
-  //     return { status: 200, message: "Cannot remove invited admin" };
-  // }
-  // return { status: 400, message: "Admin successfully invited" };
+  );
 }

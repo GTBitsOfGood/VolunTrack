@@ -1,3 +1,3 @@
-import EventRegister from "../../../screens/Events/User/Register/EventRegister";
+import EventRegister from "../../../screens/Events/Register/EventRegister";
 
 export default EventRegister;

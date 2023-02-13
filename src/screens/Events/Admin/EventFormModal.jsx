@@ -1,7 +1,7 @@
 import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import "react-quill/dist/quill.snow.css";
 import {
   Button,
@@ -17,6 +17,7 @@ import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator, standardEventValidator } from "./eventHelpers";
+import { RequestContext } from "../../../providers/RequestProvider";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -71,7 +72,7 @@ const Styled = {
   `,
 };
 
-const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
+const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.isValidForCourtHours ?? false
@@ -79,6 +80,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
   const {
     data: { user },
   } = useSession();
+  const context = useContext(RequestContext);
 
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
@@ -92,7 +94,16 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
 
     createEvent(event)
       .then(() => toggle())
-      .catch(console.log)
+      .catch((error) => {
+        if (error.response.status !== 200) {
+          context.startLoading();
+          let message =
+            error.response.data.errors[0].msg +
+            " for " +
+            error.response.data.errors[0].param;
+          context.failed(message);
+        }
+      })
       .finally(() => setSubmitting(false));
   };
 
@@ -106,6 +117,9 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     };
     setSubmitting(true);
     editEvent(editedEvent, sendConfirmationEmail);
+    if (setEvent) {
+      setEvent(editedEvent);
+    }
     toggle();
   };
 
@@ -133,6 +147,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
     containsExistingEvent(event) ? event.description : emptyStringField
   );
 
+  // eslint-disable-next-line no-unused-vars
   const [press, setPressed] = useState(false);
 
   let ReactQuill;
@@ -230,16 +245,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
       validationSchema={
         isGroupEvent ? groupEventValidator : standardEventValidator
       }
-      render={({
-        handleSubmit,
-        isValid,
-        isSubmitting,
-        values,
-        setFieldValue,
-        handleBlur,
-        errors,
-        touched,
-      }) => (
+      render={({ handleSubmit, isValid, isSubmitting }) => (
         <React.Fragment>
           <Styled.ModalBody>
             <Styled.Form>
@@ -315,7 +321,7 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
                         </Field>
                         <Styled.ErrorMessage name="endTime" />
                       </Styled.Col>
-                      <Row></Row>
+                      <Row />
                     </Row>
                     <Row
                       style={{
@@ -640,8 +646,10 @@ const EventFormModal = ({ toggle, event, han, isGroupEvent }) => {
 };
 
 EventFormModal.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
+  event: PropTypes.object.isRequired,
+  toggle: PropTypes.func.isRequired,
+  isGroupEvent: PropTypes.bool.isRequired,
+  setEvent: PropTypes.func.isRequired,
 };
 
 export default EventFormModal;

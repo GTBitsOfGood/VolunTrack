@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import variables from "../../../../design-tokens/_variables.module.scss";
+import PropTypes from "prop-types";
 
 const Styled = {
   Background: styled.div`
@@ -70,3 +71,9 @@ const Footer = ({ endEvent, reopenEvent, event }) => {
 };
 
 export default Footer;
+
+Footer.propTypes = {
+  endEvent: PropTypes.func.isRequired,
+  reopenEvent: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired,
+};

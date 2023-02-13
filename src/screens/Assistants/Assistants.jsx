@@ -15,16 +15,16 @@ import {
 import styled from "styled-components";
 import {
   deleteUser,
-  fetchUserCount,
-  fetchUserManagementData,
   getInvitedAdmins,
+  getUsers,
   removeInvitedAdmin,
   updateInvitedAdmins,
 } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
-import EmployeeTable from "./EmployeeTable";
+import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
+import PropTypes from "prop-types";
 
 const PAGE_SIZE = 10;
 
@@ -144,33 +144,24 @@ class Assistants extends React.Component {
     valid: false,
   };
 
-  // const [searchValue, setSearchValue] = useState("");
-
   componentDidMount = () => this.onRefresh();
   onRefresh = () => {
     this.setState({ loadingMoreUsers: true });
-    fetchUserCount().then((result) => {
-      if (result && result.data && result.data.count) {
-        this.setState({
-          userCount: result.data.count,
-        });
-      }
-    });
-    getInvitedAdmins().then((result) => {
+    getInvitedAdmins(this.props.user.organizationId).then((result) => {
       if (result && result.data) {
         this.setState({
           invitedAdmins: result.data,
         });
       }
     });
-    fetchUserManagementData().then((result) => {
+    getUsers().then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
           users: result.data.users.filter(
             (user) =>
-              user.role == "admin" ||
-              user.role == "admin-assistant" ||
-              user.role == "staff"
+              user.role === "admin" ||
+              user.role === "admin-assistant" ||
+              user.role === "staff"
           ),
           currentPage: 0,
           loadingMoreUsers: false,
@@ -191,14 +182,12 @@ class Assistants extends React.Component {
     );
   };
 
-  atEnd = () =>
-    (this.state.currentPage + 1) * PAGE_SIZE >= this.state.userCount;
   onEditUser = () => {
     /** code to update users in state at that specific index */
   };
 
   onDeletePending = (email) => {
-    removeInvitedAdmin(email).then(() => {
+    removeInvitedAdmin(email, this.props.user.organizationId).then(() => {
       this.componentDidMount();
     });
   };
@@ -227,9 +216,12 @@ class Assistants extends React.Component {
     });
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = async () => {
     if (this.state.newInvitedAdmin?.length > 0)
-      await updateInvitedAdmins(this.state.newInvitedAdmin);
+      await updateInvitedAdmins(
+        this.state.newInvitedAdmin,
+        this.props.user.organizationId
+      );
     this.onRefresh();
   };
 
@@ -255,7 +247,7 @@ class Assistants extends React.Component {
   };
 
   render() {
-    const { currentPage, loadingMoreUsers } = this.state;
+    const { loadingMoreUsers } = this.state;
     return (
       <Styled.Container>
         <Styled.Row>
@@ -277,7 +269,8 @@ class Assistants extends React.Component {
         </Styled.Row>
         <Styled.Row>
           <Styled.TableUsers>
-            <EmployeeTable
+            <AssistantTable
+              sessionUser={this.props.user}
               users={this.getUsersAtPage()}
               invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}
@@ -341,3 +334,7 @@ class Assistants extends React.Component {
 }
 
 export default authWrapper(Assistants);
+
+Assistants.propTypes = {
+  user: PropTypes.object.isRequired,
+};

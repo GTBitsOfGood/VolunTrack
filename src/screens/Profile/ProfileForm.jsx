@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { ErrorMessage, Field, Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Col, Container, ModalBody, Row } from "reactstrap";
@@ -11,7 +11,6 @@ import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 import { profileValidator } from "./helpers";
 
 const Styled = {
-  Form: styled(FForm)``,
   Button: styled(Button)`
     background: white;
     border: none;
@@ -58,20 +57,24 @@ class ProfileForm extends React.Component {
     this.setState({
       visibleText: true,
     });
-    await updateUser(
-      this.props.user.bio.email,
-      values.first_name,
-      values.last_name,
-      values.phone_number,
-      values.date_of_birth,
-      values.zip_code,
-      values.address,
-      values.city,
-      values.state,
-      values.notes,
-      this.state.user._id
-    );
+    let bio = {
+      email: this.props.user.bio.email,
+      first_name: values.first_name,
+      last_name: values.last_name,
+      phone_number: values.phone_number,
+      date_of_birth: values.date_of_birth,
+      zip_code: values.zip_code,
+      address: values.address,
+      city: values.city,
+      state: values.state,
+      notes: values.notes,
+    };
+    await updateUser(this.state.user._id, {
+      adminId: this.state.user._id,
+      bio: bio,
+    });
 
+    // todo: this will always run
     this.props.context.startLoading();
     this.props.context.success("Profile successfully updated!");
     this.props.router.reload();
@@ -114,8 +117,8 @@ class ProfileForm extends React.Component {
                             margin: "0px",
                             color: "#7F1C3B",
                             width: "240px",
-                            "font-size": "24px",
-                            "font-weight": "800",
+                            fontSize: "24px",
+                            fontWeight: "800",
                           }}
                         >{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
                         <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
@@ -233,7 +236,7 @@ class ProfileForm extends React.Component {
                           </Row>
                           <Row
                             style={{
-                              "margin-top": "1.5rem",
+                              marginTop: "1.5rem",
                             }}
                           >
                             <Col></Col>

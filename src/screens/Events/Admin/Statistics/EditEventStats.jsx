@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Modal, ModalHeader } from "reactstrap";
 import { Form as FForm, ErrorMessage } from "formik";
@@ -49,17 +48,18 @@ const Styled = {
 const EditEventStats = ({ open, toggle, event }) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="xl">
-      <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
+      <Styled.ModalHeader toggle={toggle} />
       <Styled.HeaderText>
         <p>Edit Entry</p>
       </Styled.HeaderText>
-      <EditEventStatsForm toggle={toggle} event={event}></EditEventStatsForm>
+      <EditEventStatsForm toggle={toggle} event={event} />
     </Modal>
   );
 };
 EditEventStats.propTypes = {
-  open: PropTypes.bool,
-  toggle: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  event: PropTypes.object.isRequired,
 };
 
 export default EditEventStats;
