@@ -201,23 +201,19 @@ const Header = () => {
     signOut();
   };
 
-  const goToProfile = (e) => {
-    e.preventDefault();
+  const goToProfile = () => {
     router.push("/profile");
   };
 
-  const goToHistory = (e) => {
-    e.preventDefault();
+  const goToHistory = () => {
     router.push("/history");
   };
 
-  const gotToSummary = (e) => {
-    e.preventDefault();
+  const gotToSummary = () => {
     router.push("/events-summary");
   };
 
-  const goToStats = (e) => {
-    e.preventDefault();
+  const goToStats = () => {
     router.push("/stats");
   };
 
@@ -260,13 +256,19 @@ const Header = () => {
             </div>
           }
         >
-          <Dropdown.Item onClick={goToManageAdmins} href="/assistants">
-            Manage Admins
+          <Dropdown.Item onClick={goToProfile} href="/profile">
+            Profile
           </Dropdown.Item>
-          <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
-            Manage Waivers
-          </Dropdown.Item>
-          <Dropdown.Item>Earnings</Dropdown.Item>
+          {user.role === "admin" && (
+            <div>
+              <Dropdown.Item onClick={goToHistory} href="/history">
+                Change History
+              </Dropdown.Item>
+              <Dropdown.Item onClick={gotToSummary} href="/events-summary">
+                Event Summary
+              </Dropdown.Item>
+            </div>
+          )}
           <Dropdown.Divider />
           <Dropdown.Item onClick={logout} href="/">
             Sign Out
@@ -333,11 +335,6 @@ const Header = () => {
             </Dropdown.Item>
             <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
               Manage Waivers
-            </Dropdown.Item>
-            <Dropdown.Item>Earnings</Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item onClick={logout} href="/">
-              Sign Out
             </Dropdown.Item>
           </Dropdown>
         )}
