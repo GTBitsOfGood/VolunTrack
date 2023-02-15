@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React, { useState } from "react";
+import "flowbite-react";
 import {
   Collapse,
   Container,
@@ -10,8 +11,6 @@ import {
   DropdownMenu,
   DropdownToggle,
   Nav,
-  Navbar,
-  NavbarBrand,
   NavbarToggler,
   NavItem,
   UncontrolledDropdown,
@@ -20,6 +19,7 @@ import styled from "styled-components";
 import variables from "../design-tokens/_variables.module.scss";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import Icon from "./Icon";
+import { Navbar, NavbarBrand, Button, Dropdown, Avatar } from "flowbite-react";
 
 const pageSwitchLeft = (currPath) => {
   switch (currPath) {
@@ -37,14 +37,14 @@ const pageSwitchLeft = (currPath) => {
 };
 
 const Styled = {
-  Navbar: styled(Navbar)`
-    background-color: #ffffff;
-    height: 60px;
-    font-size: larger;
-    @media (max-width: 768px) {
-      height: 70px;
-    }
-  `,
+  // Navbar: styled(Navbar)`
+  //   background-color: #ffffff;
+  //   height: 60px;
+  //   font-size: larger;
+  //   @media (max-width: 768px) {
+  //     height: 70px;
+  //   }
+  // `,
 
   MobileBackground: styled.div`
     @media (max-width: 768px) {
@@ -197,8 +197,7 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
 
-  const logout = (e) => {
-    e.preventDefault();
+  const logout = () => {
     signOut();
   };
 
@@ -222,182 +221,291 @@ const Header = () => {
     router.push("/stats");
   };
 
-  const goToManageAdmins = (e) => {
-    e.preventDefault();
+  const goToManageAdmins = () => {
     router.push("/assistants");
   };
 
-  const goToManageWaivers = (e) => {
-    e.preventDefault();
+  const goToManageWaivers = () => {
     router.push("/manage-waivers");
   };
 
   const currPageMatches = (page) => router.pathname === page;
 
   return (
-    <Styled.Navbar light expand="md">
-      <Container
-        style={{
-          marginLeft: "0px",
-          marginRight: "0px",
-          maxWidth: "100%",
-        }}
-      >
-        <NavbarBrand tag={(props) => <Link {...props} />} href="/home">
-          <div style={{ width: "175px", cursor: "pointer" }}>
-            <Image
-              objectFit="contain"
-              height="60px"
-              width="300px"
-              layout="fixed"
-              alt="helping mamas logo"
-              src="/images/helping_mamas_logo.png"
-            />
-          </div>
-        </NavbarBrand>
+    <Navbar fluid={true} rounded={true}>
+      <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
+        <img
+          src="/images/helping_mamas_logo.png"
+          alt="helping mamas logo"
+          className="h-12 w-60"
+        />
+      </Navbar.Brand>
+      <div className="flex md:order-2">
+        <Dropdown
+          arrowIcon={true}
+          inline={true}
+          label={
+            <div className="mr-48">
+              <Avatar
+                img={user.imageUrl ?? "/images/gradient-avatar.png"}
+                alt="icon"
+                rounded={true}
+              />
+              <p
+                style={{ margin: "0px" }}
+              >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+              <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+                user.role ?? ""
+              )}`}</p>
+            </div>
+          }
+        >
+          <Dropdown.Item onClick={goToManageAdmins} href="/assistants">
+            Manage Admins
+          </Dropdown.Item>
+          <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
+            Manage Waivers
+          </Dropdown.Item>
+          <Dropdown.Item>Earnings</Dropdown.Item>
+          <Dropdown.Divider />
+          <Dropdown.Item onClick={logout} href="/">
+            Sign Out
+          </Dropdown.Item>
+        </Dropdown>
+        <Navbar.Toggle />
+      </div>
+      <Navbar.Collapse isOpen={isOpen}>
+        <Navbar.Link
+          href="/home"
+          className={`text-lg font-bold ${
+            currPageMatches("/home") ? "text-red-600" : "text-gray-600"
+          }`}
+        >
+          Home
+        </Navbar.Link>
+        {user.role === "admin" && (
+          <Navbar.Link
+            href="/volunteers"
+            className={`text-lg font-bold ${
+              currPageMatches("/volunteers") ? "text-red-600" : "text-gray-600"
+            }`}
+          >
+            Volunteers
+          </Navbar.Link>
+        )}
+        <Navbar.Link
+          href="/events"
+          className={`text-lg font-bold ${
+            currPageMatches("/events") ? "text-red-600" : "text-gray-600"
+          }`}
+        >
+          Events
+        </Navbar.Link>
+        {user.role === "volunteer" && (
+          <Navbar.Link
+            href="/stats"
+            className={`text-lg font-bold ${
+              currPageMatches("/stats") ? "text-red-600" : "text-gray-600"
+            }`}
+          >
+            Participation History
+          </Navbar.Link>
+        )}
+        {user.role === "admin" && (
+          <Dropdown
+            arrowIcon={true}
+            inline={true}
+            label={
+              <div
+                className={`text-lg font-bold ${
+                  currPageMatches("/assistants") ||
+                  currPageMatches("/manage-waivers")
+                    ? "text-red-600"
+                    : "text-gray-600"
+                }`}
+              >
+                Settings
+              </div>
+            }
+          >
+            <Dropdown.Item onClick={goToManageAdmins} href="/assistants">
+              Manage Admins
+            </Dropdown.Item>
+            <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
+              Manage Waivers
+            </Dropdown.Item>
+            <Dropdown.Item>Earnings</Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={logout} href="/">
+              Sign Out
+            </Dropdown.Item>
+          </Dropdown>
+        )}
+      </Navbar.Collapse>
+    </Navbar>
+    // <Navbar light expand="md">
+    //   <Container
+    //     style={{
+    //       marginLeft: "0px",
+    //       marginRight: "0px",
+    //       maxWidth: "100%",
+    //     }}
+    //   >
+    //     <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
+    //       <div style={{ width: "175px", cursor: "pointer" }}>
+    //         <Image
+    //           objectFit="contain"
+    //           height="60px"
+    //           width="300px"
+    //           layout="fixed"
+    //           alt="helping mamas logo"
+    //           src="/images/helping_mamas_logo.png"
+    //         />
+    //       </div>
+    //     </Navbar.Brand>
 
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Styled.MobileBackground>
-            <Styled.FlexContainer className="navbar-nav">
-              <Styled.PageSwitch currPathName={router.pathname}>
-                <Link href="/home">
-                  {currPageMatches("/home") ? (
-                    <SelectedPageLink>Home</SelectedPageLink>
-                  ) : (
-                    <Styled.PageLink>Home</Styled.PageLink>
-                  )}
-                </Link>
-                {user.role === "admin" && (
-                  <Link
-                    href="/volunteers"
-                    selected={currPageMatches("/volunteers")}
-                  >
-                    {currPageMatches("/volunteers") ? (
-                      <SelectedPageLink>Volunteers</SelectedPageLink>
-                    ) : (
-                      <Styled.PageLink>Volunteers</Styled.PageLink>
-                    )}
-                  </Link>
-                )}
-                <Link href="/events" selected={currPageMatches("/events")}>
-                  {currPageMatches("/events") ? (
-                    <SelectedPageLink>Events</SelectedPageLink>
-                  ) : (
-                    <Styled.PageLink>Events</Styled.PageLink>
-                  )}
-                </Link>
-                {user.role === "volunteer" && (
-                  <Link onClick={goToStats} href="/stats">
-                    {currPageMatches("/stats") ? (
-                      <SelectedPageLink>Participation History</SelectedPageLink>
-                    ) : (
-                      <Styled.PageLink>Participation History</Styled.PageLink>
-                    )}
-                  </Link>
-                )}
-                {user.role === "admin" && (
-                  <Styled.Dropdown nav inNavbar className="navbar-nav">
-                    <Styled.Toggle color="white">
-                      <Styled.UserContainer>
-                        <Styled.TxtContainer>
-                          {currPageMatches("/assistants") ||
-                          currPageMatches("/manage-waivers") ? (
-                            <SelectedPageLink style={{ fontSize: "108%" }}>
-                              Settings
-                            </SelectedPageLink>
-                          ) : (
-                            <Styled.PageLink style={{ fontSize: "108%" }}>
-                              Settings
-                            </Styled.PageLink>
-                          )}
-                        </Styled.TxtContainer>
-                        <Styled.ImgContainer>
-                          <Icon name="dropdown-arrow" size="1.5rem" />
-                        </Styled.ImgContainer>
-                      </Styled.UserContainer>
-                    </Styled.Toggle>
+    //     <Navbar.Toggle onClick={toggle} />
+    //     <Collapse isOpen={isOpen} navbar>
+    //       <Styled.MobileBackground>
+    //         <Styled.FlexContainer className="navbar-nav">
+    //           <Styled.PageSwitch currPathName={router.pathname}>
+    //             <Link href="/home">
+    //               {currPageMatches("/home") ? (
+    //                 <SelectedPageLink>Home</SelectedPageLink>
+    //               ) : (
+    //                 <Styled.PageLink>Home</Styled.PageLink>
+    //               )}
+    //             </Link>
+    //             {user.role === "admin" && (
+    //               <Link
+    //                 href="/volunteers"
+    //                 selected={currPageMatches("/volunteers")}
+    //               >
+    //                 {currPageMatches("/volunteers") ? (
+    //                   <SelectedPageLink>Volunteers</SelectedPageLink>
+    //                 ) : (
+    //                   <Styled.PageLink>Volunteers</Styled.PageLink>
+    //                 )}
+    //               </Link>
+    //             )}
+    //             <Link href="/events" selected={currPageMatches("/events")}>
+    //               {currPageMatches("/events") ? (
+    //                 <SelectedPageLink>Events</SelectedPageLink>
+    //               ) : (
+    //                 <Styled.PageLink>Events</Styled.PageLink>
+    //               )}
+    //             </Link>
+    //             {user.role === "volunteer" && (
+    //               <Link onClick={goToStats} href="/stats">
+    //                 {currPageMatches("/stats") ? (
+    //                   <SelectedPageLink>Participation History</SelectedPageLink>
+    //                 ) : (
+    //                   <Styled.PageLink>Participation History</Styled.PageLink>
+    //                 )}
+    //               </Link>
+    //             )}
+    //             {user.role === "admin" && (
+    //               <Styled.Dropdown nav inNavbar className="navbar-nav">
+    //                 <Styled.Toggle color="white">
+    //                   <Styled.UserContainer>
+    //                     <Styled.TxtContainer>
+    //                       {currPageMatches("/assistants") ||
+    //                       currPageMatches("/manage-waivers") ? (
+    //                         <SelectedPageLink style={{ fontSize: "108%" }}>
+    //                           Settings
+    //                         </SelectedPageLink>
+    //                       ) : (
+    //                         <Styled.PageLink style={{ fontSize: "108%" }}>
+    //                           Settings
+    //                         </Styled.PageLink>
+    //                       )}
+    //                     </Styled.TxtContainer>
+    //                     <Styled.ImgContainer>
+    //                       <Icon name="dropdown-arrow" size="1.5rem" />
+    //                     </Styled.ImgContainer>
+    //                   </Styled.UserContainer>
+    //                 </Styled.Toggle>
 
-                    <DropdownMenu
-                      style={{
-                        width: "100%",
-                        marginTop: "0.6rem",
-                        border: "none",
-                      }}
-                    >
-                      <DropdownItem
-                        onClick={goToManageAdmins}
-                        href="/assistants"
-                      >
-                        <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
-                      </DropdownItem>
-                      <DropdownItem
-                        onClick={goToManageWaivers}
-                        href="/manage-waivers"
-                      >
-                        <Styled.DropdownItem>
-                          Manage Waivers
-                        </Styled.DropdownItem>
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Styled.Dropdown>
-                )}
-              </Styled.PageSwitch>
-              <Styled.Dropdown nav inNavbar className="navbar-nav">
-                <Styled.Toggle color="white">
-                  <Styled.UserContainer>
-                    <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
-                      <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
-                        <Styled.UserIcon
-                          style={{ marginRight: "20px" }}
-                          src={user.imageUrl ?? "/images/gradient-avatar.png"}
-                          alt="icon"
-                        />
-                      </Styled.ImgContainer>
-                      <Styled.TxtContainer>
-                        <p
-                          style={{ margin: "0px" }}
-                        >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                        <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
-                          user.role ?? ""
-                        )}`}</p>
-                      </Styled.TxtContainer>
-                      <Styled.ImgContainer style={{ paddingRight: "0px" }}>
-                        <Icon name="dropdown-arrow" size="1.5rem" />
-                      </Styled.ImgContainer>
-                    </Styled.UserContainer>
-                  </Styled.UserContainer>
-                </Styled.Toggle>
+    //                 <DropdownMenu
+    //                   style={{
+    //                     width: "100%",
+    //                     marginTop: "0.6rem",
+    //                     border: "none",
+    //                   }}
+    //                 >
+    //                   <DropdownItem
+    //                     onClick={goToManageAdmins}
+    //                     href="/assistants"
+    //                   >
+    //                     <Styled.DropdownItem>Manage Admins</Styled.DropdownItem>
+    //                   </DropdownItem>
+    //                   <DropdownItem
+    //                     onClick={goToManageWaivers}
+    //                     href="/manage-waivers"
+    //                   >
+    //                     <Styled.DropdownItem>
+    //                       Manage Waivers
+    //                     </Styled.DropdownItem>
+    //                   </DropdownItem>
+    //                 </DropdownMenu>
+    //               </Styled.Dropdown>
+    //             )}
+    //           </Styled.PageSwitch>
+    //           <Styled.Dropdown nav inNavbar className="navbar-nav">
+    //             <Styled.Toggle color="white">
+    //               <Styled.UserContainer>
+    //                 <Styled.UserContainer style={{ marginLeft: "-3rem" }}>
+    //                   <Styled.ImgContainer style={{ paddingLeft: "0px" }}>
+    //                     <Styled.UserIcon
+    //                       style={{ marginRight: "20px" }}
+    //                       src={user.imageUrl ?? "/images/gradient-avatar.png"}
+    //                       alt="icon"
+    //                     />
+    //                   </Styled.ImgContainer>
+    //                   <Styled.TxtContainer>
+    //                     <p
+    //                       style={{ margin: "0px" }}
+    //                     >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+    //                     <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
+    //                       user.role ?? ""
+    //                     )}`}</p>
+    //                   </Styled.TxtContainer>
+    //                   <Styled.ImgContainer style={{ paddingRight: "0px" }}>
+    //                     <Icon name="dropdown-arrow" size="1.5rem" />
+    //                   </Styled.ImgContainer>
+    //                 </Styled.UserContainer>
+    //               </Styled.UserContainer>
+    //             </Styled.Toggle>
 
-                <DropdownMenu style={{ width: "100%" }}>
-                  <DropdownItem onClick={goToProfile} href="/profile">
-                    <Styled.DropdownItem>Profile</Styled.DropdownItem>
-                  </DropdownItem>
-                  {user.role === "admin" && (
-                    <React.Fragment>
-                      <DropdownItem onClick={goToHistory} href="/history">
-                        <Styled.DropdownItem>
-                          Change History
-                        </Styled.DropdownItem>
-                      </DropdownItem>
-                      <DropdownItem onClick={gotToSummary} href="/summary">
-                        <Styled.DropdownItem>
-                          Events Summary
-                        </Styled.DropdownItem>
-                      </DropdownItem>
-                    </React.Fragment>
-                  )}
-                  <DropdownItem onClick={logout} href="/">
-                    <Styled.DropdownItem>Sign Out</Styled.DropdownItem>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Styled.Dropdown>
-            </Styled.FlexContainer>
-            <Nav navbar></Nav>
-          </Styled.MobileBackground>
-        </Collapse>
-      </Container>
-    </Styled.Navbar>
+    //             <DropdownMenu style={{ width: "100%" }}>
+    //               <DropdownItem onClick={goToProfile} href="/profile">
+    //                 <Styled.DropdownItem>Profile</Styled.DropdownItem>
+    //               </DropdownItem>
+    //               {user.role === "admin" && (
+    //                 <React.Fragment>
+    //                   <DropdownItem onClick={goToHistory} href="/history">
+    //                     <Styled.DropdownItem>
+    //                       Change History
+    //                     </Styled.DropdownItem>
+    //                   </DropdownItem>
+    //                   <DropdownItem onClick={gotToSummary} href="/summary">
+    //                     <Styled.DropdownItem>
+    //                       Events Summary
+    //                     </Styled.DropdownItem>
+    //                   </DropdownItem>
+    //                 </React.Fragment>
+    //               )}
+    //               <DropdownItem onClick={logout} href="/">
+    //                 <Styled.DropdownItem>Sign Out</Styled.DropdownItem>
+    //               </DropdownItem>
+    //             </DropdownMenu>
+    //           </Styled.Dropdown>
+    //         </Styled.FlexContainer>
+    //         <Nav navbar></Nav>
+    //       </Styled.MobileBackground>
+    //     </Collapse>
+    //   </Container>
+    // </Navbar>
   );
 };
 
