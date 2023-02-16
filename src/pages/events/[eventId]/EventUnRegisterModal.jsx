@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
 
-const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
+const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
   const [isDeleting, setDeleting] = useState(false);
 
   const handleSubmit = () => {
@@ -43,10 +43,10 @@ const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
   );
 };
 
-EventUnregisterModal.propTypes = {
+EventUnRegisterModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   eventData: PropTypes.object.isRequired,
   userId: PropTypes.object.isRequired,
 };
-export default EventUnregisterModal;
+export default EventUnRegisterModal;
