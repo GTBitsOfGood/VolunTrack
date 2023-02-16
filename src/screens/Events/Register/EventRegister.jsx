@@ -292,8 +292,15 @@ const EventRegister = (event) => {
     setEvents(changedEvent);
   };
 
+  const goBackToDetails = () => {
+    router.replace(`/events/${eventId}`);
+  };
+
   return (
     <Styled.Container fluid="md">
+      <Button className="bg-pink font-medium" onClick={() => goBackToDetails()}>
+        Back
+      </Button>
       <Styled.Title />
       {!isRegistered && (
         <Styled.Row>

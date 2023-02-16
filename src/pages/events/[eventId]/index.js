@@ -135,6 +135,10 @@ const EventInfo = () => {
     return <div />;
   }
 
+  const goBackToCal = () => {
+    router.replace(`/events`);
+  };
+
   const onRegisterClicked = () => {
     router.replace(`${eventId}/register`);
   };
@@ -176,7 +180,9 @@ const EventInfo = () => {
     Date.parse(event.date);
   return (
     <>
-      <Button class="text-xl">hi</Button>
+      <Button className="bg-pink font-medium" onClick={() => goBackToCal()}>
+        Back
+      </Button>
       <Styled.EventTable>
         <Col>
           <Styled.EventCol>
