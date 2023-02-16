@@ -176,7 +176,7 @@ const EventInfo = () => {
     Date.parse(event.date);
   return (
     <>
-      <Button class="text-slate-500 font-medium">hi</Button>
+      <Button class="text-xl">hi</Button>
       <Styled.EventTable>
         <Col>
           <Styled.EventCol>
