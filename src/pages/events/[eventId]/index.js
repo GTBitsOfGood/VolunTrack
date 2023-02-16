@@ -123,7 +123,6 @@ const EventInfo = () => {
   const context = useContext(RequestContext);
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
 
   const onRefresh = () => {
     fetchEventsById(eventId).then((result) => {
@@ -153,7 +152,6 @@ const EventInfo = () => {
 
   const onUnregisterClicked = () => {
     setUnregisterModal(true);
-    setCurrEvent(event);
   };
 
   const toggleUnregisterModal = () => {
@@ -340,7 +338,7 @@ const EventInfo = () => {
       <EventUnregisterModal
         open={showUnregisterModal}
         toggle={toggleUnregisterModal}
-        eventData={currEvent}
+        eventData={event}
         userId={user._id}
       />
     </>
