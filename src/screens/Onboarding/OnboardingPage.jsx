@@ -4,7 +4,7 @@ import * as SForm from "../sharedStyles/formStyles";
 import styled from "styled-components";
 import React from "react";
 import Image from "next/image";
-import { Label, TextInput } from "flowbite-react";
+import { Label as Label, TextInput } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -127,9 +127,9 @@ class OnboardingPage extends React.Component{
           }}
         >
           {({ handleSubmit, isValid, isSubmitting }) => (
-            <div style={{ width: "100%" }}>
+            <div className="flex justify-center">
               <form>
-                <Styled.FormGroup>
+                <div className="">
                   {/*<Row>*/}
                   {/*  <Field as="select" name="nonprofit">*/}
                   {/*    <option value="1">Helping Mamas</option>*/}
@@ -139,45 +139,34 @@ class OnboardingPage extends React.Component{
                   {/*</Row>*/}
                   <Styled.Header2>Non-profit Information</Styled.Header2>
                   <Styled.Subtitle>Used to verify your organization. We may ask you for more information if needed.</Styled.Subtitle>
-                  <Styled.Label>Non-profit Name</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="Non-profit Name"/>
-                  </Styled.TextInputContainer>
-                  <Styled.Label>Non-profit Website</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="https://www.example.com"/>
-                  </Styled.TextInputContainer>
+                  <Label className="mt-2 mb-1" htmlFor="organizationName">Non-profit Name</Label>
+                  <TextInput id="organizationName" placeholder="Non-profit Name"/>
+                  <Label className="mt-2 mb-1" htmlFor="websiteUrl">Non-profit Website</Label>
+                  <TextInput id="websiteUrl" placeholder="https://www.example.com"/>
                   <Styled.Header2>Contact Information</Styled.Header2>
                   <Styled.Subtitle>We will use this to contact you if we need more information or update you with the approval.</Styled.Subtitle>
+                  
+                  <Label className="mt-2 mb-1" htmlFor="contactName">Contact Name</Label>
+                  <TextInput id="contactName" placeholder="Contact Name"/>
+                  <Label className="mt-2 mb-1" htmlFor="contactEmail">Email</Label>
+                  <TextInput id="conttactEmail" placeholder="example@email.com"/>
+                  <Label className="mt-2 mb-1" htmlFor="contactPhone">Phone</Label>
+                  <TextInput id="contactPhone" placeholder="xxx-xxx-xxxx"/>
                   <Styled.Header2>Volunteer Management Information</Styled.Header2>
-                  <Styled.Label>Contact Name</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="Contact Name"/>
-                  </Styled.TextInputContainer>
-                  <Styled.Label>Email</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="example@email.com"/>
-                  </Styled.TextInputContainer>
-                  <Styled.Label>Phone</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="xxx-xxx-xxxx"/>
-                  </Styled.TextInputContainer>
                   <Styled.Subtitle>Used as important information to generate your volunteer management platform.</Styled.Subtitle>
                   <Styled.Subtitle2>* Please provide an email address that you wish to be used to create the main volunteer administrator (Admin) account. <br/>The main volunteer administrator account cannot be changed. It will have the highest permission level on this platform.</Styled.Subtitle2>
-                  <Styled.Label>Primary Admin Account</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="example@email.com"/>
-                  </Styled.TextInputContainer>
-                  <Styled.Label>Confirm Primary Contact Name</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="example@email.com"/>
-                  </Styled.TextInputContainer>
+                  <Label className="mt-2 mb-1" htmlFor="adminEmail">Primary Admin Account</Label>
+                  <TextInput id="adminEmail" placeholder="example@email.com"/>
+                  <Label className="mt-2 mb-1" htmlFor="confirmAdminEmail">Confirm Primary Admin Account</Label>
+                  <TextInput placeholder="example@email.com"/>
                   <Styled.Subtitle2>*  Please customize your nonprofit code for your volunteer management platform. <br/>Note: Your custom code must contain 3-20 letters or numbers. Please do not use spaces, symbols, or special characters.</Styled.Subtitle2>
-                  <Styled.Label>Non-profit Code</Styled.Label>
-                  <Styled.TextInputContainer>
-                    <TextInput placeholder="example123"/>
-                  </Styled.TextInputContainer>
-                </Styled.FormGroup>
+                  <Label className="mt-2 mb-1" htmlFor="organizationCode">Non-profit Code</Label>
+                  <TextInput 
+                    id="organizationCode"
+                    addon="volunteer.bitsofgood.org/"
+                    placeholder="example123"
+                  />
+                </div>
               </form>
             </div>
           )}
