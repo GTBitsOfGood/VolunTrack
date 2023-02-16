@@ -7,6 +7,7 @@ import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
+import { EventUnRegisterModal } from "./EventUnRegisterModal";
 
 const Styled = {
   Button: styled(Button)`
@@ -121,6 +122,9 @@ const EventInfo = () => {
   const user = session.user;
   const context = useContext(RequestContext);
 
+  const [showUnRegisterModal, setUnRegisterModal] = useState(false);
+  // const [currEvent, setCurrEvent] = useState(null);
+
   const onRefresh = () => {
     fetchEventsById(eventId).then((result) => {
       setEvent(result.data.event);
@@ -148,16 +152,27 @@ const EventInfo = () => {
   };
 
   const onUnregisterClicked = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    await updateEvent(changedEvent);
+    // const changedEvent = {
+    //   // remove current user id from event volunteers
+    //   ...event,
+    //   volunteers: event.volunteers.filter(
+    //     (volunteer) => volunteer !== user._id
+    //   ),
+    // };
+    // await updateEvent(changedEvent);
+    // onRefresh();
+  };
 
-    onRefresh();
+  // const onUnRegisterClicked = () => {
+  //   setUnRegisterModal(true);
+  // console.log(showUnRegisterModal);
+  // setCurrEvent(event);
+  // console.log(currEvent);
+  // };
+
+  const toggleUnRegisterModal = () => {
+    setUnRegisterModal((prev) => !prev);
+    // onRefresh();
   };
 
   const copyPrivateLink = () => {
@@ -174,6 +189,7 @@ const EventInfo = () => {
   const futureorTodaysDate =
     Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 86400000 <=
     Date.parse(event.date);
+
   return (
     <>
       <Styled.EventTable>
@@ -216,7 +232,7 @@ const EventInfo = () => {
               event.volunteers.includes(user._id) &&
               futureorTodaysDate && (
                 <Styled.Routing onClick={() => onUnregisterClicked(event)}>
-                  Unregister
+                  Click to cancel your registration
                 </Styled.Routing>
               )}
           </Row>
@@ -333,6 +349,13 @@ const EventInfo = () => {
             You are registered for this event!
           </Styled.Button>
         )}
+
+      <EventUnRegisterModal
+        open={showUnRegisterModal}
+        toggle={toggleUnRegisterModal}
+        eventData={event}
+        userId={user._id}
+      />
     </>
   );
 };
