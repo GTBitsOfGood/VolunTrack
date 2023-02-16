@@ -4,17 +4,17 @@ import PropTypes from "prop-types";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
 
 const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
-  // const [isDeleting, setDeleting] = useState(false);
+  const [isDeleting, setDeleting] = useState(false);
 
-  // const handleSubmit = () => {
-  //   setDeleting(true);
-  //   deleteAttendance(event._id, event.eventId)
-  //     .then(() => {
-  //       toggle();
-  //       setDeleting(false);
-  //     })
-  //     .catch(console.log);
-  // };
+  const handleSubmit = () => {
+    setDeleting(true);
+    onUnregisterClicked(eventData)
+      .then(() => {
+        toggle();
+        setDeleting(false);
+      })
+      .catch(console.log);
+  };
 
   const onUnregisterClicked = async (event) => {
     const changedEvent = {
@@ -37,7 +37,7 @@ const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
         <Button color="secondary" onClick={toggle}>
           No, keep it
         </Button>
-        <Button color="primary" onClick={onUnregisterClicked(eventData)}>
+        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
           Yes, cancel it
         </Button>
       </ModalFooter>
@@ -51,5 +51,4 @@ EventUnregisterModal.propTypes = {
   eventData: PropTypes.object.isRequired,
   userId: PropTypes.object.isRequired,
 };
-
 export default EventUnregisterModal;

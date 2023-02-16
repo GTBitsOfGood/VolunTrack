@@ -7,7 +7,7 @@ import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
-import { EventUnregisterModal } from "./EventUnregisterModal";
+import EventUnregisterModal from "./EventUnregisterModal";
 
 const Styled = {
   Button: styled(Button)`
@@ -357,12 +357,6 @@ const EventInfo = () => {
         eventData={event}
         userId={user._id}
       />
-      {/* <EventUnRegisterModal
-        open={showUnRegisterModal}
-        toggle={toggleUnRegisterModal}
-        eventData={event}
-        userId={user._id}
-      /> */}
     </>
   );
 };
