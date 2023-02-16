@@ -1,33 +1,18 @@
-import { Field, Formik } from "formik";
-import { Button, Col, FormGroup as BFormGroup, Row } from "reactstrap";
-import * as SForm from "../sharedStyles/formStyles";
+import { ErrorMessage, Field, Formik } from "formik";
 import styled from "styled-components";
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
-import { Label as Label, TextInput } from "flowbite-react";
+import { Label as Label, TextInput, Button } from "flowbite-react";
+import InputField from "../../components/Forms/InputField";
+import { createOrganizationValidator } from "./helpers";
+import { createOrganization } from "../../actions/queries";
+import { RequestContext } from "../../providers/RequestProvider";
+
 
 const Styled = {
   Container: styled.div`
     display: flex;
     padding: 4em;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `,
-  TopText: styled.p`
-    font-size: 32px;
-    font-weight: bold;
-  `,
-  OrDiv: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 1.5vw;
-  `,
-  FormGroup: styled(BFormGroup)`
-    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -65,37 +50,36 @@ const Styled = {
     font-size: 16px;
     line-height: 24px;
   `,
-  Label: styled.div`
-    position: absolute
-    width: 129px;
-    height: 24px;
-    left: 571px;
-    top: 371px;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
+  Button: styled(Button)`
+    background-color: #F05C61
+    padding: 14px 40px;
   `,
-  TextInputContainer: styled.div`
-    width: 297px;
-    height: 54px;
-    left: 571px;
-    top: 407px;
+  ErrorMessage: styled(ErrorMessage).attrs({
+    component: "span",
+  })`
+    ::before {
+      content: "*";
+    }
+    color: #ef4e79;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 0px;
+    padding-top: 0px;
+    display: inline-block;
   `,
 };
 
 class OnboardingPage extends React.Component{
+  // context = useContext(RequestContext);
   constructor(props) {
     super(props);
-    this.error = false;
-
-    let url = new URL(window.location.href);
-
-    if (url.searchParams.has("error")) {
-      this.props.context.startLoading();
-      this.props.context.failed("Your username or password is incorrect.");
-    }
   }
+
+  handleSubmit = async (values) => {
+    createOrganization(values);
+    this.context.startLoading();
+    this.context.success("You have successfully submitted your application!")
+  };
 
   render() {
     return (
@@ -114,59 +98,82 @@ class OnboardingPage extends React.Component{
         </Styled.Container>
         <Formik
           initialValues={{
-          first_name: "",
-          last_name: "",
-          email: "",
-          password: "",
-          password_confirm: "",
+            organization_name: "",
+            website_url: "",
+            contact_name: "",
+            contact_email: "",
+            contact_phone: "",
+            admin_email: "",
+            confirm_admin_email: "",
+            organization_code: "",
           }}
+          enableReinitialize={true}
           onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          this.handleSubmit(values);
-          setSubmitting(false);
+            setSubmitting(true);
+            console.log(values);
+            this.handleSubmit(values);
+            setSubmitting(false);
           }}
+          validationSchema={
+            createOrganizationValidator
+          }
         >
-          {({ handleSubmit, isValid, isSubmitting }) => (
+          {({ handleSubmit, isValid, isSubmitting, values }) => (
             <div className="flex justify-center">
               <form>
-                <div className="">
-                  {/*<Row>*/}
-                  {/*  <Field as="select" name="nonprofit">*/}
-                  {/*    <option value="1">Helping Mamas</option>*/}
-                  {/*    <option value="2">Nonprofit 2</option>*/}
-                  {/*    <option value="3">Nonprofit 3</option>*/}
-                  {/*  </Field>*/}
-                  {/*</Row>*/}
-                  <Styled.Header2>Non-profit Information</Styled.Header2>
-                  <Styled.Subtitle>Used to verify your organization. We may ask you for more information if needed.</Styled.Subtitle>
-                  <Label className="mt-2 mb-1" htmlFor="organizationName">Non-profit Name</Label>
-                  <TextInput id="organizationName" placeholder="Non-profit Name"/>
-                  <Label className="mt-2 mb-1" htmlFor="websiteUrl">Non-profit Website</Label>
-                  <TextInput id="websiteUrl" placeholder="https://www.example.com"/>
-                  <Styled.Header2>Contact Information</Styled.Header2>
-                  <Styled.Subtitle>We will use this to contact you if we need more information or update you with the approval.</Styled.Subtitle>
-                  
-                  <Label className="mt-2 mb-1" htmlFor="contactName">Contact Name</Label>
-                  <TextInput id="contactName" placeholder="Contact Name"/>
-                  <Label className="mt-2 mb-1" htmlFor="contactEmail">Email</Label>
-                  <TextInput id="conttactEmail" placeholder="example@email.com"/>
-                  <Label className="mt-2 mb-1" htmlFor="contactPhone">Phone</Label>
-                  <TextInput id="contactPhone" placeholder="xxx-xxx-xxxx"/>
-                  <Styled.Header2>Volunteer Management Information</Styled.Header2>
-                  <Styled.Subtitle>Used as important information to generate your volunteer management platform.</Styled.Subtitle>
-                  <Styled.Subtitle2>* Please provide an email address that you wish to be used to create the main volunteer administrator (Admin) account. <br/>The main volunteer administrator account cannot be changed. It will have the highest permission level on this platform.</Styled.Subtitle2>
-                  <Label className="mt-2 mb-1" htmlFor="adminEmail">Primary Admin Account</Label>
-                  <TextInput id="adminEmail" placeholder="example@email.com"/>
-                  <Label className="mt-2 mb-1" htmlFor="confirmAdminEmail">Confirm Primary Admin Account</Label>
-                  <TextInput placeholder="example@email.com"/>
-                  <Styled.Subtitle2>*  Please customize your nonprofit code for your volunteer management platform. <br/>Note: Your custom code must contain 3-20 letters or numbers. Please do not use spaces, symbols, or special characters.</Styled.Subtitle2>
-                  <Label className="mt-2 mb-1" htmlFor="organizationCode">Non-profit Code</Label>
-                  <TextInput 
-                    id="organizationCode"
-                    addon="volunteer.bitsofgood.org/"
-                    placeholder="example123"
-                  />
-                </div>
+                  <div className="m-auto">
+                    <Styled.Header2 className="flex justify-center">Non-profit Information</Styled.Header2>
+                    <Styled.Subtitle className="flex justify-center">Used to verify your organization. We may ask you for more information if needed.</Styled.Subtitle>
+                  </div>
+                  <div className="w-64 m-auto">
+                    <InputField className="flex justify-center" name="organization_name" label="Non-profit Name" placeholder="Non-profit Name"/>
+                    <InputField className="flex justify-center" name="website_url" label="Non-profit Website" placeholder="https://www.example.com"/>
+                  </div>
+                  <div className="m-auto">
+                    <Styled.Header2 className="flex justify-center">Contact Information</Styled.Header2>
+                    <Styled.Subtitle className="flex justify-center">We will use this to contact you if we need more information or update you with the approval.</Styled.Subtitle>
+                  </div>
+                  <div className="w-64 m-auto">
+                    <InputField className="flex justify-center" name="contact_name" label="Contact Name" placeholder="Contact Name"/>
+                    <InputField className="flex justify-center" name="contact_email" label="Contact Email" placeholder="example@email.com"/>
+                    <InputField className="flex justify-center" name="contact_phone" label="Phone" placeholder="xxx-xxx-xxxx"/>
+                  </div>
+                  <div className="m-auto">
+                    <Styled.Header2 className="flex justify-center">Volunteer Management Information</Styled.Header2>
+                    <Styled.Subtitle className="flex justify-center">Used as important information to generate your volunteer management platform.</Styled.Subtitle>
+                    <Styled.Subtitle2 className="flex justify-center">* Please provide an email address that you wish to be used to create the main volunteer administrator (Admin) account. <br/>The main volunteer administrator account cannot be changed. It will have the highest permission level on this platform.</Styled.Subtitle2>
+                  </div>
+                  <div className="w-64 m-auto">
+                    <InputField className="flex justify-center" name="admin_email" label="Primary Admin Account" placeholder="example@email.com"/>
+                    <InputField className="flex justify-center" name="confirm_admin_email" label="Confirm Primary Admin Account" placeholder="example@email.com"/>
+                  </div>
+                  <div className="m-auto">
+                    <Styled.Subtitle2 className="flex justify-center">*  Please customize your nonprofit code for your volunteer management platform. <br/>Note: Your custom code must contain 3-20 letters or numbers. Please do not use spaces, symbols, or special characters.</Styled.Subtitle2>
+                  </div>
+                  <div className="w-80 m-auto">
+                    <Label className="mt-2 mb-1" htmlFor="organization_code" value={values.organization_code=values.organization_name.toLowerCase().replace(" ", "-")}>Non-profit Code</Label>
+                    <Field className="flex justify-center" name="organization_code">
+                      {({ field }) => (
+                        <TextInput 
+                        {...field}
+                        type="text"
+                        addon="volunteer.bitsofgood.org/"
+                        placeholder="example123"
+                      />
+                      )}
+                    </Field>
+                    <Styled.ErrorMessage name="organization_code"/>
+                  </div>
+                  <div className="m-auto flex justify-center">
+                    <Button
+                      className="bg-pink-600"
+                      type="submit"
+                      onClick={handleSubmit}
+                      disabled={!isValid || isSubmitting}
+                    >
+                      Submit
+                    </Button>
+                  </div>
               </form>
             </div>
           )}
