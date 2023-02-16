@@ -298,7 +298,7 @@ const EventRegister = (event) => {
 
   return (
     <Styled.Container fluid="md">
-      <Button className="bg-pink font-medium" onClick={() => goBackToDetails()}>
+      <Button className="bg-red" onClick={() => goBackToDetails()}>
         Back
       </Button>
       <Styled.Title />
