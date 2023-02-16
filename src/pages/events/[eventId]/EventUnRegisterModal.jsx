@@ -3,18 +3,18 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
 
-const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
-  //   const [isDeleting, setDeleting] = useState(false);
+const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
+  // const [isDeleting, setDeleting] = useState(false);
 
-  //   const handleSubmit = () => {
-  //     setDeleting(true);
-  //     deleteAttendance(event._id, event.eventId)
-  //       .then(() => {
-  //         toggle();
-  //         setDeleting(false);
-  //       })
-  //       .catch(console.log);
-  //   };
+  // const handleSubmit = () => {
+  //   setDeleting(true);
+  //   deleteAttendance(event._id, event.eventId)
+  //     .then(() => {
+  //       toggle();
+  //       setDeleting(false);
+  //     })
+  //     .catch(console.log);
+  // };
 
   const onUnregisterClicked = async (event) => {
     const changedEvent = {
@@ -30,25 +30,26 @@ const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
       <ModalHeader toggle={toggle}>Delete Entry</ModalHeader>
-      {/* <ModalBody>
+      <ModalBody>
         Are you sure you want to cancel your registration for this event?
       </ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={toggle}>
           No, keep it
         </Button>
-        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
+        <Button color="primary" onClick={onUnregisterClicked(eventData)}>
           Yes, cancel it
         </Button>
-      </ModalFooter> */}
+      </ModalFooter>
     </Modal>
   );
 };
 
-EventUnRegisterModal.propTypes = {
+EventUnregisterModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   eventData: PropTypes.object.isRequired,
   userId: PropTypes.object.isRequired,
 };
-export default EventUnRegisterModal;
+
+export default EventUnregisterModal;
