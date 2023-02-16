@@ -23,8 +23,6 @@ const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
       volunteers: event.volunteers.filter((volunteer) => volunteer !== userId),
     };
     await updateEvent(changedEvent);
-
-    // onRefresh();
   };
 
   return (

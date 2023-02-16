@@ -151,23 +151,8 @@ const EventInfo = () => {
     router.push(`${eventId}/statistics`);
   };
 
-  // const onUnregisterClicked = async (event) => {
-  //   const changedEvent = {
-  //     // remove current user id from event volunteers
-  //     ...event,
-  //     volunteers: event.volunteers.filter(
-  //       (volunteer) => volunteer !== user._id
-  //     ),
-  //   };
-  //   await updateEvent(changedEvent);
-  //   onRefresh();
-  // };
-
   const onUnregisterClicked = () => {
     setUnregisterModal(true);
-    // console.log(showUnRegisterModal);
-    // setCurrEvent(event);
-    // console.log(currEvent);
   };
 
   const toggleUnregisterModal = () => {
