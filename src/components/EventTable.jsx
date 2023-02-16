@@ -80,6 +80,7 @@ const EventTable = ({
   };
 
   return (
+    <Styled.Container>
     <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
       <Table.Head>
         <Table.HeadCell>{eventName}</Table.HeadCell>
@@ -93,25 +94,27 @@ const EventTable = ({
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
               <Table.Row key={event._id}>
+                <Table.Cell>
                 <Link href={`events/${event.eventId}`}>
-                  <Table.Cell>{event.eventName}</Table.Cell>
-                  <Table.Cell>{event.timeCheckedIn.slice(0, 10)}</Table.Cell>
-                  <Table.Cell>
-                    {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
-                    {event.timeCheckedOut == null
-                      ? "N/A"
-                      : convertTime(event.timeCheckedOut.slice(11, 16))}
-                  </Table.Cell>
-                  <Table.Cell>
-                    &emsp;
-                    {event.timeCheckedOut == null
-                      ? "0 hour(s)"
-                      : getHours(
-                          event.timeCheckedIn.slice(11, 16),
-                          event.timeCheckedOut.slice(11, 16)
-                        ) + " hour(s)"}
-                  </Table.Cell>
-                </Link>
+                    {event.eventName}
+                    </Link>
+                </Table.Cell>
+                <Table.Cell>{event.timeCheckedIn.slice(0, 10)}</Table.Cell>
+                <Table.Cell>
+                  {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
+                  {event.timeCheckedOut == null
+                    ? "N/A"
+                    : convertTime(event.timeCheckedOut.slice(11, 16))}
+                </Table.Cell>
+                <Table.Cell>
+                  &emsp;
+                  {event.timeCheckedOut == null
+                    ? "0 hour(s)"
+                    : getHours(
+                        event.timeCheckedIn.slice(11, 16),
+                        event.timeCheckedOut.slice(11, 16)
+                      ) + " hour(s)"}
+                </Table.Cell>
               </Table.Row>
             ))}
         {!isIndividualStats &&
@@ -147,6 +150,7 @@ const EventTable = ({
               </Table.Row>
             ))}
       </Table.Body>
+      </Table>
       {events.length !== 0 && (
         <Pagination
           items={events}
@@ -155,7 +159,7 @@ const EventTable = ({
           updatePageCallback={updatePage}
         />
       )}
-    </Table>
+    </Styled.Container>
   );
 };
 EventTable.propTypes = {
