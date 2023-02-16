@@ -16,12 +16,12 @@ import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import * as SForm from "../sharedStyles/formStyles";
-import * as Table from "../sharedStyles/tableStyles";
+import { Table } from "flowbite-react";
 import { Field, Formik, Form } from "formik";
 
 const Styled = {
   Button: styled(Button)`
-    background: white;
+    background: none;
     border: none;
   `,
   Container: styled.div`
@@ -81,14 +81,13 @@ class VolunteerTable extends React.Component {
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
-        <Table.Table>
-          <tbody>
-            <tr>
-              <th style={{ color: "#960034" }}>Volunteer Name</th>
-              <th style={{ color: "#960034" }}>Email Address</th>
-              <th style={{ color: "#960034" }}>Phone Number</th>
-            </tr>
+      <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+            <Table.Head>
+              <Table.HeadCell>Volunteer Name</Table.HeadCell>
+              <Table.HeadCell>Email Address</Table.HeadCell>
+              <Table.HeadCell>Phone Number</Table.HeadCell>
+              <Table.HeadCell> </Table.HeadCell>
+            </Table.Head>
             {users
               .slice(
                 this.state.currentPage * this.state.pageSize,
@@ -96,8 +95,8 @@ class VolunteerTable extends React.Component {
               )
               .map((user, index) => (
                 <Table.Row key={index} evenIndex={index % 2 === 0}>
-                  <td>{user.name}</td>
-                  <td>
+                  <Table.Cell>{user.name}</Table.Cell>
+                  <Table.Cell>
                     {user.email}
                     <Styled.Button
                       onClick={() => {
@@ -106,8 +105,8 @@ class VolunteerTable extends React.Component {
                     >
                       <Icon color="grey3" name="copy" />
                     </Styled.Button>
-                  </td>
-                  <td>
+                  </Table.Cell>
+                  <Table.Cell>
                     {user.phone_number
                       ? user.phone_number.substr(0, 3) +
                         "-" +
@@ -115,8 +114,8 @@ class VolunteerTable extends React.Component {
                         "-" +
                         user.phone_number.substr(6, 4)
                       : ""}
-                  </td>
-                  <td>
+                  </Table.Cell>
+                  <Table.Cell>
                     <Styled.Button
                       onClick={() => this.onDisplayEditUserModal(user)}
                     >
@@ -164,11 +163,9 @@ class VolunteerTable extends React.Component {
                         </svg>
                       </Styled.Button>
                     </Link>
-                  </td>
+                  </Table.Cell>
                 </Table.Row>
               ))}
-          </tbody>
-        </Table.Table>
         {loading && <Loading />}
         <Formik
           enableReinitialize
@@ -310,7 +307,7 @@ class VolunteerTable extends React.Component {
             updatePageCallback={this.updatePage}
           />
         )}
-      </Table.Container>
+      </Table>
     );
   }
 }

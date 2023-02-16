@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import * as Table from "../screens/sharedStyles/condensedTableStyles";
 import { getHours } from "../screens/Stats/User/hourParsing";
 import Icon from "./Icon";
 import Pagination from "./PaginationComp";
+import { Table } from "flowbite-react";
 
 const Styled = {
   Button: styled(Button)`
@@ -80,93 +80,73 @@ const EventTable = ({
   };
 
   return (
-    <Styled.Container>
-      <Styled.ul>
-        <Styled.List>
-          <Table.EventList>
-            <Table.InnerTop>
-              <Table.EventName>{eventName}</Table.EventName>
-              <Table.Creation>{creation}</Table.Creation>
-              <Table.Time>{time}</Table.Time>
-              <Table.TextInfo>{textInfo}</Table.TextInfo>
-            </Table.InnerTop>
-          </Table.EventList>
-        </Styled.List>
+    <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+      <Table.Head>
+        <Table.HeadCell>{eventName}</Table.HeadCell>
+        <Table.HeadCell>{creation}</Table.HeadCell>
+        <Table.HeadCell>{time}</Table.HeadCell>
+        <Table.HeadCell>{textInfo}</Table.HeadCell>
+      </Table.Head>
+      <Table.Body>
         {isIndividualStats &&
           events
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
-              <Styled.List key={event._id}>
+              <Table.Row key={event._id}>
                 <Link href={`events/${event.eventId}`}>
-                  <Table.EventList>
-                    <Table.Inner>
-                      <Table.EventName>{event.eventName}</Table.EventName>
-
-                      <Table.Creation>
-                        {event.timeCheckedIn.slice(0, 10)}
-                      </Table.Creation>
-
-                      <Table.Time>
-                        {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
-                        {event.timeCheckedOut == null
-                          ? "N/A"
-                          : convertTime(event.timeCheckedOut.slice(11, 16))}
-                      </Table.Time>
-                      <Table.TextInfo>
-                        &emsp;
-                        {event.timeCheckedOut == null
-                          ? "0 hour(s)"
-                          : getHours(
-                              event.timeCheckedIn.slice(11, 16),
-                              event.timeCheckedOut.slice(11, 16)
-                            ) + " hour(s)"}
-                      </Table.TextInfo>
-                    </Table.Inner>
-                  </Table.EventList>
+                  <Table.Cell>{event.eventName}</Table.Cell>
+                  <Table.Cell>{event.timeCheckedIn.slice(0, 10)}</Table.Cell>
+                  <Table.Cell>
+                    {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
+                    {event.timeCheckedOut == null
+                      ? "N/A"
+                      : convertTime(event.timeCheckedOut.slice(11, 16))}
+                  </Table.Cell>
+                  <Table.Cell>
+                    &emsp;
+                    {event.timeCheckedOut == null
+                      ? "0 hour(s)"
+                      : getHours(
+                          event.timeCheckedIn.slice(11, 16),
+                          event.timeCheckedOut.slice(11, 16)
+                        ) + " hour(s)"}
+                  </Table.Cell>
                 </Link>
-              </Styled.List>
+              </Table.Row>
             ))}
         {!isIndividualStats &&
           events
             .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
             .map((event) => (
-              <Styled.List key={event._id}>
-                <Table.EventList>
-                  <Table.Inner>
-                    <Table.EventName>{event.volunteerName}</Table.EventName>
-
-                    <Table.Creation>
-                      {event.volunteerEmail?.substring(0, 24) + "..."}
-                    </Table.Creation>
-
-                    <Table.Time>
-                      {event.hours.toString().slice(0, 5)}
-                    </Table.Time>
-                    <Table.TextInfo>
-                      <Styled.Buttons>
-                        <Styled.EditButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onEditClicked(event);
-                          }}
-                        >
-                          <Icon color="grey3" name="create" />
-                        </Styled.EditButton>
-                        <Styled.DeleteButton
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteClicked(event);
-                          }}
-                        >
-                          <Icon color="grey3" name="delete" />
-                        </Styled.DeleteButton>
-                      </Styled.Buttons>
-                    </Table.TextInfo>
-                  </Table.Inner>
-                </Table.EventList>
-              </Styled.List>
+              <Table.Row key={event._id}>
+                <Table.Cell>{event.volunteerName}</Table.Cell>
+                <Table.Cell>
+                  {event.volunteerEmail?.substring(0, 24) + "..."}
+                </Table.Cell>
+                <Table.Cell>{event.hours.toString().slice(0, 5)}</Table.Cell>
+                <Table.Cell>
+                  <Styled.Buttons>
+                    <Styled.EditButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditClicked(event);
+                      }}
+                    >
+                      <Icon color="grey3" name="create" />
+                    </Styled.EditButton>
+                    <Styled.DeleteButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteClicked(event);
+                      }}
+                    >
+                      <Icon color="grey3" name="delete" />
+                    </Styled.DeleteButton>
+                  </Styled.Buttons>
+                </Table.Cell>
+              </Table.Row>
             ))}
-      </Styled.ul>
+      </Table.Body>
       {events.length !== 0 && (
         <Pagination
           items={events}
@@ -175,7 +155,7 @@ const EventTable = ({
           updatePageCallback={updatePage}
         />
       )}
-    </Styled.Container>
+    </Table>
   );
 };
 EventTable.propTypes = {
