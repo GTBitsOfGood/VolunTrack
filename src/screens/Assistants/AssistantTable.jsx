@@ -153,12 +153,13 @@ class AssistantTable extends React.Component {
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
     return (
-      <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+      <Styled.Container>
+        <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
           <Table.Head>
-              <Table.HeadCell>Name</Table.HeadCell>
-              <Table.HeadCell>Email Address</Table.HeadCell>
-              <Table.HeadCell>Role</Table.HeadCell>
-              <Table.HeadCell> </Table.HeadCell>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Email Address</Table.HeadCell>
+            <Table.HeadCell>Role</Table.HeadCell>
+            <Table.HeadCell> </Table.HeadCell>
           </Table.Head>
           <Table.Body>
             {!loading &&
@@ -218,7 +219,7 @@ class AssistantTable extends React.Component {
                   </Table.Row>
                 ))}
           </Table.Body>
-        
+        </Table>
         {loading && <Loading />}
         {/* Edit Modal */}
         <Modal
@@ -447,7 +448,7 @@ class AssistantTable extends React.Component {
             updatePageCallback={this.updatePage}
           />
         )}
-      </Table>
+      </Styled.Container>
     );
   }
 }

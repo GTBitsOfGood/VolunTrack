@@ -36,7 +36,12 @@ const Styled = {
     vertical-align: top;
   `,
   Table: styled.div`
-    margin: auto;
+    width: 50%;
+    height: 50%;
+    margin: 1rem 22.5rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
   `,
   StatsContainer: styled.div`
     width: 50%;

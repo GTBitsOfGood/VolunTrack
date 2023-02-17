@@ -81,75 +81,75 @@ const EventTable = ({
 
   return (
     <Styled.Container>
-    <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
-      <Table.Head>
-        <Table.HeadCell>{eventName}</Table.HeadCell>
-        <Table.HeadCell>{creation}</Table.HeadCell>
-        <Table.HeadCell>{time}</Table.HeadCell>
-        <Table.HeadCell>{textInfo}</Table.HeadCell>
-      </Table.Head>
-      <Table.Body>
-        {isIndividualStats &&
-          events
-            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-            .map((event) => (
-              <Table.Row key={event._id}>
-                <Table.Cell>
-                <Link href={`events/${event.eventId}`}>
-                    {event.eventName}
+      <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+        <Table.Head>
+          <Table.HeadCell>{eventName}</Table.HeadCell>
+          <Table.HeadCell>{creation}</Table.HeadCell>
+          <Table.HeadCell>{time}</Table.HeadCell>
+          <Table.HeadCell>{textInfo}</Table.HeadCell>
+        </Table.Head>
+        <Table.Body>
+          {isIndividualStats &&
+            events
+              .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+              .map((event) => (
+                <Table.Row key={event._id}>
+                  <Table.Cell>
+                    <Link href={`events/${event.eventId}`}>
+                      {event.eventName}
                     </Link>
-                </Table.Cell>
-                <Table.Cell>{event.timeCheckedIn.slice(0, 10)}</Table.Cell>
-                <Table.Cell>
-                  {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
-                  {event.timeCheckedOut == null
-                    ? "N/A"
-                    : convertTime(event.timeCheckedOut.slice(11, 16))}
-                </Table.Cell>
-                <Table.Cell>
-                  &emsp;
-                  {event.timeCheckedOut == null
-                    ? "0 hour(s)"
-                    : getHours(
-                        event.timeCheckedIn.slice(11, 16),
-                        event.timeCheckedOut.slice(11, 16)
-                      ) + " hour(s)"}
-                </Table.Cell>
-              </Table.Row>
-            ))}
-        {!isIndividualStats &&
-          events
-            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-            .map((event) => (
-              <Table.Row key={event._id}>
-                <Table.Cell>{event.volunteerName}</Table.Cell>
-                <Table.Cell>
-                  {event.volunteerEmail?.substring(0, 24) + "..."}
-                </Table.Cell>
-                <Table.Cell>{event.hours.toString().slice(0, 5)}</Table.Cell>
-                <Table.Cell>
-                  <Styled.Buttons>
-                    <Styled.EditButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEditClicked(event);
-                      }}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.EditButton>
-                    <Styled.DeleteButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onDeleteClicked(event);
-                      }}
-                    >
-                      <Icon color="grey3" name="delete" />
-                    </Styled.DeleteButton>
-                  </Styled.Buttons>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-      </Table.Body>
+                  </Table.Cell>
+                  <Table.Cell>{event.timeCheckedIn.slice(0, 10)}</Table.Cell>
+                  <Table.Cell>
+                    {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
+                    {event.timeCheckedOut == null
+                      ? "N/A"
+                      : convertTime(event.timeCheckedOut.slice(11, 16))}
+                  </Table.Cell>
+                  <Table.Cell>
+                    &emsp;
+                    {event.timeCheckedOut == null
+                      ? "0 hour(s)"
+                      : getHours(
+                          event.timeCheckedIn.slice(11, 16),
+                          event.timeCheckedOut.slice(11, 16)
+                        ) + " hour(s)"}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+          {!isIndividualStats &&
+            events
+              .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+              .map((event) => (
+                <Table.Row key={event._id}>
+                  <Table.Cell>{event.volunteerName}</Table.Cell>
+                  <Table.Cell>
+                    {event.volunteerEmail?.substring(0, 24) + "..."}
+                  </Table.Cell>
+                  <Table.Cell>{event.hours.toString().slice(0, 5)}</Table.Cell>
+                  <Table.Cell>
+                    <Styled.Buttons>
+                      <Styled.EditButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEditClicked(event);
+                        }}
+                      >
+                        <Icon color="grey3" name="create" />
+                      </Styled.EditButton>
+                      <Styled.DeleteButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDeleteClicked(event);
+                        }}
+                      >
+                        <Icon color="grey3" name="delete" />
+                      </Styled.DeleteButton>
+                    </Styled.Buttons>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+        </Table.Body>
       </Table>
       {events.length !== 0 && (
         <Pagination

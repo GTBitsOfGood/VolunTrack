@@ -105,9 +105,9 @@ const History = () => {
       />
       <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
         <Table.Head>
-            <Table.HeadCell>Name</Table.HeadCell>
-            <Table.HeadCell>Change Description</Table.HeadCell>
-            <Table.HeadCell>Time</Table.HeadCell>
+          <Table.HeadCell>Name</Table.HeadCell>
+          <Table.HeadCell>Change Description</Table.HeadCell>
+          <Table.HeadCell>Time</Table.HeadCell>
         </Table.Head>
         <Table.Body>
           {filteredAndSortedHistoryEvents().map((event, index) => (
@@ -116,7 +116,9 @@ const History = () => {
                 {event.firstName} {event.lastName}
               </Table.Cell>
               <Table.Cell>{event.description}</Table.Cell>
-              <Table.Cell>{new Date(event.createdAt).toLocaleString()}</Table.Cell>
+              <Table.Cell>
+                {new Date(event.createdAt).toLocaleString()}
+              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>

@@ -49,21 +49,22 @@ const convertTime = (time) => {
 
 const EventStatsTable = ({ events, isVolunteer }) => {
   return (
-    <Table style={{ width: "100%", height: "100%", margin: "auto", marginBottom: "70px"}} striped={true}>
+    <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
       <Table.Head>
-        <Styled.EventName>Event Name</Styled.EventName>
-        <Styled.Date>Date</Styled.Date>
-        <Styled.Time>Time</Styled.Time>
-        <Styled.Attendance>Attendance</Styled.Attendance>
-        <Styled.Hours>Hours</Styled.Hours>
+        <Table.HeadCell>Event Name</Table.HeadCell>
+        <Table.HeadCell>Date</Table.HeadCell>
+        <Table.HeadCell>Time</Table.HeadCell>
+        <Table.HeadCell>Attendance</Table.HeadCell>
+        <Table.HeadCell>Hours</Table.HeadCell>
       </Table.Head>
-
-      {isVolunteer === false &&
-        events.map((event) => (
-          <Table.Row key={event._id}>
-            <Link href={`events/${event._id}`}>
+      <Table.Body>
+        {isVolunteer === false &&
+          events.map((event) => (
+            <Table.Row key={event._id}>
               <Table.Cell>
-                <Styled.EventName>{event.title}</Styled.EventName>
+                <Link href={`events/${event._id}`}>
+                  <Styled.EventName>{event.title}</Styled.EventName>
+                </Link>
               </Table.Cell>
               <Table.Cell>
                 <Styled.Date>{event.date.substring(0, 10)}</Styled.Date>
@@ -80,9 +81,9 @@ const EventStatsTable = ({ events, isVolunteer }) => {
               <Table.Cell>
                 <Styled.Hours>{event.hours}</Styled.Hours>
               </Table.Cell>
-            </Link>
-          </Table.Row>
-        ))}
+            </Table.Row>
+          ))}
+      </Table.Body>
     </Table>
   );
 };
