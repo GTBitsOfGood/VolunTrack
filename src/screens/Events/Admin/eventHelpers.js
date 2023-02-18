@@ -1,4 +1,4 @@
-import { string, object, number, date } from "yup";
+import { date, number, object, string } from "yup";
 
 const today = new Date();
 const yesterday = new Date(today);

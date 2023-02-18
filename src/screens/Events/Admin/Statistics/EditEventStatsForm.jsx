@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
+import { object, string } from "yup";
 import { updateAttendance } from "../../../../actions/queries";
 import variables from "../../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../../sharedStyles/formStyles";
@@ -32,6 +33,14 @@ const Styled = {
     margin: 0.5rem 2rem 0.5rem 1rem;
   `,
 };
+
+const timeValidator = object().shape({
+  checkin: string().test(
+    "times-correct",
+    "checkin time needs to be before checkout time",
+    (value, context) => value < context.parent.checkout
+  ),
+});
 
 const EditEventStatsForm = ({ toggle, event }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
@@ -68,6 +77,7 @@ const EditEventStatsForm = ({ toggle, event }) => {
       onSubmit={(values, { setSubmitting }) => {
         onSubmitEditEvent(values, setSubmitting);
       }}
+      validationSchema={timeValidator}
       render={({ handleSubmit, isValid, isSubmitting }) => (
         <React.Fragment>
           <Styled.ModalBody>
@@ -111,21 +121,21 @@ const EditEventStatsForm = ({ toggle, event }) => {
                       </Styled.Col>
                       <Styled.Col>
                         <SForm.Label>Check In Time</SForm.Label>
-                        <Styled.ErrorMessage name="checkin" />
                         <Field name="checkin">
                           {({ field }) => (
                             <SForm.Input {...field} type="time" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="checkin" />
                       </Styled.Col>
                       <Styled.Col>
                         <SForm.Label>Check Out Time</SForm.Label>
-                        <Styled.ErrorMessage name="checkout" />
                         <Field name="checkout">
                           {({ field }) => (
                             <SForm.Input {...field} type="time" />
                           )}
                         </Field>
+                        <Styled.ErrorMessage name="checkout" />
                       </Styled.Col>
                     </Row>
                   </Col>
