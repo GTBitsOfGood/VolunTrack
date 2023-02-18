@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { ModalBody, ModalFooter, Button, Col, Row } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../../sharedStyles/formStyles";
+import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import variables from "../../../../design-tokens/_variables.module.scss";
+import React from "react";
+import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
+import styled from "styled-components";
 import { updateAttendance } from "../../../../actions/queries";
+import variables from "../../../../design-tokens/_variables.module.scss";
+import * as SForm from "../../../sharedStyles/formStyles";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -39,10 +39,18 @@ const EditEventStatsForm = ({ toggle, event }) => {
       ...event,
     };
     editedEvent.timeCheckedIn = new Date(
-      event.timeCheckedIn.slice(0, 11) + values.checkin
+      new Date(
+        new Date(event.timeCheckedIn) - new Date().getTimezoneOffset() * 60_000
+      )
+        .toISOString()
+        .slice(0, 11) + values.checkin
     ).toISOString();
     editedEvent.timeCheckedOut = new Date(
-      event.timeCheckedIn.slice(0, 11) + values.checkout
+      new Date(
+        new Date(event.timeCheckedOut) - new Date().getTimezoneOffset() * 60_000
+      )
+        .toISOString()
+        .slice(0, 11) + values.checkout
     ).toISOString();
     setSubmitting(true);
     updateAttendance(event._id, editedEvent);
