@@ -2,7 +2,6 @@ import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
 import { Label, TextInput } from "flowbite-react";
 import styled from "styled-components";
-import React from "react";
 
 const Styled = {
   ErrorMessage: styled(ErrorMessage).attrs({
@@ -41,10 +40,9 @@ const InputField = (props) => (
     </Field>
     <ErrorMessage
       component="div"
-      className="text-red-600 inline-block mt-1 pt-0 before:content-['h*'] text-sm"
+      className="text-red-600 inline-block mt-1 pt-0 before:content-['Hello_World'] text-sm"
       name={props.name}
     />
-    {/*<Styled.ErrorMessage name={props.name} />*/}
   </div>
 );
 
