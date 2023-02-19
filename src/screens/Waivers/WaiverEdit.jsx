@@ -3,7 +3,11 @@ import Error from "next/error";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getWaivers } from "../../actions/queries";
+import "react-quill/dist/quill.snow.css";
 import Waiver from "./Waiver";
+import { Button } from "flowbite-react";
+import { useRef } from "react";
+import { uploadWaiver } from "../../actions/queries";
 
 const WaiversContainer = styled.div`
   min-width: 60%;
@@ -31,29 +35,102 @@ function authWrapper(Component) {
   };
 }
 
+
+
 const WaiverEdit = () => {
   const [waivers, setWaivers] = useState({});
+  const [submit, setSubmitting] = useState(false);
+  const [adultExists, setAdultExists] = useState(false);
+  const [minorExists, setMinorExists] = useState(false);
+  const [user, setUser] = useState();
+  const [content, setContent] = useState(
+    adultExists ? "<p>s</p>" : ""
+  );
 
-  const getAndSetWaivers = async () => {
-    const res = await getWaivers();
-    setWaivers(res.data);
+  if (!user) {
+    const { data: session } = useSession();
+    setUser(session.user);
+  }
+
+  let ReactQuill;
+// patch for build failure
+if (typeof window !== "undefined") {
+  ReactQuill = require("react-quill");
+}
+const quill = useRef(null);
+
+
+  const submitWaiver = (values, setSubmitting) => {
+    const waiver = {
+      type: "adult",
+      text: "<p>s</p>",
+      organizationId: user.organizationId
+    };
+    // setSubmitting(true);
+
+    uploadWaiver(waiver)
+      // .finally(() => setSubmitting(false));
   };
 
-  useEffect(() => {
-    getAndSetWaivers();
-  }, []);
+  const changeValue = (value) => {
+    setContent(value)
+  }
+
+  // const getAndSetWaivers = async () => {
+  //   const res = await getWaivers();
+  //   setWaivers(res.data);
+  // };
+
+  // useEffect(() => {
+  //   getAndSetWaivers();
+  // }, []);
 
   return (
     <WaiversContainer>
       <h2>Manage Waivers</h2>
-      <Waiver
-        waiver={{ adult: waivers.adult }}
-        updateWaivers={getAndSetWaivers}
-      />
-      <Waiver
-        waiver={{ minor: waivers.minor }}
-        updateWaivers={getAndSetWaivers}
-      />
+      
+        {/* <Tabs.Group
+    aria-label="Default tabs"
+    style="default"
+  >
+    <Tabs.Item
+      active={true}
+      title="Adult Waiver" 
+    >
+      Profile content
+    </Tabs.Item>
+    <Tabs.Item title="Minor Waiver">
+      Dashboard content
+    </Tabs.Item>
+  </Tabs.Group> */}
+    Adult Waiver
+    <div>
+      <ReactQuill
+                          value={content}
+                          onChange={(newValue) => {
+                            changeValue(newValue);
+                          }}
+                          ref={quill}
+                          
+                        />
+                        </div>
+      <Button gradientMonochrome="pink" onClick={submitWaiver}>
+      Save
+    </Button>
+    <br></br>
+    Minor Waiver
+    <div>
+      <ReactQuill
+                          // value={content}
+                          // onChange={(newValue) => {
+                          //   setContent(newValue);
+                          // }}
+                          ref={quill}
+                        />
+                        </div>
+      <Button gradientMonochrome="pink">
+      Save
+    </Button>
     </WaiversContainer>
   );
 };

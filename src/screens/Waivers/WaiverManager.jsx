@@ -119,19 +119,19 @@ const WaiverManager = () => {
   const [minorWaiver, setMinorWaiver] = useState(null);
   const [user, setUser] = useState(null);
 
-  const getAndSetWaivers = async () => {
-    const res = await getWaivers();
-    setWaivers(res.data);
-  };
+  // const getAndSetWaivers = async () => {
+  //   const res = await getWaivers();
+  //   setWaivers(res.data);
+  // };
 
   if (!user) {
     const { data: session } = useSession();
     setUser(session.user);
   }
 
-  const onRefresh = () => {
-    loadWaivers();
-  };
+  // const onRefresh = () => {
+  //   loadWaivers();
+  // };
 
   const loadWaivers = async () => {
     const adult = await getWaivers("adult", user.organizationId);
@@ -142,12 +142,12 @@ const WaiverManager = () => {
   };
 
   const editWaiver = async () => {
-    await router.push(`/manage-waivers/edit`);
+    await router.push(`${router.pathname}/edit`);
   };
 
-  useEffect(() => {
-    getAndSetWaivers();
-  }, []);
+  // useEffect(() => {
+  //   getAndSetWaivers();
+  // }, []);
 
   return (
     <WaiversContainer>
