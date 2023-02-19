@@ -47,10 +47,16 @@ const WaiverEdit = () => {
     adultExists ? "<p>s</p>" : ""
   );
 
-  if (!user) {
-    const { data: session } = useSession();
-    setUser(session.user);
-  }
+  // const loadSession = async () => {
+  //   const { data: session } = await useSession();
+  //   setUser(session.user);
+  // };
+  // useEffect(() => {
+  //   loadSession();
+  // }, []);
+
+
+
 
   let ReactQuill;
 // patch for build failure
@@ -61,20 +67,17 @@ const quill = useRef(null);
 
 
   const submitWaiver = (values, setSubmitting) => {
-    const waiver = {
-      type: "adult",
-      text: "<p>s</p>",
-      organizationId: user.organizationId
-    };
+    // const waiver = {
+    //   type: "adult",
+    //   text: "<p>s</p>",
+    //   organizationId: 11111,
+    // };
     // setSubmitting(true);
 
-    uploadWaiver(waiver)
+    uploadWaiver("adult", "<p>s</p>", 11111);
       // .finally(() => setSubmitting(false));
   };
 
-  const changeValue = (value) => {
-    setContent(value)
-  }
 
   // const getAndSetWaivers = async () => {
   //   const res = await getWaivers();
@@ -84,6 +87,8 @@ const quill = useRef(null);
   // useEffect(() => {
   //   getAndSetWaivers();
   // }, []);
+
+  
 
   return (
     <WaiversContainer>
@@ -103,12 +108,17 @@ const quill = useRef(null);
       Dashboard content
     </Tabs.Item>
   </Tabs.Group> */}
+     
+   
+
+
+
     Adult Waiver
     <div>
       <ReactQuill
                           value={content}
                           onChange={(newValue) => {
-                            changeValue(newValue);
+                            setContent(newValue)
                           }}
                           ref={quill}
                           
@@ -117,7 +127,7 @@ const quill = useRef(null);
       <Button gradientMonochrome="pink" onClick={submitWaiver}>
       Save
     </Button>
-    <br></br>
+    {/* <br></br>
     Minor Waiver
     <div>
       <ReactQuill
@@ -130,7 +140,7 @@ const quill = useRef(null);
                         </div>
       <Button gradientMonochrome="pink">
       Save
-    </Button>
+    </Button> */}
     </WaiversContainer>
   );
 };

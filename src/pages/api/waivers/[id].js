@@ -39,12 +39,12 @@ export default async function handler(req, res, next) {
 
     res.status(200).json(updatedWaiver);
   } else if (req.method === "POST") {
-    const type = req.query.type;
-    const organizationId = req.query.organizationId;
-    const text = req.body;
+    const type = req.body.type;
+    const organizationId = req.body.organizationId;
+    const text = req.body.text;
 
     // THIS NEEDS TO BE CHANGED!
-    const newWaiver = await updateWaiver(type, text, organizationId);
+    const newWaiver = await createWaiver(type, text, organizationId);
 
     res.status(200).json(newWaiver);
   }

@@ -3,14 +3,14 @@ import dbConnect from "../mongodb/index";
 const User = require("../mongodb/models/user");
 const mongoose = require("mongoose");
 
-export async function createWaiver(newWaiverData, organizationId, next) {
-  const newWaiver = new WaiverData(newWaiverData);
+export async function createWaiver(type, text, organizationId, next) {
+  const newWaiver = new WaiverData(type, text, organizationId);
 
   await dbConnect();
 
   const waiver = await WaiverData.create({
-    type: newWaiverData.type,
-    text: newWaiverData.text,
+    type: type,
+    text: text,
     organizationId: organizationId,
   });
 }

@@ -55,7 +55,7 @@ export const getWaivers = (type, organizationId) =>
 export const deleteWaiver = (type, organizationId) =>
   axios.delete(`/api/waivers&type=${type}&organizationId=${organizationId}`);
 
-export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
+export const uploadWaiver = (type, text, organizationId) => axios.post("/api/waivers", {type, text, organizationId});
 
 export const updateInvitedAdmins = (email, organizationId) =>
   axios.post(`/api/settings/updateInvitedAdmin`, { email, organizationId });
