@@ -60,8 +60,8 @@ export const updateInvitedAdmins = (email, organizationId) =>
 export const getInvitedAdmins = (organizationId) =>
   axios.get(`/api/settings/getInvitedAdmin?organizationId=${organizationId}`);
 
-export const removeInvitedAdmin = (email) =>
-  axios.post(`/api/settings/removeInvitedAdmin`, { email });
+export const removeInvitedAdmin = (email, organizationId) =>
+  axios.post(`/api/settings/removeInvitedAdmin`, { email, organizationId });
 
 export const checkInVolunteer = (
   userId,
