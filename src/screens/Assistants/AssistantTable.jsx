@@ -1,16 +1,24 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Loading from "../../components/Loading";
-import * as Form from "../sharedStyles/formStyles";
-import * as Table from "../sharedStyles/tableStyles";
-import { Container, Row, Col } from "reactstrap";
-import styled from "styled-components";
-import Icon from "../../components/Icon";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
+import Icon from "../../components/Icon";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
+import * as Form from "../sharedStyles/formStyles";
+import * as Table from "../sharedStyles/tableStyles";
 
 // const keyToValue = (key) => {
 //   key = key.replace(/_/g, " ");

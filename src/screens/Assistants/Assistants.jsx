@@ -1,6 +1,7 @@
 import { Formik } from "formik";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
+import PropTypes from "prop-types";
 import React from "react";
 import {
   Button,
@@ -24,7 +25,6 @@ import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
-import PropTypes from "prop-types";
 
 const PAGE_SIZE = 10;
 
@@ -271,7 +271,7 @@ class Assistants extends React.Component {
           <Styled.TableUsers>
             <AssistantTable
               sessionUser={this.props.user}
-              users={this.getUsersAtPage()}
+              users={this.state.users}
               invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}
               loading={loadingMoreUsers}
