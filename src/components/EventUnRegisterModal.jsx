@@ -1,17 +1,13 @@
 import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
-import { updateEvent } from "../../../screens/Events/eventHelpers";
+import { updateEvent } from "../screens/Events/eventHelpers";
 
 const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
-  const [isDeleting, setDeleting] = useState(false);
-
   const handleSubmit = () => {
-    setDeleting(true);
     onUnregisterClicked(eventData)
       .then(() => {
         toggle();
-        setDeleting(false);
       })
       .catch(console.log);
   };
@@ -27,7 +23,7 @@ const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
 
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
-      <ModalHeader toggle={toggle}>Delete Entry</ModalHeader>
+      <ModalHeader toggle={toggle}></ModalHeader>
       <ModalBody>
         Are you sure you want to cancel your registration for this event?
       </ModalBody>
@@ -35,7 +31,7 @@ const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
         <Button color="secondary" onClick={toggle}>
           No, keep it
         </Button>
-        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
+        <Button color="primary" onClick={handleSubmit}>
           Yes, cancel it
         </Button>
       </ModalFooter>

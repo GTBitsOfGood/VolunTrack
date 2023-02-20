@@ -7,7 +7,7 @@ import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
-import EventUnregisterModal from "./EventUnRegisterModal";
+import EventUnregisterModal from "../../../components/EventUnRegisterModal";
 
 const Styled = {
   Button: styled(Button)`
@@ -217,7 +217,7 @@ const EventInfo = () => {
               event.volunteers.includes(user._id) &&
               futureorTodaysDate && (
                 <Styled.Routing onClick={() => onUnregisterClicked(event)}>
-                  Click to cancel your registration
+                  Unregister
                 </Styled.Routing>
               )}
           </Row>
