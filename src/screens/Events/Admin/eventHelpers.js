@@ -76,3 +76,11 @@ export const groupEventValidator = object().shape({
     .required(" Org ZIP is required"),
   // isPrivate: boolean().optional(),
 });
+
+export const timeValidator = object().shape({
+  checkin: string().test(
+    "times-correct",
+    "checkin time needs to be before checkout time",
+    (value, context) => value < context.parent.checkout
+  ),
+});

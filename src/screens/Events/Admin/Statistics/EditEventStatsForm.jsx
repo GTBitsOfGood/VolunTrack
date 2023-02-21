@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
-import { object, string } from "yup";
 import { updateAttendance } from "../../../../actions/queries";
 import variables from "../../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../../sharedStyles/formStyles";
+import { timeValidator } from "../eventHelpers";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -33,14 +33,6 @@ const Styled = {
     margin: 0.5rem 2rem 0.5rem 1rem;
   `,
 };
-
-const timeValidator = object().shape({
-  checkin: string().test(
-    "times-correct",
-    "checkin time needs to be before checkout time",
-    (value, context) => value < context.parent.checkout
-  ),
-});
 
 const EditEventStatsForm = ({ toggle, event }) => {
   const onSubmitEditEvent = (values, setSubmitting) => {
