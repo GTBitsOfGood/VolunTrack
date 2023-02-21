@@ -181,7 +181,7 @@ const WaiverManager = () => {
         </Button.Group>
       </div>
 
-      {onAdultTab ? (
+      {onAdultTab && (
         <>
           <br></br>
           <div className="bg-white max-w-xl mb-2">
@@ -197,7 +197,9 @@ const WaiverManager = () => {
             Save
           </Button>
         </>
-      ) : (
+      )}
+
+      {!onAdultTab && (
         <>
           <br></br>
 
