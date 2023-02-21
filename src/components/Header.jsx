@@ -1,22 +1,16 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import { useState } from "react";
 import "flowbite-react";
-import variables from "../design-tokens/_variables.module.scss";
+import React from "react";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 import { Navbar, Dropdown, Avatar } from "flowbite-react";
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const {
     data: { user },
   } = useSession();
-
-  const toggle = () => {
-    setIsOpen(!isOpen);
-  };
 
   const logout = () => {
     signOut();
@@ -48,8 +42,30 @@ const Header = () => {
 
   const currPageMatches = (page) => router.pathname === page;
 
+  const dropdownItems = (
+    <React.Fragment>
+      <Dropdown.Item onClick={goToProfile} href="/profile">
+        Profile
+      </Dropdown.Item>
+      {user.role === "admin" && (
+        <div>
+          <Dropdown.Item onClick={goToHistory} href="/history">
+            Change History
+          </Dropdown.Item>
+          <Dropdown.Item onClick={gotToSummary} href="/events-summary">
+            Event Summary
+          </Dropdown.Item>
+        </div>
+      )}
+      <Dropdown.Divider />
+      <Dropdown.Item onClick={logout} href="/">
+        Sign Out
+      </Dropdown.Item>
+    </React.Fragment>
+  );
+
   return (
-    <Navbar fluid={true} rounded={true} class="my-0 bg-white">
+    <Navbar fluid={false} rounded={true} class="my-0 bg-white">
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img
           src="/images/helping_mamas_logo.png"
@@ -57,7 +73,9 @@ const Header = () => {
           className="h-14"
         />
       </Navbar.Brand>
-      <div className="flex mr-2 md:order-2">
+      <Navbar.Toggle />
+      {/*<div className="w-48 sm:w-0 md:w-0" />*/}
+      <div className="flex hidden md:block mr-2 md:order-2">
         <Dropdown
           arrowIcon={true}
           inline={true}
@@ -77,27 +95,10 @@ const Header = () => {
             </div>
           }
         >
-          <Dropdown.Item onClick={goToProfile} href="/profile">
-            Profile
-          </Dropdown.Item>
-          {user.role === "admin" && (
-            <div>
-              <Dropdown.Item onClick={goToHistory} href="/history">
-                Change History
-              </Dropdown.Item>
-              <Dropdown.Item onClick={gotToSummary} href="/events-summary">
-                Event Summary
-              </Dropdown.Item>
-            </div>
-          )}
-          <Dropdown.Divider />
-          <Dropdown.Item onClick={logout} href="/">
-            Sign Out
-          </Dropdown.Item>
+          {dropdownItems}
         </Dropdown>
-        <Navbar.Toggle />
       </div>
-      <Navbar.Collapse isOpen={isOpen}>
+      <Navbar.Collapse>
         <Navbar.Link
           href="/home"
           color="pink"
@@ -162,6 +163,26 @@ const Header = () => {
               </Dropdown.Item>
             </Dropdown>
           )}
+        </Navbar.Link>
+        <Navbar.Link className="block md:hidden">
+          <Dropdown
+            arrowIcon={true}
+            inline={true}
+            label={
+              <div
+                className={`text-lg font-bold ${
+                  currPageMatches("/assistants") ||
+                  currPageMatches("/manage-waivers")
+                    ? "text-red-600"
+                    : "text-gray-600"
+                }`}
+              >
+                Profile Settings
+              </div>
+            }
+          >
+            {dropdownItems}
+          </Dropdown>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>
