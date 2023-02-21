@@ -9,6 +9,7 @@ import {
   Input,
   FormGroup,
 } from "reactstrap";
+import { Button as ButtonFB } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
@@ -166,32 +167,17 @@ const EventWaiverModal = ({
         <>
           <Styled.Row>
             <React.Fragment>
-              <Link href={`/events/${eventId}/register`}>
-                <Styled.Tab>
-                  <Styled.PrimaryText onClick={onGuardianClicked}>
-                    Guardian
-                  </Styled.PrimaryText>
-                  <IconSpecial
-                    width="8"
-                    height="8"
-                    viewBox="0 0 8 8"
-                    name="highlightTab"
-                  />
-                </Styled.Tab>
-              </Link>
-              <Link href={`/events/${eventId}/register`}>
-                <Styled.SecondaryTab>
-                  <Styled.PrimaryText onClick={onMinorsClicked}>
-                    Minors
-                  </Styled.PrimaryText>
-                  <IconSpecial
-                    width="8"
-                    height="8"
-                    viewBox="0 0 8 8"
-                    name="highlightTab"
-                  />
-                </Styled.SecondaryTab>
-              </Link>
+              <ButtonFB.Group
+                outline={true}
+                className="flex flex-wrap items-center gap-2"
+              >
+                <ButtonFB color="gray" onClick={onGuardianClicked}>
+                  Guardian
+                </ButtonFB>
+                <ButtonFB color="gray" onClick={onMinorsClicked}>
+                  Minor
+                </ButtonFB>
+              </ButtonFB.Group>
             </React.Fragment>
           </Styled.Row>
           {!isRegistered && (
