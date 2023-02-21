@@ -10,6 +10,9 @@ import {
   FormGroup,
 } from "reactstrap";
 import PropTypes from "prop-types";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { getWaivers } from "../../../actions/queries";
 import { Col, Row, Container } from "reactstrap";
 import variables from "../../../design-tokens/_variables.module.scss";
 import IconSpecial from "../../../components/IconSpecial";
@@ -72,6 +75,13 @@ const Styled = {
   Button: styled(Button)`
     margin-left: 1rem;
   `,
+  WaiverBox: styled.p`
+    border: 0.1rem solid ${variables["gray-200"]};
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.7rem;
+  `,
 };
 
 const EventWaiverModal = ({
@@ -82,6 +92,10 @@ const EventWaiverModal = ({
   eventId,
   isRegistered,
 }) => {
+  const {
+    data: { user },
+  } = useSession();
+
   const [showGuardian, setShowGuardian] = useState(true);
 
   const [waiverCheckboxSelected, setWaiverCheckboxSelected] = useState(false);
@@ -113,9 +127,27 @@ const EventWaiverModal = ({
   };
 
   const [showMe, setShowMe] = useState(false);
-  const togglePdf = () => {
-    setShowMe((prev) => !prev);
+
+  const [adultContent, setAdultContent] = useState("");
+  const [minorContent, setMinorContent] = useState("");
+
+  const loadWaivers = async () => {
+    const adult = await getWaivers("adult", user.organizationId);
+
+    if (adult.data.waiver.length > 0) {
+      setAdultContent(adult.data.waiver[0].text);
+    }
+
+    const minor = await getWaivers("minor", user.organizationId);
+
+    if (minor.data.waiver.length > 0) {
+      setMinorContent(minor.data.waiver[0].text);
+    }
   };
+
+  useEffect(() => {
+    loadWaivers();
+  }, []);
 
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
@@ -127,172 +159,76 @@ const EventWaiverModal = ({
         )}
       </Styled.ModalHeader>
       <Styled.Row />
-      {hasMinor && isRegistered && (
-        <React.Fragment>
+
+      {hasMinor ? (
+        <>
           <Styled.Row>
-            {showGuardian && (
-              <React.Fragment>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.Tab>
-                    <Styled.PrimaryText onClick={onGuardianClicked}>
-                      Guardian
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.Tab>
-                </Link>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.SecondaryTab>
-                    <Styled.PrimaryText onClick={onMinorsClicked}>
-                      Minors
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.SecondaryTab>
-                </Link>
-              </React.Fragment>
-            )}
-            {!showGuardian && isRegistered && (
-              <React.Fragment>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.SecondaryTab>
-                    <Styled.PrimaryText onClick={onGuardianClicked}>
-                      Guardian
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.SecondaryTab>
-                </Link>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.Tab>
-                    <Styled.PrimaryText onClick={onMinorsClicked}>
-                      Minors
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.Tab>
-                </Link>
-              </React.Fragment>
-            )}
+            <React.Fragment>
+              <Link href={`/events/${eventId}/register`}>
+                <Styled.Tab>
+                  <Styled.PrimaryText onClick={onGuardianClicked}>
+                    Guardian
+                  </Styled.PrimaryText>
+                  <IconSpecial
+                    width="8"
+                    height="8"
+                    viewBox="0 0 8 8"
+                    name="highlightTab"
+                  />
+                </Styled.Tab>
+              </Link>
+              <Link href={`/events/${eventId}/register`}>
+                <Styled.SecondaryTab>
+                  <Styled.PrimaryText onClick={onMinorsClicked}>
+                    Minors
+                  </Styled.PrimaryText>
+                  <IconSpecial
+                    width="8"
+                    height="8"
+                    viewBox="0 0 8 8"
+                    name="highlightTab"
+                  />
+                </Styled.SecondaryTab>
+              </Link>
+            </React.Fragment>
           </Styled.Row>
-        </React.Fragment>
-      )}
-      {hasMinor && !isRegistered && (
-        <React.Fragment>
-          <Styled.Row>
-            <Styled.HighlightText>
-              Before you can finish registration. Please review the following
-              waivers for yourself and your accompanying minors.
-            </Styled.HighlightText>
-          </Styled.Row>
-          <Styled.Row>
-            {showGuardian && (
-              <React.Fragment>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.Tab>
-                    <Styled.PrimaryText onClick={onGuardianClicked}>
-                      Guardian
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.Tab>
-                </Link>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.SecondaryTab>
-                    <Styled.PrimaryText onClick={onMinorsClicked}>
-                      Minors
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.SecondaryTab>
-                </Link>
-              </React.Fragment>
-            )}
-            {!showGuardian && !isRegistered && (
-              <React.Fragment>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.SecondaryTab>
-                    <Styled.PrimaryText onClick={onGuardianClicked}>
-                      Guardian
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.SecondaryTab>
-                </Link>
-                <Link href={`/events/${eventId}/register`}>
-                  <Styled.Tab>
-                    <Styled.PrimaryText onClick={onMinorsClicked}>
-                      Minors
-                    </Styled.PrimaryText>
-                    <IconSpecial
-                      width="8"
-                      height="8"
-                      viewBox="0 0 8 8"
-                      name="highlightTab"
-                    />
-                  </Styled.Tab>
-                </Link>
-              </React.Fragment>
-            )}
-          </Styled.Row>
-        </React.Fragment>
-      )}
-      {!hasMinor && !isRegistered && (
-        <Styled.Row>
-          <Styled.HighlightText>
-            Before you can finish registration. Please review the following
-            waiver. <br></br>If you are under 18, the waiver must be signed by
-            your parent.
-          </Styled.HighlightText>
-        </Styled.Row>
+          {!isRegistered && (
+            <Styled.Row>
+              <Styled.HighlightText>
+                Before you can finish registration. Please review the following
+                waivers for yourself and your accompanying minors.
+              </Styled.HighlightText>
+            </Styled.Row>
+          )}
+
+          {showGuardian && (
+            <Styled.WaiverBox>
+              <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+            </Styled.WaiverBox>
+          )}
+          {!showGuardian && (
+            <Styled.WaiverBox>
+              <div dangerouslySetInnerHTML={{ __html: minorContent }} />
+            </Styled.WaiverBox>
+          )}
+        </>
+      ) : (
+        <>
+          {!isRegistered && (
+            <Styled.Row>
+              <Styled.HighlightText>
+                Before you can finish registration. Please review the following
+                waiver.
+              </Styled.HighlightText>
+            </Styled.Row>
+          )}
+
+          <Styled.WaiverBox>
+            <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+          </Styled.WaiverBox>
+        </>
       )}
 
-      <Styled.Row>
-        <Styled.MainButton onClick={togglePdf}>
-          <IconSpecial width="25" height="24" viewBox="0 0 25 24" name="link" />
-          Read Waiver
-        </Styled.MainButton>
-        <Styled.Row
-          style={{
-            display: showMe ? "block" : "none",
-          }}
-        >
-          <iframe
-            style={{ width: "563px", height: "666px" }}
-            src={showGuardian ? "/files/adult.pdf" : "/files/minor.pdf"}
-            type="application/pdf"
-            title="title"
-          />
-        </Styled.Row>
-      </Styled.Row>
       {showGuardian && !isRegistered && (
         <Styled.Row>
           <FormGroup check>
