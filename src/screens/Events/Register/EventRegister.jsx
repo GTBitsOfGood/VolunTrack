@@ -19,7 +19,7 @@ const Styled = {
     background-color: ${variables["gray-100"]};
     overflow-y: scroll;
     overflow-x: hidden;
-    font-family: "Aktiv Grotesk";
+    padding-top: 2rem;
   `,
   Row: styled(Row)`
     margin: 0 2rem 0.5rem 2rem;
@@ -292,8 +292,18 @@ const EventRegister = (event) => {
     setEvents(changedEvent);
   };
 
+  const goBackToDetails = () => {
+    router.replace(`/events/${eventId}`);
+  };
+
   return (
     <Styled.Container fluid="md">
+      <Button
+        className="w-24 mt-2 ml-5 text-white"
+        onClick={() => goBackToDetails()}
+      >
+        Back
+      </Button>
       <Styled.Title />
       {!isRegistered && (
         <Styled.Row>
