@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
 import { updateEvent } from "../screens/Events/eventHelpers";
 
-const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
+const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
   const handleSubmit = () => {
     onUnregisterClicked(eventData)
       .then(() => {
@@ -23,7 +22,7 @@ const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
 
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static">
-      <ModalHeader toggle={toggle}></ModalHeader>
+      <ModalHeader toggle={toggle} />
       <ModalBody>
         Are you sure you want to cancel your registration for this event?
       </ModalBody>
@@ -39,10 +38,10 @@ const EventUnRegisterModal = ({ open, toggle, eventData, userId }) => {
   );
 };
 
-EventUnRegisterModal.propTypes = {
+EventUnregisterModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   eventData: PropTypes.object.isRequired,
   userId: PropTypes.object.isRequired,
 };
-export default EventUnRegisterModal;
+export default EventUnregisterModal;
