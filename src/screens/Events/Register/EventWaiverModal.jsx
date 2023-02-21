@@ -77,8 +77,10 @@ const Styled = {
   `,
   WaiverBox: styled.p`
     border: 0.1rem solid ${variables["gray-200"]};
-    border-radius: 0.5rem;
+    border-radius: 5px;
     padding: 1rem;
+    margin-left: 10px;
+    margin-right: 10px;
     margin-bottom: 1rem;
     font-size: 0.7rem;
   `,

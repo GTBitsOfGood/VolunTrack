@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 import { Button } from "flowbite-react";
 import variables from "../../design-tokens/_variables.module.scss";
 import styled from "styled-components";
+import { Tabs } from "flowbite-react";
 import { getWaivers } from "../../actions/queries";
+
 import { uploadWaiver } from "../../actions/queries";
 import "react-quill/dist/quill.snow.css";
 
@@ -125,6 +127,7 @@ const WaiverManager = () => {
 
   const [adultContent, setAdultContent] = useState("");
   const [minorContent, setMinorContent] = useState("");
+  const [onAdultTab, setTab] = useState(true);
 
   const loadWaivers = async () => {
     const adult = await getWaivers("adult", user.organizationId);
@@ -152,50 +155,66 @@ const WaiverManager = () => {
     uploadWaiver("minor", minorContent, user.organizationId);
   };
 
+  const setAdultTab = () => {
+    setTab(true);
+  };
+  const setMinorTab = () => {
+    setTab(false);
+  };
+
   return (
     <WaiversContainer>
-      <h2>Manage Waivers</h2>
-      {/* <Tabs.Group
-    aria-label="Default tabs"
-    style="default"
-  >
-    <Tabs.Item
-      active={true}
-      title="Adult Waiver" 
-    >
-      Profile content
-    </Tabs.Item>
-    <Tabs.Item title="Minor Waiver">
-      Dashboard content
-    </Tabs.Item>
-  </Tabs.Group> */}
-      Adult Waiver
+      <h2>
+        <b>Manage Waivers</b>
+      </h2>
       <div>
-        <ReactQuill
-          value={adultContent}
-          onChange={(newValue) => {
-            setAdultContent(newValue);
-          }}
-          ref={quill}
-        />
+        <Button.Group
+          outline={true}
+          className="flex flex-wrap items-center gap-2"
+        >
+          <Button color="gray" onClick={setAdultTab}>
+            Adult Waiver
+          </Button>
+          <Button color="gray" onClick={setMinorTab}>
+            Minor Waiver
+          </Button>
+        </Button.Group>
       </div>
-      <Button gradientMonochrome="pink" onClick={submitAdult}>
-        Save
-      </Button>
-      <br></br>
-      Minor Waiver
-      <div>
-        <ReactQuill
-          value={minorContent}
-          onChange={(newValue) => {
-            setMinorContent(newValue);
-          }}
-          ref={quill}
-        />
-      </div>
-      <Button gradientMonochrome="pink" onClick={submitMinor}>
-        Save
-      </Button>
+
+      {onAdultTab ? (
+        <>
+          <br></br>
+          <div className="bg-white max-w-xl mb-2">
+            <ReactQuill
+              value={adultContent}
+              onChange={(newValue) => {
+                setAdultContent(newValue);
+              }}
+              ref={quill}
+            />
+          </div>
+          <Button gradientMonochrome="pink" onClick={submitAdult}>
+            Save
+          </Button>
+        </>
+      ) : (
+        <>
+          <br></br>
+
+          <div className="bg-white max-w-xl mb-2">
+            <ReactQuill
+              value={minorContent}
+              onChange={(newValue) => {
+                setMinorContent(newValue);
+              }}
+              ref={quill}
+            />
+          </div>
+          <Button gradientMonochrome="pink" onClick={submitMinor}>
+            Save
+          </Button>
+        </>
+      )}
     </WaiversContainer>
   );
 };
