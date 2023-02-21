@@ -49,31 +49,31 @@ const Header = () => {
   const currPageMatches = (page) => router.pathname === page;
 
   return (
-    <Navbar fluid={true} rounded={true}>
+    <Navbar fluid={true} rounded={true} class="my-0 bg-white">
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img
           src="/images/helping_mamas_logo.png"
           alt="helping mamas logo"
-          className="h-12 w-60"
+          className="h-14"
         />
       </Navbar.Brand>
-      <div className="flex md:order-2">
+      <div className="flex mr-2 md:order-2">
         <Dropdown
           arrowIcon={true}
           inline={true}
           label={
-            <div className="mr-48">
+            <div className="flex">
               <Avatar
                 img={user.imageUrl ?? "/images/gradient-avatar.png"}
                 alt="icon"
                 rounded={true}
               />
-              <p
-                style={{ margin: "0px" }}
-              >{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-              <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
-                user.role ?? ""
-              )}`}</p>
+              <div className="flex flex-col gap-0 text-left ml-3">
+                <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                <p className="mb-0">{`${capitalizeFirstLetter(
+                  user.role ?? ""
+                )}`}</p>
+              </div>
             </div>
           }
         >
@@ -100,8 +100,9 @@ const Header = () => {
       <Navbar.Collapse isOpen={isOpen}>
         <Navbar.Link
           href="/home"
+          color="pink"
           className={`text-lg font-bold ${
-            currPageMatches("/home") ? "text-red-600" : "text-gray-600"
+            currPageMatches("/home") ? "text-red-800" : "text-gray-600"
           }`}
         >
           Home
@@ -110,7 +111,7 @@ const Header = () => {
           <Navbar.Link
             href="/volunteers"
             className={`text-lg font-bold ${
-              currPageMatches("/volunteers") ? "text-red-600" : "text-gray-600"
+              currPageMatches("/volunteers") ? "text-red-800" : "text-gray-600"
             }`}
           >
             Volunteers
@@ -119,7 +120,7 @@ const Header = () => {
         <Navbar.Link
           href="/events"
           className={`text-lg font-bold ${
-            currPageMatches("/events") ? "text-red-600" : "text-gray-600"
+            currPageMatches("/events") ? "text-red-800" : "text-gray-600"
           }`}
         >
           Events
@@ -129,7 +130,7 @@ const Header = () => {
             onClick={goToStats}
             href="/stats"
             className={`text-lg font-bold ${
-              currPageMatches("/stats") ? "text-red-600" : "text-gray-600"
+              currPageMatches("/stats") ? "text-red-800" : "text-gray-600"
             }`}
           >
             Participation History
