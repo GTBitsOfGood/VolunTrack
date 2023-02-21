@@ -1,13 +1,13 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
+import { useRef } from "react";
 import { useEffect, useState } from "react";
-import { Button } from "reactstrap";
-import Icon from "../../components/Icon";
-import router from "next/router";
+import { Button } from "flowbite-react";
 import variables from "../../design-tokens/_variables.module.scss";
 import styled from "styled-components";
 import { getWaivers } from "../../actions/queries";
-import Waiver from "./Waiver";
+import { uploadWaiver } from "../../actions/queries";
+import "react-quill/dist/quill.snow.css";
 
 const WaiversContainer = styled.div`
   min-width: 60%;
@@ -112,103 +112,90 @@ function authWrapper(Component) {
 }
 
 const WaiverManager = () => {
-  const [waivers, setWaivers] = useState({});
-  const [adultExists, setAdult] = useState(true);
-  const [minorExists, setMinor] = useState(true);
-  const [adultWaiver, setAdultWaiver] = useState(null);
-  const [minorWaiver, setMinorWaiver] = useState(null);
-  const [user, setUser] = useState(null);
-
-  // const getAndSetWaivers = async () => {
-  //   const res = await getWaivers();
-  //   setWaivers(res.data);
-  // };
-
-  if (!user) {
-    const { data: session } = useSession();
-    setUser(session.user);
+  let ReactQuill;
+  // patch for build failure
+  if (typeof window !== "undefined") {
+    ReactQuill = require("react-quill");
   }
+  const quill = useRef(null);
 
-  // const onRefresh = () => {
-  //   loadWaivers();
-  // };
+  const {
+    data: { user },
+  } = useSession();
+
+  const [adultContent, setAdultContent] = useState("");
+  const [minorContent, setMinorContent] = useState("");
 
   const loadWaivers = async () => {
     const adult = await getWaivers("adult", user.organizationId);
-    setAdultWaiver(adult);
 
-    const minor = await getWaivers("adult", user.organizationId);
-    setMinorWaiver(minor);
+    if (adult.data.waiver.length > 0) {
+      setAdultContent(adult.data.waiver[0].text);
+    }
+
+    const minor = await getWaivers("minor", user.organizationId);
+
+    if (minor.data.waiver.length > 0) {
+      setMinorContent(minor.data.waiver[0].text);
+    }
   };
 
-  const editWaiver = async () => {
-    await router.push(`${router.pathname}/edit`);
+  useEffect(() => {
+    loadWaivers();
+  }, []);
+
+  const submitAdult = (values, setSubmitting) => {
+    uploadWaiver("adult", adultContent, user.organizationId);
   };
 
-  // useEffect(() => {
-  //   getAndSetWaivers();
-  // }, []);
+  const submitMinor = (values, setSubmitting) => {
+    uploadWaiver("minor", minorContent, user.organizationId);
+  };
 
   return (
     <WaiversContainer>
       <h2>Manage Waivers</h2>
-
-      <WaiverContainer>
-        {adultExists ? (
-          <>
-            <WaiverUploadContainer>
-              <WaiverHeader>Adult Waiver</WaiverHeader>
-              <WaiverUploadForm>
-                <SubmitButton type="editPage" onClick={editWaiver}>
-                  Edit Waiver
-                </SubmitButton>
-                <SubmitButton type="delete">Delete Waiver</SubmitButton>
-              </WaiverUploadForm>
-            </WaiverUploadContainer>
-          </>
-        ) : (
-          <>
-            <WaiverUploadContainer>
-              <WaiverHeader>Adult Waiver</WaiverHeader>
-              <WaiverUploadForm>
-                <SubmitButton type="editPage">+ Click to Add</SubmitButton>
-              </WaiverUploadForm>
-            </WaiverUploadContainer>
-          </>
-        )}
-      </WaiverContainer>
-
-      <WaiverContainer>
-        {minorExists ? (
-          <>
-            <WaiverUploadContainer>
-              <WaiverHeader>Minor Waiver</WaiverHeader>
-              <WaiverUploadForm>
-                <SubmitButton type="editPage">Edit Waiver</SubmitButton>
-                <SubmitButton type="delete">Delete Waiver</SubmitButton>
-              </WaiverUploadForm>
-            </WaiverUploadContainer>
-          </>
-        ) : (
-          <>
-            <WaiverUploadContainer>
-              <WaiverHeader>Adult Waiver</WaiverHeader>
-              <WaiverUploadForm>
-                <SubmitButton type="editPage">+ Click to Add</SubmitButton>
-              </WaiverUploadForm>
-            </WaiverUploadContainer>
-          </>
-        )}
-      </WaiverContainer>
-
-      {/* <Waiver
-        waiver={{ adult: waivers.adult }}
-        updateWaivers={getAndSetWaivers}
-      />
-      <Waiver
-        waiver={{ minor: waivers.minor }}
-        updateWaivers={getAndSetWaivers}
-      /> */}
+      {/* <Tabs.Group
+    aria-label="Default tabs"
+    style="default"
+  >
+    <Tabs.Item
+      active={true}
+      title="Adult Waiver" 
+    >
+      Profile content
+    </Tabs.Item>
+    <Tabs.Item title="Minor Waiver">
+      Dashboard content
+    </Tabs.Item>
+  </Tabs.Group> */}
+      Adult Waiver
+      <div>
+        <ReactQuill
+          value={adultContent}
+          onChange={(newValue) => {
+            setAdultContent(newValue);
+          }}
+          ref={quill}
+        />
+      </div>
+      <Button gradientMonochrome="pink" onClick={submitAdult}>
+        Save
+      </Button>
+      <br></br>
+      Minor Waiver
+      <div>
+        <ReactQuill
+          value={minorContent}
+          onChange={(newValue) => {
+            setMinorContent(newValue);
+          }}
+          ref={quill}
+        />
+      </div>
+      <Button gradientMonochrome="pink" onClick={submitMinor}>
+        Save
+      </Button>
     </WaiversContainer>
   );
 };
