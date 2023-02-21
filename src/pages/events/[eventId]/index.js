@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
-import { updateEvent } from "../../../screens/Events/eventHelpers";
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
 
 const Styled = {
   Button: styled(Button)`
@@ -126,6 +126,8 @@ const EventInfo = () => {
   const user = session.user;
   const context = useContext(RequestContext);
 
+  const [showUnregisterModal, setUnregisterModal] = useState(false);
+
   const onRefresh = () => {
     fetchEventsById(eventId).then((result) => {
       setEvent(result.data.event);
@@ -156,15 +158,12 @@ const EventInfo = () => {
     router.push(`${eventId}/statistics`);
   };
 
-  const onUnregisterClicked = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    await updateEvent(changedEvent);
+  const onUnregisterClicked = () => {
+    setUnregisterModal(true);
+  };
+
+  const toggleUnregisterModal = () => {
+    setUnregisterModal((prev) => !prev);
 
     onRefresh();
   };
@@ -183,6 +182,7 @@ const EventInfo = () => {
   const futureorTodaysDate =
     Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 86400000 <=
     Date.parse(event.date);
+
   return (
     <>
       <Styled.EventTableAll>
@@ -350,6 +350,12 @@ const EventInfo = () => {
               You are registered for this event!
             </Styled.Button>
           )}
+        <EventUnregisterModal
+          open={showUnregisterModal}
+          toggle={toggleUnregisterModal}
+          eventData={event}
+          userId={user._id}
+        />
       </Styled.EventTableAll>
     </>
   );
