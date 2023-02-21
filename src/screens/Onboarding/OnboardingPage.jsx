@@ -1,7 +1,7 @@
-import { Field, Formik } from "formik";
-import React, { useContext } from "react";
+import { Field, Formik, ErrorMessage } from "formik";
+import React from "react";
 import Image from "next/image";
-import { Label as Label, TextInput, Button } from "flowbite-react";
+import { Label, TextInput, Button } from "flowbite-react";
 import styled from "styled-components";
 import InputField from "../../components/Forms/InputField";
 import { createOrganizationValidator } from "./helpers";
@@ -47,6 +47,19 @@ const Styled = {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
+  `,
+  ErrorMessage: styled(ErrorMessage).attrs({
+    component: "span",
+  })`
+    ::before {
+      content: "*";
+    }
+    color: #ef4e79;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 0px;
+    padding-top: 0px;
+    display: inline-block;
   `,
 };
 
@@ -224,7 +237,7 @@ class OnboardingPage extends React.Component {
                   </Field>
                   <Styled.ErrorMessage name="organization_code" />
                 </div>
-                <div className="m-auto flex justify-center">
+                <div className=" mt-6 flex justify-center">
                   <Button
                     className="bg-pink-600"
                     type="submit"
