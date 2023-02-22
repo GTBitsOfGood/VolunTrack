@@ -176,10 +176,7 @@ class Assistants extends React.Component {
       role: "admin-assistant",
     }));
     const allUsers = users.concat(modifiedInvitedAdmins);
-    const start = currentPage * PAGE_SIZE;
-    return this.filteredAndSortedAdmins(
-      allUsers.slice(start, start + PAGE_SIZE)
-    );
+    return this.filteredAndSortedAdmins(allUsers);
   };
 
   onEditUser = () => {
@@ -271,7 +268,7 @@ class Assistants extends React.Component {
           <Styled.TableUsers>
             <AssistantTable
               sessionUser={this.props.user}
-              users={this.state.users}
+              users={this.getUsersAtPage()}
               invitedAdmins={this.state.invitedAdmins}
               // invitedAdmins={["test"]}
               loading={loadingMoreUsers}
