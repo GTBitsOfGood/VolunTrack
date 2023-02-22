@@ -1,40 +1,6 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
-import styled from "styled-components";
 import { Table } from "flowbite-react";
-
-const Styled = {
-  EventName: styled.div`
-    font-size: 15px;
-    text-align: center;
-    margin-right: 10px;
-    width: 30%;
-  `,
-  Date: styled.div`
-    font-size: 15px;
-    text-align: center;
-    margin-right: 10px;
-    width: 20%;
-  `,
-  Time: styled.div`
-    font-size: 15px;
-    text-align: center;
-    margin-right: 10px;
-    width: 25%;
-  `,
-  Attendance: styled.div`
-    font-size: 15px;
-    text-align: center;
-    margin-right: 10px;
-    width: 15%;
-  `,
-  Hours: styled.div`
-    font-size: 15px;
-    text-align: center;
-    margin-right: 10px;
-    width: 15%;
-  `,
-};
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -62,25 +28,15 @@ const EventStatsTable = ({ events, isVolunteer }) => {
           events.map((event) => (
             <Table.Row key={event._id}>
               <Table.Cell>
-                <Link href={`events/${event._id}`}>
-                  <Styled.EventName>{event.title}</Styled.EventName>
-                </Link>
+                <Link href={`events/${event._id}`}>{event.title}</Link>
               </Table.Cell>
+              <Table.Cell>{event.date.substring(0, 10)}</Table.Cell>
               <Table.Cell>
-                <Styled.Date>{event.date.substring(0, 10)}</Styled.Date>
+                {convertTime(event.startTime)} - {convertTime(event.endTime)}{" "}
+                {event.localTime}
               </Table.Cell>
-              <Table.Cell>
-                <Styled.Time>
-                  {convertTime(event.startTime)} - {convertTime(event.endTime)}{" "}
-                  {event.localTime}
-                </Styled.Time>
-              </Table.Cell>
-              <Table.Cell>
-                <Styled.Attendance>{event.attendance}</Styled.Attendance>
-              </Table.Cell>
-              <Table.Cell>
-                <Styled.Hours>{event.hours}</Styled.Hours>
-              </Table.Cell>
+              <Table.Cell>{event.attendance}</Table.Cell>
+              <Table.Cell>{event.hours}</Table.Cell>
             </Table.Row>
           ))}
       </Table.Body>
