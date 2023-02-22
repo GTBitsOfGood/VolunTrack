@@ -32,9 +32,6 @@ const Styled = {
     height: 100%;
     margin: auto;
   `,
-  ul: styled.ul`
-    list-style-type: none;
-  `,
 };
 
 class AssistantTable extends React.Component {

@@ -21,20 +21,6 @@ const Styled = {
     margin: auto;
     margin-bottom: 70px;
   `,
-  ul: styled.div`
-    display: flex;
-    flex-direction: column;
-    list-style-type: none;
-  `,
-  Heading: styled.div`
-    display: flex;
-    flex-direction: column;
-    list-style-type: none;
-    font-size: 27px;
-    font-weight: bold;
-    padding: 5px;
-  `,
-  List: styled.li``,
   Buttons: styled.div`
     flex-direction: row;
   `,
@@ -47,7 +33,6 @@ const Styled = {
   DeleteButton: styled(Button)`
     background: none;
     border: none;
-
     margin: 0 0 0 auto;
   `,
 };

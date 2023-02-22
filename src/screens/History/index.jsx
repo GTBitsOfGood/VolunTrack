@@ -24,12 +24,6 @@ const Styled = {
     display: flex;
     justify-content: space-between;
   `,
-  CheckedInData: styled.p`
-    margin: 0;
-
-    font-size: 2rem;
-    vertical-align: top;
-  `,
   Search: styled.input`
     height: 3rem;
     width: 100%;
