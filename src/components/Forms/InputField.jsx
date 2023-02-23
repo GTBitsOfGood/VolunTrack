@@ -18,6 +18,7 @@ const InputField = (props) => (
           {...field}
           type={props.type ?? "text"}
           placeholder={props.placeholder}
+          disabled={props.disabled}
         />
       )}
     </Field>
@@ -34,6 +35,7 @@ InputField.propTypes = {
   label: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   isRequired: PropTypes.bool,
+  disabled: PropTypes.bool,
   type: PropTypes.string,
 };
 

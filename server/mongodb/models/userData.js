@@ -43,7 +43,6 @@ const userDataSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
       default: mongoose.Types.ObjectId("63d6dcc4e1fb5fd6e69b1738"),
-
     },
   },
   {
