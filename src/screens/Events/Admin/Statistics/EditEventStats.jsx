@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import { ErrorMessage, Form as FForm } from "formik";
 import { Modal, ModalHeader } from "reactstrap";
-import { Form as FForm, ErrorMessage } from "formik";
+import styled from "styled-components";
 
 import PropTypes from "prop-types";
-import EditEventStatsForm from "./EditEventStatsForm";
 import variables from "../../../../design-tokens/_variables.module.scss";
+import EditEventStatsForm from "./EditEventStatsForm";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -59,7 +59,7 @@ const EditEventStats = ({ open, toggle, event }) => {
 EditEventStats.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object,
 };
 
 export default EditEventStats;

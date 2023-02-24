@@ -176,7 +176,7 @@ const EditEventStatsForm = ({ toggle, event }) => {
 };
 
 EditEventStatsForm.propTypes = {
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object,
   toggle: PropTypes.func.isRequired,
 };
 

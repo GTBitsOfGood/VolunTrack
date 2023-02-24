@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import {
-  getAttendanceForEvent,
   fetchEventsById,
+  getAttendanceForEvent,
 } from "../../../../actions/queries";
 import EventTable from "../../../../components/EventTable";
-import styled from "styled-components";
-import EventStatsDeleteModal from "./EventStatsDeleteModal";
 import EditEventStats from "./EditEventStats";
+import EventStatsDeleteModal from "./EventStatsDeleteModal";
 
 const Styled = {
   Container: styled.div`
