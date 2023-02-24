@@ -201,7 +201,9 @@ class AssistantTable extends React.Component {
                         : user.role.charAt(0).toUpperCase() +
                           user.role.slice(1)}
                     </td>
-                    {!invitedAdmins.includes(user.email) ? (
+                    {!invitedAdmins
+                      .map((a) => a.toLowerCase())
+                      .includes(user.email.toLowerCase()) ? (
                       <td>
                         <Styled.Button
                           onClick={() => this.onDisplayEditUserModal(user)}
