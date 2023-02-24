@@ -1,6 +1,5 @@
-import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import React from "react";
 import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { updateAttendance } from "../../../../actions/queries";
@@ -10,7 +9,7 @@ import { timeValidator } from "../eventHelpers";
 
 const Styled = {
   Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
+  ErrorMessage: styled.div.attrs({
     component: "span",
   })`
     ::before {
@@ -21,6 +20,7 @@ const Styled = {
     font-weight: bold;
     display: inline-block;
   `,
+
   Col: styled(Col)`
     padding: 5px;
     padding-bottom: 3px;
@@ -70,101 +70,108 @@ const EditEventStatsForm = ({ toggle, event }) => {
         onSubmitEditEvent(values, setSubmitting);
       }}
       validationSchema={timeValidator}
-      render={({ handleSubmit, isValid, isSubmitting }) => (
-        <React.Fragment>
-          <Styled.ModalBody>
-            <Styled.Form>
-              <SForm.FormGroup>
-                <Row>
-                  <Col>
-                    <Row
-                      style={{
-                        padding: "5px",
-                        fontWeight: "bold",
-                        color: "gray",
-                      }}
-                    >
-                      Event Information
-                    </Row>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Name</SForm.Label>
-                        <Field name="name">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="text"
-                              disabled={true}
-                            />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Email</SForm.Label>
-                        <Field name="email">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="text"
-                              disabled={true}
-                            />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Check In Time</SForm.Label>
-                        <Field name="checkin">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field>
-                        <Styled.ErrorMessage name="checkin" />
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Check Out Time</SForm.Label>
-                        <Field name="checkout">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field>
-                        <Styled.ErrorMessage name="checkout" />
-                      </Styled.Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </SForm.FormGroup>
-            </Styled.Form>
-          </Styled.ModalBody>
-          <ModalFooter>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              style={{
-                backgroundColor: "transparent",
-                borderColor: "transparent",
-                color: variables["event-text"],
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              color="primary"
-              onClick={handleSubmit}
-              disabled={!isValid || isSubmitting}
-              style={{
-                backgroundColor: "ef4e79",
-                borderColor: "ef4e79",
-                // backgroundColor: variables["button-pink"],
-                // borderColor: variables["button-pink"],
-                marginLeft: "4rem",
-              }}
-            >
-              Update
-            </Button>
-          </ModalFooter>
-        </React.Fragment>
-      )}
-    />
+    >
+      {({ handleSubmit, isValid, isSubmitting, errors, touched, values }) => {
+        return (
+          <>
+            <Styled.ModalBody>
+              <Styled.Form>
+                <SForm.FormGroup>
+                  <Row>
+                    <Col>
+                      <Row
+                        style={{
+                          padding: "5px",
+                          fontWeight: "bold",
+                          color: "gray",
+                        }}
+                      >
+                        Event Information
+                      </Row>
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>Name</SForm.Label>
+                          <Field name="name">
+                            {({ field }) => (
+                              <SForm.Input
+                                {...field}
+                                type="text"
+                                disabled={true}
+                              />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Email</SForm.Label>
+                          <Field name="email">
+                            {({ field }) => (
+                              <SForm.Input
+                                {...field}
+                                type="text"
+                                disabled={true}
+                              />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Check In Time</SForm.Label>
+                          <Field name="checkin">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="time" step="1" />
+                            )}
+                          </Field>
+                          {errors.checkin &&
+                            (touched.checkin || touched.checkout) && (
+                              <Styled.ErrorMessage>
+                                {errors.checkin}
+                              </Styled.ErrorMessage>
+                            )}
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Check Out Time</SForm.Label>
+                          <Field name="checkout">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="time" step="1" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </SForm.FormGroup>
+              </Styled.Form>
+            </Styled.ModalBody>
+            <ModalFooter>
+              <Button
+                color="secondary"
+                onClick={toggle}
+                style={{
+                  backgroundColor: "transparent",
+                  borderColor: "transparent",
+                  color: variables["event-text"],
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="primary"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+                style={{
+                  backgroundColor: "ef4e79",
+                  borderColor: "ef4e79",
+                  // backgroundColor: variables["button-pink"],
+                  // borderColor: variables["button-pink"],
+                  marginLeft: "4rem",
+                }}
+              >
+                Update
+              </Button>
+            </ModalFooter>
+          </>
+        );
+      }}
+    </Formik>
   );
 };
 

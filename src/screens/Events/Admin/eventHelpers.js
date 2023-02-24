@@ -83,9 +83,4 @@ export const timeValidator = object().shape({
     "checkin time needs to be before checkout time",
     (value, context) => value < context.parent.checkout
   ),
-  checkout: string().test(
-    "checkout-time-after-checkin",
-    "checkout time needs to be after checkin",
-    (value, context) => value > context.parent.checkin
-  ),
 });
