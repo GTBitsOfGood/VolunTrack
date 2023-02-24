@@ -2,6 +2,7 @@ import "focus-visible/dist/focus-visible.min.js";
 import { SessionProvider } from "next-auth/react";
 import "normalize.css";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 import styled from "styled-components";
 import "../../public/static/styles/App.css";
 import "../../public/static/styles/bootstrap.min.css";
@@ -10,6 +11,8 @@ import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
 import StyleProvider from "../providers/StyleProvider";
+import { baseTheme } from "../themes/themes";
+import { applyTheme } from "../themes/utils";
 
 const Styled = {
   Container: styled.div`
@@ -26,6 +29,10 @@ const Styled = {
 };
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
+  useEffect(() => {
+    applyTheme(baseTheme);
+  }, []);
+
   return (
     <SessionProvider session={session}>
       <script
