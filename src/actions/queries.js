@@ -107,9 +107,13 @@ export const getHistoryEvents = (organizationId) =>
   axios.get(`/api/historyEvents?organizationId=${organizationId}`);
 
 // Organization Queries
-
-export const updateOrganizationData = (organizationId) =>
-  axios.get(`/api/settings/getInvitedAdmin?organizationId=${organizationId}`);
+export const updateOrganizationData = (organizationId, organizationData) =>
+  axios.put(
+    `/api/settings/organizationSettings?organizationId=${organizationId}`,
+    { organizationData }
+  );
 
 export const getOrganizationData = (organizationId) =>
-  axios.get(`/api/settings/getInvitedAdmin?organizationId=${organizationId}`);
+  axios.get(
+    `/api/settings/organizationSettings?organizationId=${organizationId}`
+  );

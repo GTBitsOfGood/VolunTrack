@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { getWaivers } from "../../actions/queries";
 import Waiver from "./Waiver";
 
-
 function authWrapper(Component) {
   return function WrappedComponent(props) {
     const {
@@ -25,11 +24,7 @@ function authWrapper(Component) {
 }
 
 const WaiverManager = () => {
-  
-
-  return (
-    Hello
-  );
+  return "Hello";
 };
 
 export default authWrapper(WaiverManager);
