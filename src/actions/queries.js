@@ -105,3 +105,6 @@ export const updateAttendance = (id, newData) =>
 
 export const getHistoryEvents = (organizationId) =>
   axios.get(`/api/historyEvents?organizationId=${organizationId}`);
+
+export const createOrganization = (organization) =>
+  axios.post(`/api/organizations`, organization);
