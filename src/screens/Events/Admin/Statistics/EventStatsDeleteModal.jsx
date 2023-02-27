@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { deleteAttendance } from "../../../../actions/queries";
 
 const EventStatsDeleteModal = ({ open, toggle, event }) => {
@@ -37,6 +37,6 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
 EventStatsDeleteModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object,
 };
 export default EventStatsDeleteModal;

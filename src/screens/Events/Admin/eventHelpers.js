@@ -1,4 +1,4 @@
-import { string, object, number, date } from "yup";
+import { date, number, object, string } from "yup";
 
 const today = new Date();
 const yesterday = new Date(today);
@@ -75,4 +75,12 @@ export const groupEventValidator = object().shape({
     .matches(/^\d+$/, " ZIP should have digits only")
     .required(" Org ZIP is required"),
   // isPrivate: boolean().optional(),
+});
+
+export const timeValidator = object().shape({
+  checkin: string().test(
+    "checkin-time-before-checkout",
+    "checkin time needs to be before checkout time",
+    (value, context) => value < context.parent.checkout
+  ),
 });

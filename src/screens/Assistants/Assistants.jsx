@@ -295,6 +295,7 @@ class Assistants extends React.Component {
                       <Form.Input
                         type="text"
                         name="email"
+                        autocomplete="off"
                         onChange={(evt) => {
                           this.setState({ newInvitedAdmin: evt.target.value });
                           invitedAdminValidator
