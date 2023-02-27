@@ -10,6 +10,8 @@ import {
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
+import "flowbite-react";
+import { Table } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -180,7 +182,7 @@ const EventAttendance = () => {
           isEnded={event?.isEnded}
         />
       </Styled.Container>
-      <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} />
+      {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>
   );
 };

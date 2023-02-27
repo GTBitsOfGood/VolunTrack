@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import "flowbite-react";
+import { Table, Button } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -56,7 +58,7 @@ const Volunteer = ({
 }): JSX.Element => {
   return (
     <>
-      {isEnded ? (
+      {/* {isEnded ? (
         <Styled.GreyedOutContainer>
           <Styled.Name>
             {volunteer.bio.first_name} {volunteer.bio.last_name}{" "}
@@ -75,7 +77,16 @@ const Volunteer = ({
           </Styled.Name>
           <Styled.Email>{volunteer.bio.email}</Styled.Email>
         </Styled.Container>
-      )}
+      )} */}
+      <Table.Row>
+        <Table.Cell>
+          <Button className="bg-red-500 hover:bg-red-200">Check-In</Button>
+        </Table.Cell>
+        <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
+        <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
+        <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
+        <Table.Cell>Waiting to Check-In</Table.Cell>
+      </Table.Row>
     </>
   );
 };

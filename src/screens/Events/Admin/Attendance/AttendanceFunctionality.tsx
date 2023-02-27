@@ -1,6 +1,7 @@
 import styled from "styled-components";
-
 import Volunteer from "./Volunteer";
+import "flowbite-react";
+import { Table } from "flowbite-react";
 
 const Styled = {
   InfoText: styled.p`
@@ -34,21 +35,73 @@ const AttendanceFunctionality = ({
   isEnded: boolean;
 }): JSX.Element => (
   <>
-    <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK IN</Styled.InfoText>
-    <Styled.VolunteerContainer>
-      {checkedOutVolunteers?.length > 0 &&
-        checkedOutVolunteers.map((volunteer) => (
-          <Volunteer
-            key={volunteer._id}
-            volunteer={volunteer}
-            minors={minors[volunteer._id]}
-            onClick={checkIn}
-            isCheckedIn={false}
-            isEnded={isEnded}
-          />
-        ))}
-    </Styled.VolunteerContainer>
-    <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK OUT</Styled.InfoText>
+    <Styled.InfoText>Check-In</Styled.InfoText>
+    <Table>
+      <Table.Head>
+        <Table.HeadCell>
+          <span className="sr-only">Check-In</span>
+        </Table.HeadCell>
+        <Table.HeadCell>Name</Table.HeadCell>
+        <Table.HeadCell>Email</Table.HeadCell>
+        <Table.HeadCell>Phone</Table.HeadCell>
+        <Table.HeadCell>Status</Table.HeadCell>
+      </Table.Head>
+      <Table.Body className="divide-y">
+        {checkedOutVolunteers?.length > 0 &&
+          checkedOutVolunteers.map((volunteer) => (
+            <Volunteer
+              key={volunteer._id}
+              volunteer={volunteer}
+              minors={minors[volunteer._id]}
+              onClick={checkIn}
+              isCheckedIn={false}
+              isEnded={isEnded}
+            />
+          ))}
+      </Table.Body>
+    </Table>
+
+    <Styled.InfoText>Check-Out</Styled.InfoText>
+    <Table>
+      <Table.Head>
+        <Table.HeadCell>
+          <span className="sr-only">Check-In</span>
+        </Table.HeadCell>
+        <Table.HeadCell>Name</Table.HeadCell>
+        <Table.HeadCell>Email</Table.HeadCell>
+        <Table.HeadCell>Phone</Table.HeadCell>
+        <Table.HeadCell>Status</Table.HeadCell>
+      </Table.Head>
+      <Table.Body className="divide-y">
+        {checkedInVolunteers?.length > 0 &&
+          checkedInVolunteers.map((volunteer) => (
+            <Volunteer
+              key={volunteer._id}
+              volunteer={volunteer}
+              minors={minors[volunteer._id]}
+              onClick={checkOut}
+              isCheckedIn={true}
+              isEnded={isEnded}
+            />
+          ))}
+      </Table.Body>
+    </Table>
+
+    {/* <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK IN</Styled.InfoText>
+      <Styled.VolunteerContainer>
+        {checkedOutVolunteers?.length > 0 &&
+          checkedOutVolunteers.map((volunteer) => (
+            <Volunteer
+              key={volunteer._id}
+              volunteer={volunteer}
+              minors={minors[volunteer._id]}
+              onClick={checkIn}
+              isCheckedIn={false}
+              isEnded={isEnded}
+            />
+          ))}
+      </Styled.VolunteerContainer> */}
+    {/* <Styled.InfoText>CLICK ON A VOLUNTEER TO CHECK OUT</Styled.InfoText>
     <Styled.VolunteerContainer>
       {checkedInVolunteers?.length > 0 &&
         checkedInVolunteers.map((volunteer) => (
@@ -61,7 +114,7 @@ const AttendanceFunctionality = ({
             isEnded={isEnded}
           />
         ))}
-    </Styled.VolunteerContainer>
+    </Styled.VolunteerContainer> */}
   </>
 );
 export default AttendanceFunctionality;
