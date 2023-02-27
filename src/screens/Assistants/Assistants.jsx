@@ -1,6 +1,7 @@
 import { Formik } from "formik";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
+import PropTypes from "prop-types";
 import React from "react";
 import {
   Button,
@@ -24,7 +25,6 @@ import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
-import PropTypes from "prop-types";
 
 const PAGE_SIZE = 10;
 
@@ -176,10 +176,7 @@ class Assistants extends React.Component {
       role: "admin-assistant",
     }));
     const allUsers = users.concat(modifiedInvitedAdmins);
-    const start = currentPage * PAGE_SIZE;
-    return this.filteredAndSortedAdmins(
-      allUsers.slice(start, start + PAGE_SIZE)
-    );
+    return this.filteredAndSortedAdmins(allUsers);
   };
 
   onEditUser = () => {
@@ -298,6 +295,7 @@ class Assistants extends React.Component {
                       <Form.Input
                         type="text"
                         name="email"
+                        autocomplete="off"
                         onChange={(evt) => {
                           this.setState({ newInvitedAdmin: evt.target.value });
                           invitedAdminValidator

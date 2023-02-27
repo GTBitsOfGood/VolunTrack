@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import styled, { withTheme } from "styled-components";
 
 const SVG = styled.svg`
@@ -88,6 +88,6 @@ Icon.propTypes = {
   name: PropTypes.string.isRequired,
   color: PropTypes.string,
   size: PropTypes.string,
-  theme: PropTypes.array,
+  theme: PropTypes.object,
   viewBox: PropTypes.string,
 };
