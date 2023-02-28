@@ -10,7 +10,7 @@ const NewHeader: React.FC = () => {
   }: { data: any } = useSession(); // refactor to use UserType instead of any
 
   return (
-    <nav className="bg-white flex px-12 py-12">
+    <nav className="bg-black flex px-12 py-12">
       <Link href="/home">
         <div className="flex items-center justify-center cursor-pointer">
           <Image
