@@ -1,23 +1,13 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Row,
-} from "reactstrap";
+import { Button } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import * as SForm from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
-import { Field, Formik, Form } from "formik";
+import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
   Button: styled(Button)`
@@ -170,137 +160,12 @@ class VolunteerTable extends React.Component {
           </tbody>
         </Table.Table>
         {loading && <Loading />}
-        <Formik
-          enableReinitialize
-          initialValues={{
-            first_name: this.state.userSelectedForEdit?.first_name ?? "",
-            last_name: this.state.userSelectedForEdit?.last_name ?? "",
-            email: this.state.userSelectedForEdit?.email ?? "",
-            phone_number: this.state.userSelectedForEdit?.phone_number ?? "",
-            date_of_birth: this.state.userSelectedForEdit?.date_of_birth ?? "",
-            zip_code: this.state.userSelectedForEdit?.zip_code ?? "",
-            address: this.state.userSelectedForEdit?.address ?? "",
-            city: this.state.userSelectedForEdit?.city ?? "",
-            state: this.state.userSelectedForEdit?.state ?? "",
-            notes: this.state.userSelectedForEdit?.notes ?? "",
-          }}
-          onSubmit={(values) => {
-            this.handleSubmit(values);
-          }}
-        >
-          <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
-            <Form>
-              <ModalHeader color="#ef4e79">
-                {this.state.userSelectedForEdit?.name ?? ""}
-              </ModalHeader>
-              <Container>
-                <ModalBody>
-                  <SForm.FormGroup>
-                    <Row>
-                      <Col>
-                        <SForm.Label>First Name</SForm.Label>
-                        <Field name="first_name">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                      <Col>
-                        <SForm.Label>Last Name</SForm.Label>
-                        <Field name="last_name">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <SForm.Label>Email</SForm.Label>
-                        <Field name="email">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                      <Col>
-                        <SForm.Label>Phone</SForm.Label>
-                        <Field name="phone_number">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                    </Row>
-
-                    <Row>
-                      <Col>
-                        <SForm.Label>Date of Birth</SForm.Label>
-                        <Field name="date_of_birth">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                      <Col>
-                        <SForm.Label>Zip Code</SForm.Label>
-                        <Field name="zip_code">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <SForm.Label>Address</SForm.Label>
-                        <Field name="address">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                      <Col>
-                        <SForm.Label>City</SForm.Label>
-                        <Field name="city">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                      <Col>
-                        <SForm.Label>State</SForm.Label>
-                        <Field name="state">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col>
-                        <SForm.Label>Notes</SForm.Label>
-                        <Field name="notes">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="text" />
-                          )}
-                        </Field>
-                      </Col>
-                    </Row>
-                  </SForm.FormGroup>
-                </ModalBody>
-              </Container>
-              <ModalFooter>
-                <Button color="secondary" onClick={this.onModalClose}>
-                  Cancel
-                </Button>
-                <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
-                  Update
-                </Button>
-              </ModalFooter>
-            </Form>
-          </Modal>
-        </Formik>
+        <EditUserForm 
+          userSelectedForEdit={this.state.userSelectedForEdit} 
+          submitHandler={this.handleSubmit} 
+          isOpen={this.state.modalOpen} 
+          closeModal={this.onModalClose} 
+        />
         {users.length !== 0 && (
           <Pagination
             items={users}
