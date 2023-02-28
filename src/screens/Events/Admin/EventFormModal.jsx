@@ -1,7 +1,7 @@
 import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import React, { useRef, useState, useContext } from "react";
+import React, { useContext, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import {
   Button,
@@ -15,9 +15,9 @@ import {
 import styled from "styled-components";
 import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
+import { RequestContext } from "../../../providers/RequestProvider";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator, standardEventValidator } from "./eventHelpers";
-import { RequestContext } from "../../../providers/RequestProvider";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -89,6 +89,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       description: content,
       isPrivate: isGroupEvent,
       userId: user._id,
+      organizationId: user.organizationId,
     };
     setSubmitting(true);
 

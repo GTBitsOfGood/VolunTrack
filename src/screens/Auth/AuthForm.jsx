@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { createAccountValidator, loginValidator } from "./helpers";
 import { signIn } from "next-auth/react";
 import { createUserFromCredentials } from "../../actions/queries";
+import InputField from "../../components/Forms/InputField";
 
 const Styled = {
   ErrorMessage: styled(ErrorMessage).attrs({
@@ -100,17 +101,22 @@ class AuthForm extends React.Component {
                   {this.props.createAccount && (
                     <Row>
                       <Col>
-                        <SForm.Label>First Name</SForm.Label>
-                        <Field name="first_name">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="text"
-                              placeholder="First Name"
-                            />
-                          )}
-                        </Field>
-                        <Styled.ErrorMessage name="first_name" />
+                        <InputField
+                          name="first_name"
+                          placeholder="Frst Name"
+                          label="First Name"
+                        />
+                        {/*<SForm.Label>First Name</SForm.Label>*/}
+                        {/*<Field name="first_name">*/}
+                        {/*  {({ field }) => (*/}
+                        {/*    <SForm.Input*/}
+                        {/*      {...field}*/}
+                        {/*      type="text"*/}
+                        {/*      placeholder="First Name"*/}
+                        {/*    />*/}
+                        {/*  )}*/}
+                        {/*</Field>*/}
+                        {/*<Styled.ErrorMessage name="first_name" />*/}
                       </Col>
                       <Col>
                         <SForm.Label>Last Name</SForm.Label>
