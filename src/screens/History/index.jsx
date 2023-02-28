@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getHistoryEvents, getUsers } from "../../actions/queries";
-import * as Table from "../sharedStyles/tableStyles";
+import { Table } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -23,12 +23,6 @@ const Styled = {
 
     display: flex;
     justify-content: space-between;
-  `,
-  CheckedInData: styled.p`
-    margin: 0;
-
-    font-size: 2rem;
-    vertical-align: top;
   `,
   Search: styled.input`
     height: 3rem;
@@ -103,25 +97,26 @@ const History = () => {
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
       />
-
-      <Table.Table>
-        <tbody>
-          <tr>
-            <th style={{ color: "#960034" }}>Name</th>
-            <th style={{ color: "#960034" }}>Change Description</th>
-            <th style={{ color: "#960034" }}>Time</th>
-          </tr>
+      <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+        <Table.Head>
+          <Table.HeadCell>Name</Table.HeadCell>
+          <Table.HeadCell>Change Description</Table.HeadCell>
+          <Table.HeadCell>Time</Table.HeadCell>
+        </Table.Head>
+        <Table.Body>
           {filteredAndSortedHistoryEvents().map((event, index) => (
             <Table.Row key={index} evenIndex={index % 2 === 0}>
-              <td>
+              <Table.Cell>
                 {event.firstName} {event.lastName}
-              </td>
-              <td>{event.description}</td>
-              <td>{new Date(event.createdAt).toLocaleString()}</td>
+              </Table.Cell>
+              <Table.Cell>{event.description}</Table.Cell>
+              <Table.Cell>
+                {new Date(event.createdAt).toLocaleString()}
+              </Table.Cell>
             </Table.Row>
           ))}
-        </tbody>
-      </Table.Table>
+        </Table.Body>
+      </Table>
     </Styled.Container>
   );
 };

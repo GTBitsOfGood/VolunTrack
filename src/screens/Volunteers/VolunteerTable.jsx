@@ -6,24 +6,18 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import * as Table from "../sharedStyles/tableStyles";
+import { Table } from "flowbite-react";
 import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
   Button: styled(Button)`
-    background: white;
+    background: none;
     border: none;
   `,
   Container: styled.div`
     width: 100%;
     height: 100%;
     margin: auto;
-  `,
-  ul: styled.ul`
-    list-style-type: none;
-  `,
-  List: styled.li`
-    padding-bottom: 120px;
   `,
 };
 
