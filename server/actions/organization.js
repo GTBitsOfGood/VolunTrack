@@ -25,3 +25,10 @@ export async function createOrganization({
 
   return { status: 200, message: result };
 }
+
+export async function fetchOrganizations() {
+  await dbConnect();
+  const results = await Organization.find({}).sort({ createdAt: 1 });
+  console.log(results);
+  return { status: 200, message: results };
+}

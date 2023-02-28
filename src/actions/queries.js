@@ -109,3 +109,6 @@ export const getHistoryEvents = (organizationId) =>
 
 export const createOrganization = (organization) =>
   axios.post(`/api/organizations`, organization);
+
+export const fetchOrganizations = () =>
+  axios.get(`/api/organizations`);
