@@ -26,14 +26,3 @@ export async function updateWaiver(type, text, organizationId) {
     return;
   });
 }
-
-export async function deleteWaiver(type, organizationId) {
-  await dbConnect();
-
-  return WaiverData.findByIdAndDelete({
-    type: type,
-    organizationId: organizationId,
-  }).then(() => {
-    return;
-  });
-}

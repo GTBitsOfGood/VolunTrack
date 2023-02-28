@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { Tabs } from "flowbite-react";
 import { getWaivers } from "../../actions/queries";
 
-import { uploadWaiver } from "../../actions/queries";
+import { updateWaiver } from "../../actions/queries";
 import "react-quill/dist/quill.snow.css";
 
 const WaiversContainer = styled.div`
@@ -148,11 +148,11 @@ const WaiverManager = () => {
   }, []);
 
   const submitAdult = (values, setSubmitting) => {
-    uploadWaiver("adult", adultContent, user.organizationId);
+    updateWaiver("adult", adultContent, user.organizationId);
   };
 
   const submitMinor = (values, setSubmitting) => {
-    uploadWaiver("minor", minorContent, user.organizationId);
+    updateWaiver("minor", minorContent, user.organizationId);
   };
 
   const setAdultTab = () => {

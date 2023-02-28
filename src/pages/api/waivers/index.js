@@ -17,18 +17,6 @@ export default async function handler(req, res, next) {
     return res.status(200).json({
       waiver,
     });
-  } else if (req.method === "DELETE") {
-    const type = req.query.type;
-    const organizationId = req.query.organizationId;
-    if (!(type === "adult" || type === "minor")) {
-      res.status(400).json({ error: "Type is not valid" });
-    }
-
-    await deleteWaiver(type, organizationId);
-
-    res.json({
-      message: "Event successfully deleted!",
-    });
   } else if (req.method === "POST") {
     const type = req.body.type;
     const organizationId = req.body.organizationId;
