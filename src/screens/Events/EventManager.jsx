@@ -22,6 +22,7 @@ import router from "next/router";
 import PropTypes from "prop-types";
 import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
+import ProgressDisplay from "../../components/ProgressDisplay";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -397,7 +398,9 @@ const EventManager = ({ user, role, isHomePage }) => {
       {isHomePage && (
         <Styled.HomePage>
           {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
-          <StatDisplay onlyAchievements={true} />
+          {/* <StatDisplay onlyAchievements={true} /> */}
+          {/* insert two progressdisplay components here */}
+          <ProgressDisplay />
           <EventTable
             dateString={dateString}
             events={
