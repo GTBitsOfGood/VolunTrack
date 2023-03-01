@@ -432,6 +432,7 @@ const EventTable = ({
   }
 };
 EventTable.propTypes = {
+  dateString: PropTypes.string,
   events: PropTypes.Array,
   onEditClicked: PropTypes.func,
   onDeleteClicked: PropTypes.func,
@@ -439,6 +440,7 @@ EventTable.propTypes = {
   onUnregister: PropTypes.func,
   user: PropTypes.object,
   role: PropTypes.string,
+  isHomePage: PropTypes.bool,
 };
 
 export default EventTable;
