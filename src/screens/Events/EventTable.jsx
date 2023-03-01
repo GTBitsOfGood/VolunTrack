@@ -315,7 +315,7 @@ const EventTable = ({
           </Styled.ul>
 
           <Styled.ul>
-            <Styled.Events>New Events</Styled.Events>
+            <Styled.Events>Nehubw Events</Styled.Events>
             {upcomingEvents.map((event) => (
               <Styled.EventContainer key={event._id}>
                 <Styled.EventGrid>
