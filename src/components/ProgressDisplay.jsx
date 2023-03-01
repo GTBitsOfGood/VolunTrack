@@ -1,8 +1,6 @@
-import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
-import { Label, TextInput } from "flowbite-react";
+import { Label, Progress } from "flowbite-react";
 import "flowbite-react";
-import { useState } from "react";
 import { getHours } from "../screens/Stats/User/hourParsing";
 
 const ProgressDisplay = (props) => {
@@ -53,13 +51,7 @@ const ProgressDisplay = (props) => {
           </p>
         </div>
       </div>
-      <div className="mt-4 w-full h-2.5 dark:bg-slate-300 rounded-full">
-        <div
-          className={`bg-green-600 h-2.5 rounded-full w-[${
-            (num * 100) / outOf
-          }%]`}
-        ></div>
-      </div>
+      <Progress className="mt-4" progress={(num / outOf) * 100} color="green" />
     </div>
   );
 };

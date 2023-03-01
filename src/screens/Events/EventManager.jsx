@@ -130,6 +130,7 @@ const Styled = {
     margin-top: 30px;
   `,
   LegendImage: styled.img`
+    margin-top: 20px;
     width: 20rem;
     height: 5rem;
   `,

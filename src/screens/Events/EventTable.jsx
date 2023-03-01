@@ -8,6 +8,7 @@ import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
 
 import DateDisplayComponent from "../../components/DateDisplay";
 import { useSession } from "next-auth/react";
+import Event from "../../components/Event";
 
 const Styled = {
   Container: styled.div`
@@ -206,74 +207,7 @@ const EventTable = ({
     return (
       <Styled.Container>
         {events.map((event) => (
-          <Styled.EventContainer key={event._id}>
-            <Styled.EventGrid>
-              <DateDisplayComponent date={event.date} color={"Primary"} />
-              <Link href={`events/${event._id}`}>
-                <Styled.EventContent>
-                  <Styled.EventContentRow>
-                    <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                    {role === "admin" && (
-                      <Styled.EditButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onEditClicked(event);
-                        }}
-                      >
-                        <Icon color="grey3" name="create" />
-                      </Styled.EditButton>
-                    )}
-                    {role === "admin" && (
-                      <Styled.DeleteButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDeleteClicked(event);
-                        }}
-                      >
-                        <Icon color="grey3" name="delete" />
-                      </Styled.DeleteButton>
-                    )}
-                    {role === "volunteer" && (
-                      <>
-                        {event.volunteers.includes(user._id) ? (
-                          <>
-                            <Styled.EventSpace>
-                              <Icon name="check" viewBox={"0 0 96 96"} />
-                              <span>Registered!</span>
-                            </Styled.EventSpace>
-                          </>
-                        ) : (
-                          <>
-                            <Styled.Button
-                              onClick={() => onRegisterClicked(event)}
-                            >
-                              <Icon color="grey3" name="add" />
-                              <span>Register</span>
-                            </Styled.Button>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </Styled.EventContentRow>
-                  <Styled.EventContentRow>
-                    <Styled.Time>{`${convertTime(
-                      event.startTime
-                    )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                    <Styled.EventSlots>
-                      {event.max_volunteers - event.volunteers.length} slots
-                      available
-                    </Styled.EventSlots>
-                  </Styled.EventContentRow>
-                </Styled.EventContent>
-              </Link>
-              {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
-                14400000 ===
-                Date.parse(event.date) &&
-                role === "admin" && (
-                  <ManageAttendanceButton eventId={event._id} />
-                )}
-            </Styled.EventGrid>
-          </Styled.EventContainer>
+          <Event key={event._id} event={event} role={role} isHomePage={false} />
         ))}
         <Styled.Spacer />
       </Styled.Container>
