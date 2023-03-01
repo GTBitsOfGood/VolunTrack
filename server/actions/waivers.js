@@ -1,7 +1,5 @@
 const WaiverData = require("../mongodb/models/waivers");
 import dbConnect from "../mongodb/index";
-const User = require("../mongodb/models/user");
-const mongoose = require("mongoose");
 
 export async function getWaiver(type, organizationId) {
   await dbConnect();
@@ -22,7 +20,7 @@ export async function updateWaiver(type, text, organizationId) {
     {
       upsert: true,
     }
-  ).then(() => {
-    return;
+  ).then((waiver) => {
+    return waiver;
   });
 }
