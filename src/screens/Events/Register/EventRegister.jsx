@@ -257,6 +257,17 @@ const EventRegister = (event) => {
     setHasMinor(true);
   };
 
+  useEffect(() => {
+    if (events.minors) {
+      for (let minor of events.minors) {
+        if (minor.volunteer_id === user._id) {
+          setHasMinor(true);
+          break;
+        }
+      }
+    }
+  }, [events]);
+
   // const onUnregister = async (event) => {
   //   const changedEvent = {
   //     // remove current user id from event volunteers
