@@ -437,19 +437,20 @@ const EventManager = ({ user, role, isHomePage }) => {
       {isHomePage && (
         <Styled.HomePage>
           {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
-          {/* <StatDisplay onlyAchievements={true} /> */}
-          {/* insert two progressdisplay components here */}
-          <div className="flex flex-wrap">
-            <ProgressDisplay
-              type={"Events"}
-              attendance={attendance}
-              header={"Events Attended"}
-            />
-            <ProgressDisplay
-              type={"Hours"}
-              attendance={attendance}
-              header={"Hours Earned"}
-            />
+          <div className="justify-start">
+            <p className="text-3xl font-bold mb-2">Accomplishments</p>
+            <div className="flex flex-wrap">
+              <ProgressDisplay
+                type={"Events"}
+                attendance={attendance}
+                header={"Events Attended"}
+              />
+              <ProgressDisplay
+                type={"Hours"}
+                attendance={attendance}
+                header={"Hours Earned"}
+              />
+            </div>
           </div>
           <EventTable
             dateString={dateString}

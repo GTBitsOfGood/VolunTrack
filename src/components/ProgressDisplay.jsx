@@ -41,19 +41,19 @@ const ProgressDisplay = (props) => {
   }
 
   return (
-    <div className="border-2 rounded-md mr-12 ml-12 p-4 bg-white">
+    <div className="border-2 rounded-md mr-8 ml-18 px-10 py-4 bg-white">
       <Label class="text-black-800 text-xl font-semibold">{props.header}</Label>
       <div className="flex flex-nowrap items-end">
         <img src={"/images/Hours Earned - " + level + ".png"}></img>
         <div className="flex flex-nowrap font-semibold items-center">
-          <p className="pl-12 text-xl">{num}</p>
+          <p className="pl-12 text-2xl">{num}</p>
           <p className="pl-2 text-md font-semibold text-slate-600">/ {outOf}</p>
           <p className="pl-2 text-md font-semibold text-slate-600">
             {props.type}
           </p>
         </div>
       </div>
-      <div className="mt-2 w-full h-2.5 dark:bg-slate-300 rounded-sm">
+      <div className="mt-4 w-full h-2.5 dark:bg-slate-300 rounded-sm">
         <div
           className={`bg-green-600 h-2.5 rounded-full w-[${
             (num * 100) / outOf
