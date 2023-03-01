@@ -175,6 +175,16 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
+    fetchAttendanceByUserId(userId).then((result) => {
+      if (result?.data?.attendances) {
+        const filteredAttendance = filterAttendance(
+          result.data.attendances,
+          startDate,
+          endDate
+        );
+        setAttendance(filteredAttendance);
+      }
+    });
     onRefresh();
   }, []);
 
@@ -205,20 +215,6 @@ const EventManager = ({ user, role, isHomePage }) => {
       end.setMinutes(end.getMinutes() - offset);
       setEndDate(end);
     }
-  };
-
-  const attend = () => {
-    setLoading(true);
-    fetchAttendanceByUserId(userId).then((result) => {
-      if (result?.data?.attendances) {
-        const filteredAttendance = filterAttendance(
-          result.data.attendances,
-          startDate,
-          endDate
-        );
-        setAttendance(filteredAttendance);
-      }
-    });
   };
 
   const onEditClicked = (event) => {
@@ -445,14 +441,14 @@ const EventManager = ({ user, role, isHomePage }) => {
           {/* insert two progressdisplay components here */}
           <div className="flex flex-wrap">
             <ProgressDisplay
-              type={"events"}
+              type={"Events"}
               attendance={attendance}
               header={"Events Attended"}
             />
             <ProgressDisplay
-              type={"hours"}
+              type={"Hours"}
               attendance={attendance}
-              header={"Hours Attended"}
+              header={"Hours Earned"}
             />
           </div>
           <EventTable

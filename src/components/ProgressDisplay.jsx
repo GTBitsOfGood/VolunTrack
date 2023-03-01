@@ -2,38 +2,60 @@ import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
 import { Label, TextInput } from "flowbite-react";
 import "flowbite-react";
+import { useState } from "react";
+import { getHours } from "../screens/Stats/User/hourParsing";
 
-const ProgressDisplay = (props) => (
-  //   <div>
-  //     <div className="flex flex-row">
-  //       <Label class="font-medium h-6 mb-2 text-slate-200" htmlFor={props.name}>
-  //         {props.label}
-  //       </Label>
-  //       {props.isRequired && <p className="text-red-600 mb-0">*</p>}
-  //     </div>
-  //     <Field name={props.name}>
-  //       {({ field }) => (
-  //         <TextInput
-  //           class="bg-white rounded-md mt-0 h-10 w-full border-1 border-slate-100"
-  //           id={props.name}
-  //           {...field}
-  //           type={props.type ?? "text"}
-  //           placeholder={props.placeholder}
-  //           disabled={props.disabled}
-  //         />
-  //       )}
-  //     </Field>
-  //     <ErrorMessage
-  //       component="div"
-  //       className="text-red-600 inline-block mt-1 pt-0 before:content-['Hello_World'] text-sm"
-  //       name={props.name}
-  //     />
-  //   </div>
+const ProgressDisplay = (props) => {
+  let level = "Bronze";
+  let num = 0;
+  let outOf = 1;
 
-  <div className="border-2 rounded-sm mr-12 ml-12 p-12">
-    <Label class="text-black-800 text-xl font-semibold">{props.header}</Label>
-  </div>
-);
+  if (props.type == "Events") {
+    if (props.attendance.length > 1) {
+      level = "Silver";
+      outOf = 3;
+    } else if (props.attendance.length > 3) {
+      level = "Gold";
+      outOf = 5;
+    }
+    num = props.attendance.length;
+  } else {
+    let add = 0;
+    outOf = 10;
+    for (let i = 0; i < props.attendance.length; i++) {
+      if (props.attendance[i].timeCheckedOut != null) {
+        add += getHours(
+          props.attendance[i].timeCheckedIn.slice(11, 16),
+          props.attendance[i].timeCheckedOut.slice(11, 16)
+        );
+      }
+    }
+    if (add >= 10) {
+      level = "Silver";
+      outOf = 15;
+    } else if (add >= 15) {
+      level = "Silver";
+      outOf = 20;
+    }
+    num = Math.round(add * 10) / 10;
+  }
+
+  return (
+    <div className="border-2 rounded-md mr-12 ml-12 p-4 bg-white">
+      <Label class="text-black-800 text-xl font-semibold">{props.header}</Label>
+      <div className="flex flex-nowrap items-end">
+        <img src={"/images/Hours Earned - " + level + ".png"}></img>
+        <div className="flex flex-nowrap font-semibold items-center">
+          <p className="pl-12 text-xl">{num}</p>
+          <p className="pl-2 text-md font-semibold text-slate-600">/ {outOf}</p>
+          <p className="pl-2 text-md font-semibold text-slate-600">
+            {props.type}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 ProgressDisplay.propTypes = {
   type: PropTypes.string.isRequired,
