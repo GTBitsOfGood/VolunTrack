@@ -1,15 +1,15 @@
-import React from "react";
-import styled from "styled-components";
-import { ModalBody, ModalFooter, Button, Col, Row } from "reactstrap";
-import { Formik, Form as FForm, Field, ErrorMessage } from "formik";
-import * as SForm from "../../../sharedStyles/formStyles";
+import { Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import variables from "../../../../design-tokens/_variables.module.scss";
+import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
+import styled from "styled-components";
 import { updateAttendance } from "../../../../actions/queries";
+import variables from "../../../../design-tokens/_variables.module.scss";
+import * as SForm from "../../../sharedStyles/formStyles";
+import { timeValidator } from "../eventHelpers";
 
 const Styled = {
   Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
+  ErrorMessage: styled.div.attrs({
     component: "span",
   })`
     ::before {
@@ -20,6 +20,7 @@ const Styled = {
     font-weight: bold;
     display: inline-block;
   `,
+
   Col: styled(Col)`
     padding: 5px;
     padding-bottom: 3px;
@@ -39,10 +40,18 @@ const EditEventStatsForm = ({ toggle, event }) => {
       ...event,
     };
     editedEvent.timeCheckedIn = new Date(
-      event.timeCheckedIn.slice(0, 11) + values.checkin
+      new Date(
+        new Date(event.timeCheckedIn) - new Date().getTimezoneOffset() * 60_000
+      )
+        .toISOString()
+        .slice(0, 11) + values.checkin
     ).toISOString();
     editedEvent.timeCheckedOut = new Date(
-      event.timeCheckedIn.slice(0, 11) + values.checkout
+      new Date(
+        new Date(event.timeCheckedOut) - new Date().getTimezoneOffset() * 60_000
+      )
+        .toISOString()
+        .slice(0, 11) + values.checkout
     ).toISOString();
     setSubmitting(true);
     updateAttendance(event._id, editedEvent);
@@ -60,106 +69,114 @@ const EditEventStatsForm = ({ toggle, event }) => {
       onSubmit={(values, { setSubmitting }) => {
         onSubmitEditEvent(values, setSubmitting);
       }}
-      render={({ handleSubmit, isValid, isSubmitting }) => (
-        <React.Fragment>
-          <Styled.ModalBody>
-            <Styled.Form>
-              <SForm.FormGroup>
-                <Row>
-                  <Col>
-                    <Row
-                      style={{
-                        padding: "5px",
-                        fontWeight: "bold",
-                        color: "gray",
-                      }}
-                    >
-                      Event Information
-                    </Row>
-                    <Row>
-                      <Styled.Col>
-                        <SForm.Label>Name</SForm.Label>
-                        <Field name="name">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="text"
-                              disabled={true}
-                            />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Email</SForm.Label>
-                        <Field name="email">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="text"
-                              disabled={true}
-                            />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Check In Time</SForm.Label>
-                        <Styled.ErrorMessage name="checkin" />
-                        <Field name="checkin">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                      <Styled.Col>
-                        <SForm.Label>Check Out Time</SForm.Label>
-                        <Styled.ErrorMessage name="checkout" />
-                        <Field name="checkout">
-                          {({ field }) => (
-                            <SForm.Input {...field} type="time" />
-                          )}
-                        </Field>
-                      </Styled.Col>
-                    </Row>
-                  </Col>
-                </Row>
-              </SForm.FormGroup>
-            </Styled.Form>
-          </Styled.ModalBody>
-          <ModalFooter>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              style={{
-                backgroundColor: "transparent",
-                borderColor: "transparent",
-                color: variables["event-text"],
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              color="primary"
-              onClick={handleSubmit}
-              disabled={!isValid || isSubmitting}
-              style={{
-                backgroundColor: "ef4e79",
-                borderColor: "ef4e79",
-                // backgroundColor: variables["button-pink"],
-                // borderColor: variables["button-pink"],
-                marginLeft: "4rem",
-              }}
-            >
-              Update
-            </Button>
-          </ModalFooter>
-        </React.Fragment>
-      )}
-    />
+      validationSchema={timeValidator}
+    >
+      {({ handleSubmit, isValid, isSubmitting, errors, touched, values }) => {
+        return (
+          <>
+            <Styled.ModalBody>
+              <Styled.Form>
+                <SForm.FormGroup>
+                  <Row>
+                    <Col>
+                      <Row
+                        style={{
+                          padding: "5px",
+                          fontWeight: "bold",
+                          color: "gray",
+                        }}
+                      >
+                        Event Information
+                      </Row>
+                      <Row>
+                        <Styled.Col>
+                          <SForm.Label>Name</SForm.Label>
+                          <Field name="name">
+                            {({ field }) => (
+                              <SForm.Input
+                                {...field}
+                                type="text"
+                                disabled={true}
+                              />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Email</SForm.Label>
+                          <Field name="email">
+                            {({ field }) => (
+                              <SForm.Input
+                                {...field}
+                                type="text"
+                                disabled={true}
+                              />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Check In Time</SForm.Label>
+                          <Field name="checkin">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="time" step="1" />
+                            )}
+                          </Field>
+                          {errors.checkin &&
+                            (touched.checkin || touched.checkout) && (
+                              <Styled.ErrorMessage>
+                                {errors.checkin}
+                              </Styled.ErrorMessage>
+                            )}
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SForm.Label>Check Out Time</SForm.Label>
+                          <Field name="checkout">
+                            {({ field }) => (
+                              <SForm.Input {...field} type="time" step="1" />
+                            )}
+                          </Field>
+                        </Styled.Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </SForm.FormGroup>
+              </Styled.Form>
+            </Styled.ModalBody>
+            <ModalFooter>
+              <Button
+                color="secondary"
+                onClick={toggle}
+                style={{
+                  backgroundColor: "transparent",
+                  borderColor: "transparent",
+                  color: variables["event-text"],
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="primary"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+                style={{
+                  backgroundColor: "ef4e79",
+                  borderColor: "ef4e79",
+                  // backgroundColor: variables["button-pink"],
+                  // borderColor: variables["button-pink"],
+                  marginLeft: "4rem",
+                }}
+              >
+                Update
+              </Button>
+            </ModalFooter>
+          </>
+        );
+      }}
+    </Formik>
   );
 };
 
 EditEventStatsForm.propTypes = {
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object,
   toggle: PropTypes.func.isRequired,
 };
 

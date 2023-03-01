@@ -400,7 +400,7 @@ const EventManager = ({ user, role, isHomePage }) => {
           {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
           {/* <StatDisplay onlyAchievements={true} /> */}
           {/* insert two progressdisplay components here */}
-          <ProgressDisplay />
+          <ProgressDisplay type={events} amount={}/>
           <EventTable
             dateString={dateString}
             events={
