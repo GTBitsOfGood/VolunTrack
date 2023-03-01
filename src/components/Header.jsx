@@ -65,43 +65,19 @@ const Header = () => {
   );
 
   return (
-    <Navbar fluid={false} rounded={true} class="my-0 bg-white">
+    <Navbar fluid={false} rounded={true}>
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img
           src="/images/helping_mamas_logo.png"
           alt="helping mamas logo"
-          className="h-14"
+          className="h-10"
         />
       </Navbar.Brand>
       <Navbar.Toggle />
       {/*<div className="w-48 sm:w-0 md:w-0" />*/}
-      <div className="mr-2 flex hidden md:order-2 md:block">
-        <Dropdown
-          arrowIcon={true}
-          inline={true}
-          label={
-            <div className="flex">
-              <Avatar
-                img={user.imageUrl ?? "/images/gradient-avatar.png"}
-                alt="icon"
-                rounded={true}
-              />
-              <div className="ml-3 flex flex-col gap-0 text-left">
-                <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                <p className="mb-0">{`${capitalizeFirstLetter(
-                  user.role ?? ""
-                )}`}</p>
-              </div>
-            </div>
-          }
-        >
-          {dropdownItems}
-        </Dropdown>
-      </div>
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          color="pink"
           className={`text-lg font-bold ${
             currPageMatches("/home") ? "text-red-800" : "text-gray-600"
           }`}
@@ -164,6 +140,29 @@ const Header = () => {
             </Dropdown>
           )}
         </Navbar.Link>
+        <div className="mr-2 flex hidden md:order-2 md:block">
+          <Dropdown
+            arrowIcon={true}
+            inline={true}
+            label={
+              <div className="flex">
+                <Avatar
+                  img={user.imageUrl ?? "/images/gradient-avatar.png"}
+                  alt="icon"
+                  rounded={true}
+                />
+                <div className="ml-3 flex flex-col gap-0 text-left">
+                  <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                  <p className="mb-0">{`${capitalizeFirstLetter(
+                    user.role ?? ""
+                  )}`}</p>
+                </div>
+              </div>
+            }
+          >
+            {dropdownItems}
+          </Dropdown>
+        </div>
         <Navbar.Link className="block md:hidden">
           <Dropdown
             arrowIcon={true}
