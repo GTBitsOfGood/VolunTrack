@@ -131,6 +131,7 @@ const eventSchema = new mongoose.Schema(
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
+      default: "63d6dcc4e1fb5fd6e69b1738",
     },
   },
   { timestamps: true }

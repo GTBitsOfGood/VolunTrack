@@ -26,11 +26,7 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
     },
   ];
 
-  sendEmail(
-    user,
-    personalization,
-    `Registration Confirmed for ${event.title}`
-  );
+  sendEmail(user, personalization, `Registration Confirmed for ${event.title}`);
 };
 
 export const sendEventEditedEmail = async (user, event) => {
