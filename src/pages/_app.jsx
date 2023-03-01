@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import "../../public/static/styles/App.css";
 import "../../public/static/styles/bootstrap.min.css";
-import "tailwindcss/tailwind.css";
+import "../../public/static/styles/eqs1bcl.css";
 import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
