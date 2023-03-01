@@ -65,45 +65,21 @@ const Header = () => {
   );
 
   return (
-    <Navbar fluid={false} rounded={true} class="my-0 bg-white">
+    <Navbar fluid={false} rounded={true}>
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img
           src="/images/helping_mamas_logo.png"
           alt="helping mamas logo"
-          className="h-14"
+          className="h-10"
         />
       </Navbar.Brand>
       <Navbar.Toggle />
       {/*<div className="w-48 sm:w-0 md:w-0" />*/}
-      <div className="mr-2 flex hidden md:order-2 md:block">
-        <Dropdown
-          arrowIcon={true}
-          inline={true}
-          label={
-            <div className="flex">
-              <Avatar
-                img={user.imageUrl ?? "/images/gradient-avatar.png"}
-                alt="icon"
-                rounded={true}
-              />
-              <div className="ml-3 flex flex-col gap-0 text-left">
-                <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                <p className="mb-0">{`${capitalizeFirstLetter(
-                  user.role ?? ""
-                )}`}</p>
-              </div>
-            </div>
-          }
-        >
-          {dropdownItems}
-        </Dropdown>
-      </div>
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          color="pink"
           className={`text-lg font-bold ${
-            currPageMatches("/home") ? "text-red-800" : "text-gray-600"
+            currPageMatches("/home") ? "text-pink-800" : "text-gray-600"
           }`}
         >
           Home
@@ -112,7 +88,7 @@ const Header = () => {
           <Navbar.Link
             href="/volunteers"
             className={`text-lg font-bold ${
-              currPageMatches("/volunteers") ? "text-red-800" : "text-gray-600"
+              currPageMatches("/volunteers") ? "text-pink-800" : "text-gray-600"
             }`}
           >
             Volunteers
@@ -121,7 +97,7 @@ const Header = () => {
         <Navbar.Link
           href="/events"
           className={`text-lg font-bold ${
-            currPageMatches("/events") ? "text-red-800" : "text-gray-600"
+            currPageMatches("/events") ? "text-pink-800" : "text-gray-600"
           }`}
         >
           Events
@@ -131,7 +107,7 @@ const Header = () => {
             onClick={goToStats}
             href="/stats"
             className={`text-lg font-bold ${
-              currPageMatches("/stats") ? "text-red-800" : "text-gray-600"
+              currPageMatches("/stats") ? "text-pink-800" : "text-gray-600"
             }`}
           >
             Participation History
@@ -164,6 +140,29 @@ const Header = () => {
             </Dropdown>
           )}
         </Navbar.Link>
+        <div className="mr-2 flex hidden md:order-2 md:block">
+          <Dropdown
+            arrowIcon={true}
+            inline={true}
+            label={
+              <div className="flex">
+                <Avatar
+                  img={user.imageUrl ?? "/images/gradient-avatar.png"}
+                  alt="icon"
+                  rounded={true}
+                />
+                <div className="ml-3 flex flex-col gap-0 text-left">
+                  <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                  <p className="mb-0">{`${capitalizeFirstLetter(
+                    user.role ?? ""
+                  )}`}</p>
+                </div>
+              </div>
+            }
+          >
+            {dropdownItems}
+          </Dropdown>
+        </div>
         <Navbar.Link className="block md:hidden">
           <Dropdown
             arrowIcon={true}
