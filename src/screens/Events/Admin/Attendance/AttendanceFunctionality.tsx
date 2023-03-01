@@ -35,7 +35,7 @@ const AttendanceFunctionality = ({
   isEnded: boolean;
 }): JSX.Element => (
   <>
-    <Styled.InfoText>Check-In</Styled.InfoText>
+    <Styled.InfoText className="font-bold text-black">Check-In</Styled.InfoText>
     <Table>
       <Table.Head>
         <Table.HeadCell>
@@ -55,13 +55,16 @@ const AttendanceFunctionality = ({
               minors={minors[volunteer._id]}
               onClick={checkIn}
               isCheckedIn={false}
+              isCheckedOut={false}
               isEnded={isEnded}
             />
           ))}
       </Table.Body>
     </Table>
 
-    <Styled.InfoText>Check-Out</Styled.InfoText>
+    <Styled.InfoText className="font-bold text-black">
+      Check-Out
+    </Styled.InfoText>
     <Table>
       <Table.Head>
         <Table.HeadCell>
@@ -81,6 +84,7 @@ const AttendanceFunctionality = ({
               minors={minors[volunteer._id]}
               onClick={checkOut}
               isCheckedIn={true}
+              isCheckedOut={false}
               isEnded={isEnded}
             />
           ))}

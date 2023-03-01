@@ -11,7 +11,7 @@ import {
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
 import "flowbite-react";
-import { Table } from "flowbite-react";
+import { Table, Button } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -22,8 +22,7 @@ const Styled = {
   `,
   Header: styled.h1`
     margin: 0;
-
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
   `,
   HeaderRow: styled.div`
@@ -44,7 +43,7 @@ const Styled = {
     margin: 0;
     padding: 0 0.5rem;
 
-    font-size: 1.5rem;
+    font-size: 1rem;
 
     border: 1px solid lightgray;
     border-radius: 0.5rem;
@@ -151,7 +150,14 @@ const EventAttendance = () => {
   return (
     <>
       <Styled.Container>
+        <p className="text-rose-600">&lt; Back to home</p>
         <Styled.HeaderRow>
+          <Styled.Header>Attendance Management</Styled.Header>
+          <Button className="bg-red-500 hover:bg-red-200" onClick={endEvent}>
+            End Event
+          </Button>
+        </Styled.HeaderRow>
+        {/* <Styled.HeaderRow>
           <Styled.Header>Attendance</Styled.Header>
           <Styled.CheckedInData>
             <span style={{ fontWeight: "bold" }}>
@@ -163,7 +169,7 @@ const EventAttendance = () => {
             </span>{" "}
             Checked In
           </Styled.CheckedInData>
-        </Styled.HeaderRow>
+        </Styled.HeaderRow> */}
 
         <Styled.Search
           placeholder="Search by Volunteer Name or Email"

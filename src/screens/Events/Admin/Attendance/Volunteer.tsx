@@ -48,12 +48,14 @@ const Volunteer = ({
   minors,
   onClick,
   isCheckedIn,
+  isCheckedOut,
   isEnded,
 }: {
   volunteer: { [key: string]: any };
   minors: string[];
   onClick: (volunteer: { [key: string]: any }) => void;
   isCheckedIn: boolean;
+  isCheckedOut: boolean;
   isEnded: boolean;
 }): JSX.Element => {
   return (
@@ -78,15 +80,49 @@ const Volunteer = ({
           <Styled.Email>{volunteer.bio.email}</Styled.Email>
         </Styled.Container>
       )} */}
-      <Table.Row>
-        <Table.Cell>
-          <Button className="bg-red-500 hover:bg-red-200">Check-In</Button>
-        </Table.Cell>
-        <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
-        <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
-        <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
-        <Table.Cell>Waiting to Check-In</Table.Cell>
-      </Table.Row>
+      {isEnded ? (
+        //event ended table
+        <Table.Row>
+          <Table.Cell>
+            <Button
+              className="bg-red-500 hover:bg-red-200"
+              onClick={() => onClick(volunteer)}
+            >
+              {isCheckedIn ? "Checked Out" : "Absent"}
+            </Button>
+          </Table.Cell>
+          <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
+          <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
+          <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
+          <Table.Cell>
+            {" "}
+            {isCheckedIn ? "Time Placement" : "Waiting to Check-In"}
+          </Table.Cell>
+        </Table.Row>
+      ) : (
+        //default table
+        <Table.Row>
+          <Table.Cell>
+            <Button
+              className="bg-red-500 hover:bg-red-200"
+              onClick={() => onClick(volunteer)}
+            >
+              {isCheckedIn
+                ? isCheckedOut
+                  ? "Checked Out"
+                  : "Check Out"
+                : "Check In"}
+            </Button>
+          </Table.Cell>
+          <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
+          <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
+          <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
+          <Table.Cell>
+            {" "}
+            {isCheckedIn ? "Time Placement" : "Waiting to Check-In"}
+          </Table.Cell>
+        </Table.Row>
+      )}
     </>
   );
 };
