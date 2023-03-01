@@ -5,15 +5,15 @@ import { Label, TextInput } from "flowbite-react";
 const InputField = (props) => (
   <div>
     <div className="flex flex-row">
-      <Label class="font-medium h-6 mb-2 text-slate-200" htmlFor={props.name}>
+      <Label class="text-slate-200 mb-2 h-6 font-medium" htmlFor={props.name}>
         {props.label}
       </Label>
-      {props.isRequired && <p className="text-red-600 mb-0">*</p>}
+      {props.isRequired && <p className="mb-0 text-red-600">*</p>}
     </div>
     <Field name={props.name}>
       {({ field }) => (
         <TextInput
-          class="bg-white rounded-md mt-0 h-10 w-full border-1 border-slate-100"
+          class="border-1 border-slate-100 mt-0 h-10 w-full rounded-md bg-white"
           id={props.name}
           {...field}
           type={props.type ?? "text"}
@@ -24,7 +24,7 @@ const InputField = (props) => (
     </Field>
     <ErrorMessage
       component="div"
-      className="text-red-600 inline-block mt-1 pt-0 before:content-['Hello_World'] text-sm"
+      className="mt-1 inline-block pt-0 text-sm text-red-600 before:content-['Hello_World']"
       name={props.name}
     />
   </div>

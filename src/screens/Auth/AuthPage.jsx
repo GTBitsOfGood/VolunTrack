@@ -57,14 +57,14 @@ const AuthPage = (props) => {
         <Styled.TopText>
           {props.createAccount ? "Create an Account" : "Sign In"}
         </Styled.TopText>
-        <div className="flex flex-wrap w-full gap-2 items-center">
+        <div className="flex w-full flex-wrap items-center gap-2">
           <Button color="light" className="w-full py-1" onClick={login}>
             <img
               alt="Google Logo"
               src="/images/google.svg"
               className="mr-2 h-6 w-6"
             />
-            <p className="text-lg my-0">Continue with Google</p>
+            <p className="my-0 text-lg">Continue with Google</p>
           </Button>
         </div>
         <Styled.OrDiv>

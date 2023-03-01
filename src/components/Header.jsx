@@ -75,7 +75,7 @@ const Header = () => {
       </Navbar.Brand>
       <Navbar.Toggle />
       {/*<div className="w-48 sm:w-0 md:w-0" />*/}
-      <div className="flex hidden md:block mr-2 md:order-2">
+      <div className="mr-2 flex hidden md:order-2 md:block">
         <Dropdown
           arrowIcon={true}
           inline={true}
@@ -86,7 +86,7 @@ const Header = () => {
                 alt="icon"
                 rounded={true}
               />
-              <div className="flex flex-col gap-0 text-left ml-3">
+              <div className="ml-3 flex flex-col gap-0 text-left">
                 <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
                 <p className="mb-0">{`${capitalizeFirstLetter(
                   user.role ?? ""

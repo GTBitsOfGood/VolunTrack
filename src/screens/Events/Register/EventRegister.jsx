@@ -299,7 +299,7 @@ const EventRegister = (event) => {
   return (
     <Styled.Container fluid="md">
       <Button
-        className="w-24 mt-2 ml-5 text-white"
+        className="mt-2 ml-5 w-24 text-white"
         onClick={() => goBackToDetails()}
       >
         Back
