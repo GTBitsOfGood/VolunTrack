@@ -53,11 +53,11 @@ const ProgressDisplay = (props) => {
           </p>
         </div>
       </div>
-      <div className="mt-4 w-full h-2.5 dark:bg-slate-300 rounded-sm">
+      <div className="mt-4 w-full h-3.5 rounded-full border-2">
         <div
-          className={`bg-green-600 h-2.5 rounded-full w-[${
+          className={`bg-green-600 w-[${
             (num * 100) / outOf
-          }%]`}
+          }%] h-2.5 rounded-full`}
         ></div>
       </div>
     </div>
