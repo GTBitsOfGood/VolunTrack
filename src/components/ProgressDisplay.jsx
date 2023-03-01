@@ -30,12 +30,12 @@ const ProgressDisplay = (props) => {
         );
       }
     }
-    if (add >= 10) {
+    if (add >= 15) {
+      level = "Gold";
+      outOf = 20;
+    } else if (add >= 10) {
       level = "Silver";
       outOf = 15;
-    } else if (add >= 15) {
-      level = "Silver";
-      outOf = 20;
     }
     num = Math.round(add * 10) / 10;
   }
