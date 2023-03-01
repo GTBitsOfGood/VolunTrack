@@ -1,22 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Link from "next/link";
-import {
-  Modal,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Input,
-  FormGroup,
-} from "reactstrap";
-import { Button as ButtonFB } from "flowbite-react";
+import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
+import { Button, Tabs } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { getWaivers } from "../../../actions/queries";
 import { Col, Row, Container } from "reactstrap";
 import variables from "../../../design-tokens/_variables.module.scss";
-import IconSpecial from "../../../components/IconSpecial";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -165,21 +156,6 @@ const EventWaiverModal = ({
 
       {hasMinor ? (
         <>
-          <Styled.Row>
-            <React.Fragment>
-              <ButtonFB.Group
-                outline={true}
-                className="flex flex-wrap items-center gap-2"
-              >
-                <ButtonFB color="gray" onClick={onGuardianClicked}>
-                  Guardian
-                </ButtonFB>
-                <ButtonFB color="gray" onClick={onMinorsClicked}>
-                  Minor
-                </ButtonFB>
-              </ButtonFB.Group>
-            </React.Fragment>
-          </Styled.Row>
           {!isRegistered && (
             <Styled.Row>
               <Styled.HighlightText>
@@ -188,17 +164,52 @@ const EventWaiverModal = ({
               </Styled.HighlightText>
             </Styled.Row>
           )}
-
-          {showGuardian && (
-            <Styled.WaiverBox>
-              <div dangerouslySetInnerHTML={{ __html: adultContent }} />
-            </Styled.WaiverBox>
-          )}
-          {!showGuardian && (
-            <Styled.WaiverBox>
-              <div dangerouslySetInnerHTML={{ __html: minorContent }} />
-            </Styled.WaiverBox>
-          )}
+          <Tabs.Group style="underline">
+            <Tabs.Item
+              title="Guardian Waiver"
+              className="overflow-auto"
+              onClick={onGuardianClicked}
+              active={showGuardian}
+            >
+              <Styled.WaiverBox>
+                <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+              </Styled.WaiverBox>
+              <Styled.Row>
+                <FormGroup check>
+                  <Input
+                    type="checkbox"
+                    onChange={onWaiverCheckboxClicked}
+                    checked={waiverCheckboxSelected}
+                  />{" "}
+                </FormGroup>
+                <Styled.Text>
+                  I have read the waiver and agree to its terms and conditions
+                </Styled.Text>
+              </Styled.Row>
+            </Tabs.Item>
+            <Tabs.Item
+              title="Minor Waiver"
+              className="overflow-auto"
+              onClick={onMinorsClicked}
+              active={!showGuardian}
+            >
+              <Styled.WaiverBox>
+                <div dangerouslySetInnerHTML={{ __html: minorContent }} />
+              </Styled.WaiverBox>
+              <Styled.Row>
+                <FormGroup check>
+                  <Input
+                    type="checkbox"
+                    onChange={onWaiverMinorCheckboxClicked}
+                    checked={waiverMinorCheckboxSelected}
+                  />{" "}
+                </FormGroup>
+                <Styled.Text>
+                  I have read the waiver and agree to its terms and conditions
+                </Styled.Text>
+              </Styled.Row>
+            </Tabs.Item>
+          </Tabs.Group>
         </>
       ) : (
         <>
@@ -214,42 +225,24 @@ const EventWaiverModal = ({
           <Styled.WaiverBox>
             <div dangerouslySetInnerHTML={{ __html: adultContent }} />
           </Styled.WaiverBox>
+          <Styled.Row>
+            <FormGroup check>
+              <Input
+                type="checkbox"
+                onChange={onWaiverCheckboxClicked}
+                checked={waiverCheckboxSelected}
+              />{" "}
+            </FormGroup>
+            <Styled.Text>
+              I have read the waiver and agree to its terms and conditions
+            </Styled.Text>
+          </Styled.Row>
         </>
-      )}
-
-      {showGuardian && !isRegistered && (
-        <Styled.Row>
-          <FormGroup check>
-            <Input
-              type="checkbox"
-              onChange={onWaiverCheckboxClicked}
-              checked={waiverCheckboxSelected}
-            />{" "}
-          </FormGroup>
-          <Styled.Text>
-            I have read the waiver and agree to its terms and conditions
-          </Styled.Text>
-        </Styled.Row>
-      )}
-
-      {!showGuardian && !isRegistered && (
-        <Styled.Row>
-          <FormGroup check>
-            <Input
-              type="checkbox"
-              onChange={onWaiverMinorCheckboxClicked}
-              checked={waiverMinorCheckboxSelected}
-            />{" "}
-          </FormGroup>
-          <Styled.Text>
-            I have read the waiver and agree to its terms and conditions
-          </Styled.Text>
-        </Styled.Row>
       )}
       <ModalFooter>
         {!hasMinor && !isRegistered && (
           <Button
-            color="primary"
+            gradientMonochrome="pink"
             disabled={!waiverCheckboxSelected}
             onClick={() => onRegisterAfterWaiverClicked()}
           >
@@ -258,7 +251,7 @@ const EventWaiverModal = ({
         )}
         {hasMinor && !isRegistered && showGuardian && (
           <Button
-            color="primary"
+            gradientMonochrome="pink"
             onClick={onNextClicked}
             disabled={!waiverCheckboxSelected}
           >
@@ -267,16 +260,16 @@ const EventWaiverModal = ({
         )}
         {hasMinor && !isRegistered && !showGuardian && (
           <React.Fragment>
-            <Styled.Button color="primary" onClick={onPrevClicked}>
+            <Button gradientMonochrome="pink" onClick={onPrevClicked}>
               Previous
-            </Styled.Button>
-            <Styled.Button
-              color="primary"
+            </Button>
+            <Button
+              gradientMonochrome="pink"
               disabled={!waiverMinorCheckboxSelected || !waiverCheckboxSelected}
               onClick={() => onRegisterAfterWaiverClicked()}
             >
               Register
-            </Styled.Button>
+            </Button>
           </React.Fragment>
         )}
       </ModalFooter>
