@@ -136,7 +136,7 @@ class OnboardingForm extends React.Component {
                     information if needed.
                   </Styled.Subtitle>
                 </div>
-                <div className="w-64 m-auto mt-5">
+                <div className="m-auto mt-5 w-64">
                   <InputField
                     className="flex justify-center"
                     name="organization_name"
@@ -159,7 +159,7 @@ class OnboardingForm extends React.Component {
                     or update you with the approval.
                   </Styled.Subtitle>
                 </div>
-                <div className="w-64 m-auto">
+                <div className="m-auto w-64">
                   <InputField
                     className="flex justify-center"
                     name="contact_name"
@@ -179,7 +179,7 @@ class OnboardingForm extends React.Component {
                     placeholder="xxx-xxx-xxxx"
                   />
                 </div>
-                <div className="mb-5 m-auto">
+                <div className="m-auto mb-5">
                   <Styled.Header2 className="flex justify-center">
                     Volunteer Management Information
                   </Styled.Header2>
@@ -195,7 +195,7 @@ class OnboardingForm extends React.Component {
                     It will have the highest permission level on this platform.
                   </Styled.Subtitle2>
                 </div>
-                <div className="w-64 m-auto">
+                <div className="m-auto w-64">
                   <InputField
                     className="flex justify-center"
                     name="admin_email"
@@ -217,7 +217,7 @@ class OnboardingForm extends React.Component {
                     Please do not use spaces, symbols, or special characters.
                   </Styled.Subtitle2>
                 </div>
-                <div className="w-80 m-auto">
+                <div className="m-auto w-80">
                   <Label className="mt-2 mb-1" htmlFor="organization_code">
                     Non-profit Code
                   </Label>
@@ -238,7 +238,7 @@ class OnboardingForm extends React.Component {
                   </Field>
                   <Styled.ErrorMessage name="organization_code" />
                 </div>
-                <div className="m-auto flex justify-center mt-5">
+                <div className="m-auto mt-5 flex justify-center">
                   <Button
                     className="bg-pink-600"
                     type="submit"
