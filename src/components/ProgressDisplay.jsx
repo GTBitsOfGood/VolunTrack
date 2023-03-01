@@ -30,18 +30,15 @@ const ProgressDisplay = (props) => (
   //     />
   //   </div>
 
-  <div>
-    <p>paragraph</p>
+  <div className="border-2 rounded-sm mr-12 ml-12 p-12">
+    <Label class="text-black-800 text-xl font-semibold">{props.header}</Label>
   </div>
 );
 
 ProgressDisplay.propTypes = {
-  name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  isRequired: PropTypes.bool,
-  disabled: PropTypes.bool,
-  type: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  attendance: PropTypes.object.isRequired,
+  header: PropTypes.string.isRequired,
 };
 
 export default ProgressDisplay;

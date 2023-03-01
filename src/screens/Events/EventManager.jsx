@@ -16,6 +16,9 @@ import EventCreateModal from "./Admin/EventCreateModal";
 import EventDeleteModal from "./Admin/EventDeleteModal";
 import EventEditModal from "./Admin/EventEditModal";
 import EventTable from "./EventTable";
+import { fetchAttendanceByUserId } from "../../actions/queries";
+
+import { filterAttendance } from "../Stats/helper";
 
 import { useSession } from "next-auth/react";
 import router from "next/router";
@@ -23,6 +26,7 @@ import PropTypes from "prop-types";
 import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
 import ProgressDisplay from "../../components/ProgressDisplay";
+import "flowbite-react";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -177,6 +181,45 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [currEvent, setCurrEvent] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [attendance, setAttendance] = useState([]);
+  const [startDate, setStartDate] = useState("undefined");
+  const [endDate, setEndDate] = useState("undefined");
+  const { data: session } = useSession();
+  const userId = session.user._id;
+
+  const onSubmitValues = (values, setSubmitting) => {
+    let offset = new Date().getTimezoneOffset();
+
+    if (!values.startDate) {
+      setStartDate("undefined");
+    } else {
+      let start = new Date(values.startDate);
+      start.setMinutes(start.getMinutes() - offset);
+      setStartDate(start);
+    }
+
+    if (!values.endDate) {
+      setEndDate("undefined");
+    } else {
+      let end = new Date(values.endDate);
+      end.setMinutes(end.getMinutes() - offset);
+      setEndDate(end);
+    }
+  };
+
+  const attend = () => {
+    setLoading(true);
+    fetchAttendanceByUserId(userId).then((result) => {
+      if (result?.data?.attendances) {
+        const filteredAttendance = filterAttendance(
+          result.data.attendances,
+          startDate,
+          endDate
+        );
+        setAttendance(filteredAttendance);
+      }
+    });
+  };
 
   const onEditClicked = (event) => {
     setShowEditModal(true);
@@ -400,7 +443,18 @@ const EventManager = ({ user, role, isHomePage }) => {
           {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
           {/* <StatDisplay onlyAchievements={true} /> */}
           {/* insert two progressdisplay components here */}
-          <ProgressDisplay type={events} amount={}/>
+          <div className="flex flex-wrap">
+            <ProgressDisplay
+              type={"events"}
+              attendance={attendance}
+              header={"Events Attended"}
+            />
+            <ProgressDisplay
+              type={"hours"}
+              attendance={attendance}
+              header={"Hours Attended"}
+            />
+          </div>
           <EventTable
             dateString={dateString}
             events={
