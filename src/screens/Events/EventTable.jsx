@@ -2,11 +2,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import Icon from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
-import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
-
-import DateDisplayComponent from "../../components/DateDisplay";
 import { useSession } from "next-auth/react";
 import Event from "../../components/Event";
 
@@ -214,7 +210,7 @@ const EventTable = ({
 
   if (!isHomePage) {
     return (
-      <div>
+      <Styled.Container>
         {events.map((event) => (
           <Event
             key={event._id}
@@ -222,12 +218,12 @@ const EventTable = ({
             role={role}
             isHomePage={false}
             user={user}
-            onRegisterClicked={onRegisterClicked}
             functions={funcs}
+            onRegisterClicked={onRegisterClicked}
           />
         ))}
         <Styled.Spacer />
-      </div>
+      </Styled.Container>
     );
   } else {
     if (registeredEvents.length > 0 && upcomingEvents.length > 0) {
@@ -236,63 +232,30 @@ const EventTable = ({
           <Styled.ul>
             <Styled.Events>Your Upcoming Events</Styled.Events>
             {registeredEvents.map((event) => (
-              <Styled.EventContainer key={event._id}>
-                <Styled.EventGrid>
-                  <DateDisplayComponent date={event.date} color={"Primary"} />
-                  <Link href={`events/${event._id}`}>
-                    <Styled.EventContent>
-                      <Styled.EventContentRow>
-                        <Styled.EventTitle>{event.title}</Styled.EventTitle>
-
-                        <Styled.EventSpace>
-                          <Icon name="check" viewBox={"0 0 96 96"} />
-                          <span>Registered!</span>
-                        </Styled.EventSpace>
-                      </Styled.EventContentRow>
-                      <Styled.EventContentRow>
-                        <Styled.Time>{`${convertTime(
-                          event.startTime
-                        )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                        <Styled.EventSlots>
-                          {event.max_volunteers - event.volunteers.length} slots
-                          available
-                        </Styled.EventSlots>
-                      </Styled.EventContentRow>
-                    </Styled.EventContent>
-                  </Link>
-                </Styled.EventGrid>
-              </Styled.EventContainer>
+              <Event
+                key={event._id}
+                eventObj={event}
+                role={role}
+                isHomePage={false}
+                user={user}
+                functions={funcs}
+                onRegisterClicked={onRegisterClicked}
+              />
             ))}
           </Styled.ul>
 
           <Styled.ul>
             <Styled.Events>New Events</Styled.Events>
             {upcomingEvents.map((event) => (
-              <Styled.EventContainer key={event._id}>
-                <Styled.EventGrid>
-                  <DateDisplayComponent date={event.date} color={"Secondary"} />
-                  <Link href={`events/${event._id}`}>
-                    <Styled.EventContent>
-                      <Styled.EventContentRow>
-                        <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                        <Styled.Button onClick={() => onRegisterClicked(event)}>
-                          <Icon color="grey3" name="add" />
-                          <span>Register</span>
-                        </Styled.Button>
-                      </Styled.EventContentRow>
-                      <Styled.EventContentRow>
-                        <Styled.Time>{`${convertTime(
-                          event.startTime
-                        )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                        <Styled.EventSlots>
-                          {event.max_volunteers - event.volunteers.length} slots
-                          available
-                        </Styled.EventSlots>
-                      </Styled.EventContentRow>
-                    </Styled.EventContent>
-                  </Link>
-                </Styled.EventGrid>
-              </Styled.EventContainer>
+              <Event
+                key={event._id}
+                eventObj={event}
+                role={role}
+                isHomePage={false}
+                user={user}
+                functions={funcs}
+                onRegisterClicked={onRegisterClicked}
+              />
             ))}
             <Link href={`/events`}>
               <Styled.LinkedText>View More</Styled.LinkedText>
@@ -306,32 +269,15 @@ const EventTable = ({
         <Styled.Container>
           <Styled.Events>Your Upcoming Events</Styled.Events>
           {registeredEvents.map((event) => (
-            <Styled.EventContainer key={event._id}>
-              <Styled.EventGrid>
-                <DateDisplayComponent date={event.date} color={"Primary"} />
-                <Link href={`events/${event._id}`}>
-                  <Styled.EventContent>
-                    <Styled.EventContentRow>
-                      <Styled.EventTitle>{event.title}</Styled.EventTitle>
-
-                      <Styled.EventSpace>
-                        <Icon name="check" viewBox={"0 0 96 96"} />
-                        <span>Registered!</span>
-                      </Styled.EventSpace>
-                    </Styled.EventContentRow>
-                    <Styled.EventContentRow>
-                      <Styled.Time>{`${convertTime(
-                        event.startTime
-                      )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                      <Styled.EventSlots>
-                        {event.max_volunteers - event.volunteers.length} slots
-                        available
-                      </Styled.EventSlots>
-                    </Styled.EventContentRow>
-                  </Styled.EventContent>
-                </Link>
-              </Styled.EventGrid>
-            </Styled.EventContainer>
+            <Event
+              key={event._id}
+              eventObj={event}
+              role={role}
+              isHomePage={false}
+              user={user}
+              functions={funcs}
+              onRegisterClicked={onRegisterClicked}
+            />
           ))}
           <Styled.Spacer />
         </Styled.Container>
@@ -341,31 +287,15 @@ const EventTable = ({
         <Styled.Container>
           <Styled.Events>New Events</Styled.Events>
           {upcomingEvents.map((event) => (
-            <Styled.EventContainer key={event._id}>
-              <Styled.EventGrid>
-                <DateDisplayComponent date={event.date} color={"Primary"} />
-                <Link href={`events/${event._id}`}>
-                  <Styled.EventContent>
-                    <Styled.EventContentRow>
-                      <Styled.EventTitle>{event.title}</Styled.EventTitle>
-                      <Styled.Button onClick={() => onRegisterClicked(event)}>
-                        <Icon color="grey3" name="add" />
-                        <span>Register</span>
-                      </Styled.Button>
-                    </Styled.EventContentRow>
-                    <Styled.EventContentRow>
-                      <Styled.Time>{`${convertTime(
-                        event.startTime
-                      )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
-                      <Styled.EventSlots>
-                        {event.max_volunteers - event.volunteers.length} slots
-                        available
-                      </Styled.EventSlots>
-                    </Styled.EventContentRow>
-                  </Styled.EventContent>
-                </Link>
-              </Styled.EventGrid>
-            </Styled.EventContainer>
+            <Event
+              key={event._id}
+              eventObj={event}
+              role={role}
+              isHomePage={false}
+              user={user}
+              functions={funcs}
+              onRegisterClicked={onRegisterClicked}
+            />
           ))}
           <Link href={`/events`}>
             <Styled.LinkedText>View More</Styled.LinkedText>
