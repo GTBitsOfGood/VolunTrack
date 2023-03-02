@@ -106,7 +106,6 @@ const Event = (props) => {
                 <Button
                   class="border-2 rounded-lg h-12"
                   onClick={() => {
-                    console.log("hi");
                     props.onRegisterClicked(props.eventObj);
                   }}
                 >
@@ -144,9 +143,19 @@ const Event = (props) => {
       </div>
       {collapse && (
         <div>
-          <p>hi</p>
-          <Button class="text-xl text-black-600" href={`events/${props.eventObj._id}`}> 
-            More Information
+          <div className="flex">
+            <Label class="text-md font-bold mr-1">Address: </Label>
+            <p>{props.eventObj.address}</p>
+          </div>
+          <div className="flex">
+            <Label class="text-md font-bold mr-1">Description: </Label>
+            {props.eventObj.description}
+          </div>
+          <Button
+            class="text-xl text-black-600"
+            href={`events/${props.eventObj._id}`}
+          >
+            <p>More Information</p>
           </Button>
         </div>
       )}
@@ -158,7 +167,6 @@ Event.propTypes = {
   key: PropTypes.object.isRequired,
   eventObj: PropTypes.object.isRequired,
   role: PropTypes.object.isRequired,
-  isHomePage: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   functions: PropTypes.object.isRequired,
   onRegisterClicked: PropTypes.func.isRequired,
