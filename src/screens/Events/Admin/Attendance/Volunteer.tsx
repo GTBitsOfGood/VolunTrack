@@ -43,19 +43,24 @@ const CheckedInContainer = styled.div`
   background-color: #9cdea3;
 `;
 
+let checkedOut = false;
+
+const checkedOutVol = () => {
+  checkedOut = !checkedOut;
+  console.log(checkedOut);
+};
+
 const Volunteer = ({
   volunteer,
   minors,
   onClick,
   isCheckedIn,
-  isCheckedOut,
   isEnded,
 }: {
   volunteer: { [key: string]: any };
   minors: string[];
   onClick: (volunteer: { [key: string]: any }) => void;
   isCheckedIn: boolean;
-  isCheckedOut: boolean;
   isEnded: boolean;
 }): JSX.Element => {
   return (
@@ -84,12 +89,15 @@ const Volunteer = ({
         //event ended table
         <Table.Row>
           <Table.Cell>
-            <Button
-              className="bg-red-500 hover:bg-red-200"
-              onClick={() => onClick(volunteer)}
-            >
-              {isCheckedIn ? "Checked Out" : "Absent"}
-            </Button>
+            {isCheckedIn ? (
+              <Button className="text-rose-600 bg-stone-300" disabled>
+                Checked Out
+              </Button>
+            ) : (
+              <Button className="bg-stone-600	text-white" disabled>
+                Absent
+              </Button>
+            )}
           </Table.Cell>
           <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
           <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
@@ -103,16 +111,27 @@ const Volunteer = ({
         //default table
         <Table.Row>
           <Table.Cell>
-            <Button
-              className="bg-red-500 hover:bg-red-200"
-              onClick={() => onClick(volunteer)}
-            >
-              {isCheckedIn
-                ? isCheckedOut
-                  ? "Checked Out"
-                  : "Check Out"
-                : "Check In"}
-            </Button>
+            {isCheckedIn ? (
+              checkedOut ? (
+                <Button className="bg-stone-600	text-white" disabled>
+                  Checked Out
+                </Button>
+              ) : (
+                <Button
+                  className="bg-red-300 text-pink-400"
+                  onClick={() => checkedOutVol()}
+                >
+                  Check Out
+                </Button>
+              )
+            ) : (
+              <Button
+                className="bg-red-500 hover:bg-red-200"
+                onClick={() => onClick(volunteer)}
+              >
+                Check In
+              </Button>
+            )}
           </Table.Cell>
           <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
           <Table.Cell>{volunteer.bio.last_name}</Table.Cell>

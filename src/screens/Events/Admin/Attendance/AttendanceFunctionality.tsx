@@ -55,7 +55,6 @@ const AttendanceFunctionality = ({
               minors={minors[volunteer._id]}
               onClick={checkIn}
               isCheckedIn={false}
-              isCheckedOut={false}
               isEnded={isEnded}
             />
           ))}
@@ -84,7 +83,6 @@ const AttendanceFunctionality = ({
               minors={minors[volunteer._id]}
               onClick={checkOut}
               isCheckedIn={true}
-              isCheckedOut={false}
               isEnded={isEnded}
             />
           ))}
