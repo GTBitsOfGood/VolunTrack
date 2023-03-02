@@ -439,7 +439,7 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.HomePage>
           {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
           <div className="justify-start">
-            <p className="text-3xl font-bold mb-2">Accomplishments</p>
+            <p className="mb-2 text-3xl font-bold">Accomplishments</p>
             <div className="flex flex-wrap">
               <ProgressDisplay
                 type={"Events"}

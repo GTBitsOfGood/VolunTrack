@@ -3,28 +3,28 @@ import { Label, Progress } from "flowbite-react";
 import "flowbite-react";
 import { getHours } from "../screens/Stats/User/hourParsing";
 
-const ProgressDisplay = (props) => {
+const ProgressDisplay = ({ type, attendance, header }) => {
   let level = "Bronze";
   let num = 0;
   let outOf = 1;
 
-  if (props.type == "Events") {
-    if (props.attendance.length > 1) {
+  if (type == "Events") {
+    if (attendance.length > 1) {
       level = "Silver";
       outOf = 3;
-    } else if (props.attendance.length > 3) {
+    } else if (attendance.length > 3) {
       level = "Gold";
       outOf = 5;
     }
-    num = props.attendance.length;
+    num = attendance.length;
   } else {
     let add = 0;
     outOf = 10;
-    for (let i = 0; i < props.attendance.length; i++) {
-      if (props.attendance[i].timeCheckedOut != null) {
+    for (let i = 0; i < attendance.length; i++) {
+      if (attendance[i].timeCheckedOut != null) {
         add += getHours(
-          props.attendance[i].timeCheckedIn.slice(11, 16),
-          props.attendance[i].timeCheckedOut.slice(11, 16)
+          attendance[i].timeCheckedIn.slice(11, 16),
+          attendance[i].timeCheckedOut.slice(11, 16)
         );
       }
     }
@@ -39,16 +39,14 @@ const ProgressDisplay = (props) => {
   }
 
   return (
-    <div className="border-2 rounded-md mr-8 ml-18 px-10 py-4 bg-white">
-      <Label class="text-black-800 text-xl font-semibold">{props.header}</Label>
+    <div className="ml-18 mr-8 rounded-md border-2 bg-white px-10 py-4">
+      <Label class="text-black-800 text-xl font-semibold">{header}</Label>
       <div className="flex flex-nowrap items-end">
         <img src={"/images/Hours Earned - " + level + ".png"}></img>
-        <div className="flex flex-nowrap font-semibold items-center">
+        <div className="flex flex-nowrap items-center font-semibold">
           <p className="pl-12 text-2xl">{num}</p>
-          <p className="pl-2 text-md font-semibold text-slate-600">/ {outOf}</p>
-          <p className="pl-2 text-md font-semibold text-slate-600">
-            {props.type}
-          </p>
+          <p className="text-md text-slate-600 pl-2">/ {outOf}</p>
+          <p className="text-md text-slate-600 pl-2">{type}</p>
         </div>
       </div>
       <Progress className="mt-4" progress={(num / outOf) * 100} color="green" />

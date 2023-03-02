@@ -203,14 +203,31 @@ const EventTable = ({
   if (registeredEvents.length > 2) {
     upcomingEvents = upcomingEvents.slice(0, 2);
   }
+
+  let funcs = {
+    onDeleteClicked: onDeleteClicked,
+    onEditClicked: onEditClicked,
+    onRegisterClicked: onRegisterClicked,
+    onUnregister: onUnregister,
+    convertTime: convertTime,
+  };
+
   if (!isHomePage) {
     return (
-      <Styled.Container>
+      <div>
         {events.map((event) => (
-          <Event key={event._id} event={event} role={role} isHomePage={false} />
+          <Event
+            key={event._id}
+            eventObj={event}
+            role={role}
+            isHomePage={false}
+            user={user}
+            onRegisterClicked={onRegisterClicked}
+            functions={funcs}
+          />
         ))}
         <Styled.Spacer />
-      </Styled.Container>
+      </div>
     );
   } else {
     if (registeredEvents.length > 0 && upcomingEvents.length > 0) {
@@ -249,7 +266,7 @@ const EventTable = ({
           </Styled.ul>
 
           <Styled.ul>
-            <Styled.Events>Nehubw Events</Styled.Events>
+            <Styled.Events>New Events</Styled.Events>
             {upcomingEvents.map((event) => (
               <Styled.EventContainer key={event._id}>
                 <Styled.EventGrid>
