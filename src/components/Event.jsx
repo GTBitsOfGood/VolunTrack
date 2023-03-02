@@ -2,22 +2,24 @@ import PropTypes from "prop-types";
 import { Label, Button } from "flowbite-react";
 import "flowbite-react";
 import DateDisplayComponent from "../components/DateDisplay";
-import Link from "next/link";
+import { useState } from "react";
 import ManageAttendanceButton from "../screens/Events/Admin/ManageAttendanceButton";
 
 const Event = (props) => {
-  let event = props.eventObj;
+  const [collapse, setCollapse] = useState(false);
+
+  const open = () => {
+    setCollapse(!collapse);
+  };
 
   return (
     <div className="border-2 rounded-xl mx-18 mb-2 px-10 py-4 bg-white flex flex-col">
       <div className="mb-4 flex justify-between">
         <div className="flex justify-start">
           <DateDisplayComponent date={props.eventObj.date} color={"Primary"} />
-          <Link href={`events/${props.eventObj._id}`}>
+          <Button class="text-xl" onClick={open}>
             <div>
-              <Label class="mx-3 text-xl font-bold">
-                {props.eventObj.title}
-              </Label>
+              <Label class="text-xl font-bold">{props.eventObj.title}</Label>
               {Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) -
                 14400000 ===
                 Date.parse(props.eventObj.date) &&
@@ -25,7 +27,7 @@ const Event = (props) => {
                   <ManageAttendanceButton eventId={props.eventObj._id} />
                 )}
             </div>
-          </Link>
+          </Button>
         </div>
         <div className="flex justify-end">
           {props.role === "admin" && (
@@ -140,6 +142,14 @@ const Event = (props) => {
           slots available
         </Label>
       </div>
+      {collapse && (
+        <div>
+          <p>hi</p>
+          <Button class="text-xl text-black-600" href={`events/${props.eventObj._id}`}> 
+            More Information
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
