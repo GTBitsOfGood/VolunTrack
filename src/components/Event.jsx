@@ -13,7 +13,7 @@ const Event = (props) => {
   };
 
   return (
-    <div className="border-2 rounded-xl mx-18 mb-2 px-10 py-4 bg-white flex flex-col">
+    <div className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-white px-10 py-4">
       <div className="mb-4 flex justify-between">
         <div className="flex justify-start">
           <DateDisplayComponent date={props.eventObj.date} color={"Primary"} />
@@ -32,7 +32,7 @@ const Event = (props) => {
         <div className="flex justify-end">
           {props.role === "admin" && (
             <Button
-              class="border-2 rounded-lg h-12 mr-3"
+              class="mr-3 h-12 rounded-lg border-2"
               onClick={(e) => {
                 e.stopPropagation();
                 props.functions.onEditClicked(props.eventObj);
@@ -44,7 +44,7 @@ const Event = (props) => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="h-6 w-6"
               >
                 <path
                   strokeLinecap="round"
@@ -56,7 +56,7 @@ const Event = (props) => {
           )}
           {props.role === "admin" && (
             <Button
-              class="border-2 rounded-lg h-12"
+              class="h-12 rounded-lg border-2"
               onClick={(e) => {
                 e.stopPropagation();
                 props.functions.onDeleteClicked(props.eventObj);
@@ -116,7 +116,7 @@ const Event = (props) => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6 ml-2"
+                    className="ml-2 h-6 w-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -144,15 +144,15 @@ const Event = (props) => {
       {collapse && (
         <div>
           <div className="flex">
-            <Label class="text-md font-bold mr-1">Address: </Label>
+            <Label class="text-md mr-1 font-bold">Address: </Label>
             <p>{props.eventObj.address}</p>
           </div>
           <div className="flex">
-            <Label class="text-md font-bold mr-1">Description: </Label>
+            <Label class="text-md mr-1 font-bold">Description: </Label>
             {props.eventObj.description}
           </div>
           <Button
-            class="text-xl text-black-600"
+            class="black-600 text-xl"
             href={`events/${props.eventObj._id}`}
           >
             <p>More Information</p>
