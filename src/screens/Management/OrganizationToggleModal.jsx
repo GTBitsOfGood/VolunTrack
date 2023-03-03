@@ -6,7 +6,7 @@ import { toggleStatus } from "../../actions/queries";
 const OrganizationToggleModal = (props) => {
   const handleSubmit = () => {
     toggleStatus(props.organizationId);
-    onClose();
+    props.onClose();
   };
 
   return (
@@ -18,8 +18,8 @@ const OrganizationToggleModal = (props) => {
         </h3>
         <p>
           By clicking the confirm button, this volunteer management platform
-          will become{props.status ? " inactive " : " active "}immediately. Are you
-          sure you want to confirm?
+          will become{props.status ? " inactive " : " active "}immediately. Are
+          you sure you want to confirm?
         </p>
       </Modal.Body>
       <Modal.Footer className="flex justify-center">
@@ -36,7 +36,6 @@ const OrganizationToggleModal = (props) => {
     </Modal>
   );
 };
-
 
 OrganizationToggleModal.propTypes = {
   open: PropTypes.bool,

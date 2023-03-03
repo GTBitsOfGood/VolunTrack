@@ -1,11 +1,12 @@
 import { Card, ToggleSwitch } from "flowbite-react";
 import React from "react";
+import PropTypes from "prop-types";
 
 const OrganizationCard = (props) => {
   const onChange = () => {
     console.log(props.org._id);
-    setOpen(true);
-    setOrganization(props.org._id);
+    props.setOpen(true);
+    props.setOrganization(props.org._id);
   };
 
   return (
@@ -21,11 +22,15 @@ const OrganizationCard = (props) => {
               checked={props.org.active}
               onChange={onChange}
             />
-            <div className={props.org.active ? "text-green-400" : "text-red-400"}>
+            <div
+              className={props.org.active ? "text-green-400" : "text-red-400"}
+            >
               {props.org.active ? "Currently Active" : "Currently Inactive"}
             </div>
           </div>
-          <div>Requested Date: {new Date(props.org.createdAt).toDateString()}</div>
+          <div>
+            Requested Date: {new Date(props.org.createdAt).toDateString()}
+          </div>
           <div className={props.org.active ? "text-green-400" : "text-red-400"}>
             Recent Update: {props.org.active ? "Activated " : "Deactivated "}on{" "}
             {new Date(props.org.updatedAt).toDateString()}
