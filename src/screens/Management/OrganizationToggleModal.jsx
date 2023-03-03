@@ -10,7 +10,7 @@ const OrganizationToggleModal = (props) => {
   };
 
   return (
-    <Modal show={open} dismissible={true} onClose={props.onClose} popup={true}>
+    <Modal show={props.open} dismissible={true} onClose={props.onClose} popup={true}>
       <Modal.Header />
       <Modal.Body className="text-center">
         <h3 className="font-family-sans pb-4 text-xl font-semibold">
