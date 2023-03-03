@@ -1,23 +1,12 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Row,
-} from "reactstrap";
+import { Button, Modal, ModalHeader } from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import * as SForm from "../sharedStyles/formStyles";
 import { Table } from "flowbite-react";
-import { Field, Formik, Form } from "formik";
 import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
@@ -167,7 +156,7 @@ class VolunteerTable extends React.Component {
             <ModalHeader color="#ef4e79">
               {this.state.userSelectedForEdit?.name ?? ""}
             </ModalHeader>
-            <EditUserForm 
+            <EditUserForm
               userSelectedForEdit={this.state.userSelectedForEdit}
               submitHandler={this.handleSubmit}
               isOpen={this.state.isOpen}

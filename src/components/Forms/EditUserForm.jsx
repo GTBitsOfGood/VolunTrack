@@ -1,41 +1,36 @@
 import PropTypes from "prop-types";
 import React from "react";
-import {
-  Button,
-  Col,
-  Container,
-  Row,
-} from "reactstrap";
+import { Button, Col, Container, Row } from "reactstrap";
 import * as SForm from "../../screens/sharedStyles/formStyles";
 import { Field, Formik, Form } from "formik";
 
 // TODO ITEMS
 /*
-*  [v] Pass in the state displayEditUserModal
-*  [v] Implement for a volunteer
-*  [ ] Implement for an admin (maybe with authentification)
-*  [ ] Implement for a profile edit
-*  [ ] Make sure the scope of the props is narrow/broad enough
-*  [ ] Change Forms to use the new InputField component
-*  [ ] Hide the role drop down everywhere
-*  [ ] Ask Question About the point below
-*  -- Only allow edits to edit profile and edit volunteer (you can pass in a boolean and disable all the fields if true)
-*/
+ *  [v] Pass in the state displayEditUserModal
+ *  [v] Implement for a volunteer
+ *  [ ] Implement for an admin (maybe with authentification)
+ *  [ ] Implement for a profile edit
+ *  [ ] Make sure the scope of the props is narrow/broad enough
+ *  [ ] Change Forms to use the new InputField component
+ *  [ ] Hide the role drop down everywhere
+ *  [ ] Ask Question About the point below
+ *  -- Only allow edits to edit profile and edit volunteer (you can pass in a boolean and disable all the fields if true)
+ */
 
 const EditUserForm = ({
-    userSelectedForEdit,
-    submitHandler,
-    isOpen,
-    closeModal,
+  userSelectedForEdit,
+  submitHandler,
+  isOpen,
+  closeModal,
 }) => {
-    return (
-<Formik
-  enableReinitialize
-  initialValues={userSelectedForEdit}
-  onSubmit={submitHandler}
->
-    <Form>
-      <Container>
+  return (
+    <Formik
+      enableReinitialize
+      initialValues={userSelectedForEdit}
+      onSubmit={submitHandler}
+    >
+      <Form>
+        <Container>
           <SForm.FormGroup>
             <Row>
               <Col>
@@ -109,25 +104,33 @@ const EditUserForm = ({
               </Col>
             </Row>
           </SForm.FormGroup>
-      </Container>
-      <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", padding:"5px"}}>
+        </Container>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "5px",
+          }}
+        >
           <Button color="secondary" onClick={closeModal}>
             Cancel
           </Button>
           <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
             Update
           </Button>
-      </div>
-    </Form>
-</Formik>
-);
-}
+        </div>
+      </Form>
+    </Formik>
+  );
+};
 
 EditUserForm.propTypes = {
-    userSelectedForEdit: PropTypes.object.isRequired,
-    submitHandler: PropTypes.func.isRequired,
-    isOpen: PropTypes.bool.isRequired,
-    closeModal: PropTypes.func.isRequired,
+  userSelectedForEdit: PropTypes.object.isRequired,
+  submitHandler: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default EditUserForm;
