@@ -112,3 +112,8 @@ export const createOrganization = (organization) =>
 
 export const fetchOrganizations = () =>
   axios.get(`/api/organizations`);
+
+export const toggleStatus = (id) => {
+  axios.post(`/api/organizations/${id}/toggleStatus`);
+}
+  

@@ -36,6 +36,7 @@ const BogApproval = () => {
   const onCloseModal = () => {
     setOpenModal(false);
     setCurrOrganizationId(null);
+    onRefresh();
   }
 
   return (
@@ -51,35 +52,40 @@ const BogApproval = () => {
             src="/images/bog_hac4impact_logo.png"
           />
         </div>
-        <h3 className='flex justify-left font-sans px-4'>
+        <h1 className='flex justify-left font-sans px-4 font-semibold text-3xl'>
           Approval Portal - Volunteer Management Platforms 
-        </h3>
-        <h4 className='flex justify-left font-sans px-4 pt-3 pb-1'>
+        </h1>
+        <h2 className='flex justify-left font-sans px-4 pt-3 pb-1 font-semibold text-2xl'>
           New Applications
-        </h4>
-        {organizations.filter((organization) => {
-          if (organization.updatedAt === organization.createdAt) {
-            return true;
-          } else {
-            return false;
-          }
-        }).map((organization, index) => (
-          <OrganizationCard key={index} org={organization} setOrganization={setCurrOrganizationId} setOpen={setOpenModal}/>
-        ))}
-        <h4 className='flex justify-left font-sans px-4 pt-3 pb-1'>
+        </h2>
+        <div className="space-y-5">
+          {organizations.filter((organization) => {
+            if (organization.updatedAt === organization.createdAt) {
+              return true;
+            } else {
+              return false;
+            }
+          }).map((organization, index) => (
+            <OrganizationCard key={index} org={organization} setOrganization={setCurrOrganizationId} setOpen={setOpenModal}/>
+          ))}
+        </div>
+        <h2 className='flex justify-left font-sans px-4 pt-3 pb-1 text-2xl'>
           Application History
-        </h4>
-        {organizations.filter((organization) => {
+        </h2>
+        <div className="space-y-5">
+          {organizations.filter((organization) => {
           if (organization.updatedAt === organization.createdAt) {
             return false;
           } else {
             return true;
           }
-        }).map((organization, index) => (
-          <OrganizationCard key={index} org={organization} setOrganization={setCurrOrganizationId} setOpen={setOpenModal}/>
-        ))}
+          }).map((organization, index) => (
+            <OrganizationCard key={index} org={organization} setOrganization={setCurrOrganizationId} setOpen={setOpenModal}/>
+          ))}
+        </div>
+        
         (currOrganizationId && 
-          <OrganizationToggleModal open={openModal} onClose={onCloseModal} toggle={onToggleOrganization} organization={currOrganizationId}/>
+          <OrganizationToggleModal open={openModal} onClose={onCloseModal} toggle={onToggleOrganization} organizationId={currOrganizationId}/>
         )
       </div>
     )

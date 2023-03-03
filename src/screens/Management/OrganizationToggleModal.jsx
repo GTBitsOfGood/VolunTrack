@@ -1,12 +1,12 @@
 import { Button, Modal } from 'flowbite-react';
 import React from 'react'
+import { toggleStatus } from '../../actions/queries'
 
 const OrganizationToggleModal = ({ open, onClose, status, organizationId }) => {
     const handleSubmit = () => {
-      
-      onClose()
+      toggleStatus(organizationId);
+      onClose();
     }
-
     
 
     return (

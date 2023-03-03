@@ -32,3 +32,11 @@ export async function fetchOrganizations() {
   console.log(results);
   return { status: 200, message: results };
 }
+
+export async function toggleStatus(organizationId) {
+  await dbConnect();
+  const organization = await Organization.findOne({ _id: organizationId });
+  console.log(organization.active)
+  await Organization.updateOne({_id: organizationId}, { $set: { active: !organization.active } });
+  return { status: 200 };
+}
