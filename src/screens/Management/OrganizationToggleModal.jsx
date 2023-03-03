@@ -1,10 +1,11 @@
 import { Button, Modal } from "flowbite-react";
 import React from "react";
+import PropTypes from "prop-types";
 import { toggleStatus } from "../../actions/queries";
 
-const OrganizationToggleModal = ({ open, onClose, status, organizationId }) => {
+const OrganizationToggleModal = (props) => {
   const handleSubmit = () => {
-    toggleStatus(organizationId);
+    toggleStatus(props.organizationId);
     onClose();
   };
 
@@ -13,11 +14,11 @@ const OrganizationToggleModal = ({ open, onClose, status, organizationId }) => {
       <Modal.Header />
       <Modal.Body className="text-center">
         <h3 className="font-family-sans pb-4 text-xl font-semibold">
-          {status ? "Deactivate " : "Activate "} the platform
+          {props.status ? "Deactivate " : "Activate "} the platform
         </h3>
         <p>
           By clicking the confirm button, this volunteer management platform
-          will become{status ? " inactive " : " active "}immediately. Are you
+          will become{props.status ? " inactive " : " active "}immediately. Are you
           sure you want to confirm?
         </p>
       </Modal.Body>
@@ -34,6 +35,14 @@ const OrganizationToggleModal = ({ open, onClose, status, organizationId }) => {
       </Modal.Footer>
     </Modal>
   );
+};
+
+
+OrganizationToggleModal.propTypes = {
+  open: PropTypes.bool,
+  onClose: PropTypes.func,
+  status: PropTypes.bool,
+  organizationId: PropTypes.string,
 };
 
 export default OrganizationToggleModal;
