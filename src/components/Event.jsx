@@ -68,7 +68,7 @@ const Event = (props) => {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6"
+                className="h-6 w-6"
               >
                 <path
                   strokeLinecap="round"
@@ -91,7 +91,7 @@ const Event = (props) => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="currentColor"
-                    className="w-6 h-6 ml-2"
+                    className="ml-2 h-6 w-6"
                   >
                     <path
                       strokeLinecap="round"
@@ -104,7 +104,7 @@ const Event = (props) => {
             ) : (
               <>
                 <Button
-                  class="border-2 rounded-lg h-12"
+                  class="h-12 rounded-lg border-2"
                   onClick={() => {
                     props.onRegisterClicked(props.eventObj);
                   }}
