@@ -10,7 +10,7 @@ const OrganizationToggleModal = (props) => {
   };
 
   return (
-    <Modal show={open} dismissible={true} onClose={onClose} popup={true}>
+    <Modal show={open} dismissible={true} onClose={props.onClose} popup={true}>
       <Modal.Header />
       <Modal.Body className="text-center">
         <h3 className="font-family-sans pb-4 text-xl font-semibold">
@@ -28,7 +28,7 @@ const OrganizationToggleModal = (props) => {
         </Button>
         <Button
           className="border-primary bg-white text-primary"
-          onClick={onClose}
+          onClick={props.onClose}
         >
           Cancel
         </Button>
