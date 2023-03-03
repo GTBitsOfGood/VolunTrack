@@ -1,5 +1,6 @@
 const {
-  createOrganization, fetchOrganizations
+  createOrganization,
+  fetchOrganizations,
 } = require("../../../../server/actions/organization");
 
 export default async function handler(req, res, next) {

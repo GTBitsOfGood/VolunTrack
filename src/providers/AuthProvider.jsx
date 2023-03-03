@@ -17,8 +17,7 @@ const AuthProvider = ({ children }) => {
     default:
       if (router.pathname === "/create-account")
         return <AuthPage createAccount={true} />;
-      else if (router.pathname === "/bog-acceptance")
-        return <BogApproval/>
+      else if (router.pathname === "/bog-acceptance") return <BogApproval />;
       // unauthenticated, send to login page
       else if (router.pathname === "/organization-onboarding")
         return <OnboardingPage />;
