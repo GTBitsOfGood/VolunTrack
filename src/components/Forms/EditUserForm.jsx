@@ -4,10 +4,6 @@ import {
   Button,
   Col,
   Container,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
   Row,
 } from "reactstrap";
 import * as SForm from "../../screens/sharedStyles/formStyles";
@@ -38,13 +34,8 @@ const EditUserForm = ({
   initialValues={userSelectedForEdit}
   onSubmit={submitHandler}
 >
-  <Modal style={{ maxWidth: "750px" }} isOpen={isOpen}>
     <Form>
-      <ModalHeader color="#ef4e79">
-        {userSelectedForEdit?.name ?? ""}
-      </ModalHeader>
       <Container>
-        <ModalBody>
           <SForm.FormGroup>
             <Row>
               <Col>
@@ -118,18 +109,16 @@ const EditUserForm = ({
               </Col>
             </Row>
           </SForm.FormGroup>
-        </ModalBody>
       </Container>
-      <ModalFooter>
-        <Button color="secondary" onClick={closeModal}>
-          Cancel
-        </Button>
-        <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
-          Update
-        </Button>
-      </ModalFooter>
+      <div style={{display:"flex", flexDirection:"row", alignItems:"center", justifyContent:"center", padding:"5px"}}>
+          <Button color="secondary" onClick={closeModal}>
+            Cancel
+          </Button>
+          <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
+            Update
+          </Button>
+      </div>
     </Form>
-  </Modal>
 </Formik>
 );
 }

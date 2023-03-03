@@ -1,12 +1,23 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button } from "reactstrap";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
 import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
+import * as SForm from "../sharedStyles/formStyles";
 import { Table } from "flowbite-react";
+import { Field, Formik, Form } from "formik";
 import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
@@ -65,101 +76,105 @@ class VolunteerTable extends React.Component {
   render() {
     const { users, loading } = this.props;
     return (
-      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
-        <Table.Table>
-          <tbody>
-            <tr>
-              <th style={{ color: "#960034" }}>Volunteer Name</th>
-              <th style={{ color: "#960034" }}>Email Address</th>
-              <th style={{ color: "#960034" }}>Phone Number</th>
-            </tr>
-            {users
-              .slice(
-                this.state.currentPage * this.state.pageSize,
-                (this.state.currentPage + 1) * this.state.pageSize
-              )
-              .map((user, index) => (
-                <Table.Row key={index} evenIndex={index % 2 === 0}>
-                  <td>{user.name}</td>
-                  <td>
-                    {user.email}
-                    <Styled.Button
-                      onClick={() => {
-                        navigator.clipboard.writeText(user.email);
-                      }}
-                    >
-                      <Icon color="grey3" name="copy" />
+      <div>
+        <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+          <Table.Head className="bg-white dark:border-gray-700 dark:bg-gray-800">
+            <Table.HeadCell>Volunteer Name</Table.HeadCell>
+            <Table.HeadCell>Email Address</Table.HeadCell>
+            <Table.HeadCell>Phone Number</Table.HeadCell>
+            <Table.HeadCell> </Table.HeadCell>
+          </Table.Head>
+          {users
+            .slice(
+              this.state.currentPage * this.state.pageSize,
+              (this.state.currentPage + 1) * this.state.pageSize
+            )
+            .map((user, index) => (
+              <Table.Row key={index} evenIndex={index % 2 === 0}>
+                <Table.Cell>{user.name}</Table.Cell>
+                <Table.Cell>
+                  {user.email}
+                  <Styled.Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(user.email);
+                    }}
+                  >
+                    <Icon color="grey3" name="copy" />
+                  </Styled.Button>
+                </Table.Cell>
+                <Table.Cell>
+                  {user.phone_number
+                    ? user.phone_number.substr(0, 3) +
+                      "-" +
+                      user.phone_number.substr(3, 3) +
+                      "-" +
+                      user.phone_number.substr(6, 4)
+                    : ""}
+                </Table.Cell>
+                <Table.Cell>
+                  <Styled.Button
+                    onClick={() => this.onDisplayEditUserModal(user)}
+                  >
+                    <Icon color="grey3" name="create" />
+                  </Styled.Button>
+                  {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                  {/*  <Icon color="grey3" name="delete" />*/}
+                  {/*</Styled.Button>*/}
+                  <Link href={`stats/${user._id}`}>
+                    <Styled.Button>
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g clipPath="url(#clip0_2204_28336)">
+                          <path
+                            d="M5.04892 17.99L10.2446 12.7856L13.7084 16.2494L21.0689 7.97098L19.848 6.75L13.7084 13.6516L10.2446 10.1878L3.75 16.6911L5.04892 17.99Z"
+                            fill="#960034"
+                          />
+                          <line
+                            x1="0.975"
+                            y1="1"
+                            x2="0.975"
+                            y2="22.5"
+                            stroke="#960034"
+                            strokeWidth="1.7"
+                          />
+                          <line
+                            x1="0.25"
+                            y1="21.65"
+                            x2="22.75"
+                            y2="21.65"
+                            stroke="#960034"
+                            strokeWidth="1.7"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_2204_28336">
+                            <rect width="24" height="24" fill="white" />
+                          </clipPath>
+                        </defs>
+                      </svg>
                     </Styled.Button>
-                  </td>
-                  <td>
-                    {user.phone_number
-                      ? user.phone_number.substr(0, 3) +
-                        "-" +
-                        user.phone_number.substr(3, 3) +
-                        "-" +
-                        user.phone_number.substr(6, 4)
-                      : ""}
-                  </td>
-                  <td>
-                    <Styled.Button
-                      onClick={() => this.onDisplayEditUserModal(user)}
-                    >
-                      <Icon color="grey3" name="create" />
-                    </Styled.Button>
-                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
-                    {/*  <Icon color="grey3" name="delete" />*/}
-                    {/*</Styled.Button>*/}
-                    <Link href={`stats/${user._id}`}>
-                      <Styled.Button>
-                        <svg
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_2204_28336)">
-                            <path
-                              d="M5.04892 17.99L10.2446 12.7856L13.7084 16.2494L21.0689 7.97098L19.848 6.75L13.7084 13.6516L10.2446 10.1878L3.75 16.6911L5.04892 17.99Z"
-                              fill="#960034"
-                            />
-                            <line
-                              x1="0.975"
-                              y1="1"
-                              x2="0.975"
-                              y2="22.5"
-                              stroke="#960034"
-                              strokeWidth="1.7"
-                            />
-                            <line
-                              x1="0.25"
-                              y1="21.65"
-                              x2="22.75"
-                              y2="21.65"
-                              stroke="#960034"
-                              strokeWidth="1.7"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_2204_28336">
-                              <rect width="24" height="24" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                      </Styled.Button>
-                    </Link>
-                  </td>
-                </Table.Row>
-              ))}
-          </tbody>
-        </Table.Table>
-        {loading && <Loading />}
-        <EditUserForm 
-          userSelectedForEdit={this.state.userSelectedForEdit} 
-          submitHandler={this.handleSubmit} 
-          isOpen={this.state.modalOpen} 
-          closeModal={this.onModalClose} 
-        />
+                  </Link>
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          {loading && <Loading />}
+          <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
+            <ModalHeader color="#ef4e79">
+              {this.state.userSelectedForEdit?.name ?? ""}
+            </ModalHeader>
+            <EditUserForm 
+              userSelectedForEdit={this.state.userSelectedForEdit}
+              submitHandler={this.handleSubmit}
+              isOpen={this.state.isOpen}
+              closeModal={this.onModalClose}
+            />
+          </Modal>
+        </Table>
         {users.length !== 0 && (
           <Pagination
             items={users}
@@ -169,7 +184,7 @@ class VolunteerTable extends React.Component {
             updatePageCallback={this.updatePage}
           />
         )}
-      </Table.Container>
+      </div>
     );
   }
 }
