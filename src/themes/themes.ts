@@ -1,5 +1,5 @@
 import { ThemeType } from "./types";
 import { createTheme } from "./utils";
 
-export const baseTheme: ThemeType = createTheme("red", "blue");
-export const darkTheme: ThemeType = createTheme("grey", "black");
+export const lightTheme: ThemeType = createTheme("#1f2937", "white");
+export const darkTheme: ThemeType = createTheme("white", "#1f2937");

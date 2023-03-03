@@ -1,3 +1,5 @@
+import { Table } from "flowbite-react";
+import { Field, Form, Formik } from "formik";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
@@ -15,9 +17,8 @@ import styled from "styled-components";
 import Icon from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
+
 import * as SForm from "../sharedStyles/formStyles";
-import { Table } from "flowbite-react";
-import { Field, Formik, Form } from "formik";
 
 const Styled = {
   Button: styled(Button)`
@@ -76,8 +77,12 @@ class VolunteerTable extends React.Component {
     const { users, loading } = this.props;
     return (
       <div>
-        <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
-          <Table.Head className="bg-white dark:border-gray-700 dark:bg-gray-800">
+        <Table
+          style={{ width: "100%", maxWidth: "none" }}
+          striped={true}
+          color="secondaryColor"
+        >
+          <Table.Head className="bg-secondaryColor text-primaryColor dark:border-gray-700 dark:bg-gray-800">
             <Table.HeadCell>Volunteer Name</Table.HeadCell>
             <Table.HeadCell>Email Address</Table.HeadCell>
             <Table.HeadCell>Phone Number</Table.HeadCell>

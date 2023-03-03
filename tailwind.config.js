@@ -7,8 +7,8 @@ module.exports = {
   ],
   theme: {
     colors: {
-      primary: "var(--primary-color)",
-      secondary: "var(--primary-color)",
+      primaryColor: "var(--primary-color)",
+      secondaryColor: "var(--secondary-color)",
     },
     extend: {},
   },

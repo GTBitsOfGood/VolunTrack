@@ -1,10 +1,10 @@
+import "flowbite-react";
+import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import "flowbite-react";
 import React from "react";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
-import { Navbar, Dropdown, Avatar } from "flowbite-react";
 
 const Header = () => {
   const router = useRouter();
