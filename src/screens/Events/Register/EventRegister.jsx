@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
+import { Icon } from "../../../components/Icon";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-import Icon from "../../../components/Icon";
 
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";

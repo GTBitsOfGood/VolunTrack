@@ -14,7 +14,7 @@ import {
   Row,
 } from "reactstrap";
 import styled from "styled-components";
-import Icon from "../../components/Icon";
+import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import Icon from "../../components/Icon";
+import { Icon } from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
 import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
 
