@@ -1,4 +1,3 @@
-import { Button as FlowbiteButton } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import PropTypes from "prop-types";
@@ -7,8 +6,6 @@ import { CSVLink } from "react-csv";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { deleteUser, getUsers, updateUser } from "../../actions/queries";
-import { darkTheme, lightTheme } from "../../themes/themes";
-import { applyTheme } from "../../themes/utils";
 import VolunteerTable from "./VolunteerTable";
 
 const Styled = {
@@ -176,18 +173,6 @@ class Volunteers extends React.Component {
       <Styled.Container>
         <Styled.HeaderTitle>
           <Styled.Text>Volunteers</Styled.Text>
-          <div className="flex">
-            <FlowbiteButton
-              color="light"
-              className="m-0"
-              onClick={() => applyTheme(lightTheme)}
-            >
-              Light
-            </FlowbiteButton>
-            <FlowbiteButton color="dark" onClick={() => applyTheme(darkTheme)}>
-              Dark
-            </FlowbiteButton>
-          </div>
           <Styled.CSVLink
             data={this.state.users}
             filename={"volunteer-list.csv"}

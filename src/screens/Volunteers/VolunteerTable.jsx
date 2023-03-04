@@ -77,12 +77,8 @@ class VolunteerTable extends React.Component {
     const { users, loading } = this.props;
     return (
       <div>
-        <Table
-          style={{ width: "100%", maxWidth: "none" }}
-          striped={true}
-          color="secondaryColor"
-        >
-          <Table.Head className="bg-secondaryColor text-primaryColor dark:border-gray-700 dark:bg-gray-800">
+        <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+          <Table.Head className="dark:border-red-700 dark:bg-gray-800">
             <Table.HeadCell>Volunteer Name</Table.HeadCell>
             <Table.HeadCell>Email Address</Table.HeadCell>
             <Table.HeadCell>Phone Number</Table.HeadCell>

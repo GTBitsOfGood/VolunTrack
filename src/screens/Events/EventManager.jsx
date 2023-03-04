@@ -7,7 +7,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
-  DropdownToggle,
+  DropdownToggle
 } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../actions/queries";
@@ -22,6 +22,10 @@ import router from "next/router";
 import PropTypes from "prop-types";
 import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
+
+import { Button as FlowbiteButton } from "flowbite-react";
+import { darkTheme, lightTheme } from "../../themes/themes";
+import { applyTheme } from "../../themes/utils";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -352,6 +356,21 @@ const EventManager = ({ user, role, isHomePage }) => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
+              <div className="flex">
+                <FlowbiteButton
+                  color="light"
+                  className="m-0"
+                  onClick={() => applyTheme(lightTheme)}
+                >
+                  Light
+                </FlowbiteButton>
+                <FlowbiteButton
+                  color="dark"
+                  onClick={() => applyTheme(darkTheme)}
+                >
+                  Dark
+                </FlowbiteButton>
+              </div>
               <Styled.Button onClick={onCreateClicked}>
                 <span style={{ color: "white" }}>Create new event</span>
               </Styled.Button>
