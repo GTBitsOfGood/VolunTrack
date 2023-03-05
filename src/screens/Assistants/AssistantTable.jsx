@@ -230,6 +230,7 @@ class AssistantTable extends React.Component {
                 submitHandler={this.onModalClose}
                 isPopUp={true}
                 isAdmin={true} // Update to correctly pass permissions
+                closePopUp={this.cancel}
               />
             </ModalBody>
           </Container>

@@ -4,17 +4,6 @@ import * as SForm from "../../screens/sharedStyles/formStyles";
 import { Formik, Form } from "formik";
 import InputField from "./InputField";
 
-// TODO ITEMS
-/*
- *  [v] Pass in the state displayEditUserModal
- *  [v] Implement for a volunteer
- *  [v] Implement for an admin (maybe with authentification)
- *  [ ] Implement for a profile edit
- *  [v] Make sure the scope of the props is narrow/broad enough
- *  [v] Change Forms to use the new InputField component
- *  [v] Hide the role drop down everywhere
- */
-
 const EditUserForm = (props) => {
   if (props.userSelectedForEdit) {
     return (

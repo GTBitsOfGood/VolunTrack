@@ -161,6 +161,7 @@ class VolunteerTable extends React.Component {
               submitHandler={this.handleSubmit}
               isPopUp={true}
               isAdmin={true} // update to correctly pass permissions
+              closePopUp={this.onModalClose}
             />
           </Modal>
         </Table>
