@@ -144,7 +144,6 @@ class AssistantTable extends React.Component {
   };
 
   render() {
-    const { data: session } = useSession();
     const { users, invitedAdmins, loading } = this.props;
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
