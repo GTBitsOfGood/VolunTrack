@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
+import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
   Button: styled(Button)`
@@ -228,171 +229,16 @@ class AssistantTable extends React.Component {
           </ModalHeader>
           <Container>
             <ModalBody>
-              <form>
-                <Form.FormGroup>
-                  <Row>
-                    <Col>
-                      <Form.Label>First Name</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.first_name
-                            : ""
-                        }
-                        type="text"
-                        name="Name"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Last Name</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.last_name
-                            : ""
-                        }
-                        type="text"
-                        name="Name"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Role</Form.Label>
-                      <Dropdown
-                        options={roles}
-                        onChange={(e) => {
-                          this.handleStatus(e);
-                        }}
-                        value={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.role === "admin"
-                              ? "Administrator"
-                              : this.state.userSelectedForEdit.role ===
-                                "admin-assistant"
-                              ? "Admin Assistant"
-                              : this.state.userSelectedForEdit.role === "staff"
-                              ? "Staff"
-                              : { defaultOption }
-                            : { defaultOption }
-                        }
-                        placeholder="Select an option"
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Form.Label>Email</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.email
-                            : ""
-                        }
-                        type="text"
-                        name="Email"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Phone</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.phone_number
-                            : ""
-                        }
-                        type="text"
-                        name="Phone"
-                      />
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col>
-                      <Form.Label>Date of Birth</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.date_of_birth
-                            : ""
-                        }
-                        type="text"
-                        name="Date of Birth"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Zip Code</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.zip_code
-                            : ""
-                        }
-                        type="text"
-                        name="Zip Code"
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <Form.Label>Address</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.address
-                            : ""
-                        }
-                        type="text"
-                        name="Address"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>City</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.city
-                            : ""
-                        }
-                        type="text"
-                        name="City"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>State</Form.Label>
-                      <Form.Input
-                        readOnly={true}
-                        defaultValue={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.state
-                            : ""
-                        }
-                        type="text"
-                        name="State"
-                      />
-                    </Col>
-                  </Row>
-                </Form.FormGroup>
-              </form>
+              <EditUserForm
+                userSelectedForEdit={this.state.userSelectedForEdit}
+                submitHandler={this.onModalClose}
+                isModal={true}
+                isOpen={this.state.isOpen}
+                closeModal={this.cancel}
+                isAdmin={true}
+              />
             </ModalBody>
           </Container>
-          <ModalFooter>
-            <Button color="secondary" onClick={this.cancel}>
-              Cancel
-            </Button>
-            <Button
-              style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.onModalClose}
-            >
-              Update
-            </Button>
-          </ModalFooter>
         </Modal>
         {/* Delete Invited Admin Modal */}
         <Modal
