@@ -144,6 +144,7 @@ class AssistantTable extends React.Component {
   };
 
   render() {
+    const { data: session } = useSession();
     const { users, invitedAdmins, loading } = this.props;
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
@@ -232,10 +233,8 @@ class AssistantTable extends React.Component {
               <EditUserForm
                 userSelectedForEdit={this.state.userSelectedForEdit}
                 submitHandler={this.onModalClose}
-                isModal={true}
-                isOpen={this.state.isOpen}
-                closeModal={this.cancel}
-                isAdmin={true}
+                isPopUp={true}
+                isAdmin={true} // Update to correctly pass permissions
               />
             </ModalBody>
           </Container>
