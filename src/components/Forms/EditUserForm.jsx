@@ -13,15 +13,13 @@ import { Field, Formik, Form } from "formik";
  *  [ ] Make sure the scope of the props is narrow/broad enough
  *  [ ] Change Forms to use the new InputField component
  *  [ ] Hide the role drop down everywhere
- *  [ ] Ask Question About the point below
- *  -- Only allow edits to edit profile and edit volunteer (you can pass in a boolean and disable all the fields if true)
  */
 
 const EditUserForm = ({
   userSelectedForEdit,
   submitHandler,
-  isOpen,
   closeModal,
+  isModal
 }) => {
   return (
     <Formik
@@ -114,9 +112,9 @@ const EditUserForm = ({
             padding: "5px",
           }}
         >
-          <Button color="secondary" onClick={closeModal}>
+          {isModal && <Button color="secondary" onClick={closeModal}>
             Cancel
-          </Button>
+          </Button>}
           <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
             Update
           </Button>
@@ -129,8 +127,9 @@ const EditUserForm = ({
 EditUserForm.propTypes = {
   userSelectedForEdit: PropTypes.object.isRequired,
   submitHandler: PropTypes.func.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  closeModal: PropTypes.func.isRequired,
+  isModal: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 export default EditUserForm;

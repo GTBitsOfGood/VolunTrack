@@ -159,8 +159,10 @@ class VolunteerTable extends React.Component {
             <EditUserForm
               userSelectedForEdit={this.state.userSelectedForEdit}
               submitHandler={this.handleSubmit}
+              isModal={true}
               isOpen={this.state.isOpen}
               closeModal={this.onModalClose}
+              isAdmin={true}
             />
           </Modal>
         </Table>
