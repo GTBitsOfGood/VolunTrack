@@ -15,17 +15,12 @@ import { Field, Formik, Form } from "formik";
  *  [ ] Hide the role drop down everywhere
  */
 
-const EditUserForm = ({
-  userSelectedForEdit,
-  submitHandler,
-  closeModal,
-  isModal
-}) => {
+const EditUserForm = (props) => {
   return (
     <Formik
       enableReinitialize
-      initialValues={userSelectedForEdit}
-      onSubmit={submitHandler}
+      initialValues={props.userSelectedForEdit}
+      onSubmit={props.submitHandler}
     >
       <Form>
         <Container>
@@ -112,9 +107,11 @@ const EditUserForm = ({
             padding: "5px",
           }}
         >
-          {isModal && <Button color="secondary" onClick={closeModal}>
-            Cancel
-          </Button>}
+          {props.isModal && (
+            <Button color="secondary" onClick={props.closeModal}>
+              Cancel
+            </Button>
+          )}
           <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
             Update
           </Button>
