@@ -2,20 +2,16 @@ import PropTypes from "prop-types";
 import React from "react";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import * as Form from "../sharedStyles/formStyles";
 import { Table } from "flowbite-react";
 import Icon from "../../components/Icon";
-import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 import {
   Button,
-  Col,
   Container,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
-  Row,
 } from "reactstrap";
 import styled from "styled-components";
 import { updateUser } from "../../actions/queries";

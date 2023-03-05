@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import React from "react";
 import { Button, Col, Container, Row } from "reactstrap";
 import * as SForm from "../../screens/sharedStyles/formStyles";
-import { Field, Formik, Form } from "formik";
+import { Formik, Form } from "formik";
 import InputField from "./InputField";
 
 // TODO ITEMS
@@ -140,7 +139,7 @@ const EditUserForm = (props) => {
             }}
           >
             {props.isPopUp && (
-              <Button color="secondary" onClick={props.closeModal}>
+              <Button color="secondary" onClick={props.closePopUp}>
                 Cancel
               </Button>
             )}
@@ -161,6 +160,7 @@ EditUserForm.propTypes = {
   submitHandler: PropTypes.func.isRequired,
   isPopUp: PropTypes.bool.isRequired,
   isAdmin: PropTypes.string.isRequired,
+  closePopUp: PropTypes.func,
 };
 
 export default EditUserForm;
