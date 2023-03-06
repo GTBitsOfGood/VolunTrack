@@ -7,7 +7,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
-  DropdownToggle
+  DropdownToggle,
 } from "reactstrap";
 import styled from "styled-components";
 import { fetchEvents } from "../../actions/queries";
