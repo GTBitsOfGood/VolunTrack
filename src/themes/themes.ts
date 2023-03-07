@@ -7,8 +7,4 @@ export const darkTheme: ThemeType = createTheme("white", "#1f2937");
 //   "#F2D2BD",
 //   "#9F2B68"
 // );
-export const sampleOrgTheme: ThemeType = createTheme(
-  "#210e72",
-  "#6b86d5"
-);
-
+export const sampleOrgTheme: ThemeType = createTheme("#210e72", "#6b86d5");
