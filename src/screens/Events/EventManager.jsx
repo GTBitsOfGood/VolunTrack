@@ -24,7 +24,7 @@ import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
 
 import { Button as FlowbiteButton } from "flowbite-react";
-import { darkTheme, lightTheme } from "../../themes/themes";
+import { sampleOrgTheme } from "../../themes/themes";
 import { applyTheme } from "../../themes/utils";
 
 // const isSameDay = (a) => (b) => {
@@ -356,24 +356,9 @@ const EventManager = ({ user, role, isHomePage }) => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <div className="flex">
-                <FlowbiteButton
-                  color="light"
-                  className="m-0"
-                  onClick={() => applyTheme(lightTheme)}
-                >
-                  Light
-                </FlowbiteButton>
-                <FlowbiteButton
-                  color="dark"
-                  onClick={() => applyTheme(darkTheme)}
-                >
-                  Dark
-                </FlowbiteButton>
-              </div>
-              <Styled.Button onClick={onCreateClicked}>
-                <span style={{ color: "white" }}>Create new event</span>
-              </Styled.Button>
+              <FlowbiteButton className="bg-primaryColor hover:bg-secondaryColor">
+                Create new event
+              </FlowbiteButton>
             </Styled.ButtonRow>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>

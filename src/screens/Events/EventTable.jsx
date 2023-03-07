@@ -205,7 +205,7 @@ const EventTable = ({
         {events.map((event) => (
           <Styled.EventContainer
             key={event._id}
-            className="bg-secondaryColor text-primaryColor"
+            className="bg-white text-primaryColor"
           >
             <Styled.EventGrid>
               <DateDisplayComponent date={event.date} color={"Primary"} />
