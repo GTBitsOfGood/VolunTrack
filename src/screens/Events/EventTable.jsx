@@ -203,10 +203,7 @@ const EventTable = ({
     return (
       <Styled.Container>
         {events.map((event) => (
-          <Styled.EventContainer
-            key={event._id}
-            className="bg-white text-primaryColor"
-          >
+          <Styled.EventContainer key={event._id} className="bg-white">
             <Styled.EventGrid>
               <DateDisplayComponent date={event.date} color={"Primary"} />
               <Link href={`events/${event._id}`}>

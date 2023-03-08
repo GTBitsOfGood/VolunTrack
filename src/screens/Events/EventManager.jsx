@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
-  Button,
+  Button as RSButton,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -23,9 +23,7 @@ import PropTypes from "prop-types";
 import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
 
-import { Button as FlowbiteButton } from "flowbite-react";
-import { sampleOrgTheme } from "../../themes/themes";
-import { applyTheme } from "../../themes/utils";
+import { Button } from "flowbite-react";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -42,7 +40,7 @@ const Styled = {
     align-items: flex-start;
     overflow: hidden;
   `,
-  Button: styled(Button)`
+  Button: styled(RSButton)`
     background: ${variables.primary};
     border: none;
     color: white;
@@ -356,9 +354,9 @@ const EventManager = ({ user, role, isHomePage }) => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <FlowbiteButton className="bg-primaryColor hover:bg-secondaryColor">
+              <Button className="hover:bg-hoverColor bg-primaryColor">
                 Create new event
-              </FlowbiteButton>
+              </Button>
             </Styled.ButtonRow>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
