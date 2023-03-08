@@ -1,12 +1,12 @@
+import { Table } from "flowbite-react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { getHours } from "../screens/Stats/User/hourParsing";
-import Icon from "./Icon";
+import { Icon } from "./Icon";
 import Pagination from "./PaginationComp";
-import { Table } from "flowbite-react";
 
 const Styled = {
   Button: styled(Button)`

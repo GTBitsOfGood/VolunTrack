@@ -1,12 +1,12 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
+import { CSVLink } from "react-csv";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
-import { CSVLink } from "react-csv";
 
 const Styled = {
   Container: styled.div`

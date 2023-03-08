@@ -1,11 +1,11 @@
+import { Label, TextInput } from "flowbite-react";
 import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
-import { Label, TextInput } from "flowbite-react";
 
 const InputField = (props) => (
   <div>
     <div className="flex flex-row">
-      <Label class="text-slate-200 mb-2 h-6 font-medium" htmlFor={props.name}>
+      <Label class="mb-2 h-6 font-medium text-slate-200" htmlFor={props.name}>
         {props.label}
       </Label>
       {props.isRequired && <p className="mb-0 text-red-600">*</p>}
@@ -13,7 +13,7 @@ const InputField = (props) => (
     <Field name={props.name}>
       {({ field }) => (
         <TextInput
-          class="border-1 border-slate-100 mt-0 h-10 w-full rounded-md bg-white"
+          class="border-1 mt-0 h-10 w-full rounded-md border-slate-100 bg-white"
           id={props.name}
           {...field}
           type={props.type ?? "text"}

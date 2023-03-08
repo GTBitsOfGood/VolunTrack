@@ -11,7 +11,7 @@ import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
 import StyleProvider from "../providers/StyleProvider";
-import { baseTheme } from "../themes/themes";
+import { blueTheme } from "../themes/themes";
 import { applyTheme } from "../themes/utils";
 
 const Styled = {
@@ -30,7 +30,7 @@ const Styled = {
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   useEffect(() => {
-    applyTheme(baseTheme);
+    applyTheme(blueTheme);
   }, []);
 
   return (

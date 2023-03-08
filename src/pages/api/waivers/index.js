@@ -1,7 +1,4 @@
-import {
-  getWaiver,
-  updateWaiver,
-} from "../../../../server/actions/waivers";
+import { getWaiver, updateWaiver } from "../../../../server/actions/waivers";
 
 export default async function handler(req, res, next) {
   if (req.method === "GET") {

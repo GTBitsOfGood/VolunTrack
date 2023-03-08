@@ -1,10 +1,10 @@
+import "flowbite-react";
+import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import "flowbite-react";
 import React from "react";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
-import { Navbar, Dropdown, Avatar } from "flowbite-react";
 
 const Header = () => {
   const router = useRouter();
@@ -78,8 +78,10 @@ const Header = () => {
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          className={`text-lg font-bold ${
-            currPageMatches("/home") ? "text-pink-800" : "text-gray-600"
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            currPageMatches("/home")
+              ? "text-primaryColor"
+              : "text-secondaryColor"
           }`}
         >
           Home
@@ -87,8 +89,10 @@ const Header = () => {
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
-            className={`text-lg font-bold ${
-              currPageMatches("/volunteers") ? "text-pink-800" : "text-gray-600"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/volunteers")
+                ? "text-primaryColor"
+                : "text-secondaryColor"
             }`}
           >
             Volunteers
@@ -96,8 +100,10 @@ const Header = () => {
         )}
         <Navbar.Link
           href="/events"
-          className={`text-lg font-bold ${
-            currPageMatches("/events") ? "text-pink-800" : "text-gray-600"
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            currPageMatches("/events")
+              ? "text-primaryColor"
+              : "text-secondaryColor"
           }`}
         >
           Events
@@ -106,8 +112,10 @@ const Header = () => {
           <Navbar.Link
             onClick={goToStats}
             href="/stats"
-            className={`text-lg font-bold ${
-              currPageMatches("/stats") ? "text-pink-800" : "text-gray-600"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/stats")
+                ? "text-primaryColor"
+                : "text-secondaryColor"
             }`}
           >
             Participation History
@@ -120,11 +128,11 @@ const Header = () => {
               inline={true}
               label={
                 <div
-                  className={`text-lg font-bold ${
+                  className={`text-lg font-bold md:hover:text-primaryColor  ${
                     currPageMatches("/assistants") ||
                     currPageMatches("/manage-waivers")
-                      ? "text-red-600"
-                      : "text-gray-600"
+                      ? "text-primaryColor"
+                      : "text-secondaryColor"
                   }`}
                 >
                   Settings
@@ -172,8 +180,8 @@ const Header = () => {
                 className={`text-lg font-bold ${
                   currPageMatches("/assistants") ||
                   currPageMatches("/manage-waivers")
-                    ? "text-red-600"
-                    : "text-gray-600"
+                    ? "text-primaryColor"
+                    : "text-secondaryColor"
                 }`}
               >
                 Profile Settings
