@@ -355,7 +355,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                 </DropdownMenu>
               </Dropdown>
               <Button
-                className="hover:bg-hoverColor bg-primaryColor"
+                className="bg-primaryColor hover:bg-hoverColor"
                 onClick={onCreateClicked}
               >
                 Create new event
