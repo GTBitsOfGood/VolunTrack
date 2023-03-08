@@ -354,7 +354,10 @@ const EventManager = ({ user, role, isHomePage }) => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <Button className="hover:bg-hoverColor bg-primaryColor">
+              <Button
+                className="hover:bg-hoverColor bg-primaryColor"
+                onClick={onCreateClicked}
+              >
                 Create new event
               </Button>
             </Styled.ButtonRow>
