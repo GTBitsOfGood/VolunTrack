@@ -8,7 +8,7 @@ const ProgressDisplay = ({ type, attendance, header }) => {
   let num = 0;
   let outOf = 1;
 
-  if (type == "Events") {
+  if (type === "Events") {
     if (attendance.length > 1) {
       level = "Silver";
       outOf = 3;
@@ -42,11 +42,11 @@ const ProgressDisplay = ({ type, attendance, header }) => {
     <div className="ml-18 mr-8 rounded-md border-2 bg-white px-10 py-4">
       <Label class="text-black-800 text-xl font-semibold">{header}</Label>
       <div className="flex flex-nowrap items-end">
-        <img src={"/images/Hours Earned - " + level + ".png"}></img>
+        <img src={"/images/Hours Earned - " + level + ".png"} />
         <div className="flex flex-nowrap items-center font-semibold">
           <p className="pl-12 text-2xl">{num}</p>
-          <p className="text-md text-slate-600 pl-2">/ {outOf}</p>
-          <p className="text-md text-slate-600 pl-2">{type}</p>
+          <p className="text-md pl-2 text-slate-600">/ {outOf}</p>
+          <p className="text-md pl-2 text-slate-600">{type}</p>
         </div>
       </div>
       <Progress className="mt-4" progress={(num / outOf) * 100} color="green" />
