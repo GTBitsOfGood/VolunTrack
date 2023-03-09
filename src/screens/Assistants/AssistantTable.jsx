@@ -1,26 +1,24 @@
+import { Table } from "flowbite-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Loading from "../../components/Loading";
-import * as Form from "../sharedStyles/formStyles";
-import { Table } from "flowbite-react";
-import { Container, Row, Col } from "reactstrap";
-import styled from "styled-components";
-import Icon from "../../components/Icon";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
+import { Icon } from "../../components/Icon";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-
-// const keyToValue = (key) => {
-//   key = key.replace(/_/g, " ");
-//   key = key
-//     .toLowerCase()
-//     .split(" ")
-//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-//     .join(" ");
-//   return key;
-// };
+import * as Form from "../sharedStyles/formStyles";
 
 const Styled = {
   Button: styled(Button)`
@@ -113,7 +111,6 @@ class AssistantTable extends React.Component {
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
     }
-    return;
   };
 
   cancel = () => {
@@ -179,11 +176,11 @@ class AssistantTable extends React.Component {
                       </Styled.Button>
                     </Table.Cell>
                     <Table.Cell>
-                      {user.role == "admin"
+                      {user.role === "admin"
                         ? "Administrator"
-                        : user.role == "admin-assistant"
+                        : user.role === "admin-assistant"
                         ? "Admin Assistant"
-                        : user.role == "staff"
+                        : user.role === "staff"
                         ? "Staff"
                         : user.role.charAt(0).toUpperCase() +
                           user.role.slice(1)}
@@ -269,12 +266,12 @@ class AssistantTable extends React.Component {
                         }}
                         value={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.role == "admin"
+                            ? this.state.userSelectedForEdit.role === "admin"
                               ? "Administrator"
-                              : this.state.userSelectedForEdit.role ==
+                              : this.state.userSelectedForEdit.role ===
                                 "admin-assistant"
                               ? "Admin Assistant"
-                              : this.state.userSelectedForEdit.role == "staff"
+                              : this.state.userSelectedForEdit.role === "staff"
                               ? "Staff"
                               : { defaultOption }
                             : { defaultOption }

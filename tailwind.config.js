@@ -1,12 +1,18 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
   content: [
-    "./src/**/*.{html, js, jsx, ts, tsx}",
-    './public/**/*.{html, js, jsx, ts, tsx}"',
-    "./node_modules/flowbite-react/**/*.js",
+    "./src/**/*.{html,js,jsx,ts,tsx}",
+    "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primaryColor: "var(--primary-color)",
+        secondaryColor: "var(--secondary-color)",
+        hoverColor: "var(--hover-color)",
+      },
+    },
   },
   plugins: [require("flowbite/plugin")],
 };

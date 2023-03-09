@@ -8,7 +8,7 @@ export async function inviteAdmin(email, organizationId) {
     {
       _id: organizationId,
     },
-    { $push: { invitedAdmins: email } },
+    { $addToSet: { invitedAdmins: email } },
     { new: true, upsert: true }
   );
 }
@@ -24,7 +24,6 @@ export async function removeInvitedAdmin(email, organizationId) {
 
   return await Organization.findOneAndUpdate(
     { _id: organizationId },
-    { $pull: { invitedAdmins: email } },
-    { new: true }
+    { $pull: { invitedAdmins: email } }
   );
 }

@@ -1,10 +1,10 @@
+import "flowbite-react";
+import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import "flowbite-react";
 import React from "react";
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
-import { Navbar, Dropdown, Avatar } from "flowbite-react";
 
 const Header = () => {
   const router = useRouter();
@@ -65,45 +65,23 @@ const Header = () => {
   );
 
   return (
-    <Navbar fluid={false} rounded={true} class="my-0 bg-white">
+    <Navbar fluid={false} rounded={true}>
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img
           src="/images/helping_mamas_logo.png"
           alt="helping mamas logo"
-          className="h-14"
+          className="h-10"
         />
       </Navbar.Brand>
       <Navbar.Toggle />
       {/*<div className="w-48 sm:w-0 md:w-0" />*/}
-      <div className="flex hidden md:block mr-2 md:order-2">
-        <Dropdown
-          arrowIcon={true}
-          inline={true}
-          label={
-            <div className="flex">
-              <Avatar
-                img={user.imageUrl ?? "/images/gradient-avatar.png"}
-                alt="icon"
-                rounded={true}
-              />
-              <div className="flex flex-col gap-0 text-left ml-3">
-                <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                <p className="mb-0">{`${capitalizeFirstLetter(
-                  user.role ?? ""
-                )}`}</p>
-              </div>
-            </div>
-          }
-        >
-          {dropdownItems}
-        </Dropdown>
-      </div>
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          color="pink"
-          className={`text-lg font-bold ${
-            currPageMatches("/home") ? "text-red-800" : "text-gray-600"
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            currPageMatches("/home")
+              ? "text-primaryColor"
+              : "text-secondaryColor"
           }`}
         >
           Home
@@ -111,8 +89,10 @@ const Header = () => {
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
-            className={`text-lg font-bold ${
-              currPageMatches("/volunteers") ? "text-red-800" : "text-gray-600"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/volunteers")
+                ? "text-primaryColor"
+                : "text-secondaryColor"
             }`}
           >
             Volunteers
@@ -120,8 +100,10 @@ const Header = () => {
         )}
         <Navbar.Link
           href="/events"
-          className={`text-lg font-bold ${
-            currPageMatches("/events") ? "text-red-800" : "text-gray-600"
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            currPageMatches("/events")
+              ? "text-primaryColor"
+              : "text-secondaryColor"
           }`}
         >
           Events
@@ -130,8 +112,10 @@ const Header = () => {
           <Navbar.Link
             onClick={goToStats}
             href="/stats"
-            className={`text-lg font-bold ${
-              currPageMatches("/stats") ? "text-red-800" : "text-gray-600"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/stats")
+                ? "text-primaryColor"
+                : "text-secondaryColor"
             }`}
           >
             Participation History
@@ -144,11 +128,11 @@ const Header = () => {
               inline={true}
               label={
                 <div
-                  className={`text-lg font-bold ${
+                  className={`text-lg font-bold md:hover:text-primaryColor  ${
                     currPageMatches("/assistants") ||
                     currPageMatches("/manage-waivers")
-                      ? "text-red-600"
-                      : "text-gray-600"
+                      ? "text-primaryColor"
+                      : "text-secondaryColor"
                   }`}
                 >
                   Settings
@@ -164,6 +148,29 @@ const Header = () => {
             </Dropdown>
           )}
         </Navbar.Link>
+        <div className="mr-2 flex hidden md:order-2 md:block">
+          <Dropdown
+            arrowIcon={true}
+            inline={true}
+            label={
+              <div className="flex">
+                <Avatar
+                  img={user.imageUrl ?? "/images/gradient-avatar.png"}
+                  alt="icon"
+                  rounded={true}
+                />
+                <div className="ml-3 flex flex-col gap-0 text-left">
+                  <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                  <p className="mb-0">{`${capitalizeFirstLetter(
+                    user.role ?? ""
+                  )}`}</p>
+                </div>
+              </div>
+            }
+          >
+            {dropdownItems}
+          </Dropdown>
+        </div>
         <Navbar.Link className="block md:hidden">
           <Dropdown
             arrowIcon={true}
@@ -173,8 +180,8 @@ const Header = () => {
                 className={`text-lg font-bold ${
                   currPageMatches("/assistants") ||
                   currPageMatches("/manage-waivers")
-                    ? "text-red-600"
-                    : "text-gray-600"
+                    ? "text-primaryColor"
+                    : "text-secondaryColor"
                 }`}
               >
                 Profile Settings
