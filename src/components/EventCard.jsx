@@ -47,7 +47,7 @@ const EventCard = (props) => {
           </div>
         </div>
         <div className="flex-column justify-end">
-          {props.role === "admin" && (
+          {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
                 <button
@@ -78,7 +78,7 @@ const EventCard = (props) => {
               </Tooltip>
             </div>
           )}
-          {props.role === "volunteer" && (
+          {props.user.role === "volunteer" && (
             <>
               {props.event.volunteers.includes(props.user._id) ? (
                 <button className="mx-1 flex" onClick={registerOnClick}>
@@ -121,7 +121,6 @@ const EventCard = (props) => {
 EventCard.propTypes = {
   key: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
-  role: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   functions: PropTypes.object.isRequired,
   onRegisterClicked: PropTypes.func.isRequired,

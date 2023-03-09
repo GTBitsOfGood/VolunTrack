@@ -1,9 +1,7 @@
 import Link from "next/link";
 import PropTypes from "prop-types";
-import { Button } from "reactstrap";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
-import variables from "../../design-tokens/_variables.module.scss";
 import { useSession } from "next-auth/react";
 
 const Styled = {
@@ -19,13 +17,6 @@ const Styled = {
   Spacer: styled.div`
     height: 12rem;
   `,
-  Button: styled(Button)`
-    background: white;
-    border: none;
-    color: #000;
-    padding: 0.5rem;
-    margin: 0 0 0 auto;
-  `,
   Events: styled.div`
     text-align: left;
     font-size: 36px;
@@ -36,7 +27,7 @@ const Styled = {
     }
   `,
   LinkedText: styled.p`
-    color: ${variables["primary"]};
+    color: #ef4e79;
     font-size: 0.9rem;
     font-weight: 900;
     text-align: left;
@@ -95,7 +86,6 @@ const EventsList = ({
   onRegisterClicked,
   onUnregister,
   user,
-  role,
   isHomePage,
 }) => {
   if (!user) {
@@ -130,11 +120,9 @@ const EventsList = ({
     upcomingEvents = upcomingEvents.slice(0, 2);
   }
 
-  let funcs = {
+  const functions = {
     onDeleteClicked: onDeleteClicked,
     onEditClicked: onEditClicked,
-    onRegisterClicked: onRegisterClicked,
-    onUnregister: onUnregister,
     convertTime: convertTime,
   };
 
@@ -145,9 +133,8 @@ const EventsList = ({
           <EventCard
             key={event._id}
             event={event}
-            role={role}
             user={user}
-            functions={funcs}
+            functions={functions}
             onRegisterClicked={onRegisterClicked}
           />
         ))}
@@ -164,9 +151,8 @@ const EventsList = ({
               <EventCard
                 key={event._id}
                 event={event}
-                role={role}
                 user={user}
-                functions={funcs}
+                functions={functions}
                 onRegisterClicked={onRegisterClicked}
               />
             ))}
@@ -178,9 +164,8 @@ const EventsList = ({
               <EventCard
                 key={event._id}
                 event={event}
-                role={role}
                 user={user}
-                functions={funcs}
+                functions={functions}
                 onRegisterClicked={onRegisterClicked}
               />
             ))}
@@ -199,9 +184,8 @@ const EventsList = ({
             <EventCard
               key={event._id}
               event={event}
-              role={role}
               user={user}
-              functions={funcs}
+              functions={functions}
               onRegisterClicked={onRegisterClicked}
             />
           ))}
@@ -216,9 +200,8 @@ const EventsList = ({
             <EventCard
               key={event._id}
               event={event}
-              role={role}
               user={user}
-              functions={funcs}
+              functions={functions}
               onRegisterClicked={onRegisterClicked}
             />
           ))}
@@ -245,7 +228,6 @@ EventsList.propTypes = {
   onRegisterClicked: PropTypes.func,
   onUnregister: PropTypes.func,
   user: PropTypes.object,
-  role: PropTypes.string,
   isHomePage: PropTypes.bool,
 };
 

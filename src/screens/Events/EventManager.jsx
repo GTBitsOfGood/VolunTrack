@@ -29,6 +29,7 @@ import ProgressDisplay from "../../components/ProgressDisplay";
 import "flowbite-react";
 
 import { Button } from "flowbite-react";
+import AdminHomeHeader from "../../components/AdminHomeHeader";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -422,7 +423,6 @@ const EventManager = ({ user, role, isHomePage }) => {
               onRegisterClicked={goToRegistrationPage}
               onUnregister={onUnregister}
               user={user}
-              role={role}
               isHomePage={isHomePage}
             />
           )}
@@ -440,41 +440,63 @@ const EventManager = ({ user, role, isHomePage }) => {
           />
         </Styled.Right>
       )}
-      {isHomePage && (
-        <Styled.HomePage>
-          {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
-          <div className="justify-start">
-            <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-            <div className="flex flex-wrap">
-              <ProgressDisplay
-                type={"Events"}
-                attendance={attendance}
-                header={"Events Attended"}
-              />
-              <ProgressDisplay
-                type={"Hours"}
-                attendance={attendance}
-                header={"Hours Earned"}
-              />
+      <Styled.HomePage>
+        {isHomePage && user.role === "volunteer" && (
+          <>
+            <div className="justify-start">
+              <p className="mb-2 text-2xl font-bold">Accomplishments</p>
+              <div className="flex flex-wrap">
+                <ProgressDisplay
+                  type={"Events"}
+                  attendance={attendance}
+                  header={"Events Attended"}
+                />
+                <ProgressDisplay
+                  type={"Hours"}
+                  attendance={attendance}
+                  header={"Hours Earned"}
+                />
+              </div>
             </div>
-          </div>
-          <EventsList
-            dateString={dateString}
-            events={
-              user.role === "admin"
-                ? filteredEvents
-                : filterEvents(events, user)
-            }
-            onEditClicked={onEditClicked}
-            onDeleteClicked={onDeleteClicked}
-            onRegisterClicked={goToRegistrationPage}
-            onUnregister={onUnregister}
-            user={user}
-            role={role}
-            isHomePage={isHomePage}
-          />
-        </Styled.HomePage>
-      )}
+            <EventsList
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filteredEvents
+                  : filterEvents(events, user)
+              }
+              onEditClicked={onEditClicked}
+              onDeleteClicked={onDeleteClicked}
+              onRegisterClicked={goToRegistrationPage}
+              onUnregister={onUnregister}
+              user={user}
+              isHomePage={isHomePage}
+            />
+          </>
+        )}
+
+        {isHomePage && user.role !== "volunteer" && (
+          <>
+            <AdminHomeHeader />
+            <EventsList
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filterOn
+                    ? filteredEvents
+                    : events
+                  : filterEvents(events, user)
+              }
+              onEditClicked={onEditClicked}
+              onDeleteClicked={onDeleteClicked}
+              onRegisterClicked={goToRegistrationPage}
+              onUnregister={onUnregister}
+              user={user}
+              isHomePage={isHomePage}
+            />
+          </>
+        )}
+      </Styled.HomePage>
     </Styled.Container>
   );
 };
