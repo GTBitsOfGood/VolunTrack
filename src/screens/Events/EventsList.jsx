@@ -2,9 +2,9 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
+import EventCard from "../../components/EventCard";
 import variables from "../../design-tokens/_variables.module.scss";
 import { useSession } from "next-auth/react";
-import Event from "../../components/Event";
 
 const Styled = {
   Container: styled.div`
@@ -16,72 +16,6 @@ const Styled = {
     min-height: min-content;
     overflow-y: auto;
   `,
-  EventContainer: styled.div`
-    width: 100%;
-    margin: 0 0 2rem 0;
-    padding: 0.75rem;
-    display: flex;
-    flex-direction: column;
-
-    background-color: white;
-    border: 1px solid ${variables["gray-200"]};
-    border-radius: 1rem;
-
-    cursor: pointer;
-  `,
-  EventGrid: styled.div`
-    width: 100%;
-    display: flex;
-    align-items: center;
-  `,
-  EventContent: styled.div`
-    width: 100%;
-    margin: 0;
-
-    display: flex;
-    flex-direction: column;
-  `,
-  EventContentRow: styled.div`
-    height: 50%;
-    width: 100%;
-
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  `,
-  EventTitle: styled.h3`
-    margin: 0;
-    padding: 0;
-
-    font-size: 1.5rem;
-    font-weight: bold;
-  `,
-  EventSlots: styled.p`
-    margin: 0 0 0 1rem;
-
-    color: grey;
-  `,
-  EditButton: styled(Button)`
-    margin: 0 0 0 auto;
-
-    background: none;
-    border: none;
-  `,
-  DeleteButton: styled(Button)`
-    background: none;
-    border: none;
-
-    justify-self: right;
-  `,
-  Time: styled.p`
-    margin: 0 auto 0 0;
-
-    font-size: 1.2rem;
-  `,
-  Date: styled.p`
-    margin: 0 1rem 0 0;
-    color: grey;
-  `,
   Spacer: styled.div`
     height: 12rem;
   `,
@@ -89,10 +23,6 @@ const Styled = {
     background: white;
     border: none;
     color: #000;
-    padding: 0.5rem;
-    margin: 0 0 0 auto;
-  `,
-  EventSpace: styled.div`
     padding: 0.5rem;
     margin: 0 0 0 auto;
   `,
@@ -157,7 +87,7 @@ const convertTime = (time) => {
 //   return date;
 // };
 
-const EventTable = ({
+const EventsList = ({
   dateString,
   events,
   onEditClicked,
@@ -212,9 +142,9 @@ const EventTable = ({
     return (
       <Styled.Container>
         {events.map((event) => (
-          <Event
+          <EventCard
             key={event._id}
-            eventObj={event}
+            event={event}
             role={role}
             user={user}
             functions={funcs}
@@ -231,9 +161,9 @@ const EventTable = ({
           <Styled.ul>
             <Styled.Events>Your Upcoming Events</Styled.Events>
             {registeredEvents.map((event) => (
-              <Event
+              <EventCard
                 key={event._id}
-                eventObj={event}
+                event={event}
                 role={role}
                 user={user}
                 functions={funcs}
@@ -245,9 +175,9 @@ const EventTable = ({
           <Styled.ul>
             <Styled.Events>New Events</Styled.Events>
             {upcomingEvents.map((event) => (
-              <Event
+              <EventCard
                 key={event._id}
-                eventObj={event}
+                event={event}
                 role={role}
                 user={user}
                 functions={funcs}
@@ -266,9 +196,9 @@ const EventTable = ({
         <Styled.Container>
           <Styled.Events>Your Upcoming Events</Styled.Events>
           {registeredEvents.map((event) => (
-            <Event
+            <EventCard
               key={event._id}
-              eventObj={event}
+              event={event}
               role={role}
               user={user}
               functions={funcs}
@@ -283,9 +213,9 @@ const EventTable = ({
         <Styled.Container>
           <Styled.Events>New Events</Styled.Events>
           {upcomingEvents.map((event) => (
-            <Event
+            <EventCard
               key={event._id}
-              eventObj={event}
+              event={event}
               role={role}
               user={user}
               functions={funcs}
@@ -307,7 +237,7 @@ const EventTable = ({
     }
   }
 };
-EventTable.propTypes = {
+EventsList.propTypes = {
   dateString: PropTypes.string,
   events: PropTypes.Array,
   onEditClicked: PropTypes.func,
@@ -319,4 +249,4 @@ EventTable.propTypes = {
   isHomePage: PropTypes.bool,
 };
 
-export default EventTable;
+export default EventsList;

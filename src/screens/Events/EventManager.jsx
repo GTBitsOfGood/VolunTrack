@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import {
-  Button,
+  Button as RSButton,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -15,7 +15,7 @@ import variables from "../../design-tokens/_variables.module.scss";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventDeleteModal from "./Admin/EventDeleteModal";
 import EventEditModal from "./Admin/EventEditModal";
-import EventTable from "./EventTable";
+import EventsList from "./EventsList";
 import { fetchAttendanceByUserId } from "../../actions/queries";
 
 import { filterAttendance } from "../Stats/helper";
@@ -27,6 +27,8 @@ import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import "flowbite-react";
+
+import { Button } from "flowbite-react";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -43,7 +45,7 @@ const Styled = {
     align-items: flex-start;
     overflow: hidden;
   `,
-  Button: styled(Button)`
+  Button: styled(RSButton)`
     background: ${variables.primary};
     border: none;
     color: white;
@@ -393,9 +395,12 @@ const EventManager = ({ user, role, isHomePage }) => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <Styled.Button onClick={onCreateClicked}>
-                <span style={{ color: "white" }}>Create new event</span>
-              </Styled.Button>
+              <Button
+                className="bg-primaryColor hover:bg-hoverColor"
+                onClick={onCreateClicked}
+              >
+                Create new event
+              </Button>
             </Styled.ButtonRow>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
@@ -403,7 +408,7 @@ const EventManager = ({ user, role, isHomePage }) => {
           {events.length === 0 ? (
             <Styled.Events>No Events Scheduled on This Date</Styled.Events>
           ) : (
-            <EventTable
+            <EventsList
               dateString={dateString}
               events={
                 user.role === "admin"
@@ -453,7 +458,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               />
             </div>
           </div>
-          <EventTable
+          <EventsList
             dateString={dateString}
             events={
               user.role === "admin"
