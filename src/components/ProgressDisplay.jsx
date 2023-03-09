@@ -6,15 +6,16 @@ import { getHours } from "../screens/Stats/User/hourParsing";
 const ProgressDisplay = ({ type, attendance, header }) => {
   let level = "Bronze";
   let num = 0;
-  let outOf = 1;
+  let outOf;
 
   if (type === "Events") {
-    if (attendance.length > 1) {
-      level = "Silver";
-      outOf = 3;
-    } else if (attendance.length > 3) {
+    outOf = 10;
+    if (attendance.length > 15) {
       level = "Gold";
-      outOf = 5;
+      outOf = 20;
+    } else if (attendance.length > 10) {
+      level = "Silver";
+      outOf = 15;
     }
     num = attendance.length;
   } else {
@@ -39,12 +40,16 @@ const ProgressDisplay = ({ type, attendance, header }) => {
   }
 
   return (
-    <div className="ml-18 mr-8 rounded-md border-2 bg-white px-10 py-4">
+    <div className="ml-18 mr-8 rounded-md border-2 bg-white px-12 py-4">
       <Label class="text-black-800 text-xl font-semibold">{header}</Label>
-      <div className="flex flex-nowrap items-end">
-        <img src={"/images/Hours Earned - " + level + ".png"} />
+      <div className="flex flex-nowrap items-center">
+        <img
+          className="h-16"
+          src={"/images/Hours Earned - " + level + ".png"}
+          alt="medal"
+        />
         <div className="flex flex-nowrap items-center font-semibold">
-          <p className="pl-12 text-2xl">{num}</p>
+          <p className="pl-6 text-2xl">{num}</p>
           <p className="text-md pl-2 text-slate-600">/ {outOf}</p>
           <p className="text-md pl-2 text-slate-600">{type}</p>
         </div>
