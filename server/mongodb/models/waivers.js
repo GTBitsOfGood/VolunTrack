@@ -3,22 +3,18 @@ const mongoose = require("mongoose");
 // define schema
 const waiverSchema = new mongoose.Schema(
   {
-    name: {
+    type: {
       type: String,
       required: true,
     },
-    desc: {
+    text: {
       type: String,
       required: false,
-    },
-    img: {
-      data: Buffer,
-      contentType: String,
     },
     organizationId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Organization",
-      default: mongoose.Types.ObjectId("63d6dcc4e1fb5fd6e69b1738"),
+      default: "63d6dcc4e1fb5fd6e69b1738",
     },
   },
   { timestamps: true }

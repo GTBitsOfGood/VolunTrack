@@ -187,7 +187,7 @@ const EventInfo = () => {
     <>
       <Styled.EventTableAll>
         <Button
-          className="w-24 mt-2 ml-5 mb-4 text-white"
+          className="mt-2 ml-5 mb-4 w-24 text-white"
           onClick={() => goBackToCal()}
         >
           Back

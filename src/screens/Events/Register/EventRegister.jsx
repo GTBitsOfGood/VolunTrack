@@ -5,11 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
+import { Icon } from "../../../components/Icon";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-import Icon from "../../../components/Icon";
 
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -257,6 +257,17 @@ const EventRegister = (event) => {
     setHasMinor(true);
   };
 
+  useEffect(() => {
+    if (events.minors) {
+      for (let minor of events.minors) {
+        if (minor.volunteer_id === user._id) {
+          setHasMinor(true);
+          break;
+        }
+      }
+    }
+  }, [events]);
+
   // const onUnregister = async (event) => {
   //   const changedEvent = {
   //     // remove current user id from event volunteers
@@ -299,7 +310,7 @@ const EventRegister = (event) => {
   return (
     <Styled.Container fluid="md">
       <Button
-        className="w-24 mt-2 ml-5 text-white"
+        className="mt-2 ml-5 w-24 text-white"
         onClick={() => goBackToDetails()}
       >
         Back

@@ -1,42 +1,34 @@
+import { Table } from "flowbite-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import Loading from "../../components/Loading";
-import * as Form from "../sharedStyles/formStyles";
-import * as Table from "../sharedStyles/tableStyles";
-import { Container, Row, Col } from "reactstrap";
-import styled from "styled-components";
-import Icon from "../../components/Icon";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
+import { Icon } from "../../components/Icon";
+import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-
-// const keyToValue = (key) => {
-//   key = key.replace(/_/g, " ");
-//   key = key
-//     .toLowerCase()
-//     .split(" ")
-//     .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
-//     .join(" ");
-//   return key;
-// };
+import * as Form from "../sharedStyles/formStyles";
 
 const Styled = {
   Button: styled(Button)`
-    background: white;
+    background: none;
     border: none;
   `,
   Container: styled.div`
     width: 100%;
     height: 100%;
     margin: auto;
-  `,
-  ul: styled.ul`
-    list-style-type: none;
-  `,
-  List: styled.li`
-    padding-bottom: 120px;
   `,
 };
 
@@ -119,7 +111,6 @@ class AssistantTable extends React.Component {
         .filter((user) => user === this.state.userSelectedForEdit)
         .map((selectedUser) => (selectedUser.role = newRoleName));
     }
-    return;
   };
 
   cancel = () => {
@@ -156,14 +147,15 @@ class AssistantTable extends React.Component {
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
     return (
-      <Table.Container style={{ width: "100%", maxWidth: "none" }}>
-        <Table.Table>
-          <tbody>
-            <tr>
-              <th style={{ color: "#960034" }}>Name</th>
-              <th style={{ color: "#960034" }}>Email Address</th>
-              <th style={{ color: "#960034" }}>Role</th>
-            </tr>
+      <Styled.Container>
+        <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+          <Table.Head>
+            <Table.HeadCell>Name</Table.HeadCell>
+            <Table.HeadCell>Email Address</Table.HeadCell>
+            <Table.HeadCell>Role</Table.HeadCell>
+            <Table.HeadCell> </Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
             {!loading &&
               users
                 .slice(
@@ -172,8 +164,8 @@ class AssistantTable extends React.Component {
                 )
                 .map((user, index) => (
                   <Table.Row key={index} evenIndex={index % 2 === 0}>
-                    <td>{user.name}</td>
-                    <td>
+                    <Table.Cell>{user.name}</Table.Cell>
+                    <Table.Cell>
                       {user.email}
                       <Styled.Button
                         onClick={() => {
@@ -182,19 +174,19 @@ class AssistantTable extends React.Component {
                       >
                         <Icon color="grey3" name="copy" />
                       </Styled.Button>
-                    </td>
-                    <td>
-                      {user.role == "admin"
+                    </Table.Cell>
+                    <Table.Cell>
+                      {user.role === "admin"
                         ? "Administrator"
-                        : user.role == "admin-assistant"
+                        : user.role === "admin-assistant"
                         ? "Admin Assistant"
-                        : user.role == "staff"
+                        : user.role === "staff"
                         ? "Staff"
                         : user.role.charAt(0).toUpperCase() +
                           user.role.slice(1)}
-                    </td>
+                    </Table.Cell>
                     {!invitedAdmins.includes(user.email) ? (
-                      <td>
+                      <Table.Cell>
                         <Styled.Button
                           onClick={() => this.onDisplayEditUserModal(user)}
                         >
@@ -205,9 +197,9 @@ class AssistantTable extends React.Component {
                         >
                           <Icon color="grey3" name="delete" />
                         </Styled.Button>
-                      </td>
+                      </Table.Cell>
                     ) : (
-                      <td>
+                      <Table.Cell>
                         Pending
                         <Styled.Button
                           onClick={() =>
@@ -216,12 +208,12 @@ class AssistantTable extends React.Component {
                         >
                           <Icon color="grey3" name="delete" />
                         </Styled.Button>
-                      </td>
+                      </Table.Cell>
                     )}
                   </Table.Row>
                 ))}
-          </tbody>
-        </Table.Table>
+          </Table.Body>
+        </Table>
         {loading && <Loading />}
         {/* Edit Modal */}
         <Modal
@@ -274,12 +266,12 @@ class AssistantTable extends React.Component {
                         }}
                         value={
                           this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.role == "admin"
+                            ? this.state.userSelectedForEdit.role === "admin"
                               ? "Administrator"
-                              : this.state.userSelectedForEdit.role ==
+                              : this.state.userSelectedForEdit.role ===
                                 "admin-assistant"
                               ? "Admin Assistant"
-                              : this.state.userSelectedForEdit.role == "staff"
+                              : this.state.userSelectedForEdit.role === "staff"
                               ? "Staff"
                               : { defaultOption }
                             : { defaultOption }
@@ -450,7 +442,7 @@ class AssistantTable extends React.Component {
             updatePageCallback={this.updatePage}
           />
         )}
-      </Table.Container>
+      </Styled.Container>
     );
   }
 }

@@ -48,11 +48,12 @@ export const getUserFromId = (id) => axios.get(`/api/users/${id}`);
 
 export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
 
-export const getWaivers = () => axios.get("/api/waivers?adult=true&minor=true");
+//WAIVERS
+export const getWaivers = (type, organizationId) =>
+  axios.get(`/api/waivers?type=${type}&organizationId=${organizationId}`);
 
-export const deleteWaiver = (id) => axios.delete(`/api/waivers/${id}`);
-
-export const uploadWaiver = (waiver) => axios.post("/api/waivers", waiver);
+export const updateWaiver = (type, text, organizationId) =>
+  axios.post("/api/waivers", { type, text, organizationId });
 
 export const updateInvitedAdmins = (email, organizationId) =>
   axios.post(`/api/settings/updateInvitedAdmin`, { email, organizationId });
@@ -60,8 +61,8 @@ export const updateInvitedAdmins = (email, organizationId) =>
 export const getInvitedAdmins = (organizationId) =>
   axios.get(`/api/settings/getInvitedAdmin?organizationId=${organizationId}`);
 
-export const removeInvitedAdmin = (email) =>
-  axios.post(`/api/settings/removeInvitedAdmin`, { email });
+export const removeInvitedAdmin = (email, organizationId) =>
+  axios.post(`/api/settings/removeInvitedAdmin`, { email, organizationId });
 
 export const checkInVolunteer = (
   userId,
@@ -117,3 +118,5 @@ export const getOrganizationData = (organizationId) =>
   axios.get(
     `/api/settings/organizationSettings?organizationId=${organizationId}`
   );
+export const createOrganization = (organization) =>
+  axios.post(`/api/organizations`, organization);

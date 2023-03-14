@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import {
-  getAttendanceForEvent,
   fetchEventsById,
+  getAttendanceForEvent,
 } from "../../../../actions/queries";
 import EventTable from "../../../../components/EventTable";
-import styled from "styled-components";
-import EventStatsDeleteModal from "./EventStatsDeleteModal";
 import EditEventStats from "./EditEventStats";
+import EventStatsDeleteModal from "./EventStatsDeleteModal";
 
 const Styled = {
   Container: styled.div`
@@ -36,7 +36,12 @@ const Styled = {
     vertical-align: top;
   `,
   Table: styled.div`
-    margin: auto;
+    width: 50%;
+    height: 50%;
+    margin: 1rem 22.5rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
   `,
   StatsContainer: styled.div`
     width: 50%;
