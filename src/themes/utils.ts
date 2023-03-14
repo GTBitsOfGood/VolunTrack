@@ -7,7 +7,12 @@ export const applyTheme = (theme: ThemeType): void => {
   });
 };
 
-export const createTheme = (primary: string, secondary: string): ThemeType => ({
+export const createTheme = (
+  primary: string,
+  secondary: string,
+  hover: string
+): ThemeType => ({
   "--primary-color": primary,
   "--secondary-color": secondary,
+  "--hover-color": hover,
 });
