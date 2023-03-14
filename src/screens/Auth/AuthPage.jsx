@@ -7,6 +7,7 @@ import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
+import Footer from "../../components/Footer";
 
 const Styled = {
   Main: styled.div`
@@ -14,6 +15,7 @@ const Styled = {
     height: 100%;
     background: hsl(0, 0%, 95%);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
   `,
@@ -54,6 +56,7 @@ const AuthPage = (props) => {
           src="/images/bog_logo.png"
           style={{ width: "100%", marginBottom: "2px" }}
         /> */}
+        <div className="h-28" />
         <Styled.TopText>
           {props.createAccount ? "Create an Account" : "Sign In"}
         </Styled.TopText>
@@ -91,6 +94,8 @@ const AuthPage = (props) => {
           </a>
         </div>
       </Styled.Container>
+      <div className="grow" />
+      <Footer />
     </Styled.Main>
   );
 };
