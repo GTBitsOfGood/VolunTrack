@@ -17,3 +17,5 @@ export default async () => {
       throw e;
     });
 };
+
+// PR 290-recurring-events-backend: See PR comments on GitHub for MongoDB commands
