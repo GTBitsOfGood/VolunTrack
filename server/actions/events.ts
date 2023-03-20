@@ -1,12 +1,13 @@
+import { Types } from "mongoose";
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
 import Event, { EventType } from "../mongodb/models/Event";
+import EventParent from "../mongodb/models/EventParent";
 import {
   createHistoryEventCreateEvent,
-  createHistoryEventEditEvent
+  createHistoryEventEditEvent,
 } from "./historyEvent";
 const User = require("../mongodb/models/user");
-const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
 
 export async function createEvent(newEventData, next) {
@@ -35,22 +36,49 @@ export const getEvents = async (
   const endDate =
     endDateString === "undefined" ? undefined : new Date(endDateString);
 
+  const eventAggregation = Event.aggregate([
+    {
+      $lookup: {
+        from: EventParent.collection.name,
+        let: { eventParent: "$eventParent" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$_id", "$$eventParent"],
+              },
+            },
+          },
+        ],
+        as: "eventParent",
+      },
+    },
+    {
+      $unwind: "$eventParent",
+    },
+    {
+      $match: {
+        "eventParent.organizationId": Types.ObjectId(organizationId),
+      },
+    },
+  ]);
+
   if (!startDate && !endDate) {
-    return Event.find().populate("parentEventId").sort({ date: "asc" });
+    return await eventAggregation;
   } else if (!startDate) {
-    return Event.find({ date: { $lte: endDate } })
-      .populate("parentEventId")
-      .sort({ date: "asc" });
+    return await eventAggregation.match({
+      $expr: { $lte: ["$date", endDate] },
+    });
   } else if (!endDate) {
-    return Event.find({ date: { $gte: startDate } })
-      .populate("parentEventId")
-      .sort({ date: "asc" });
+    return await eventAggregation.match({
+      $expr: { $gte: ["$date", startDate] },
+    });
   } else {
-    return Event.find({ date: { $gte: startDate, $lte: endDate } })
-      .populate("parentEventId")
-      .sort({
-        date: "asc",
-      });
+    return await eventAggregation.match({
+      $expr: {
+        $and: [{ $gte: ["$date", startDate] }, { $lte: ["$date", endDate] }],
+      },
+    });
   }
 };
 
