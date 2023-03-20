@@ -1,16 +1,16 @@
-const EventData = require("../mongodb/models/event");
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
+import Event, { EventType } from "../mongodb/models/Event";
 import {
   createHistoryEventCreateEvent,
-  createHistoryEventEditEvent,
+  createHistoryEventEditEvent
 } from "./historyEvent";
 const User = require("../mongodb/models/user");
 const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
 
 export async function createEvent(newEventData, next) {
-  const newEvent = new EventData(newEventData);
+  const newEvent = new Event(newEventData);
 
   await dbConnect();
 
@@ -23,65 +23,43 @@ export async function createEvent(newEventData, next) {
     .catch(next);
 }
 
-export async function getEvents(startDate, endDate, organizationId) {
+export const getEvents = async (
+  startDateString: string,
+  endDateString: string,
+  organizationId: string
+): Promise<EventType[]> => {
   await dbConnect();
 
-  if (startDate === "undefined" && endDate === "undefined") {
-    return EventData.find({ organizationId })
-      .sort({ date: 1 })
-      .then((events) => {
-        return events;
-      });
-  } else if (startDate === "undefined") {
-    endDate = new Date(endDate);
-    if (endDate === "Invalid Date") {
-      return { status: 400, message: { error: "Invalid Date sent" } };
-    } else {
-      return EventData.find({ date: { $lte: endDate }, organizationId })
-        .sort({ date: 1 })
-        .then((events) => {
-          return events;
-        });
-    }
-  } else if (endDate === "undefined") {
-    startDate = new Date(startDate);
-    if (startDate === "Invalid Date") {
-      return { status: 400, message: { error: "Invalid Date sent" } };
-    } else {
-      return EventData.find({ date: { $gte: startDate }, organizationId })
-        .sort({ date: 1 })
-        .then((events) => {
-          return events;
-        });
-    }
+  const startDate =
+    startDateString === "undefined" ? undefined : new Date(startDateString);
+  const endDate =
+    endDateString === "undefined" ? undefined : new Date(endDateString);
+
+  if (!startDate && !endDate) {
+    return Event.find().populate("parentEventId").sort({ date: "asc" });
+  } else if (!startDate) {
+    return Event.find({ date: { $lte: endDate } })
+      .populate("parentEventId")
+      .sort({ date: "asc" });
+  } else if (!endDate) {
+    return Event.find({ date: { $gte: startDate } })
+      .populate("parentEventId")
+      .sort({ date: "asc" });
   } else {
-    startDate = new Date(startDate);
-    endDate = new Date(endDate);
-    if (startDate === "Invalid Date" || endDate === "Invalid Date") {
-      return { status: 400, message: { error: "Invalid Date sent" } };
-    } else {
-      return EventData.find({
-        date: { $gte: startDate, $lte: endDate },
-        organizationId,
-      })
-        .sort({ date: 1 })
-        .then((events) => {
-          return events;
-        });
-    }
+    return Event.find({ date: { $gte: startDate, $lte: endDate } })
+      .populate("parentEventId")
+      .sort({
+        date: "asc",
+      });
   }
-}
+};
 
 export async function updateEvent(updateEventData, next) {
   await dbConnect();
 
-  return EventData.findOneAndUpdate(
-    { _id: updateEventData._id },
-    updateEventData,
-    {
-      new: true,
-    }
-  )
+  return Event.findOneAndUpdate({ _id: updateEventData._id }, updateEventData, {
+    new: true,
+  })
     .then((event) => {
       createHistoryEventEditEvent(updateEventData);
       return event;
@@ -94,7 +72,7 @@ export async function updateEvent(updateEventData, next) {
 export async function deleteEventID(eventID, next) {
   await dbConnect();
 
-  return EventData.findByIdAndDelete({ _id: eventID })
+  return Event.findByIdAndDelete({ _id: eventID })
     .then(() => {
       return;
     })
@@ -104,7 +82,7 @@ export async function deleteEventID(eventID, next) {
 export async function updateEventID(eventID, event, next) {
   await dbConnect();
 
-  return EventData.findByIdAndUpdate(eventID, event, {
+  return Event.findByIdAndUpdate(eventID, event, {
     new: true,
     useFindAndModify: false,
   })
@@ -123,7 +101,7 @@ export async function getEventVolunteersList(eventId, next) {
   };
   let volunteers = [];
   let minors = [];
-  await EventData.find({ _id: eventId })
+  await Event.find({ _id: eventId })
     .then((event) => {
       volunteers = event[0].volunteers;
       volunteers = volunteers.map(mongoose.Types.ObjectId);
@@ -152,7 +130,7 @@ export async function getEventVolunteersList(eventId, next) {
 export async function getEventByID(eventID) {
   await dbConnect();
 
-  return EventData.findById(eventID).then((event) => {
+  return Event.findById(eventID).then((event) => {
     return event;
   });
 }

@@ -24,7 +24,7 @@
     "**/*.ts",
     "**/*.tsx",
     "src/screens/Events/Admin/Attendance/EventAttendance.jsx"
-  ],
+, "server/actions/events.ts"  ],
   "exclude": [
     "node_modules"
   ]
