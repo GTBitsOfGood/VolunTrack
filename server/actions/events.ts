@@ -61,6 +61,24 @@ export const getEvents = async (
         "eventParent.organizationId": Types.ObjectId(organizationId),
       },
     },
+    {
+      $project: {
+        "eventParent._id": 0,
+        "eventParent.__v": 0,
+        "eventParent.createdAt": 0,
+        "eventParent.updatedAt": 0,
+      },
+    },
+    {
+      $replaceRoot: {
+        newRoot: {
+          $mergeObjects: ["$$ROOT", "$eventParent"],
+        },
+      },
+    },
+    {
+      $project: { eventParent: 0 },
+    },
   ]);
 
   if (!startDate && !endDate) {
