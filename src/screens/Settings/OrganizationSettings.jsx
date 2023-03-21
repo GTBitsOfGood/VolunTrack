@@ -152,13 +152,13 @@ const OrganizationSettings = () => {
       primaryColor: primaryColor,
       imageURL: values.logo_link,
 
-      defaultEventAddress: values.defaultAddress,
-      defaultEventCity: values.defaultCity,
-      defaultEventState: values.defaultState,
-      defaultEventZip: values.defaultZIP,
-      defaultContactName: values.defaultContactName,
-      defaultContactEmail: values.defaultContactEmail,
-      defaultContactPhone: values.defaultContactPhone,
+      defaultEventAddress: values.default_address,
+      defaultEventCity: values.default_city,
+      defaultEventState: values.default_state,
+      defaultEventZip: values.default_zip,
+      defaultContactName: values.default_contact_name,
+      defaultContactEmail: values.default_contact_email,
+      defaultContactPhone: values.default_contact_phone,
     };
 
     await updateOrganizationData(user.organizationId, {
@@ -226,6 +226,9 @@ const OrganizationSettings = () => {
                       </SidebarItem>
                       <SidebarItem onClick={() => updatePage("defValues")}>
                         <Icon color="grey3" name="refresh" />Default Values
+                      </SidebarItem>
+                      <SidebarItem onClick={() => updatePage("medals")}>
+                        <Icon color="grey3" name="refresh" />Medal Thresholds
                       </SidebarItem>
 
                     </Sidebar.Items>
@@ -393,6 +396,18 @@ const OrganizationSettings = () => {
                   </div>
                 )}
 
+          {page === "medals" && (
+                  <div>
+                    <Header>Medal Settings</Header>
+                    <div className="text-slate-500 pb-3" >* You can set goals for volunteers to help them gain different medals and motivate them to keep engaging in different events</div>
+                    <b>Event Medals</b>
+                    <div>
+                      <div className="m-auto mt-5 ">
+
+                </div>
+                </div>
+                </div>
+                )}
 
 
               </SettingsContainer>
