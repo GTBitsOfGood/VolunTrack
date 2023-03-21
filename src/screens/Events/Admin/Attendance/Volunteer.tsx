@@ -43,26 +43,56 @@ const CheckedInContainer = styled.div`
   background-color: #9cdea3;
 `;
 
-let checkedOut = false;
+// let checkedOut = false;
 
-const checkedOutVol = () => {
-  checkedOut = !checkedOut;
-  console.log(checkedOut);
-};
+// const checkedOutVol = () => {
+//   checkedOut = !checkedOut;
+//   console.log(checkedOut);
+// };
 
 const Volunteer = ({
   volunteer,
   minors,
   onClick,
-  isCheckedIn,
+  checkInStatus,
   isEnded,
 }: {
   volunteer: { [key: string]: any };
   minors: string[];
   onClick: (volunteer: { [key: string]: any }) => void;
-  isCheckedIn: boolean;
+  checkInStatus: "waiting" | "checked in" | "checked out";
   isEnded: boolean;
 }): JSX.Element => {
+  const renderButton = () => {
+    if (checkInStatus === "waiting")
+      return (
+        <Button
+          className="bg-red-500 hover:bg-red-200"
+          onClick={() => onClick(volunteer)}
+        >
+          Check In
+        </Button>
+      );
+    if (checkInStatus === "checked in")
+      return (
+        <Button
+          className="bg-red-300 text-pink-400"
+          onClick={() => {
+            console.log("hi");
+            onClick(volunteer);
+          }}
+        >
+          Check Out
+        </Button>
+      );
+    if (checkInStatus === "checked out")
+      return (
+        <Button className="bg-stone-600	text-white" disabled>
+          Checked Out
+        </Button>
+      );
+    return null;
+  };
   return (
     <>
       {/* {isEnded ? (
@@ -88,57 +118,29 @@ const Volunteer = ({
       {isEnded ? (
         //event ended table
         <Table.Row>
+          <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
-            {isCheckedIn ? (
-              <Button className="text-rose-600 bg-stone-300" disabled>
-                Checked Out
-              </Button>
-            ) : (
-              <Button className="bg-stone-600	text-white" disabled>
-                Absent
-              </Button>
-            )}
+            {volunteer.bio.first_name} {volunteer.bio.last_name}
           </Table.Cell>
-          <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
-          <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
+          <Table.Cell>{volunteer.bio.email}</Table.Cell>
           <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
           <Table.Cell>
             {" "}
-            {isCheckedIn ? "Time Placement" : "Waiting to Check-In"}
+            {/* {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
           </Table.Cell>
         </Table.Row>
       ) : (
         //default table
         <Table.Row>
+          <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
-            {isCheckedIn ? (
-              checkedOut ? (
-                <Button className="bg-stone-600	text-white" disabled>
-                  Checked Out
-                </Button>
-              ) : (
-                <Button
-                  className="bg-red-300 text-pink-400"
-                  onClick={() => checkedOutVol()}
-                >
-                  Check Out
-                </Button>
-              )
-            ) : (
-              <Button
-                className="bg-red-500 hover:bg-red-200"
-                onClick={() => onClick(volunteer)}
-              >
-                Check In
-              </Button>
-            )}
+            {volunteer.bio.first_name} {volunteer.bio.last_name}
           </Table.Cell>
-          <Table.Cell>{volunteer.bio.first_name}</Table.Cell>
-          <Table.Cell>{volunteer.bio.last_name}</Table.Cell>
+          <Table.Cell>{volunteer.bio.email}</Table.Cell>
           <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
           <Table.Cell>
             {" "}
-            {isCheckedIn ? "Time Placement" : "Waiting to Check-In"}
+            {/* {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
           </Table.Cell>
         </Table.Row>
       )}

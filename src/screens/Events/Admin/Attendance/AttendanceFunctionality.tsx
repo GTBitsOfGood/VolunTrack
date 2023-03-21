@@ -20,6 +20,7 @@ const Styled = {
 };
 
 const AttendanceFunctionality = ({
+  waitingVolunteers,
   checkedInVolunteers,
   checkedOutVolunteers,
   minors,
@@ -27,6 +28,7 @@ const AttendanceFunctionality = ({
   checkOut,
   isEnded,
 }: {
+  waitingVolunteers: any;
   checkedInVolunteers: any;
   checkedOutVolunteers: any;
   minors: { [volunteerID: string]: string[] };
@@ -47,14 +49,14 @@ const AttendanceFunctionality = ({
         <Table.HeadCell>Status</Table.HeadCell>
       </Table.Head>
       <Table.Body className="divide-y">
-        {checkedOutVolunteers?.length > 0 &&
-          checkedOutVolunteers.map((volunteer) => (
+        {waitingVolunteers?.length > 0 &&
+          waitingVolunteers.map((volunteer) => (
             <Volunteer
               key={volunteer._id}
               volunteer={volunteer}
               minors={minors[volunteer._id]}
               onClick={checkIn}
-              isCheckedIn={false}
+              checkInStatus={"waiting"}
               isEnded={isEnded}
             />
           ))}
@@ -67,7 +69,7 @@ const AttendanceFunctionality = ({
     <Table>
       <Table.Head>
         <Table.HeadCell>
-          <span className="sr-only">Check-In</span>
+          <span className="sr-only">Check-Out</span>
         </Table.HeadCell>
         <Table.HeadCell>Name</Table.HeadCell>
         <Table.HeadCell>Email</Table.HeadCell>
@@ -82,7 +84,18 @@ const AttendanceFunctionality = ({
               volunteer={volunteer}
               minors={minors[volunteer._id]}
               onClick={checkOut}
-              isCheckedIn={true}
+              checkInStatus={"checked in"}
+              isEnded={isEnded}
+            />
+          ))}
+        {checkedOutVolunteers?.length > 0 &&
+          checkedOutVolunteers.map((volunteer) => (
+            <Volunteer
+              key={volunteer._id}
+              volunteer={volunteer}
+              minors={minors[volunteer._id]}
+              onClick={checkOut}
+              checkInStatus={"checked out"}
               isEnded={isEnded}
             />
           ))}

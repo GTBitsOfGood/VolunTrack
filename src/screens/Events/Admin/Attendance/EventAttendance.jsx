@@ -9,9 +9,9 @@ import {
   updateEventById,
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
-import Footer from "./Footer";
 import "flowbite-react";
-import { Table, Button } from "flowbite-react";
+import { Button } from "flowbite-react";
+import Link from "next/link";
 
 const Styled = {
   Container: styled.div`
@@ -59,6 +59,7 @@ const EventAttendance = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
+  const [waitingVolunteers, setWaitingVolunteers] = useState([]);
   const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
   const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
 
@@ -73,11 +74,19 @@ const EventAttendance = () => {
       });
       setMinors(fetchedMinors);
 
+      setWaitingVolunteers(
+        (await getEventVolunteersByAttendance(eventId, "waiting")).data
+          .volunteers
+      );
+      console.log(waitingVolunteers);
+
       setCheckedInVolunteers(
-        (await getEventVolunteersByAttendance(eventId, true)).data.volunteers
+        (await getEventVolunteersByAttendance(eventId, "checked in")).data
+          .volunteers
       );
       setCheckedOutVolunteers(
-        (await getEventVolunteersByAttendance(eventId, false)).data.volunteers
+        (await getEventVolunteersByAttendance(eventId, "checked out")).data
+          .volunteers
       );
     })();
   }, []);
@@ -90,19 +99,17 @@ const EventAttendance = () => {
       volunteer.bio.first_name + " " + volunteer.bio.last_name,
       volunteer.bio.email
     );
-
-    setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
-    setCheckedOutVolunteers(
-      checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
+    setCheckedInVolunteers((volunteers) => [...volunteers, volunteer]);
+    setWaitingVolunteers((volunteers) =>
+      volunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
   const checkOut = (volunteer) => {
     checkOutVolunteer(volunteer._id, eventId);
-
-    setCheckedOutVolunteers(checkedOutVolunteers.concat(volunteer));
-    setCheckedInVolunteers(
-      checkedInVolunteers.filter((v) => v._id !== volunteer._id)
+    setCheckedOutVolunteers((volunteers) => [...volunteers, volunteer]);
+    setCheckedInVolunteers((volunteers) =>
+      volunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
@@ -150,7 +157,9 @@ const EventAttendance = () => {
   return (
     <>
       <Styled.Container>
-        <p className="text-rose-600">&lt; Back to home</p>
+        <Link href={`/home`} className="text-rose-600 mb-3">
+          &lt; Back to home
+        </Link>
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
           <Button className="bg-red-500 hover:bg-red-200" onClick={endEvent}>
@@ -178,6 +187,7 @@ const EventAttendance = () => {
         />
 
         <AttendanceFunctionality
+          waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
           checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
           checkedOutVolunteers={filteredAndSortedVolunteers(
             checkedOutVolunteers
