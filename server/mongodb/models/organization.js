@@ -4,6 +4,8 @@ const organizationSchema = new mongoose.Schema(
   {
     name: String,
     website: String,
+    imageURL: String,
+    notificationEmail: String,
     slug: String,
     primaryColor: String,
     secondaryColor: String,

@@ -4,12 +4,14 @@ import PropTypes from "prop-types";
 
 const InputField = (props) => (
   <div>
+    {props.label && (
     <div className="flex flex-row">
       <Label class="mb-2 h-6 font-medium text-slate-200" htmlFor={props.name}>
         {props.label}
       </Label>
       {props.isRequired && <p className="mb-0 text-red-600">*</p>}
     </div>
+    )}
     <Field name={props.name}>
       {({ field }) => (
         <TextInput

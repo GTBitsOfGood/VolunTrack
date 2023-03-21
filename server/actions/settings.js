@@ -45,8 +45,11 @@ export async function updateOrganizationData(organizationData, organizationId) {
     {
       name: organizationData.data.name,
       website: organizationData.data.website,
+      notificationEmail: organizationData.data.notificationEmail,
+
       primaryColor: organizationData.data.primaryColor,
-      secondaryColor: organizationData.data.secondaryColor,
+      imageURL: organizationData.data.imageURL,
+      
       defaultEventState: organizationData.data.defaultEventState,
       defaultEventCity: organizationData.data.defaultEventCity,
       defaultEventAddress: organizationData.data.defaultEventAddress,
