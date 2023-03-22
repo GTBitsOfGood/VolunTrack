@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import { deleteEvent } from "../../../actions/queries";
 
 const EventDeleteModal = ({ open, toggle, event }) => {
@@ -25,12 +26,8 @@ const EventDeleteModal = ({ open, toggle, event }) => {
       <ModalHeader toggle={toggle}>Delete Event</ModalHeader>
       <ModalBody>Are you sure you want to delete this event?</ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
-          Delete
-        </Button>
+        <BoGButton text="Cancel" onClick={toggle}/>
+        <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting}/>
       </ModalFooter>
     </Modal>
   );

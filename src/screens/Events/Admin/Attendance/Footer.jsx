@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import { Button } from "reactstrap";
+import BoGButton from "../../../../components/BoGButton";
 import styled from "styled-components";
-import variables from "../../../../design-tokens/_variables.module.scss";
 import PropTypes from "prop-types";
 
 const Styled = {
@@ -24,25 +23,6 @@ const Styled = {
     gap: 2rem;
     justify-content: center;
   `,
-  EndEventButton: styled(Button)`
-    width: 100%;
-    background: ${variables.primary};
-    border: none;
-    border-radius: 1rem;
-    color: white;
-
-    font-size: 1.5rem;
-  `,
-  EventPageButton: styled(Button)`
-    width: 100%;
-    font-size: 1.5rem;
-    border-radius: 1rem;
-  `,
-  ReopenEventButton: styled(Button)`
-    width: 100%;
-    font-size: 1.5rem;
-    border-radius: 1rem;
-  `,
 };
 
 const Footer = ({ endEvent, reopenEvent, event }) => {
@@ -52,19 +32,14 @@ const Footer = ({ endEvent, reopenEvent, event }) => {
     <Styled.Background>
       <Styled.Container>
         {event.isEnded ? (
-          <Styled.ReopenEventButton onClick={reopenEvent}>
-            Reopen Event
-          </Styled.ReopenEventButton>
+          <BoGButton text="Reopen Event" onClick={reopenEvent}/>
         ) : (
-          <Styled.EndEventButton onClick={endEvent}>
-            End Event
-          </Styled.EndEventButton>
+          <BoGButton text="End Evnet" onClick={endEvent}/>
         )}
-        <Styled.EventPageButton
+        <BoGButton
           onClick={() => router.push(`/events/${event._id}`)}
-        >
-          Visit Event Page
-        </Styled.EventPageButton>
+          text="Visit Event Page"
+        />
       </Styled.Container>
     </Styled.Background>
   );

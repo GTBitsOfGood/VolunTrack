@@ -1,18 +1,5 @@
 import { useRouter } from "next/router";
-import { Button } from "reactstrap";
-import styled from "styled-components";
-import variables from "../../../design-tokens/_variables.module.scss";
-
-const Styled = {
-  Button: styled(Button)`
-    width: 100%;
-    margin: 1rem 0 0 0;
-
-    background: ${variables.primary};
-    border: none;
-    color: white;
-  `,
-};
+import BoGButton from "../../../components/BoGButton";
 
 const ManageAttendanceButton = ({
   eventId,
@@ -25,7 +12,7 @@ const ManageAttendanceButton = ({
     router.push(`${router.pathname}/${eventId}/attendance`);
   };
 
-  return <Styled.Button onClick={handleClick}>Manage Attendance</Styled.Button>;
+  return <BoGButton onClick={handleClick} text="Manage Attendance"/>;
 };
 
 export default ManageAttendanceButton;

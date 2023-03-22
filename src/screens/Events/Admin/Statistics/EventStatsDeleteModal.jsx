@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import BoGButton from "../../../../components/BoGButton";
 import { deleteAttendance } from "../../../../actions/queries";
 
+// TODO: Test
 const EventStatsDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
 
@@ -23,12 +25,8 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
         Are you sure you want to delete this entry <strong>permanently</strong>?
       </ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
-          Delete
-        </Button>
+        <BoGButton text="Cancel" onClick={toggle}/>
+        <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting}/>
       </ModalFooter>
     </Modal>
   );

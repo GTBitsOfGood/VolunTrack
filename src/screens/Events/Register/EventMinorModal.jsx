@@ -8,6 +8,7 @@ import {
   Input,
   FormGroup,
 } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
 import { Formik, Field } from "formik";
@@ -55,6 +56,7 @@ const Styled = {
   `,
 };
 
+// Where is this modal too?
 const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   const minor = {
     firstName: "",
@@ -149,16 +151,12 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={close}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
+              <BoGButton text="Cancel" onClick={close}/>
+              <BoGButton
+                text="Add"
                 disabled={!checked || firstName == "" || lastName == ""}
                 onClick={handleSubmit}
-              >
-                Add
-              </Button>
+              />
             </ModalFooter>
           </Modal>
         </React.Fragment>

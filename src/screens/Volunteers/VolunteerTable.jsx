@@ -17,6 +17,7 @@ import styled from "styled-components";
 import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
+import BoGButton from "../../components/BoGButton";
 
 import * as SForm from "../sharedStyles/formStyles";
 
@@ -291,9 +292,8 @@ class VolunteerTable extends React.Component {
                   </ModalBody>
                 </Container>
                 <ModalFooter>
-                  <Button color="secondary" onClick={this.onModalClose}>
-                    Cancel
-                  </Button>
+                  <BoGButton onClick={this.onModalClose} text="Cancel" outline={true}/>
+                  {/*TODOCD: Figure out Formik button of type submit}*/}
                   <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
                     Update
                   </Button>

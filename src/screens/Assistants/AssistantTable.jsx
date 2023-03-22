@@ -1,4 +1,5 @@
 import { Table } from "flowbite-react";
+import BoGButton from "../../components/BoGButton";
 import PropTypes from "prop-types";
 import React from "react";
 import Dropdown from "react-dropdown";
@@ -383,15 +384,8 @@ class AssistantTable extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <Button color="secondary" onClick={this.cancel}>
-              Cancel
-            </Button>
-            <Button
-              style={{ backgroundColor: "#ef4e79" }}
-              onClick={this.onModalClose}
-            >
-              Update
-            </Button>
+            <BoGButton onClick={this.cancel} text="Cancel"/>
+            <BoGButton onClick={this.onModalClose} text="Update"/>
           </ModalFooter>
         </Modal>
         {/* Delete Invited Admin Modal */}
@@ -406,12 +400,8 @@ class AssistantTable extends React.Component {
             pending admin: {this.state.pendingSelectedForDelete}?
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.closePendingModal}>
-              Cancel
-            </Button>
-            <Button color="primary" onClick={this.handleSubmitForPending}>
-              Delete
-            </Button>
+            <BoGButton onClick={this.closePendingModal} text="Cancel"/>
+            <BoGButton onClick={this.handleSubmitForPending} text="Delete"/>
           </ModalFooter>
         </Modal>
         {/* Delete Current Admin Modal */}
@@ -426,12 +416,8 @@ class AssistantTable extends React.Component {
             {this.state.userSelectedForDelete?.name}?
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.closeDeleteUserModal}>
-              Cancel
-            </Button>
-            <Button color="primary" onClick={this.handleSubmitForDeleteUser}>
-              Delete
-            </Button>
+            <BoGButton onClick={this.closePendingModal} text="Cancel"/>
+            <BoGButton onClick={this.handleSubmitForPending} text="Delete"/>
           </ModalFooter>
         </Modal>
         {users.length !== 0 && (

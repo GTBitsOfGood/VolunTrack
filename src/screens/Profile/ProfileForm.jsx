@@ -1,7 +1,8 @@
 import { ErrorMessage, Field, Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Col, Container, ModalBody, Row } from "reactstrap";
+import { Col, Container, ModalBody, Row } from "reactstrap";
+import BoGButton from "../../components/BoGButton";
 import * as SForm from "../sharedStyles/formStyles";
 import * as Table from "../sharedStyles/tableStyles";
 
@@ -11,10 +12,6 @@ import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 import { profileValidator } from "./helpers";
 
 const Styled = {
-  Button: styled(Button)`
-    background: white;
-    border: none;
-  `,
   ErrorMessage: styled(ErrorMessage).attrs({
     component: "span",
   })`
@@ -240,13 +237,11 @@ class ProfileForm extends React.Component {
                             }}
                           >
                             <Col></Col>
-                            <Button
-                              style={{ backgroundColor: "#ef4e79" }}
+                            <BoGButton
+                              text={"Update"}
                               onClick={handleSubmit}
                               disabled={!isValid || isSubmitting}
-                            >
-                              Update
-                            </Button>
+                            />
                           </Row>
                         </SForm.FormGroup>
                       </form>

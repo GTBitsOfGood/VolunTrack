@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
 import { Icon } from "../../../components/Icon";
@@ -14,6 +15,7 @@ import EventWaiverModal from "./EventWaiverModal";
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";
 
+// Where is this screen?
 const Styled = {
   Container: styled(Container)`
     background-color: ${variables["gray-100"]};
