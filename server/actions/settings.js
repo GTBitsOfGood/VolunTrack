@@ -38,7 +38,6 @@ export async function getOrganizationData(organizationId) {
 export async function updateOrganizationData(organizationData, organizationId) {
   await dbConnect();
 
-  console.log(organizationData);
   // update the organization data in the database
   return await Organization.findOneAndUpdate(
     { _id: organizationId },
@@ -49,7 +48,7 @@ export async function updateOrganizationData(organizationData, organizationId) {
 
       primaryColor: organizationData.data.primaryColor,
       imageURL: organizationData.data.imageURL,
-      
+
       defaultEventState: organizationData.data.defaultEventState,
       defaultEventCity: organizationData.data.defaultEventCity,
       defaultEventAddress: organizationData.data.defaultEventAddress,
@@ -57,6 +56,11 @@ export async function updateOrganizationData(organizationData, organizationId) {
       defaultContactName: organizationData.data.defaultContactName,
       defaultContactEmail: organizationData.data.defaultContactEmail,
       defaultContactPhone: organizationData.data.defaultContactPhone,
+
+      eventSilver: organizationData.data.eventSilver,
+      eventGold: organizationData.data.eventGold,
+      hoursSilver: organizationData.data.hoursSilver,
+      hoursGold: organizationData.data.hoursGold,
     },
     {
       upsert: true,

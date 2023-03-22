@@ -53,6 +53,7 @@
     "flowbite": "^1.6.3",
     "flowbite-react": "^0.3.8",
     "focus-visible": "^5.2.0",
+    "font-awesome": "^4.7.0",
     "formik": "^2.2.9",
     "mailersend": "^1.4.5",
     "mongodb": "^4.3.1",

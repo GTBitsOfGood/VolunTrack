@@ -15,9 +15,6 @@ export default async function handler(req, res, next) {
     const data = req.body.organizationData;
     const organizationId = req.query.organizationId;
 
-    // console.log("HERE IN SERVER")
-    // console.log(data)
-    // console.log(organizationId)
     const updateOrg = await updateOrganizationData(data, organizationId);
 
     res.status(200).json(updateOrg);

@@ -26,7 +26,7 @@ const InputField = (props) => (
     </Field>
     <ErrorMessage
       component="div"
-      className="mt-1 inline-block pt-0 text-sm text-red-600 before:content-['Hello_World']"
+      className="mt-1 inline-block pt-0 text-sm text-red-600"
       name={props.name}
     />
   </div>

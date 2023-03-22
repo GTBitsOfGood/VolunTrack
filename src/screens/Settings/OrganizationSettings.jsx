@@ -7,6 +7,7 @@ import { Label, TextInput, Button, Sidebar, Dropdown } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
 import { createOrganizationValidator } from "./helpers";
 import { Formik } from "formik";
+import { ErrorMessage } from "formik";
 import {
   getOrganizationData,
   updateOrganizationData,
@@ -19,6 +20,8 @@ const SettingsContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+
 
 const Header = styled.h1`
   font-size: 2rem;
@@ -82,6 +85,8 @@ const OrganizationSettings = () => {
 
   const [primaryColor, setPrimaryColor] = useState("");
   const [imageURL, setImageURL] = useState("");
+  // const [hex, setHex] = useState("");
+  // const [dropdownStyle, setDropdownStyle] = useState("");
 
   const [defaultAddress, setDefaultAddress] = useState("");
   const [defaultCity, setDefaultCity] = useState("");
@@ -91,8 +96,13 @@ const OrganizationSettings = () => {
   const [defaultContactEmail, setDefaultContactEmail] = useState("");
   const [defaultContactPhone, setDefaultContactPhone] = useState("");
 
+  const [eventSilver, setEventSilver] = useState("");
+  const [eventGold, setEventGold] = useState("");
+  const [hoursSilver, setHoursSilver] = useState("");
+  const [hoursGold, setHoursGold] = useState("");
+
   const [edit, setEdit] = useState(false);
-  const [page, setPage] = useState("styling");
+  const [page, setPage] = useState("orgInfo");
 
   let user = useSession().data.user;
 
@@ -104,7 +114,7 @@ const OrganizationSettings = () => {
 
   useEffect(() => {
     window.addEventListener('beforeunload', handleWindowClose);
-    
+
   }, []);
 
 
@@ -127,6 +137,11 @@ const OrganizationSettings = () => {
       setDefaultContactName(data.data.orgData.defaultContactName);
       setDefaultContactEmail(data.data.orgData.defaultContactEmail);
       setDefaultContactPhone(data.data.orgData.defaultContactPhone);
+
+      setEventSilver(data.data.orgData.eventSilver);
+      setEventGold(data.data.orgData.eventGold);
+      setHoursSilver(data.data.orgData.hoursSilver);
+      setHoursGold(data.data.orgData.hoursGold);
     }
   };
 
@@ -134,13 +149,16 @@ const OrganizationSettings = () => {
     setPage(page);
   };
 
+  function refreshPage() {
+    window.location.reload(false);
+  }
+
 
   useEffect(() => {
     loadData();
   }, []);
 
   const handleSubmit = async (values) => {
-    console.log(values)
 
     setEdit(false);
 
@@ -159,12 +177,47 @@ const OrganizationSettings = () => {
       defaultContactName: values.default_contact_name,
       defaultContactEmail: values.default_contact_email,
       defaultContactPhone: values.default_contact_phone,
+
+      eventSilver: values.event_silver,
+      eventGold: values.event_gold,
+      hoursSilver: values.hours_silver,
+      hoursGold: values.hours_gold,
     };
 
     await updateOrganizationData(user.organizationId, {
       data: data,
     });
+
+    // refreshPage();
+
   };
+
+
+  // // based on the primaryColor, use setHex to set the hex value
+  // useEffect(() => {
+  //   if (primaryColor === "Red") {
+  //     setHex("#dc2626");
+  //   } else if (primaryColor === "Orange") {
+  //     setHex("#c2410c");
+  //   } else if (primaryColor === "Yellow") {
+  //     setHex("#008000");
+  //   } else if (primaryColor === "Green") {
+  //     setHex("#FFFF00");
+  //   } else if (primaryColor === "Light Blue") {
+  //     setHex("#FFA500");
+  //   } else if (primaryColor === "Blue") {
+  //     setHex("#800080");
+  //   } else if (primaryColor === "Purple") {
+  //     setHex("#FFC0CB");
+  //   } else if (primaryColor === "Magenta") {
+  //     setHex("#808080");
+  //   }
+
+  //   setDropdownStyle("bg-[" + hex +"] text-white rounded-lg")
+  //   console.log(dropdownStyle)
+  // }, [primaryColor]);
+
+
 
   return (
     <div>
@@ -185,6 +238,10 @@ const OrganizationSettings = () => {
           default_contact_email: defaultContactEmail,
           default_contact_phone: defaultContactPhone,
 
+          event_silver: eventSilver,
+          event_gold: eventGold,
+          hours_silver: hoursSilver,
+          hours_gold: hoursGold,
 
         }}
         enableReinitialize={true}
@@ -205,7 +262,7 @@ const OrganizationSettings = () => {
                 <Header className="">Settings</Header>
               </div>
               <div className="flex flex-col w-1/2 justify-center items-end px-7">
-                <Button className="w-48" onClick={handleSubmit}>
+                <Button className="w-48 bg-primaryColor hover:bg-hoverColor" onClick={handleSubmit}>
                   <b>SAVE</b>
                 </Button>
               </div>
@@ -218,18 +275,48 @@ const OrganizationSettings = () => {
                   <Sidebar aria-label="Default sidebar example" >
                     <Sidebar.Items>
 
-                      <SidebarItem onClick={() => updatePage("styling")}>
-                        <Icon color="grey3" name="create" />Styling & Theme
-                      </SidebarItem>
-                      <SidebarItem onClick={() => updatePage("orgInfo")}>
-                        <Icon color="grey3" name="add" />Organization Info
-                      </SidebarItem>
-                      <SidebarItem onClick={() => updatePage("defValues")}>
-                        <Icon color="grey3" name="refresh" />Default Values
-                      </SidebarItem>
-                      <SidebarItem onClick={() => updatePage("medals")}>
-                        <Icon color="grey3" name="refresh" />Medal Thresholds
-                      </SidebarItem>
+                      {page === "orgInfo" ? (
+                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("orgInfo")}>
+                          <Icon color="grey3" name="add" /><div className="">Organization Info</div>
+                        </SidebarItem>
+                      ) : (
+                        <SidebarItem className="" onClick={() => updatePage("orgInfo")}>
+                          <Icon color="grey3" name="add" /><div className="">Organization Info</div>
+                        </SidebarItem>
+                      )}
+
+                      {page === "styling" ? (
+                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("styling")}>
+                          <Icon color="grey3" name="create" /><div className="">Styling & Theme</div>
+                        </SidebarItem>
+                      ) : (
+                        <SidebarItem onClick={() => updatePage("styling")}>
+                          <Icon color="grey3" name="create" /><div className="">Styling & Theme</div>
+                        </SidebarItem>
+                      )}
+
+                      {page === "defValues" ? (
+                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("defValues")}>
+                          <Icon color="grey3" name="refresh" /><div className="">Default Values</div>
+                        </SidebarItem>
+                      ) : (
+                        <SidebarItem onClick={() => updatePage("defValues")}>
+                          <Icon color="grey3" name="refresh" /><div className="">Default Values</div>
+                        </SidebarItem>
+                      )}
+
+                      {page === "medals" ? (
+                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("medals")}>
+                          <Icon color="grey3" name="medal" /><div className="">Medal Thresholds</div>
+                        </SidebarItem>
+                      ) : (
+                        <SidebarItem onClick={() => updatePage("medals")}>
+                          <Icon color="grey3" name="medal" /><div className="">Medal Thresholds</div>
+                        </SidebarItem>
+                      )}
+
+
+
 
                     </Sidebar.Items>
                   </Sidebar>
@@ -248,6 +335,9 @@ const OrganizationSettings = () => {
                       <Dropdown
                         label={primaryColor}
                         size="lg"
+                        class="bg-secondaryColor text-white rounded-lg"
+
+
                       >
                         <Dropdown.Item onClick={() => setPrimaryColor("Red")}>
                           Red
@@ -264,8 +354,8 @@ const OrganizationSettings = () => {
                         <Dropdown.Item onClick={() => setPrimaryColor("Light Blue")}>
                           Light Blue
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Dark Blue")}>
-                          Dark Blue
+                        <Dropdown.Item onClick={() => setPrimaryColor("Blue")}>
+                          Blue
                         </Dropdown.Item>
                         <Dropdown.Item onClick={() => setPrimaryColor("Purple")}>
                           Purple
@@ -276,7 +366,7 @@ const OrganizationSettings = () => {
                       </Dropdown>
 
                     </div>
-                    <div className="pb-5">
+                    <div className="pb-5 max-w-lg">
                       <Label htmlFor="email1" value="Logo Link" />
                       <InputField
                         className="flex justify-center m-auto text-black"
@@ -292,7 +382,7 @@ const OrganizationSettings = () => {
                   <div>
                     <Header>Organization Info</Header>
 
-                    <div className="m-auto mt-5 ">
+                    <div className="max-w-lg">
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Non-profit Name" />
                         <InputField
@@ -327,7 +417,7 @@ const OrganizationSettings = () => {
                     <div className="text-slate-500 pb-3" >* You can use default values to create an event quickly</div>
                     <b>Default Event Information</b>
                     <div>
-                      <div className="m-auto mt-5 ">
+                      <div className="max-w-lg">
                         <div className="pb-3">
                           <Label htmlFor="email1" value="Address" />
                           <InputField
@@ -336,6 +426,7 @@ const OrganizationSettings = () => {
                             placeholder="000 Peachtree St"
                           />
                         </div>
+                        <div className="m-auto mt-5 flex gap-5">
                         <div className="pb-3">
                           <Label htmlFor="email1" value="City" />
                           <InputField
@@ -360,6 +451,7 @@ const OrganizationSettings = () => {
                             placeholder="00000"
                           />
                         </div>
+                        </div>
 
                       </div>
                     </div>
@@ -367,7 +459,7 @@ const OrganizationSettings = () => {
                     <div className="pt-3">
                       <b>Default Contact Information</b>
                     </div>
-                    <div className="m-auto mt-5 ">
+                    <div className="max-w-lg">
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Name" />
                         <InputField
@@ -396,17 +488,56 @@ const OrganizationSettings = () => {
                   </div>
                 )}
 
-          {page === "medals" && (
+                {page === "medals" && (
                   <div>
                     <Header>Medal Settings</Header>
                     <div className="text-slate-500 pb-3" >* You can set goals for volunteers to help them gain different medals and motivate them to keep engaging in different events</div>
                     <b>Event Medals</b>
                     <div>
-                      <div className="m-auto mt-5 ">
+                      <div className="m-auto mt-5 flex gap-10">
+                        <div className="pb-3 w-32">
+                          <Label htmlFor="email1" value="Silver Medal" />
+                          <InputField
+                            className="flex justify-center m-auto text-black"
+                            name="event_silver"
+                            placeholder="Threshold"
+                          />
+                        </div>
+                        <div className="pb-3 w-32 ">
+                          <Label htmlFor="email1" value="Gold Medal" />
+                          <InputField
+                            className="flex justify-center m-auto text-black"
+                            name="event_gold"
+                            placeholder="Threshold"
+                          />
+                        </div>
 
-                </div>
-                </div>
-                </div>
+
+                      </div>
+                      <b>Earned Hour Medals</b>
+                      <div className="m-auto mt-5 flex gap-10">
+                        <div className="pb-3 w-32">
+                          <Label htmlFor="email1" value="Silver Medal" />
+                          <InputField
+                            className="flex justify-center m-auto text-black"
+                            name="hours_silver"
+                            placeholder="Threshold"
+                          />
+                        </div>
+                        <div className="pb-3 w-32">
+                          <Label htmlFor="email1" value="Gold Medal" />
+                          <InputField
+                            className="flex justify-center m-auto text-black"
+                            name="hours_gold"
+                            placeholder="Threshold"
+                          />
+                        </div>
+
+
+                      </div>
+
+                    </div>
+                  </div>
                 )}
 
 

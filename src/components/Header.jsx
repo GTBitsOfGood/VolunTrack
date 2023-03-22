@@ -4,6 +4,9 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React from "react";
+import { useEffect } from "react";
+import { getOrganizationData } from "../actions/queries";
+
 import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 
 const Header = () => {
@@ -40,6 +43,10 @@ const Header = () => {
     router.push("/manage-waivers");
   };
 
+  const goToOrganizationSettings = () => {
+    router.push("/organization-settings");
+  };
+
   const currPageMatches = (page) => router.pathname === page;
 
   const dropdownItems = (
@@ -64,12 +71,29 @@ const Header = () => {
     </React.Fragment>
   );
 
+  
+
+  const [imageURL, setImageURL] = React.useState("");
+
+  const loadData = async () => {
+    const data = await getOrganizationData(user.organizationId);
+
+    if (data) {
+      
+      setImageURL(data.data.orgData.imageURL);
+
+    }
+  };
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <Navbar fluid={false} rounded={true}>
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img
-          src="/images/helping_mamas_logo.png"
-          alt="helping mamas logo"
+          src={imageURL ? imageURL : "https://images.ctfassets.net/zifivti966xh/783eJrF131aCls0m6gr7QA/ba63f418e6e885123b604c08f3deb4dd/bog-logo.svg"}
+          alt="org logo"
           className="h-10"
         />
       </Navbar.Brand>
@@ -144,6 +168,9 @@ const Header = () => {
               </Dropdown.Item>
               <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
                 Manage Waivers
+              </Dropdown.Item>
+              <Dropdown.Item onClick={goToOrganizationSettings} href="/organization-settings">
+                Organization Settings
               </Dropdown.Item>
             </Dropdown>
           )}

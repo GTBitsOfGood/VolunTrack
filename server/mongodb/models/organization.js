@@ -25,6 +25,11 @@ const organizationSchema = new mongoose.Schema(
     defaultContactPhone: String,
     originalAdminEmail: String,
     active: Boolean,
+
+    eventSilver: Number,
+    eventGold: Number,
+    hoursSilver: Number,
+    hoursGold: Number,
   },
   { timestamps: true }
 );
