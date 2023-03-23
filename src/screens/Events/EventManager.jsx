@@ -345,10 +345,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <BoGButton
-                text="Create new event"
-                onClick={onCreateClicked}
-              />
+              <BoGButton text="Create new event" onClick={onCreateClicked} />
             </Styled.ButtonRow>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>

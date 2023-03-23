@@ -12,7 +12,7 @@ const ManageAttendanceButton = ({
     router.push(`${router.pathname}/${eventId}/attendance`);
   };
 
-  return <BoGButton onClick={handleClick} text="Manage Attendance"/>;
+  return <BoGButton onClick={handleClick} text="Manage Attendance" />;
 };
 
 export default ManageAttendanceButton;

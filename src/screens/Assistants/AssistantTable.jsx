@@ -384,7 +384,7 @@ class AssistantTable extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <BoGButton onClick={this.cancel} text="Cancel" />
+            <BoGButton onClick={this.cancel} text="Cancel" outline={true} />
             <BoGButton onClick={this.onModalClose} text="Update" />
           </ModalFooter>
         </Modal>
@@ -400,7 +400,11 @@ class AssistantTable extends React.Component {
             pending admin: {this.state.pendingSelectedForDelete}?
           </ModalBody>
           <ModalFooter>
-            <BoGButton onClick={this.closePendingModal} text="Cancel" />
+            <BoGButton
+              onClick={this.closePendingModal}
+              text="Cancel"
+              outline={true}
+            />
             <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
           </ModalFooter>
         </Modal>
@@ -416,7 +420,11 @@ class AssistantTable extends React.Component {
             {this.state.userSelectedForDelete?.name}?
           </ModalBody>
           <ModalFooter>
-            <BoGButton onClick={this.closePendingModal} text="Cancel" />
+            <BoGButton
+              onClick={this.closePendingModal}
+              text="Cancel"
+              outline={true}
+            />
             <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
           </ModalFooter>
         </Modal>

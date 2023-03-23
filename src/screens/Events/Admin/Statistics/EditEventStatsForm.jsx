@@ -143,7 +143,7 @@ const EditEventStatsForm = ({ toggle, event }) => {
               </Styled.Form>
             </Styled.ModalBody>
             <ModalFooter>
-              <BoGButton text="Cancel" onClick={toggle} />
+              <BoGButton text="Cancel" onClick={toggle} outline={true} />
               <BoGButton
                 text="Update"
                 onClick={handleSubmit}

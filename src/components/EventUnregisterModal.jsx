@@ -28,8 +28,8 @@ const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
         Are you sure you want to cancel your registration for this event?
       </ModalBody>
       <ModalFooter>
-        <BoGButton text="No, keep it" onClick={toggle} outline={true}/>
-        <BoGButton text="Yes, cancel it" onClick={handleSubmit}/>
+        <BoGButton text="No, keep it" onClick={toggle} outline={true} />
+        <BoGButton text="Yes, cancel it" onClick={handleSubmit} />
       </ModalFooter>
     </Modal>
   );

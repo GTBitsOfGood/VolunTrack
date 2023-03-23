@@ -25,7 +25,7 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
         Are you sure you want to delete this entry <strong>permanently</strong>?
       </ModalBody>
       <ModalFooter>
-        <BoGButton text="Cancel" onClick={toggle} />
+        <BoGButton text="Cancel" onClick={toggle} outline={true} />
         <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting} />
       </ModalFooter>
     </Modal>

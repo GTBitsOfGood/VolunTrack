@@ -604,7 +604,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
             </Styled.Row>
           </Styled.ModalBody>
           <ModalFooter>
-            <BoGButton text="Cancel" onClick={toggle} />
+            <BoGButton text="Cancel" onClick={toggle} outline={true} />
             <BoGButton
               text={submitText}
               onClick={() => {

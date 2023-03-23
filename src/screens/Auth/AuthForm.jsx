@@ -193,9 +193,11 @@ class AuthForm extends React.Component {
                       }}
                       onClick={handleSubmit}
                       disabled={!isValid || isSubmitting}
-                      text={this.props.createAccount
-                        ? "Create an account"
-                        : "Sign In"}
+                      text={
+                        this.props.createAccount
+                          ? "Create an account"
+                          : "Sign In"
+                      }
                     />
                   </Row>
                 </Styled.FormGroup>

@@ -160,7 +160,7 @@ const EventInfo = () => {
   return (
     <>
       <Styled.EventTableAll>
-        <BoGButton text="Back" onClick={() => goBackToCal()}/>
+        <BoGButton text="Back" onClick={() => goBackToCal()} />
         <Styled.EventTable>
           <Col>
             <Styled.EventCol>
@@ -190,14 +190,23 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <BoGButton text="Manage Attendance" onClick={routeToRegisteredVolunteers}/>
-                  <BoGButton text="View Participation Statistics" onClick={routeToStats}/>
+                  <BoGButton
+                    text="Manage Attendance"
+                    onClick={routeToRegisteredVolunteers}
+                  />
+                  <BoGButton
+                    text="View Participation Statistics"
+                    onClick={routeToStats}
+                  />
                 </>
               )}
               {user.role === "volunteer" &&
                 event.volunteers.includes(user._id) &&
                 futureorTodaysDate && (
-                  <BoGButton text="Unregister" onClick={() => onUnregisterClicked(event)}/>
+                  <BoGButton
+                    text="Unregister"
+                    onClick={() => onUnregisterClicked(event)}
+                  />
                 )}
             </Row>
             <Row>
@@ -282,7 +291,10 @@ const EventInfo = () => {
                   </Styled.InfoTable>
                   {user.role === "volunteer" && (
                     <Styled.ButtonCol>
-                      <BoGButton text="Share Private Event Link" onClick={copyPrivateLink}/>
+                      <BoGButton
+                        text="Share Private Event Link"
+                        onClick={copyPrivateLink}
+                      />
                     </Styled.ButtonCol>
                   )}
                 </Styled.EventCol2>
@@ -294,18 +306,28 @@ const EventInfo = () => {
           event.max_volunteers - event.volunteers.length !== 0 &&
           !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
-            <BoGButton text="Register" onClick={() => onRegisterClicked(event)}/>
+            <BoGButton
+              text="Register"
+              onClick={() => onRegisterClicked(event)}
+            />
           )}
         {user.role === "volunteer" &&
           event.max_volunteers - event.volunteers.length === 0 &&
           !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
-            <BoGButton disabled={true} text="Registration Closed" onClick={null}/>
+            <BoGButton
+              disabled={true}
+              text="Registration Closed"
+              onClick={null}
+            />
           )}
         {user.role === "volunteer" &&
           event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
-            <BoGButton text="You are registered for this event!"disabled={true}/>
+            <BoGButton
+              text="You are registered for this event!"
+              disabled={true}
+            />
           )}
         <EventUnregisterModal
           open={showUnregisterModal}

@@ -38,7 +38,7 @@ class BoGButton extends React.Component {
 
 export default BoGButton;
 
-Button.propTypes = {
+BoGButton.propTypes = {
   text: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   size: PropTypes.string,
