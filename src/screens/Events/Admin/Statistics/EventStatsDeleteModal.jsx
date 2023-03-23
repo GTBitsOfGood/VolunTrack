@@ -4,7 +4,6 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import BoGButton from "../../../../components/BoGButton";
 import { deleteAttendance } from "../../../../actions/queries";
 
-// TODO: Test
 const EventStatsDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
 

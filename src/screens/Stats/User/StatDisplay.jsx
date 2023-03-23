@@ -16,7 +16,6 @@ import { Field, Formik } from "formik";
 import { Row, Col } from "reactstrap";
 import { filterAttendance } from "../helper";
 
-// TODO: Possibly Add a styling feature to button
 const Styled = {
   Container: styled.div`
     width: 100%;

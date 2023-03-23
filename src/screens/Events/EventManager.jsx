@@ -322,15 +322,27 @@ const EventManager = ({ user, role, isHomePage }) => {
           {role === "admin" ? (
             <Styled.ButtonRow>
               <Dropdown label={dropdownVal}>
-                  <Dropdown.Item onClick={() => {changeValue("All Events")}}>
-                    All Events
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => {changeValue("Public Events")}}>
-                    Public Events
-                  </Dropdown.Item>
-                  <Dropdown.Item onClick={() => {changeValue("Private Group Events")}}>
-                    Private Group Events
-                  </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("All Events");
+                  }}
+                >
+                  All Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Public Events");
+                  }}
+                >
+                  Public Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Private Group Events");
+                  }}
+                >
+                  Private Group Events
+                </Dropdown.Item>
               </Dropdown>
               <BoGButton text="Create new event" onClick={onCreateClicked} />
             </Styled.ButtonRow>

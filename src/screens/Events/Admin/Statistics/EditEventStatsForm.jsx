@@ -7,7 +7,6 @@ import { updateAttendance } from "../../../../actions/queries";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
 
-// TODO: Test
 const Styled = {
   Form: styled(FForm)``,
   ErrorMessage: styled.div.attrs({

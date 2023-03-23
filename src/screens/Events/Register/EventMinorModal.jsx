@@ -44,7 +44,6 @@ const Styled = {
   `,
 };
 
-// Where is this modal too?
 const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
   const minor = {
     firstName: "",

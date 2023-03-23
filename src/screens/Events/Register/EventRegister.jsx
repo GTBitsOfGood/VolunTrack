@@ -15,7 +15,6 @@ import EventWaiverModal from "./EventWaiverModal";
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";
 
-// Where is this screen?
 const Styled = {
   Container: styled(Container)`
     background-color: ${variables["gray-100"]};
