@@ -337,28 +337,28 @@ const OrganizationSettings = () => {
 
 
                       >
-                        <Dropdown.Item onClick={() => setPrimaryColor("Red")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Red")} className="font-bold text-red-800">
                           Red
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Orange")} >
+                        <Dropdown.Item onClick={() => setPrimaryColor("Orange")} className="font-bold text-orange-600">
                           Orange
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Yellow")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Yellow")} className="font-bold text-yellow-500">
                           Yellow
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Green")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Green")} className="font-bold text-lime-500">
                           Green
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Light Blue")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Light Blue")} className="font-bold text-sky-500">
                           Light Blue
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Blue")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Blue")} className="font-bold text-blue-800">
                           Blue
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Purple")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Purple")} className="font-bold text-purple-800">
                           Purple
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Magenta")}>
+                        <Dropdown.Item onClick={() => setPrimaryColor("Magenta")} className="font-bold text-pink-800">
                           Magenta
                         </Dropdown.Item>
                       </Dropdown>

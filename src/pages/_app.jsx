@@ -38,7 +38,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   // }, []);
 
   useEffect(() => {
-    applyTheme(redTheme);
+    applyTheme(magentaTheme);
   }, []);
 
   return (
