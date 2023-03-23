@@ -160,8 +160,6 @@ const OrganizationSettings = () => {
 
   const handleSubmit = async (values) => {
 
-    setEdit(false);
-
     const data = {
       name: values.non_profit_name,
       website: values.non_profit_website,
@@ -372,6 +370,7 @@ const OrganizationSettings = () => {
                         className="flex justify-center m-auto text-black"
                         name="logo_link"
                         placeholder="https://www.example.com"
+                        onChange={() => setEdit(true)}
                       />
                       <div className="text-slate-500 pb-3 pt-1" >* Submit a link to your logo. Please make sure the logo is clear and in the right dimension.</div>
                     </div>
@@ -389,6 +388,7 @@ const OrganizationSettings = () => {
                           className="flex justify-center m-auto text-black"
                           name="non_profit_name"
                           placeholder="Bits of Good"
+                          onChange={() => setEdit(true)}
                         />
                       </div>
                       <div className="pb-3">
@@ -427,30 +427,30 @@ const OrganizationSettings = () => {
                           />
                         </div>
                         <div className="m-auto mt-5 flex gap-5">
-                        <div className="pb-3">
-                          <Label htmlFor="email1" value="City" />
-                          <InputField
-                            className="flex justify-center m-auto text-black"
-                            name="default_city"
-                            placeholder="Atlanta"
-                          />
-                        </div>
-                        <div className="pb-3">
-                          <Label htmlFor="email1" value="State" />
-                          <InputField
-                            className="flex justify-center m-auto text-black"
-                            name="default_state"
-                            placeholder="GA"
-                          />
-                        </div>
-                        <div className="pb-3">
-                          <Label htmlFor="email1" value="ZIP Code" />
-                          <InputField
-                            className="flex justify-center m-auto text-black"
-                            name="default_zip"
-                            placeholder="00000"
-                          />
-                        </div>
+                          <div className="pb-3">
+                            <Label htmlFor="email1" value="City" />
+                            <InputField
+                              className="flex justify-center m-auto text-black"
+                              name="default_city"
+                              placeholder="Atlanta"
+                            />
+                          </div>
+                          <div className="pb-3">
+                            <Label htmlFor="email1" value="State" />
+                            <InputField
+                              className="flex justify-center m-auto text-black"
+                              name="default_state"
+                              placeholder="GA"
+                            />
+                          </div>
+                          <div className="pb-3">
+                            <Label htmlFor="email1" value="ZIP Code" />
+                            <InputField
+                              className="flex justify-center m-auto text-black"
+                              name="default_zip"
+                              placeholder="00000"
+                            />
+                          </div>
                         </div>
 
                       </div>

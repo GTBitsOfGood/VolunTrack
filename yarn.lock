@@ -4059,7 +4059,7 @@
   dependencies:
     "fast-diff" "^1.1.2"
 
-"prettier-plugin-tailwindcss@^0.2.3":
+"prettier-plugin-tailwindcss@^0.2.5":
   "integrity" "sha512-vZ/iKieyCx0WTxHbkf5E1rBlv/ybFk8WTT4hL5W2jlVxum2Zbe0jMUpuQdDrpa4z2vnPiJ5KIWCqL/kd16fKYg=="
   "resolved" "https://registry.npmjs.org/prettier-plugin-tailwindcss/-/prettier-plugin-tailwindcss-0.2.5.tgz"
   "version" "0.2.5"

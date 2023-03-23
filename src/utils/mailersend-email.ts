@@ -1,8 +1,26 @@
+import { getOrganizationData } from "../actions/queries";
+import { useEffect, useState } from "react";
+
 const Recipient = require("mailersend").Recipient;
 const EmailParams = require("mailersend").EmailParams;
 const MailerSend = require("mailersend");
 
 export const sendRegistrationConfirmationEmail = async (user, event) => {
+
+  const [orgName, setOrgName] = useState("");
+
+  const loadData = async () => {
+    const data = await getOrganizationData(user.organizationId);
+
+    if (data) {
+      setOrgName(data.data.orgData.name);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const personalization = [
     {
       email: user.bio.email,
@@ -21,7 +39,7 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
         eventZipCode: event.zip,
         eventDescription: event.description.replace(/<[^>]+>/g, " "),
         eventContactEmail: event.eventContactEmail,
-        nonprofitName: "Helping Mamas", // TODO: change when we switch to multi tenant model
+        nonprofitName: orgName,
       },
     },
   ];
@@ -30,7 +48,20 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
 };
 
 export const sendEventEditedEmail = async (user, event) => {
-  const nonprofit = "Helping Mamas"; // TODO: change when we switch to multi tenant model
+  const [nonprofit, setOrgName] = useState("");
+
+  const loadData = async () => {
+    const data = await getOrganizationData(user.organizationId);
+
+    if (data) {
+      setOrgName(data.data.orgData.name);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const personalization = [
     {
       email: user.bio.email,
@@ -58,6 +89,23 @@ export const sendEventEditedEmail = async (user, event) => {
 };
 
 const sendEmail = async (user, personalization, subject) => {
+
+  const [orgName, setOrgName] = useState("");
+  const [bcc, setBcc] = useState("");
+
+  const loadData = async () => {
+    const data = await getOrganizationData(user.organizationId);
+
+    if (data) {
+      setOrgName(data.data.orgData.name);
+      setBcc(data.data.orgData.notificationEmail);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
@@ -70,10 +118,11 @@ const sendEmail = async (user, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom("volunteer@bitsofgood.org")
-    .setFromName("Bits of Good") // TODO: change when we switch to multi tenant model
+    .setFrom(personalization.data.eventContactEmail)
+    .setFromName(orgName)
     .setRecipients(recipients)
     .setSubject(subject)
+    .setBcc(bcc)
     .setTemplateId("vywj2lpov8p47oqz")
     .setPersonalization(personalization);
 
