@@ -2,8 +2,6 @@ import { Table } from "flowbite-react";
 import BoGButton from "../../components/BoGButton";
 import PropTypes from "prop-types";
 import React from "react";
-import Dropdown from "react-dropdown";
-import "react-dropdown/style.css";
 import {
   Button,
   Col,
@@ -256,28 +254,6 @@ class AssistantTable extends React.Component {
                         }
                         type="text"
                         name="Name"
-                      />
-                    </Col>
-                    <Col>
-                      <Form.Label>Role</Form.Label>
-                      <Dropdown
-                        options={roles}
-                        onChange={(e) => {
-                          this.handleStatus(e);
-                        }}
-                        value={
-                          this.state.userSelectedForEdit
-                            ? this.state.userSelectedForEdit.role === "admin"
-                              ? "Administrator"
-                              : this.state.userSelectedForEdit.role ===
-                                "admin-assistant"
-                              ? "Admin Assistant"
-                              : this.state.userSelectedForEdit.role === "staff"
-                              ? "Staff"
-                              : { defaultOption }
-                            : { defaultOption }
-                        }
-                        placeholder="Select an option"
                       />
                     </Col>
                   </Row>
