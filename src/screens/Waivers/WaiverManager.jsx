@@ -95,7 +95,7 @@ const WaiverManager = () => {
             />
           </div>
           <div className="flex justify-end">
-            <BoGButton onClick={submitAdult} text="Save"/>
+            <BoGButton onClick={submitAdult} text="Save" />
           </div>
         </Tabs.Item>
         <Tabs.Item
@@ -113,7 +113,7 @@ const WaiverManager = () => {
             />
           </div>
           <div className="flex justify-end">
-            <BoGButton onClick={submitMinor} text="Save"/>
+            <BoGButton onClick={submitMinor} text="Save" />
           </div>
         </Tabs.Item>
       </Tabs.Group>

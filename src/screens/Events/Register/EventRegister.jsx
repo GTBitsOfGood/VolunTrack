@@ -311,12 +311,7 @@ const EventRegister = (event) => {
 
   return (
     <Styled.Container fluid="md">
-      <Button
-        className="mt-2 ml-5 w-24 text-white"
-        onClick={() => goBackToDetails()}
-      >
-        Back
-      </Button>
+      <BoGButton text="Back" onClick={() => goBackToDetails()} />
       <Styled.Title />
       {!isRegistered && (
         <Styled.Row>
@@ -362,9 +357,10 @@ const EventRegister = (event) => {
                   {/*</Styled.LinkedTextRight>*/}
                 </Styled.Row>
                 <Styled.Row>
-                  <Button color="primary" onClick={onReturnToHomeClicked}>
-                    Return to Home
-                  </Button>
+                  <BoGButton
+                    text="Return to Home"
+                    onClick={onReturnToHomeClicked}
+                  />
                 </Styled.Row>
                 <Styled.Row></Styled.Row>
               </Styled.EventContainer>
@@ -453,12 +449,7 @@ const EventRegister = (event) => {
           <Col>
             {!isRegistered && (
               <Link href={`/events/${eventId}/register`}>
-                <Styled.MinorButton
-                  style={{ cursor: "pointer" }}
-                  onClick={onAddMinorClicked}
-                >
-                  Add a Minor
-                </Styled.MinorButton>
+                <BoGButton text={"Add a Minor"} onClick={onAddMinorClicked} />
               </Link>
             )}
           </Col>
@@ -466,9 +457,7 @@ const EventRegister = (event) => {
       </Styled.BottomContainer>
       {!isRegistered && (
         <Styled.ModalFooter>
-          <Styled.Button onClick={onCompleteRegistrationClicked}>
-            Register
-          </Styled.Button>
+          <BoGButton text="Register" onClick={onCompleteRegistrationClicked} />
         </Styled.ModalFooter>
       )}
       <EventMinorModal

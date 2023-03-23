@@ -292,10 +292,14 @@ class VolunteerTable extends React.Component {
                   </ModalBody>
                 </Container>
                 <ModalFooter>
-                  <BoGButton onClick={this.onModalClose} text="Cancel" outline={true}/>
+                  <BoGButton
+                    onClick={this.onModalClose}
+                    text="Cancel"
+                    outline={true}
+                  />
                   {/*TODOCD: Figure out Formik button of type submit}*/}
                   <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
-                    Update
+                    {"Update (Edit Me)"}
                   </Button>
                 </ModalFooter>
               </Form>

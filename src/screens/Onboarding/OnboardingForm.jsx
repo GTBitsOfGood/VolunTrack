@@ -236,7 +236,11 @@ class OnboardingForm extends React.Component {
                   <Styled.ErrorMessage name="organization_code" />
                 </div>
                 <div className="m-auto mt-5 flex justify-center">
-                  <BoGButton text="Submit" onClick={handleSubmit} disabled={!isValid || isSubmitting}/>
+                  <BoGButton
+                    text="Submit"
+                    onClick={handleSubmit}
+                    disabled={!isValid || isSubmitting}
+                  />
                 </div>
               </form>
             </div>

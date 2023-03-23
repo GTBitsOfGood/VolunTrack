@@ -263,7 +263,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
                   </Row>
                   <Row>
                     <Col>
-                    <BoGButton
+                      <BoGButton
                         onClick={() => {
                           handleSubmit();
                         }}

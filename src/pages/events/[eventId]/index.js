@@ -1,7 +1,8 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -9,17 +10,6 @@ import { RequestContext } from "../../../providers/RequestProvider";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 
 const Styled = {
-  Button: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: white;
-    margin-bottom: 2rem;
-    margin-left: 4rem;
-    margin-right: 4rem;
-    font-size: 20px;
-    position: fixed;
-    bottom: 0;
-    width: 90%;
-  `,
   EventTableAll: styled.div`
     display: flex;
     flex-direction: column;
@@ -87,22 +77,6 @@ const Styled = {
     flex-direction: column;
     background-color: white;
     padding-bottom: 1.5rem;
-  `,
-  PrivateLink: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: white;
-    font-size: 15px;
-    margin: auto;
-    bottom: 0;
-    width: 50%;
-  `,
-  Routing: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: white;
-    font-size: 15px;
-    margin: 1rem;
-    bottom: 0;
-    width: 32%;
   `,
 };
 
@@ -186,12 +160,7 @@ const EventInfo = () => {
   return (
     <>
       <Styled.EventTableAll>
-        <Button
-          className="mt-2 ml-5 mb-4 w-24 text-white"
-          onClick={() => goBackToCal()}
-        >
-          Back
-        </Button>
+        <BoGButton text="Back" onClick={() => goBackToCal()}/>
         <Styled.EventTable>
           <Col>
             <Styled.EventCol>
@@ -221,20 +190,14 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <Styled.Routing onClick={routeToRegisteredVolunteers}>
-                    Manage Attendance
-                  </Styled.Routing>
-                  <Styled.Routing onClick={routeToStats}>
-                    View Participation Statistics
-                  </Styled.Routing>
+                  <BoGButton text="Manage Attendance" onClick={routeToRegisteredVolunteers}/>
+                  <BoGButton text="View Participation Statistics" onClick={routeToStats}/>
                 </>
               )}
               {user.role === "volunteer" &&
                 event.volunteers.includes(user._id) &&
                 futureorTodaysDate && (
-                  <Styled.Routing onClick={() => onUnregisterClicked(event)}>
-                    Unregister
-                  </Styled.Routing>
+                  <BoGButton text="Unregister" onClick={() => onUnregisterClicked(event)}/>
                 )}
             </Row>
             <Row>
@@ -319,9 +282,7 @@ const EventInfo = () => {
                   </Styled.InfoTable>
                   {user.role === "volunteer" && (
                     <Styled.ButtonCol>
-                      <Styled.PrivateLink onClick={copyPrivateLink}>
-                        Share Private Event Link
-                      </Styled.PrivateLink>
+                      <BoGButton text="Share Private Event Link" onClick={copyPrivateLink}/>
                     </Styled.ButtonCol>
                   )}
                 </Styled.EventCol2>
@@ -333,22 +294,18 @@ const EventInfo = () => {
           event.max_volunteers - event.volunteers.length !== 0 &&
           !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
-            <Styled.Button onClick={() => onRegisterClicked(event)}>
-              Register
-            </Styled.Button>
+            <BoGButton text="Register" onClick={() => onRegisterClicked(event)}/>
           )}
         {user.role === "volunteer" &&
           event.max_volunteers - event.volunteers.length === 0 &&
           !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
-            <Styled.Button disabled={true}>Registration Closed</Styled.Button>
+            <BoGButton disabled={true} text="Registration Closed" onClick={null}/>
           )}
         {user.role === "volunteer" &&
           event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
-            <Styled.Button disabled={true}>
-              You are registered for this event!
-            </Styled.Button>
+            <BoGButton text="You are registered for this event!"disabled={true}/>
           )}
         <EventUnregisterModal
           open={showUnregisterModal}

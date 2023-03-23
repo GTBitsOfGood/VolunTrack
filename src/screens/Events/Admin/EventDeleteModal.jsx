@@ -26,8 +26,8 @@ const EventDeleteModal = ({ open, toggle, event }) => {
       <ModalHeader toggle={toggle}>Delete Event</ModalHeader>
       <ModalBody>Are you sure you want to delete this event?</ModalBody>
       <ModalFooter>
-        <BoGButton text="Cancel" onClick={toggle}/>
-        <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting}/>
+        <BoGButton text="Cancel" onClick={toggle} />
+        <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting} />
       </ModalFooter>
     </Modal>
   );

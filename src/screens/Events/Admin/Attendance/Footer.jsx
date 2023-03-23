@@ -32,9 +32,9 @@ const Footer = ({ endEvent, reopenEvent, event }) => {
     <Styled.Background>
       <Styled.Container>
         {event.isEnded ? (
-          <BoGButton text="Reopen Event" onClick={reopenEvent}/>
+          <BoGButton text="Reopen Event" onClick={reopenEvent} />
         ) : (
-          <BoGButton text="End Evnet" onClick={endEvent}/>
+          <BoGButton text="End Evnet" onClick={endEvent} />
         )}
         <BoGButton
           onClick={() => router.push(`/events/${event._id}`)}

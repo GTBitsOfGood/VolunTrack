@@ -384,8 +384,8 @@ class AssistantTable extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <BoGButton onClick={this.cancel} text="Cancel"/>
-            <BoGButton onClick={this.onModalClose} text="Update"/>
+            <BoGButton onClick={this.cancel} text="Cancel" />
+            <BoGButton onClick={this.onModalClose} text="Update" />
           </ModalFooter>
         </Modal>
         {/* Delete Invited Admin Modal */}
@@ -400,8 +400,8 @@ class AssistantTable extends React.Component {
             pending admin: {this.state.pendingSelectedForDelete}?
           </ModalBody>
           <ModalFooter>
-            <BoGButton onClick={this.closePendingModal} text="Cancel"/>
-            <BoGButton onClick={this.handleSubmitForPending} text="Delete"/>
+            <BoGButton onClick={this.closePendingModal} text="Cancel" />
+            <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
           </ModalFooter>
         </Modal>
         {/* Delete Current Admin Modal */}
@@ -416,8 +416,8 @@ class AssistantTable extends React.Component {
             {this.state.userSelectedForDelete?.name}?
           </ModalBody>
           <ModalFooter>
-            <BoGButton onClick={this.closePendingModal} text="Cancel"/>
-            <BoGButton onClick={this.handleSubmitForPending} text="Delete"/>
+            <BoGButton onClick={this.closePendingModal} text="Cancel" />
+            <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
           </ModalFooter>
         </Modal>
         {users.length !== 0 && (

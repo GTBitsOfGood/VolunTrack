@@ -4,7 +4,6 @@ import {
   Modal,
   ModalHeader,
   ModalFooter,
-  Button,
   Input,
   FormGroup,
 } from "reactstrap";
@@ -29,11 +28,6 @@ const Styled = {
   `,
   HighlightText: styled.p`
     color: ${variables["dark"]};
-  `,
-  MainButton: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: ${variables["white"]};
-    width: 100%;
   `,
   Col: styled(Col)`
     margin-top: 0.5rem;
@@ -151,7 +145,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <BoGButton text="Cancel" onClick={close}/>
+              <BoGButton text="Cancel" onClick={close} />
               <BoGButton
                 text="Add"
                 disabled={!checked || firstName == "" || lastName == ""}
