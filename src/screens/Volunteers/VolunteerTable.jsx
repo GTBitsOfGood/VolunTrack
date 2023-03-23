@@ -188,7 +188,7 @@ class VolunteerTable extends React.Component {
             onSubmit={(values) => {
               this.handleSubmit(values);
             }}
-          >
+            render={({handleSubmit}) => (
             <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
               <Form>
                 <ModalHeader color="#ef4e79">
@@ -298,13 +298,12 @@ class VolunteerTable extends React.Component {
                     outline={true}
                   />
                   {/*TODOCD: Figure out Formik button of type submit}*/}
-                  <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
-                    {"Update (Edit Me)"}
-                  </Button>
+                  <BoGButton text="Update" onClick={handleSubmit}/>
                 </ModalFooter>
               </Form>
             </Modal>
-          </Formik>
+          )}
+          />
         </Table>
         {users.length !== 0 && (
           <Pagination
