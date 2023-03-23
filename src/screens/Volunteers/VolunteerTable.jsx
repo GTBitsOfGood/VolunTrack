@@ -188,121 +188,123 @@ class VolunteerTable extends React.Component {
             onSubmit={(values) => {
               this.handleSubmit(values);
             }}
-            render={({handleSubmit}) => (
-            <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
-              <Form>
-                <ModalHeader color="#ef4e79">
-                  {this.state.userSelectedForEdit?.name ?? ""}
-                </ModalHeader>
-                <Container>
-                  <ModalBody>
-                    <SForm.FormGroup>
-                      <Row>
-                        <Col>
-                          <SForm.Label>First Name</SForm.Label>
-                          <Field name="first_name">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                        <Col>
-                          <SForm.Label>Last Name</SForm.Label>
-                          <Field name="last_name">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <SForm.Label>Email</SForm.Label>
-                          <Field name="email">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                        <Col>
-                          <SForm.Label>Phone</SForm.Label>
-                          <Field name="phone_number">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                      </Row>
+            render={({ handleSubmit }) => (
+              <Modal
+                style={{ maxWidth: "750px" }}
+                isOpen={this.state.modalOpen}
+              >
+                <Form>
+                  <ModalHeader color="#ef4e79">
+                    {this.state.userSelectedForEdit?.name ?? ""}
+                  </ModalHeader>
+                  <Container>
+                    <ModalBody>
+                      <SForm.FormGroup>
+                        <Row>
+                          <Col>
+                            <SForm.Label>First Name</SForm.Label>
+                            <Field name="first_name">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                          <Col>
+                            <SForm.Label>Last Name</SForm.Label>
+                            <Field name="last_name">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <SForm.Label>Email</SForm.Label>
+                            <Field name="email">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                          <Col>
+                            <SForm.Label>Phone</SForm.Label>
+                            <Field name="phone_number">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                        </Row>
 
-                      <Row>
-                        <Col>
-                          <SForm.Label>Date of Birth</SForm.Label>
-                          <Field name="date_of_birth">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                        <Col>
-                          <SForm.Label>Zip Code</SForm.Label>
-                          <Field name="zip_code">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <SForm.Label>Address</SForm.Label>
-                          <Field name="address">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                        <Col>
-                          <SForm.Label>City</SForm.Label>
-                          <Field name="city">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                        <Col>
-                          <SForm.Label>State</SForm.Label>
-                          <Field name="state">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col>
-                          <SForm.Label>Notes</SForm.Label>
-                          <Field name="notes">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="text" />
-                            )}
-                          </Field>
-                        </Col>
-                      </Row>
-                    </SForm.FormGroup>
-                  </ModalBody>
-                </Container>
-                <ModalFooter>
-                  <BoGButton
-                    onClick={this.onModalClose}
-                    text="Cancel"
-                    outline={true}
-                  />
-                  {/*TODOCD: Figure out Formik button of type submit}*/}
-                  <BoGButton text="Update" onClick={handleSubmit}/>
-                </ModalFooter>
-              </Form>
-            </Modal>
-          )}
+                        <Row>
+                          <Col>
+                            <SForm.Label>Date of Birth</SForm.Label>
+                            <Field name="date_of_birth">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                          <Col>
+                            <SForm.Label>Zip Code</SForm.Label>
+                            <Field name="zip_code">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <SForm.Label>Address</SForm.Label>
+                            <Field name="address">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                          <Col>
+                            <SForm.Label>City</SForm.Label>
+                            <Field name="city">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                          <Col>
+                            <SForm.Label>State</SForm.Label>
+                            <Field name="state">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <SForm.Label>Notes</SForm.Label>
+                            <Field name="notes">
+                              {({ field }) => (
+                                <SForm.Input {...field} type="text" />
+                              )}
+                            </Field>
+                          </Col>
+                        </Row>
+                      </SForm.FormGroup>
+                    </ModalBody>
+                  </Container>
+                  <ModalFooter>
+                    <BoGButton
+                      onClick={this.onModalClose}
+                      text="Cancel"
+                      outline={true}
+                    />
+                    <BoGButton text="Update" onClick={handleSubmit} />
+                  </ModalFooter>
+                </Form>
+              </Modal>
+            )}
           />
         </Table>
         {users.length !== 0 && (
