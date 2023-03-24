@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import Icon from "../../components/Icon";
+import { Icon } from "../../components/Icon";
 import "react-dropdown/style.css";
 import {
   Button,
