@@ -1,3 +1,3 @@
-export type ThemeType = {
+export interface ThemeType {
   [cssVariable: string]: string;
-};
+}

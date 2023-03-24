@@ -1,12 +1,12 @@
+import { Table } from "flowbite-react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
 import styled from "styled-components";
-import Icon from "../../components/Icon";
+import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import { Table } from "flowbite-react";
 import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
@@ -66,12 +66,18 @@ class VolunteerTable extends React.Component {
     const { users, loading } = this.props;
     return (
       <div>
-        <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
-          <Table.Head className="bg-white dark:border-gray-700 dark:bg-gray-800">
-            <Table.HeadCell>Volunteer Name</Table.HeadCell>
-            <Table.HeadCell>Email Address</Table.HeadCell>
-            <Table.HeadCell>Phone Number</Table.HeadCell>
-            <Table.HeadCell> </Table.HeadCell>
+        <Table striped={true}>
+          <Table.Head className="dark:border-red-700">
+            <Table.HeadCell className="text-primaryColor">
+              Volunteer Name
+            </Table.HeadCell>
+            <Table.HeadCell className="text-primaryColor">
+              Email Address
+            </Table.HeadCell>
+            <Table.HeadCell className="text-primaryColor">
+              Phone Number
+            </Table.HeadCell>
+            <Table.HeadCell className="text-primaryColor"> </Table.HeadCell>
           </Table.Head>
           {users
             .slice(

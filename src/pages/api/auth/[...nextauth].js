@@ -125,6 +125,7 @@ export default NextAuth({
       };
     },
     async redirect({ baseUrl }) {
+      if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },
   },

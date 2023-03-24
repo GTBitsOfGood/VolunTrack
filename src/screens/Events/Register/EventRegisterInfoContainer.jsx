@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { Row, Col, Container } from "reactstrap";
-import IconSpecial from "../../../components/IconSpecial";
 import Link from "next/link";
 import PropTypes from "prop-types";
+import { Col, Container, Row } from "reactstrap";
+import styled from "styled-components";
+import { IconSpecial } from "../../../components/Icon";
 import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {

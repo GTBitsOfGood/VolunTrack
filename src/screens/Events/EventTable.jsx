@@ -2,12 +2,12 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import Icon from "../../components/Icon";
+import { Icon } from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
 import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
 
-import DateDisplayComponent from "../../components/DateDisplay";
 import { useSession } from "next-auth/react";
+import DateDisplayComponent from "../../components/DateDisplay";
 
 const Styled = {
   Container: styled.div`
@@ -26,7 +26,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
 
-    background-color: white;
     border: 1px solid ${variables["gray-200"]};
     border-radius: 1rem;
 
@@ -61,8 +60,6 @@ const Styled = {
   `,
   EventSlots: styled.p`
     margin: 0 0 0 1rem;
-
-    color: grey;
   `,
   EditButton: styled(Button)`
     margin: 0 0 0 auto;
@@ -206,7 +203,7 @@ const EventTable = ({
     return (
       <Styled.Container>
         {events.map((event) => (
-          <Styled.EventContainer key={event._id}>
+          <Styled.EventContainer key={event._id} className="bg-white">
             <Styled.EventGrid>
               <DateDisplayComponent date={event.date} color={"Primary"} />
               <Link href={`events/${event._id}`}>
@@ -220,7 +217,7 @@ const EventTable = ({
                           onEditClicked(event);
                         }}
                       >
-                        <Icon color="grey3" name="create" />
+                        <Icon color="secondaryColor" name="create" />
                       </Styled.EditButton>
                     )}
                     {role === "admin" && (
@@ -247,7 +244,7 @@ const EventTable = ({
                             <Styled.Button
                               onClick={() => onRegisterClicked(event)}
                             >
-                              <Icon color="grey3" name="add" />
+                              <Icon color="secondaryColor" name="add" />
                               <span>Register</span>
                             </Styled.Button>
                           </>
