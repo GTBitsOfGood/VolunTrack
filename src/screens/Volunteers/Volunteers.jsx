@@ -162,7 +162,7 @@ class Volunteers extends React.Component {
           <Styled.CSVLink
             data={this.state.users}
             filename={"volunteer-list.csv"}
-            className="btn btn-primary"
+            className="btn bg-primaryColor text-white"
             target="_blank"
           >
             Download to CSV

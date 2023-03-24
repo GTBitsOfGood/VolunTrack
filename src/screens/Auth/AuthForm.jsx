@@ -185,12 +185,6 @@ class AuthForm extends React.Component {
                   <Row>
                     <BoGButton
                       type="submit"
-                      style={{
-                        backgroundColor: "#ef4e79",
-                        width: "92%",
-                        margin: "auto",
-                        color: "white",
-                      }}
                       onClick={handleSubmit}
                       disabled={!isValid || isSubmitting}
                       text={
