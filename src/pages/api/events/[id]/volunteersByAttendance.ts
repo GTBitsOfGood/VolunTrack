@@ -1,4 +1,5 @@
 import dbConnect from "../../../../../server/mongodb";
+import Volunteer from "../../../../screens/Events/Admin/Attendance/Volunteer";
 const Attendance = require("../../../../../server/mongodb/models/attendance");
 const Event = require("../../../../../server/mongodb/models/event");
 const { getEventVolunteers } = require("../../../../../server/actions/users");
@@ -15,13 +16,25 @@ export default async function handler(req, res) {
       CHECKED_OUT = "checked out",
     }
 
-    const checkInStatusMap = {};
+    type volunteer = {event: string, eventName: string, userId: string, volunteerName: string, volunteerEmail: string, timeCheckedIn: string, timeCheckedOut: string}
+    type checkInStatusMap = Record<string, volunteer>
 
-    // fetch all attendance entries for given event and sort by most recent
-    const attendanceEntryRecent = async () => {};
 
-    // for each attendance entry with a unique user ID, add to volunteerCheckInStatusMap
-    // if there is an existing attendance entry with give user ID, skip
+    const fetchAttendanceEntries = async() => {
+      const checkInStatusMap = {};
+      // fetch all attendance entries for given event and sort by most recent
+
+      const allVolunteerIds = (await Event.findById(eventId)).volunteers;
+      const allVolunteerAttendanceEntries = await Attendance.find({$and: [{userId: {$in: allVolunteerIds}}, {eventId: eventId}]}).sort({timeCheckedOut: -1, timeCheckedIn: -1});
+
+      allVolunteerIds.forEach((volunteerId) => {
+        if (!(volunteerId in checkInStatusMap)) {
+          checkInStatusMap[volunteerId] = (allVolunteerAttendanceEntries.find((attendanceEntry) => String(attendanceEntry.userId) === String(volunteerId)))
+        }
+      });
+
+      return checkInStatusMap;
+    };
 
     // volunteersNotCheckedIn
     const findVolunteersWaiting = async () => {
@@ -45,27 +58,16 @@ export default async function handler(req, res) {
         .message;
       return res.status(200).json(waitingVolunteers);
     };
+
     // volunteersCheckedIn
     const findVolunteersCheckedIn = async () => {
-      // get attendance entries with a checked in field and no checkout field
-      const checkedInAttendanceEntries = await Attendance.find({
-        eventId,
-        timeCheckedIn: { $ne: null },
-        timeCheckedOut: null,
-      });
-
-      // filter out volunteers that don't exist in the attendance entries
-      const allVolunteerIds = (await Event.findById(eventId)).volunteers;
-      const checkedInVolunteerIds = allVolunteerIds.filter(
-        (volunteerId) =>
-          !checkedInAttendanceEntries.some(
-            (entry) => entry.userId === volunteerId
-          )
-      );
+     const volunteers = await fetchAttendanceEntries();
+     const volunteersCheckedIn = Object.values(volunteers).filter((volunteer: volunteer) => !volunteer.timeCheckedOut || volunteer.timeCheckedOut > volunteer.timeCheckedIn);
+     const volunteerIdsCheckedIn = volunteersCheckedIn.map((volunteer: volunteer) => volunteer.userId);
 
       // get full volunteer info and return to client
       const checkedInVolunteers = (
-        await getEventVolunteers(checkedInVolunteerIds)
+        await getEventVolunteers(volunteerIdsCheckedIn)
       ).message;
       return res.status(200).json(checkedInVolunteers);
     };
@@ -73,24 +75,13 @@ export default async function handler(req, res) {
     // volunteersCheckedOut
     const findVolunteersCheckedOut = async () => {
       // get attendance entries with a checked in field and a checked out field
-      const checkedOutAttendanceEntries = await Attendance.find({
-        eventId,
-        timeCheckedIn: { $ne: null },
-        timeCheckedOut: { $ne: null },
-      });
-
-      // filter out volunteers that don't exist in the attendance entries
-      const allVolunteerIds = (await Event.findById(eventId)).volunteers;
-      const checkedOutVolunteerIds = allVolunteerIds.filter(
-        (volunteerId) =>
-          !checkedOutAttendanceEntries.some(
-            (entry) => entry.userId === volunteerId
-          )
-      );
+    const volunteers = await fetchAttendanceEntries();
+     const volunteersCheckedOut = Object.values(volunteers).filter((volunteer: volunteer) => !volunteer.timeCheckedIn || volunteer.timeCheckedOut < volunteer.timeCheckedIn);
+     const volunteerIdsCheckedOut = volunteersCheckedOut.map((volunteer: volunteer) => volunteer.userId);
 
       // get full volunteer info and return to client
       const checkedOutVolunteers = (
-        await getEventVolunteers(checkedOutVolunteerIds)
+        await getEventVolunteers(volunteerIdsCheckedOut)
       ).message;
       return res.status(200).json(checkedOutVolunteers);
     };
