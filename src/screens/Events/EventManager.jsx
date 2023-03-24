@@ -13,10 +13,11 @@ import styled from "styled-components";
 import { fetchEvents } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
 import EventCreateModal from "./Admin/EventCreateModal";
-import EventDeleteModal from "./Admin/EventDeleteModal";
-import EventEditModal from "./Admin/EventEditModal";
 import EventsList from "./EventsList";
-import { fetchAttendanceByUserId } from "../../actions/queries";
+import {
+  fetchAttendanceByUserId,
+  getEventStatistics,
+} from "../../actions/queries";
 
 import { filterAttendance } from "../Stats/helper";
 
@@ -140,7 +141,6 @@ const Styled = {
 };
 
 const EventManager = ({ user, role, isHomePage }) => {
-  // eslint-disable-next-line no-unused-vars
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -150,6 +150,14 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
+  const [numEvents, setNumEvents] = useState(0);
+  const [attend, setAttend] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [eventState, setEventState] = useState([]);
+
+  const eventChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const hourChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   if (!user) {
     const { data: session } = useSession();
@@ -164,6 +172,30 @@ const EventManager = ({ user, role, isHomePage }) => {
           setEvents(result.data.events);
           setDates(result.data.events);
         }
+        if (result?.data?.events) setNumEvents(result.data.events.length);
+
+        getEventStatistics(startDate, endDate).then((stats) => {
+          var totalAttendance = 0;
+          var totalHours = 0;
+          for (let event of result?.data?.events) {
+            let split = event.date.split("-");
+            let index = parseInt(split[1]) - 1;
+            let stat = stats.data.find((s) => s._id === event._id);
+            if (stat) {
+              hourChart[index] += Math.round(stat.minutes / 60.0);
+              attendChart[index] += stat.uniqueUsers.length;
+              totalAttendance += stat.uniqueUsers.length;
+              totalHours += stat.minutes / 60.0;
+            }
+            eventChart[index] = eventChart[index] + 1;
+          }
+
+          setAttend(totalAttendance);
+          setHours(Math.round(totalHours * 100) / 100);
+        });
+        eventState.push(eventChart);
+        eventState.push(hourChart);
+        eventState.push(attendChart);
       })
       .finally(() => {
         setLoading(false);
@@ -418,8 +450,6 @@ const EventManager = ({ user, role, isHomePage }) => {
                     : events
                   : filterEvents(events, user)
               }
-              onEditClicked={onEditClicked}
-              onDeleteClicked={onDeleteClicked}
               onRegisterClicked={goToRegistrationPage}
               onUnregister={onUnregister}
               user={user}
@@ -427,17 +457,6 @@ const EventManager = ({ user, role, isHomePage }) => {
             />
           )}
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-          <EventEditModal
-            open={showEditModal}
-            toggle={toggleEditModal}
-            event={currEvent}
-            setEvent={setCurrEvent}
-          />
-          <EventDeleteModal
-            open={showDeleteModal}
-            toggle={toggleDeleteModal}
-            event={currEvent}
-          />
         </Styled.Right>
       )}
       <Styled.HomePage>
@@ -465,8 +484,6 @@ const EventManager = ({ user, role, isHomePage }) => {
                   ? filteredEvents
                   : filterEvents(events, user)
               }
-              onEditClicked={onEditClicked}
-              onDeleteClicked={onDeleteClicked}
               onRegisterClicked={goToRegistrationPage}
               onUnregister={onUnregister}
               user={user}
@@ -477,7 +494,16 @@ const EventManager = ({ user, role, isHomePage }) => {
 
         {isHomePage && user.role !== "volunteer" && (
           <>
-            <AdminHomeHeader />
+            <AdminHomeHeader
+              data={events}
+              dateString={dateString}
+              numEvents={numEvents}
+              attend={attend}
+              hours={hours}
+              eventChart={eventState}
+              hourChart={hourChart}
+              attendChart={attendChart}
+            />
             <EventsList
               dateString={dateString}
               events={
@@ -487,8 +513,6 @@ const EventManager = ({ user, role, isHomePage }) => {
                     : events
                   : filterEvents(events, user)
               }
-              onEditClicked={onEditClicked}
-              onDeleteClicked={onDeleteClicked}
               onRegisterClicked={goToRegistrationPage}
               onUnregister={onUnregister}
               user={user}

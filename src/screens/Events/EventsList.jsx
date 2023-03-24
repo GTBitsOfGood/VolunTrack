@@ -81,8 +81,6 @@ const convertTime = (time) => {
 const EventsList = ({
   dateString,
   events,
-  onEditClicked,
-  onDeleteClicked,
   onRegisterClicked,
   onUnregister,
   user,
@@ -121,8 +119,6 @@ const EventsList = ({
   }
 
   const functions = {
-    onDeleteClicked: onDeleteClicked,
-    onEditClicked: onEditClicked,
     convertTime: convertTime,
   };
 
@@ -223,8 +219,6 @@ const EventsList = ({
 EventsList.propTypes = {
   dateString: PropTypes.string,
   events: PropTypes.Array,
-  onEditClicked: PropTypes.func,
-  onDeleteClicked: PropTypes.func,
   onRegisterClicked: PropTypes.func,
   onUnregister: PropTypes.func,
   user: PropTypes.object,

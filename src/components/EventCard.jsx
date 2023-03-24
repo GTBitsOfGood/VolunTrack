@@ -11,8 +11,13 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
+import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
+import EventEditModal from "../screens/Events/Admin/EventEditModal";
 
 const EventCard = (props) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [currEvent, setCurrEvent] = useState(null);
   const [collapse, setCollapse] = useState(false);
 
   const open = () => {
@@ -22,6 +27,23 @@ const EventCard = (props) => {
   const manageAttendanceOnClick = (e) => {
     router.push(`/events/${props.event._id}/attendance`);
     e.stopPropagation();
+  };
+
+  const deleteOnClick = (event) => {
+    setShowDeleteModal(true);
+    setCurrEvent(event);
+  };
+
+  const toggleDeleteModal = () => {
+    setShowDeleteModal((prev) => !prev);
+  };
+
+  const editOnClick = (event) => {
+    setShowEditModal(true);
+    setCurrEvent(event);
+  };
+  const toggleEditModal = () => {
+    setShowEditModal((prev) => !prev);
   };
 
   const registerOnClick = (e) => {
@@ -50,24 +72,12 @@ const EventCard = (props) => {
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
-                <button
-                  className="mx-1"
-                  onClick={(e) => {
-                    props.functions.onEditClicked(props.event);
-                    e.stopPropagation();
-                  }}
-                >
+                <button className="mx-1" onClick={editOnClick}>
                   <PencilIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <Tooltip content="Delete" style="light">
-                <button
-                  className="mx-1"
-                  onClick={(e) => {
-                    props.functions.onDeleteClicked(props.event);
-                    e.stopPropagation();
-                  }}
-                >
+                <button className="mx-1" onClick={deleteOnClick}>
                   <TrashIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
@@ -76,6 +86,17 @@ const EventCard = (props) => {
                   <UsersIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
+              <EventDeleteModal
+                open={showDeleteModal}
+                toggle={toggleDeleteModal}
+                event={currEvent}
+              />
+              <EventEditModal
+                open={showEditModal}
+                toggle={toggleEditModal}
+                event={currEvent}
+                setEvent={setCurrEvent}
+              />
             </div>
           )}
           {props.user.role === "volunteer" && (
