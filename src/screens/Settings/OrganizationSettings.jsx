@@ -21,8 +21,6 @@ const SettingsContainer = styled.div`
   flex-direction: column;
 `;
 
-
-
 const Header = styled.h1`
   font-size: 2rem;
   font-weight: 600;
@@ -35,14 +33,13 @@ const SubHeader = styled.h1`
   margin-bottom: 1rem;
 `;
 
-
 const SidebarItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  
+
   &:hover {
     background-color: #f5f5f5;
   }
@@ -56,9 +53,6 @@ const SideBarContainer = styled.div`
   border-radius: 0.5rem;
   background-color: #f5f5f5;
 `;
-
-
-
 
 function authWrapper(Component) {
   return function WrappedComponent(props) {
@@ -108,15 +102,13 @@ const OrganizationSettings = () => {
 
   const handleWindowClose = (e) => {
     e.preventDefault();
-    e.returnValue = '';
-    return 'Are you sure? You may have unsaved changes.';
-  }
+    e.returnValue = "";
+    return "Are you sure? You may have unsaved changes.";
+  };
 
   useEffect(() => {
-    window.addEventListener('beforeunload', handleWindowClose);
-
+    window.addEventListener("beforeunload", handleWindowClose);
   }, []);
-
 
   const loadData = async () => {
     const data = await getOrganizationData(user.organizationId);
@@ -125,7 +117,6 @@ const OrganizationSettings = () => {
       setName(data.data.orgData.name);
       setWebsite(data.data.orgData.website);
       setNotificationEmail(data.data.orgData.notificationEmail);
-
 
       setPrimaryColor(data.data.orgData.primaryColor);
       setImageURL(data.data.orgData.imageURL);
@@ -153,13 +144,11 @@ const OrganizationSettings = () => {
     window.location.reload(false);
   }
 
-
   useEffect(() => {
     loadData();
   }, []);
 
   const handleSubmit = async (values) => {
-
     const data = {
       name: values.non_profit_name,
       website: values.non_profit_website,
@@ -187,9 +176,7 @@ const OrganizationSettings = () => {
     });
 
     // refreshPage();
-
   };
-
 
   // // based on the primaryColor, use setHex to set the hex value
   // useEffect(() => {
@@ -215,8 +202,6 @@ const OrganizationSettings = () => {
   //   console.log(dropdownStyle)
   // }, [primaryColor]);
 
-
-
   return (
     <div>
       <Formik
@@ -240,7 +225,6 @@ const OrganizationSettings = () => {
           event_gold: eventGold,
           hours_silver: hoursSilver,
           hours_gold: hoursGold,
-
         }}
         enableReinitialize={true}
         onSubmit={(values, { setSubmitting }) => {
@@ -251,78 +235,92 @@ const OrganizationSettings = () => {
         validationSchema={createOrganizationValidator}
       >
         {({ handleSubmit, isValid, isSubmitting, values }) => (
-
           <div>
-            <div className="flex flex-row h-24">
-
-              <div className="flex flex-col w-1/2 justify-center px-10 pt-2.5">
-
+            <div className="flex h-24 flex-row">
+              <div className="flex w-1/2 flex-col justify-center px-10 pt-2.5">
                 <Header className="">Settings</Header>
               </div>
-              <div className="flex flex-col w-1/2 justify-center items-end px-7">
-                <Button className="w-48 bg-primaryColor hover:bg-hoverColor" onClick={handleSubmit}>
+              <div className="flex w-1/2 flex-col items-end justify-center px-7">
+                <Button
+                  className="w-48 bg-primaryColor hover:bg-hoverColor"
+                  onClick={handleSubmit}
+                >
                   <b>SAVE</b>
                 </Button>
               </div>
-
-
             </div>
             <div style={{ display: "flex" }}>
               <SideBarContainer style={{ flexBasis: "20%" }}>
                 <div className="w-fit">
-                  <Sidebar aria-label="Default sidebar example" >
+                  <Sidebar aria-label="Default sidebar example">
                     <Sidebar.Items>
-
                       {page === "orgInfo" ? (
-                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("orgInfo")}>
-                          <Icon color="grey3" name="add" /><div className="">Organization Info</div>
+                        <SidebarItem
+                          className="bg-gray-200"
+                          onClick={() => updatePage("orgInfo")}
+                        >
+                          <Icon color="grey3" name="add" />
+                          <div className="">Organization Info</div>
                         </SidebarItem>
                       ) : (
-                        <SidebarItem className="" onClick={() => updatePage("orgInfo")}>
-                          <Icon color="grey3" name="add" /><div className="">Organization Info</div>
+                        <SidebarItem
+                          className=""
+                          onClick={() => updatePage("orgInfo")}
+                        >
+                          <Icon color="grey3" name="add" />
+                          <div className="">Organization Info</div>
                         </SidebarItem>
                       )}
 
                       {page === "styling" ? (
-                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("styling")}>
-                          <Icon color="grey3" name="create" /><div className="">Styling & Theme</div>
+                        <SidebarItem
+                          className="bg-gray-200"
+                          onClick={() => updatePage("styling")}
+                        >
+                          <Icon color="grey3" name="create" />
+                          <div className="">Styling & Theme</div>
                         </SidebarItem>
                       ) : (
                         <SidebarItem onClick={() => updatePage("styling")}>
-                          <Icon color="grey3" name="create" /><div className="">Styling & Theme</div>
+                          <Icon color="grey3" name="create" />
+                          <div className="">Styling & Theme</div>
                         </SidebarItem>
                       )}
 
                       {page === "defValues" ? (
-                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("defValues")}>
-                          <Icon color="grey3" name="refresh" /><div className="">Default Values</div>
+                        <SidebarItem
+                          className="bg-gray-200"
+                          onClick={() => updatePage("defValues")}
+                        >
+                          <Icon color="grey3" name="refresh" />
+                          <div className="">Default Values</div>
                         </SidebarItem>
                       ) : (
                         <SidebarItem onClick={() => updatePage("defValues")}>
-                          <Icon color="grey3" name="refresh" /><div className="">Default Values</div>
+                          <Icon color="grey3" name="refresh" />
+                          <div className="">Default Values</div>
                         </SidebarItem>
                       )}
 
                       {page === "medals" ? (
-                        <SidebarItem className="bg-gray-200" onClick={() => updatePage("medals")}>
-                          <Icon color="grey3" name="medal" /><div className="">Medal Thresholds</div>
+                        <SidebarItem
+                          className="bg-gray-200"
+                          onClick={() => updatePage("medals")}
+                        >
+                          <Icon color="grey3" name="medal" />
+                          <div className="">Medal Thresholds</div>
                         </SidebarItem>
                       ) : (
                         <SidebarItem onClick={() => updatePage("medals")}>
-                          <Icon color="grey3" name="medal" /><div className="">Medal Thresholds</div>
+                          <Icon color="grey3" name="medal" />
+                          <div className="">Medal Thresholds</div>
                         </SidebarItem>
                       )}
-
-
-
-
                     </Sidebar.Items>
                   </Sidebar>
                 </div>
               </SideBarContainer>
               <SettingsContainer style={{ flexBasis: "80%" }}>
-
-
                 {page === "styling" && (
                   <div>
                     <Header>Styling & Theme</Header>
@@ -333,48 +331,71 @@ const OrganizationSettings = () => {
                       <Dropdown
                         label={primaryColor}
                         size="lg"
-                        class="bg-secondaryColor text-white rounded-lg"
-
-
+                        class="rounded-lg bg-secondaryColor text-white"
                       >
-                        <Dropdown.Item onClick={() => setPrimaryColor("Red")} className="font-bold text-red-800">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Red")}
+                          className="font-bold text-red-800"
+                        >
                           Red
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Orange")} className="font-bold text-orange-600">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Orange")}
+                          className="font-bold text-orange-600"
+                        >
                           Orange
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Yellow")} className="font-bold text-yellow-500">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Yellow")}
+                          className="font-bold text-yellow-500"
+                        >
                           Yellow
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Green")} className="font-bold text-lime-500">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Green")}
+                          className="font-bold text-lime-500"
+                        >
                           Green
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Light Blue")} className="font-bold text-sky-500">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Light Blue")}
+                          className="font-bold text-sky-500"
+                        >
                           Light Blue
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Blue")} className="font-bold text-blue-800">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Blue")}
+                          className="font-bold text-blue-800"
+                        >
                           Blue
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Purple")} className="font-bold text-purple-800">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Purple")}
+                          className="font-bold text-purple-800"
+                        >
                           Purple
                         </Dropdown.Item>
-                        <Dropdown.Item onClick={() => setPrimaryColor("Magenta")} className="font-bold text-pink-800">
+                        <Dropdown.Item
+                          onClick={() => setPrimaryColor("Magenta")}
+                          className="font-bold text-pink-800"
+                        >
                           Magenta
                         </Dropdown.Item>
                       </Dropdown>
-
                     </div>
-                    <div className="pb-5 max-w-lg">
+                    <div className="max-w-lg pb-5">
                       <Label htmlFor="email1" value="Logo Link" />
                       <InputField
-                        className="flex justify-center m-auto text-black"
+                        className="m-auto flex justify-center text-black"
                         name="logo_link"
                         placeholder="https://www.example.com"
                         onChange={() => setEdit(true)}
                       />
-                      <div className="text-slate-500 pb-3 pt-1" >* Submit a link to your logo. Please make sure the logo is clear and in the right dimension.</div>
+                      <div className="pb-3 pt-1 text-slate-500">
+                        * Submit a link to your logo. Please make sure the logo
+                        is clear and in the right dimension.
+                      </div>
                     </div>
-
                   </div>
                 )}
                 {page === "orgInfo" && (
@@ -385,7 +406,7 @@ const OrganizationSettings = () => {
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Non-profit Name" />
                         <InputField
-                          className="flex justify-center m-auto text-black"
+                          className="m-auto flex justify-center text-black"
                           name="non_profit_name"
                           placeholder="Bits of Good"
                           onChange={() => setEdit(true)}
@@ -394,7 +415,7 @@ const OrganizationSettings = () => {
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Non-profit Website" />
                         <InputField
-                          className="flex justify-center m-auto text-black"
+                          className="m-auto flex justify-center text-black"
                           name="non_profit_website"
                           placeholder="https://www.example.com"
                         />
@@ -402,7 +423,7 @@ const OrganizationSettings = () => {
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Notification Email" />
                         <InputField
-                          className="flex justify-center m-auto text-black"
+                          className="m-auto flex justify-center text-black"
                           name="notification_email"
                           placeholder="example@bitsofgood.com"
                         />
@@ -414,14 +435,16 @@ const OrganizationSettings = () => {
                 {page === "defValues" && (
                   <div>
                     <Header>Default Values</Header>
-                    <div className="text-slate-500 pb-3" >* You can use default values to create an event quickly</div>
+                    <div className="pb-3 text-slate-500">
+                      * You can use default values to create an event quickly
+                    </div>
                     <b>Default Event Information</b>
                     <div>
                       <div className="max-w-lg">
                         <div className="pb-3">
                           <Label htmlFor="email1" value="Address" />
                           <InputField
-                            className="flex justify-center m-auto text-black"
+                            className="m-auto flex justify-center text-black"
                             name="default_address"
                             placeholder="000 Peachtree St"
                           />
@@ -430,7 +453,7 @@ const OrganizationSettings = () => {
                           <div className="pb-3">
                             <Label htmlFor="email1" value="City" />
                             <InputField
-                              className="flex justify-center m-auto text-black"
+                              className="m-auto flex justify-center text-black"
                               name="default_city"
                               placeholder="Atlanta"
                             />
@@ -438,7 +461,7 @@ const OrganizationSettings = () => {
                           <div className="pb-3">
                             <Label htmlFor="email1" value="State" />
                             <InputField
-                              className="flex justify-center m-auto text-black"
+                              className="m-auto flex justify-center text-black"
                               name="default_state"
                               placeholder="GA"
                             />
@@ -446,13 +469,12 @@ const OrganizationSettings = () => {
                           <div className="pb-3">
                             <Label htmlFor="email1" value="ZIP Code" />
                             <InputField
-                              className="flex justify-center m-auto text-black"
+                              className="m-auto flex justify-center text-black"
                               name="default_zip"
                               placeholder="00000"
                             />
                           </div>
                         </div>
-
                       </div>
                     </div>
 
@@ -463,7 +485,7 @@ const OrganizationSettings = () => {
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Name" />
                         <InputField
-                          className="flex justify-center m-auto text-black"
+                          className="m-auto flex justify-center text-black"
                           name="default_contact_name"
                           placeholder="John Doe"
                         />
@@ -471,7 +493,7 @@ const OrganizationSettings = () => {
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Email" />
                         <InputField
-                          className="flex justify-center m-auto text-black"
+                          className="m-auto flex justify-center text-black"
                           name="default_contact_email"
                           placeholder="example@bitsofgood.com"
                         />
@@ -479,7 +501,7 @@ const OrganizationSettings = () => {
                       <div className="pb-3">
                         <Label htmlFor="email1" value="Phone" />
                         <InputField
-                          className="flex justify-center m-auto text-black"
+                          className="m-auto flex justify-center text-black"
                           name="default_contact_phone"
                           placeholder="XXX-XXX-XXXX"
                         />
@@ -491,67 +513,58 @@ const OrganizationSettings = () => {
                 {page === "medals" && (
                   <div>
                     <Header>Medal Settings</Header>
-                    <div className="text-slate-500 pb-3" >* You can set goals for volunteers to help them gain different medals and motivate them to keep engaging in different events</div>
+                    <div className="pb-3 text-slate-500">
+                      * You can set goals for volunteers to help them gain
+                      different medals and motivate them to keep engaging in
+                      different events
+                    </div>
                     <b>Event Medals</b>
                     <div>
                       <div className="m-auto mt-5 flex gap-10">
-                        <div className="pb-3 w-32">
+                        <div className="w-32 pb-3">
                           <Label htmlFor="email1" value="Silver Medal" />
                           <InputField
-                            className="flex justify-center m-auto text-black"
+                            className="m-auto flex justify-center text-black"
                             name="event_silver"
                             placeholder="Threshold"
                           />
                         </div>
-                        <div className="pb-3 w-32 ">
+                        <div className="w-32 pb-3 ">
                           <Label htmlFor="email1" value="Gold Medal" />
                           <InputField
-                            className="flex justify-center m-auto text-black"
+                            className="m-auto flex justify-center text-black"
                             name="event_gold"
                             placeholder="Threshold"
                           />
                         </div>
-
-
                       </div>
                       <b>Earned Hour Medals</b>
                       <div className="m-auto mt-5 flex gap-10">
-                        <div className="pb-3 w-32">
+                        <div className="w-32 pb-3">
                           <Label htmlFor="email1" value="Silver Medal" />
                           <InputField
-                            className="flex justify-center m-auto text-black"
+                            className="m-auto flex justify-center text-black"
                             name="hours_silver"
                             placeholder="Threshold"
                           />
                         </div>
-                        <div className="pb-3 w-32">
+                        <div className="w-32 pb-3">
                           <Label htmlFor="email1" value="Gold Medal" />
                           <InputField
-                            className="flex justify-center m-auto text-black"
+                            className="m-auto flex justify-center text-black"
                             name="hours_gold"
                             placeholder="Threshold"
                           />
                         </div>
-
-
                       </div>
-
                     </div>
                   </div>
                 )}
-
-
               </SettingsContainer>
-
             </div>
-
           </div>
-
         )}
-
-
       </Formik>
-
     </div>
   );
 };

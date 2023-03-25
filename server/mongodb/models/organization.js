@@ -20,9 +20,6 @@ const organizationSchema = new mongoose.Schema(
     defaultContactPhone: String,
 
     invitedAdmins: [{ type: String }],
-    defaultContactName: String,
-    defaultContactEmail: String,
-    defaultContactPhone: String,
     originalAdminEmail: String,
     active: Boolean,
 

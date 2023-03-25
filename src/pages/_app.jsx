@@ -12,15 +12,22 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import RequestProvider from "../providers/RequestProvider";
 import StyleProvider from "../providers/StyleProvider";
-import { blueTheme, redTheme, orangeTheme, yellowTheme, greenTheme, lightBlueTheme, purpleTheme, magentaTheme } from "../themes/themes";
+import {
+  blueTheme,
+  redTheme,
+  orangeTheme,
+  yellowTheme,
+  greenTheme,
+  lightBlueTheme,
+  purpleTheme,
+  magentaTheme,
+} from "../themes/themes";
 import { applyTheme } from "../themes/utils";
 import { getOrganizationData } from "../actions/queries";
 import Footer from "../components/Footer";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
-
   // const [color, setColor] = useState("Blue");
-
 
   // const loadData = async () => {
   //   console.log("HERE!")
@@ -28,7 +35,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   //   const data = await getOrganizationData(session.user.organizationId);
 
   //   if (data) {
-      
+
   //     setImageURL(data.data.orgData.imageURL);
 
   //   }
@@ -64,10 +71,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
       </RequestProvider>
     </SessionProvider>
   );
-
-
 };
-
 
 App.propTypes = {
   Component: PropTypes.any.isRequired,
