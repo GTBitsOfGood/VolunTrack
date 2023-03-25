@@ -36,8 +36,10 @@ class AuthForm extends React.Component {
 
     let url = new URL(window.location.href);
 
-    this.state = {companyCode: url.pathname === "/create-account" ?  "" : url.pathname.substring(1)};
-    
+    this.state = {
+      companyCode:
+        url.pathname === "/create-account" ? "" : url.pathname.substring(1),
+    };
 
     if (url.searchParams.has("error")) {
       this.props.context.startLoading();
@@ -188,20 +190,20 @@ class AuthForm extends React.Component {
                   )}
                   {this.props.createAccount && (
                     <Row>
-                    <Col>
-                      <SForm.Label>Company Code</SForm.Label>
-                      <Field name="company_code">
-                        {({ field }) => (
-                          <SForm.Input
-                            {...field}
-                            type="company_code"
-                            placeholder="Your Company's Code"
-                          />
-                        )}
-                      </Field>
-                      <Styled.ErrorMessage name="company_code" />
-                    </Col>
-                  </Row>
+                      <Col>
+                        <SForm.Label>Company Code</SForm.Label>
+                        <Field name="company_code">
+                          {({ field }) => (
+                            <SForm.Input
+                              {...field}
+                              type="company_code"
+                              placeholder="Your Company's Code"
+                            />
+                          )}
+                        </Field>
+                        <Styled.ErrorMessage name="company_code" />
+                      </Col>
+                    </Row>
                   )}
                   <Row>
                     <Button

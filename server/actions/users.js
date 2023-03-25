@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import dbConnect from "../mongodb/index";
 import User from "../mongodb/models/user";
-import Organization from "../mongodb/models/organization"
+import Organization from "../mongodb/models/organization";
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
@@ -19,18 +19,19 @@ export async function createUserFromCredentials(user) {
     };
   }
 
-  const organization = await Organization.findOne({ "slug" : user.company_code})
+  const organization = await Organization.findOne({ slug: user.company_code });
   if (!organization) {
     return {
       status: 400,
-      message: "The entered company code does not exist. Please contact your administrator for assistance."
+      message:
+        "The entered company code does not exist. Please contact your administrator for assistance.",
     };
   }
 
-  if (organization.active == false){
+  if (organization.active == false) {
     return {
       status: 400,
-      message: "The entered company code is currently marked as inactive."
+      message: "The entered company code is currently marked as inactive.",
     };
   }
 

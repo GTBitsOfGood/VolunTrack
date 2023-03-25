@@ -43,7 +43,6 @@ const Styled = {
 };
 
 const AuthPage = (props) => {
-
   const login = (e) => {
     e.preventDefault();
     signIn("google");
