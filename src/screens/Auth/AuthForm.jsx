@@ -36,6 +36,9 @@ class AuthForm extends React.Component {
 
     let url = new URL(window.location.href);
 
+    this.state = {companyCode: url.pathname === "/create-account" ?  "" : url.pathname.substring(1)};
+    
+
     if (url.searchParams.has("error")) {
       this.props.context.startLoading();
       this.props.context.failed("Your username or password is incorrect.");
@@ -77,6 +80,7 @@ class AuthForm extends React.Component {
             email: "",
             password: "",
             password_confirm: "",
+            company_code: this.state.companyCode,
           }}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
@@ -103,7 +107,7 @@ class AuthForm extends React.Component {
                       <Col>
                         <InputField
                           name="first_name"
-                          placeholder="Frst Name"
+                          placeholder="First Name"
                           label="First Name"
                         />
                         {/*<SForm.Label>First Name</SForm.Label>*/}
@@ -182,6 +186,23 @@ class AuthForm extends React.Component {
                       </Col>
                     </Row>
                   )}
+                  {this.props.createAccount && (
+                    <Row>
+                    <Col>
+                      <SForm.Label>Company Code</SForm.Label>
+                      <Field name="company_code">
+                        {({ field }) => (
+                          <SForm.Input
+                            {...field}
+                            type="company_code"
+                            placeholder="Your Company's Code"
+                          />
+                        )}
+                      </Field>
+                      <Styled.ErrorMessage name="company_code" />
+                    </Col>
+                  </Row>
+                  )}
                   <Row>
                     <Button
                       type="submit"
@@ -213,5 +234,6 @@ export default AuthForm;
 
 AuthForm.propTypes = {
   createAccount: PropTypes.bool,
+  companyCode: PropTypes.string,
   context: PropTypes.object.isRequired,
 };
