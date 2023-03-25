@@ -162,14 +162,16 @@ class VolunteerTable extends React.Component {
             <ModalHeader color="#ef4e79">
               {this.state.userSelectedForEdit?.name ?? ""}
             </ModalHeader>
-            <EditUserForm
-              userSelectedForEdit={this.state.userSelectedForEdit}
-              submitHandler={this.handleSubmit}
-              isPopUp={true}
-              isAdmin={this.props.isAdmin}
-              closePopUp={this.onModalClose}
-              disableEdit={false}
-            />
+            <div className="p-3">
+              <EditUserForm
+                userSelectedForEdit={this.state.userSelectedForEdit}
+                submitHandler={this.handleSubmit}
+                isPopUp={true}
+                isAdmin={this.props.isAdmin}
+                closePopUp={this.onModalClose}
+                disableEdit={false}
+              />
+            </div>
           </Modal>
         </Table>
         {users.length !== 0 && (

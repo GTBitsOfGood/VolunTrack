@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
-import { Button, Col, Container, Row } from "reactstrap";
-import * as SForm from "../../screens/sharedStyles/formStyles";
+import { Button } from "reactstrap";
 import { Formik, Form } from "formik";
 import InputField from "./InputField";
 import React from "react";
@@ -21,113 +20,91 @@ class EditUserForm extends React.Component {
           onSubmit={this.props.submitHandler}
         >
           <Form>
-            <Container>
-              <SForm.FormGroup>
-                <Row>
-                  <Col>
-                    <InputField
-                      name={"first_name"}
-                      label={"First Name"}
-                      isRequired={true}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                  <Col>
-                    <InputField
-                      name={"last_name"}
-                      label={"Last Name"}
-                      isRequired={true}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <InputField
-                      name={"email"}
-                      label={"Email"}
-                      isRequired={true}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                  <Col>
-                    <InputField
-                      name={"phone_number"}
-                      label={"Phone"}
-                      isRequired={false}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                </Row>
+            <div className="grid grid-cols-6 gap-x-4 gap-y-1">
+              <InputField
+                className="col-span-6 md:col-span-3"
+                name={"first_name"}
+                label={"First Name"}
+                isRequired={true}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-3"
+                name={"last_name"}
+                label={"Last Name"}
+                isRequired={true}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
 
-                <Row>
-                  <Col>
-                    <InputField
-                      name={"date_of_birth"}
-                      label={"Date of Birth"}
-                      isRequired={false}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                  <Col>
-                    <InputField
-                      name={"zip_code"}
-                      label={"Zip Code"}
-                      isRequired={false}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <InputField
-                      name={"address"}
-                      label={"Address"}
-                      isRequired={false}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                  <Col>
-                    <InputField
-                      name={"city"}
-                      label={"City"}
-                      isRequired={false}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                  <Col>
-                    <InputField
-                      name={"state"}
-                      label={"State"}
-                      isRequired={false}
-                      disabled={this.props.disableEdit}
-                      type={"text"}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  {this.props.isAdmin && (
-                    <Col>
-                      <InputField
-                        name={"notes"}
-                        label={"Notes"}
-                        isRequired={false}
-                        disabled={this.props.disableEdit}
-                        type={"text"}
-                      />
-                    </Col>
-                  )}
-                </Row>
-              </SForm.FormGroup>
-            </Container>
+              <InputField
+                className="col-span-6 md:col-span-3"
+                name={"email"}
+                label={"Email"}
+                isRequired={true}
+                disabled={true}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-3"
+                name={"phone_number"}
+                label={"Phone"}
+                isRequired={false}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-3"
+                name={"date_of_birth"}
+                label={"Date of Birth"}
+                isRequired={false}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-3"
+                name={"address"}
+                label={"Address"}
+                isRequired={false}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-2"
+                name={"city"}
+                label={"City"}
+                isRequired={false}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-2"
+                name={"state"}
+                label={"State"}
+                isRequired={false}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              <InputField
+                className="col-span-6 md:col-span-2"
+                name={"zip_code"}
+                label={"Zip Code"}
+                isRequired={false}
+                disabled={this.props.disableEdit}
+                type={"text"}
+              />
+              {this.props.isAdmin && (
+                <InputField
+                  className="col-span-6"
+                  name={"notes"}
+                  label={"Notes"}
+                  isRequired={false}
+                  disabled={this.props.disableEdit}
+                  type={"text"}
+                />
+              )}
+            </div>
             <div
               style={{
                 display: "flex",

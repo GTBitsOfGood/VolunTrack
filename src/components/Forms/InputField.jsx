@@ -3,7 +3,7 @@ import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
 
 const InputField = (props) => (
-  <div className="mb-3">
+  <div className={props.className + " mb-3"}>
     <div className="flex flex-row">
       <Label class="mb-1 h-6 font-medium text-slate-600" htmlFor={props.name}>
         {props.label}
@@ -37,6 +37,7 @@ InputField.propTypes = {
   isRequired: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default InputField;
