@@ -119,6 +119,7 @@ class ProfileForm extends React.Component {
                 isAdmin={isAdmin}
                 isPopUp={false}
                 submitHandler={this.handleSubmit}
+                disableEdit={false}
               />
             </Container>
           )}

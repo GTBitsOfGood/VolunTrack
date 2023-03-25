@@ -166,8 +166,9 @@ class VolunteerTable extends React.Component {
               userSelectedForEdit={this.state.userSelectedForEdit}
               submitHandler={this.handleSubmit}
               isPopUp={true}
-              isAdmin={true} // update to correctly pass permissions
+              isAdmin={this.props.isAdmin}
               closePopUp={this.onModalClose}
+              disableEdit={false}
             />
           </Modal>
         </Table>
@@ -192,4 +193,5 @@ VolunteerTable.propTypes = {
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
   deleteUserCallback: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };

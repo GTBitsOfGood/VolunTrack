@@ -229,8 +229,9 @@ class AssistantTable extends React.Component {
                 userSelectedForEdit={this.state.userSelectedForEdit}
                 submitHandler={this.onModalClose}
                 isPopUp={true}
-                isAdmin={true} // Update to correctly pass permissions
+                isAdmin={this.props.sessionUser.role === "admin"} // Update to correctly pass permissions
                 closePopUp={this.cancel}
+                disableEdit={true}
               />
             </ModalBody>
           </Container>

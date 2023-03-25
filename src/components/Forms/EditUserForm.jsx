@@ -29,7 +29,7 @@ class EditUserForm extends React.Component {
                       name={"first_name"}
                       label={"First Name"}
                       isRequired={true}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -38,7 +38,7 @@ class EditUserForm extends React.Component {
                       name={"last_name"}
                       label={"Last Name"}
                       isRequired={true}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -48,8 +48,8 @@ class EditUserForm extends React.Component {
                     <InputField
                       name={"email"}
                       label={"Email"}
-                      isRequired={true} // does not seem to work
-                      disabled={true} // update based on permissions
+                      isRequired={true}
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -58,7 +58,7 @@ class EditUserForm extends React.Component {
                       name={"phone_number"}
                       label={"Phone"}
                       isRequired={false}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -70,7 +70,7 @@ class EditUserForm extends React.Component {
                       name={"date_of_birth"}
                       label={"Date of Birth"}
                       isRequired={false}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -79,7 +79,7 @@ class EditUserForm extends React.Component {
                       name={"zip_code"}
                       label={"Zip Code"}
                       isRequired={false}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -90,7 +90,7 @@ class EditUserForm extends React.Component {
                       name={"address"}
                       label={"Address"}
                       isRequired={false}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -99,7 +99,7 @@ class EditUserForm extends React.Component {
                       name={"city"}
                       label={"City"}
                       isRequired={false}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
@@ -108,21 +108,23 @@ class EditUserForm extends React.Component {
                       name={"state"}
                       label={"State"}
                       isRequired={false}
-                      disabled={false} // update based on permissions
+                      disabled={this.props.disableEdit}
                       type={"text"}
                     />
                   </Col>
                 </Row>
                 <Row>
-                  <Col>
-                    <InputField
-                      name={"notes"}
-                      label={"Notes"}
-                      isRequired={false}
-                      disabled={false} // update based on permissions
-                      type={"text"}
-                    />
-                  </Col>
+                  {this.props.isAdmin && (
+                    <Col>
+                      <InputField
+                        name={"notes"}
+                        label={"Notes"}
+                        isRequired={false}
+                        disabled={this.props.disableEdit}
+                        type={"text"}
+                      />
+                    </Col>
+                  )}
                 </Row>
               </SForm.FormGroup>
             </Container>
@@ -159,6 +161,7 @@ EditUserForm.propTypes = {
   isPopUp: PropTypes.bool.isRequired,
   isAdmin: PropTypes.string.isRequired,
   closePopUp: PropTypes.func,
+  disableEdit: PropTypes.bool.isRequired,
 };
 
 export default EditUserForm;
