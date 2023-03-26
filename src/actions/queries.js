@@ -33,8 +33,8 @@ export const createEvent = (event) => axios.post("/api/events", event);
 
 export const editEvent = (event, sendConfirmationEmail) =>
   axios.put("/api/events", {
-    event: event,
-    sendConfirmationEmail: sendConfirmationEmail,
+    event,
+    sendConfirmationEmail,
   });
 
 export const deleteEvent = (_id, userId) =>

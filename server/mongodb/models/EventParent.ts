@@ -1,32 +1,44 @@
-import { model, Model, models, Schema } from "mongoose";
+import { Document, model, Model, models, Schema } from "mongoose";
+import { z } from "zod";
 
-export interface EventParentType {
-  title: string;
-  startTime: string;
-  endTime: string;
-  localTime: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  eventContactPhone: string;
-  eventContactEmail: string;
-  maxVolunteers: number;
-  isPrivate: boolean;
-  isValidForCourtHours: boolean;
-  pocName?: string;
-  pocEmail?: string;
-  pocPhone?: string;
-  orgName?: string;
-  orgAddress?: string;
-  orgCity?: string;
-  orgState?: string;
-  orgZip?: string;
-  description?: string;
-  organizationId?: Schema.Types.ObjectId;
-}
+export const eventParentValidator = z.object({
+  title: z.string(),
+  startTime: z.string().regex(new RegExp(/^\d{2}:\d{2}$/)),
+  endTime: z.string().regex(new RegExp(/^\d{2}:\d{2}$/)),
+  localTime: z.string(),
+  address: z.string(),
+  city: z.string(),
+  state: z.string().regex(new RegExp(/^[A-Z]{2}$/)),
+  zip: z.string().regex(new RegExp(/^\d{5}$/)),
+  eventContactPhone: z.string(),
+  eventContactEmail: z.string().email(),
+  maxVolunteers: z.number(),
+  isPrivate: z.boolean(),
+  isValidForCourtHours: z.boolean(),
+  pocName: z.string().optional(),
+  pocEmail: z.string().email().optional(),
+  pocPhone: z.string().optional(),
+  orgName: z.string().optional(),
+  orgAddress: z.string().optional(),
+  orgCity: z.string().optional(),
+  orgState: z
+    .string()
+    .regex(new RegExp(/^[A-Z]{2}$/))
+    .optional(),
+  orgZip: z
+    .string()
+    .regex(new RegExp(/^\d{5}$/))
+    .optional(),
+  description: z.string().optional(),
+  organizationId: z.instanceof(Schema.Types.ObjectId),
+});
 
-const eventParentSchema = new Schema<EventParentType>(
+export interface EventParentData extends z.infer<typeof eventParentValidator> {}
+export interface EventParentDocument extends EventParentData, Document {}
+
+interface EventParentModel extends Model<EventParentDocument> {}
+
+const eventParentSchema = new Schema<EventParentDocument, EventParentModel>(
   {
     title: { type: String, required: true },
     startTime: { type: String, required: true },
@@ -59,5 +71,10 @@ const eventParentSchema = new Schema<EventParentType>(
   { timestamps: true }
 );
 
-export default (models.EventParent as Model<EventParentType, {}, {}>) ??
-  model<EventParentType>("EventParent", eventParentSchema);
+export default ("EventParent" in models
+  ? (models.EventParent as EventParentModel)
+  : undefined) ??
+  model<EventParentDocument, EventParentModel>(
+    "EventParent",
+    eventParentSchema
+  );

@@ -50,5 +50,5 @@ userSchema.virtual("age").get(() => {
 });
 
 // export user model to app
-module.exports =
-  mongoose.models.User || mongoose.model("User", userSchema, "users");
+export default mongoose.models.User ||
+  mongoose.model("User", userSchema, "users");

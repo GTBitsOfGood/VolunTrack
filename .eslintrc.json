@@ -1,27 +1,57 @@
 {
   "root": true,
-  "parser": "@typescrip-eslint/parser",
+  "parser": "@babel/eslint-parser",
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "browser": true
   },
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "plugins": ["@typescript-eslint"],
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "rules": {
     "no-underscore-dangle": "off",
     "implicit-arrow-linebreak": "off",
-    "no-console": "off",
+    "no-console": "warn",
     "import/prefer-default-export": "off",
-    "no-unused-vars": "warn",
-    "prettier/prettier": "warn"
-  }
+    "no-unused-vars": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "env": {
+        "es6": true,
+        "node": true
+      },
+      "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module",
+        "project": "./tsconfig.json"
+      },
+      "plugins": ["eslint-plugin-tsdoc"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/strict",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "no-underscore-dangle": "off",
+        "implicit-arrow-linebreak": "off",
+        "no-console": "warn",
+        "import/prefer-default-export": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn"],
+        "tsdoc/syntax": "warn",
+        "@typescript-eslint/no-empty-interface": [
+          "error",
+          {
+            "allowSingleExtends": true
+          }
+        ]
+      }
+    }
+  ]
 }

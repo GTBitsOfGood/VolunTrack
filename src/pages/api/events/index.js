@@ -21,7 +21,7 @@ const validateBody = initMiddleware(
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
-    let events = await getEvents(
+    const events = await getEvents(
       req.query.startDate,
       req.query.endDate,
       req.query.organizationId

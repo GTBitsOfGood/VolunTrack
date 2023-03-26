@@ -1,34 +1,29 @@
 import { Types } from "mongoose";
 import { scheduler } from "../jobs/scheduler";
 import dbConnect from "../mongodb/index";
-import Event, { EventType } from "../mongodb/models/Event";
-import EventParent from "../mongodb/models/EventParent";
+import Event, {
+  EventData,
+  EventDocument,
+  EventPopulatedDocument,
+} from "../mongodb/models/Event";
 import {
   createHistoryEventCreateEvent,
   createHistoryEventEditEvent,
 } from "./historyEvent";
-const User = require("../mongodb/models/user");
-const ObjectId = require("mongodb").ObjectId;
 
-export async function createEvent(newEventData, next) {
-  const newEvent = new Event(newEventData);
-
+export const getEvent = async (
+  id: Types.ObjectId
+): Promise<EventPopulatedDocument | undefined> => {
   await dbConnect();
 
-  return newEvent
-    .save()
-    .then(async (event) => {
-      await scheduler.scheduleNewEventJobs(event);
-      createHistoryEventCreateEvent(newEventData);
-    })
-    .catch(next);
-}
+  return await Event.findByIdPopulated(id);
+};
 
 export const getEvents = async (
   startDateString: string,
   endDateString: string,
-  organizationId: string
-): Promise<EventType[]> => {
+  organizationId: Types.ObjectId
+): Promise<EventPopulatedDocument[]> => {
   await dbConnect();
 
   const startDate =
@@ -36,147 +31,127 @@ export const getEvents = async (
   const endDate =
     endDateString === "undefined" ? undefined : new Date(endDateString);
 
-  const eventAggregation = Event.aggregate([
-    {
-      $lookup: {
-        from: EventParent.collection.name,
-        let: { eventParent: "$eventParent" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $eq: ["$_id", "$$eventParent"],
-              },
+  if (!startDate && !endDate) {
+    return Event.findPopulated(undefined, [
+      { $match: { "eventParent.organizationId": organizationId } },
+    ]);
+  } else if (!startDate) {
+    return Event.findPopulated(
+      [{ $match: { $expr: { $lte: ["$date", endDate] } } }],
+      [{ $match: { "eventParent.organizationId": organizationId } }]
+    );
+  } else if (!endDate) {
+    return Event.findPopulated(
+      [{ $match: { $expr: { $gte: ["$date", startDate] } } }],
+      [{ $match: { "eventParent.organizationId": organizationId } }]
+    );
+  } else {
+    return Event.findPopulated(
+      [
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $gte: ["$date", startDate] },
+                { $lte: ["$date", endDate] },
+              ],
             },
           },
-        ],
-        as: "eventParent",
-      },
-    },
-    {
-      $unwind: "$eventParent",
-    },
-    {
-      $match: {
-        "eventParent.organizationId": Types.ObjectId(organizationId),
-      },
-    },
-    {
-      $project: {
-        "eventParent._id": 0,
-        "eventParent.__v": 0,
-        "eventParent.createdAt": 0,
-        "eventParent.updatedAt": 0,
-      },
-    },
-    {
-      $replaceRoot: {
-        newRoot: {
-          $mergeObjects: ["$$ROOT", "$eventParent"],
         },
-      },
-    },
-    {
-      $project: { eventParent: 0 },
-    },
-  ]);
-
-  if (!startDate && !endDate) {
-    return await eventAggregation;
-  } else if (!startDate) {
-    return await eventAggregation.match({
-      $expr: { $lte: ["$date", endDate] },
-    });
-  } else if (!endDate) {
-    return await eventAggregation.match({
-      $expr: { $gte: ["$date", startDate] },
-    });
-  } else {
-    return await eventAggregation.match({
-      $expr: {
-        $and: [{ $gte: ["$date", startDate] }, { $lte: ["$date", endDate] }],
-      },
-    });
+      ],
+      [{ $match: { "eventParent.organizationId": organizationId } }]
+    );
   }
 };
 
-export async function updateEvent(updateEventData, next) {
+export const createEvent = async (
+  eventData: EventData
+): Promise<EventDocument> => {
   await dbConnect();
 
-  return Event.findOneAndUpdate({ _id: updateEventData._id }, updateEventData, {
+  const event = new Event(eventData);
+  console.log(event);
+
+  await event.save();
+  await scheduler.scheduleNewEventJobs(event);
+  createHistoryEventCreateEvent(eventData);
+
+  return event;
+};
+
+export const updateEvent = async (
+  id: Types.ObjectId,
+  eventData: EventData
+): Promise<EventDocument | undefined> => {
+  await dbConnect();
+
+  const event = await Event.findByIdAndUpdate(id, eventData, {
     new: true,
-  })
-    .then((event) => {
-      createHistoryEventEditEvent(updateEventData);
-      return event;
-    })
-    .catch((err) => {
-      next(err);
-    });
-}
-
-export async function deleteEventID(eventID, next) {
-  await dbConnect();
-
-  return Event.findByIdAndDelete({ _id: eventID })
-    .then(() => {
-      return;
-    })
-    .catch(next);
-}
-
-export async function updateEventID(eventID, event, next) {
-  await dbConnect();
-
-  return Event.findByIdAndUpdate(eventID, event, {
-    new: true,
-    useFindAndModify: false,
-  })
-    .then(() => {
-      return event;
-    })
-    .catch(next);
-}
-
-export async function getEventVolunteersList(eventId, next) {
-  await dbConnect();
-
-  let result = {
-    volunteer: [],
-    minor: {},
-  };
-  let volunteers = [];
-  let minors = [];
-  await Event.find({ _id: eventId })
-    .then((event) => {
-      volunteers = event[0].volunteers;
-      volunteers = volunteers.map(mongoose.Types.ObjectId);
-      minors = event[0].minors;
-    })
-    .catch(next);
-  await User.find({ _id: { $in: volunteers } })
-    .then((users) => {
-      for (const user of users) {
-        const name = user.bio.first_name + " " + user.bio.last_name;
-        result.volunteer.push(name);
-      }
-    })
-    .catch(next);
-  for (const minor of minors) {
-    await User.findOne({ _id: ObjectId(minor.volunteer_id) })
-      .then((user) => {
-        const name = user.bio.first_name + " " + user.bio.last_name;
-        result.minor[name] = minor.minor;
-      })
-      .catch(next);
-  }
-  return result;
-}
-
-export async function getEventByID(eventID) {
-  await dbConnect();
-
-  return Event.findById(eventID).then((event) => {
-    return event;
   });
-}
+  if (!event) return undefined;
+  createHistoryEventEditEvent(eventData);
+  return event;
+};
+
+export const deleteEvent = async (
+  id: Types.ObjectId
+): Promise<Types.ObjectId | undefined> => {
+  await dbConnect();
+
+  const event = await Event.findByIdAndDelete(id);
+  if (!event) return undefined;
+  // createHistoryEventDeleteEvent()
+  return id;
+};
+
+/**
+ * Finds all Registrations that are on this event. Returns a list of all unique
+ * users on those Registration documents
+ *
+ * @param id - Event id
+ * @returns List of all users who are registered for the specified event
+ */
+// export const getEventVolunteers = async (
+//   id: Types.ObjectId
+// ): Promise<UserDocument[]> => {
+//   await dbConnect();
+
+//   const registrations = await Registration.find({ event: id })
+
+//   registrations[0].
+// };
+
+// export async function getEventVolunteersList(eventId, next) {
+//   await dbConnect();
+
+//   let result = {
+//     volunteer: [],
+//     minor: {},
+//   };
+//   let volunteers = [];
+//   let minors = [];
+//   await Event.find({ _id: eventId })
+//     .then((event) => {
+//       volunteers = event[0].volunteers;
+//       volunteers = volunteers.map(mongoose.Types.ObjectId);
+//       minors = event[0].minors;
+//     })
+//     .catch(next);
+//   await User.find({ _id: { $in: volunteers } })
+//     .then((users) => {
+//       for (const user of users) {
+//         const name = user.bio.first_name + " " + user.bio.last_name;
+//         result.volunteer.push(name);
+//       }
+//     })
+//     .catch(next);
+//   for (const minor of minors) {
+//     await User.findOne({ _id: ObjectId(minor.volunteer_id) })
+//       .then((user) => {
+//         const name = user.bio.first_name + " " + user.bio.last_name;
+//         result.minor[name] = minor.minor;
+//       })
+//       .catch(next);
+//   }
+//   return result;
+// }
