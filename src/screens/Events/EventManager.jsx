@@ -321,7 +321,11 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.Right>
           {role === "admin" ? (
             <Styled.ButtonRow>
-              <Dropdown label={dropdownVal}>
+              <Dropdown
+                inline={true}
+                arrowIcon={false}
+                label={<BoGButton text="Create new event" dropdown={true} />}
+              >
                 <Dropdown.Item
                   onClick={() => {
                     changeValue("All Events");
