@@ -3,15 +3,8 @@ import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import React, { useContext, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import {
-  Button,
-  Col,
-  FormGroup,
-  Input,
-  ModalBody,
-  ModalFooter,
-  Row,
-} from "reactstrap";
+import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
 import { createEvent, editEvent } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -611,34 +604,15 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
             </Styled.Row>
           </Styled.ModalBody>
           <ModalFooter>
-            <Button
-              color="secondary"
-              onClick={toggle}
-              style={{
-                backgroundColor: "transparent",
-                borderColor: "transparent",
-                color: variables["event-text"],
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              color="primary"
+            <BoGButton text="Cancel" onClick={toggle} outline={true} />
+            <BoGButton
+              text={submitText}
               onClick={() => {
                 handleSubmit();
                 setPressed(true);
               }}
               disabled={!isValid || isSubmitting}
-              style={{
-                backgroundColor: "ef4e79",
-                borderColor: "ef4e79",
-                // backgroundColor: variables["button-pink"],
-                // borderColor: variables["button-pink"],
-                marginLeft: "4rem",
-              }}
-            >
-              {submitText}
-            </Button>
+            />
           </ModalFooter>
         </React.Fragment>
       )}
