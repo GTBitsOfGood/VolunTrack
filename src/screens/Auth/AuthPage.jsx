@@ -80,7 +80,7 @@ const AuthPage = (props) => {
           createAccount={props.createAccount}
           context={useContext(RequestContext)}
         />
-        <div style={{ display: "flex" }}>
+        <div className="flex">
           {props.createAccount
             ? "Already have an account?"
             : "Don't have an account?"}

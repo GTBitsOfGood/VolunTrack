@@ -3,10 +3,11 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import React from "react";
 import Image from "next/image";
-import { Label as Label, TextInput, Button } from "flowbite-react";
+import { Label as Label, TextInput } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
 import { createOrganizationValidator } from "./helpers";
 import { createOrganization } from "../../actions/queries";
+import BoGButton from "../../components/BoGButton";
 
 const Styled = {
   Container: styled.div`
@@ -48,10 +49,6 @@ const Styled = {
     font-weight: 400;
     font-size: 16px;
     line-height: 24px;
-  `,
-  Button: styled(Button)`
-    background-color: #F05C61
-    padding: 14px 40px;
   `,
   ErrorMessage: styled(ErrorMessage).attrs({
     component: "span",
@@ -239,14 +236,11 @@ class OnboardingForm extends React.Component {
                   <Styled.ErrorMessage name="organization_code" />
                 </div>
                 <div className="m-auto mt-5 flex justify-center">
-                  <Button
-                    className="bg-pink-600"
-                    type="submit"
+                  <BoGButton
+                    text="Submit"
                     onClick={handleSubmit}
                     disabled={!isValid || isSubmitting}
-                  >
-                    Submit
-                  </Button>
+                  />
                 </div>
               </form>
             </div>

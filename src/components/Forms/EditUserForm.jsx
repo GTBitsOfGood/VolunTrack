@@ -3,6 +3,7 @@ import { Button } from "reactstrap";
 import { Formik, Form } from "formik";
 import InputField from "./InputField";
 import React from "react";
+import BoGButton from "../BoGButton";
 
 class EditUserForm extends React.Component {
   constructor(props) {
@@ -105,23 +106,15 @@ class EditUserForm extends React.Component {
                 />
               )}
             </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: "5px",
-              }}
-            >
+            <div className="flex flex-row justify-center gap-2">
               {this.props.isPopUp && (
-                <Button color="secondary" onClick={this.props.closePopUp}>
-                  Cancel
-                </Button>
+                <BoGButton
+                  onClick={this.props.closePopUp}
+                  text="Cancel"
+                  outline={true}
+                />
               )}
-              <Button type="submit" style={{ backgroundColor: "#ef4e79" }}>
-                Update
-              </Button>
+              <BoGButton text="Update" type="submit" />
             </div>
           </Form>
         </Formik>
