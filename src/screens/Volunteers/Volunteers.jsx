@@ -190,6 +190,7 @@ class Volunteers extends React.Component {
             loading={loadingMoreUsers}
             editUserCallback={this.onEditUser}
             deleteUserCallback={this.onDeleteUser}
+            isAdmin={this.props.user.role === "admin"}
           />
         </Styled.TableUsers>
       </Styled.Container>
