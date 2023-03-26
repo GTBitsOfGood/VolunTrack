@@ -1,9 +1,9 @@
 import { ErrorMessage, Field, Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Col, FormGroup as BFormGroup, Row } from "reactstrap";
+import { Col, FormGroup as BFormGroup, Row } from "reactstrap";
 import * as SForm from "../sharedStyles/formStyles";
-
+import BoGButton from "../../components/BoGButton";
 import styled from "styled-components";
 import { createAccountValidator, loginValidator } from "./helpers";
 import { signIn } from "next-auth/react";
@@ -183,21 +183,16 @@ class AuthForm extends React.Component {
                     </Row>
                   )}
                   <Row>
-                    <Button
+                    <BoGButton
                       type="submit"
-                      style={{
-                        backgroundColor: "#ef4e79",
-                        width: "92%",
-                        margin: "auto",
-                        color: "white",
-                      }}
                       onClick={handleSubmit}
                       disabled={!isValid || isSubmitting}
-                    >
-                      {this.props.createAccount
-                        ? "Create an account"
-                        : "Sign In"}
-                    </Button>
+                      text={
+                        this.props.createAccount
+                          ? "Create an account"
+                          : "Sign In"
+                      }
+                    />
                   </Row>
                 </Styled.FormGroup>
               </form>
