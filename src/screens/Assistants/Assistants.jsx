@@ -3,8 +3,8 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import PropTypes from "prop-types";
 import React from "react";
+import BoGButton from "../../components/BoGButton";
 import {
-  Button,
   Col,
   Container,
   Modal,
@@ -64,34 +64,6 @@ const Styled = {
   `,
   Row: styled(Row)`
     margin: 0.5rem 0.5rem 0.5rem 1rem;
-  `,
-  Button: styled(Button)`
-    background: ${variables.primary};
-    border: none;
-    color: white;
-    width: 11.5rem;
-    height: 2.5rem;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-    margin-left: 2vw;
-  `,
-  AddAdminButton: styled(Button)`
-    background: ${variables.primary};
-    border: none;
-    color: white;
-    width: 11.5rem;
-    height: 2.5rem;
-    margin-top: 0.2rem;
-    margin-bottom: 2vw;
-    margin-left: auto;
-    margin-right: 0;
-  `,
-  ToBeginningButton: styled(Button)`
-    background: white;
-    border: none;
-    margin-left: auto;
-    margin-right: 1rem;
-    color: black;
   `,
   Search: styled.input`
     height: 3rem;
@@ -259,9 +231,7 @@ class Assistants extends React.Component {
             />
           </Styled.Col>
           <Styled.Col>
-            <Styled.AddAdminButton onClick={this.onCreateClicked}>
-              <span style={{ color: "white" }}>Add an Admin</span>
-            </Styled.AddAdminButton>
+            <BoGButton text="Add an Admin" onClick={this.onCreateClicked} />
           </Styled.Col>
         </Styled.Row>
         <Styled.Row>
@@ -314,16 +284,16 @@ class Assistants extends React.Component {
             </ModalBody>
           </Container>
           <ModalFooter>
-            <Button color="secondary" onClick={() => this.onModalClose(false)}>
-              Cancel
-            </Button>
-            <Button
-              style={{ backgroundColor: "#ef4e79" }}
+            <BoGButton
+              text="Cancel"
+              outline={true}
+              onClick={() => this.onModalClose(false)}
+            />
+            <BoGButton
+              text="Add as an Admin"
               onClick={() => this.onModalClose(true)}
               disabled={!this.state.valid}
-            >
-              Add as an Admin
-            </Button>
+            />
           </ModalFooter>
         </Modal>
       </Styled.Container>

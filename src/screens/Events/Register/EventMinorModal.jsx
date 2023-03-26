@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {
-  Modal,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Input,
-  FormGroup,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
 import { Formik, Field } from "formik";
@@ -28,11 +22,6 @@ const Styled = {
   `,
   HighlightText: styled.p`
     color: ${variables["dark"]};
-  `,
-  MainButton: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: ${variables["white"]};
-    width: 100%;
   `,
   Col: styled(Col)`
     margin-top: 0.5rem;
@@ -149,16 +138,12 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={close}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
+              <BoGButton text="Cancel" onClick={close} outline={true} />
+              <BoGButton
+                text="Add"
                 disabled={!checked || firstName == "" || lastName == ""}
                 onClick={handleSubmit}
-              >
-                Add
-              </Button>
+              />
             </ModalFooter>
           </Modal>
         </React.Fragment>

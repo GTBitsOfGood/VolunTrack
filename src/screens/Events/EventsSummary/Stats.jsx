@@ -4,7 +4,8 @@ import "react-quill/dist/quill.snow.css";
 import { fetchEvents, getEventStatistics } from "../../../actions/queries";
 import { useEffect } from "react";
 import EventTable from "../../../components/EventStatsTable";
-import { Button, Col, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
 import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";
@@ -164,19 +165,12 @@ const Stats = () => {
             </Row>
             <Row>
               <Col>
-                <Button
-                  color="primary"
+                <BoGButton
+                  text="Search"
                   onClick={() => {
                     handleSubmit();
                   }}
-                  style={{
-                    backgroundColor: "ef4e79",
-                    borderColor: "ef4e79",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  Search
-                </Button>
+                />
               </Col>
             </Row>
           </React.Fragment>

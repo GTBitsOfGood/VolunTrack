@@ -6,7 +6,7 @@ import { createTheme } from "./utils";
 //   "#9F2B68"
 // );
 export const blueTheme: ThemeType = createTheme(
-  "#1e40af",
-  "#2563eb",
-  "#1d4ed8"
+  "#9e40af",
+  "#8563eb",
+  "#9d4ed8"
 );
