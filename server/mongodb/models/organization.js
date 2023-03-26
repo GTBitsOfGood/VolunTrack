@@ -7,8 +7,7 @@ const organizationSchema = new mongoose.Schema(
     imageURL: String,
     notificationEmail: String,
     slug: String,
-    primaryColor: String,
-    secondaryColor: String,
+    theme: { type: String, default: "red" },
 
     defaultEventState: String,
     defaultEventCity: String,
@@ -21,12 +20,12 @@ const organizationSchema = new mongoose.Schema(
 
     invitedAdmins: [{ type: String }],
     originalAdminEmail: String,
-    active: Boolean,
+    active: { type: Boolean, default: false },
 
-    eventSilver: Number,
-    eventGold: Number,
-    hoursSilver: Number,
-    hoursGold: Number,
+    eventSilver: { type: Number, default: 4 },
+    eventGold: { type: Number, default: 8 },
+    hoursSilver: { type: Number, default: 20 },
+    hoursGold: { type: Number, default: 40 },
   },
   { timestamps: true }
 );

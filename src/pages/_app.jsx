@@ -8,44 +8,21 @@ import "../../public/static/styles/bootstrap.min.css";
 import "tailwindcss/tailwind.css";
 import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
-import { useState } from "react";
 import { useSession } from "next-auth/react";
 import RequestProvider from "../providers/RequestProvider";
 import StyleProvider from "../providers/StyleProvider";
-import {
-  blueTheme,
-  redTheme,
-  orangeTheme,
-  yellowTheme,
-  greenTheme,
-  lightBlueTheme,
-  purpleTheme,
-  magentaTheme,
-} from "../themes/themes";
+import { themes } from "../themes/themes";
 import { applyTheme } from "../themes/utils";
 import { getOrganizationData } from "../actions/queries";
 import Footer from "../components/Footer";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
-  // const [color, setColor] = useState("Blue");
-
-  // const loadData = async () => {
-  //   console.log("HERE!")
-  //   console.log(session)
-  //   const data = await getOrganizationData(session.user.organizationId);
-
-  //   if (data) {
-
-  //     setImageURL(data.data.orgData.imageURL);
-
-  //   }
-  // };
-  // useEffect(() => {
-  //   loadData();
-  // }, []);
-
+  // const session = useSession();
   useEffect(() => {
-    applyTheme(magentaTheme);
+    console.log(session);
+    // getOrganizationData(session.user.organizationId).then((data) =>
+    //   applyTheme(themes[data.theme])
+    // );
   }, []);
 
   return (

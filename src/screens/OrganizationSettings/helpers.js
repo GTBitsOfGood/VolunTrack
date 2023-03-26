@@ -1,4 +1,4 @@
-import { string, object, ref } from "yup";
+import { string, object } from "yup";
 
 export const createOrganizationValidator = object().shape({
   non_profit_name: string().trim().required("Organization name is required"),

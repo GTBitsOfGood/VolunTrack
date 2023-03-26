@@ -1,3 +1,3 @@
-import OrganizationSettings from "../screens/Settings";
+import OrganizationSettings from "../screens/OrganizationSettings";
 
 export default OrganizationSettings;

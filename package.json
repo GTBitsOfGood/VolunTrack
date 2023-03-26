@@ -36,6 +36,7 @@
     ]
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.16",
     "@next-auth/mongodb-adapter": "^1.0.1",
     "@types/jest": "^29.4.0",
     "@types/react-dom": "^18.0.11",
@@ -53,7 +54,6 @@
     "flowbite": "^1.6.3",
     "flowbite-react": "^0.3.8",
     "focus-visible": "^5.2.0",
-    "font-awesome": "^4.7.0",
     "formik": "^2.2.9",
     "mailersend": "^1.4.5",
     "mongodb": "^4.3.1",
@@ -99,7 +99,7 @@
     "lint-staged": "^11.0.1",
     "prettier": "^2.8.4",
     "prettier-eslint": "^12.0.0",
-    "prettier-plugin-tailwindcss": "^0.2.5",
+    "prettier-plugin-tailwindcss": "^0.2.3",
     "sass": "^1.54.8",
     "typescript": "^4.9.5",
     "vercel": "^23.1.2"

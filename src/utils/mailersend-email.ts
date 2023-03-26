@@ -6,7 +6,6 @@ const EmailParams = require("mailersend").EmailParams;
 const MailerSend = require("mailersend");
 
 export const sendRegistrationConfirmationEmail = async (user, event) => {
-
   const [orgName, setOrgName] = useState("");
 
   const loadData = async () => {
@@ -89,7 +88,6 @@ export const sendEventEditedEmail = async (user, event) => {
 };
 
 const sendEmail = async (user, personalization, subject) => {
-
   const [orgName, setOrgName] = useState("");
   const [bcc, setBcc] = useState("");
 
