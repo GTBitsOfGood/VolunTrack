@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useSession } from "next-auth/react";
-import { Button } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventTable";
 import {
   fetchAttendanceByUserId,
@@ -30,21 +30,6 @@ const Styled = {
     display: flex;
     flex-direction: column;
     margin-left: 0vw;
-  `,
-  Button: styled(Button)`
-    background: ${variables.primary};
-    border: none;
-    color: white;
-    width: 7.5rem;
-    height: 3rem;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-
-    &:focus {
-      background: white;
-      outline: none;
-      border: none;
-    }
   `,
   Events: styled.div`
     text-align: left;
@@ -277,19 +262,12 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
                   </Row>
                   <Row>
                     <Col>
-                      <Button
-                        color="primary"
+                      <BoGButton
                         onClick={() => {
                           handleSubmit();
                         }}
-                        style={{
-                          backgroundColor: "ef4e79",
-                          borderColor: "ef4e79",
-                          marginBottom: "1rem",
-                        }}
-                      >
-                        Search
-                      </Button>
+                        text="Search"
+                      />
                     </Col>
                   </Row>
                 </React.Fragment>

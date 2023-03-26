@@ -1,9 +1,9 @@
 import { Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
+import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
+import BoGButton from "../../../../components/BoGButton";
 import styled from "styled-components";
 import { updateAttendance } from "../../../../actions/queries";
-import variables from "../../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
 
@@ -142,31 +142,12 @@ const EditEventStatsForm = ({ toggle, event }) => {
               </Styled.Form>
             </Styled.ModalBody>
             <ModalFooter>
-              <Button
-                color="secondary"
-                onClick={toggle}
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: "transparent",
-                  color: variables["event-text"],
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                color="primary"
+              <BoGButton text="Cancel" onClick={toggle} outline={true} />
+              <BoGButton
+                text="Update"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
-                style={{
-                  backgroundColor: "ef4e79",
-                  borderColor: "ef4e79",
-                  // backgroundColor: variables["button-pink"],
-                  // borderColor: variables["button-pink"],
-                  marginLeft: "4rem",
-                }}
-              >
-                Update
-              </Button>
+              />
             </ModalFooter>
           </>
         );

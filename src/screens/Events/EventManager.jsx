@@ -2,13 +2,7 @@
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import {
-  Button as RSButton,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
+import { Dropdown } from "flowbite-react";
 import styled from "styled-components";
 import { fetchEvents } from "../../actions/queries";
 import variables from "../../design-tokens/_variables.module.scss";
@@ -28,9 +22,9 @@ import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import "flowbite-react";
-
 import { Button } from "flowbite-react";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
+import BoGButton from "../../components/BoGButton";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -46,13 +40,6 @@ const Styled = {
     flex-direction: row;
     align-items: flex-start;
     overflow: hidden;
-  `,
-  Button: styled(RSButton)`
-    background: ${variables.primary};
-    border: none;
-    color: white;
-    width: 9.5rem;
-    height: 2.5rem;
   `,
   TablePadding: styled.div`
     margin-top: 2rem;
@@ -145,7 +132,6 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterOn, setFilterOn] = useState(false);
-  const [dropdownOn, setDropdownOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("All Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
@@ -368,13 +354,9 @@ const EventManager = ({ user, role, isHomePage }) => {
     return arr;
   };
 
-  const toggle = () => {
-    setDropdownOn(!dropdownOn);
-  };
-
-  const changeValue = (e) => {
-    setDropdownVal(e.currentTarget.textContent);
-    const value = e.currentTarget.textContent;
+  const changeValue = (label) => {
+    setDropdownVal(label);
+    const value = label;
     if (value === "Public Events") {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => !event.isPrivate));
@@ -414,26 +396,34 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.Right>
           {role === "admin" ? (
             <Styled.ButtonRow>
-              <Dropdown isOpen={dropdownOn} toggle={toggle}>
-                <DropdownToggle caret>{dropdownVal}</DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    <div onClick={changeValue}>All Events</div>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <div onClick={changeValue}>Public Events</div>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <div onClick={changeValue}>Private Group Events</div>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-              <Button
-                className="bg-primaryColor hover:bg-hoverColor"
-                onClick={onCreateClicked}
+              <Dropdown
+                inline={true}
+                arrowIcon={false}
+                label={<BoGButton text="Create new event" dropdown={true} />}
               >
-                Create new event
-              </Button>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("All Events");
+                  }}
+                >
+                  All Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Public Events");
+                  }}
+                >
+                  Public Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Private Group Events");
+                  }}
+                >
+                  Private Group Events
+                </Dropdown.Item>
+              </Dropdown>
+              <BoGButton text="Create new event" onClick={onCreateClicked} />
             </Styled.ButtonRow>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>

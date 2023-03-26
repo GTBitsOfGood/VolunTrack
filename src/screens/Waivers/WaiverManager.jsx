@@ -2,11 +2,12 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useRef } from "react";
 import { useEffect, useState } from "react";
-import { Tabs, Button } from "flowbite-react";
+import { Tabs } from "flowbite-react";
 import { getWaivers } from "../../actions/queries";
 
 import { updateWaiver } from "../../actions/queries";
 import "react-quill/dist/quill.snow.css";
+import BoGButton from "../../components/BoGButton";
 
 function authWrapper(Component) {
   return function WrappedComponent(props) {
@@ -94,9 +95,7 @@ const WaiverManager = () => {
             />
           </div>
           <div className="flex justify-end">
-            <Button gradientMonochrome="pink" onClick={submitAdult}>
-              Save
-            </Button>
+            <BoGButton onClick={submitAdult} text="Save" />
           </div>
         </Tabs.Item>
         <Tabs.Item
@@ -114,9 +113,7 @@ const WaiverManager = () => {
             />
           </div>
           <div className="flex justify-end">
-            <Button gradientMonochrome="pink" onClick={submitMinor}>
-              Save
-            </Button>
+            <BoGButton onClick={submitMinor} text="Save" />
           </div>
         </Tabs.Item>
       </Tabs.Group>

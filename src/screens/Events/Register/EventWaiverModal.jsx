@@ -1,13 +1,14 @@
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
-import { Button, Tabs } from "flowbite-react";
+import { Tabs } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { getWaivers } from "../../../actions/queries";
 import { Col, Row, Container } from "reactstrap";
 import variables from "../../../design-tokens/_variables.module.scss";
+import BoGButton from "../../../components/BoGButton";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -190,38 +191,30 @@ const EventWaiverModal = ({
       )}
       <ModalFooter>
         {!hasMinor && !isRegistered && (
-          <Button
-            gradientMonochrome="pink"
+          <BoGButton
+            text="Register"
             disabled={!waiverCheckboxSelected}
             onClick={() => onRegisterAfterWaiverClicked()}
-          >
-            Register
-          </Button>
+          />
         )}
         {hasMinor && !isRegistered && activeTab === 0 && (
-          <Button
-            gradientMonochrome="pink"
+          <BoGButton
             onClick={() => tabsRef.current?.setActiveTab(1)}
             disabled={!waiverCheckboxSelected}
-          >
-            Next
-          </Button>
+            text="Next"
+          />
         )}
         {hasMinor && !isRegistered && activeTab === 1 && (
           <React.Fragment>
-            <Button
-              gradientMonochrome="pink"
+            <BoGButton
+              text="Previous"
               onClick={() => tabsRef.current?.setActiveTab(0)}
-            >
-              Previous
-            </Button>
-            <Button
-              gradientMonochrome="pink"
+            />
+            <BoGButton
+              text="Register"
               disabled={!waiverMinorCheckboxSelected || !waiverCheckboxSelected}
               onClick={() => onRegisterAfterWaiverClicked()}
-            >
-              Register
-            </Button>
+            />
           </React.Fragment>
         )}
       </ModalFooter>
