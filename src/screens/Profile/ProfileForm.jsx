@@ -1,46 +1,8 @@
-import { ErrorMessage } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Container } from "reactstrap";
-import * as Table from "../sharedStyles/tableStyles";
-import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
-import { capitalizeFirstLetter } from "../../screens/Profile/helpers";
 import EditUserForm from "../../components/Forms/EditUserForm";
 
-const Styled = {
-  Button: styled(Button)`
-    background: white;
-    border: none;
-  `,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 0px;
-    padding-top: 0px;
-    display: inline-block;
-  `,
-  Container: styled.div`
-    width: 100%;
-    height: 100%;
-    margin: auto;
-  `,
-  ul: styled.ul`
-    list-style-type: none;
-  `,
-  List: styled.li`
-    padding-bottom: 120px;
-  `,
-  HeaderContainer: styled.div`
-    margin-bottom: 2rem;
-  `,
-};
 class ProfileForm extends React.Component {
   constructor(props) {
     super(props);
@@ -95,25 +57,11 @@ class ProfileForm extends React.Component {
 
     return (
       <React.Fragment>
-        <Table.Container
-          style={{ width: "50%", maxWidth: "none", padding: "3rem" }}
-        >
+        <div className="w-3/4 rounded-md bg-white p-3 md:w-1/2">
           {this.state.user && (
-            <Container>
-              <Styled.HeaderContainer>
-                <p
-                  style={{
-                    margin: "0px",
-                    color: "#7F1C3B",
-                    width: "240px",
-                    fontSize: "24px",
-                    fontWeight: "800",
-                  }}
-                >{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
-                <p style={{ margin: "0px" }}>{`${capitalizeFirstLetter(
-                  this.state.user.role ?? ""
-                )}`}</p>
-              </Styled.HeaderContainer>
+            <div>
+              <p className="text-2xl font-semibold text-primaryColor">{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
+              <p className="mb-2 capitalize">{this.state.user.role}</p>
               <EditUserForm
                 userSelectedForEdit={this.state.placeHolders}
                 isAdmin={isAdmin}
@@ -121,9 +69,9 @@ class ProfileForm extends React.Component {
                 submitHandler={this.handleSubmit}
                 disableEdit={false}
               />
-            </Container>
+            </div>
           )}
-        </Table.Container>
+        </div>
       </React.Fragment>
     );
   }
