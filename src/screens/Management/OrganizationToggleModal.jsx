@@ -1,7 +1,7 @@
-import { Button, Modal } from "flowbite-react";
-import React from "react";
+import { Modal } from "flowbite-react";
 import PropTypes from "prop-types";
 import { toggleStatus } from "../../actions/queries";
+import BoGButton from "../../components/BoGButton";
 
 const OrganizationToggleModal = (props) => {
   const handleSubmit = () => {
@@ -18,8 +18,8 @@ const OrganizationToggleModal = (props) => {
     >
       <Modal.Header />
       <Modal.Body className="text-center">
-        <h3 className="font-family-sans pb-4 text-xl font-semibold">
-          {props.status ? "Deactivate " : "Activate "} the platform
+        <h3 className="pb-4 text-xl font-semibold">
+          {props.status ? "Deactivate " : "Activate "} the organization
         </h3>
         <p>
           By clicking the confirm button, this volunteer management platform
@@ -27,16 +27,9 @@ const OrganizationToggleModal = (props) => {
           you sure you want to confirm?
         </p>
       </Modal.Body>
-      <Modal.Footer className="flex justify-center">
-        <Button className="bg-primary" onClick={handleSubmit}>
-          Confirm
-        </Button>
-        <Button
-          className="border-primary bg-white text-primary"
-          onClick={props.onClose}
-        >
-          Cancel
-        </Button>
+      <Modal.Footer className="flex justify-center gap-2">
+        <BoGButton onClick={props.onClose} text="Cancel" outline={true} />
+        <BoGButton onClick={handleSubmit} text="Confirm" />
       </Modal.Footer>
     </Modal>
   );

@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchOrganizations } from "../../actions/queries";
 import OrganizationCard from "./OrganizationCard";
-import Image from "next/image";
 import OrganizationToggleModal from "./OrganizationToggleModal";
+import { useSession } from "next-auth/react";
+import Error from "next/error";
+import { Spinner } from "flowbite-react";
 
 const BogApproval = () => {
   const [loading, setLoading] = useState(true);
@@ -39,33 +41,40 @@ const BogApproval = () => {
   };
 
   return loading ? (
-    <div>loading</div>
+    <div className="mt-16 text-center">
+      <Spinner />
+    </div>
   ) : (
-    <div id="screen">
-      <div className="justify-left flex">
-        <Image
-          objectFit="contain"
-          height="158px"
-          width="302px"
-          layout="fixed"
-          alt="Bits of Good Logo"
-          src="/images/bog_hac4impact_logo.png"
-        />
-      </div>
-      <h1 className="justify-left flex px-4 font-sans text-3xl font-semibold">
-        Approval Portal - Volunteer Management Platforms
+    <div className="mx-auto my-2 w-3/4 space-y-8">
+      <h1 className="my-4 text-3xl font-semibold">
+        Bits of Good Nonprofit Approval Portal
       </h1>
-      <h2 className="justify-left flex px-4 pt-3 pb-1 font-sans text-2xl font-semibold">
-        New Applications
-      </h2>
       <div className="space-y-5">
+        <h2 className="text-2xl font-semibold">New Applications</h2>
+        {organizations.filter((organization) => {
+          return organization.updatedAt === organization.createdAt;
+        }).length > 0 ? (
+          organizations
+            .filter((organization) => {
+              return organization.updatedAt === organization.createdAt;
+            })
+            .map((organization, index) => (
+              <OrganizationCard
+                key={index}
+                org={organization}
+                setOrganization={setCurrOrganizationId}
+                setOpen={setOpenModal}
+              />
+            ))
+        ) : (
+          <div className="my-8 text-center">No new applications</div>
+        )}
+      </div>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Application History</h2>
         {organizations
           .filter((organization) => {
-            if (organization.updatedAt === organization.createdAt) {
-              return true;
-            } else {
-              return false;
-            }
+            return organization.updatedAt !== organization.createdAt;
           })
           .map((organization, index) => (
             <OrganizationCard
@@ -76,37 +85,34 @@ const BogApproval = () => {
             />
           ))}
       </div>
-      <h2 className="justify-left flex px-4 pt-3 pb-1 font-sans text-2xl">
-        Application History
-      </h2>
-      <div className="space-y-5">
-        {organizations
-          .filter((organization) => {
-            if (organization.updatedAt === organization.createdAt) {
-              return false;
-            } else {
-              return true;
-            }
-          })
-          .map((organization, index) => (
-            <OrganizationCard
-              key={index}
-              org={organization}
-              setOrganization={setCurrOrganizationId}
-              setOpen={setOpenModal}
-            />
-          ))}
-      </div>
-      (currOrganizationId &&
-      <OrganizationToggleModal
-        open={openModal}
-        onClose={onCloseModal}
-        toggle={onToggleOrganization}
-        organizationId={currOrganizationId}
-      />
-      )
+      {currOrganizationId && (
+        <OrganizationToggleModal
+          open={openModal}
+          onClose={onCloseModal}
+          toggle={onToggleOrganization}
+          organizationId={currOrganizationId}
+        />
+      )}
     </div>
   );
 };
 
-export default BogApproval;
+export default BOGWrapper(BogApproval);
+
+function BOGWrapper(Component) {
+  return function WrappedComponent(props) {
+    const {
+      data: { user },
+    } = useSession();
+    if (user.isBitsOfGoodAdmin !== true) {
+      return (
+        <Error
+          title="You are not authorized to access this page"
+          statusCode={403}
+        />
+      );
+    } else {
+      return <Component {...props} user={user} />;
+    }
+  };
+}
