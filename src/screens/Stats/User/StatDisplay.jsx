@@ -20,7 +20,7 @@ const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -40,7 +40,7 @@ const Styled = {
   Content: styled.div`
     width: 60%;
     height: 100%;
-    
+
     padding-top: 1rem;
     display: flex;
     flex-direction: row;

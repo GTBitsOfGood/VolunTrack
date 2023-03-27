@@ -118,7 +118,7 @@ export default NextAuth({
       return {
         ...session,
         user: user_data,
-        theme: organization.theme
+        theme: organization.theme,
       };
     },
     async redirect({ baseUrl }) {
