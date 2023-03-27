@@ -157,7 +157,7 @@ const EventAttendance = () => {
   return (
     <>
       <Styled.Container>
-        <Link href={`/home`} className="text-rose-600 mb-5">
+        <Link href={`/home`} className="mb-5 text-rose-600">
           &lt; Back to home
         </Link>
         <Styled.HeaderRow>
