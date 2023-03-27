@@ -2,8 +2,7 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useEffect, useState } from "react";
 import { organizationSettingsPages as pages } from "./pages";
-import styled from "styled-components";
-import { Button, Sidebar, Dropdown } from "flowbite-react";
+import { Sidebar, Dropdown } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
 import { createOrganizationValidator } from "./helpers";
 import { Field, Formik } from "formik";
@@ -13,6 +12,7 @@ import {
 } from "../../actions/queries";
 import { applyTheme } from "../../themes/utils";
 import { themes } from "../../themes/themes";
+import BoGButton from "../../components/BoGButton";
 
 function authWrapper(Component) {
   return function WrappedComponent(props) {
@@ -48,8 +48,10 @@ const OrganizationSettings = () => {
   };
 
   useEffect(async () => {
-    const data = await getOrganizationData(user.organizationId);
-    if (data) setOrganizationData(data);
+    const response = await getOrganizationData(user.organizationId);
+    if (response.data.orgData) {
+      setOrganizationData(response.data.orgData);
+    }
 
     window.addEventListener("beforeunload", handleWindowClose);
   }, []);
@@ -91,10 +93,10 @@ const OrganizationSettings = () => {
           logo_link: organizationData.imageURL,
           theme: organizationData.theme,
 
-          default_address: organizationData.defaultAddress,
-          default_city: organizationData.defaultCity,
-          default_state: organizationData.defaultState,
-          default_zip: organizationData.defaultZIP,
+          default_address: organizationData.defaultEventAddress,
+          default_city: organizationData.defaultEventCity,
+          default_state: organizationData.defaultEventState,
+          default_zip: organizationData.defaultEventZip,
           default_contact_name: organizationData.defaultContactName,
           default_contact_email: organizationData.defaultContactEmail,
           default_contact_phone: organizationData.defaultContactPhone,
@@ -119,18 +121,13 @@ const OrganizationSettings = () => {
                 <h3 className="text-4xl font-bold">Settings</h3>
               </div>
               <div className="flex w-1/2 flex-col items-end justify-center px-7">
-                <Button
-                  className="w-48 bg-primaryColor hover:bg-hoverColor"
-                  onClick={handleSubmit}
-                >
-                  Save
-                </Button>
+                <BoGButton text="Save" onClick={handleSubmit} type="submit" />
               </div>
             </div>
-            <div style={{ display: "flex" }}>
+            <div className="flex">
               <Sidebar className="h-full">
                 <Sidebar.Items>
-                  <Sidebar.ItemGroup>
+                  <Sidebar.ItemGroup className="!mt-0 !pt-0">
                     {pages.map((page, i) => (
                       <Sidebar.Item
                         className={
@@ -162,11 +159,17 @@ const OrganizationSettings = () => {
                             <Field name={field.name} key={j}>
                               {({ field }) => (
                                 <Dropdown
+                                  inline={true}
+                                  arrowIcon={false}
+                                  label={
+                                    <BoGButton
+                                      text="Set Theme"
+                                      dropdown={true}
+                                    />
+                                  }
                                   id={field.name}
                                   name={field.name}
                                   key={j}
-                                  label="Set Theme"
-                                  className="bg-primaryColor text-white"
                                 >
                                   <Dropdown.Item
                                     onClick={() => setTheme("red")}
@@ -221,7 +224,7 @@ const OrganizationSettings = () => {
                             </Field>
                           ) : (
                             <InputField
-                              key={j}
+                              key={field.name}
                               name={field.name}
                               label={field.label}
                               placeholder={field.placeholder}
