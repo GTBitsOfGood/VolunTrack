@@ -1,3 +1,3 @@
-import BogApproval from "../screens/Management/BogApproval";
+import BogApproval from "../screens/ApprovalPortal/BogApproval";
 
 export default BogApproval;

@@ -103,14 +103,10 @@ export default NextAuth({
       let user_data = {
         ...currentUser._doc,
       };
-      const invitedAdmins = await Organization.find({
+      const organization = await Organization.findOne({
         _id: user_data.organizationId,
       });
-      if (
-        invitedAdmins[0] &&
-        invitedAdmins[0].invitedAdmins &&
-        invitedAdmins[0].invitedAdmins.includes(user_data.bio.email)
-      ) {
+      if (organization?.invitedAdmins?.includes(user_data.bio.email)) {
         user_data.role = "admin";
         await User.findOneAndUpdate({ _id }, { role: "admin" });
         await Organization.findOneAndUpdate(
@@ -122,6 +118,7 @@ export default NextAuth({
       return {
         ...session,
         user: user_data,
+        theme: organization.theme
       };
     },
     async redirect({ baseUrl }) {

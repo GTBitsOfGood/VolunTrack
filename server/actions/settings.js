@@ -35,37 +35,13 @@ export async function getOrganizationData(organizationId) {
   return await Organization.findOne({ _id: organizationId });
 }
 
-export async function updateOrganizationData(organizationData, organizationId) {
+export async function updateOrganizationData(data, organizationId) {
   await dbConnect();
 
   // update the organization data in the database
-  return await Organization.findOneAndUpdate(
-    { _id: organizationId },
-    {
-      name: organizationData.data.name,
-      website: organizationData.data.website,
-      notificationEmail: organizationData.data.notificationEmail,
-
-      primaryColor: organizationData.data.primaryColor,
-      imageURL: organizationData.data.imageURL,
-
-      defaultEventState: organizationData.data.defaultEventState,
-      defaultEventCity: organizationData.data.defaultEventCity,
-      defaultEventAddress: organizationData.data.defaultEventAddress,
-      defaultEventZip: organizationData.data.defaultEventZip,
-      defaultContactName: organizationData.data.defaultContactName,
-      defaultContactEmail: organizationData.data.defaultContactEmail,
-      defaultContactPhone: organizationData.data.defaultContactPhone,
-
-      eventSilver: organizationData.data.eventSilver,
-      eventGold: organizationData.data.eventGold,
-      hoursSilver: organizationData.data.hoursSilver,
-      hoursGold: organizationData.data.hoursGold,
-    },
-    {
-      upsert: true,
-    }
-  ).then(() => {
+  return await Organization.findOneAndUpdate({ _id: organizationId }, data, {
+    upsert: true,
+  }).then(() => {
     return;
   });
 }

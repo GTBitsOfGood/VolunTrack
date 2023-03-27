@@ -82,9 +82,12 @@ const Header = () => {
 
   const [imageURL, setImageURL] = React.useState("/images/bog_logo.png");
 
-  useEffect(async () => {
-    const data = await getOrganizationData(user.organizationId);
-    if (data) setImageURL(data.data.orgData.imageURL);
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getOrganizationData(user.organizationId);
+      if (response.data.orgData) setImageURL(response.data.orgData.imageURL);
+    }
+    fetchData();
   }, []);
 
   return (

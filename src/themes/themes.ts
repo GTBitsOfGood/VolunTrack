@@ -1,4 +1,19 @@
-import { createTheme } from "./utils";
+export const applyTheme = (theme: string) => {
+  const root = document.documentElement;
+  Object.keys(themes[theme]).forEach((cssVar) => {
+    root.style.setProperty(cssVar, themes[theme][cssVar]);
+  });
+};
+
+const createTheme = (
+  primary: string,
+  secondary: string,
+  hover: string
+): ThemeType => ({
+  "--primary-color": primary,
+  "--secondary-color": secondary,
+  "--hover-color": hover,
+});
 
 export const themes = {
   red: createTheme("#991b1b", "#dc2626", "#b91c1c"),
@@ -10,3 +25,7 @@ export const themes = {
   purple: createTheme("#6b21a8", "#9333ea", "#7e22ce"),
   magenta: createTheme("#9d174d", "#db2777", "#be185d"),
 };
+
+interface ThemeType {
+  [cssVariable: string]: string;
+}

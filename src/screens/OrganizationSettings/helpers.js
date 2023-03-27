@@ -15,6 +15,7 @@ export const createOrganizationValidator = object().shape({
   default_contact_name: string().nullable().trim(),
   default_contact_email: string().nullable().trim().email("Invalid email"),
   default_contact_phone: string().nullable().trim(),
+  theme: string().nullable().trim(),
 
   event_silver: string()
     .trim()

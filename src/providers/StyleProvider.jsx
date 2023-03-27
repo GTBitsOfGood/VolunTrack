@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { ThemeProvider } from "styled-components";
+import { applyTheme, themes } from "../themes/themes";
+import { useSession } from "next-auth/react";
 
 const theme = {
   primary: "#b35fd0",
@@ -40,14 +41,18 @@ const theme = {
   },
 };
 
-const StyleWrapper = ({ children }) => (
-  <React.Fragment>
-    <ThemeProvider theme={theme}>{children}</ThemeProvider>
-  </React.Fragment>
-);
+const ThemeWrapper = ({ children }) => {
+  const { data: session } = useSession();
 
-export default StyleWrapper;
+  useEffect(() => {
+    applyTheme(session.theme);
+  }, []);
 
-StyleWrapper.propTypes = {
+  return <React.Fragment>{children}</React.Fragment>;
+};
+
+export default ThemeWrapper;
+
+ThemeWrapper.propTypes = {
   children: PropTypes.object,
 };

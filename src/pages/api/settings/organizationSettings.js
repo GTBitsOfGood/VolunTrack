@@ -12,10 +12,10 @@ export default async function handler(req, res, next) {
       orgData,
     });
   } else if (req.method === "PUT") {
-    const data = req.body.organizationData;
+    const body = req.body.organizationData;
     const organizationId = req.query.organizationId;
 
-    const updateOrg = await updateOrganizationData(data, organizationId);
+    const updateOrg = await updateOrganizationData(body.data, organizationId);
 
     res.status(200).json(updateOrg);
   }

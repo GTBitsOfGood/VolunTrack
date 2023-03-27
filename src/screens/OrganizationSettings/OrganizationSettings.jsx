@@ -10,8 +10,7 @@ import {
   getOrganizationData,
   updateOrganizationData,
 } from "../../actions/queries";
-import { applyTheme } from "../../themes/utils";
-import { themes } from "../../themes/themes";
+import { applyTheme } from "../../themes/themes";
 import BoGButton from "../../components/BoGButton";
 
 function authWrapper(Component) {
@@ -37,6 +36,17 @@ const OrganizationSettings = () => {
   const [currentPage, setCurrentPage] = useState(pages[0]);
   const user = useSession().data.user;
 
+  const colors = {
+    red: "text-red-800",
+    orange: "text-orange-600",
+    yellow: "text-yellow-500",
+    green: "text-lime-500",
+    "light blue": "text-sky-500",
+    blue: "text-sky-800",
+    purple: "text-purple-800",
+    magenta: "text-pink-800",
+  };
+
   const handleWindowClose = (e) => {
     e.preventDefault();
     e.returnValue = "";
@@ -44,16 +54,19 @@ const OrganizationSettings = () => {
   };
 
   const setTheme = (theme) => {
-    applyTheme(themes[theme]);
+    applyTheme(theme);
   };
 
-  useEffect(async () => {
-    const response = await getOrganizationData(user.organizationId);
-    if (response.data.orgData) {
-      setOrganizationData(response.data.orgData);
-    }
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getOrganizationData(user.organizationId);
+      if (response.data.orgData) {
+        setOrganizationData(response.data.orgData);
+      }
 
-    window.addEventListener("beforeunload", handleWindowClose);
+      window.addEventListener("beforeunload", handleWindowClose);
+    }
+    fetchData();
   }, []);
 
   const handleSubmit = async (values) => {
@@ -114,7 +127,7 @@ const OrganizationSettings = () => {
         }}
         validationSchema={createOrganizationValidator}
       >
-        {({ handleSubmit }) => (
+        {({ handleSubmit, setFieldValue }) => (
           <div>
             <div className="flex h-24 flex-row">
               <div className="flex w-1/2 flex-col justify-center px-10 pt-2.5">
@@ -171,54 +184,20 @@ const OrganizationSettings = () => {
                                   name={field.name}
                                   key={j}
                                 >
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("red")}
-                                    className="font-bold text-red-800"
-                                  >
-                                    Red
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("orange")}
-                                    className="font-bold text-orange-600"
-                                  >
-                                    Orange
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("yellow")}
-                                    className="font-bold text-yellow-500"
-                                  >
-                                    Yellow
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("green")}
-                                    className="font-bold text-lime-500"
-                                  >
-                                    Green
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("lightBlue")}
-                                    className="font-bold text-sky-500"
-                                  >
-                                    Light Blue
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("blue")}
-                                    className="font-bold text-blue-800"
-                                  >
-                                    Blue
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("purple")}
-                                    className="font-bold text-purple-800"
-                                  >
-                                    Purple
-                                  </Dropdown.Item>
-                                  <Dropdown.Item
-                                    onClick={() => setTheme("magenta")}
-                                    className="font-bold text-pink-800"
-                                  >
-                                    Magenta
-                                  </Dropdown.Item>
+                                  {Object.keys(colors).map((color) => (
+                                    <Dropdown.Item
+                                      key={color}
+                                      onClick={() => {
+                                        setTheme(color);
+                                        setFieldValue("theme", color);
+                                      }}
+                                      className={
+                                        "font-bold capitalize " + colors[color]
+                                      }
+                                    >
+                                      {color}
+                                    </Dropdown.Item>
+                                  ))}
                                 </Dropdown>
                               )}
                             </Field>
