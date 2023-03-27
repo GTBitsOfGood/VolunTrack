@@ -47,7 +47,7 @@ const Styled = {
     height: 3rem;
 
     p {
-      color: ${(props) => props.theme.grey5};
+      color: hsl(0, 0%, 50%);
       margin: 0 1rem;
       font-size: 1.2rem;
     }

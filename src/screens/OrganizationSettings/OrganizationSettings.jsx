@@ -64,7 +64,7 @@ const OrganizationSettings = () => {
         setOrganizationData(response.data.orgData);
       }
 
-      window.addEventListener("beforeunload", handleWindowClose);
+      // window.addEventListener("beforeunload", handleWindowClose);
     }
     fetchData();
   }, []);

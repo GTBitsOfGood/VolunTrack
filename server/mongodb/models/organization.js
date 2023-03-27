@@ -7,7 +7,7 @@ const organizationSchema = new mongoose.Schema(
     imageURL: String,
     notificationEmail: String,
     slug: String,
-    theme: { type: String, default: "red" },
+    theme: { type: String, default: "magenta" },
 
     defaultEventState: String,
     defaultEventCity: String,
