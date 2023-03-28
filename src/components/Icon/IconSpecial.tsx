@@ -1,7 +1,6 @@
-import { IconProps } from "./Icon";
 import { iconData } from "./iconData";
 
-interface IconSpecialProps extends IconProps {
+type IconSpecialProps extends IconProps {
   href: string;
   id: string;
 }

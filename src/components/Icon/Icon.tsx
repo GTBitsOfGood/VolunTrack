@@ -1,6 +1,6 @@
 import { iconData } from "./iconData";
 
-export interface IconProps {
+export type IconProps {
   name: string;
   viewBox: string;
   height: string;

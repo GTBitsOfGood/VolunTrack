@@ -1,14 +1,17 @@
 import { Types } from "mongoose";
 import { scheduler } from "../jobs/scheduler";
+import { eventPopulator } from "../mongodb/aggregations";
 import dbConnect from "../mongodb/index";
 import Event, {
   EventData,
-  EventDocument,
-  EventPopulatedDocument,
+  EventPopulatedData
 } from "../mongodb/models/Event";
+import EventParent from "../mongodb/models/EventParent";
+import Registration from "../mongodb/models/Registration";
+import User from "../mongodb/models/User";
 import {
   createHistoryEventCreateEvent,
-  createHistoryEventEditEvent,
+  createHistoryEventEditEvent
 } from "./historyEvent";
 
 export const getEvent = async (
@@ -23,7 +26,7 @@ export const getEvents = async (
   startDateString: string,
   endDateString: string,
   organizationId: Types.ObjectId
-): Promise<EventPopulatedDocument[]> => {
+): Promise<EventPopulatedData[]> => {
   await dbConnect();
 
   const startDate =
@@ -32,21 +35,23 @@ export const getEvents = async (
     endDateString === "undefined" ? undefined : new Date(endDateString);
 
   if (!startDate && !endDate) {
-    return Event.findPopulated(undefined, [
+    return Event.aggregate([ ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
   } else if (!startDate) {
-    return Event.findPopulated(
-      [{ $match: { $expr: { $lte: ["$date", endDate] } } }],
-      [{ $match: { "eventParent.organizationId": organizationId } }]
-    );
+    return Event.aggregate([
+      { $match: { $expr: { $lte: ["$date", endDate] } } },
+      ...eventPopulator,
+      { $match: { "eventParent.organizationId": organizationId } }
+    ]);
   } else if (!endDate) {
-    return Event.findPopulated(
-      [{ $match: { $expr: { $gte: ["$date", startDate] } } }],
-      [{ $match: { "eventParent.organizationId": organizationId } }]
-    );
+    return Event.aggregate([
+      { $match: { $expr: { $gte: ["$date", startDate] } } },
+      ...eventPopulator,
+      { $match: { "eventParent.organizationId": organizationId } }
+    ]);
   } else {
-    return Event.findPopulated(
+    return Event.aggregate(
       [
         {
           $match: {
@@ -58,8 +63,8 @@ export const getEvents = async (
             },
           },
         },
-      ],
-      [{ $match: { "eventParent.organizationId": organizationId } }]
+      ...eventPopulator,
+      { $match: { "eventParent.organizationId": organizationId } }]
     );
   }
 };
@@ -70,13 +75,23 @@ export const createEvent = async (
   await dbConnect();
 
   const event = new Event(eventData);
-  console.log(event);
-
   await event.save();
+
   await scheduler.scheduleNewEventJobs(event);
   createHistoryEventCreateEvent(eventData);
 
   return event;
+};
+
+export const createEventWithParent = async (
+  eventData: EventPopulatedData
+): Promise<EventPopulatedDocument> => {
+  await dbConnect();
+
+  const eventParent = await EventParent.create(eventData.eventParent);
+  const event = await Event.create({ ...eventData, eventParent:  })
+
+  return (await Event.findByIdPopulated(event._id))!;
 };
 
 export const updateEvent = async (
@@ -111,15 +126,17 @@ export const deleteEvent = async (
  * @param id - Event id
  * @returns List of all users who are registered for the specified event
  */
-// export const getEventVolunteers = async (
-//   id: Types.ObjectId
-// ): Promise<UserDocument[]> => {
-//   await dbConnect();
+export const getEventVolunteers = async (
+  id: Types.ObjectId
+): Promise<UserDocument[]> => {
+  await dbConnect();
 
-//   const registrations = await Registration.find({ event: id })
+  const registrations = await Registration.find({ event: id });
+  const userIds = new Set(registrations.map((r) => r.user));
+  const users = await User.find({ id: { $in: userIds } });
 
-//   registrations[0].
-// };
+  return users;
+};
 
 // export async function getEventVolunteersList(eventId, next) {
 //   await dbConnect();

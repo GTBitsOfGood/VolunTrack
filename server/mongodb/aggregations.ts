@@ -1,4 +1,4 @@
-export const eventPopulation = [
+export const eventPopulator = [
   {
     $lookup: {
       from: "eventparents",
@@ -18,7 +18,7 @@ export const eventPopulation = [
   { $unwind: "$eventParent" },
 ];
 
-export const attendancePopulation = [
+export const attendancePopulator = [
   {
     $lookup: {
       from: "events",
@@ -55,7 +55,7 @@ export const attendancePopulation = [
   { $unwind: "$user" },
 ];
 
-export const registrationPopulation = [
+export const registrationPopulator = [
   {
     $lookup: {
       from: "events",
@@ -90,4 +90,24 @@ export const registrationPopulation = [
   },
   { $unwind: "$event" },
   { $unwind: "$user" },
+];
+
+export const userPopulator = [
+  {
+    $lookup: {
+      from: "organizations",
+      let: { organiztion: "$organization" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $eq: ["$_id", "$$organization"],
+            },
+          },
+        },
+      ],
+      as: "organization",
+    },
+  },
+  { $unwind: "$organization" },
 ];

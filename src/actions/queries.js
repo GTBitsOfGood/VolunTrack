@@ -71,7 +71,7 @@ export const checkInVolunteer = (
   volunteerName,
   volunteerEmail
 ) =>
-  axios.post("/api/attendance/checkin", {
+  axios.post("/api/attendances/checkin", {
     userId,
     eventId,
     eventName,
@@ -80,7 +80,7 @@ export const checkInVolunteer = (
   });
 
 export const checkOutVolunteer = (userId, eventId) =>
-  axios.post("/api/attendance/checkout", { userId, eventId });
+  axios.post("/api/attendances/checkout", { userId, eventId });
 
 export const getEventVolunteersByAttendance = (eventId, isCheckedIn) =>
   axios.get(
@@ -91,18 +91,18 @@ export const updateEventById = (id, event) =>
   axios.put(`/api/events/${id}`, event);
 
 export const getAttendanceForEvent = (eventId) =>
-  axios.post("/api/attendance/statistics", { eventId });
+  axios.post("/api/attendances/statistics", { eventId });
 
 export const getEventStatistics = (startDate, endDate) =>
   axios.get(
-    `/api/attendance/eventstatistics?startDate=${startDate}&endDate=${endDate}`
+    `/api/attendances/eventstatistics?startDate=${startDate}&endDate=${endDate}`
   );
 
 export const deleteAttendance = (id) =>
-  axios.delete(`/api/attendance/${id}`, { id });
+  axios.delete(`/api/attendances/${id}`, { id });
 
 export const updateAttendance = (id, newData) =>
-  axios.put(`/api/attendance/${id}`, { id, newData });
+  axios.put(`/api/attendances/${id}`, { id, newData });
 
 export const getHistoryEvents = (organizationId) =>
   axios.get(`/api/historyEvents?organizationId=${organizationId}`);
