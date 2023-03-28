@@ -19,14 +19,15 @@ const InputField = (props) => (
           type={props.type ?? "text"}
           placeholder={props.placeholder}
           disabled={props.disabled}
+          onChange={props.onChange ?? (() => {})}
         />
       )}
     </Field>
     <ErrorMessage
       component="div"
-      className="mt-1 inline-block pt-0 text-sm text-red-600 before:content-['Hello_World']"
+      className="mt-1 inline-block pt-0 text-sm text-red-600"
       name={props.name}
-    />
+    />{" "}
   </div>
 );
 
@@ -38,6 +39,7 @@ InputField.propTypes = {
   disabled: PropTypes.bool,
   type: PropTypes.string,
   className: PropTypes.string,
+  onChange: PropTypes.func,
 };
 
 export default InputField;

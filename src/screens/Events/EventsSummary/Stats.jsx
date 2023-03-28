@@ -1,4 +1,4 @@
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { fetchEvents, getEventStatistics } from "../../../actions/queries";
@@ -7,9 +7,11 @@ import EventTable from "../../../components/EventStatsTable";
 import { Col, Row } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
-import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";
 import { useSession } from "next-auth/react";
+import InputField from "../../../components/Forms/InputField";
+
+// TODOCD: Date/Time Validations
 
 const Styled = {
   Container: styled.div`
@@ -146,21 +148,14 @@ const Stats = () => {
           <React.Fragment>
             <Row>
               <Col>
-                <SForm.Label>From</SForm.Label>
-                <Field name="startDate">
-                  {({ field }) => (
-                    <SForm.Input {...field} type="datetime-local" />
-                  )}
-                </Field>
+                <InputField
+                  label="From"
+                  name="startDate"
+                  type="datetime-local"
+                />
               </Col>
               <Col>
-                <SForm.Label>To</SForm.Label>
-
-                <Field name="endDate">
-                  {({ field }) => (
-                    <SForm.Input {...field} type="datetime-local" />
-                  )}
-                </Field>
+                <InputField label="To" name="endDate" type="datetime-local" />
               </Col>
             </Row>
             <Row>

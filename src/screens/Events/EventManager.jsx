@@ -324,7 +324,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               <Dropdown
                 inline={true}
                 arrowIcon={false}
-                label={<BoGButton text="Create new event" dropdown={true} />}
+                label={<BoGButton text="Filter Events" dropdown={true} />}
               >
                 <Dropdown.Item
                   onClick={() => {

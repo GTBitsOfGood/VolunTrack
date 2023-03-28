@@ -11,10 +11,10 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import "react-calendar/dist/Calendar.css";
 import PropTypes from "prop-types";
 import { getHours } from "./hourParsing";
-import * as SForm from "../../sharedStyles/formStyles";
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import { Row, Col } from "reactstrap";
 import { filterAttendance } from "../helper";
+import InputField from "../../../components/Forms/InputField";
 
 const Styled = {
   Container: styled.div`
@@ -243,30 +243,27 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
                 <React.Fragment>
                   <Row>
                     <Col>
-                      <SForm.Label>From</SForm.Label>
-                      <Field name="startDate">
-                        {({ field }) => (
-                          <SForm.Input {...field} type="datetime-local" />
-                        )}
-                      </Field>
+                      <InputField
+                        label="From"
+                        name="startDate"
+                        type="datetime-local"
+                      />
                     </Col>
                     <Col>
-                      <SForm.Label>To</SForm.Label>
-
-                      <Field name="endDate">
-                        {({ field }) => (
-                          <SForm.Input {...field} type="datetime-local" />
-                        )}
-                      </Field>
+                      <InputField
+                        label="To"
+                        name="endDate"
+                        type="datetime-local"
+                      />
                     </Col>
                   </Row>
                   <Row>
                     <Col>
                       <BoGButton
+                        text="Search"
                         onClick={() => {
                           handleSubmit();
                         }}
-                        text="Search"
                       />
                     </Col>
                   </Row>

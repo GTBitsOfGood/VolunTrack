@@ -1,4 +1,4 @@
-import { Field, Form as FForm, Formik } from "formik";
+import { Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
 import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import BoGButton from "../../../../components/BoGButton";
@@ -6,6 +6,9 @@ import styled from "styled-components";
 import { updateAttendance } from "../../../../actions/queries";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
+import InputField from "../../../../components/Forms/InputField";
+
+// TODOCD: Date/Time Validations
 
 const Styled = {
   Form: styled(FForm)``,
@@ -90,31 +93,26 @@ const EditEventStatsForm = ({ toggle, event }) => {
                       </Row>
                       <Row>
                         <Styled.Col>
-                          <SForm.Label>Name</SForm.Label>
-                          <Field name="name">
-                            {({ field }) => (
-                              <SForm.Input
-                                {...field}
-                                type="text"
-                                disabled={true}
-                              />
-                            )}
-                          </Field>
+                          <InputField
+                            name="name"
+                            label="Name"
+                            disabled={true}
+                          />
                         </Styled.Col>
                         <Styled.Col>
-                          <SForm.Label>Email</SForm.Label>
-                          <Field name="email">
-                            {({ field }) => (
-                              <SForm.Input
-                                {...field}
-                                type="text"
-                                disabled={true}
-                              />
-                            )}
-                          </Field>
+                          <InputField
+                            name="email"
+                            label="Email"
+                            disabled={true}
+                          />
                         </Styled.Col>
                         <Styled.Col>
-                          <SForm.Label>Check In Time</SForm.Label>
+                          <InputField
+                            name="checkin"
+                            label="Check In Time"
+                            type="time"
+                          />
+                          {/* <SForm.Label>Check In Time</SForm.Label>
                           <Field name="checkin">
                             {({ field }) => (
                               <SForm.Input {...field} type="time" step="1" />
@@ -125,15 +123,21 @@ const EditEventStatsForm = ({ toggle, event }) => {
                               <Styled.ErrorMessage>
                                 {errors.checkin}
                               </Styled.ErrorMessage>
-                            )}
+                            )} */}
+                          {/* Need to get validation working here */}
                         </Styled.Col>
                         <Styled.Col>
-                          <SForm.Label>Check Out Time</SForm.Label>
+                          <InputField
+                            name="checkout"
+                            label="Check Out Time"
+                            type="time"
+                          />
+                          {/* <SForm.Label>Check Out Time</SForm.Label>
                           <Field name="checkout">
                             {({ field }) => (
                               <SForm.Input {...field} type="time" step="1" />
                             )}
-                          </Field>
+                          </Field> */}
                         </Styled.Col>
                       </Row>
                     </Col>
