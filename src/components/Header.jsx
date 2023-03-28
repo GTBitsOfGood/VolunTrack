@@ -4,7 +4,6 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React from "react";
-import { capitalizeFirstLetter } from "../screens/Profile/helpers";
 
 const Header = () => {
   const router = useRouter();
@@ -22,6 +21,10 @@ const Header = () => {
 
   const goToHistory = () => {
     router.push("/history");
+  };
+
+  const goToBogApprovalPortal = () => {
+    router.push("/bog-portal");
   };
 
   const gotToSummary = () => {
@@ -54,6 +57,13 @@ const Header = () => {
           </Dropdown.Item>
           <Dropdown.Item onClick={gotToSummary} href="/events-summary">
             Event Summary
+          </Dropdown.Item>
+        </div>
+      )}
+      {user.isBitsOfGoodAdmin === true && (
+        <div>
+          <Dropdown.Item onClick={goToBogApprovalPortal} href="/bog-portal">
+            BOG Approval Portal
           </Dropdown.Item>
         </div>
       )}

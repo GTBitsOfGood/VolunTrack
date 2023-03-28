@@ -88,7 +88,7 @@ class OnboardingForm extends React.Component {
             width="302px"
             layout="fixed"
             alt="Bits of Good Logo"
-            src="/images/bog_hac4impact_logo.png"
+            src="/images/bog_hack4impact_logo.png"
           />
 
           <Styled.Header>
