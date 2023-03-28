@@ -1,5 +1,5 @@
-import { getOrganizationData } from "../actions/queries";
 import { useEffect, useState } from "react";
+import { getOrganizationData } from "../../server/actions/settings.js";
 
 const Recipient = require("mailersend").Recipient;
 const EmailParams = require("mailersend").EmailParams;

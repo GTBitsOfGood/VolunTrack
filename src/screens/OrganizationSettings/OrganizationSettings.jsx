@@ -2,8 +2,9 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useEffect, useState } from "react";
 import { organizationSettingsPages as pages } from "./pages";
-import { Sidebar, Dropdown } from "flowbite-react";
+import { Sidebar, Dropdown, Toast } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
+import { HiCheck } from "react-icons/hi";
 import { createOrganizationValidator } from "./helpers";
 import { Field, Formik } from "formik";
 import {
@@ -34,6 +35,7 @@ function authWrapper(Component) {
 const OrganizationSettings = () => {
   const [organizationData, setOrganizationData] = useState({});
   const [currentPage, setCurrentPage] = useState(pages[0]);
+  const [saved, setSaved] = useState(false);
   const user = useSession().data.user;
 
   const colors = {
@@ -123,6 +125,7 @@ const OrganizationSettings = () => {
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
           handleSubmit(values);
+          setSaved(true);
           setSubmitting(false);
         }}
         validationSchema={createOrganizationValidator}
@@ -158,6 +161,19 @@ const OrganizationSettings = () => {
               </Sidebar>
 
               <div className="flex-column flex min-w-[50%] p-4">
+                {saved && (
+                  <div className="pb-3">
+                    <Toast>
+                      <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                        <HiCheck className="h-5 w-5" />
+                      </div>
+                      <div className="ml-3 text-sm font-normal">
+                        Settings saved successfully!
+                      </div>
+                      <Toast.Toggle />
+                    </Toast>
+                  </div>
+                )}
                 <h3 className="text-2xl font-bold">{currentPage.title}</h3>
                 <p className="pb-3 text-slate-500">{currentPage.helperText}</p>
                 <div className="rounded-sm bg-white p-4">
