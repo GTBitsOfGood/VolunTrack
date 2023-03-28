@@ -507,6 +507,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               onUnregister={onUnregister}
               user={user}
               isHomePage={isHomePage}
+              onCreateClicked={onCreateClicked}
             />
           </>
         )}

@@ -1,8 +1,10 @@
+/* eslint-disable prettier/prettier */
 import Link from "next/link";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import { useSession } from "next-auth/react";
+import BoGButton from "../../components/BoGButton";
 
 const Styled = {
   Container: styled.div`
@@ -85,6 +87,7 @@ const EventsList = ({
   onUnregister,
   user,
   isHomePage,
+  onCreateClicked,
 }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -100,6 +103,11 @@ const EventsList = ({
   var upcomingEvents = events.filter(function (event) {
     const currentDate = new Date();
     return new Date(event.date) > currentDate;
+  });
+
+  var todayEvents = events.filter(function (event) {
+    const currentDate = new Date();
+    return new Date(event.date) === currentDate;
   });
 
   const registeredEvents = upcomingEvents.filter(function (event) {
@@ -142,7 +150,7 @@ const EventsList = ({
       return (
         <Styled.Container>
           <Styled.ul>
-            <Styled.Events>Your Upcoming Events</Styled.Events>
+            <Styled.Events>Registered Events</Styled.Events>
             {registeredEvents.map((event) => (
               <EventCard
                 key={event._id}
@@ -188,10 +196,10 @@ const EventsList = ({
           <Styled.Spacer />
         </Styled.Container>
       );
-    } else if (upcomingEvents.length > 0) {
+    } else if (user.role == "volunteer" && upcomingEvents.length > 0) {
       return (
         <Styled.Container>
-          <Styled.Events>New Events</Styled.Events>
+          <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
           {upcomingEvents.map((event) => (
             <EventCard
               key={event._id}
@@ -206,6 +214,59 @@ const EventsList = ({
           </Link>
           <Styled.Spacer />
         </Styled.Container>
+      );
+    } else if (user.role == "admin") {
+      return (
+        <div>
+          <Styled.Container>
+            <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
+            {todayEvents.length > 0 &&
+              todayEvents.map((event) => (
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  functions={functions}
+                  onRegisterClicked={onRegisterClicked}
+                />
+              ))}
+            <div className="justify-content-center flex">
+              {todayEvents.length === 0 && (
+                <img
+                  className="h-24 mt-6"
+                  src={"/images/No Events Today.png"}
+                  alt="medal"
+                />
+              )}
+            </div>
+            <Styled.Spacer />
+          </Styled.Container>
+          <Styled.Container>
+            <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
+            {upcomingEvents.length > 0 &&
+            <div>
+              {upcomingEvents.map((event) => (
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  functions={functions}
+                  onRegisterClicked={onRegisterClicked}
+                />
+              ))}
+              <Link href={`/events`}>
+              <Styled.LinkedText>View More</Styled.LinkedText>
+            </Link>
+            </div>
+            }
+            <div className="justify-content-center flex">
+            {upcomingEvents.length === 0 && (
+              <BoGButton text="Create new event" onClick={onCreateClicked} />
+            )}
+            </div>
+            <Styled.Spacer />
+          </Styled.Container>
+        </div>
       );
     } else {
       return (
@@ -223,6 +284,7 @@ EventsList.propTypes = {
   onUnregister: PropTypes.func,
   user: PropTypes.object,
   isHomePage: PropTypes.bool,
+  onCreateClicked: PropTypes.func,
 };
 
 export default EventsList;

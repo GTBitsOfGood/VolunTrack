@@ -192,59 +192,65 @@ const AdminHomeHeader = (props) => {
   ];
 
   return (
-    <div className="flex">
-      <div className="flex-column">
-        <div className="flex-column m-2 flex rounded-lg bg-white p-4">
-          <h3 className="font-weight-bold pb-3 text-xl">
-            {"Today's Overview"}
-          </h3>
-          <div className="flex">
-            <div>
-              <DateDisplayComponent
-                date={props.dateString}
-                version={"Primary"}
-              />
+    <div className="flex-column">
+      <p className="font-weight-bold mx-2 mt-2 pb-3 text-2xl">Overview</p>
+      <div className="flex">
+        <div className="flex-column">
+          <div className="flex-column m-2 flex rounded-lg bg-white p-4">
+            <h3 className="font-weight-bold pb-3 text-lg">
+              {"Today's Overview"}
+            </h3>
+            <div className="flex">
+              <div>
+                <DateDisplayComponent
+                  date={props.dateString}
+                  version={"Primary"}
+                />
+              </div>
+              <div className="flex-column flex">
+                <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                  <p className="pl-2 text-2xl">{events}</p>
+                  <p className="text-md pl-2 text-slate-600">
+                    {" "}
+                    Upcoming Events
+                  </p>
+                </div>
+                <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                  <p className="pl-2 text-2xl">0</p>
+                  <p className="text-md pl-2 text-slate-600"> Volunteers</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-column m-2 flex rounded-lg bg-white p-4">
+            <div className="flex items-center pb-3">
+              <h3 className="font-weight-bold text-lg">Total Data</h3>
+              <p className="pl-2 text-sm text-slate-600">
+                {"(10/30/2022 to now)"}
+              </p>
             </div>
             <div className="flex-column flex">
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="pl-2 text-2xl">{events}</p>
-                <p className="text-md pl-2 text-slate-600"> Upcoming Events</p>
+                <p className="pl-2 text-2xl">{props.numEvents}</p>
+                <p className="text-md pl-2 text-slate-600"> Events</p>
               </div>
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="pl-2 text-2xl">0</p>
-                <p className="text-md pl-2 text-slate-600"> Volunteers</p>
+                <p className="pl-2 text-2xl">{props.attend}</p>
+                <p className="text-md pl-2 text-slate-600"> Attendance</p>
+              </div>
+              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                <p className="pl-2 text-2xl">{props.hours}</p>
+                <p className="text-md pl-2 text-slate-600"> Hours</p>
               </div>
             </div>
           </div>
         </div>
-
-        <div className="flex-column m-2 flex rounded-lg bg-white p-4">
-          <div className="flex items-center pb-3">
-            <h3 className="font-weight-bold text-xl">Total Data</h3>
-            <p className="pl-2 text-sm text-slate-600">
-              {"(10/30/2022 to now)"}
-            </p>
-          </div>
-          <div className="flex-column flex">
-            <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-              <p className="pl-2 text-2xl">{props.numEvents}</p>
-              <p className="text-md pl-2 text-slate-600"> Events</p>
-            </div>
-            <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-              <p className="pl-2 text-2xl">{props.attend}</p>
-              <p className="text-md pl-2 text-slate-600"> Attendance</p>
-            </div>
-            <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-              <p className="pl-2 text-2xl">{props.hours}</p>
-              <p className="text-md pl-2 text-slate-600"> Hours</p>
-            </div>
-          </div>
+        <div className="mixed-chart m-2 rounded-lg bg-white">
+          {typeof window !== "undefined" && (
+            <Chart width={600} options={options} series={series} type="area" />
+          )}
         </div>
-      </div>
-      <div className="mixed-chart m-2 rounded-lg bg-white">
-        {typeof window !== "undefined" && (
-          <Chart width={600} options={options} series={series} type="area" />
-        )}
       </div>
     </div>
   );
