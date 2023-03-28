@@ -21,10 +21,12 @@ import {
   removeInvitedAdmin,
   updateInvitedAdmins,
 } from "../../actions/queries";
-import variables from "../../design-tokens/_variables.module.scss";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
+import InputField from "../../components/Forms/InputField";
+
+// TODOCD: Implement Search Feature
 
 const PAGE_SIZE = 10;
 
@@ -261,8 +263,8 @@ class Assistants extends React.Component {
                 <Form.FormGroup>
                   <Row>
                     <Col>
-                      <Form.Label>Email</Form.Label>
-                      <Form.Input
+                      <InputField
+                        label="Email"
                         type="text"
                         name="email"
                         autocomplete="off"

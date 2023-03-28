@@ -215,7 +215,7 @@ class OnboardingForm extends React.Component {
                   </Styled.Subtitle2>
                 </div>
                 <div className="m-auto w-80">
-                  <Label className="mt-2 mb-1" htmlFor="organization_code">
+                  <Label className="mb-1 mt-2" htmlFor="organization_code">
                     Non-profit Code
                   </Label>
                   <Field

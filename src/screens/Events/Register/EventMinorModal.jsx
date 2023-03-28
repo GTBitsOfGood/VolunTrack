@@ -8,6 +8,8 @@ import { Formik, Field } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";
 
+// TODOCD: How do you want to handle blurring minors' info?
+
 const Styled = {
   ModalHeader: styled(ModalHeader)`
     display: flex;
