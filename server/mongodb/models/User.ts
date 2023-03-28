@@ -16,6 +16,7 @@ export type UserData = {
   notes?: string;
   passwordHash?: string;
   imageUrl?: string;
+  isBitsOfGoodAdmin?: boolean;
 };
 
 const userSchema = new Schema<UserData>(
@@ -50,6 +51,7 @@ const userSchema = new Schema<UserData>(
     notes: String,
     passwordHash: String,
     imageUrl: String,
+    isBitsOfGoodAdmin: Boolean,
   },
   {
     timestamps: true,
