@@ -10,7 +10,7 @@ export default async function handler(req, res) {
     const attendance = await Attendance.findOne({
       userId,
       eventId,
-      timeCheckedOut: null,
+      checkoutTime: null,
     });
 
     if (!attendance) {
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     }
 
     const newAttendance = await attendance.updateOne({
-      timeCheckedOut: Date.now(),
+      checkoutTime: Date.now(),
     });
 
     return res.status(200).json(newAttendance);

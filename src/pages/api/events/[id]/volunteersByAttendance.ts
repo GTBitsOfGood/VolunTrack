@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     const checkedInVolunteerIds = (
       await Attendance.find({
         eventId,
-        timeCheckedOut: null,
+        checkoutTime: null,
       })
     ).map((attendance) => attendance.userId.toString());
 

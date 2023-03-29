@@ -10,13 +10,13 @@ export default async function handler(req, res) {
     if (start !== "undefined" && end !== "undefined") {
       start = new Date(start);
       end = new Date(end);
-      filter = { timeCheckedIn: { $gte: start, $lt: end } };
+      filter = { checkinTime: { $gte: start, $lt: end } };
     } else if (start !== "undefined") {
       start = new Date(start);
-      filter = { timeCheckedIn: { $gte: start } };
+      filter = { checkinTime: { $gte: start } };
     } else if (end !== "undefined") {
       end = new Date(end);
-      filter = { timeCheckedIn: { $lt: end } };
+      filter = { checkinTime: { $lt: end } };
     }
 
     const attendance = await Attendance.aggregate([
@@ -31,8 +31,8 @@ export default async function handler(req, res) {
           minutes: {
             $sum: {
               $dateDiff: {
-                startDate: "$timeCheckedIn",
-                endDate: "$timeCheckedOut",
+                startDate: "$checkinTime",
+                endDate: "$checkoutTime",
                 unit: "minute",
               },
             },

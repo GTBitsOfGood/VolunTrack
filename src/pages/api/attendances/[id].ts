@@ -1,18 +1,36 @@
-const Attendance = require("../../../../server/mongodb/models/attendance");
+import { HydratedDocument, Types } from "mongoose";
+import { NextApiRequest, NextApiResponse } from "next/types";
+import Attendance, {
+  AttendanceData,
+} from "../../../../server/mongodb/models/Attendance";
 
-export default async function handler(req, res) {
-  if (req.method === "PUT") {
-    const attendanceId = req.query.id;
-    const attendance = await Attendance.updateOne(
-      { _id: attendanceId },
-      req.body.newData
-    );
-    return res.status(200).json(attendance);
+export default async (
+  req: NextApiRequest,
+  res: NextApiResponse<
+    | { attendance?: HydratedDocument<AttendanceData> }
+    | { attendanceId?: Types.ObjectId }
+  >
+) => {
+  const id = req.query.id as string;
+
+  const attendance = await Attendance.findById(id);
+  if (!attendance) {
+    return res.status(404);
   }
-  if (req.method === "DELETE") {
-    const attendanceId = req.query.id;
-    Attendance.findOneAndDelete({ _id: attendanceId }).then(() => {
-      return res.status(200).send();
-    });
+
+  switch (req.method) {
+    case "GET": {
+      return res.status(200).json({ attendance });
+    }
+    case "PUT": {
+      const attendanceData = req.body as Partial<AttendanceData>;
+
+      await attendance.updateOne(attendanceData);
+      return res.status(200).json({ attendanceId: attendance._id });
+    }
+    case "DELETE": {
+      await attendance.deleteOne();
+      return res.status(200).json({ attendanceId: attendance._id });
+    }
   }
-}
+};

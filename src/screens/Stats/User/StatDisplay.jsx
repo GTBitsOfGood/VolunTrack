@@ -151,10 +151,10 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
           let add = 0;
           // HAVE TO FIX THIS
           for (let i = 0; i < filteredAttendance.length; i++) {
-            if (filteredAttendance[i].timeCheckedOut != null) {
+            if (filteredAttendance[i].checkoutTime != null) {
               add += getHours(
-                filteredAttendance[i].timeCheckedIn.slice(11, 16),
-                filteredAttendance[i].timeCheckedOut.slice(11, 16)
+                filteredAttendance[i].checkinTime.slice(11, 16),
+                filteredAttendance[i].checkoutTime.slice(11, 16)
               );
             }
           }

@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { getEvents } from "../../../../server/actions/events";
 import dbConnect from "../../../../server/mongodb";

@@ -1,26 +1,22 @@
 import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
-import dbConnect from "../../../../server/mongodb";
 import Attendance from "../../../../server/mongodb/models/Attendance";
 import Event, { EventData } from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
-import { EditEventRequestBody } from "../../../queries/events";
+import { UpdateEventRequestBody } from "../../../queries/events";
 
 export default async (
   req: NextApiRequest,
   res: NextApiResponse<
-    | { message: string }
-    | { event: HydratedDocument<EventData> }
-    | { eventId: Types.ObjectId }
+    { event?: HydratedDocument<EventData> } | { eventId?: Types.ObjectId }
   >
 ) => {
   const id = req.query.id as string;
 
-  await dbConnect();
   const event = await Event.findById(id);
   if (!event) {
-    return res.status(404).send({ message: `Event with id ${id} not found` });
+    return res.status(404);
   }
 
   switch (req.method) {
@@ -29,7 +25,7 @@ export default async (
     }
     case "PUT": {
       const { eventData, sendConfirmationEmail } = req.body as {
-        eventData: EditEventRequestBody;
+        eventData: UpdateEventRequestBody;
         sendConfirmationEmail: boolean;
       };
 

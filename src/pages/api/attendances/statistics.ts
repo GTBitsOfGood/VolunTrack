@@ -1,5 +1,5 @@
-import dbConnect from "../../../../server/mongodb";
 import mongoose from "mongoose";
+import dbConnect from "../../../../server/mongodb";
 const Attendance = require("../../../../server/mongodb/models/attendance");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -15,8 +15,8 @@ export default async function handler(req, res) {
           minutes: {
             $sum: {
               $dateDiff: {
-                startDate: "$timeCheckedIn",
-                endDate: "$timeCheckedOut",
+                startDate: "$checkinTime",
+                endDate: "$checkoutTime",
                 unit: "minute",
               },
             },

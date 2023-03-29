@@ -1,26 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import {
-  createHistoryEvent,
-  getAllHistoryEvents,
-} from "../../../../server/actions/historyEvent";
+import { HydratedDocument } from "mongoose";
+import { NextApiRequest, NextApiResponse } from "next/types";
+import HistoryEvent, {
+  HistoryEventData,
+} from "../../../../server/mongodb/models/HistoryEvent";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (
+  req: NextApiRequest,
+  res: NextApiResponse<{ historyEvents: HydratedDocument<HistoryEventData>[] }>
+) => {
   switch (req.method) {
     case "GET": {
-      const historyEvents = await getAllHistoryEvents(req.query.organizationId);
+      const { keyword, description, user, event, organization } =
+        req.query as Partial<HistoryEventData>;
 
-      res.status(200).json(historyEvents);
+      const match: Partial<HistoryEventData> = {};
+      if (keyword) match.keyword = keyword;
+      if (description) match.description = description;
+      if (user) match.user = user;
+      if (event) match.event = event;
+      if (organization) match.organization = organization;
 
-      break;
-    }
-    case "POST": {
-      const historyEvent = createHistoryEvent(req.body.eventHistory);
-
-      if (historyEvent) {
-        res.status(200).json(historyEvent);
-      }
-
-      break;
+      return res
+        .status(200)
+        .json({ historyEvents: await HistoryEvent.find(match) });
     }
   }
 };

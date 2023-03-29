@@ -16,9 +16,8 @@ export default async function handler(req, res) {
     let attendanceStats = [];
     for (let document of attendance) {
       let hours = -1;
-      if (document.timeCheckedOut != null) {
-        hours =
-          Math.abs(document.timeCheckedOut - document.timeCheckedIn) / 36e5;
+      if (document.checkoutTime != null) {
+        hours = Math.abs(document.checkoutTime - document.checkinTime) / 36e5;
       }
       const newDoc = {
         ...document._doc,

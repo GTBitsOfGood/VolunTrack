@@ -6,15 +6,12 @@ import { UserData } from "../../../../server/mongodb/models/User";
 export default async (
   req: NextApiRequest,
   res: NextApiResponse<
-    | { user: HydratedDocument<UserData> }
-    | { message: string }
-    | { userId: Types.ObjectId }
+    { user?: HydratedDocument<UserData> } | { userId?: Types.ObjectId }
   >
 ) => {
   const id = req.query.id as string;
   const user = await getUser(new Types.ObjectId(id));
-  if (!user)
-    return res.status(404).send({ message: `User with id ${id} not found` });
+  if (!user) return res.status(404);
 
   switch (req.method) {
     case "GET": {

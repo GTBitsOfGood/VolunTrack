@@ -9,11 +9,18 @@ import { EventParentData } from "../../server/mongodb/models/EventParent";
 export type CreateEventRequestBody = Omit<EventData, "eventParent"> & {
   eventParent: Types.ObjectId | EventParentData;
 };
-export type EditEventRequestBody = Partial<
+export type UpdateEventRequestBody = Partial<
   Omit<EventData, "eventParent"> & {
     eventParent: Types.ObjectId | Partial<EventParentData>;
   }
 >;
+
+export const getEvent = (
+  id: Types.ObjectId
+): Promise<AxiosResponse<{ event?: HydratedDocument<EventPopulatedData> }>> =>
+  axios.get<{ event?: HydratedDocument<EventPopulatedData> }>(
+    `/api/events/${id.toString()}`
+  );
 
 export const getEvents = (
   startDateString: string,
@@ -34,17 +41,17 @@ export const createEvent = (
     eventData
   );
 
-export const editEvent = (
+export const updateEvent = (
   id: Types.ObjectId,
-  eventData: EditEventRequestBody,
+  eventData: UpdateEventRequestBody,
   sendConfirmationEmail: boolean
-): Promise<AxiosResponse<{ eventId: Types.ObjectId }>> =>
-  axios.put<{ eventId: Types.ObjectId }>(`/api/events/${id.toString()}`, {
+): Promise<AxiosResponse<{ eventId?: Types.ObjectId }>> =>
+  axios.put<{ eventId?: Types.ObjectId }>(`/api/events/${id.toString()}`, {
     eventData,
     sendConfirmationEmail,
   });
 
 export const deleteEvent = (
   id: Types.ObjectId
-): Promise<AxiosResponse<{ eventId: Types.ObjectId }>> =>
-  axios.delete<{ eventId: Types.ObjectId }>(`/api/events/${id.toString()}`);
+): Promise<AxiosResponse<{ eventId?: Types.ObjectId }>> =>
+  axios.delete<{ eventId?: Types.ObjectId }>(`/api/events/${id.toString()}`);

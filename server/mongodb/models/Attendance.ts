@@ -7,18 +7,18 @@ import {
 } from "../middleware";
 
 export type AttendanceData = {
-  event: Types.ObjectId;
   user: Types.ObjectId;
-  timeCheckedIn: Date;
-  timeCheckedOut?: Date;
+  event: Types.ObjectId;
+  checkinTime?: Date;
+  checkoutTime?: Date;
 };
 
 const attendanceSchema = new Schema<AttendanceData>(
   {
-    event: { type: Schema.Types.ObjectId, ref: "Event", required: true },
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    timeCheckedIn: { type: Date, required: true },
-    timeCheckedOut: Date,
+    event: { type: Schema.Types.ObjectId, ref: "Event", required: true },
+    checkinTime: { type: Date, default: null },
+    checkoutTime: { type: Date, default: null },
   },
   { timestamps: true }
 );

@@ -13,8 +13,8 @@ export const getWaivers = async (
 export const updateWaiver = async (
   id: Types.ObjectId,
   waiverData: Partial<WaiverData>
-): Promise<AxiosResponse<{ waiverId: Types.ObjectId }>> =>
-  axios.put<{ waiverId: Types.ObjectId }>(
+): Promise<AxiosResponse<{ waiverId?: Types.ObjectId }>> =>
+  axios.put<{ waiverId?: Types.ObjectId }>(
     `/api/waivers/${id.toString()}`,
     waiverData
   );

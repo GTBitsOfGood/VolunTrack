@@ -7,7 +7,6 @@ import {
 } from "../middleware";
 
 export type OrganizationData = {
-  _id?: string;
   name: string;
   url: string;
   slug: string;
