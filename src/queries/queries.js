@@ -1,60 +1,6 @@
 import axios from "axios";
 
-export const getUsers = (organizationId, role) =>
-  axios.get(`/api/users/getUsers?role=${role}`);
-
-export const getCurrentUser = (userId) =>
-  axios.get("/api/users/current?volunteer=" + userId);
-
-export const updateUser = (userId, userInfo) => {
-  axios.post(`/api/users/${userId}`, userInfo);
-};
-
-export const fetchVolunteers = (eventVolunteers, organizationId) => {
-  return axios.get(
-    `/api/users/eventVolunteers?volunteers=${JSON.stringify(
-      eventVolunteers
-    )}&organizationId=${organizationId}`
-  );
-};
-
-export const fetchEvents = (startDate, endDate, organizationId) =>
-  axios.get(
-    `/api/events?startDate=${startDate}&endDate=${endDate}&organizationId=${organizationId}`
-  );
-
-export const fetchEventsById = (_id) => axios.get("/api/events/" + _id);
-
-export const fetchAttendanceByUserId = (userId) => {
-  return axios.get("/api/users/stats?volunteer=" + userId);
-};
-
-export const createEvent = (event) => axios.post("/api/events", event);
-
-export const editEvent = (event, sendConfirmationEmail) =>
-  axios.put("/api/events", {
-    event,
-    sendConfirmationEmail,
-  });
-
-export const deleteEvent = (_id, userId) =>
-  axios.delete(`/api/events/${_id}?userId=${userId}`);
-
-// credentials signup
-export const createUserFromCredentials = (user) =>
-  axios.post(`/api/users`, user);
-
-export const getUserFromId = (id) => axios.get(`/api/users/${id}`);
-
-export const deleteUser = (id, user) => axios.delete(`/api/users/${id}`, user);
-
-//WAIVERS
-export const getWaivers = (type, organizationId) =>
-  axios.get(`/api/waivers?type=${type}&organizationId=${organizationId}`);
-
-export const updateWaiver = (type, text, organizationId) =>
-  axios.post("/api/waivers", { type, text, organizationId });
-
+// don't need to query for invited admins, just query the organization instead and update that
 export const updateInvitedAdmins = (email, organizationId) =>
   axios.post(`/api/settings/updateInvitedAdmin`, { email, organizationId });
 

@@ -4,7 +4,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users";
-import dbConnect from "../../../../server/mongodb/index";
+import dbConnect from "../../../../server/mongodb";
 import Organization from "../../../../server/mongodb/models/organization";
 import User from "../../../../server/mongodb/models/user";
 

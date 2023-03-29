@@ -2,8 +2,8 @@ import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import BoGButton from "../../../components/BoGButton";
 import { deleteEvent } from "../../../actions/queries";
+import BoGButton from "../../../components/BoGButton";
 
 const EventDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
@@ -13,7 +13,7 @@ const EventDeleteModal = ({ open, toggle, event }) => {
 
   const handleSubmit = () => {
     setDeleting(true);
-    deleteEvent(event._id, user._id)
+    deleteEvent(event._id)
       .then(() => {
         toggle();
         setDeleting(false);

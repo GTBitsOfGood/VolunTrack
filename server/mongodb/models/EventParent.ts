@@ -1,4 +1,10 @@
 import { Model, model, models, Schema, Types } from "mongoose";
+import dbConnect from "../";
+import {
+  documentMiddleware,
+  documentOrQueryMiddleware,
+  queryMiddleware,
+} from "../middleware";
 
 export type EventParentData = {
   title: string;
@@ -59,6 +65,9 @@ const eventParentSchema = new Schema<EventParentData>(
   },
   { timestamps: true }
 );
+eventParentSchema.pre(documentMiddleware, async () => await dbConnect());
+eventParentSchema.pre(queryMiddleware, async () => await dbConnect());
+eventParentSchema.pre(documentOrQueryMiddleware, async () => await dbConnect());
 
 export default ("EventParent" in models
   ? (models.EventParent as Model<EventParentData>)

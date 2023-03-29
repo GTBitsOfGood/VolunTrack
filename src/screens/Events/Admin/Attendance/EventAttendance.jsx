@@ -7,7 +7,7 @@ import {
   fetchEventsById,
   getEventVolunteersByAttendance,
   updateEventById,
-} from "../../../../actions/queries";
+} from "../../../../queries/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
 

@@ -1,10 +1,16 @@
 import { Model, model, models, Schema, Types } from "mongoose";
+import dbConnect from "../";
+import {
+  documentMiddleware,
+  documentOrQueryMiddleware,
+  queryMiddleware,
+} from "../middleware";
 
 export type UserData = {
   email: string;
-  role: "admin" | "volunteer" | "manager";
-  status: "has_volunteered" | "new";
-  organization: Types.ObjectId;
+  role?: "admin" | "volunteer" | "manager";
+  status?: "has_volunteered" | "new";
+  organization?: Types.ObjectId;
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
@@ -50,13 +56,16 @@ const userSchema = new Schema<UserData>(
     state: String,
     notes: String,
     passwordHash: String,
-    imageUrl: String,
-    isBitsOfGoodAdmin: Boolean,
+    imageUrl: { type: String, default: "/images/gradient-avatar.png" },
+    isBitsOfGoodAdmin: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
 );
+userSchema.pre(documentMiddleware, async () => await dbConnect());
+userSchema.pre(queryMiddleware, async () => await dbConnect());
+userSchema.pre(documentOrQueryMiddleware, async () => await dbConnect());
 
 export default ("User" in models
   ? (models.User as Model<UserData>)

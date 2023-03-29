@@ -4,11 +4,11 @@ import PropTypes from "prop-types";
 import React, { useContext, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
-import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
-import { createEvent, editEvent } from "../../../actions/queries";
+import BoGButton from "../../../components/BoGButton";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
+import { createEvent, editEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator, standardEventValidator } from "./eventHelpers";
 

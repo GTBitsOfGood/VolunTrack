@@ -1,6 +1,13 @@
 import { Model, model, models, Schema } from "mongoose";
+import dbConnect from "../";
+import {
+  documentMiddleware,
+  documentOrQueryMiddleware,
+  queryMiddleware,
+} from "../middleware";
 
 export type OrganizationData = {
+  _id?: string;
   name: string;
   url: string;
   slug: string;
@@ -25,6 +32,12 @@ const organizationSchema = new Schema<OrganizationData>(
     active: Boolean,
   },
   { timestamps: true }
+);
+organizationSchema.pre(documentMiddleware, async () => await dbConnect());
+organizationSchema.pre(queryMiddleware, async () => await dbConnect());
+organizationSchema.pre(
+  documentOrQueryMiddleware,
+  async () => await dbConnect()
 );
 
 export default ("Organization" in models

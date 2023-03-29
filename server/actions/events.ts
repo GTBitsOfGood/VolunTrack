@@ -1,7 +1,6 @@
-import { Types } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import { scheduler } from "../jobs/scheduler";
 import { eventPopulator } from "../mongodb/aggregations";
-import dbConnect from "../mongodb/index";
 import Event, {
   EventData,
   EventPopulatedData
@@ -16,18 +15,20 @@ import {
 
 export const getEvent = async (
   id: Types.ObjectId
-): Promise<EventPopulatedDocument | undefined> => {
-  await dbConnect();
+): Promise<HydratedDocument<EventPopulatedData> | undefined> => {
+  
 
-  return await Event.findByIdPopulated(id);
+  const events = await Event.aggregate([ ...eventPopulator, { $match: { _id: id } } ]);
+  if (events.length === 0) return undefined;
+  return events[0];
 };
 
 export const getEvents = async (
   startDateString: string,
   endDateString: string,
   organizationId: Types.ObjectId
-): Promise<EventPopulatedData[]> => {
-  await dbConnect();
+): Promise<HydratedDocument<EventPopulatedData>[]> => {
+  
 
   const startDate =
     startDateString === "undefined" ? undefined : new Date(startDateString);
@@ -71,8 +72,8 @@ export const getEvents = async (
 
 export const createEvent = async (
   eventData: EventData
-): Promise<EventDocument> => {
-  await dbConnect();
+): Promise<EventData> => {
+  
 
   const event = new Event(eventData);
   await event.save();
@@ -86,7 +87,7 @@ export const createEvent = async (
 export const createEventWithParent = async (
   eventData: EventPopulatedData
 ): Promise<EventPopulatedDocument> => {
-  await dbConnect();
+  
 
   const eventParent = await EventParent.create(eventData.eventParent);
   const event = await Event.create({ ...eventData, eventParent:  })
@@ -98,7 +99,7 @@ export const updateEvent = async (
   id: Types.ObjectId,
   eventData: EventData
 ): Promise<EventDocument | undefined> => {
-  await dbConnect();
+  
 
   const event = await Event.findByIdAndUpdate(id, eventData, {
     new: true,
@@ -106,17 +107,6 @@ export const updateEvent = async (
   if (!event) return undefined;
   createHistoryEventEditEvent(eventData);
   return event;
-};
-
-export const deleteEvent = async (
-  id: Types.ObjectId
-): Promise<Types.ObjectId | undefined> => {
-  await dbConnect();
-
-  const event = await Event.findByIdAndDelete(id);
-  if (!event) return undefined;
-  // createHistoryEventDeleteEvent()
-  return id;
 };
 
 /**
@@ -129,7 +119,7 @@ export const deleteEvent = async (
 export const getEventVolunteers = async (
   id: Types.ObjectId
 ): Promise<UserDocument[]> => {
-  await dbConnect();
+  
 
   const registrations = await Registration.find({ event: id });
   const userIds = new Set(registrations.map((r) => r.user));
@@ -139,7 +129,7 @@ export const getEventVolunteers = async (
 };
 
 // export async function getEventVolunteersList(eventId, next) {
-//   await dbConnect();
+//   
 
 //   let result = {
 //     volunteer: [],

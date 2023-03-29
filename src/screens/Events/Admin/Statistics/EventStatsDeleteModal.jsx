@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import BoGButton from "../../../../components/BoGButton";
-import { deleteAttendance } from "../../../../actions/queries";
+import { deleteAttendance } from "../../../../queries/queries";
 
 const EventStatsDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);

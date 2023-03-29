@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { getEvents } from "../../../../server/actions/events";
-import dbConnect from "../../../../server/mongodb/index";
+import dbConnect from "../../../../server/mongodb";
 import Event, {
   EventData,
   EventPopulatedData,
@@ -9,14 +9,14 @@ import Event, {
 import EventParent, {
   EventParentData,
 } from "../../../../server/mongodb/models/EventParent";
-import {
-  CreateEventRequestBody,
-  CreateEventResponseData,
-} from "../../../actions/queries";
+import { CreateEventRequestBody } from "../../../queries/events";
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<EventPopulatedData[] | CreateEventResponseData>
+  res: NextApiResponse<
+    | { events: HydratedDocument<EventPopulatedData>[] }
+    | { eventId: Types.ObjectId; eventParentId?: Types.ObjectId }
+  >
 ) => {
   switch (req.method) {
     case "GET": {
@@ -24,15 +24,13 @@ export default async (
         [queryParam: string]: string;
       };
 
-      return res
-        .status(200)
-        .json(
-          await getEvents(
-            startDateString,
-            endDateString,
-            new Types.ObjectId(organizationId)
-          )
-        );
+      return res.status(200).json({
+        events: await getEvents(
+          startDateString,
+          endDateString,
+          new Types.ObjectId(organizationId)
+        ),
+      });
     }
     case "POST": {
       const requestBody = req.body as CreateEventRequestBody;

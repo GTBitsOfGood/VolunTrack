@@ -1,26 +1,38 @@
-import { Types } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
-import dbConnect from "../../../../server/mongodb/index";
-import Attendance from "../../../../server/mongodb/models/Attendance";
+import dbConnect from "../../../../server/mongodb";
+import Attendance, {
+  AttendanceData,
+} from "../../../../server/mongodb/models/Attendance";
 
 export default async (
   req: NextApiRequest,
-  res: NextApiResponse<Types.ObjectId>
+  res: NextApiResponse<
+    | { attendances: HydratedDocument<AttendanceData>[] }
+    | { attendanceId: Types.ObjectId }
+  >
 ) => {
   switch (req.method) {
+    case "GET": {
+      const userId = req.query.userId as string;
+
+      await dbConnect();
+      const attendances = await Attendance.find({ user: userId });
+      return res.status(200).json({ attendances });
+    }
     case "POST": {
-      const { event, user } = req.body as {
-        event: Types.ObjectId;
-        user: Types.ObjectId;
+      const { eventId, userId } = req.body as {
+        eventId: Types.ObjectId;
+        userId: Types.ObjectId;
       };
 
       await dbConnect();
       const attendance = await Attendance.create({
-        event,
-        user,
+        eventId,
+        userId,
         timeCheckedIn: new Date(),
       });
-      return res.status(201).json(attendance._id);
+      return res.status(201).json({ attendanceId: attendance._id });
     }
   }
 };

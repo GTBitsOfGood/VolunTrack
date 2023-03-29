@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import EventTable from "../../../../components/EventTable";
 import {
   fetchEventsById,
   getAttendanceForEvent,
-} from "../../../../actions/queries";
-import EventTable from "../../../../components/EventTable";
+} from "../../../../queries/queries";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
 

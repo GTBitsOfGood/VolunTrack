@@ -1,9 +1,9 @@
 import { Field, Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
 import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
-import BoGButton from "../../../../components/BoGButton";
 import styled from "styled-components";
-import { updateAttendance } from "../../../../actions/queries";
+import BoGButton from "../../../../components/BoGButton";
+import { updateAttendance } from "../../../../queries/queries";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
 

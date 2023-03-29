@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { Field, Formik } from "formik";
 import { useSession } from "next-auth/react";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import "react-calendar/dist/Calendar.css";
+import { Col, Row } from "reactstrap";
+import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventTable";
-import {
-  fetchAttendanceByUserId,
-  getCurrentUser,
-} from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
-import "react-calendar/dist/Calendar.css";
-import PropTypes from "prop-types";
-import { getHours } from "./hourParsing";
+import { getAttendancesByUserId } from "../../../queries/attendances";
+import { getUser } from "../../../queries/users";
 import * as SForm from "../../sharedStyles/formStyles";
-import { Field, Formik } from "formik";
-import { Row, Col } from "reactstrap";
 import { filterAttendance } from "../helper";
+import { getHours } from "./hourParsing";
 
 const Styled = {
   Container: styled.div`
@@ -134,7 +132,7 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
 
   useEffect(() => {
     setLoading(true);
-    fetchAttendanceByUserId(userId)
+    getAttendancesByUserId(userId)
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
@@ -172,18 +170,10 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
         setLoading(false);
       });
 
-    getCurrentUser(userId)
-      .then((result) => {
-        if (result) {
-          setName(
-            result.data.result[0].bio.first_name +
-              " " +
-              result.data.result[0].bio.last_name +
-              "'s"
-          );
-        }
-      })
-      .finally(() => {});
+    getUser(userId).then((response) => {
+      if (response.data)
+        setName(`${response.data.firstName} ${response.data.lastName}'s`);
+    });
   }, [startDate, endDate]);
 
   let achievements = (
