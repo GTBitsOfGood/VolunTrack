@@ -15,6 +15,7 @@ import * as SForm from "../../sharedStyles/formStyles";
 import { Field, Formik } from "formik";
 import { Row, Col } from "reactstrap";
 import { filterAttendance } from "../helper";
+import ProgressDisplay from "../../../components/ProgressDisplay";
 
 const Styled = {
   Container: styled.div`
@@ -187,42 +188,18 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
   }, [startDate, endDate]);
 
   let achievements = (
-    <Styled.Box>
-      <Styled.BoxInner>
-        <Styled.StatText>Events Attended</Styled.StatText>
-        <Styled.StatImage>
-          {loading ? (
-            "Loading... "
-          ) : (
-            <img
-              src={"/images/Events Attended - " + attend + ".png"}
-              alt="helping-mamas-photo"
-              width="150px"
-              height="150px"
-            />
-          )}
-        </Styled.StatImage>
-        <Styled.StatText>{attendance.length} events</Styled.StatText>
-      </Styled.BoxInner>
-
-      <Styled.BoxInner>
-        <Styled.StatText>Hours Earned</Styled.StatText>
-        <Styled.StatImage>
-          {loading ? (
-            "Loading... "
-          ) : (
-            <img
-              src={"/images/Hours Earned - " + earn + ".png"}
-              id="earned"
-              alt="helping-mamas-photo"
-              width="150px"
-              height="150px"
-            />
-          )}
-        </Styled.StatImage>
-        <Styled.StatText>{Math.round(sum * 10) / 10} hours</Styled.StatText>
-      </Styled.BoxInner>
-    </Styled.Box>
+    <div className="flex">
+      <ProgressDisplay
+        type={"Events"}
+        attendance={attendance}
+        header={"Events Attended"}
+      />
+      <ProgressDisplay
+        type={"Hours"}
+        attendance={attendance}
+        header={"Hours Earned"}
+      />
+    </div>
   );
 
   return (

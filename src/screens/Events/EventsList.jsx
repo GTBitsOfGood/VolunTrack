@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import Link from "next/link";
 import PropTypes from "prop-types";
 import styled from "styled-components";
@@ -115,6 +114,16 @@ const EventsList = ({
     return event.volunteers.includes(user._id);
   });
 
+  const todayRegisteredEvents = registeredEvents.filter(function (event) {
+    const currentDate = new Date();
+    return new Date(event.date) === currentDate;
+  });
+
+  const upcomingRegisteredEvents = registeredEvents.filter(function (event) {
+    const currentDate = new Date();
+    return new Date(event.date) > currentDate;
+  });
+
   upcomingEvents = upcomingEvents.filter(function (event) {
     return !event.volunteers.includes(user._id);
   });
@@ -147,72 +156,75 @@ const EventsList = ({
       </Styled.Container>
     );
   } else {
-    if (registeredEvents.length > 0 && upcomingEvents.length > 0) {
+    if (user.role == "volunteer" && upcomingEvents.length > 0) {
       return (
         <Styled.Container>
           <Styled.ul>
-            <Styled.Events>Registered Events</Styled.Events>
-            {registeredEvents.map((event) => (
-              <EventCard
-                key={event._id}
-                event={event}
-                user={user}
-                functions={functions}
-                onRegisterClicked={onRegisterClicked}
-              />
-            ))}
+            <div className="column-flex">
+              <p className="font-weight-bold pb-3 text-2xl">
+                Registered Events
+              </p>
+              {todayRegisteredEvents.length > 0 && (
+                <div>
+                  <p className="font-weight-bold pb-3 text-xl">
+                    {"Today's Events"}
+                  </p>
+                  {todayRegisteredEvents.map((event) => (
+                    <EventCard
+                      key={event._id}
+                      event={event}
+                      user={user}
+                      functions={functions}
+                      onRegisterClicked={onRegisterClicked}
+                    />
+                  ))}
+                </div>
+              )}
+              {upcomingRegisteredEvents.length > 0 && (
+                <div>
+                  <p className="font-weight-bold pb-3 text-xl">
+                    {"Upcoming Events"}
+                  </p>
+                  {upcomingEvents.map((event) => (
+                    <EventCard
+                      key={event._id}
+                      event={event}
+                      user={user}
+                      functions={functions}
+                      onRegisterClicked={onRegisterClicked}
+                    />
+                  ))}
+                </div>
+              )}
+              {registeredEvents.length === 0 && (
+                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                  Please register for an event!
+                </p>
+              )}
+            </div>
           </Styled.ul>
 
           <Styled.ul>
-            <Styled.Events>New Events</Styled.Events>
-            {upcomingEvents.map((event) => (
-              <EventCard
-                key={event._id}
-                event={event}
-                user={user}
-                functions={functions}
-                onRegisterClicked={onRegisterClicked}
-              />
-            ))}
+            <p className="font-weight-bold pb-3 text-2xl">New Events</p>
+            {upcomingEvents.length > 0 &&
+              upcomingEvents.map((event) => (
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  functions={functions}
+                  onRegisterClicked={onRegisterClicked}
+                />
+              ))}
+            {upcomingEvents.length === 0 && (
+              <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                No new events!
+              </p>
+            )}
             <Link href={`/events`}>
               <Styled.LinkedText>View More</Styled.LinkedText>
             </Link>
           </Styled.ul>
-          <Styled.Spacer />
-        </Styled.Container>
-      );
-    } else if (registeredEvents.length > 0) {
-      return (
-        <Styled.Container>
-          <Styled.Events>Your Upcoming Events</Styled.Events>
-          {registeredEvents.map((event) => (
-            <EventCard
-              key={event._id}
-              event={event}
-              user={user}
-              functions={functions}
-              onRegisterClicked={onRegisterClicked}
-            />
-          ))}
-          <Styled.Spacer />
-        </Styled.Container>
-      );
-    } else if (user.role == "volunteer" && upcomingEvents.length > 0) {
-      return (
-        <Styled.Container>
-          <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
-          {upcomingEvents.map((event) => (
-            <EventCard
-              key={event._id}
-              event={event}
-              user={user}
-              functions={functions}
-              onRegisterClicked={onRegisterClicked}
-            />
-          ))}
-          <Link href={`/events`}>
-            <Styled.LinkedText>View More</Styled.LinkedText>
-          </Link>
           <Styled.Spacer />
         </Styled.Container>
       );

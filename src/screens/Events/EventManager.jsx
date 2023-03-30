@@ -239,22 +239,22 @@ const EventManager = ({ user, role, isHomePage }) => {
     }
   };
 
-  const onEditClicked = (event) => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
-  const toggleEditModal = () => {
-    setShowEditModal((prev) => !prev);
-    onRefresh();
-  };
-  const onDeleteClicked = (event) => {
-    setShowDeleteModal(true);
-    setCurrEvent(event);
-  };
-  const toggleDeleteModal = () => {
-    setShowDeleteModal((prev) => !prev);
-    onRefresh();
-  };
+  // const onEditClicked = (event) => {
+  //   setShowEditModal(true);
+  //   setCurrEvent(event);
+  // };
+  // const toggleEditModal = () => {
+  //   setShowEditModal((prev) => !prev);
+  //   onRefresh();
+  // };
+  // const onDeleteClicked = (event) => {
+  //   setShowDeleteModal(true);
+  //   setCurrEvent(event);
+  // };
+  // const toggleDeleteModal = () => {
+  //   setShowDeleteModal((prev) => !prev);
+  //   onRefresh();
+  // };
 
   const goToRegistrationPage = async (event) => {
     if (event?.eventId) {
@@ -452,33 +452,35 @@ const EventManager = ({ user, role, isHomePage }) => {
       <Styled.HomePage>
         {isHomePage && user.role === "volunteer" && (
           <>
-            <div className="justify-start">
-              <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-              <div className="flex flex-wrap">
-                <ProgressDisplay
-                  type={"Events"}
-                  attendance={attendance}
-                  header={"Events Attended"}
-                />
-                <ProgressDisplay
-                  type={"Hours"}
-                  attendance={attendance}
-                  header={"Hours Earned"}
-                />
+            <div className="flex-column flex">
+              <div className="mb-4 justify-start">
+                <p className="mb-2 text-2xl font-bold">Accomplishments</p>
+                <div className="flex flex-wrap">
+                  <ProgressDisplay
+                    type={"Events"}
+                    attendance={attendance}
+                    header={"Events Attended"}
+                  />
+                  <ProgressDisplay
+                    type={"Hours"}
+                    attendance={attendance}
+                    header={"Hours Earned"}
+                  />
+                </div>
               </div>
+              <EventsList
+                dateString={dateString}
+                events={
+                  user.role === "admin"
+                    ? filteredEvents
+                    : filterEvents(events, user)
+                }
+                onRegisterClicked={goToRegistrationPage}
+                onUnregister={onUnregister}
+                user={user}
+                isHomePage={isHomePage}
+              />
             </div>
-            <EventsList
-              dateString={dateString}
-              events={
-                user.role === "admin"
-                  ? filteredEvents
-                  : filterEvents(events, user)
-              }
-              onRegisterClicked={goToRegistrationPage}
-              onUnregister={onUnregister}
-              user={user}
-              isHomePage={isHomePage}
-            />
           </>
         )}
 

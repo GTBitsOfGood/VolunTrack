@@ -42,13 +42,13 @@ const ProgressDisplay = ({ type, attendance, header }) => {
   return (
     <div className="ml-18 mr-8 rounded-md border-2 bg-white px-12 py-4">
       <Label class="text-black-800 text-xl font-semibold">{header}</Label>
-      <div className="flex flex-nowrap items-center">
+      <div className="items-center flex flex-nowrap">
         <img
           className="h-16"
           src={"/images/Hours Earned - " + level + ".png"}
           alt="medal"
         />
-        <div className="flex flex-nowrap items-center font-semibold">
+        <div className="items-center flex flex-nowrap font-semibold">
           <p className="pl-6 text-2xl">{num}</p>
           <p className="text-md pl-2 text-slate-600">/ {outOf}</p>
           <p className="text-md pl-2 text-slate-600">{type}</p>
