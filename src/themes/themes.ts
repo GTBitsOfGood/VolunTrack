@@ -1,12 +1,32 @@
-import { ThemeType } from "./types";
-import { createTheme } from "./utils";
+export const applyTheme = (theme: string) => {
+  const root = document.documentElement;
+  if (!theme || !themes[theme]) theme = "magenta";
+  Object.keys(themes[theme]).forEach((cssVar) => {
+    root.style.setProperty(cssVar, themes[theme][cssVar]);
+  });
+};
 
-// export const sampleOrgTheme: ThemeType = createTheme(
-//   "#F2D2BD",
-//   "#9F2B68"
-// );
-export const blueTheme: ThemeType = createTheme(
-  "#9e40af",
-  "#8563eb",
-  "#9d4ed8"
-);
+const createTheme = (
+  primary: string,
+  secondary: string,
+  hover: string
+): ThemeType => ({
+  "--primary-color": primary,
+  "--secondary-color": secondary,
+  "--hover-color": hover,
+});
+
+export const themes = {
+  red: createTheme("#991b1b", "#dc2626", "#b91c1c"),
+  orange: createTheme("#c2410c", "#f97316", "#ea580c"),
+  yellow: createTheme("#eab308", "#fde047", "#facc15"),
+  green: createTheme("#65a30d", "#a3e635", "#84cc16"),
+  sky: createTheme("#0891b2", "#22d3ee", "#06b6d4"),
+  blue: createTheme("#1e40af", "#2563eb", "#1d4ed8"),
+  purple: createTheme("#6b21a8", "#9333ea", "#7e22ce"),
+  magenta: createTheme("#9d174d", "#db2777", "#be185d"),
+};
+
+interface ThemeType {
+  [cssVariable: string]: string;
+}

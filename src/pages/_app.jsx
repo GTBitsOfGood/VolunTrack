@@ -2,23 +2,16 @@ import "focus-visible/dist/focus-visible.min.js";
 import { SessionProvider } from "next-auth/react";
 import "normalize.css";
 import PropTypes from "prop-types";
-import { useEffect } from "react";
 import "../../public/static/styles/App.css";
 import "../../public/static/styles/bootstrap.min.css";
 import "tailwindcss/tailwind.css";
 import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
-import StyleProvider from "../providers/StyleProvider";
-import { blueTheme } from "../themes/themes";
-import { applyTheme } from "../themes/utils";
+import ThemeWrapper from "../providers/StyleProvider";
 import Footer from "../components/Footer";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
-  useEffect(() => {
-    applyTheme(blueTheme);
-  }, []);
-
   return (
     <SessionProvider session={session}>
       <script
@@ -27,16 +20,17 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
         async
         crossOrigin={"true"}
       />
+
       <RequestProvider>
         <AuthProvider>
-          <StyleProvider>
+          <ThemeWrapper>
             <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
               <Header />
               <Component {...pageProps} />
               <div className="grow" />
               <Footer />
             </div>
-          </StyleProvider>
+          </ThemeWrapper>
         </AuthProvider>
       </RequestProvider>
     </SessionProvider>
