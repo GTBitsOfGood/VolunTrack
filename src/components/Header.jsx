@@ -4,7 +4,8 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React from "react";
-import { capitalizeFirstLetter } from "../screens/Profile/helpers";
+import { useEffect } from "react";
+import { getOrganizationData } from "../actions/queries";
 
 const Header = () => {
   const router = useRouter();
@@ -24,6 +25,10 @@ const Header = () => {
     router.push("/history");
   };
 
+  const goToBogApprovalPortal = () => {
+    router.push("/bog-portal");
+  };
+
   const gotToSummary = () => {
     router.push("/events-summary");
   };
@@ -38,6 +43,10 @@ const Header = () => {
 
   const goToManageWaivers = () => {
     router.push("/manage-waivers");
+  };
+
+  const goToOrganizationSettings = () => {
+    router.push("/organization-settings");
   };
 
   const currPageMatches = (page) => router.pathname === page;
@@ -57,6 +66,13 @@ const Header = () => {
           </Dropdown.Item>
         </div>
       )}
+      {user.isBitsOfGoodAdmin === true && (
+        <div>
+          <Dropdown.Item onClick={goToBogApprovalPortal} href="/bog-portal">
+            BOG Approval Portal
+          </Dropdown.Item>
+        </div>
+      )}
       <Dropdown.Divider />
       <Dropdown.Item onClick={logout} href="/">
         Sign Out
@@ -64,17 +80,22 @@ const Header = () => {
     </React.Fragment>
   );
 
+  const [imageURL, setImageURL] = React.useState("/images/bog_logo.png");
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getOrganizationData(user.organizationId);
+      if (response.data.orgData) setImageURL(response.data.orgData.imageURL);
+    }
+    fetchData();
+  }, []);
+
   return (
     <Navbar fluid={false} rounded={true}>
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
-        <img
-          src="/images/helping_mamas_logo.png"
-          alt="helping mamas logo"
-          className="h-10"
-        />
+        <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      {/*<div className="w-48 sm:w-0 md:w-0" />*/}
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
@@ -144,6 +165,12 @@ const Header = () => {
               </Dropdown.Item>
               <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
                 Manage Waivers
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={goToOrganizationSettings}
+                href="/organization-settings"
+              >
+                Organization Settings
               </Dropdown.Item>
             </Dropdown>
           )}

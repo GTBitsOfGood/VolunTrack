@@ -14,6 +14,7 @@ const userSchema = new Schema(
       default: "new",
       enum: ["has_volunteered", "new"],
     },
+    isBitsOfGoodAdmin: { type: Boolean, default: false },
     bio: {
       first_name: { type: String },
       last_name: { type: String },
