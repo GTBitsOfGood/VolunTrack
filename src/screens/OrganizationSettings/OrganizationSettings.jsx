@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import { organizationSettingsPages as pages } from "./pages";
 import { Sidebar, Dropdown, Toast } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
-import { HiCheck } from "react-icons/hi";
+import {
+  CheckCircleIcon,
+} from "@heroicons/react/24/solid";
 import { createOrganizationValidator } from "./helpers";
 import { Field, Formik } from "formik";
 import {
@@ -43,7 +45,7 @@ const OrganizationSettings = () => {
     orange: "text-orange-600",
     yellow: "text-yellow-500",
     green: "text-lime-500",
-    "light blue": "text-sky-500",
+    sky: "text-sky-500",
     blue: "text-sky-800",
     purple: "text-purple-800",
     magenta: "text-pink-800",
@@ -165,7 +167,7 @@ const OrganizationSettings = () => {
                   <div className="pb-3">
                     <Toast>
                       <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                        <HiCheck className="h-5 w-5" />
+                        <CheckCircleIcon className="h-5 w-5" />
                       </div>
                       <div className="ml-3 text-sm font-normal">
                         Settings saved successfully!

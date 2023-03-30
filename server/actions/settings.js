@@ -39,9 +39,11 @@ export async function updateOrganizationData(data, organizationId) {
   await dbConnect();
 
   // update the organization data in the database
-  return await Organization.findOneAndUpdate({ _id: organizationId }, data, {
-    upsert: true,
-  }).then(() => {
-    return;
-  });
+  return Organization.findOneAndUpdate(
+    { _id: organizationId },
+    { $set: data },
+    {
+      new: true,
+    }
+  );
 }
