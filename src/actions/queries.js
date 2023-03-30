@@ -107,6 +107,17 @@ export const updateAttendance = (id, newData) =>
 export const getHistoryEvents = (organizationId) =>
   axios.get(`/api/historyEvents?organizationId=${organizationId}`);
 
+// Organization Queries
+export const updateOrganizationData = (organizationId, organizationData) =>
+  axios.put(
+    `/api/settings/organizationSettings?organizationId=${organizationId}`,
+    { organizationData }
+  );
+
+export const getOrganizationData = (organizationId) =>
+  axios.get(
+    `/api/settings/organizationSettings?organizationId=${organizationId}`
+  );
 export const createOrganization = (organization) =>
   axios.post(`/api/organizations`, organization);
 
