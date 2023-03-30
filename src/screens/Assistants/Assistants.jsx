@@ -32,7 +32,7 @@ const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -47,7 +47,7 @@ const Styled = {
     height: 3rem;
 
     p {
-      color: ${(props) => props.theme.grey5};
+      color: hsl(0, 0%, 50%);
       margin: 0 1rem;
       font-size: 1.2rem;
     }

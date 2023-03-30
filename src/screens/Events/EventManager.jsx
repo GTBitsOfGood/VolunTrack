@@ -34,7 +34,7 @@ const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-y: 2rem;
     display: flex;
     flex-direction: row;
@@ -101,7 +101,7 @@ const Styled = {
   HomePage: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;

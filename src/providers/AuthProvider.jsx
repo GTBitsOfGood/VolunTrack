@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
       if (router.pathname === "/create-account")
         return <AuthPage createAccount={true} />;
       // unauthenticated, send to login page
-      if (router.pathname === "/organization-onboarding")
+      else if (router.pathname === "/organization-onboarding")
         return <OnboardingPage />;
       else if (router.pathname !== "/login") router.push("/login");
       return <AuthPage />;
