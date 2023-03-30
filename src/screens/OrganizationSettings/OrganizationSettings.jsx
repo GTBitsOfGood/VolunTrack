@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { organizationSettingsPages as pages } from "./pages";
 import { Sidebar, Dropdown, Toast } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
-import {
-  CheckCircleIcon,
-} from "@heroicons/react/24/solid";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { createOrganizationValidator } from "./helpers";
 import { Field, Formik } from "formik";
 import {
