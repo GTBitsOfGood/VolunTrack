@@ -233,35 +233,34 @@ const EventsList = ({
               ))}
             <div className="justify-content-center flex">
               {todayEvents.length === 0 && (
-                  <p className="font-weight-bold pb-3 text-lg text-primaryColor">No events scheduled today</p>
+                <p className="font-weight-bold pb-3 text-lg text-primaryColor">
+                  No events scheduled today
+                </p>
               )}
               <div className="h-24" />
             </div>
           </div>
           <div>
             <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
-            {upcomingEvents.length > 0 &&
-            <div>
-              {upcomingEvents.map((event) => (
-                <EventCard
-                  key={event._id}
-                  event={event}
-                  user={user}
-                  functions={functions}
-                  onRegisterClicked={onRegisterClicked}
-                  version={"Secondary"}
-                />
-              ))}
-              <Text
-                  href={`/events`}
-                  text="View More"
-              />
-            </div>
-            }
-            <div className="justify-content-center flex">
-            {upcomingEvents.length === 0 && (
-              <BoGButton text="Create new event" onClick={onCreateClicked} />
+            {upcomingEvents.length > 0 && (
+              <div>
+                {upcomingEvents.map((event) => (
+                  <EventCard
+                    key={event._id}
+                    event={event}
+                    user={user}
+                    functions={functions}
+                    onRegisterClicked={onRegisterClicked}
+                    version={"Secondary"}
+                  />
+                ))}
+                <Text href={`/events`} text="View More" />
+              </div>
             )}
+            <div className="justify-content-center flex">
+              {upcomingEvents.length === 0 && (
+                <BoGButton text="Create new event" onClick={onCreateClicked} />
+              )}
             </div>
             <div className="h-48" />
           </div>

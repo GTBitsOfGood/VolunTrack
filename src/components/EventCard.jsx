@@ -59,7 +59,10 @@ const EventCard = (props) => {
     >
       <div className="flex justify-between">
         <div className="flex justify-start">
-          <DateDisplayComponent date={props.event.date} version={props.version ?? "Primary"} />
+          <DateDisplayComponent
+            date={props.event.date}
+            version={props.version ?? "Primary"}
+          />
           <div className="flex-column flex text-xl">
             <Label class="text-xl font-bold">{props.event.title}</Label>
             <Label>{`${props.functions.convertTime(
