@@ -1,9 +1,8 @@
 import PropTypes from "prop-types";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 
 const AdminHomeHeader = (props) => {
   let events = 0;
@@ -141,52 +140,52 @@ const AdminHomeHeader = (props) => {
     {
       name: "Events",
       data: [
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][8],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][9],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][10],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][11],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][0],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][1],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][2],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][3],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][4],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][5],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][6],
-        props.eventChart[0] == undefined ? 0 : props.eventChart[0][7],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][8],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][9],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][10],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][11],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][0],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][1],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][2],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][3],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][4],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][5],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][6],
+        props.eventChart[0] === undefined ? 0 : props.eventChart[0][7],
       ],
     },
     {
       name: "Hours",
       data: [
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][8],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][9],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][10],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][11],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][0],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][1],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][2],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][3],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][4],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][5],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][6],
-        props.eventChart[1] == undefined ? 0 : props.eventChart[1][7],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][8],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][9],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][10],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][11],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][0],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][1],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][2],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][3],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][4],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][5],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][6],
+        props.eventChart[1] === undefined ? 0 : props.eventChart[1][7],
       ],
     },
     {
       name: "Attendance",
       data: [
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][8],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][9],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][10],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][11],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][0],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][1],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][2],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][3],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][4],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][5],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][6],
-        props.eventChart[2] == undefined ? 0 : props.eventChart[2][7],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][8],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][9],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][10],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][11],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][0],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][1],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][2],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][3],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][4],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][5],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][6],
+        props.eventChart[2] === undefined ? 0 : props.eventChart[2][7],
       ],
     },
   ];
@@ -215,6 +214,7 @@ const AdminHomeHeader = (props) => {
                     Upcoming Events
                   </p>
                 </div>
+                <hr className="my-2 mx-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
                   <p className="pl-2 text-2xl">0</p>
                   <p className="text-md pl-2 text-slate-600"> Volunteers</p>
@@ -235,10 +235,12 @@ const AdminHomeHeader = (props) => {
                 <p className="pl-2 text-2xl">{props.numEvents}</p>
                 <p className="text-md pl-2 text-slate-600"> Events</p>
               </div>
+              <hr className="my-1 mx-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
                 <p className="pl-2 text-2xl">{props.attend}</p>
                 <p className="text-md pl-2 text-slate-600"> Attendance</p>
               </div>
+              <hr className="my-1 mx-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
                 <p className="pl-2 text-2xl">{props.hours}</p>
                 <p className="text-md pl-2 text-slate-600"> Hours</p>

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import { Label, Button, Tooltip } from "flowbite-react";
-import "flowbite-react";
+import { Label, Tooltip } from "flowbite-react";
 import DateDisplayComponent from "../components/DateDisplay";
+import Text from "../components/Text";
 import { useState } from "react";
 import {
   UsersIcon,
@@ -17,11 +17,16 @@ import EventEditModal from "../screens/Events/Admin/EventEditModal";
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
   const [collapse, setCollapse] = useState(false);
+  const [event, setEvent] = useState(props.event);
 
   const open = () => {
     setCollapse(!collapse);
+  };
+
+  const registerOnClick = (e) => {
+    router.push(`/events/${props.event._id}/register`);
+    e.stopPropagation();
   };
 
   const manageAttendanceOnClick = (e) => {
@@ -31,24 +36,20 @@ const EventCard = (props) => {
 
   const deleteOnClick = (event) => {
     setShowDeleteModal(true);
-    setCurrEvent(event);
+    event.stopPropagation();
+  };
+
+  const editOnClick = (event) => {
+    setShowEditModal(true);
+    event.stopPropagation();
   };
 
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
   };
 
-  const editOnClick = (event) => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
   const toggleEditModal = () => {
     setShowEditModal((prev) => !prev);
-  };
-
-  const registerOnClick = (e) => {
-    router.push(`/events/${props.event._id}/register`);
-    e.stopPropagation();
   };
 
   return (
@@ -58,7 +59,7 @@ const EventCard = (props) => {
     >
       <div className="flex justify-between">
         <div className="flex justify-start">
-          <DateDisplayComponent date={props.event.date} version={"Primary"} />
+          <DateDisplayComponent date={props.event.date} version={props.version ?? "Primary"} />
           <div className="flex-column flex text-xl">
             <Label class="text-xl font-bold">{props.event.title}</Label>
             <Label>{`${props.functions.convertTime(
@@ -89,25 +90,31 @@ const EventCard = (props) => {
               <EventDeleteModal
                 open={showDeleteModal}
                 toggle={toggleDeleteModal}
-                event={currEvent}
+                event={event}
               />
               <EventEditModal
                 open={showEditModal}
                 toggle={toggleEditModal}
-                event={currEvent}
-                setEvent={setCurrEvent}
+                event={event}
+                setEvent={setEvent}
               />
             </div>
           )}
           {props.user.role === "volunteer" && (
             <>
               {props.event.volunteers.includes(props.user._id) ? (
-                <button className="mx-1 flex" onClick={registerOnClick}>
+                <button
+                  className="align-items-center mx-1 flex"
+                  onClick={registerOnClick}
+                >
                   <CheckCircleIcon className="h-8 text-primaryColor" />
                   <span>Registered!</span>
                 </button>
               ) : (
-                <button className="mx-1 flex" onClick={registerOnClick}>
+                <button
+                  className="align-items-center mx-1 flex"
+                  onClick={registerOnClick}
+                >
                   <PlusCircleIcon className="h-8 text-primaryColor" />
                   <span>Register</span>
                 </button>
@@ -121,18 +128,22 @@ const EventCard = (props) => {
         </div>
       </div>
       {collapse && (
-        <div>
-          <div className="flex">
-            <Label class="text-md mr-1 font-bold">Address: </Label>
+        <div className="ml-16 mt-2 space-y-2 pl-2">
+          <div className="flex-column flex">
+            <Label class="text-md mr-1 mb-0 font-bold">Address: </Label>
             <p>{props.event.address}</p>
           </div>
-          <div className="flex">
-            <Label class="text-md mr-1 font-bold">Description: </Label>
-            {props.event.description}
+          <div className="flex-column flex">
+            <Label class="text-md mr-1 mb-0 font-bold">Description: </Label>
+            <div
+              dangerouslySetInnerHTML={{ __html: props.event.description }}
+            />
           </div>
-          <Button class="black-600 text-xl" href={`events/${props.event._id}`}>
-            <p>More Information</p>
-          </Button>
+          <Text
+            className="mt-4"
+            href={`events/${props.event._id}`}
+            text="More Information"
+          />
         </div>
       )}
     </div>
@@ -145,6 +156,7 @@ EventCard.propTypes = {
   user: PropTypes.object.isRequired,
   functions: PropTypes.object.isRequired,
   onRegisterClicked: PropTypes.func.isRequired,
+  version: PropTypes.string,
 };
 
 export default EventCard;

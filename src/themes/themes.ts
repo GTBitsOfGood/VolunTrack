@@ -16,15 +16,18 @@ const createTheme = (
   "--hover-color": hover,
 });
 
+// TODO: change these all to primary=800, hover=700, secondary=200?
+// Depends how we want the secondary color to be used. Regardless, the colors need to be adjusted
+
 export const themes = {
   red: createTheme("#991b1b", "#dc2626", "#b91c1c"),
   orange: createTheme("#c2410c", "#f97316", "#ea580c"),
-  yellow: createTheme("#eab308", "#fde047", "#facc15"),
-  green: createTheme("#65a30d", "#a3e635", "#84cc16"),
-  sky: createTheme("#0891b2", "#22d3ee", "#06b6d4"),
-  blue: createTheme("#1e40af", "#2563eb", "#1d4ed8"),
-  purple: createTheme("#6b21a8", "#9333ea", "#7e22ce"),
-  magenta: createTheme("#9d174d", "#db2777", "#be185d"),
+  yellow: createTheme("#854d0e", "#fef08a", "#a16207"),
+  green: createTheme("#166534", "#86efac", "#15803d"),
+  sky: createTheme("#0891b2", "#cffafe", "#06b6d4"),
+  blue: createTheme("#1e40af", "#bfdbfe", "#1d4ed8"),
+  purple: createTheme("#6b21a8", "#e9d5ff", "#7e22ce"),
+  magenta: createTheme("#9d174d", "#fbcfe8", "#be185d"),
 };
 
 interface ThemeType {

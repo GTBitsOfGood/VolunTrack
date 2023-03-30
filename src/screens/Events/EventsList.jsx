@@ -5,6 +5,7 @@ import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import { useSession } from "next-auth/react";
 import BoGButton from "../../components/BoGButton";
+import Text from "../../components/Text";
 
 const Styled = {
   Container: styled.div`
@@ -215,10 +216,10 @@ const EventsList = ({
           <Styled.Spacer />
         </Styled.Container>
       );
-    } else if (user.role == "admin") {
+    } else if (user.role === "admin") {
       return (
-        <div>
-          <Styled.Container>
+        <div className="w-3/5">
+          <div>
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
               todayEvents.map((event) => (
@@ -232,16 +233,12 @@ const EventsList = ({
               ))}
             <div className="justify-content-center flex">
               {todayEvents.length === 0 && (
-                <img
-                  className="h-24 mt-6"
-                  src={"/images/No Events Today.png"}
-                  alt="medal"
-                />
+                  <p className="font-weight-bold pb-3 text-lg text-primaryColor">No events scheduled today</p>
               )}
+              <div className="h-24" />
             </div>
-            <Styled.Spacer />
-          </Styled.Container>
-          <Styled.Container>
+          </div>
+          <div>
             <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
             {upcomingEvents.length > 0 &&
             <div>
@@ -252,11 +249,13 @@ const EventsList = ({
                   user={user}
                   functions={functions}
                   onRegisterClicked={onRegisterClicked}
+                  version={"Secondary"}
                 />
               ))}
-              <Link href={`/events`}>
-              <Styled.LinkedText>View More</Styled.LinkedText>
-            </Link>
+              <Text
+                  href={`/events`}
+                  text="View More"
+              />
             </div>
             }
             <div className="justify-content-center flex">
@@ -264,8 +263,8 @@ const EventsList = ({
               <BoGButton text="Create new event" onClick={onCreateClicked} />
             )}
             </div>
-            <Styled.Spacer />
-          </Styled.Container>
+            <div className="h-48" />
+          </div>
         </div>
       );
     } else {
