@@ -139,6 +139,7 @@ const EventCard = (props) => {
           <div className="flex-column flex">
             <Label class="text-md mr-1 mb-0 font-bold">Description: </Label>
             <div
+              className="h-12 overflow-hidden"
               dangerouslySetInnerHTML={{ __html: props.event.description }}
             />
           </div>
