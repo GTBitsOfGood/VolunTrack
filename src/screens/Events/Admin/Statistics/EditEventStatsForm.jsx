@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../../components/BoGButton";
-import { updateAttendance } from "../../../../queries/queries";
+import { updateAttendance } from "../../../../queries/attendances";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
 

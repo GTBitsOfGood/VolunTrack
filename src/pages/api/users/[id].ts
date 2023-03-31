@@ -1,6 +1,7 @@
 import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { getUser } from "../../../../server/actions/users";
+import dbConnect from "../../../../server/mongodb";
 import { UserData } from "../../../../server/mongodb/models/User";
 
 export default async (
@@ -9,6 +10,8 @@ export default async (
     { user?: HydratedDocument<UserData> } | { userId?: Types.ObjectId }
   >
 ) => {
+  await dbConnect();
+
   const id = req.query.id as string;
   const user = await getUser(new Types.ObjectId(id));
   if (!user) return res.status(404);

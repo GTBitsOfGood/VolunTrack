@@ -4,6 +4,7 @@ import {
   createUserFromCredentials,
   getUsers,
 } from "../../../../server/actions/users";
+import dbConnect from "../../../../server/mongodb";
 import { UserData } from "../../../../server/mongodb/models/User";
 
 export default async (
@@ -12,6 +13,8 @@ export default async (
     { users: HydratedDocument<UserData>[] } | { userId?: Types.ObjectId }
   >
 ) => {
+  await dbConnect();
+
   switch (req.method) {
     case "GET": {
       const { organizationId, role, eventId, isCheckedIn } = req.query as {

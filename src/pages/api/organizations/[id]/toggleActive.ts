@@ -18,21 +18,8 @@ export default async (
   }
 
   switch (req.method) {
-    case "GET": {
-      return res
-        .status(200)
-        .json({ invitedAdmins: organization.invitedAdmins });
-    }
     case "POST": {
-      const email = req.body as string;
-
-      await organization.updateOne({ $push: { invitedAdmins: email } });
-      return res.status(200).json({ organizationId: organization._id });
-    }
-    case "DELETE": {
-      const { data: email } = req.body as { data: string };
-
-      await organization.updateOne({ $pull: { invitedAdmins: email } });
+      await organization.updateOne({ active: !organization.active });
       return res.status(200).json({ organizationId: organization._id });
     }
   }

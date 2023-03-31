@@ -4,10 +4,9 @@ import styled from "styled-components";
 import {
   checkInVolunteer,
   checkOutVolunteer,
-  fetchEventsById,
-  getEventVolunteersByAttendance,
-  updateEventById,
-} from "../../../../queries/queries";
+} from "../../../../queries/attendances";
+import { getEvent, updateEvent } from "../../../../queries/events";
+import { getUsers } from "../../../../queries/users";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
 
@@ -63,32 +62,26 @@ const EventAttendance = () => {
 
   useEffect(() => {
     (async () => {
-      const fetchedEvent = (await fetchEventsById(eventId)).data.event;
-      setEvent(fetchedEvent);
+      const event = await getEvent(eventId);
+      setEvent(event.data.event);
 
       const fetchedMinors = {};
-      fetchedEvent.minors.forEach((m) => {
+      event.minors.forEach((m) => {
         fetchedMinors[m.volunteer_id] = m.minor;
       });
       setMinors(fetchedMinors);
 
       setCheckedInVolunteers(
-        (await getEventVolunteersByAttendance(eventId, true)).data.volunteers
+        (await getUsers(undefined, undefined, eventId, true)).data.users
       );
       setCheckedOutVolunteers(
-        (await getEventVolunteersByAttendance(eventId, false)).data.volunteers
+        (await getUsers(undefined, undefined, eventId, false)).data.users
       );
     })();
   }, []);
 
   const checkIn = (volunteer) => {
-    checkInVolunteer(
-      volunteer._id,
-      eventId,
-      event.title,
-      volunteer.bio.first_name + " " + volunteer.bio.last_name,
-      volunteer.bio.email
-    );
+    checkInVolunteer(volunteer._id, eventId);
 
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(
@@ -108,7 +101,7 @@ const EventAttendance = () => {
   const endEvent = () => {
     const newEvent = { ...event, isEnded: true };
     setEvent(newEvent);
-    updateEventById(eventId, newEvent);
+    updateEvent(eventId, newEvent);
     checkedInVolunteers.forEach((v) => {
       checkOutVolunteer(v._id, eventId);
     });
@@ -119,7 +112,7 @@ const EventAttendance = () => {
   const reopenEvent = () => {
     const newEvent = { ...event, isEnded: false };
     setEvent(newEvent);
-    updateEventById(eventId, newEvent);
+    updateEvent(eventId, newEvent);
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {

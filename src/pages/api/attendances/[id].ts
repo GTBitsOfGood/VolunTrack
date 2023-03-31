@@ -1,5 +1,6 @@
 import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import dbConnect from "../../../../server/mongodb";
 import Attendance, {
   AttendanceData,
 } from "../../../../server/mongodb/models/Attendance";
@@ -11,6 +12,8 @@ export default async (
     | { attendanceId?: Types.ObjectId }
   >
 ) => {
+  await dbConnect();
+
   const id = req.query.id as string;
 
   const attendance = await Attendance.findById(id);

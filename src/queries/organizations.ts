@@ -2,6 +2,16 @@ import axios, { AxiosResponse } from "axios";
 import { HydratedDocument, Types } from "mongoose";
 import { OrganizationData } from "../../server/mongodb/models/Organization";
 
+export const getOrganization = (
+  id: Types.ObjectId
+): Promise<
+  AxiosResponse<{ organization?: HydratedDocument<OrganizationData> }>
+> => {
+  return axios.get<{ organization?: HydratedDocument<OrganizationData> }>(
+    `/api/organizations/${id.toString()}`
+  );
+};
+
 export const getOrganizations = (
   organizationData?: Partial<OrganizationData>
 ): Promise<
@@ -31,6 +41,14 @@ export const updateOrganization = (
   return axios.put<{ organizationId?: Types.ObjectId }>(
     `/api/organizations/${id.toString()}`,
     organizationData
+  );
+};
+
+export const toggleOrganizationActive = (
+  id: Types.ObjectId
+): Promise<AxiosResponse<{ organizationId?: Types.ObjectId }>> => {
+  return axios.post<{ organizationId?: Types.ObjectId }>(
+    `/api/organizations/${id.toString()}/toggleActive`
   );
 };
 

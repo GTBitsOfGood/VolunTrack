@@ -1,18 +1,18 @@
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { Dropdown, Sidebar, Toast } from "flowbite-react";
+import { Field, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useEffect, useState } from "react";
-import { organizationSettingsPages as pages } from "./pages";
-import { Sidebar, Dropdown, Toast } from "flowbite-react";
-import InputField from "../../components/Forms/InputField";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { createOrganizationValidator } from "./helpers";
-import { Field, Formik } from "formik";
-import {
-  getOrganizationData,
-  updateOrganizationData,
-} from "../../actions/queries";
-import { applyTheme } from "../../themes/themes";
 import BoGButton from "../../components/BoGButton";
+import InputField from "../../components/Forms/InputField";
+import {
+  getOrganization,
+  updateOrganization,
+} from "../../queries/organizations";
+import { applyTheme } from "../../themes/themes";
+import { createOrganizationValidator } from "./helpers";
+import { organizationSettingsPages as pages } from "./pages";
 
 function authWrapper(Component) {
   return function WrappedComponent(props) {
@@ -61,7 +61,7 @@ const OrganizationSettings = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getOrganizationData(user.organizationId);
+      const response = await getOrganization(user.organizationId);
       if (response.data.orgData) {
         setOrganizationData(response.data.orgData);
       }
@@ -93,9 +93,7 @@ const OrganizationSettings = () => {
       hoursGold: values.hours_gold,
     };
 
-    await updateOrganizationData(user.organizationId, {
-      data: data,
-    });
+    await updateOrganization(user.organizationId, data);
   };
 
   return (

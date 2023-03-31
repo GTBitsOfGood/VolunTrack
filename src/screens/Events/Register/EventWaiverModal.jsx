@@ -1,14 +1,21 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
-import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
 import { Tabs } from "flowbite-react";
-import PropTypes from "prop-types";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { getWaivers } from "../../../actions/queries";
-import { Col, Row, Container } from "reactstrap";
-import variables from "../../../design-tokens/_variables.module.scss";
+import PropTypes from "prop-types";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Col,
+  Container,
+  FormGroup,
+  Input,
+  Modal,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
+import variables from "../../../design-tokens/_variables.module.scss";
+import { getWaivers } from "../../../queries/waivers";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`

@@ -1,10 +1,4 @@
 import { model, Model, models, Schema, Types } from "mongoose";
-import dbConnect from "../";
-import {
-  documentMiddleware,
-  documentOrQueryMiddleware,
-  queryMiddleware,
-} from "../middleware";
 
 export type WaiverData = {
   organization: Types.ObjectId;
@@ -25,9 +19,6 @@ const waiverSchema = new Schema<WaiverData>(
   },
   { timestamps: true }
 );
-waiverSchema.pre(documentMiddleware, async () => await dbConnect());
-waiverSchema.pre(queryMiddleware, async () => await dbConnect());
-waiverSchema.pre(documentOrQueryMiddleware, async () => await dbConnect());
 
 export default ("Waiver" in models
   ? (models.Waiver as Model<WaiverData>)

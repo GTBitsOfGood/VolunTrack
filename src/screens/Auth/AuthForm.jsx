@@ -1,14 +1,14 @@
 import { ErrorMessage, Field, Formik } from "formik";
+import { signIn } from "next-auth/react";
 import PropTypes from "prop-types";
 import React from "react";
 import { Col, FormGroup as BFormGroup, Row } from "reactstrap";
-import * as SForm from "../sharedStyles/formStyles";
-import BoGButton from "../../components/BoGButton";
 import styled from "styled-components";
-import { createAccountValidator, loginValidator } from "./helpers";
-import { signIn } from "next-auth/react";
-import { createUserFromCredentials } from "../../actions/queries";
+import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
+import { createUserFromCredentials } from "../../queries/users";
+import * as SForm from "../sharedStyles/formStyles";
+import { createAccountValidator, loginValidator } from "./helpers";
 
 const Styled = {
   ErrorMessage: styled(ErrorMessage).attrs({

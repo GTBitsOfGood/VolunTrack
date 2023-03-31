@@ -34,7 +34,10 @@ export const getEvents = (
 export const createEvent = (
   eventData: CreateEventRequestBody
 ): Promise<
-  AxiosResponse<{ eventId: Types.ObjectId; eventParentId?: Types.ObjectId }>
+  AxiosResponse<{
+    event: HydratedDocument<EventData>;
+    eventParent?: HydratedDocument;
+  }>
 > =>
   axios.post<{ eventId: Types.ObjectId; eventParentId?: Types.ObjectId }>(
     "/api/events",

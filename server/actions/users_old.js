@@ -1,4 +1,4 @@
-import User from "../mongodb/models/user";
+import User from "../mongodb/models/User";
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");

@@ -1,13 +1,13 @@
+import { Label, TextInput } from "flowbite-react";
 import { ErrorMessage, Field, Formik } from "formik";
-import styled from "styled-components";
+import Image from "next/image";
 import PropTypes from "prop-types";
 import React from "react";
-import Image from "next/image";
-import { Label as Label, TextInput } from "flowbite-react";
-import InputField from "../../components/Forms/InputField";
-import { createOrganizationValidator } from "./helpers";
-import { createOrganization } from "../../actions/queries";
+import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
+import InputField from "../../components/Forms/InputField";
+import { createOrganization } from "../../queries/organizations";
+import { createOrganizationValidator } from "./helpers";
 
 const Styled = {
   Container: styled.div`

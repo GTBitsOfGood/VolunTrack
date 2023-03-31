@@ -1,11 +1,11 @@
 import { Modal } from "flowbite-react";
 import PropTypes from "prop-types";
-import { toggleStatus } from "../../actions/queries";
 import BoGButton from "../../components/BoGButton";
+import { toggleOrganizationActive } from "../../queries/organizations";
 
 const OrganizationToggleModal = (props) => {
   const handleSubmit = () => {
-    toggleStatus(props.organizationId);
+    toggleOrganizationActive(props.organizationId);
     props.onClose();
   };
 

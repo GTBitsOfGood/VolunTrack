@@ -4,9 +4,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users";
-import dbConnect from "../../../../server/mongodb";
-import Organization from "../../../../server/mongodb/models/organization";
-import User from "../../../../server/mongodb/models/user";
+import Organization from "../../../../server/mongodb/models/Organization";
+import User from "../../../../server/mongodb/models/User";
 
 const uri = process.env.MONGO_DB;
 const options = {
@@ -69,7 +68,6 @@ export default NextAuth({
     // We can delete this and then add a new User from the defined User schema
     createUser: async (message) => {
       // this is only called for google auth
-      await dbConnect();
 
       const _id = new ObjectId(message.user.id);
 
@@ -97,7 +95,6 @@ export default NextAuth({
     },
     // This determines what is returned from useSession and getSession calls
     async session({ session, token }) {
-      await dbConnect();
       const _id = new ObjectId(token.id);
       const currentUser = await User.findOne({ _id });
       let user_data = {

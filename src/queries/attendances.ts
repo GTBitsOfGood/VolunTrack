@@ -50,8 +50,8 @@ export const getAttendances = (
 
 export const createAttendance = (
   attendanceData: AttendanceData
-): Promise<AxiosResponse<{ attendanceId: Types.ObjectId }>> =>
-  axios.post<{ attendanceId: Types.ObjectId }>(
+): Promise<AxiosResponse<{ attendance: HydratedDocument<AttendanceData> }>> =>
+  axios.post<{ attendance: HydratedDocument<AttendanceData> }>(
     "/api/attendances",
     attendanceData
   );
@@ -59,15 +59,11 @@ export const createAttendance = (
 export const updateAttendance = (
   id: Types.ObjectId,
   attendanceData: Partial<AttendanceData>
-): Promise<AxiosResponse<{ attendanceId?: Types.ObjectId }>> =>
-  axios.put<{ attendanceId?: Types.ObjectId }>(
+): Promise<AxiosResponse<{ attendance?: HydratedDocument<AttendanceData> }>> =>
+  axios.put<{ attendance?: HydratedDocument<AttendanceData> }>(
     `/api/attendances/${id.toString()}`,
     attendanceData
   );
 
-export const deleteAttendance = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ attendanceId?: Types.ObjectId }>> =>
-  axios.delete<{ attendanceId?: Types.ObjectId }>(
-    `/api/attendances/${id.toString()}`
-  );
+export const deleteAttendance = (id: Types.ObjectId): Promise<AxiosResponse> =>
+  axios.delete(`/api/attendances/${id.toString()}`);

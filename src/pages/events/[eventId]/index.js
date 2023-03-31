@@ -2,12 +2,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
-import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../actions/queries";
+import BoGButton from "../../../components/BoGButton";
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
-import EventUnregisterModal from "../../../components/EventUnregisterModal";
+import { getEvent } from "../../../queries/events";
 
 const Styled = {
   EventTableAll: styled.div`
@@ -103,7 +103,7 @@ const EventInfo = () => {
   const [showUnregisterModal, setUnregisterModal] = useState(false);
 
   const onRefresh = () => {
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       setEvent(result.data.event);
     });
   };

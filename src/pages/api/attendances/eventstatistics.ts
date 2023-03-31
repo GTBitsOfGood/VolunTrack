@@ -1,8 +1,6 @@
-import dbConnect from "../../../../server/mongodb";
 const Attendance = require("../../../../server/mongodb/models/attendance");
 
 export default async function handler(req, res) {
-  await dbConnect();
   if (req.method === "GET") {
     let start = req.query.startDate;
     let end = req.query.endDate;

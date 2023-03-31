@@ -10,13 +10,19 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:prettier/recommended"
+  ],
   "rules": {
     "no-underscore-dangle": "off",
     "implicit-arrow-linebreak": "off",
     "no-console": "warn",
     "import/prefer-default-export": "off",
-    "no-unused-vars": "warn"
+    "no-unused-vars": "warn",
+    "react/prop-types": "off"
   },
   "overrides": [
     {
@@ -35,6 +41,8 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:@typescript-eslint/strict",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
         "plugin:prettier/recommended"
       ],
       "rules": {

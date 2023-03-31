@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import PropTypes from "prop-types";
 import React from "react";
-import BoGButton from "../../components/BoGButton";
 import {
   Col,
   Container,
@@ -14,14 +13,13 @@ import {
   Row,
 } from "reactstrap";
 import styled from "styled-components";
+import BoGButton from "../../components/BoGButton";
 import {
-  deleteUser,
+  addInvitedAdmin,
+  deleteInvitedAdmin,
   getInvitedAdmins,
-  getUsers,
-  removeInvitedAdmin,
-  updateInvitedAdmins,
-} from "../../actions/queries";
-import variables from "../../design-tokens/_variables.module.scss";
+} from "../../queries/organizations";
+import { deleteUser, getUsers } from "../../queries/users";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
@@ -152,17 +150,17 @@ class Assistants extends React.Component {
   };
 
   onEditUser = () => {
-    /** code to update users in state at that specific index */
+    /** Code to update users in state at that specific index */
   };
 
   onDeletePending = (email) => {
-    removeInvitedAdmin(email, this.props.user.organizationId).then(() => {
+    deleteInvitedAdmin(this.props.user.organizationId, email).then(() => {
       this.componentDidMount();
     });
   };
 
   onDeleteUser = (id, user) => {
-    deleteUser(id, user).then(() => {
+    deleteUser(id).then(() => {
       this.componentDidMount();
     });
   };
@@ -187,9 +185,9 @@ class Assistants extends React.Component {
 
   handleSubmit = async () => {
     if (this.state.newInvitedAdmin?.length > 0)
-      await updateInvitedAdmins(
-        this.state.newInvitedAdmin,
-        this.props.user.organizationId
+      await addInvitedAdmin(
+        this.props.user.organizationId,
+        this.state.newInvitedAdmin
       );
     this.onRefresh();
   };

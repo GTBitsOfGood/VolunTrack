@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { CSVLink } from "react-csv";
 import styled from "styled-components";
-import { deleteUser, getUsers, updateUser } from "../../actions/queries";
+import { deleteUser, getUsers, updateUser } from "../../queries/users";
 import VolunteerTable from "./VolunteerTable";
 
 const Styled = {
@@ -102,7 +102,7 @@ class Volunteers extends React.Component {
   };
 
   onEditUser = (userId, updatedUser) => {
-    /** code to update users in state at that specific index */
+    /** Code to update users in state at that specific index */
     const adminId = this.props.user._id;
     const userInfo = { adminId, bio: updatedUser };
     updateUser(userId, userInfo);

@@ -1,10 +1,4 @@
 import { Model, model, models, Schema, Types } from "mongoose";
-import dbConnect from "../";
-import {
-  documentMiddleware,
-  documentOrQueryMiddleware,
-  queryMiddleware,
-} from "../middleware";
 
 export type AttendanceData = {
   user: Types.ObjectId;
@@ -22,10 +16,7 @@ const attendanceSchema = new Schema<AttendanceData>(
   },
   { timestamps: true }
 );
-attendanceSchema.pre(documentMiddleware, async () => await dbConnect());
-attendanceSchema.pre(queryMiddleware, async () => await dbConnect());
-attendanceSchema.pre(documentOrQueryMiddleware, async () => await dbConnect());
 
-export default ("Attendance" in models
+export default (models && "Attendance" in models
   ? (models.Attendance as Model<AttendanceData>)
   : undefined) ?? model<AttendanceData>("Attendance", attendanceSchema);

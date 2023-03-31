@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { HydratedDocument, Types } from "mongoose";
 import Attendance from "../mongodb/models/Attendance";
 import Registration from "../mongodb/models/Registration";
@@ -67,6 +67,23 @@ export const createUserFromCredentials = async (
     userData.passwordHash = hash;
     return (await User.create(userData))._id;
   });
+};
+
+export const verifyUserWithCredentials = async (
+  email: string,
+  password: string
+): Promise<{ user?: HydratedDocument<UserData>; message?: string }> => {
+  const user = await User.findOne({ email });
+
+  if (!user)
+    return { message: "Email address not found, please create an account" };
+
+  if (!user.passwordHash) return { message: "Please sign in with Google" };
+
+  const match = await compare(email + password, user.passwordHash);
+
+  if (match) return { user };
+  else return { message: "Password is incorrect" };
 };
 
 export const updateUser = async (

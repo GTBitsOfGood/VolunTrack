@@ -1,13 +1,10 @@
+import { Tabs } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import { useRef } from "react";
-import { useEffect, useState } from "react";
-import { Tabs } from "flowbite-react";
-import { getWaivers } from "../../actions/queries";
-
-import { updateWaiver } from "../../actions/queries";
+import { useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import BoGButton from "../../components/BoGButton";
+import { getWaivers, updateWaiver } from "../../queries/waivers";
 
 function authWrapper(Component) {
   return function WrappedComponent(props) {

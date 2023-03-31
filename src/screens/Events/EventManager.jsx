@@ -1,22 +1,21 @@
 // import { differenceInCalendarDays } from "date-fns";
-import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import { Dropdown } from "flowbite-react";
-import styled from "styled-components";
-import { fetchEvents } from "../../actions/queries";
-import variables from "../../design-tokens/_variables.module.scss";
-import EventCreateModal from "./Admin/EventCreateModal";
-import EventDeleteModal from "./Admin/EventDeleteModal";
-import EventEditModal from "./Admin/EventEditModal";
-import EventTable from "./EventTable";
-
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
-import StatDisplay from "../Stats/User/StatDisplay";
-import { updateEvent } from "./eventHelpers";
+import { useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
+import variables from "../../design-tokens/_variables.module.scss";
+import { getEvents } from "../../queries/events";
+import StatDisplay from "../Stats/User/StatDisplay";
+import EventCreateModal from "./Admin/EventCreateModal";
+import EventDeleteModal from "./Admin/EventDeleteModal";
+import EventEditModal from "./Admin/EventEditModal";
+import { updateEvent } from "./eventHelpers";
+import EventTable from "./EventTable";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -136,7 +135,7 @@ const EventManager = ({ user, role, isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents(undefined, undefined, user.organizationId)
+    getEvents(undefined, undefined, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);

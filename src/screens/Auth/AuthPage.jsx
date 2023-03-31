@@ -1,13 +1,13 @@
+import { Button } from "flowbite-react";
 import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
 import "normalize.css";
-import styled from "styled-components";
-import AuthForm from "./AuthForm";
-import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
-import { RequestContext } from "../../providers/RequestProvider";
+import styled from "styled-components";
 import Footer from "../../components/Footer";
+import { RequestContext } from "../../providers/RequestProvider";
+import AuthForm from "./AuthForm";
 
 const Styled = {
   Main: styled.div`

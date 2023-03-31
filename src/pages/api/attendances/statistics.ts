@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
-import dbConnect from "../../../../server/mongodb";
 const Attendance = require("../../../../server/mongodb/models/attendance");
 const ObjectId = mongoose.Types.ObjectId;
 
 export default async function handler(req, res) {
-  await dbConnect();
   if (req.method === "POST") {
     const attendance = await Attendance.aggregate([
       {

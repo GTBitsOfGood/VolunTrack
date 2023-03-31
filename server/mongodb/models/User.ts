@@ -1,10 +1,4 @@
 import { Model, model, models, Schema, Types } from "mongoose";
-import dbConnect from "../";
-import {
-  documentMiddleware,
-  documentOrQueryMiddleware,
-  queryMiddleware,
-} from "../middleware";
 
 export type UserData = {
   email: string;
@@ -63,9 +57,6 @@ const userSchema = new Schema<UserData>(
     timestamps: true,
   }
 );
-userSchema.pre(documentMiddleware, async () => await dbConnect());
-userSchema.pre(queryMiddleware, async () => await dbConnect());
-userSchema.pre(documentOrQueryMiddleware, async () => await dbConnect());
 
 export default ("User" in models
   ? (models.User as Model<UserData>)

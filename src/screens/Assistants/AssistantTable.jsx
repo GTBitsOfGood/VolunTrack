@@ -1,10 +1,6 @@
 import { Table } from "flowbite-react";
-import BoGButton from "../../components/BoGButton";
 import PropTypes from "prop-types";
 import React from "react";
-import Loading from "../../components/Loading";
-import Pagination from "../../components/PaginationComp";
-import { Icon } from "../../components/Icon";
 import {
   Button,
   Container,
@@ -14,8 +10,12 @@ import {
   ModalHeader,
 } from "reactstrap";
 import styled from "styled-components";
-import { updateUser } from "../../actions/queries";
+import BoGButton from "../../components/BoGButton";
 import EditUserForm from "../../components/Forms/EditUserForm";
+import { Icon } from "../../components/Icon";
+import Loading from "../../components/Loading";
+import Pagination from "../../components/PaginationComp";
+import { updateUser } from "../../queries/users";
 
 const Styled = {
   Button: styled(Button)`

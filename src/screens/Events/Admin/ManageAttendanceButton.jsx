@@ -1,14 +1,10 @@
 import { useRouter } from "next/router";
 import BoGButton from "../../../components/BoGButton";
 
-const ManageAttendanceButton = ({
-  eventId,
-}: {
-  eventId: string;
-}): JSX.Element => {
+const ManageAttendanceButton = ({ eventId }) => {
   const router = useRouter();
 
-  const handleClick = (): void => {
+  const handleClick = () => {
     router.push(`${router.pathname}/${eventId}/attendance`);
   };
 

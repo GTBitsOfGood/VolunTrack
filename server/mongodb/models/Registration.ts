@@ -1,10 +1,4 @@
 import { Model, model, models, Schema, Types } from "mongoose";
-import dbConnect from "../";
-import {
-  documentMiddleware,
-  documentOrQueryMiddleware,
-  queryMiddleware,
-} from "../middleware";
 
 export type RegistrationData = {
   minors: string[];
@@ -20,13 +14,6 @@ const registrationSchema = new Schema<RegistrationData>(
   },
   { timestamps: true }
 );
-registrationSchema.pre(documentMiddleware, async () => await dbConnect());
-registrationSchema.pre(queryMiddleware, async () => await dbConnect());
-registrationSchema.pre(
-  documentOrQueryMiddleware,
-  async () => await dbConnect()
-);
-
 export default ("Registration" in models
   ? (models.Registration as Model<RegistrationData>)
   : undefined) ?? model<RegistrationData>("Registration", registrationSchema);

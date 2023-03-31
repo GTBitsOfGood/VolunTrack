@@ -1,5 +1,6 @@
 import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import dbConnect from "../../../../server/mongodb";
 import Attendance from "../../../../server/mongodb/models/Attendance";
 import Event, { EventData } from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
@@ -12,6 +13,8 @@ export default async (
     { event?: HydratedDocument<EventData> } | { eventId?: Types.ObjectId }
   >
 ) => {
+  await dbConnect();
+
   const id = req.query.id as string;
 
   const event = await Event.findById(id);
@@ -21,7 +24,9 @@ export default async (
 
   switch (req.method) {
     case "GET": {
-      return res.status(200).json({ event });
+      return res
+        .status(200)
+        .json({ event: await event.populate("eventParent") });
     }
     case "PUT": {
       const { eventData, sendConfirmationEmail } = req.body as {

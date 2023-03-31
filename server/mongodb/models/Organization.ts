@@ -1,42 +1,60 @@
 import { Model, model, models, Schema } from "mongoose";
-import dbConnect from "../";
-import {
-  documentMiddleware,
-  documentOrQueryMiddleware,
-  queryMiddleware,
-} from "../middleware";
 
 export type OrganizationData = {
   name: string;
   url: string;
+  imageUrl: string;
+  notificationEmail: string;
   slug: string;
-  invitedAdmins: string[];
+  theme: string;
+
+  defaultEventState: string;
+  defaultEventCity: string;
+  defaultEventAddress: string;
+  defaultEventZip: string;
+
   defaultContactName: string;
   defaultContactEmail: string;
   defaultContactPhone: string;
+
+  invitedAdmins: [{ type: string }];
   originalAdminEmail: string;
   active: boolean;
+
+  eventSilver: number;
+  eventGold: number;
+  hoursSilver: number;
+  hoursGold: number;
 };
 
 const organizationSchema = new Schema<OrganizationData>(
   {
     name: String,
     url: String,
+    imageUrl: String,
+    notificationEmail: String,
     slug: String,
-    invitedAdmins: [{ type: String }],
+    theme: { type: String, default: "magenta" },
+
+    defaultEventState: String,
+    defaultEventCity: String,
+    defaultEventAddress: String,
+    defaultEventZip: String,
+
     defaultContactName: String,
     defaultContactEmail: String,
     defaultContactPhone: String,
+
+    invitedAdmins: [{ type: String }],
     originalAdminEmail: String,
-    active: Boolean,
+    active: { type: Boolean, default: false },
+
+    eventSilver: { type: Number, default: 4 },
+    eventGold: { type: Number, default: 8 },
+    hoursSilver: { type: Number, default: 20 },
+    hoursGold: { type: Number, default: 40 },
   },
   { timestamps: true }
-);
-organizationSchema.pre(documentMiddleware, async () => await dbConnect());
-organizationSchema.pre(queryMiddleware, async () => await dbConnect());
-organizationSchema.pre(
-  documentOrQueryMiddleware,
-  async () => await dbConnect()
 );
 
 export default ("Organization" in models

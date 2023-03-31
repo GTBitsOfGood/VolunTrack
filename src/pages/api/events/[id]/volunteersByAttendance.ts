@@ -1,10 +1,8 @@
-import dbConnect from "../../../../../server/mongodb";
 const Attendance = require("../../../../../server/mongodb/models/attendance");
 const Event = require("../../../../../server/mongodb/models/Event");
 const { getEventVolunteers } = require("../../../../../server/actions/users");
 
 export default async function handler(req, res) {
-  await dbConnect();
   if (req.method === "GET") {
     const eventId = req.query.id;
     const isCheckedIn = req.query.isCheckedIn === "true";

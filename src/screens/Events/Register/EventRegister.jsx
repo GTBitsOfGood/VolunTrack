@@ -1,19 +1,18 @@
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
-import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../actions/queries";
+import BoGButton from "../../../components/BoGButton";
 import { Icon } from "../../../components/Icon";
+import variables from "../../../design-tokens/_variables.module.scss";
+import { getEvent } from "../../../queries/events";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-
-import PropTypes from "prop-types";
-import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Container: styled(Container)`
@@ -190,7 +189,7 @@ const EventRegister = (event) => {
 
   const onRefresh = () => {
     setIsLoading(true);
-    fetchEventsById(eventId)
+    getEvent(eventId)
       .then()
       .finally(() => {
         setTimeout(() => setIsLoading(false), 7000);
@@ -198,7 +197,7 @@ const EventRegister = (event) => {
   };
 
   const onLoadEvent = () => {
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       if (result && result.data && result.data.event) {
         setEvents(result.data.event);
       }

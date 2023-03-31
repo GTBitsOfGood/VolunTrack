@@ -1,5 +1,6 @@
 import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import dbConnect from "../../../../server/mongodb";
 import Organization, {
   OrganizationData,
 } from "../../../../server/mongodb/models/Organization";
@@ -11,6 +12,8 @@ export default async (
     | { organizationId: Types.ObjectId }
   >
 ) => {
+  await dbConnect();
+
   switch (req.method) {
     case "GET": {
       // uncomment this and use data to filter in case we need to

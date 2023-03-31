@@ -1,9 +1,8 @@
+import { Form, Formik } from "formik";
 import PropTypes from "prop-types";
-import { Button } from "reactstrap";
-import { Formik, Form } from "formik";
-import InputField from "./InputField";
 import React from "react";
 import BoGButton from "../BoGButton";
+import InputField from "./InputField";
 
 class EditUserForm extends React.Component {
   constructor(props) {

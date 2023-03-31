@@ -18,6 +18,8 @@ export default async (
     | { eventId: Types.ObjectId; eventParentId?: Types.ObjectId }
   >
 ) => {
+  await dbConnect();
+
   switch (req.method) {
     case "GET": {
       const { startDateString, endDateString, organizationId } = req.query as {
@@ -35,7 +37,6 @@ export default async (
     case "POST": {
       const requestBody = req.body as CreateEventRequestBody;
 
-      await dbConnect();
       if (requestBody.eventParent instanceof Types.ObjectId) {
         // Create a one off Event connected to an already existing EventParent
         const eventData = requestBody as EventData;

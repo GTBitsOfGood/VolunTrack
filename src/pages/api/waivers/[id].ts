@@ -1,11 +1,14 @@
 import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import dbConnect from "../../../../server/mongodb";
 import Waiver, { WaiverData } from "../../../../server/mongodb/models/Waiver";
 
 export default async (
   req: NextApiRequest,
   res: NextApiResponse<{ waiverId?: Types.ObjectId }>
 ) => {
+  await dbConnect();
+
   const id = req.query.id as string;
   const waiver = await Waiver.findById(new Types.ObjectId(id));
   if (!waiver) return res.status(404);

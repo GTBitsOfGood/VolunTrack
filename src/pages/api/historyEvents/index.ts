@@ -1,5 +1,6 @@
 import { HydratedDocument } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import dbConnect from "../../../../server/mongodb";
 import HistoryEvent, {
   HistoryEventData,
 } from "../../../../server/mongodb/models/HistoryEvent";
@@ -8,6 +9,8 @@ export default async (
   req: NextApiRequest,
   res: NextApiResponse<{ historyEvents: HydratedDocument<HistoryEventData>[] }>
 ) => {
+  await dbConnect();
+
   switch (req.method) {
     case "GET": {
       const { keyword, description, user, event, organization } =

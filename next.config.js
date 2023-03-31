@@ -20,4 +20,8 @@ module.exports = withImages({
       JWT_SECRET: process.env.JWT_SECRET,
     },
   },
+  webpack(config) {
+    config.experiments = { topLevelAwait: true, layers: true };
+    return config;
+  },
 });

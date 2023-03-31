@@ -2,10 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import EventTable from "../../../../components/EventTable";
-import {
-  fetchEventsById,
-  getAttendanceForEvent,
-} from "../../../../queries/queries";
+import { getAttendances } from "../../../../queries/attendances";
+import { getEvent } from "../../../../queries/events";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
 
@@ -74,14 +72,14 @@ const EventStatistics = () => {
   const [event, setEvent] = useState(null);
 
   const onRefresh = () => {
-    getAttendanceForEvent(eventId).then((result) => {
+    getAttendances(undefined, eventId).then((result) => {
       let stats = result.data.map((stat) => {
         stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
         return stat;
       });
       setAttendanceStats(stats);
     });
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       setEvent(result.data.event);
     });
   };

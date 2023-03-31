@@ -7,6 +7,8 @@ export default async (
   req: NextApiRequest,
   res: NextApiResponse<{ registrationId: Types.ObjectId }>
 ) => {
+  await dbConnect();
+
   switch (req.method) {
     case "POST": {
       const { minors, eventId, userId } = req.body as {
@@ -15,7 +17,6 @@ export default async (
         userId: Types.ObjectId;
       };
 
-      await dbConnect();
       const registration = await Registration.create({
         minors,
         event: eventId,

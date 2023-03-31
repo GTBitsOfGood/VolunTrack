@@ -3,9 +3,8 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import React from "react";
-import { useEffect } from "react";
-import { getOrganizationData } from "../actions/queries";
+import React, { useEffect } from "react";
+import { getOrganization } from "../queries/organizations";
 
 const Header = () => {
   const router = useRouter();
@@ -84,8 +83,9 @@ const Header = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getOrganizationData(user.organizationId);
-      if (response.data.orgData) setImageURL(response.data.orgData.imageURL);
+      const response = await getOrganization(user.organizationId);
+      if (response.data.organization)
+        setImageURL(response.data.organization.imageUrl);
     }
     fetchData();
   }, []);

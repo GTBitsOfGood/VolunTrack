@@ -1,13 +1,12 @@
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { Button } from "reactstrap";
 import styled from "styled-components";
+import DateDisplayComponent from "../../components/DateDisplay";
 import { Icon } from "../../components/Icon";
 import variables from "../../design-tokens/_variables.module.scss";
 import ManageAttendanceButton from "./Admin/ManageAttendanceButton";
-
-import { useSession } from "next-auth/react";
-import DateDisplayComponent from "../../components/DateDisplay";
 
 const Styled = {
   Container: styled.div`

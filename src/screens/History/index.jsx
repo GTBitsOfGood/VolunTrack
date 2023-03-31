@@ -1,9 +1,10 @@
+import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getHistoryEvents, getUsers } from "../../actions/queries";
-import { Table } from "flowbite-react";
+import { getHistoryEvents } from "../../queries/historyEvents";
+import { getUsers } from "../../queries/users";
 
 const Styled = {
   Container: styled.div`
@@ -47,8 +48,9 @@ const History = () => {
 
   useEffect(() => {
     (async () => {
-      const fetchedHistoryEvents = (await getHistoryEvents(user.organizationId))
-        .data;
+      const fetchedHistoryEvents = (
+        await getHistoryEvents({ organizationId: user.organizationId })
+      ).data;
       const admins = (await getUsers(user.organizationId, "admin")).data.users;
       const mappedHistoryEvents = await Promise.all(
         fetchedHistoryEvents.map(async (event) => {

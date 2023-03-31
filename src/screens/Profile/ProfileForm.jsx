@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { updateUser } from "../../actions/queries";
 import EditUserForm from "../../components/Forms/EditUserForm";
+import { updateUser } from "../../queries/users";
 
 class ProfileForm extends React.Component {
   constructor(props) {
