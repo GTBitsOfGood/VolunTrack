@@ -7,7 +7,7 @@ const EventManagerSelector = () => {
   } = useSession();
 
   if (user.role !== "volunteer") {
-    return <EventManager user={user} role={user.role} isHomePage={false} />;
+    return <EventManager user={user} role={user.role} isHomePage={true} />;
   } else {
     return <EventManager user={user} role={user.role} isHomePage={true} />;
   }
