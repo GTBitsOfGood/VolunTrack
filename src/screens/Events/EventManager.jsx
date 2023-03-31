@@ -152,9 +152,9 @@ const EventManager = ({ user, role, isHomePage }) => {
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
         getEventStatistics(startDate, endDate).then((stats) => {
-          var totalAttendance = 0;
-          var totalHours = 0;
-          for (let event of result?.data?.events) {
+          let totalAttendance = 0;
+          let totalHours = 0;
+          for (let event of result?.data?.events ?? []) {
             let split = event.date.split("-");
             let index = parseInt(split[1]) - 1;
             let stat = stats.data.find((s) => s._id === event._id);
@@ -247,7 +247,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    fetchEvents(selectDate, selectDate, user.organizationId)
+    getEvents(selectDate, selectDate, user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
