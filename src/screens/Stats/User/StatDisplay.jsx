@@ -1,50 +1,17 @@
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import { Col, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventTable";
 import ProgressDisplay from "../../../components/ProgressDisplay";
-import variables from "../../../design-tokens/_variables.module.scss";
 import { getAttendancesByUserId } from "../../../queries/attendances";
 import { getUser } from "../../../queries/users";
-import * as SForm from "../../sharedStyles/formStyles";
 import { filterAttendance } from "../helper";
 
 const Styled = {
-  Container: styled.div`
-    width: 100%;
-    height: 100%;
-
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  `,
-  Right: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 0vw;
-  `,
-  Events: styled.div`
-    text-align: left;
-    font-size: 36px;
-    font-weight: bold;
-  `,
-  Margin: styled.div``,
-  Content: styled.div`
-    width: 60%;
-    height: 100%;
-
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    margin: 0 auto;
-    align-items: start;
-  `,
   Header: styled.div`
     font-size: 27px;
     font-weight: bold;
@@ -55,46 +22,9 @@ const Styled = {
     color: gray;
     padding: 5px;
   `,
-  marginTable: styled.div`
-    margin-left: 0px;
-  `,
-  Box: styled.div`
-    height: 250px;
-    width: 725px;
-    background-color: white;
-    border: 1px solid ${variables["gray-200"]};
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    align-items: center;
-    margin: auto;
-  `,
-  BoxInner: styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    padding: 5px;
-    padding-left: 20px;
-  `,
-  StatText: styled.div`
-    font-weight: bold;
-    font-size: 20px;
-    text-align: center;
-    padding: 3px;
-    @media (max-width: 768px) {
-      font-size: 15px;
-    }
-  `,
-  StatImage: styled.div``,
-  Hours: styled.div`
-    margin-bottom: 2rem;
-  `,
 };
 
-const StatDisplay = ({ userId, onlyAchievements }) => {
+const StatDisplay = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [attendance, setAttendance] = useState([]);
   const [length, setLength] = useState(0);
@@ -176,81 +106,47 @@ const StatDisplay = ({ userId, onlyAchievements }) => {
     });
   }, [startDate, endDate]);
 
-  let achievements = (
-    <div className="flex">
-      <ProgressDisplay
-        type={"Events"}
-        attendance={attendance}
-        header={"Events Attended"}
-      />
-      <ProgressDisplay
-        type={"Hours"}
-        attendance={attendance}
-        header={"Hours Earned"}
-      />
-    </div>
-  );
-
   return (
     <React.Fragment>
-      {!onlyAchievements && (
-        <Styled.Container>
-          <Styled.Right>
-            <Styled.Header>{name} Volunteer Statistics</Styled.Header>
-            <Styled.Header2>ACHIEVEMENTS</Styled.Header2>
-            {achievements}
+      <div className="flex-column mx-auto flex w-5/6 items-start">
+        <Styled.Header>{name} Volunteer Statistics</Styled.Header>
+        <div className="my-2 flex justify-between">
+          <ProgressDisplay
+            type={"Events"}
+            attendance={attendance}
+            header={"Events Attended"}
+          />
+          <ProgressDisplay
+            type={"Hours"}
+            attendance={attendance}
+            header={"Hours Earned"}
+          />
+        </div>
 
-            <Formik
-              initialValues={{}}
-              onSubmit={(values, { setSubmitting }) => {
-                onSubmitValues(values, setSubmitting);
-              }}
-              render={({ handleSubmit }) => (
-                <React.Fragment>
-                  <Row>
-                    <Col>
-                      <SForm.Label>From</SForm.Label>
-                      <Field name="startDate">
-                        {({ field }) => (
-                          <SForm.Input {...field} type="datetime-local" />
-                        )}
-                      </Field>
-                    </Col>
-                    <Col>
-                      <SForm.Label>To</SForm.Label>
-
-                      <Field name="endDate">
-                        {({ field }) => (
-                          <SForm.Input {...field} type="datetime-local" />
-                        )}
-                      </Field>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <BoGButton
-                        onClick={() => {
-                          handleSubmit();
-                        }}
-                        text="Search"
-                      />
-                    </Col>
-                  </Row>
-                </React.Fragment>
-              )}
-            />
-            <div>
-              <Styled.Header>Volunteer History</Styled.Header>
-              <Styled.Header2>{length} events</Styled.Header2>
-              <Styled.marginTable>
-                <EventTable events={attendance} isIndividualStats={true} />
-              </Styled.marginTable>
-              <Styled.Margin />
+        <Formik
+          initialValues={{}}
+          onSubmit={(values, { setSubmitting }) => {
+            onSubmitValues(values, setSubmitting);
+          }}
+          render={({ handleSubmit }) => (
+            <div className="my-2 flex items-center space-x-8">
+              <InputField label="From" name="startDate" type="datetime-local" />
+              <InputField label="To" name="endDate" type="datetime-local" />
+              <BoGButton
+                text="Search"
+                onClick={() => {
+                  handleSubmit();
+                }}
+              />
             </div>
-          </Styled.Right>
-        </Styled.Container>
-      )}
-      {onlyAchievements && achievements}
+          )}
+        />
+        <div className="w-full">
+          <Styled.Header>Volunteer History</Styled.Header>
+          <Styled.Header2>{length} events</Styled.Header2>
+          <EventTable events={attendance} isIndividualStats={true} />
+        </div>
+      </div>
     </React.Fragment>
   );
 };

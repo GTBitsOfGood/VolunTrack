@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
+import InputField from "../../components/Forms/InputField";
 import {
   addInvitedAdmin,
   deleteInvitedAdmin,
@@ -23,6 +24,8 @@ import { deleteUser, getUsers } from "../../queries/users";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
+
+// TODOCD: Implement Search Feature
 
 const PAGE_SIZE = 10;
 
@@ -171,13 +174,10 @@ class Assistants extends React.Component {
     });
   };
 
-  onModalClose = (isUpdating) => {
+  onModalClose = () => {
     this.setState({
       showNewAdminModal: false,
     });
-    if (isUpdating) {
-      this.handleSubmit();
-    }
     this.setState({
       newInvitedAdmin: "",
     });
@@ -246,54 +246,56 @@ class Assistants extends React.Component {
             />
           </Styled.TableUsers>
         </Styled.Row>
-
-        <Modal
-          style={{ "max-width": "750px" }}
-          isOpen={this.state.showNewAdminModal}
-          onClose={null}
+        <Formik
+          initialValues={{
+            email: "",
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(true);
+            this.handleSubmit(values);
+            setSubmitting(false);
+          }}
+          validationSchema={invitedAdminValidator}
         >
-          <ModalHeader color="#ef4e79">{"Add Admin"}</ModalHeader>
-          <Container>
-            <ModalBody>
-              <Formik validationSchema={invitedAdminValidator}>
-                <Form.FormGroup>
-                  <Row>
-                    <Col>
-                      <Form.Label>Email</Form.Label>
-                      <Form.Input
-                        type="text"
-                        name="email"
-                        autocomplete="off"
-                        onChange={(evt) => {
-                          this.setState({ newInvitedAdmin: evt.target.value });
-                          invitedAdminValidator
-                            .isValid({ email: this.state.newInvitedAdmin })
-                            .then((valid) => {
-                              this.setState({
-                                valid: valid,
-                              });
-                            });
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                </Form.FormGroup>
-              </Formik>
-            </ModalBody>
-          </Container>
-          <ModalFooter>
-            <BoGButton
-              text="Cancel"
-              outline={true}
-              onClick={() => this.onModalClose(false)}
-            />
-            <BoGButton
-              text="Add as an Admin"
-              onClick={() => this.onModalClose(true)}
-              disabled={!this.state.valid}
-            />
-          </ModalFooter>
-        </Modal>
+          {({ handleSubmit, isValid, isSubmitting }) => (
+            <Modal
+              style={{ "max-width": "750px" }}
+              isOpen={this.state.showNewAdminModal}
+              onClose={null}
+            >
+              <ModalHeader color="#ef4e79">{"Add Admin"}</ModalHeader>
+              <Container>
+                <ModalBody>
+                  <Form.FormGroup>
+                    <Row>
+                      <Col>
+                        <InputField
+                          label="Email"
+                          type="text"
+                          name="email"
+                          autocomplete="off"
+                        />
+                      </Col>
+                    </Row>
+                  </Form.FormGroup>
+                </ModalBody>
+              </Container>
+              <ModalFooter>
+                <BoGButton
+                  text="Cancel"
+                  outline={true}
+                  onClick={() => this.onModalClose(false)}
+                />
+                <BoGButton
+                  type="submit"
+                  text="Add as an Admin"
+                  onClick={handleSubmit}
+                  disabled={!isValid || isSubmitting}
+                />
+              </ModalFooter>
+            </Modal>
+          )}
+        </Formik>
       </Styled.Container>
     );
   }

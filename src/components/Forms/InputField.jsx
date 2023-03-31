@@ -29,7 +29,7 @@ const InputField = (props) => (
       component="div"
       className="mt-1 inline-block pt-0 text-sm text-red-600"
       name={props.name}
-    />
+    />{" "}
   </div>
 );
 

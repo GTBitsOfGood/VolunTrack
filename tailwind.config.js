@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        grey: "#f5f5f5",
         primaryColor: "var(--primary-color)",
         secondaryColor: "var(--secondary-color)",
         hoverColor: "var(--hover-color)",
