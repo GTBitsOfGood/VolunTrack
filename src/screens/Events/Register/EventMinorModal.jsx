@@ -4,11 +4,11 @@ import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
-import { Formik, Field } from "formik";
+import { Formik } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";
-
-// TODOCD: How do you want to handle blurring minors' info?
+import InputField from "../../../components/Forms/InputField";
+import { minorNameValidator } from "../eventHelpers";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -51,8 +51,6 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
     firstName: "",
     lastName: "",
   };
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [checked, setCheck] = useState(false);
 
   const close = () => {
@@ -71,15 +69,13 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setSubmitting(true);
-
-        if (checked && firstName !== "" && lastName !== "") {
-          setHasMinorTrue(firstName, lastName);
+        if (checked) {
+          setHasMinorTrue(values.firstName, values.lastName);
         }
-        setFirstName("");
-        setLastName("");
         toggle();
       }}
-      render={({ handleSubmit, isSubmitting, handleBlur }) => (
+      validationSchema={minorNameValidator}
+      render={({ handleSubmit, isValid, isSubmitting }) => (
         <React.Fragment>
           <Modal
             isOpen={open}
@@ -95,35 +91,18 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               <Styled.Row />
               <Styled.Row>
                 <Styled.Col>
-                  <Styled.Text>First Name</Styled.Text>
-                  <Field name="firstName">
-                    {({ field }) => (
-                      <SForm.Input
-                        {...field}
-                        type="text"
-                        onBlur={handleBlur}
-                        value={firstName}
-                        onChange={(e) => {
-                          setFirstName(e.target.value);
-                        }}
-                      />
-                    )}
-                  </Field>
+                  <InputField
+                    name="firstName"
+                    placeholder="First Name"
+                    label="First Name"
+                  />
                 </Styled.Col>
                 <Styled.Col>
-                  <Styled.Text>Last Name</Styled.Text>
-                  <Field name="lastName">
-                    {({ field }) => (
-                      <SForm.Input
-                        {...field}
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => {
-                          setLastName(e.target.value);
-                        }}
-                      />
-                    )}
-                  </Field>
+                  <InputField
+                    name="lastName"
+                    label="Last Name"
+                    placeholder="Last Name"
+                  />
                 </Styled.Col>
               </Styled.Row>
               <Styled.Row>
@@ -143,7 +122,7 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               <BoGButton text="Cancel" onClick={close} outline={true} />
               <BoGButton
                 text="Add"
-                disabled={!checked || firstName == "" || lastName == ""}
+                disabled={!checked || !isValid || isSubmitting}
                 onClick={handleSubmit}
               />
             </ModalFooter>
