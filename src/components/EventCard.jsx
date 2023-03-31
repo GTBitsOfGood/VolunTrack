@@ -54,7 +54,7 @@ const EventCard = (props) => {
 
   return (
     <div
-      className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-white px-6 py-3"
+      className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-grey px-6 py-3"
       onClick={open}
     >
       <div className="flex justify-between">

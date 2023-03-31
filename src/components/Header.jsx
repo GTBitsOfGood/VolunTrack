@@ -100,9 +100,7 @@ const Header = () => {
         <Navbar.Link
           href="/home"
           className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/home")
-              ? "text-primaryColor"
-              : "text-secondaryColor"
+            currPageMatches("/home") ? "text-primaryColor" : ""
           }`}
         >
           Home
@@ -111,9 +109,7 @@ const Header = () => {
           <Navbar.Link
             href="/volunteers"
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/volunteers")
-                ? "text-primaryColor"
-                : "text-secondaryColor"
+              currPageMatches("/volunteers") ? "text-primaryColor" : ""
             }`}
           >
             Volunteers
@@ -122,9 +118,7 @@ const Header = () => {
         <Navbar.Link
           href="/events"
           className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/events")
-              ? "text-primaryColor"
-              : "text-secondaryColor"
+            currPageMatches("/events") ? "text-primaryColor" : ""
           }`}
         >
           Events
@@ -134,9 +128,7 @@ const Header = () => {
             onClick={goToStats}
             href="/stats"
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/stats")
-                ? "text-primaryColor"
-                : "text-secondaryColor"
+              currPageMatches("/stats") ? "text-primaryColor" : ""
             }`}
           >
             Participation History
@@ -151,9 +143,10 @@ const Header = () => {
                 <div
                   className={`text-lg font-bold md:hover:text-primaryColor  ${
                     currPageMatches("/assistants") ||
-                    currPageMatches("/manage-waivers")
+                    currPageMatches("/manage-waivers") ||
+                    currPageMatches("/organization-settings")
                       ? "text-primaryColor"
-                      : "text-secondaryColor"
+                      : ""
                   }`}
                 >
                   Settings
@@ -203,10 +196,7 @@ const Header = () => {
             label={
               <div
                 className={`text-lg font-bold ${
-                  currPageMatches("/assistants") ||
-                  currPageMatches("/manage-waivers")
-                    ? "text-primaryColor"
-                    : "text-secondaryColor"
+                  currPageMatches("/profile") ? "text-primaryColor" : ""
                 }`}
               >
                 Profile Settings
