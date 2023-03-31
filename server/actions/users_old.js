@@ -1,9 +1,12 @@
+import dbConnect from "../mongodb/";
 import User from "../mongodb/models/User";
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 export async function verifyUserWithCredentials(email, password) {
+  await dbConnect();
+
   const user = await User.findOne({ "bio.email": email });
 
   if (!user) {
@@ -34,6 +37,8 @@ export async function verifyUserWithCredentials(email, password) {
 }
 
 export async function getUserFromId(id, next) {
+  await dbConnect();
+
   return User.findById(id)
     .then((user) => {
       if (!user) {
@@ -48,6 +53,8 @@ export async function getUserFromId(id, next) {
 }
 
 export async function deleteUserById(user, id, next) {
+  await dbConnect();
+
   // if (user && user.userDataId === id) {
   //   // User is trying to remove themselves, don't let that happen...
   //   return { status: 403, message: { error: "Cannot delete yourself!" } };

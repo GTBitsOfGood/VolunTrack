@@ -24,7 +24,6 @@ export const checkOutVolunteer = async (
   )[0]._id;
   return updateAttendance(attendanceId, { checkoutTime: new Date() });
 };
-// End of helper functions
 
 export const getAttendance = (
   id: Types.ObjectId
@@ -67,3 +66,18 @@ export const updateAttendance = (
 
 export const deleteAttendance = (id: Types.ObjectId): Promise<AxiosResponse> =>
   axios.delete(`/api/attendances/${id.toString()}`);
+
+export const getAttendanceStatistics = (
+  eventId?: Types.ObjectId,
+  startDate?: Date,
+  endDate?: Date
+): Promise<
+  AxiosResponse<{
+    statistics: { num: number; users: Types.ObjectId[]; minutes: number }[];
+  }>
+> =>
+  axios.get<{
+    statistics: { num: number; users: Types.ObjectId[]; minutes: number }[];
+  }>(`/api/attendances/statistics`, {
+    params: { eventIdString: eventId, startDate, endDate },
+  });

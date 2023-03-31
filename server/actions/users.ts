@@ -1,5 +1,6 @@
 import { compare, hash } from "bcrypt";
 import { HydratedDocument, Types } from "mongoose";
+import dbConnect from "../mongodb/";
 import Attendance from "../mongodb/models/Attendance";
 import Registration from "../mongodb/models/Registration";
 import User, { UserData } from "../mongodb/models/User";
@@ -8,6 +9,8 @@ import { createHistoryEventEditProfile } from "./historyEvent";
 export const getUser = async (
   id: Types.ObjectId
 ): Promise<HydratedDocument<UserData> | undefined> => {
+  await dbConnect();
+
   const user = await User.findById(id);
   if (!user) return undefined;
   return user;
@@ -19,6 +22,8 @@ export const getUsers = async (
   eventId?: Types.ObjectId,
   isCheckedIn?: boolean
 ): Promise<HydratedDocument<UserData>[]> => {
+  await dbConnect();
+
   let users: HydratedDocument<UserData>[] = [];
 
   if (!organizationId && !role) {
@@ -61,6 +66,9 @@ export const getUsers = async (
 export const createUserFromCredentials = async (
   userData: UserData & { password: string }
 ): Promise<Types.ObjectId | undefined> => {
+  console.log("createUserFromCredentials");
+  await dbConnect();
+
   if (await User.exists({ email: userData.email })) return undefined;
 
   hash(userData.email + userData.password, 10, async function (err, hash) {
@@ -73,6 +81,9 @@ export const verifyUserWithCredentials = async (
   email: string,
   password: string
 ): Promise<{ user?: HydratedDocument<UserData>; message?: string }> => {
+  console.log("verifyUserWithCredentials");
+  await dbConnect();
+
   const user = await User.findOne({ email });
 
   if (!user)
@@ -90,6 +101,8 @@ export const updateUser = async (
   id: Types.ObjectId,
   userData: Partial<UserData>
 ): Promise<Types.ObjectId | undefined> => {
+  await dbConnect();
+
   const user = await User.findByIdAndUpdate(id, userData, { new: true });
   if (!user) return undefined;
 

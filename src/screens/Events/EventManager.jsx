@@ -1,4 +1,5 @@
 // import { differenceInCalendarDays } from "date-fns";
+import "flowbite-react";
 import { Dropdown } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import router from "next/router";
@@ -7,22 +8,16 @@ import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
-import {
-  fetchAttendanceByUserId,
-  getEventStatistics,
-} from "../../actions/queries";
-import BoGButton from "../../components/BoGButton";
-import variables from "../../design-tokens/_variables.module.scss";
-import { getEvents } from "../../queries/events";
-import EventCreateModal from "./Admin/EventCreateModal";
-import EventsList from "./EventsList";
-
-import { filterAttendance } from "../Stats/helper";
-
-import "flowbite-react";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
+import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
+import variables from "../../design-tokens/_variables.module.scss";
+import { getAttendances, getAttendanceStatistics } from "../../queries/attendances";
+import { getEvents } from "../../queries/events";
+import { filterAttendance } from "../Stats/helper";
+import EventCreateModal from "./Admin/EventCreateModal";
 import { updateEvent } from "./eventHelpers";
+import EventsList from "./EventsList";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -151,7 +146,7 @@ const EventManager = ({ user, role, isHomePage }) => {
         }
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getEventStatistics(startDate, endDate).then((stats) => {
+        getAttendanceStatistics(undefined, startDate, endDate).then((stats) => {
           let totalAttendance = 0;
           let totalHours = 0;
           for (let event of result?.data?.events ?? []) {
@@ -188,7 +183,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
-    fetchAttendanceByUserId(userId).then((result) => {
+    getAttendances(userId).then((result) => {
       if (result?.data?.attendances) {
         const filteredAttendance = filterAttendance(
           result.data.attendances,

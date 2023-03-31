@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users";
+import dbConnect from "../../../../server/mongodb";
 import Organization from "../../../../server/mongodb/models/Organization";
 import User from "../../../../server/mongodb/models/User";
 
@@ -95,6 +96,8 @@ export default NextAuth({
     },
     // This determines what is returned from useSession and getSession calls
     async session({ session, token }) {
+      await dbConnect();
+
       const _id = new ObjectId(token.id);
       const currentUser = await User.findOne({ _id });
       let user_data = {

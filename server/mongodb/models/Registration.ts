@@ -14,6 +14,7 @@ const registrationSchema = new Schema<RegistrationData>(
   },
   { timestamps: true }
 );
+
 export default ("Registration" in models
   ? (models.Registration as Model<RegistrationData>)
   : undefined) ?? model<RegistrationData>("Registration", registrationSchema);

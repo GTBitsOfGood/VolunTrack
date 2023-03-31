@@ -1,4 +1,5 @@
 import { HydratedDocument, Types } from "mongoose";
+import dbConnect from "../mongodb/";
 import { eventPopulator } from "../mongodb/aggregations";
 import Event, { EventPopulatedData } from "../mongodb/models/Event";
 
@@ -7,6 +8,8 @@ export const getEvents = async (
   endDateString: string,
   organizationId: Types.ObjectId
 ): Promise<HydratedDocument<EventPopulatedData>[]> => {
+  await dbConnect();
+
   const startDate =
     startDateString === "undefined" ? undefined : new Date(startDateString);
   const endDate =

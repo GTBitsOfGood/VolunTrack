@@ -1,10 +1,15 @@
+import dbConnect from "../mongodb/";
 import HistoryEvent from "../mongodb/models/HistoryEvent";
 
 export const getAllHistoryEvents = async (organizationId) => {
+  await dbConnect();
+
   return await HistoryEvent.find({ organizationId }).sort("createdAt");
 };
 
 export const createHistoryEvent = async (historyEventData) => {
+  await dbConnect();
+
   const historyEvent = await HistoryEvent.create(historyEventData);
   return historyEvent;
 };
