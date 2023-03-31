@@ -8,8 +8,6 @@ import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
 import InputField from "../../../../components/Forms/InputField";
 
-// TODOCD: Date/Time Validations
-
 const Styled = {
   Form: styled(FForm)``,
   ErrorMessage: styled.div.attrs({
@@ -112,19 +110,6 @@ const EditEventStatsForm = ({ toggle, event }) => {
                             label="Check In Time"
                             type="time"
                           />
-                          {/* <SForm.Label>Check In Time</SForm.Label>
-                          <Field name="checkin">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="time" step="1" />
-                            )}
-                          </Field>
-                          {errors.checkin &&
-                            (touched.checkin || touched.checkout) && (
-                              <Styled.ErrorMessage>
-                                {errors.checkin}
-                              </Styled.ErrorMessage>
-                            )} */}
-                          {/* Need to get validation working here */}
                         </Styled.Col>
                         <Styled.Col>
                           <InputField
@@ -132,12 +117,6 @@ const EditEventStatsForm = ({ toggle, event }) => {
                             label="Check Out Time"
                             type="time"
                           />
-                          {/* <SForm.Label>Check Out Time</SForm.Label>
-                          <Field name="checkout">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="time" step="1" />
-                            )}
-                          </Field> */}
                         </Styled.Col>
                       </Row>
                     </Col>

@@ -11,8 +11,6 @@ import Loading from "../../../components/Loading";
 import { useSession } from "next-auth/react";
 import InputField from "../../../components/Forms/InputField";
 
-// TODOCD: Date/Time Validations
-
 const Styled = {
   Container: styled.div`
     width: 100%;
