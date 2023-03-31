@@ -25,8 +25,7 @@ import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
 import InputField from "../../components/Forms/InputField";
-
-// TODOCD: Implement Search Feature
+import SearchBar from "../../components/SearchBar";
 
 const PAGE_SIZE = 10;
 
@@ -66,14 +65,6 @@ const Styled = {
   `,
   Row: styled(Row)`
     margin: 0.5rem 0.5rem 0.5rem 1rem;
-  `,
-  Search: styled.input`
-    height: 3rem;
-    width: 100%;
-    font-size: 1.5rem;
-    padding-left: 0.5rem;
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
   `,
   TableUsers: styled.div`
     width: 80%;
@@ -221,7 +212,7 @@ class Assistants extends React.Component {
         </Styled.Row>
         <Styled.Row>
           <Styled.Col>
-            <Styled.Search
+            <SearchBar
               placeholder="Search by Employee Name or Email"
               value={this.state.searchValue}
               onChange={(e) => this.setState({ searchValue: e.target.value })}

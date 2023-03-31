@@ -6,8 +6,7 @@ import { CSVLink } from "react-csv";
 import styled from "styled-components";
 import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
-
-// TODOCD: Implement Search Feature
+import SearchBar from "../../components/SearchBar";
 
 const Styled = {
   Container: styled.div`
@@ -171,12 +170,13 @@ class Volunteers extends React.Component {
           </Styled.CSVLink>
         </Styled.HeaderTitle>
         <Styled.TopMenu>
-          <Styled.Search
+          <SearchBar
             placeholder="Search Name"
             value={searchValue}
             onChange={(evt) =>
               this.setState({ searchValue: evt.target.value, searchOn: true })
             }
+            className="w-full"
           />
           <Styled.TotalVols>
             Total Volunteers: {this.state.users.length}
