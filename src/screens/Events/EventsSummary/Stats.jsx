@@ -6,6 +6,7 @@ import { Col, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventStatsTable";
+import InputField from "../../../components/Forms/InputField";
 import Loading from "../../../components/Loading";
 import { getAttendances } from "../../../queries/attendances";
 import { getEvents } from "../../../queries/events";

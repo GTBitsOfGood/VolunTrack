@@ -41,19 +41,20 @@ const CheckedInContainer = styled.div`
   background-color: #9cdea3;
 `;
 
-const Volunteer = ({
-  volunteer,
-  minors,
-  onClick,
-  isCheckedIn,
-  isEnded,
-}: {
-  volunteer: { [key: string]: any };
-  minors: string[];
-  onClick: (volunteer: { [key: string]: any }) => void;
-  isCheckedIn: boolean;
-  isEnded: boolean;
-}): JSX.Element => {
+// const Volunteer = ({
+//   volunteer,
+//   minors,
+//   onClick,
+//   isCheckedIn,
+//   isEnded,
+// }: {
+//   volunteer: { [key: string]: any };
+//   minors: string[];
+//   onClick: (volunteer: { [key: string]: any }) => void;
+//   isCheckedIn: boolean;
+//   isEnded: boolean;
+// }): JSX.Element => {
+const Volunteer = (volunteer, minors, onClick, isCheckedIn, isEnded) => {
   return (
     <>
       {isEnded ? (
