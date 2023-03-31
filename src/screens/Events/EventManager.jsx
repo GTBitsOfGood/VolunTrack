@@ -18,11 +18,9 @@ import { filterAttendance } from "../Stats/helper";
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
-import StatDisplay from "../Stats/User/StatDisplay";
 import { updateEvent } from "./eventHelpers";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import "flowbite-react";
-import { Button } from "flowbite-react";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 
@@ -108,12 +106,6 @@ const Styled = {
     margin: 0 auto;
     align-items: center;
     row-gap: 10px;
-  `,
-  EventFilter: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 2rem;
   `,
   LegendText: styled.p`
     font-size: 20px;
@@ -210,51 +202,11 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   }, []);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [attendance, setAttendance] = useState([]);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
   const { data: session } = useSession();
   const userId = session.user._id;
-
-  const onSubmitValues = (values, setSubmitting) => {
-    let offset = new Date().getTimezoneOffset();
-
-    if (!values.startDate) {
-      setStartDate("undefined");
-    } else {
-      let start = new Date(values.startDate);
-      start.setMinutes(start.getMinutes() - offset);
-      setStartDate(start);
-    }
-
-    if (!values.endDate) {
-      setEndDate("undefined");
-    } else {
-      let end = new Date(values.endDate);
-      end.setMinutes(end.getMinutes() - offset);
-      setEndDate(end);
-    }
-  };
-
-  // const onEditClicked = (event) => {
-  //   setShowEditModal(true);
-  //   setCurrEvent(event);
-  // };
-  // const toggleEditModal = () => {
-  //   setShowEditModal((prev) => !prev);
-  //   onRefresh();
-  // };
-  // const onDeleteClicked = (event) => {
-  //   setShowDeleteModal(true);
-  //   setCurrEvent(event);
-  // };
-  // const toggleDeleteModal = () => {
-  //   setShowDeleteModal((prev) => !prev);
-  //   onRefresh();
-  // };
 
   const goToRegistrationPage = async (event) => {
     if (event?.eventId) {
