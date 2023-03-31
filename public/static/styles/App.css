@@ -14,7 +14,7 @@ html, body, #__next {
     padding: 0;
     position: relative;
     overflow: overlay;
-    background: hsl(0,0%,95%);
+    background: hsl(0,0%,95%); /* TODO this changes the background color of the app */
 }
 
 .App {

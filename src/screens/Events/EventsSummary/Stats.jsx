@@ -1,5 +1,5 @@
-import { Field, Formik } from "formik";
 import { useSession } from "next-auth/react";
+import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Col, Row } from "reactstrap";
@@ -9,7 +9,7 @@ import EventTable from "../../../components/EventStatsTable";
 import Loading from "../../../components/Loading";
 import { getAttendances } from "../../../queries/attendances";
 import { getEvents } from "../../../queries/events";
-import * as SForm from "../../sharedStyles/formStyles";
+import InputField from "../../../components/Forms/InputField";
 
 const Styled = {
   Container: styled.div`
@@ -148,21 +148,14 @@ const Stats = () => {
           <React.Fragment>
             <Row>
               <Col>
-                <SForm.Label>From</SForm.Label>
-                <Field name="startDate">
-                  {({ field }) => (
-                    <SForm.Input {...field} type="datetime-local" />
-                  )}
-                </Field>
+                <InputField
+                  label="From"
+                  name="startDate"
+                  type="datetime-local"
+                />
               </Col>
               <Col>
-                <SForm.Label>To</SForm.Label>
-
-                <Field name="endDate">
-                  {({ field }) => (
-                    <SForm.Input {...field} type="datetime-local" />
-                  )}
-                </Field>
+                <InputField label="To" name="endDate" type="datetime-local" />
               </Col>
             </Row>
             <Row>
