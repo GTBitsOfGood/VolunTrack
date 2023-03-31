@@ -1,12 +1,35 @@
-import { ThemeType } from "./types";
-import { createTheme } from "./utils";
+export const applyTheme = (theme: string) => {
+  const root = document.documentElement;
+  if (!theme || !themes[theme]) theme = "magenta";
+  Object.keys(themes[theme]).forEach((cssVar) => {
+    root.style.setProperty(cssVar, themes[theme][cssVar]);
+  });
+};
 
-// export const sampleOrgTheme: ThemeType = createTheme(
-//   "#F2D2BD",
-//   "#9F2B68"
-// );
-export const blueTheme: ThemeType = createTheme(
-  "#9e40af",
-  "#8563eb",
-  "#9d4ed8"
-);
+const createTheme = (
+  primary: string,
+  secondary: string,
+  hover: string
+): ThemeType => ({
+  "--primary-color": primary,
+  "--secondary-color": secondary,
+  "--hover-color": hover,
+});
+
+// TODO: change these all to primary=800, hover=700, secondary=200?
+// Depends how we want the secondary color to be used. Regardless, the colors need to be adjusted
+
+export const themes = {
+  red: createTheme("#991b1b", "#dc2626", "#b91c1c"),
+  orange: createTheme("#c2410c", "#f97316", "#ea580c"),
+  yellow: createTheme("#854d0e", "#fef08a", "#a16207"),
+  green: createTheme("#166534", "#86efac", "#15803d"),
+  sky: createTheme("#0891b2", "#cffafe", "#06b6d4"),
+  blue: createTheme("#1e40af", "#bfdbfe", "#1d4ed8"),
+  purple: createTheme("#6b21a8", "#e9d5ff", "#7e22ce"),
+  magenta: createTheme("#9d174d", "#fbcfe8", "#be185d"),
+};
+
+interface ThemeType {
+  [cssVariable: string]: string;
+}

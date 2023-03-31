@@ -20,7 +20,7 @@ const Container = styled.div`
         ? "hsla(127, 100%, 32%, 90%)"
         : props.failed
         ? "hsla(0, 100%, 50%, 80%)"
-        : props.theme.grey9};
+        : "hsl(0, 0%, 95%)"};
     display: flex;
     align-items: center;
     border-radius: 0.5rem;
