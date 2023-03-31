@@ -19,7 +19,6 @@ const InputField = (props) => (
           type={props.type ?? "text"}
           placeholder={props.placeholder}
           disabled={props.disabled}
-          onChange={props.onChange ?? (() => {})}
         />
       )}
     </Field>
@@ -39,7 +38,6 @@ InputField.propTypes = {
   disabled: PropTypes.bool,
   type: PropTypes.string,
   className: PropTypes.string,
-  onChange: PropTypes.func,
 };
 
 export default InputField;

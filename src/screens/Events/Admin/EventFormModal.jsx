@@ -430,8 +430,8 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                           {({ field }) => (
                             <SForm.Input {...field} type="text" />
                           )}
-                        </Field> */}
-                        <Styled.ErrorMessage name="zip" />
+                        </Field>
+                        <Styled.ErrorMessage name="zip" />  */}
                       </Styled.ThirdCol>
                     </Row>
                     <Row
@@ -479,7 +479,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             <SForm.Input {...field} type="text" />
                           )}
                         </Field> */}
-                        <Styled.ErrorMessage name="eventContactEmail" />
+                        {/* <Styled.ErrorMessage name="eventContactEmail" /> */}
                       </Styled.Col>
                     </Row>
                   </Col>

@@ -175,24 +175,22 @@ class Assistants extends React.Component {
     });
   };
 
-  onModalClose = (isUpdating) => {
+  onModalClose = () => {
     this.setState({
       showNewAdminModal: false,
     });
-    if (isUpdating) {
-      this.handleSubmit();
-    }
     this.setState({
       newInvitedAdmin: "",
     });
   };
 
-  handleSubmit = async () => {
-    if (this.state.newInvitedAdmin?.length > 0)
+  handleSubmit = async (values) => {
+    if (values?.email?.length)
       await updateInvitedAdmins(
-        this.state.newInvitedAdmin,
+        values.email,
         this.props.user.organizationId
       );
+    this.onModalClose();
     this.onRefresh();
   };
 
@@ -250,7 +248,17 @@ class Assistants extends React.Component {
             />
           </Styled.TableUsers>
         </Styled.Row>
-
+        <Formik 
+              initialValues={{
+                email: "",
+              }}
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true);
+                this.handleSubmit(values);
+                setSubmitting(false);
+              }}
+              validationSchema={invitedAdminValidator}>
+              {({ handleSubmit, isValid, isSubmitting }) => (
         <Modal
           style={{ "max-width": "750px" }}
           isOpen={this.state.showNewAdminModal}
@@ -258,8 +266,7 @@ class Assistants extends React.Component {
         >
           <ModalHeader color="#ef4e79">{"Add Admin"}</ModalHeader>
           <Container>
-            <ModalBody>
-              <Formik validationSchema={invitedAdminValidator}>
+            <ModalBody>  
                 <Form.FormGroup>
                   <Row>
                     <Col>
@@ -268,21 +275,10 @@ class Assistants extends React.Component {
                         type="text"
                         name="email"
                         autocomplete="off"
-                        onChange={(evt) => {
-                          this.setState({ newInvitedAdmin: evt.target.value });
-                          invitedAdminValidator
-                            .isValid({ email: this.state.newInvitedAdmin })
-                            .then((valid) => {
-                              this.setState({
-                                valid: valid,
-                              });
-                            });
-                        }}
                       />
                     </Col>
                   </Row>
-                </Form.FormGroup>
-              </Formik>
+                </Form.FormGroup>           
             </ModalBody>
           </Container>
           <ModalFooter>
@@ -292,12 +288,15 @@ class Assistants extends React.Component {
               onClick={() => this.onModalClose(false)}
             />
             <BoGButton
+              type="submit"
               text="Add as an Admin"
-              onClick={() => this.onModalClose(true)}
-              disabled={!this.state.valid}
+              onClick={handleSubmit}
+              disabled={!isValid || isSubmitting}
             />
           </ModalFooter>
         </Modal>
+        )}
+        </Formik>
       </Styled.Container>
     );
   }
