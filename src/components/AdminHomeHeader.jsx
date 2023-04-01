@@ -220,7 +220,7 @@ const AdminHomeHeader = (props) => {
                 />
               </div>
               <div className="flex-column flex">
-                <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
                   <p className="pl-2 text-2xl">{events}</p>
                   <p className="text-md pl-2 text-slate-600">
                     {" "}
@@ -228,7 +228,7 @@ const AdminHomeHeader = (props) => {
                   </p>
                 </div>
                 <hr className="mx-2 my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-                <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
                   <p className="pl-2 text-2xl">{volunteers}</p>
                   <p className="text-md pl-2 text-slate-600"> Volunteers</p>
                 </div>
@@ -244,17 +244,17 @@ const AdminHomeHeader = (props) => {
               </p>
             </div>
             <div className="flex-column flex">
-              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+              <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
                 <p className="pl-2 text-2xl">{props.numEvents}</p>
                 <p className="text-md pl-2 text-slate-600"> Events</p>
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+              <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
                 <p className="pl-2 text-2xl">{props.attend}</p>
                 <p className="text-md pl-2 text-slate-600"> Attendance</p>
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+              <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
                 <p className="pl-2 text-2xl">{props.hours}</p>
                 <p className="text-md pl-2 text-slate-600"> Hours</p>
               </div>

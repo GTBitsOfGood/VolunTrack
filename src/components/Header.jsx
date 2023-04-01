@@ -99,7 +99,7 @@ const Header = () => {
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+          className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
             currPageMatches("/home") ? "text-primaryColor" : ""
           }`}
         >
@@ -108,7 +108,7 @@ const Header = () => {
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
               currPageMatches("/volunteers") ? "text-primaryColor" : ""
             }`}
           >
@@ -117,7 +117,7 @@ const Header = () => {
         )}
         <Navbar.Link
           href="/events"
-          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+          className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
             currPageMatches("/events") ? "text-primaryColor" : ""
           }`}
         >
@@ -127,7 +127,7 @@ const Header = () => {
           <Navbar.Link
             onClick={goToStats}
             href="/stats"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
               currPageMatches("/stats") ? "text-primaryColor" : ""
             }`}
           >
@@ -141,7 +141,7 @@ const Header = () => {
               inline={true}
               label={
                 <div
-                  className={`text-lg font-bold md:hover:text-primaryColor  ${
+                  className={`md:hover:text-primaryColor text-lg font-bold  ${
                     currPageMatches("/assistants") ||
                     currPageMatches("/manage-waivers") ||
                     currPageMatches("/organization-settings")

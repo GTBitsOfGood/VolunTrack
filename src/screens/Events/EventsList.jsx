@@ -197,7 +197,7 @@ const EventsList = ({
                 </div>
               )}
               {registeredEvents.length === 0 && (
-                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                <p className="justify-content-center text-primaryColor mb-4 flex text-lg font-bold">
                   Please register for an event!
                 </p>
               )}
@@ -217,7 +217,7 @@ const EventsList = ({
                 />
               ))}
             {upcomingEvents.length === 0 && (
-              <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+              <p className="justify-content-center text-primaryColor mb-4 flex text-lg font-bold">
                 No new events!
               </p>
             )}
@@ -245,7 +245,7 @@ const EventsList = ({
               ))}
             <div className="justify-content-center flex">
               {todayEvents.length === 0 && (
-                <p className="font-weight-bold pb-3 text-lg text-primaryColor">
+                <p className="font-weight-bold text-primaryColor pb-3 text-lg">
                   No events scheduled today
                 </p>
               )}
