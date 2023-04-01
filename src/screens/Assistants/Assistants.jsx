@@ -1,6 +1,4 @@
 import { Formik } from "formik";
-import { useSession } from "next-auth/react";
-import Error from "next/error";
 import PropTypes from "prop-types";
 import React from "react";
 import BoGButton from "../../components/BoGButton";
@@ -25,9 +23,8 @@ import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
 import InputField from "../../components/Forms/InputField";
+import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
-
-// TODOCD: Implement Search Feature
 
 const PAGE_SIZE = 10;
 
@@ -37,14 +34,6 @@ const Styled = {
   `,
   Row: styled(Row)`
     margin: 0.5rem 0.5rem 0.5rem 1rem;
-  `,
-  Search: styled.input`
-    height: 3rem;
-    width: 100%;
-    font-size: 1.5rem;
-    padding-left: 0.5rem;
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
   `,
 };
 
@@ -166,7 +155,7 @@ class Assistants extends React.Component {
         </Styled.Row>
         <Styled.Row>
           <Styled.Col>
-            <Styled.Search
+            <SearchBar
               placeholder="Search by Employee Name or Email"
               value={this.state.searchValue}
               onChange={(e) => this.setState({ searchValue: e.target.value })}

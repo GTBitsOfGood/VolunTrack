@@ -9,8 +9,8 @@ import {
   updateEventById,
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
+import SearchBar from "../../../../components/SearchBar";
 import "flowbite-react";
-import { Button } from "flowbite-react";
 import Text from "../../../../components/Text";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import BoGButton from "../../../../components/BoGButton";
@@ -164,7 +164,7 @@ const EventAttendance = () => {
           <Styled.Header>Attendance Management</Styled.Header>
           <BoGButton text="End Event" onClick={endEvent} />
         </Styled.HeaderRow>
-        <Styled.Search
+        <SearchBar
           placeholder="Search by Volunteer Name or Email"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
