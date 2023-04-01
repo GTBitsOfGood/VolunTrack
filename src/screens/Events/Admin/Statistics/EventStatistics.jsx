@@ -2,12 +2,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StatsTable from "../../../../components/StatsTable";
+import BasicModal from "../../../../components/BasicModal";
 import { getAttendances } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
 import { getRegistrations } from "../../../../queries/registrations";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import EditEventStats from "./EditEventStats";
-import EventStatsDeleteModal from "./EventStatsDeleteModal";
 import { getHours } from "../../../Stats/User/hourParsing";
 
 const Styled = {
@@ -120,6 +120,15 @@ const EventStatistics = () => {
     setShowDeleteModal(true);
     setCurrEvent(event);
   };
+
+  const confirmDeleteModal = () => {
+    deleteAttendance(currEvent._id, currEvent.eventId)
+      .then(() => {
+        toggleDeleteModal();
+      })
+      .catch(console.log);
+  };
+
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
     onRefresh();
@@ -177,10 +186,13 @@ const EventStatistics = () => {
         toggle={toggleEditModal}
         event={currEvent}
       />
-      <EventStatsDeleteModal
+      <BasicModal 
         open={showDeleteModal}
-        toggle={toggleDeleteModal}
-        event={currEvent}
+        title={`Are you sure you want to delete this entry ${<strong>permanently</strong>}?`}
+        onConfirm={confirmDeleteModal}
+        onCancel={toggleDeleteModal}
+        cancelText={"Cancel"}
+        confirmText={"Delete"}
       />
     </Styled.Container>
   );

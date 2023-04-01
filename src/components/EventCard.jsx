@@ -1,3 +1,4 @@
+import { useSession } from "next-auth/react";
 import {
   CheckCircleIcon,
   PencilIcon,
@@ -14,6 +15,8 @@ import Text from "../components/Text";
 import { getRegistrations } from "../queries/registrations";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
+import BasicModal from "./BasicModal";
+import { deleteEvent } from "../actions/queries";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -23,6 +26,9 @@ const EventCard = (props) => {
   const [registrations, setRegistrations] = useState([]);
   const [regCount, setRegCount] = useState(0);
   const isRegistered = props.isRegistered;
+  const {
+    data: { user },
+  } = useSession();
   const onEventDelete = props.onEventDelete;
 
   useEffect(() => {
@@ -62,6 +68,14 @@ const EventCard = (props) => {
 
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
+  };
+
+  const confirmDeleteModal = () => {
+    deleteEvent(event._id, user._id)
+      .then(() => {
+        toggleDeleteModal();
+      })
+      .catch(console.log);
   };
 
   const toggleEditModal = () => {
@@ -134,11 +148,14 @@ const EventCard = (props) => {
                   <UsersIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
-              <EventDeleteModal
+              <BasicModal
                 open={showDeleteModal}
-                toggle={toggleDeleteModal}
-                event={event}
-                onEventDelete={onEventDelete}
+                title={"Delete Event"}
+                text={"Are you sure you want to delete this event?"}
+                onConfirm={confirmDeleteModal}
+                onCancel={toggleDeleteModal}
+                confirmText={"Delete"}
+                cancelText={"Cancel"}
               />
               <EventEditModal
                 open={showEditModal}

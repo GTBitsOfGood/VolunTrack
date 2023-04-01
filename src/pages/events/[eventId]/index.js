@@ -7,6 +7,7 @@ import BoGButton from "../../../components/BoGButton";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
+import BasicModal from "../../../components/BasicModal";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
@@ -144,7 +145,7 @@ const EventInfo = () => {
     router.push(`${eventId}/statistics`);
   };
 
-  const onUnregisterClicked = () => {
+  const openUnregisterModal = () => {
     setUnregisterModal(true);
   };
 
@@ -152,6 +153,23 @@ const EventInfo = () => {
     setUnregisterModal((prev) => !prev);
 
     onRefresh();
+  };
+
+  const onUnregisterClicked = async (event) => {
+    const changedEvent = {
+      // remove current user id from event volunteers
+      ...event,
+      volunteers: event.volunteers.filter((volunteer) => volunteer !== user._id),
+    };
+    await updateEvent(changedEvent);
+  };
+
+  const onConfirmUnregisterModal = () => {
+    onUnregisterClicked(event)
+      .then(() => {
+        toggleUnregisterModal();
+      })
+      .catch(console.log);
   };
 
   const copyPrivateLink = () => {
@@ -230,7 +248,7 @@ const EventInfo = () => {
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"
-                    onClick={() => onUnregisterClicked(event)}
+                    onClick={() => openUnregisterModal(event)}
                   />
                 )}
               {user.role === "volunteer" &&
@@ -348,11 +366,13 @@ const EventInfo = () => {
             )}
           </Col>
         </Styled.EventTable>
-        <EventUnregisterModal
+        <BasicModal 
           open={showUnregisterModal}
-          toggle={toggleUnregisterModal}
-          eventData={event}
-          userId={user._id}
+          title={"Are you sure you want to cancel your registration for this event?"}
+          onConfirm={onConfirmUnregisterModal}
+          onCancel={toggleUnregisterModal}
+          confirmText={"Yes, cancel it"}
+          cancelText={"No, keep it"}
         />
       </Styled.EventTableAll>
     </>

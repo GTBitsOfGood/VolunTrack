@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getOrganizations } from "../../queries/organizations";
 import OrganizationCard from "./OrganizationCard";
 import OrganizationToggleModal from "./OrganizationToggleModal";
+import BasicModal from "../../components/BasicModal";
 
 const BogApproval = () => {
   const [loading, setLoading] = useState(true);
@@ -25,19 +26,19 @@ const BogApproval = () => {
       });
   };
 
-  const onToggleOrganization = () => {
-    setOpenModal(false);
-    onRefresh();
-  };
-
   useEffect(() => {
     onRefresh();
   }, []);
 
+  const onConfirmModal = () => {
+    toggleStatus(currOrganization.organizationId);
+    onCloseModal();
+    onRefresh();
+  }
+
   const onCloseModal = () => {
     setOpenModal(false);
     setCurrOrganization(null);
-    onRefresh();
   };
 
   return loading ? (
@@ -86,11 +87,16 @@ const BogApproval = () => {
           ))}
       </div>
       {currOrganization && (
-        <OrganizationToggleModal
+        <BasicModal 
           open={openModal}
+          text={`By clicking the confirm button, this volunteer management platform \
+            will become ${currOrganization.status ? " inactive " : " active "} immediately. Are \
+            you sure you want to confirm?`}
+          confirmText={"Confirm"}
+          cancelText={"Cancel"}
           onClose={onCloseModal}
-          status={currOrganization.active}
-          organizationId={currOrganization._id}
+          onConfirm={onConfirmModal}
+          title={"Toggle the organizations status"}
         />
       )}
     </div>
