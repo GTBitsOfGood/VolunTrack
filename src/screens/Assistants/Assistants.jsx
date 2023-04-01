@@ -25,6 +25,7 @@ import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
 import InputField from "../../components/Forms/InputField";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 // TODOCD: Implement Search Feature
 
@@ -300,7 +301,7 @@ class Assistants extends React.Component {
   }
 }
 
-export default authWrapper(Assistants);
+export default AdminAuthWrapper(Assistants);
 
 Assistants.propTypes = {
   user: PropTypes.object.isRequired,

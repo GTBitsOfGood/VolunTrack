@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import Error from "next/error";
 import { useEffect, useState } from "react";
 import { organizationSettingsPages as pages } from "./pages";
 import { Sidebar, Dropdown, Toast } from "flowbite-react";
@@ -13,24 +12,7 @@ import {
 } from "../../actions/queries";
 import { applyTheme } from "../../themes/themes";
 import BoGButton from "../../components/BoGButton";
-
-function authWrapper(Component) {
-  return function WrappedComponent(props) {
-    const {
-      data: { user },
-    } = useSession();
-    if (user.role !== "admin") {
-      return (
-        <Error
-          title="You are not authorized to access this page"
-          statusCode={403}
-        />
-      );
-    } else {
-      return <Component {...props} user={user} />;
-    }
-  };
-}
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const OrganizationSettings = () => {
   const [organizationData, setOrganizationData] = useState({});
@@ -240,4 +222,4 @@ const OrganizationSettings = () => {
   );
 };
 
-export default authWrapper(OrganizationSettings);
+export default AdminAuthWrapper(OrganizationSettings);
