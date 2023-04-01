@@ -183,7 +183,7 @@ class AdminsTable extends React.Component {
                               className="mx-1"
                               onClick={() => this.onDisplayEditUserModal(user)}
                             >
-                              <PencilIcon className="h-7 text-primaryColor" />
+                              <PencilIcon className="text-primaryColor h-7" />
                             </button>
                           </Tooltip>
                           <Tooltip content="Delete" style="light">
@@ -193,7 +193,7 @@ class AdminsTable extends React.Component {
                                 this.onDisplayDeleteUserModal(user)
                               }
                             >
-                              <TrashIcon className="h-7 text-primaryColor" />
+                              <TrashIcon className="text-primaryColor h-7" />
                             </button>
                           </Tooltip>
                         </div>
@@ -209,7 +209,7 @@ class AdminsTable extends React.Component {
                                 this.onDisplayDeletePending(user.email)
                               }
                             >
-                              <TrashIcon className="h-7 text-primaryColor" />
+                              <TrashIcon className="text-primaryColor h-7" />
                             </button>
                           </Tooltip>
                         </div>
