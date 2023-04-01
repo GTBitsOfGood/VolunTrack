@@ -95,7 +95,6 @@ const AuthPage = (props) => {
         </div>
       </Styled.Container>
       <div className="grow" />
-      
     </Styled.Main>
   );
 };
