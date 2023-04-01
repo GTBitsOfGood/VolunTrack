@@ -8,6 +8,7 @@ import { fetchEventsById } from "../../../actions/queries";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
+import Text from "../../../components/Text";
 
 const Styled = {
   EventTableAll: styled.div`
@@ -160,7 +161,12 @@ const EventInfo = () => {
   return (
     <>
       <Styled.EventTableAll>
-        <BoGButton text="Back" onClick={() => goBackToCal()} />
+        <Text
+          className="ml-16 mb-4"
+          href={`/events`}
+          onClick={() => goBackToCal()}
+          text="< Back to home"
+        />
         <Styled.EventTable>
           <Col>
             <Styled.EventCol>
@@ -190,14 +196,18 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <BoGButton
-                    text="Manage Attendance"
-                    onClick={routeToRegisteredVolunteers}
-                  />
-                  <BoGButton
-                    text="View Participation Statistics"
-                    onClick={routeToStats}
-                  />
+                  <div className="mr-4 mb-4 ml-3">
+                    <BoGButton
+                      text="Manage Attendance"
+                      onClick={routeToRegisteredVolunteers}
+                    />
+                  </div>
+                  <div className="mr-3 mb-4 ml-4">
+                    <BoGButton
+                      text="View Participation Statistics"
+                      onClick={routeToStats}
+                    />
+                  </div>
                 </>
               )}
               {user.role === "volunteer" &&

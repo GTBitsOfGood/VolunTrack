@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { getHistoryEvents, getUsers } from "../../actions/queries";
 import { Table } from "flowbite-react";
 import SearchBar from "../../components/SearchBar";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -115,4 +116,4 @@ History.propTypes = {
   historyEvents: PropTypes.array,
 };
 
-export default History;
+export default AdminAuthWrapper(History);

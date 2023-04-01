@@ -1,46 +1,13 @@
 import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
 import "normalize.css";
-import styled from "styled-components";
 import AuthForm from "./AuthForm";
 import { Button } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
 import Footer from "../../components/Footer";
-
-const Styled = {
-  Main: styled.div`
-    width: 100%;
-    height: 100%;
-    background: hsl(0, 0%, 95%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  `,
-  Container: styled.div`
-    width: 500px;
-    height: 600px;
-    display: flex;
-    padding: 4em;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  `,
-  TopText: styled.p`
-    font-size: 32px;
-    font-weight: bold;
-  `,
-  OrDiv: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    margin-top: 1.5vw;
-  `,
-};
+import Text from "../../components/Text";
 
 const AuthPage = (props) => {
   const login = (e) => {
@@ -49,17 +16,19 @@ const AuthPage = (props) => {
   };
 
   return (
-    <Styled.Main>
-      <Styled.Container>
+    <div className="flex-column flex h-full w-full items-center justify-center">
+      <div className="flex-column mx-auto my-2 flex w-1/2 items-center justify-center lg:w-1/4">
         {/* <img
           alt="Bits of Good Logo"
           src="/images/bog_logo.png"
           style={{ width: "100%", marginBottom: "2px" }}
         /> */}
         <div className="h-28" />
-        <Styled.TopText>
-          {props.createAccount ? "Create an Account" : "Sign In"}
-        </Styled.TopText>
+        <Text
+          text={props.createAccount ? "Create an Account" : "Sign In"}
+          type="header"
+          className="pb-2"
+        />
         <div className="flex w-full flex-wrap items-center gap-2">
           <Button color="light" className="w-full py-1" onClick={login}>
             <img
@@ -70,33 +39,32 @@ const AuthPage = (props) => {
             <p className="my-0 text-lg">Continue with Google</p>
           </Button>
         </div>
-        <Styled.OrDiv>
-          <hr size="150" width="150" color="#6C757D"></hr>
-          OR
-          <hr size="150" width="150" color="#6C757D"></hr>
-        </Styled.OrDiv>
+        <div className="mt-2 flex w-full items-center justify-between">
+          <hr size="150" width="150" color="#6C757D" />
+          <Text text="OR" />
+          <hr size="150" width="150" color="#6C757D" />
+        </div>
         <br></br>
         <AuthForm
           createAccount={props.createAccount}
           context={useContext(RequestContext)}
         />
-        <div className="flex">
+        <div className="mt-1 flex items-center">
           {props.createAccount
             ? "Already have an account?"
             : "Don't have an account?"}
-          <a
-            style={{ marginLeft: "5px" }}
+          <Text
+            text={props.createAccount ? "Sign In" : "Create an account"}
             href={`${window.location.origin}/${
               props.createAccount ? "login" : "create-account"
             }`}
-          >
-            {props.createAccount ? "Sign In" : "Create an account"}
-          </a>
+            className="ml-2"
+          />
         </div>
-      </Styled.Container>
+      </div>
       <div className="grow" />
       <Footer />
-    </Styled.Main>
+    </div>
   );
 };
 

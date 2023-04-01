@@ -5,7 +5,7 @@ module.exports = {
     "./src/**/*.{html,js,jsx,ts,tsx}",
     "./node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
   ],
-  theme: {
+  type: {
     extend: {
       colors: {
         grey: "#f5f5f5",

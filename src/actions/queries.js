@@ -82,9 +82,9 @@ export const checkInVolunteer = (
 export const checkOutVolunteer = (userId, eventId) =>
   axios.post("/api/attendance/checkout", { userId, eventId });
 
-export const getEventVolunteersByAttendance = (eventId, isCheckedIn) =>
+export const getEventVolunteersByAttendance = (eventId, checkInStatus) =>
   axios.get(
-    `/api/events/${eventId}/volunteersByAttendance?isCheckedIn=${isCheckedIn}`
+    `/api/events/${eventId}/volunteersByAttendance?checkInStatus=${checkInStatus}`
   );
 
 export const updateEventById = (id, event) =>

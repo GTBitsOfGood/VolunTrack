@@ -9,8 +9,11 @@ import {
   updateEventById,
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
-import Footer from "./Footer";
 import SearchBar from "../../../../components/SearchBar";
+import "flowbite-react";
+import Text from "../../../../components/Text";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
+import BoGButton from "../../../../components/BoGButton";
 
 const Styled = {
   Container: styled.div`
@@ -21,8 +24,7 @@ const Styled = {
   `,
   Header: styled.h1`
     margin: 0;
-
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
   `,
   HeaderRow: styled.div`
@@ -43,7 +45,7 @@ const Styled = {
     margin: 0;
     padding: 0 0.5rem;
 
-    font-size: 1.5rem;
+    font-size: 1rem;
 
     border: 1px solid lightgray;
     border-radius: 0.5rem;
@@ -59,6 +61,7 @@ const EventAttendance = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
+  const [waitingVolunteers, setWaitingVolunteers] = useState([]);
   const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
   const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
 
@@ -73,11 +76,19 @@ const EventAttendance = () => {
       });
       setMinors(fetchedMinors);
 
+      setWaitingVolunteers(
+        (await getEventVolunteersByAttendance(eventId, "waiting")).data
+          .volunteers
+      );
+      console.log(waitingVolunteers);
+
       setCheckedInVolunteers(
-        (await getEventVolunteersByAttendance(eventId, true)).data.volunteers
+        (await getEventVolunteersByAttendance(eventId, "checked in")).data
+          .volunteers
       );
       setCheckedOutVolunteers(
-        (await getEventVolunteersByAttendance(eventId, false)).data.volunteers
+        (await getEventVolunteersByAttendance(eventId, "checked out")).data
+          .volunteers
       );
     })();
   }, []);
@@ -90,19 +101,17 @@ const EventAttendance = () => {
       volunteer.bio.first_name + " " + volunteer.bio.last_name,
       volunteer.bio.email
     );
-
-    setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
-    setCheckedOutVolunteers(
-      checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
+    setCheckedInVolunteers((volunteers) => [...volunteers, volunteer]);
+    setWaitingVolunteers((volunteers) =>
+      volunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
   const checkOut = (volunteer) => {
     checkOutVolunteer(volunteer._id, eventId);
-
-    setCheckedOutVolunteers(checkedOutVolunteers.concat(volunteer));
-    setCheckedInVolunteers(
-      checkedInVolunteers.filter((v) => v._id !== volunteer._id)
+    setCheckedOutVolunteers((volunteers) => [...volunteers, volunteer]);
+    setCheckedInVolunteers((volunteers) =>
+      volunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
@@ -150,20 +159,11 @@ const EventAttendance = () => {
   return (
     <>
       <Styled.Container>
+        <Text className="mb-4" href={`/events`} text="< Back to home" />
         <Styled.HeaderRow>
-          <Styled.Header>Attendance</Styled.Header>
-          <Styled.CheckedInData>
-            <span style={{ fontWeight: "bold" }}>
-              <span style={{ fontWeight: "bold", fontSize: "3rem" }}>
-                {checkedInVolunteers.length}
-              </span>
-              <span style={{ fontWeight: "normal" }}>/</span>
-              {checkedInVolunteers.length + checkedOutVolunteers.length}
-            </span>{" "}
-            Checked In
-          </Styled.CheckedInData>
+          <Styled.Header>Attendance Management</Styled.Header>
+          <BoGButton text="End Event" onClick={endEvent} />
         </Styled.HeaderRow>
-
         <SearchBar
           placeholder="Search by Volunteer Name or Email"
           value={searchValue}
@@ -171,6 +171,7 @@ const EventAttendance = () => {
         />
 
         <AttendanceFunctionality
+          waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
           checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
           checkedOutVolunteers={filteredAndSortedVolunteers(
             checkedOutVolunteers
@@ -181,9 +182,9 @@ const EventAttendance = () => {
           isEnded={event?.isEnded}
         />
       </Styled.Container>
-      <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} />
+      {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>
   );
 };
 
-export default EventAttendance;
+export default AdminAuthWrapper(EventAttendance);

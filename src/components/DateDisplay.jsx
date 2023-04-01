@@ -15,7 +15,7 @@ class DateDisplayComponent extends React.Component {
 
   render() {
     return this.props.version === "Primary" ? (
-      <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-primaryColor">
+      <div className="bg-primaryColor mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md">
         <p className="text-sm leading-none text-white">
           {this.state.month.toUpperCase()}
         </p>
@@ -24,11 +24,11 @@ class DateDisplayComponent extends React.Component {
         </p>
       </div>
     ) : (
-      <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
-        <p className="text-sm leading-none text-primaryColor">
+      <div className="bg-secondaryColor mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md">
+        <p className="text-primaryColor text-sm leading-none">
           {this.state.month.toUpperCase()}
         </p>
-        <p className="mt-1 text-3xl font-bold leading-none text-primaryColor">
+        <p className="text-primaryColor mt-1 text-3xl font-bold leading-none">
           {this.state.day}
         </p>
       </div>
