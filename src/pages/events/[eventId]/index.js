@@ -131,7 +131,7 @@ const EventInfo = () => {
           onClick={() => goBackToCal()}
           text="< Back to home"
         />
-        <Styled.EventTable>
+        <div className="flex flex-row bg-gray-100 h-screen">
           <Col>
             <div className="ml-6 mr-2 flex flex-col">
               <div className="mb-1 text-4xl font-bold text-black">
