@@ -201,7 +201,7 @@ class OnboardingForm extends React.Component {
                     spaces, symbols, or special characters.
                   </Styled.Subtitle2>
                 </div>
-                <div className="m-auto w-64">
+                <div className="m-auto w-80">
                   <Label className="mb-3 mt-4" htmlFor="organization_code">
                     Non-profit Code
                   </Label>
