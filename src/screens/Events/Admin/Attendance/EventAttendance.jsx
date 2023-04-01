@@ -10,6 +10,7 @@ import {
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
+import SearchBar from "../../../../components/SearchBar";
 
 const Styled = {
   Container: styled.div`
@@ -163,7 +164,7 @@ const EventAttendance = () => {
           </Styled.CheckedInData>
         </Styled.HeaderRow>
 
-        <Styled.Search
+        <SearchBar
           placeholder="Search by Volunteer Name or Email"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
