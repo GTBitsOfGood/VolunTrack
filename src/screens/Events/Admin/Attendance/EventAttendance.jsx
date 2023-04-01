@@ -11,6 +11,7 @@ import {
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
 import Text from "../../../../components/Text";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -187,4 +188,4 @@ const EventAttendance = () => {
   );
 };
 
-export default EventAttendance;
+export default AdminAuthWrapper(EventAttendance);
