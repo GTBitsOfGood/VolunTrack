@@ -36,7 +36,7 @@ ConfirmationModal.propTypes = {
   cancelText: PropTypes.string.isRequired,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
-  form: PropTypes.element
+  form: PropTypes.element,
 };
 
 export default ConfirmationModal;
