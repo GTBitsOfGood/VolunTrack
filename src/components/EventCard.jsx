@@ -64,7 +64,7 @@ const EventCard = (props) => {
             version={props.version ?? "Primary"}
           />
           <div className="flex-column flex text-xl">
-            <Label class="text-xl font-bold">{props.event.title}</Label>
+            <Text text={props.event.title} type="subheading" />
             <Label>{`${props.functions.convertTime(
               props.event.startTime
             )} - ${props.functions.convertTime(
@@ -133,11 +133,11 @@ const EventCard = (props) => {
       {collapse && (
         <div className="ml-16 mt-2 space-y-2 pl-2">
           <div className="flex-column flex">
-            <Label class="text-md mr-1 mb-0 font-bold">Address: </Label>
+            <Label class="text-md mb-0 mr-1 font-bold">Address: </Label>
             <p>{props.event.address}</p>
           </div>
           <div className="flex-column flex">
-            <Label class="text-md mr-1 mb-0 font-bold">Description: </Label>
+            <Label class="text-md mb-0 mr-1 font-bold">Description: </Label>
             <div
               className="h-12 overflow-hidden"
               dangerouslySetInnerHTML={{ __html: props.event.description }}

@@ -11,7 +11,8 @@ import {
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import "flowbite-react";
 import { Button } from "flowbite-react";
-import Link from "next/link";
+import Text from "../../../../components/Text";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -157,29 +158,13 @@ const EventAttendance = () => {
   return (
     <>
       <Styled.Container>
-        <Link href={`/home`} className="mb-10 text-rose-600">
-          &lt; Back to home
-        </Link>
+        <Text className="mb-4" href={`/events`} text="< Back to home" />
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
           <Button className="bg-red-500 hover:bg-red-200" onClick={endEvent}>
             End Event
           </Button>
         </Styled.HeaderRow>
-        {/* <Styled.HeaderRow>
-          <Styled.Header>Attendance</Styled.Header>
-          <Styled.CheckedInData>
-            <span style={{ fontWeight: "bold" }}>
-              <span style={{ fontWeight: "bold", fontSize: "3rem" }}>
-                {checkedInVolunteers.length}
-              </span>
-              <span style={{ fontWeight: "normal" }}>/</span>
-              {checkedInVolunteers.length + checkedOutVolunteers.length}
-            </span>{" "}
-            Checked In
-          </Styled.CheckedInData>
-        </Styled.HeaderRow> */}
-
         <Styled.Search
           placeholder="Search by Volunteer Name or Email"
           value={searchValue}
@@ -203,4 +188,4 @@ const EventAttendance = () => {
   );
 };
 
-export default EventAttendance;
+export default AdminAuthWrapper(EventAttendance);
