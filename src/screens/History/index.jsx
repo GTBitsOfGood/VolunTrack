@@ -57,7 +57,7 @@ const History = () => {
   };
 
   return (
-    <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] pt-2">
+    <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] py-3">
       <div className="mb-2">
         <Text text="History" type="header" />
       </div>
