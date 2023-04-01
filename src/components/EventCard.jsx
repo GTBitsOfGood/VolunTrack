@@ -12,7 +12,6 @@ import {
   PlusCircleIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
-import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
 import BasicModal from "./BasicModal";
 import { deleteEvent } from "../actions/queries";

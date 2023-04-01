@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchOrganizations, toggleStatus } from "../../actions/queries";
 import OrganizationCard from "./OrganizationCard";
-import OrganizationToggleModal from "./OrganizationToggleModal";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { Spinner } from "flowbite-react";
@@ -84,7 +83,7 @@ const BogApproval = () => {
             <OrganizationCard
               key={index}
               org={organization}
-              setOrganization={setCurrOrganizationId}
+              setOrganization={setCurrOrganization}
               setOpen={setOpenModal}
             />
           ))}
