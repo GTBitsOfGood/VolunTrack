@@ -194,9 +194,8 @@ class OnboardingForm extends React.Component {
                 </div>
                 <div className="m-auto text-center">
                   <Styled.Subtitle2 className="mx-3.5 mt-4">
-                    * Please customize&nbsp;
-                    <b>your nonprofit code</b>&nbsp;for your volunteer
-                    management platform Note: Your custom code <br />
+                    * Please&nbsp;<b>customize your link</b>&nbsp;to your
+                    volunteer management platform. Note: Your custom code <br />
                     must contain&nbsp;
                     <b>3-20 letters or numbers.</b>&nbsp;Please do not use
                     spaces, symbols, or special characters.
@@ -214,7 +213,7 @@ class OnboardingForm extends React.Component {
                       <TextInput
                         {...field}
                         type="text"
-                        addon="volunteer.bitsofgood.org/"
+                        addon="https://volunteer.bitsofgood.org/"
                         placeholder={values.organization_name
                           .toLowerCase()
                           .replace(" ", "-")}
