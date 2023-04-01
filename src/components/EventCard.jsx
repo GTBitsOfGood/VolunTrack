@@ -3,6 +3,7 @@ import { Label, Tooltip } from "flowbite-react";
 import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import {
   UsersIcon,
   PencilIcon,
@@ -13,12 +14,17 @@ import {
 import router from "next/router";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
+import BasicModal from "./BasicModal";
+import { deleteEvent } from "../actions/queries";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [event, setEvent] = useState(props.event);
+  const {
+    data: { user },
+  } = useSession();
 
   const open = () => {
     setCollapse(!collapse);
@@ -46,6 +52,14 @@ const EventCard = (props) => {
 
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
+  };
+
+  const confirmDeleteModal = () => {
+    deleteEvent(event._id, user._id)
+      .then(() => {
+        toggleDeleteModal();
+      })
+      .catch(console.log);
   };
 
   const toggleEditModal = () => {
@@ -90,10 +104,14 @@ const EventCard = (props) => {
                   <UsersIcon className="text-primaryColor h-8" />
                 </button>
               </Tooltip>
-              <EventDeleteModal
+              <BasicModal
                 open={showDeleteModal}
-                toggle={toggleDeleteModal}
-                event={event}
+                title={"Delete Event"}
+                text={"Are you sure you want to delete this event?"}
+                onConfirm={confirmDeleteModal}
+                onCancel={toggleDeleteModal}
+                confirmText={"Delete"}
+                cancelText={"Cancel"}
               />
               <EventEditModal
                 open={showEditModal}

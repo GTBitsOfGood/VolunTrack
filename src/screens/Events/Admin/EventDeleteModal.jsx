@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -7,9 +7,7 @@ import { deleteEvent } from "../../../actions/queries";
 
 const EventDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
-  const {
-    data: { user },
-  } = useSession();
+  
 
   const handleSubmit = () => {
     setDeleting(true);

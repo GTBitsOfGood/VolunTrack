@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const OrganizationCard = (props) => {
   const onChange = () => {
     props.setOpen(true);
-    props.setOrganization(props.org._id);
+    props.setOrganization({organizationId: props.org._id, status: props.org.active});
   };
 
   return (

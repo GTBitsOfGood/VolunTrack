@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { fetchOrganizations } from "../../actions/queries";
+import { fetchOrganizations, toggleStatus } from "../../actions/queries";
 import OrganizationCard from "./OrganizationCard";
 import OrganizationToggleModal from "./OrganizationToggleModal";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { Spinner } from "flowbite-react";
+import BasicModal from "../../components/BasicModal";
 
 const BogApproval = () => {
   const [loading, setLoading] = useState(true);
   const [organizations, setOrganizations] = useState([]);
-  const [currOrganizationId, setCurrOrganizationId] = useState(null);
+  const [currOrganization, setCurrOrganization] = useState({organizationId: null, status: null});
   const [openModal, setOpenModal] = useState(false);
 
   const onRefresh = () => {
@@ -25,19 +26,19 @@ const BogApproval = () => {
       });
   };
 
-  const onToggleOrganization = () => {
-    setOpenModal(false);
-    onRefresh();
-  };
-
   useEffect(() => {
     onRefresh();
   }, []);
 
+  const onConfirmModal = () => {
+    toggleStatus(currOrganization.organizationId);
+    onCloseModal();
+    onRefresh();
+  }
+
   const onCloseModal = () => {
     setOpenModal(false);
-    setCurrOrganizationId(null);
-    onRefresh();
+    setCurrOrganization(null);
   };
 
   return loading ? (
@@ -62,7 +63,7 @@ const BogApproval = () => {
               <OrganizationCard
                 key={index}
                 org={organization}
-                setOrganization={setCurrOrganizationId}
+                setOrganization={setCurrOrganization}
                 setOpen={setOpenModal}
               />
             ))
@@ -85,12 +86,17 @@ const BogApproval = () => {
             />
           ))}
       </div>
-      {currOrganizationId && (
-        <OrganizationToggleModal
+      {currOrganization.organizationId && (
+        <BasicModal 
           open={openModal}
+          text={`By clicking the confirm button, this volunteer management platform \
+            will become ${currOrganization.status ? " inactive " : " active "} immediately. Are \
+            you sure you want to confirm?`}
+          confirmText={"Confirm"}
+          cancelText={"Cancel"}
           onClose={onCloseModal}
-          toggle={onToggleOrganization}
-          organizationId={currOrganizationId}
+          onConfirm={onConfirmModal}
+          title={"Toggle the organizations status"}
         />
       )}
     </div>
