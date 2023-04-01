@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import { getRegistrations } from "../queries/registrations";
-import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
 import BasicModal from "./BasicModal";
 import { deleteEvent } from "../actions/queries";
