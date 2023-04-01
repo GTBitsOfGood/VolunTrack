@@ -6,11 +6,23 @@ import DateDisplayComponent from "./DateDisplay";
 
 const AdminHomeHeader = (props) => {
   let events = 0;
+  let volunteers = 0;
+  let firstDate = "";
   for (let i = 0; i < props.data.length; i++) {
     let splitDate = new Date(props.data[i].date).toDateString().split(" ");
     let final = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     if (final === props.dateString) {
       events++;
+      volunteers += props.data[i].volunteers.length;
+    }
+    if (i === props.data.length - 1) {
+      let split = props.data[i].date;
+      firstDate =
+        split.substring(5, 7) +
+        "/" +
+        split.substring(8, 10) +
+        "/" +
+        split.substring(0, 4);
     }
   }
 
@@ -31,6 +43,7 @@ const AdminHomeHeader = (props) => {
         show: false,
       },
     },
+    colors: ["#0284c7", "#15803d", "#991b1b"],
     fill: {
       type: "gradient",
       gradient: {
@@ -216,7 +229,7 @@ const AdminHomeHeader = (props) => {
                 </div>
                 <hr className="mx-2 my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                  <p className="pl-2 text-2xl">0</p>
+                  <p className="pl-2 text-2xl">{volunteers}</p>
                   <p className="text-md pl-2 text-slate-600"> Volunteers</p>
                 </div>
               </div>
@@ -227,7 +240,7 @@ const AdminHomeHeader = (props) => {
             <div className="flex items-center pb-3">
               <h3 className="font-weight-bold text-lg">Total Data</h3>
               <p className="pl-2 text-sm text-slate-600">
-                {"(10/30/2022 to now)"}
+                {`(${firstDate} to now)`}
               </p>
             </div>
             <div className="flex-column flex">
