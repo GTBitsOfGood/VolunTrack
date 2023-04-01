@@ -64,7 +64,7 @@ const EventCard = (props) => {
             version={props.version ?? "Primary"}
           />
           <div className="flex-column flex text-xl">
-            <Label class="text-xl font-bold">{props.event.title}</Label>
+            <Text text={props.event.title} type="subheading" />
             <Label>{`${props.functions.convertTime(
               props.event.startTime
             )} - ${props.functions.convertTime(
