@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getHistoryEvents } from "../../queries/historyEvents";
 import { getUsers } from "../../queries/users";
-
-// TODOCD: Implement Search Feature
+import SearchBar from "../../components/SearchBar";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -26,17 +26,6 @@ const Styled = {
 
     display: flex;
     justify-content: space-between;
-  `,
-  Search: styled.input`
-    height: 3rem;
-    width: 100%;
-    margin: 0;
-    padding: 0 0.5rem;
-
-    font-size: 1.5rem;
-
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
   `,
 };
 
@@ -96,7 +85,7 @@ const History = () => {
         <Styled.Header>History</Styled.Header>
       </Styled.HeaderRow>
 
-      <Styled.Search
+      <SearchBar
         placeholder="Search by Admin Name or Actions"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
@@ -129,4 +118,4 @@ History.propTypes = {
   historyEvents: PropTypes.array,
 };
 
-export default History;
+export default AdminAuthWrapper(History);

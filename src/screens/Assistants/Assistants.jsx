@@ -1,6 +1,4 @@
 import { Formik } from "formik";
-import { useSession } from "next-auth/react";
-import Error from "next/error";
 import PropTypes from "prop-types";
 import React from "react";
 import {
@@ -24,85 +22,19 @@ import { deleteUser, getUsers } from "../../queries/users";
 import * as Form from "../sharedStyles/formStyles";
 import AssistantTable from "./AssistantTable";
 import { invitedAdminValidator } from "./helpers";
-
-// TODOCD: Implement Search Feature
+import SearchBar from "../../components/SearchBar";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const PAGE_SIZE = 10;
 
 const Styled = {
-  Container: styled.div`
-    width: 100%;
-    height: 100%;
-
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    left: 10%;
-  `,
-  PaginationContainer: styled.div`
-    background: white;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    height: 3rem;
-
-    p {
-      color: hsl(0, 0%, 50%);
-      margin: 0 1rem;
-      font-size: 1.2rem;
-    }
-  `,
-  ButtonContainer: styled.div`
-    width: 95%;
-    maxwidth: 80rem;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  `,
   Col: styled(Col)`
     margin-top: 0.5rem;
   `,
   Row: styled(Row)`
     margin: 0.5rem 0.5rem 0.5rem 1rem;
   `,
-  Search: styled.input`
-    height: 3rem;
-    width: 100%;
-    font-size: 1.5rem;
-    padding-left: 0.5rem;
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
-  `,
-  TableUsers: styled.div`
-    width: 80%;
-  `,
-  Text: styled.div`
-    color: #000000;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 32px;
-    line-height: 41px;
-  `,
 };
-
-function authWrapper(Component) {
-  return function WrappedComponent(props) {
-    const {
-      data: { user },
-    } = useSession();
-    if (user.role !== "admin") {
-      return (
-        <Error
-          title="You are not authorized to access this page"
-          statusCode={403}
-        />
-      );
-    } else {
-      return <Component {...props} user={user} />;
-    }
-  };
-}
 
 class Assistants extends React.Component {
   state = {
@@ -216,13 +148,15 @@ class Assistants extends React.Component {
   render() {
     const { loadingMoreUsers } = this.state;
     return (
-      <Styled.Container>
+      <div className="relative left-[10%] flex h-full w-full flex-col justify-center pt-4">
         <Styled.Row>
-          <Styled.Text>Employees</Styled.Text>
+          <div className="text-4xl font-bold not-italic text-black">
+            Employees
+          </div>
         </Styled.Row>
         <Styled.Row>
           <Styled.Col>
-            <Styled.Search
+            <SearchBar
               placeholder="Search by Employee Name or Email"
               value={this.state.searchValue}
               onChange={(e) => this.setState({ searchValue: e.target.value })}
@@ -233,7 +167,7 @@ class Assistants extends React.Component {
           </Styled.Col>
         </Styled.Row>
         <Styled.Row>
-          <Styled.TableUsers>
+          <div className="w-[80%]">
             <AssistantTable
               sessionUser={this.props.user}
               users={this.getUsersAtPage()}
@@ -244,7 +178,7 @@ class Assistants extends React.Component {
               deletePendingCallback={this.onDeletePending}
               deleteUserCallback={this.onDeleteUser}
             />
-          </Styled.TableUsers>
+          </div>
         </Styled.Row>
         <Formik
           initialValues={{
@@ -296,12 +230,12 @@ class Assistants extends React.Component {
             </Modal>
           )}
         </Formik>
-      </Styled.Container>
+      </div>
     );
   }
 }
 
-export default authWrapper(Assistants);
+export default AdminAuthWrapper(Assistants);
 
 Assistants.propTypes = {
   user: PropTypes.object.isRequired,

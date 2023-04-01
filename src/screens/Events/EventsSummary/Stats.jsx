@@ -10,6 +10,7 @@ import InputField from "../../../components/Forms/InputField";
 import Loading from "../../../components/Loading";
 import { getAttendances } from "../../../queries/attendances";
 import { getEvents } from "../../../queries/events";
+import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -204,4 +205,4 @@ const Stats = () => {
   );
 };
 
-export default Stats;
+export default AdminAuthWrapper(Stats);

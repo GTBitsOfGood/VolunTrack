@@ -6,6 +6,7 @@ import { getAttendances } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -173,4 +174,4 @@ const EventStatistics = () => {
   );
 };
 
-export default EventStatistics;
+export default AdminAuthWrapper(EventStatistics);
