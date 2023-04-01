@@ -13,6 +13,7 @@ import "flowbite-react";
 import { Button } from "flowbite-react";
 import Text from "../../../../components/Text";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
+import BoGButton from "../../../../components/BoGButton";
 
 const Styled = {
   Container: styled.div`
@@ -161,9 +162,7 @@ const EventAttendance = () => {
         <Text className="mb-4" href={`/events`} text="< Back to home" />
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
-          <Button className="bg-red-500 hover:bg-red-200" onClick={endEvent}>
-            End Event
-          </Button>
+          <BoGButton text="End Event" onClick={endEvent} />
         </Styled.HeaderRow>
         <Styled.Search
           placeholder="Search by Volunteer Name or Email"
