@@ -92,7 +92,7 @@ class OnboardingForm extends React.Component {
             contact with you to help you establish the platform.
           </Styled.Subtitle>
         </Styled.Container>
-        <hr class="mb-12 mt-4"></hr>
+        <hr className="mb-12 mt-4"></hr>
         <Formik
           initialValues={{
             organization_name: "",
