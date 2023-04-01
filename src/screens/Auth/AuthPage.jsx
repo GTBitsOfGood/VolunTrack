@@ -24,7 +24,11 @@ const AuthPage = (props) => {
           style={{ width: "100%", marginBottom: "2px" }}
         /> */}
         <div className="h-28" />
-        <Text text={props.createAccount ? "Create an Account" : "Sign In"} theme="header" className="pb-2"/>
+        <Text
+          text={props.createAccount ? "Create an Account" : "Sign In"}
+          theme="header"
+          className="pb-2"
+        />
         <div className="flex w-full flex-wrap items-center gap-2">
           <Button color="light" className="w-full py-1" onClick={login}>
             <img
@@ -37,7 +41,7 @@ const AuthPage = (props) => {
         </div>
         <div className="mt-2 flex w-full items-center justify-between">
           <hr size="150" width="150" color="#6C757D" />
-          <Text text="OR"/>
+          <Text text="OR" />
           <hr size="150" width="150" color="#6C757D" />
         </div>
         <br></br>

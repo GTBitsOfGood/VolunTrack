@@ -18,24 +18,27 @@ class Text extends React.Component {
         >
           {this.props.text}
         </a>
-      )
+      );
     } else {
       let theming = "text-sm ";
       switch (this.props.theme) {
-        case "helper":
-          theming = "text-sm text-gray "
-          break;
         case "header":
           return (
-            <h1 className={"text-4xl font-bold " + this.props.className}>{this.props.text}</h1>
+            <h1 className={"text-4xl font-bold " + this.props.className}>
+              {this.props.text}
+            </h1>
           );
-        case "subheading":
-          theming = "text-xl text-bold "
-          break;
+        case "subheader":
+          return (
+            <h3 className={"text-xl font-bold " + this.props.className}>
+              {this.props.text}
+            </h3>
+          );
+        case "helper":
+          theming = "text-grey ";
       }
-      theming = theming + this.props?.className;
       return (
-        <p className={theming}>{this.props.text}</p>
+        <p className={theming + this.props.className}>{this.props.text}</p>
       );
     }
   }
