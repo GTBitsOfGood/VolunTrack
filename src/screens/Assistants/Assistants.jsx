@@ -158,9 +158,11 @@ class Assistants extends React.Component {
   render() {
     const { loadingMoreUsers } = this.state;
     return (
-      <div className="flex flex-col pt-4 relative w-full h-full left-[10%] justify-center">
+      <div className="relative left-[10%] flex h-full w-full flex-col justify-center pt-4">
         <Styled.Row>
-          <div className="text-black not-italic font-bold text-4xl">Employees</div>
+          <div className="text-4xl font-bold not-italic text-black">
+            Employees
+          </div>
         </Styled.Row>
         <Styled.Row>
           <Styled.Col>
