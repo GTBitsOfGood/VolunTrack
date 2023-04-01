@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getHistoryEvents, getUsers } from "../../actions/queries";
 import { Table } from "flowbite-react";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 // TODOCD: Implement Search Feature
 
@@ -127,4 +128,4 @@ History.propTypes = {
   historyEvents: PropTypes.array,
 };
 
-export default History;
+export default AdminAuthWrapper(History);

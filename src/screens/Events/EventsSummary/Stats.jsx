@@ -10,6 +10,7 @@ import styled from "styled-components";
 import Loading from "../../../components/Loading";
 import { useSession } from "next-auth/react";
 import InputField from "../../../components/Forms/InputField";
+import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -202,4 +203,4 @@ const Stats = () => {
   );
 };
 
-export default Stats;
+export default AdminAuthWrapper(Stats);
