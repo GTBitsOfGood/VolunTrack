@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import BasicModal from "../../../../components/BasicModal";
 import {
+  deleteAttendance,
   fetchEventsById,
   getAttendanceForEvent,
 } from "../../../../actions/queries";
