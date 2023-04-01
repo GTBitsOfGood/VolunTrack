@@ -43,14 +43,14 @@ const WaiverManager = () => {
   const loadWaivers = async () => {
     const adult = await getWaivers("adult", user.organizationId);
 
-    if (adult.data.waiver.length > 0) {
-      setAdultContent(adult.data.waiver[0].text);
+    if (adult.data.waivers.length > 0) {
+      setAdultContent(adult.data.waivers[0].text);
     }
 
     const minor = await getWaivers("minor", user.organizationId);
 
-    if (minor.data.waiver.length > 0) {
-      setMinorContent(minor.data.waiver[0].text);
+    if (minor.data.waivers.length > 0) {
+      setMinorContent(minor.data.waivers[0].text);
     }
   };
 

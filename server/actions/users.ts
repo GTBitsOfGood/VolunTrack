@@ -21,27 +21,27 @@ export const getUsers = async (
   } else if (!organizationId) {
     users = await User.find({ role });
   } else if (!role) {
-    users = await User.find({ organization: organizationId });
+    users = await User.find({ organizationId });
   } else {
-    users = await User.find({ role, organization: organizationId });
+    users = await User.find({ role, organizationId });
   }
 
   if (eventId) {
-    const registrations = await Registration.find({ event: eventId });
+    const registrations = await Registration.find({ eventId });
     const userIds = new Set(
-      registrations.map((registration) => registration.user)
+      registrations.map((registration) => registration.userId)
     );
     users = users.filter((user) => userIds.has(user._id));
   }
 
   if (isCheckedIn !== undefined) {
     const attendances = await Attendance.find({
-      event: eventId,
+      eventId,
       checkinTime: { $ne: null },
       checkoutTime: null,
     });
     const checkedInUserIds = new Set(
-      attendances.map((attendance) => attendance.user)
+      attendances.map((attendance) => attendance.userId)
     );
     if (isCheckedIn) {
       users = users.filter((user) => checkedInUserIds.has(user._id));

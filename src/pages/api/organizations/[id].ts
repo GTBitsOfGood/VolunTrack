@@ -9,7 +9,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
   const organizationId = req.query.id as string;
-  console.log(req.query);
   const organization = await Organization.findById(organizationId);
   if (!organization)
     return res

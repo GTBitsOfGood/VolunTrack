@@ -1,3 +1,4 @@
+import { Label } from "flowbite-react";
 import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
@@ -6,13 +7,12 @@ import "react-quill/dist/quill.snow.css";
 import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
+import InputField from "../../../components/Forms/InputField";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, editEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator, standardEventValidator } from "./eventHelpers";
-import InputField from "../../../components/Forms/InputField";
-import { Label } from "flowbite-react";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -167,69 +167,77 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   return (
     <Formik
       initialValues={{
-        title: containsExistingEvent(event) ? event.title : emptyStringField,
+        title: containsExistingEvent(event)
+          ? event.eventParent.title
+          : emptyStringField,
         date: containsExistingEvent(event)
           ? event.date.split("T")[0]
           : emptyStringField, // strips timestamp
         startTime: containsExistingEvent(event)
-          ? event.startTime
+          ? event.eventParent.startTime
           : emptyStringField,
         endTime: containsExistingEvent(event)
-          ? event.endTime
+          ? event.eventParent.endTime
           : emptyStringField,
         localTime: containsExistingEvent(event)
-          ? event.localTime
+          ? event.eventParent.localTime
           : getLocalTime(),
         address: containsExistingEvent(event)
-          ? event.address
+          ? event.eventParent.address
           : emptyStringField,
-        city: containsExistingEvent(event) ? event.city : emptyStringField,
-        state: containsExistingEvent(event) ? event.state : "TN",
-        zip: containsExistingEvent(event) ? event.zip : emptyStringField,
+        city: containsExistingEvent(event)
+          ? event.eventParent.city
+          : emptyStringField,
+        state: containsExistingEvent(event) ? event.eventParent.state : "TN",
+        zip: containsExistingEvent(event)
+          ? event.eventParent.zip
+          : emptyStringField,
         max_volunteers: containsExistingEvent(event)
-          ? event.max_volunteers
+          ? event.eventParent.maxVolunteers
           : emptyStringField,
         description: containsExistingEvent(event)
-          ? event.description
+          ? event.eventParent.description
           : emptyStringField,
 
         // TODO: add default values for these
         eventContactPhone: containsExistingEvent(event)
-          ? event.eventContactPhone
+          ? event.eventParent.eventContactPhone
           : emptyStringField,
         eventContactEmail: containsExistingEvent(event)
-          ? event.eventContactEmail
+          ? event.eventParent.eventContactEmail
           : emptyStringField,
 
         pocName:
           containsExistingEvent(event) && isGroupEvent
-            ? event.pocName
+            ? event.eventParent.pocName
             : emptyStringField,
         pocEmail:
           containsExistingEvent(event) && isGroupEvent
-            ? event.pocEmail
+            ? event.eventParent.pocEmail
             : emptyStringField,
         pocPhone:
           containsExistingEvent(event) && isGroupEvent
-            ? event.pocPhone
+            ? event.eventParent.pocPhone
             : emptyStringField,
         orgName:
           containsExistingEvent(event) && isGroupEvent
-            ? event.orgName
+            ? event.eventParent.orgName
             : emptyStringField,
         orgAddress:
           containsExistingEvent(event) && isGroupEvent
-            ? event.orgAddress
+            ? event.eventParent.orgAddress
             : emptyStringField,
         orgCity:
           containsExistingEvent(event) && isGroupEvent
-            ? event.orgCity
+            ? event.eventParent.orgCity
             : emptyStringField,
         orgState:
-          containsExistingEvent(event) && isGroupEvent ? event.orgState : "GA",
+          containsExistingEvent(event) && isGroupEvent
+            ? event.eventParent.orgState
+            : "GA",
         orgZip:
           containsExistingEvent(event) && isGroupEvent
-            ? event.orgZip
+            ? event.eventParent.orgZip
             : emptyStringField,
         isPrivate: isGroupEvent,
       }}

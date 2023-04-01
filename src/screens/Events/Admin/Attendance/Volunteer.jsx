@@ -55,15 +55,16 @@ const CheckedInContainer = styled.div`
 //   isEnded: boolean;
 // }): JSX.Element => {
 const Volunteer = (volunteer, minors, onClick, isCheckedIn, isEnded) => {
+  console.log(volunteer);
   return (
     <>
       {isEnded ? (
         <Styled.GreyedOutContainer>
           <Styled.Name>
-            {volunteer.bio.first_name} {volunteer.bio.last_name}{" "}
+            {volunteer.firstName} {volunteer.lastName}{" "}
             {minors?.length > 0 && <>({minors.length} minors)</>}
           </Styled.Name>
-          <Styled.Email>{volunteer.bio.email}</Styled.Email>
+          <Styled.Email>{volunteer.email}</Styled.Email>
         </Styled.GreyedOutContainer>
       ) : (
         <Styled.Container
@@ -71,10 +72,10 @@ const Volunteer = (volunteer, minors, onClick, isCheckedIn, isEnded) => {
           onClick={() => onClick(volunteer)}
         >
           <Styled.Name>
-            {volunteer.bio.first_name} {volunteer.bio.last_name}{" "}
+            {volunteer.firstName} {volunteer.lastName}{" "}
             {minors?.length > 0 && <>({minors.length} minors)</>}
           </Styled.Name>
-          <Styled.Email>{volunteer.bio.email}</Styled.Email>
+          <Styled.Email>{volunteer.email}</Styled.Email>
         </Styled.Container>
       )}
     </>

@@ -65,11 +65,11 @@ const EventAttendance = () => {
       const event = await getEvent(eventId);
       setEvent(event.data.event);
 
-      const fetchedMinors = {};
-      event.minors.forEach((m) => {
-        fetchedMinors[m.volunteer_id] = m.minor;
-      });
-      setMinors(fetchedMinors);
+      // const fetchedMinors = {};
+      // event.minors.forEach((m) => {
+      //   fetchedMinors[m.volunteer_id] = m.minor;
+      // });
+      // setMinors(fetchedMinors);
 
       setCheckedInVolunteers(
         (await getUsers(undefined, undefined, eventId, true)).data.users
@@ -80,8 +80,8 @@ const EventAttendance = () => {
     })();
   }, []);
 
-  const checkIn = (volunteer) => {
-    checkInVolunteer(volunteer._id, eventId);
+  const checkIn = async (volunteer) => {
+    await checkInVolunteer(volunteer._id, eventId);
 
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(
@@ -89,8 +89,8 @@ const EventAttendance = () => {
     );
   };
 
-  const checkOut = (volunteer) => {
-    checkOutVolunteer(volunteer._id, eventId);
+  const checkOut = async (volunteer) => {
+    await checkOutVolunteer(volunteer._id, eventId);
 
     setCheckedOutVolunteers(checkedOutVolunteers.concat(volunteer));
     setCheckedInVolunteers(

@@ -253,11 +253,12 @@ const EventTable = ({
                   </Styled.EventContentRow>
                   <Styled.EventContentRow>
                     <Styled.Time>{`${convertTime(
-                      event.startTime
-                    )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                      event.eventParent.startTime
+                    )} - ${convertTime(
+                      event.eventParent.endTime
+                    )} EST`}</Styled.Time>
                     <Styled.EventSlots>
-                      {event.max_volunteers - event.volunteers.length} slots
-                      available
+                      {event.eventParent.max_volunteers} slots available
                     </Styled.EventSlots>
                   </Styled.EventContentRow>
                 </Styled.EventContent>
@@ -296,11 +297,12 @@ const EventTable = ({
                       </Styled.EventContentRow>
                       <Styled.EventContentRow>
                         <Styled.Time>{`${convertTime(
-                          event.startTime
-                        )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                          event.eventParent.startTime
+                        )} - ${convertTime(
+                          event.eventParent.endTime
+                        )} EST`}</Styled.Time>
                         <Styled.EventSlots>
-                          {event.max_volunteers - event.volunteers.length} slots
-                          available
+                          {event.eventParent.maxVolunteers} slots available
                         </Styled.EventSlots>
                       </Styled.EventContentRow>
                     </Styled.EventContent>
@@ -327,11 +329,12 @@ const EventTable = ({
                       </Styled.EventContentRow>
                       <Styled.EventContentRow>
                         <Styled.Time>{`${convertTime(
-                          event.startTime
-                        )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                          event.eventParent.startTime
+                        )} - ${convertTime(
+                          event.eventParent.endTime
+                        )} EST`}</Styled.Time>
                         <Styled.EventSlots>
-                          {event.max_volunteers - event.volunteers.length} slots
-                          available
+                          {event.eventParent.maxVolunteers} slots available
                         </Styled.EventSlots>
                       </Styled.EventContentRow>
                     </Styled.EventContent>
@@ -366,11 +369,12 @@ const EventTable = ({
                     </Styled.EventContentRow>
                     <Styled.EventContentRow>
                       <Styled.Time>{`${convertTime(
-                        event.startTime
-                      )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                        event.eventParent.startTime
+                      )} - ${convertTime(
+                        event.eventParent.endTime
+                      )} EST`}</Styled.Time>
                       <Styled.EventSlots>
-                        {event.max_volunteers - event.volunteers.length} slots
-                        available
+                        {event.eventParent.maxVolunteers} slots available
                       </Styled.EventSlots>
                     </Styled.EventContentRow>
                   </Styled.EventContent>
@@ -400,11 +404,12 @@ const EventTable = ({
                     </Styled.EventContentRow>
                     <Styled.EventContentRow>
                       <Styled.Time>{`${convertTime(
-                        event.startTime
-                      )} - ${convertTime(event.endTime)} EST`}</Styled.Time>
+                        event.eventParent.startTime
+                      )} - ${convertTime(
+                        event.eventParent.endTime
+                      )} EST`}</Styled.Time>
                       <Styled.EventSlots>
-                        {event.max_volunteers - event.volunteers.length} slots
-                        available
+                        {event.eventParent.maxVolunteers} slots available
                       </Styled.EventSlots>
                     </Styled.EventContentRow>
                   </Styled.EventContent>

@@ -13,12 +13,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const eventId = req.query.eventId
         ? new Types.ObjectId(req.query.eventId as string)
         : undefined;
-      const startDate = req.query.startDate
-        ? new Date(req.query.startDate as string)
-        : undefined;
-      const endDate = req.query.endDate
-        ? new Date(req.query.endDate as string)
-        : undefined;
+      const startDate =
+        req.query.startDate !== "undefined"
+          ? new Date(req.query.startDate as string)
+          : undefined;
+      const endDate =
+        req.query.endDate !== "undefined"
+          ? new Date(req.query.endDate as string)
+          : undefined;
 
       const match: Partial<
         Omit<AttendanceData, "checkinTime" | "checkoutTime"> & {
@@ -34,9 +36,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         { $match: match },
         {
           $group: {
-            _id: "$event",
+            _id: "$eventId",
             num: { $count: {} },
-            users: { $addToSet: "$user" },
+            users: { $addToSet: "$userId" },
             minutes: {
               $sum: {
                 $dateDiff: {

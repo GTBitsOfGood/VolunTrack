@@ -1,16 +1,16 @@
-import PropTypes from "prop-types";
+import {
+  CheckCircleIcon,
+  PencilIcon,
+  PlusCircleIcon,
+  TrashIcon,
+  UsersIcon,
+} from "@heroicons/react/24/solid";
 import { Label, Tooltip } from "flowbite-react";
+import router from "next/router";
+import PropTypes from "prop-types";
+import { useState } from "react";
 import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
-import { useState } from "react";
-import {
-  UsersIcon,
-  PencilIcon,
-  TrashIcon,
-  CheckCircleIcon,
-  PlusCircleIcon,
-} from "@heroicons/react/24/solid";
-import router from "next/router";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
 
@@ -64,11 +64,13 @@ const EventCard = (props) => {
             version={props.version ?? "Primary"}
           />
           <div className="flex-column flex text-xl">
-            <Label class="text-xl font-bold">{props.event.title}</Label>
+            <Label class="text-xl font-bold">
+              {props.event.eventParent.title}
+            </Label>
             <Label>{`${props.functions.convertTime(
-              props.event.startTime
+              props.event.eventParent.startTime
             )} - ${props.functions.convertTime(
-              props.event.endTime
+              props.event.eventParent.endTime
             )} EST`}</Label>
           </div>
         </div>
@@ -125,8 +127,7 @@ const EventCard = (props) => {
             </>
           )}
           <Label className="justify-end">
-            {props.event.max_volunteers - props.event.volunteers.length} slots
-            available
+            {props.event.eventParent.maxVolunteers} slots available
           </Label>
         </div>
       </div>
@@ -140,7 +141,9 @@ const EventCard = (props) => {
             <Label class="text-md mr-1 mb-0 font-bold">Description: </Label>
             <div
               className="h-12 overflow-hidden"
-              dangerouslySetInnerHTML={{ __html: props.event.description }}
+              dangerouslySetInnerHTML={{
+                __html: props.event.eventParent.description,
+              }}
             />
           </div>
           <Text

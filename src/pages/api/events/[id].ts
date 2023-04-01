@@ -34,7 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET": {
       return res
         .status(200)
-        .json({ event: await event.populate("eventParent") });
+        .json({ event: await event.populate("eventParentId") });
     }
     case "PUT": {
       const requestBody = req.body as {
@@ -75,7 +75,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       return res
         .status(200)
-        .json({ event: await event.populate("eventParent") });
+        .json({ event: await event.populate("eventParentId") });
     }
     case "DELETE": {
       await Attendance.deleteMany({ eventId: event._id });
