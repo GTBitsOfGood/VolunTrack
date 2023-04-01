@@ -12,7 +12,6 @@ import BoGButton from "../../components/BoGButton";
 const Styled = {
   Container: styled.div`
     display: flex;
-    padding: 4em;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -21,34 +20,26 @@ const Styled = {
     font-style: normal;
     font-weight: 600;
     font-size: 24px;
-    line-height: 30px;
     align-items: center;
+    margin: 0;
     justify-content: center;
   `,
   Subtitle: styled.div`
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
-    line-height: 20px;
     color: #637381;
   `,
   Header2: styled.div`
     font-style: normal;
     font-weight: 600;
     font-size: 20px;
-    line-height: 30px;
     color: #f05c61;
   `,
-  Subtitle2: styled.div`
-    position: absolute
-    width: 686px;
-    height: 72px;
-    left: 376px;
-    top: 1497px;
+  Subtitle2: styled.p`
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    line-height: 24px;
   `,
   ErrorMessage: styled(ErrorMessage).attrs({
     component: "span",
@@ -101,6 +92,7 @@ class OnboardingForm extends React.Component {
             contact with you to help you establish the platform.
           </Styled.Subtitle>
         </Styled.Container>
+        <hr className="mb-12 mt-4"></hr>
         <Formik
           initialValues={{
             organization_name: "",
@@ -122,100 +114,95 @@ class OnboardingForm extends React.Component {
           validationSchema={createOrganizationValidator}
         >
           {({ handleSubmit, isValid, isSubmitting, values }) => (
-            <div className="flex justify-center">
+            <div className="flex flex-col justify-center">
               <form>
                 <div className="m-auto">
                   <Styled.Header2 className="flex justify-center">
                     Non-profit Information
                   </Styled.Header2>
-                  <Styled.Subtitle className="flex justify-center">
+                  <Styled.Subtitle className="mb-4 flex justify-center">
                     Used to verify your organization. We may ask you for more
                     information if needed.
                   </Styled.Subtitle>
                 </div>
-                <div className="m-auto mt-5 w-64">
+                <div className="m-auto flex w-64 flex-col">
+                  <p>Non-profit Name</p>
                   <InputField
-                    className="flex justify-center"
                     name="organization_name"
-                    label="Non-profit Name"
                     placeholder="Non-profit Name"
                   />
                   <InputField
-                    className="flex justify-center"
                     name="website_url"
                     label="Non-profit Website"
                     placeholder="https://www.example.com"
                   />
                 </div>
                 <div className="m-auto">
-                  <Styled.Header2 className="flex justify-center">
+                  <Styled.Header2 className="mt-4 flex justify-center">
                     Contact Information
                   </Styled.Header2>
-                  <Styled.Subtitle className="flex justify-center">
+                  <Styled.Subtitle className="mb-4 flex justify-center">
                     We will use this to contact you if we need more information
                     or update you with the approval.
                   </Styled.Subtitle>
                 </div>
                 <div className="m-auto w-64">
                   <InputField
-                    className="flex justify-center"
                     name="contact_name"
                     label="Contact Name"
                     placeholder="Contact Name"
                   />
                   <InputField
-                    className="flex justify-center"
                     name="contact_email"
                     label="Contact Email"
                     placeholder="example@email.com"
                   />
                   <InputField
-                    className="flex justify-center"
                     name="contact_phone"
                     label="Phone"
                     placeholder="xxx-xxx-xxxx"
                   />
                 </div>
-                <div className="m-auto mb-5">
-                  <Styled.Header2 className="flex justify-center">
+                <div className="m-auto text-center">
+                  <Styled.Header2 className="mt-10">
                     Volunteer Management Information
                   </Styled.Header2>
-                  <Styled.Subtitle className="flex justify-center">
+                  <Styled.Subtitle>
                     Used as important information to generate your volunteer
                     management platform.
                   </Styled.Subtitle>
-                  <Styled.Subtitle2 className="flex justify-center">
+                  <Styled.Subtitle2 className="mx-3.5 mt-4 mb-4">
                     * Please provide an email address that you wish to be used
                     to create the main volunteer administrator (Admin) account.{" "}
                     <br />
-                    The main volunteer administrator account cannot be changed.
-                    It will have the highest permission level on this platform.
+                    The main volunteer administrator account&nbsp;
+                    <b>cannot be changed.</b>&nbsp;It will have the
+                    <b>&nbsp;highest permission level</b>&nbsp;on this platform.
                   </Styled.Subtitle2>
                 </div>
                 <div className="m-auto w-64">
                   <InputField
-                    className="flex justify-center"
                     name="admin_email"
                     label="Primary Admin Account"
                     placeholder="example@email.com"
                   />
                   <InputField
-                    className="flex justify-center"
                     name="confirm_admin_email"
                     label="Confirm Primary Admin Account"
                     placeholder="example@email.com"
                   />
                 </div>
-                <div className="m-auto mb-5">
-                  <Styled.Subtitle2 className="flex justify-center">
-                    * Please customize your nonprofit code for your volunteer
-                    management platform. <br />
-                    Note: Your custom code must contain 3-20 letters or numbers.
-                    Please do not use spaces, symbols, or special characters.
+                <div className="m-auto text-center">
+                  <Styled.Subtitle2 className="mx-3.5 mt-4">
+                    * Please&nbsp;<b>customize your link</b>&nbsp;to your
+                    volunteer management platform. Note: Your custom code <br />
+                    must contain&nbsp;
+                    <b>3-20 letters or numbers.</b>&nbsp;Please do not use
+                    spaces, symbols, or special characters.
                   </Styled.Subtitle2>
                 </div>
                 <div className="m-auto w-80">
-                  <Label className="mb-1 mt-2" htmlFor="organization_code">
+                  <Label className="mb-3 mt-4" htmlFor="organization_code">
                     Non-profit Code
                   </Label>
                   <Field
@@ -226,7 +213,7 @@ class OnboardingForm extends React.Component {
                       <TextInput
                         {...field}
                         type="text"
-                        addon="volunteer.bitsofgood.org/"
+                        addon="https://volunteer.bitsofgood.org/"
                         placeholder={values.organization_name
                           .toLowerCase()
                           .replace(" ", "-")}
@@ -235,7 +222,7 @@ class OnboardingForm extends React.Component {
                   </Field>
                   <Styled.ErrorMessage name="organization_code" />
                 </div>
-                <div className="m-auto mt-5 flex justify-center">
+                <div className="mb-12 mt-5 flex justify-center">
                   <BoGButton
                     text="Submit"
                     onClick={handleSubmit}
