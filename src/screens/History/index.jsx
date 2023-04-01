@@ -1,32 +1,11 @@
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { getHistoryEvents, getUsers } from "../../actions/queries";
 import { Table } from "flowbite-react";
 import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
-
-const Styled = {
-  Container: styled.div`
-    width: 90vw;
-    max-width: 96rem;
-    margin: 0 auto;
-    padding: 2rem 0 0 0;
-  `,
-  Header: styled.h1`
-    margin: 0;
-
-    font-size: 3rem;
-    font-weight: bold;
-  `,
-  HeaderRow: styled.div`
-    margin: 0 0 1rem 0;
-
-    display: flex;
-    justify-content: space-between;
-  `,
-};
+import Text from "../../components/Text";
 
 const History = () => {
   const {
@@ -78,10 +57,10 @@ const History = () => {
   };
 
   return (
-    <Styled.Container>
-      <Styled.HeaderRow>
-        <Styled.Header>History</Styled.Header>
-      </Styled.HeaderRow>
+    <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] pt-2">
+      <div className="mb-2">
+        <Text text="History" type="header" />
+      </div>
 
       <SearchBar
         placeholder="Search by Admin Name or Actions"
@@ -108,7 +87,7 @@ const History = () => {
           ))}
         </Table.Body>
       </Table>
-    </Styled.Container>
+    </div>
   );
 };
 
