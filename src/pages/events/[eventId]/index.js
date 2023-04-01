@@ -159,7 +159,9 @@ const EventInfo = () => {
     const changedEvent = {
       // remove current user id from event volunteers
       ...event,
-      volunteers: event.volunteers.filter((volunteer) => volunteer !== user._id),
+      volunteers: event.volunteers.filter(
+        (volunteer) => volunteer !== user._id
+      ),
     };
     await updateEvent(changedEvent);
   };
@@ -366,9 +368,11 @@ const EventInfo = () => {
             )}
           </Col>
         </Styled.EventTable>
-        <BasicModal 
+        <BasicModal
           open={showUnregisterModal}
-          title={"Are you sure you want to cancel your registration for this event?"}
+          title={
+            "Are you sure you want to cancel your registration for this event?"
+          }
           onConfirm={onConfirmUnregisterModal}
           onCancel={toggleUnregisterModal}
           confirmText={"Yes, cancel it"}

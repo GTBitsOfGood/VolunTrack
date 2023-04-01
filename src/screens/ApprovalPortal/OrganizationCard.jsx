@@ -5,6 +5,9 @@ const OrganizationCard = (props) => {
   const onChange = () => {
     props.setOpen(true);
     props.setOrganization(props.org);
+      organizationId: props.org._id,
+      status: props.org.active,
+    });
   };
 
   return (

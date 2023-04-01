@@ -11,6 +11,9 @@ const BogApproval = () => {
   const [loading, setLoading] = useState(true);
   const [organizations, setOrganizations] = useState([]);
   const [currOrganization, setCurrOrganization] = useState(null);
+    organizationId: null,
+    status: null,
+  });
   const [openModal, setOpenModal] = useState(false);
 
   const onRefresh = () => {
@@ -34,7 +37,7 @@ const BogApproval = () => {
     toggleStatus(currOrganization.organizationId);
     onCloseModal();
     onRefresh();
-  }
+  };
 
   const onCloseModal = () => {
     setOpenModal(false);
@@ -87,10 +90,12 @@ const BogApproval = () => {
           ))}
       </div>
       {currOrganization && (
-        <BasicModal 
+        <BasicModal
           open={openModal}
           text={`By clicking the confirm button, this volunteer management platform \
-            will become ${currOrganization.status ? " inactive " : " active "} immediately. Are \
+            will become ${
+              currOrganization.status ? " inactive " : " active "
+            } immediately. Are \
             you sure you want to confirm?`}
           confirmText={"Confirm"}
           cancelText={"Cancel"}
