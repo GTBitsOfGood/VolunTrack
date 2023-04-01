@@ -109,12 +109,12 @@ const EventInfo = () => {
     <>
       <div className="flex flex-col bg-gray-100 pb-16 pt-8">
         <Text
-          className="ml-16 mb-4"
+          className="mb-4 ml-16"
           href={`/events`}
           onClick={() => goBackToCal()}
           text="< Back to home"
         />
-        <div className="flex flex-row bg-gray-100 h-screen">
+        <div className="flex h-screen flex-row bg-gray-100">
           <Col>
             <div className="ml-6 mr-2 flex flex-col">
               <div className="mb-1 text-4xl font-bold text-black">
@@ -145,13 +145,13 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <div className="mr-4 mb-4 ml-3">
+                  <div className="mb-4 ml-3 mr-4">
                     <BoGButton
                       text="Manage Attendance"
                       onClick={routeToRegisteredVolunteers}
                     />
                   </div>
-                  <div className="mr-3 mb-4 ml-4">
+                  <div className="mb-4 ml-4 mr-3">
                     <BoGButton
                       text="View Participation Statistics"
                       onClick={routeToStats}
