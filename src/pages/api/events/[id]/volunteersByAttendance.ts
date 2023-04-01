@@ -75,8 +75,7 @@ export default async function handler(req, res) {
       const volunteers = await fetchAttendanceEntries();
       const volunteersCheckedIn = Object.values(volunteers).filter(
         (volunteer: volunteer) =>
-          !volunteer.timeCheckedOut ||
-          volunteer.timeCheckedOut > volunteer.timeCheckedIn
+          volunteer?.timeCheckedOut == null && volunteer?.timeCheckedIn != null
       );
       const volunteerIdsCheckedIn = volunteersCheckedIn.map(
         (volunteer: volunteer) => volunteer.userId
@@ -93,11 +92,11 @@ export default async function handler(req, res) {
     const findVolunteersCheckedOut = async () => {
       // get attendance entries with a checked in field and a checked out field
       const volunteers = await fetchAttendanceEntries();
+
       const volunteersCheckedOut = Object.values(volunteers).filter(
-        (volunteer: volunteer) =>
-          !volunteer.timeCheckedIn ||
-          volunteer.timeCheckedOut < volunteer.timeCheckedIn
+        (volunteer: volunteer) => volunteer?.timeCheckedOut != null
       );
+
       const volunteerIdsCheckedOut = volunteersCheckedOut.map(
         (volunteer: volunteer) => volunteer.userId
       );
