@@ -1,4 +1,4 @@
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
@@ -8,6 +8,12 @@ import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import EditUserForm from "../../components/Forms/EditUserForm";
+import {
+  PencilIcon,
+  DocumentDuplicateIcon,
+  ChartBarIcon,
+} from "@heroicons/react/24/solid";
+import router from "next/router";
 
 const Styled = {
   Button: styled(Button)`
@@ -62,6 +68,10 @@ class VolunteerTable extends React.Component {
     this.onModalClose();
   };
 
+  statsOnClick = (user) => {
+    router.push(`stats/${user._id}`);
+  };
+
   render() {
     const { users, loading } = this.props;
     return (
@@ -88,14 +98,19 @@ class VolunteerTable extends React.Component {
               <Table.Row key={index} evenIndex={index % 2 === 0}>
                 <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>
-                  {user.email}
-                  <Styled.Button
-                    onClick={() => {
-                      navigator.clipboard.writeText(user.email);
-                    }}
-                  >
-                    <Icon color="grey3" name="copy" />
-                  </Styled.Button>
+                  <div className="flex items-center">
+                    {user.email}
+                    <Tooltip content="Copy" style="light">
+                      <button
+                        className="mx-1"
+                        onClick={() => {
+                          navigator.clipboard.writeText(user.email);
+                        }}
+                      >
+                        <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                      </button>
+                    </Tooltip>
+                  </div>
                 </Table.Cell>
                 <Table.Cell>
                   {user.phone_number
@@ -107,53 +122,27 @@ class VolunteerTable extends React.Component {
                     : ""}
                 </Table.Cell>
                 <Table.Cell>
-                  <Styled.Button
-                    onClick={() => this.onDisplayEditUserModal(user)}
-                  >
-                    <Icon color="grey3" name="create" />
-                  </Styled.Button>
-                  {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
-                  {/*  <Icon color="grey3" name="delete" />*/}
-                  {/*</Styled.Button>*/}
-                  <Link href={`stats/${user._id}`}>
-                    <Styled.Button>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
+                  <div className="flex">
+                    <Tooltip content="Edit" style="light">
+                      <button
+                        className="mx-1"
+                        onClick={() => this.onDisplayEditUserModal(user)}
                       >
-                        <g clipPath="url(#clip0_2204_28336)">
-                          <path
-                            d="M5.04892 17.99L10.2446 12.7856L13.7084 16.2494L21.0689 7.97098L19.848 6.75L13.7084 13.6516L10.2446 10.1878L3.75 16.6911L5.04892 17.99Z"
-                            fill="#960034"
-                          />
-                          <line
-                            x1="0.975"
-                            y1="1"
-                            x2="0.975"
-                            y2="22.5"
-                            stroke="#960034"
-                            strokeWidth="1.7"
-                          />
-                          <line
-                            x1="0.25"
-                            y1="21.65"
-                            x2="22.75"
-                            y2="21.65"
-                            stroke="#960034"
-                            strokeWidth="1.7"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_2204_28336">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
-                    </Styled.Button>
-                  </Link>
+                        <PencilIcon className="h-7 text-primaryColor" />
+                      </button>
+                    </Tooltip>
+                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                    {/*  <Icon color="grey3" name="delete" />*/}
+                    {/*</Styled.Button>*/}
+                    <Tooltip content="Stats" style="light">
+                      <button
+                        className="mx-1"
+                        onClick={() => this.statsOnClick(user)}
+                      >
+                        <ChartBarIcon className="h-7 text-primaryColor" />
+                      </button>
+                    </Tooltip>
+                  </div>
                 </Table.Cell>
               </Table.Row>
             ))}
