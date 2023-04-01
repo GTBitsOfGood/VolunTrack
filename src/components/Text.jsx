@@ -7,19 +7,40 @@ class Text extends React.Component {
   }
 
   render() {
-    return this.props.href ? (
-      <a
-        className={
-          "text-sm text-primaryColor underline hover:text-hoverColor " +
-          this.props.className
-        }
-        href={this.props.href}
-      >
-        {this.props.text}
-      </a>
-    ) : (
-      <p>{this.props.text}</p>
-    );
+    if (this.props.href) {
+      return (
+        <a
+          className={
+            "text-primaryColor hover:text-hoverColor text-sm underline " +
+            this.props.className
+          }
+          href={this.props.href}
+        >
+          {this.props.text}
+        </a>
+      );
+    } else {
+      let theming = "text-sm ";
+      switch (this.props.type) {
+        case "header":
+          return (
+            <h1 className={"text-4xl font-bold " + this.props.className}>
+              {this.props.text}
+            </h1>
+          );
+        case "subheader":
+          return (
+            <h3 className={"text-xl font-bold " + this.props.className}>
+              {this.props.text}
+            </h3>
+          );
+        case "helper":
+          theming = "text-grey ";
+      }
+      return (
+        <p className={theming + this.props.className}>{this.props.text}</p>
+      );
+    }
   }
 }
 
@@ -27,6 +48,7 @@ export default Text;
 
 Text.propTypes = {
   text: PropTypes.string.isRequired,
+  type: PropTypes.string,
   // children: PropTypes.arrayOf(PropTypes.element),
   className: PropTypes.string,
   href: PropTypes.string,

@@ -2,7 +2,6 @@ import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { Dropdown, Sidebar, Toast } from "flowbite-react";
 import { Field, Formik } from "formik";
 import { useSession } from "next-auth/react";
-import Error from "next/error";
 import { useEffect, useState } from "react";
 import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
@@ -13,24 +12,7 @@ import {
 import { applyTheme } from "../../themes/themes";
 import { createOrganizationValidator } from "./helpers";
 import { organizationSettingsPages as pages } from "./pages";
-
-function authWrapper(Component) {
-  return function WrappedComponent(props) {
-    const {
-      data: { user },
-    } = useSession();
-    if (user.role !== "admin") {
-      return (
-        <Error
-          title="You are not authorized to access this page"
-          statusCode={403}
-        />
-      );
-    } else {
-      return <Component {...props} user={user} />;
-    }
-  };
-}
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const OrganizationSettings = () => {
   const [organizationData, setOrganizationData] = useState({});
@@ -238,4 +220,4 @@ const OrganizationSettings = () => {
   );
 };
 
-export default authWrapper(OrganizationSettings);
+export default AdminAuthWrapper(OrganizationSettings);
