@@ -21,7 +21,7 @@ class Text extends React.Component {
       );
     } else {
       let theming = "text-sm ";
-      switch (this.props.theme) {
+      switch (this.props.type) {
         case "header":
           return (
             <h1 className={"text-4xl font-bold " + this.props.className}>
@@ -48,7 +48,7 @@ export default Text;
 
 Text.propTypes = {
   text: PropTypes.string.isRequired,
-  theme: PropTypes.string,
+  type: PropTypes.string,
   // children: PropTypes.arrayOf(PropTypes.element),
   className: PropTypes.string,
   href: PropTypes.string,

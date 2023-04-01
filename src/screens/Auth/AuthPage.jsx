@@ -26,7 +26,7 @@ const AuthPage = (props) => {
         <div className="h-28" />
         <Text
           text={props.createAccount ? "Create an Account" : "Sign In"}
-          theme="header"
+          type="header"
           className="pb-2"
         />
         <div className="flex w-full flex-wrap items-center gap-2">
