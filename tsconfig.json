@@ -15,6 +15,12 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/utils/mailersend-email.js",
+    "src/utils/mailchimp-email.js"
+  ],
   "exclude": ["node_modules", "**/*.js", "**/*.jsx"]
 }

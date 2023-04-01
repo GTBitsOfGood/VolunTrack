@@ -1,33 +1,34 @@
-import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
-import { getUser } from "../../../../server/actions/users";
 import dbConnect from "../../../../server/mongodb";
-import { UserData } from "../../../../server/mongodb/models/User";
+import User, {
+  UserData,
+  userValidator,
+} from "../../../../server/mongodb/models/User";
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<
-    { user?: HydratedDocument<UserData> } | { userId?: Types.ObjectId }
-  >
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  const id = req.query.id as string;
-  const user = await getUser(new Types.ObjectId(id));
-  if (!user) return res.status(404);
+  const userId = req.query.id as string;
+  const user = await User.findById(userId);
+  if (!user)
+    return res
+      .status(404)
+      .json({ message: `User with id ${userId} not found` });
 
   switch (req.method) {
     case "GET": {
       return res.status(200).json({ user });
     }
     case "PUT": {
-      const userData = req.body as Partial<UserData>;
-      await user.updateOne(userData);
-      return res.status(200).json({ userId: user._id });
+      if (userValidator.partial().safeParse(req.body).success) {
+        await user.updateOne(req.body as Partial<UserData>);
+        return res.status(200).json({ user });
+      }
+      return res.status(400).json({ message: "Invalid user data format" });
     }
     case "DELETE": {
       await user.deleteOne();
-      return res.status(200).json({ userId: user._id });
+      return res.status(200);
     }
   }
 };

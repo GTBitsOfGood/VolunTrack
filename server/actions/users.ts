@@ -6,16 +6,6 @@ import Registration from "../mongodb/models/Registration";
 import User, { UserData } from "../mongodb/models/User";
 import { createHistoryEventEditProfile } from "./historyEvent";
 
-export const getUser = async (
-  id: Types.ObjectId
-): Promise<HydratedDocument<UserData> | undefined> => {
-  await dbConnect();
-
-  const user = await User.findById(id);
-  if (!user) return undefined;
-  return user;
-};
-
 export const getUsers = async (
   organizationId?: Types.ObjectId,
   role?: "admin" | "volunteer" | "manager",
@@ -64,24 +54,26 @@ export const getUsers = async (
 };
 
 export const createUserFromCredentials = async (
-  userData: UserData & { password: string }
-): Promise<Types.ObjectId | undefined> => {
-  console.log("createUserFromCredentials");
+  userData: Partial<UserData> & Required<Pick<UserData, "password" | "email">>
+): Promise<HydratedDocument<UserData> | undefined> => {
   await dbConnect();
 
   if (await User.exists({ email: userData.email })) return undefined;
 
-  hash(userData.email + userData.password, 10, async function (err, hash) {
-    userData.passwordHash = hash;
-    return (await User.create(userData))._id;
-  });
+  hash(
+    `${userData.email} ${userData.password}`,
+    10,
+    async function (err, hash) {
+      userData.passwordHash = hash;
+      return await User.create(userData);
+    }
+  );
 };
 
 export const verifyUserWithCredentials = async (
   email: string,
   password: string
 ): Promise<{ user?: HydratedDocument<UserData>; message?: string }> => {
-  console.log("verifyUserWithCredentials");
   await dbConnect();
 
   const user = await User.findOne({ email });

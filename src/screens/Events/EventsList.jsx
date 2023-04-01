@@ -1,10 +1,11 @@
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import EventCard from "../../components/EventCard";
-import { useSession } from "next-auth/react";
 import BoGButton from "../../components/BoGButton";
+import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
+import { getRegistrations } from "../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -110,8 +111,14 @@ const EventsList = ({
     return new Date(event.date) === currentDate;
   });
 
-  const registeredEvents = upcomingEvents.filter(function (event) {
-    return event.volunteers.includes(user._id);
+  // const registeredEvents = upcomingEvents.filter(function (event) {
+  //   return event.volunteers.includes(user._id);
+  // });
+  const registeredEvents = upcomingEvents.filter(async (event) => {
+    const userRegisteredEvents = (
+      await getRegistrations(event.id, user._id)
+    ).data.registrations?.map((registration) => registration.eventId);
+    return userRegisteredEvents.includes(event.id);
   });
 
   const todayRegisteredEvents = registeredEvents.filter(function (event) {

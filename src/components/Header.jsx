@@ -83,6 +83,7 @@ const Header = () => {
 
   useEffect(() => {
     async function fetchData() {
+      console.log(user.organizationId);
       const response = await getOrganization(user.organizationId);
       if (response.data.organization)
         setImageURL(response.data.organization.imageUrl);

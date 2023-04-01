@@ -1,12 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { HydratedDocument, Types } from "mongoose";
 import { UserData } from "../../server/mongodb/models/User";
 
-export const getUser = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ user?: HydratedDocument<UserData> }>> =>
-  axios.get<{ user?: HydratedDocument<UserData> }>(
-    `/api/users/${id.toString()}`
+export const getUser = (userId: string) =>
+  axios.get<{ user?: HydratedDocument<UserData>; message?: string }>(
+    `/api/users/${userId}`
   );
 
 export const getUsers = (
@@ -14,26 +12,27 @@ export const getUsers = (
   role?: "admin" | "volunteer" | "manager",
   eventId?: Types.ObjectId,
   isCheckedIn?: boolean
-): Promise<AxiosResponse<{ users: HydratedDocument<UserData>[] }>> =>
-  axios.get<{ users: HydratedDocument<UserData>[] }>("/api/users", {
-    params: { organizationId, role, eventId, isCheckedIn },
-  });
+) =>
+  axios.get<{ users?: HydratedDocument<UserData>[]; message?: string }>(
+    "/api/users",
+    {
+      params: { organizationId, role, eventId, isCheckedIn },
+    }
+  );
 
 export const createUserFromCredentials = (
-  userData: UserData & { password: string }
-): Promise<AxiosResponse<{ userId?: Types.ObjectId }>> =>
-  axios.post<{ userId?: Types.ObjectId }>("/api/users", userData);
-
-export const updateUser = (
-  id: Types.ObjectId,
-  userData: Partial<UserData>
-): Promise<AxiosResponse<{ userId?: Types.ObjectId }>> =>
-  axios.put<{ userId?: Types.ObjectId }>(
-    `/api/users/${id.toString()}`,
+  userData: Omit<UserData, "password"> & { password: string }
+) =>
+  axios.post<{ user?: HydratedDocument<UserData>; message?: string }>(
+    "/api/users",
     userData
   );
 
-export const deleteUser = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ userId?: Types.ObjectId }>> =>
-  axios.delete<{ userId?: Types.ObjectId }>(`/api/users/${id.toString()}`);
+export const updateUser = (userId: string, userData: Partial<UserData>) =>
+  axios.put<{ user?: HydratedDocument<UserData>; message?: string }>(
+    `/api/users/${userId}`,
+    userData
+  );
+
+export const deleteUser = (userId: string) =>
+  axios.delete(`/api/users/${userId}`);

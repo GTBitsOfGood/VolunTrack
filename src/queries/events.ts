@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { HydratedDocument, Types } from "mongoose";
 import {
   EventData,
@@ -11,50 +11,51 @@ export type CreateEventRequestBody = Omit<EventData, "eventParent"> & {
 };
 export type UpdateEventRequestBody = Partial<
   Omit<EventData, "eventParent"> & {
-    eventParent: Types.ObjectId | Partial<EventParentData>;
+    eventParent?: Types.ObjectId | Partial<EventParentData>;
   }
 >;
 
-export const getEvent = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ event?: HydratedDocument<EventPopulatedData> }>> =>
-  axios.get<{ event?: HydratedDocument<EventPopulatedData> }>(
-    `/api/events/${id.toString()}`
+export const getEvent = (eventId: string) =>
+  axios.get<{ event?: HydratedDocument<EventPopulatedData>; message?: string }>(
+    `/api/events/${eventId}`
   );
 
 export const getEvents = (
-  startDateString: string,
-  endDateString: string,
-  organizationId: Types.ObjectId
-): Promise<AxiosResponse<{ events: HydratedDocument<EventPopulatedData>[] }>> =>
-  axios.get<{ events: HydratedDocument<EventPopulatedData>[] }>(
-    `/api/events?startDate=${startDateString}&endDate=${endDateString}&organizationId=${organizationId.toString()}`
-  );
-
-export const createEvent = (
-  eventData: CreateEventRequestBody
-): Promise<
-  AxiosResponse<{
-    event: HydratedDocument<EventData>;
-    eventParent?: HydratedDocument;
-  }>
-> =>
-  axios.post<{ eventId: Types.ObjectId; eventParentId?: Types.ObjectId }>(
+  organizationId: string,
+  startDateString?: string,
+  endDateString?: string
+) => {
+  console.log(organizationId);
+  return axios.get<{ events: HydratedDocument<EventPopulatedData>[] }>(
     "/api/events",
-    eventData
+    {
+      params: {
+        organizationId,
+        startDateString,
+        endDateString,
+      },
+    }
   );
+};
+
+export const createEvent = (eventData: CreateEventRequestBody) =>
+  axios.post<{
+    event?: HydratedDocument<EventPopulatedData>;
+    message?: string;
+  }>("/api/events", eventData);
 
 export const updateEvent = (
-  id: Types.ObjectId,
+  eventId: string,
   eventData: UpdateEventRequestBody,
-  sendConfirmationEmail: boolean
-): Promise<AxiosResponse<{ eventId?: Types.ObjectId }>> =>
-  axios.put<{ eventId?: Types.ObjectId }>(`/api/events/${id.toString()}`, {
-    eventData,
-    sendConfirmationEmail,
-  });
+  sendConfirmationEmail = true
+) =>
+  axios.put<{ event?: HydratedDocument<EventPopulatedData>; message?: string }>(
+    `/api/events/${eventId}`,
+    {
+      eventData,
+      sendConfirmationEmail,
+    }
+  );
 
-export const deleteEvent = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ eventId?: Types.ObjectId }>> =>
-  axios.delete<{ eventId?: Types.ObjectId }>(`/api/events/${id.toString()}`);
+export const deleteEvent = (eventId: string) =>
+  axios.delete<{ message?: string }>(`/api/events/${eventId}`);

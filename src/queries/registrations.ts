@@ -1,13 +1,20 @@
-import axios, { AxiosResponse } from "axios";
-import { Types } from "mongoose";
+import axios from "axios";
+import { HydratedDocument } from "mongoose";
+import { RegistrationData } from "../../server/mongodb/models/Registration";
 
-export const createRegistration = (
-  minors: string[],
-  eventId: Types.ObjectId,
-  userId: Types.ObjectId
-): Promise<AxiosResponse<{ registrationId: Types.ObjectId }>> =>
-  axios.post<{ registrationId: Types.ObjectId }>("/api/registrations", {
-    minors,
-    eventId,
-    userId,
+export const getRegistrations = (eventId: string, userId: string) =>
+  axios.get<{
+    registrations?: HydratedDocument<RegistrationData>[];
+    message?: string;
+  }>("/api/registrations", {
+    params: {
+      eventId,
+      userId,
+    },
   });
+
+export const createRegistration = (registrationData: RegistrationData) =>
+  axios.post<{
+    registration?: HydratedDocument<RegistrationData>;
+    message?: string;
+  }>("/api/registrations", registrationData);

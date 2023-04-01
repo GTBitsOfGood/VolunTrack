@@ -1,83 +1,81 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { HydratedDocument, Types } from "mongoose";
 import Attendance, {
   AttendanceData,
 } from "../../server/mongodb/models/Attendance";
 
 // Helper functions for checking in and out volunteers
-export const checkInVolunteer = (
-  userId: Types.ObjectId,
-  eventId: Types.ObjectId
-) =>
-  createAttendance({ user: userId, event: eventId, checkinTime: new Date() });
+export const checkInVolunteer = (userId: string, eventId: string) =>
+  createAttendance({
+    userId: new Types.ObjectId(userId),
+    eventId: new Types.ObjectId(eventId),
+    checkinTime: new Date(),
+  });
 
-export const checkOutVolunteer = async (
-  userId: Types.ObjectId,
-  eventId: Types.ObjectId
-) => {
+export const checkOutVolunteer = async (userId: string, eventId: string) => {
   const attendanceId = (
     await Attendance.find({
-      user: userId,
-      event: eventId,
+      userId: new Types.ObjectId(userId),
+      eventId: new Types.ObjectId(eventId),
       checkoutTime: null,
     })
-  )[0]._id;
+  )[0].id as string;
   return updateAttendance(attendanceId, { checkoutTime: new Date() });
 };
 
-export const getAttendance = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ attendance?: HydratedDocument<AttendanceData> }>> =>
-  axios.get<{ attendance?: HydratedDocument<AttendanceData> }>(
-    `/api/attendances/${id.toString()}`
-  );
+export const getAttendance = (attendanceId: string) =>
+  axios.get<{
+    attendance?: HydratedDocument<AttendanceData>;
+    message?: string;
+  }>(`/api/attendances/${attendanceId}`);
 
 export const getAttendances = (
   userId?: Types.ObjectId,
   eventId?: Types.ObjectId,
-  checkinTimeBounds?: { start?: Date; end?: Date },
-  checkoutTimeBounds?: { start?: Date; end?: Date }
-): Promise<
-  AxiosResponse<{ attendances: HydratedDocument<AttendanceData>[] }>
-> =>
-  axios.get<{ attendances: HydratedDocument<AttendanceData>[] }>(
+  checkinTimeStart?: Date,
+  checkinTimeEnd?: Date,
+  checkoutTimeStart?: Date,
+  checkoutTimeEnd?: Date
+) =>
+  axios.get<{ attendances?: HydratedDocument<AttendanceData>[] }>(
     "/api/attendances",
     {
-      params: { userId, eventId, checkinTimeBounds, checkoutTimeBounds },
+      params: {
+        userId,
+        eventId,
+        checkinTimeStart,
+        checkinTimeEnd,
+        checkoutTimeStart,
+        checkoutTimeEnd,
+      },
     }
   );
 
-export const createAttendance = (
-  attendanceData: AttendanceData
-): Promise<AxiosResponse<{ attendance: HydratedDocument<AttendanceData> }>> =>
-  axios.post<{ attendance: HydratedDocument<AttendanceData> }>(
-    "/api/attendances",
-    attendanceData
-  );
+export const createAttendance = (attendanceData: AttendanceData) =>
+  axios.post<{
+    attendance?: HydratedDocument<AttendanceData>;
+    message?: string;
+  }>("/api/attendances", attendanceData);
 
 export const updateAttendance = (
-  id: Types.ObjectId,
+  attendanceId: string,
   attendanceData: Partial<AttendanceData>
-): Promise<AxiosResponse<{ attendance?: HydratedDocument<AttendanceData> }>> =>
-  axios.put<{ attendance?: HydratedDocument<AttendanceData> }>(
-    `/api/attendances/${id.toString()}`,
-    attendanceData
-  );
+) =>
+  axios.put<{
+    attendance?: HydratedDocument<AttendanceData>;
+    message?: string;
+  }>(`/api/attendances/${attendanceId}`, attendanceData);
 
-export const deleteAttendance = (id: Types.ObjectId): Promise<AxiosResponse> =>
-  axios.delete(`/api/attendances/${id.toString()}`);
+export const deleteAttendance = (attendanceId: string) =>
+  axios.delete<{ message?: string }>(`/api/attendances/${attendanceId}`);
 
 export const getAttendanceStatistics = (
-  eventId?: Types.ObjectId,
+  eventId?: string,
   startDate?: Date,
   endDate?: Date
-): Promise<
-  AxiosResponse<{
-    statistics: { num: number; users: Types.ObjectId[]; minutes: number }[];
-  }>
-> =>
+) =>
   axios.get<{
     statistics: { num: number; users: Types.ObjectId[]; minutes: number }[];
   }>(`/api/attendances/statistics`, {
-    params: { eventIdString: eventId, startDate, endDate },
+    params: { eventId, startDate, endDate },
   });

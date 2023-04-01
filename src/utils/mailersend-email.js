@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getOrganizationData } from "../../server/actions/settings.js";
+import { getOrganization } from "../queries/organizations";
 
 const Recipient = require("mailersend").Recipient;
 const EmailParams = require("mailersend").EmailParams;
@@ -9,7 +9,7 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
   const [orgName, setOrgName] = useState("");
 
   const loadData = async () => {
-    const data = await getOrganizationData(user.organizationId);
+    const data = await getOrganization(user.organizationId);
 
     if (data) {
       setOrgName(data.data.orgData.name);

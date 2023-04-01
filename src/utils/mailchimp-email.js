@@ -5,11 +5,7 @@ const { getEventVolunteers } = require("../../server/actions/users");
 
 // TODO: convert survey emails to mailersend
 // Sends an email to all the users signed up to volunteer for an event
-export const sendEventEmail = async (
-  event: any,
-  templateName: string,
-  templateVariables: [{ [key: string]: string }]
-): Promise<void> => {
+export const sendEventEmail = async () => {
   const eventEmails = await getEventEmails(event);
 
   // await mailchimp.messages.sendTemplate({
@@ -23,7 +19,7 @@ export const sendEventEmail = async (
 };
 
 // Returns the list of emails of volunteers who are signed up for a specified event
-const getEventEmails = async (event: any) => {
+const getEventEmails = async (event) => {
   const eventVolunteers = await getEventVolunteers(event.volunteers);
   const eventVolunteerEmails = eventVolunteers.message.users.map(
     (user) => user.bio.email

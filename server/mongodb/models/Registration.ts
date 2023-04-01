@@ -1,16 +1,19 @@
 import { Model, model, models, Schema, Types } from "mongoose";
+import { z } from "zod";
 
-export type RegistrationData = {
-  minors: string[];
-  event: Types.ObjectId;
-  user: Types.ObjectId;
-};
+export const registrationValidator = z.object({
+  eventId: z.instanceof(Types.ObjectId),
+  userId: z.instanceof(Types.ObjectId),
+  minors: z.string().array().optional(),
+});
+
+export type RegistrationData = z.infer<typeof registrationValidator>;
 
 const registrationSchema = new Schema<RegistrationData>(
   {
-    minors: { type: [String], required: true },
-    event: { type: Schema.Types.ObjectId, ref: "Event", required: true },
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    eventId: { type: Schema.Types.ObjectId, ref: "Event", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    minors: { type: [String], default: [] },
   },
   { timestamps: true }
 );

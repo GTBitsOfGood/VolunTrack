@@ -1,24 +1,26 @@
-import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import Waiver, { WaiverData } from "../../../../server/mongodb/models/Waiver";
+import Waiver, {
+  WaiverData,
+  waiverValidator,
+} from "../../../../server/mongodb/models/Waiver";
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<{ waiverId?: Types.ObjectId }>
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  const id = req.query.id as string;
-  const waiver = await Waiver.findById(new Types.ObjectId(id));
-  if (!waiver) return res.status(404);
+  const waiverId = req.query.id as string;
+  const waiver = await Waiver.findById(waiverId);
+  if (!waiver)
+    return res
+      .status(404)
+      .json({ message: `Waiver with id ${waiverId} not found` });
 
   switch (req.method) {
     case "PUT": {
-      const waiverData = req.body as Partial<WaiverData>;
-
-      await waiver.updateOne(waiverData);
-      return res.status(200).json({ waiverId: waiver._id });
+      if (waiverValidator.partial().safeParse(req.body).success) {
+        await waiver.updateOne(req.body as WaiverData);
+        return res.status(200).json({ waiver });
+      }
     }
   }
 };

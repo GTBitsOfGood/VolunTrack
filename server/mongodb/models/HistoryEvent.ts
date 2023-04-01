@@ -3,9 +3,9 @@ import { model, Model, models, Schema, Types } from "mongoose";
 export type HistoryEventData = {
   keyword: string;
   description: string;
-  user: Types.ObjectId;
-  event?: Types.ObjectId;
-  organization?: Types.ObjectId;
+  userId: Types.ObjectId;
+  eventId?: Types.ObjectId;
+  organizationId?: Types.ObjectId;
 };
 
 const historyEventSchema = new Schema<HistoryEventData>(
@@ -17,16 +17,16 @@ const historyEventSchema = new Schema<HistoryEventData>(
       type: String,
       default: "",
     },
-    user: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    event: {
+    eventId: {
       type: Schema.Types.ObjectId,
       ref: "Event",
     },
-    organization: {
+    organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",

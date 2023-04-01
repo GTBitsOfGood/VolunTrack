@@ -1,24 +1,19 @@
-import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Attendance, {
-  AttendanceData,
+  attendanceValidator,
 } from "../../../../server/mongodb/models/Attendance";
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<
-    | { attendance?: HydratedDocument<AttendanceData> }
-    | { attendanceId?: Types.ObjectId }
-  >
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  const id = req.query.id as string;
+  const attendanceId = req.query.id as string;
 
-  const attendance = await Attendance.findById(id);
+  const attendance = await Attendance.findById(attendanceId);
   if (!attendance) {
-    return res.status(404);
+    return res
+      .status(404)
+      .json({ message: `Attendance with id ${attendanceId} not found` });
   }
 
   switch (req.method) {
@@ -26,14 +21,18 @@ export default async (
       return res.status(200).json({ attendance });
     }
     case "PUT": {
-      const attendanceData = req.body as Partial<AttendanceData>;
+      if (attendanceValidator.partial().safeParse(req.body).success) {
+        await attendance.updateOne();
+        return res.status(200).json({ attendance });
+      }
 
-      await attendance.updateOne(attendanceData);
-      return res.status(200).json({ attendanceId: attendance._id });
+      return res
+        .status(400)
+        .json({ message: "Invalid attendance data format" });
     }
     case "DELETE": {
       await attendance.deleteOne();
-      return res.status(200).json({ attendanceId: attendance._id });
+      return res.status(204);
     }
   }
 };

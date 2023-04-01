@@ -1,5 +1,6 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
+import { Types } from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -90,7 +91,7 @@ export default NextAuth({
     },
   },
   callbacks: {
-    async jwt({ token, user }) {
+    jwt({ token, user }) {
       if (user) token.id = user.id;
       return token;
     },
@@ -98,30 +99,28 @@ export default NextAuth({
     async session({ session, token }) {
       await dbConnect();
 
-      const _id = new ObjectId(token.id);
-      const currentUser = await User.findOne({ _id });
-      let user_data = {
-        ...currentUser._doc,
-      };
-      const organization = await Organization.findOne({
-        _id: user_data.organizationId,
-      });
-      if (organization?.invitedAdmins?.includes(user_data.bio.email)) {
-        user_data.role = "admin";
-        await User.findOneAndUpdate({ _id }, { role: "admin" });
-        await Organization.findOneAndUpdate(
-          { _id: user_data.organizationid },
-          { $pull: { invitedAdmins: user_data.bio.email } },
+      const id = new Types.ObjectId(token.id);
+
+      const user = (await User.findById(id))._doc;
+      const organization = (await Organization.findById(user?.organizationId))
+        ._doc;
+
+      if (!user || !organization) return {};
+
+      if (organization?.invitedAdmins?.includes(user.email)) {
+        await user.updateOne({ role: "admin" });
+        await organization.updateOne(
+          { $pull: { invitedAdmins: user.email } },
           { new: true }
         );
       }
       return {
         ...session,
-        user: user_data,
+        user: user,
         theme: organization.theme,
       };
     },
-    async redirect({ baseUrl }) {
+    redirect({ baseUrl }) {
       if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },

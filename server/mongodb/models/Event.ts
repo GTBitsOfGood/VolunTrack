@@ -1,20 +1,27 @@
 import { Model, model, models, Schema, Types } from "mongoose";
-import { EventParentData } from "./EventParent";
-export type EventData = {
-  date: Date;
-  eventParent: Types.ObjectId;
-  isEnded?: boolean;
-};
-export type EventPopulatedData = {
-  date: Date;
-  eventParent: EventParentData;
-  isEnded?: boolean;
-};
+import { z } from "zod";
+import { eventParentValidator } from "./EventParent";
+
+export const eventValidator = z.object({
+  date: z.date(),
+  eventParentId: z.instanceof(Types.ObjectId),
+  isEnded: z.boolean().optional(),
+});
+
+export const eventPopulatedValidator = z.object({
+  date: z.date(),
+  eventParent: eventParentValidator,
+  isEnded: z.boolean().optional(),
+});
+
+export type EventData = z.infer<typeof eventValidator>;
+
+export type EventPopulatedData = z.infer<typeof eventPopulatedValidator>;
 
 const eventSchema = new Schema<EventData>(
   {
     date: { type: Date, required: true },
-    eventParent: {
+    eventParentId: {
       type: Schema.Types.ObjectId,
       ref: "EventParent",
     },

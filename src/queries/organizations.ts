@@ -1,22 +1,17 @@
-import axios, { AxiosResponse } from "axios";
-import { HydratedDocument, Types } from "mongoose";
+import axios from "axios";
+import { HydratedDocument } from "mongoose";
 import { OrganizationData } from "../../server/mongodb/models/Organization";
 
-export const getOrganization = (
-  id: Types.ObjectId
-): Promise<
-  AxiosResponse<{ organization?: HydratedDocument<OrganizationData> }>
-> => {
-  return axios.get<{ organization?: HydratedDocument<OrganizationData> }>(
-    `/api/organizations/${id.toString()}`
-  );
+export const getOrganization = (organizationId: string) => {
+  return axios.get<{
+    organization?: HydratedDocument<OrganizationData>;
+    message?: string;
+  }>(`/api/organizations/${organizationId}`);
 };
 
 export const getOrganizations = (
   organizationData?: Partial<OrganizationData>
-): Promise<
-  AxiosResponse<{ organizations: HydratedDocument<OrganizationData>[] }>
-> => {
+) => {
   return axios.get<{ organizations: HydratedDocument<OrganizationData>[] }>(
     "/api/organizations",
     {
@@ -25,57 +20,46 @@ export const getOrganizations = (
   );
 };
 
-export const createOrganization = (
-  organizationData: OrganizationData
-): Promise<AxiosResponse<{ organizationId?: Types.ObjectId }>> => {
-  return axios.post<{ organizationId?: Types.ObjectId }>(
-    "/api/organizations",
-    organizationData
-  );
+export const createOrganization = (organizationData: OrganizationData) => {
+  return axios.post<{
+    organization?: HydratedDocument<OrganizationData>;
+    message?: string;
+  }>("/api/organizations", organizationData);
 };
 
 export const updateOrganization = (
-  id: Types.ObjectId,
+  organizationId: string,
   organizationData: Partial<OrganizationData>
-): Promise<AxiosResponse<{ organizationId?: Types.ObjectId }>> => {
-  return axios.put<{ organizationId?: Types.ObjectId }>(
-    `/api/organizations/${id.toString()}`,
-    organizationData
+) => {
+  return axios.put<{
+    organization?: HydratedDocument<OrganizationData>;
+    message?: string;
+  }>(`/api/organizations/${organizationId}`, organizationData);
+};
+
+export const toggleOrganizationActive = (organizationId: string) => {
+  return axios.post<{
+    organization?: HydratedDocument<OrganizationData>;
+    message?: string;
+  }>(`/api/organizations/${organizationId}/toggleActive`);
+};
+
+export const getInvitedAdmins = (organizationId: string) => {
+  return axios.get<{ invitedAdmins?: string[]; message?: string }>(
+    `/api/organizations/${organizationId}/invitedAdmins`
   );
 };
 
-export const toggleOrganizationActive = (
-  id: Types.ObjectId
-): Promise<AxiosResponse<{ organizationId?: Types.ObjectId }>> => {
-  return axios.post<{ organizationId?: Types.ObjectId }>(
-    `/api/organizations/${id.toString()}/toggleActive`
-  );
-};
-
-export const getInvitedAdmins = (
-  organizationId: Types.ObjectId
-): Promise<AxiosResponse<{ invitedAdmins?: string[] }>> => {
-  return axios.get<{ invitedAdmins?: string[] }>(
-    `/api/organizations/${organizationId.toString()}/invitedAdmins`
-  );
-};
-
-export const addInvitedAdmin = (
-  organizationId: Types.ObjectId,
-  email: string
-): Promise<AxiosResponse<{ organizationId?: Types.ObjectId }>> => {
-  return axios.post<{ organizationId?: Types.ObjectId }>(
-    `/api/organizations/${organizationId.toString()}/invitedAdmins`,
+export const addInvitedAdmin = (organizationId: string, email: string) => {
+  return axios.post<{ invitedAdmins?: string[]; message?: string }>(
+    `/api/organizations/${organizationId}/invitedAdmins`,
     email
   );
 };
 
-export const deleteInvitedAdmin = (
-  organizationId: Types.ObjectId,
-  email: string
-): Promise<AxiosResponse<{ organizationId?: Types.ObjectId }>> => {
-  return axios.delete<{ organizationId?: Types.ObjectId }>(
-    `/api/organizations/${organizationId.toString()}/invitedAdmins`,
+export const deleteInvitedAdmin = (organizationId: string, email: string) => {
+  return axios.delete<{ invitedAdmins?: string[]; message?: string }>(
+    `/api/organizations/${organizationId}/invitedAdmins`,
     { data: email }
   );
 };

@@ -1,30 +1,33 @@
 import { Model, model, models, Schema, Types } from "mongoose";
+import { z } from "zod";
 
-export type EventParentData = {
-  title: string;
-  startTime: string;
-  endTime: string;
-  localTime: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  eventContactPhone: string;
-  eventContactEmail: string;
-  maxVolunteers: number;
-  isPrivate: boolean;
-  isValidForCourtHours: boolean;
-  organization: Types.ObjectId;
-  pocName?: string;
-  pocEmail?: string;
-  pocPhone?: string;
-  orgName?: string;
-  orgAddress?: string;
-  orgCity?: string;
-  orgState?: string;
-  orgZip?: string;
-  description?: string;
-};
+export const eventParentValidator = z.object({
+  title: z.string(),
+  startTime: z.string(),
+  endTime: z.string(),
+  localTime: z.string(),
+  address: z.string(),
+  city: z.string(),
+  state: z.string(),
+  zip: z.string(),
+  eventContactPhone: z.string(),
+  eventContactEmail: z.string(),
+  maxVolunteers: z.number(),
+  isPrivate: z.boolean(),
+  isValidForCourtHours: z.boolean(),
+  organizationId: z.instanceof(Types.ObjectId),
+  pocName: z.string().optional(),
+  pocEmail: z.string().optional(),
+  pocPhone: z.string().optional(),
+  orgName: z.string().optional(),
+  orgAddress: z.string().optional(),
+  orgCity: z.string().optional(),
+  orgState: z.string().optional(),
+  orgZip: z.string().optional(),
+  description: z.string().optional(),
+});
+
+export type EventParentData = z.infer<typeof eventParentValidator>;
 
 const eventParentSchema = new Schema<EventParentData>(
   {
@@ -41,7 +44,7 @@ const eventParentSchema = new Schema<EventParentData>(
     maxVolunteers: { type: Number, required: true },
     isPrivate: { type: Boolean, required: true },
     isValidForCourtHours: { type: Boolean, required: true, default: false },
-    organization: {
+    organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",

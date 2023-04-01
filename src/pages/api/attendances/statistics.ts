@@ -5,25 +5,20 @@ import Attendance, {
   AttendanceData,
 } from "../../../../server/mongodb/models/Attendance";
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<{
-    statistics: { num: number; users: Types.ObjectId[]; minutes: number }[];
-  }>
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
   switch (req.method) {
     case "GET": {
-      const { eventIdString, startDateString, endDateString } = req.query as {
-        [queryParam: string]: string;
-      };
-
-      const eventId = eventIdString
-        ? new Types.ObjectId(eventIdString)
+      const eventId = req.query.eventId
+        ? new Types.ObjectId(req.query.eventId as string)
         : undefined;
-      const startDate = startDateString ? new Date(startDateString) : undefined;
-      const endDate = endDateString ? new Date(endDateString) : undefined;
+      const startDate = req.query.startDate
+        ? new Date(req.query.startDate as string)
+        : undefined;
+      const endDate = req.query.endDate
+        ? new Date(req.query.endDate as string)
+        : undefined;
 
       const match: Partial<
         Omit<AttendanceData, "checkinTime" | "checkoutTime"> & {
@@ -31,7 +26,7 @@ export default async (
           checkoutTime: QuerySelector<Date>;
         }
       > = {};
-      if (eventId) match.event = eventId;
+      if (eventId) match.eventId = eventId;
       if (startDate) match.checkinTime = { $gte: startDate };
       if (endDate) match.checkoutTime = { $lt: endDate };
 

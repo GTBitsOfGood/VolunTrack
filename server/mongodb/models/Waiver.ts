@@ -1,14 +1,17 @@
 import { model, Model, models, Schema, Types } from "mongoose";
+import { z } from "zod";
 
-export type WaiverData = {
-  organization: Types.ObjectId;
-  type?: "adult" | "minor";
-  text?: string;
-};
+export const waiverValidator = z.object({
+  organizationId: z.instanceof(Types.ObjectId),
+  type: z.enum(["adult", "minor"]).optional(),
+  text: z.string().optional(),
+});
+
+export type WaiverData = z.infer<typeof waiverValidator>;
 
 const waiverSchema = new Schema<WaiverData>(
   {
-    organization: {
+    organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",
       required: true,

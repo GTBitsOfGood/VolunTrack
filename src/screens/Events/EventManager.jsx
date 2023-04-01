@@ -1,7 +1,6 @@
 // import { differenceInCalendarDays } from "date-fns";
 import "flowbite-react";
 import { Dropdown } from "flowbite-react";
-import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
@@ -12,7 +11,10 @@ import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
-import { getAttendances, getAttendanceStatistics } from "../../queries/attendances";
+import {
+  getAttendances,
+  getAttendanceStatistics
+} from "../../queries/attendances";
 import { getEvents } from "../../queries/events";
 import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
@@ -131,14 +133,9 @@ const EventManager = ({ user, role, isHomePage }) => {
   const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   const hourChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  if (!user) {
-    const { data: session } = useSession();
-    user = session.user;
-  }
-
   const onRefresh = () => {
     setLoading(true);
-    getEvents(undefined, undefined, user.organizationId)
+    getEvents(user.organizationId)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -183,7 +180,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
-    getAttendances(userId).then((result) => {
+    getAttendances(undefined, undefined).then((result) => {
       if (result?.data?.attendances) {
         const filteredAttendance = filterAttendance(
           result.data.attendances,
@@ -199,8 +196,6 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [attendance, setAttendance] = useState([]);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
-  const { data: session } = useSession();
-  const userId = session.user._id;
 
   const goToRegistrationPage = async (event) => {
     if (event?.eventId) {
@@ -242,7 +237,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    getEvents(selectDate, selectDate, user.organizationId)
+    getEvents(user.organizationId, selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);

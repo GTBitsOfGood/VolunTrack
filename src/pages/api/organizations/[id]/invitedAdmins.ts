@@ -1,20 +1,17 @@
-import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import { z } from "zod";
 import dbConnect from "../../../../../server/mongodb";
 import Organization from "../../../../../server/mongodb/models/Organization";
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<
-    { invitedAdmins?: string[] } | { organizationId?: Types.ObjectId }
-  >
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  const id = req.query.id as string;
-  const organization = await Organization.findById(new Types.ObjectId(id));
+  const organizationId = req.query.id as string;
+  const organization = await Organization.findById(organizationId);
   if (!organization) {
-    return res.status(404);
+    return res
+      .status(404)
+      .json({ message: `Organization with id ${organizationId} not found` });
   }
 
   switch (req.method) {
@@ -26,14 +23,26 @@ export default async (
     case "POST": {
       const email = req.body as string;
 
-      await organization.updateOne({ $push: { invitedAdmins: email } });
-      return res.status(200).json({ organizationId: organization._id });
+      if (z.string().email().safeParse(email).success) {
+        await organization.updateOne({
+          $push: { invitedAdmins: email },
+        });
+        return res
+          .status(200)
+          .json({ invitedAdmins: organization.invitedAdmins });
+      }
+      return res.status(400).json({ message: "Invalid email" });
     }
     case "DELETE": {
       const { data: email } = req.body as { data: string };
 
-      await organization.updateOne({ $pull: { invitedAdmins: email } });
-      return res.status(200).json({ organizationId: organization._id });
+      if (z.string().email().safeParse(email).success) {
+        await organization.updateOne({ $pull: { invitedAdmins: email } });
+        return res
+          .status(200)
+          .json({ invitedAdmins: organization.invitedAdmins });
+      }
+      return res.status(400).json({ message: "Invalid email" });
     }
   }
 };

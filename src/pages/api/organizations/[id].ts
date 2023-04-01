@@ -1,35 +1,37 @@
-import { HydratedDocument, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Organization, {
   OrganizationData,
+  organizationValidator,
 } from "../../../../server/mongodb/models/Organization";
 
-export default async (
-  req: NextApiRequest,
-  res: NextApiResponse<
-    | { organization?: HydratedDocument<OrganizationData> }
-    | { organizationId?: Types.ObjectId }
-  >
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  const id = req.query.id as string;
-  const organization = await Organization.findById(id);
-  if (!organization) return res.status(404);
+  const organizationId = req.query.id as string;
+  console.log(req.query);
+  const organization = await Organization.findById(organizationId);
+  if (!organization)
+    return res
+      .status(404)
+      .json({ message: `Organization with id ${organizationId} not found` });
 
   switch (req.method) {
     case "GET": {
       return res.status(200).json({ organization });
     }
     case "PUT": {
-      const userData = req.body as Partial<OrganizationData>;
-      await organization.updateOne(userData);
-      return res.status(200).json({ organizationId: organization._id });
+      if (organizationValidator.partial().safeParse(req.body).success) {
+        await organization.updateOne(req.body as Partial<OrganizationData>);
+        return res.status(200).json({ organization });
+      }
+      return res
+        .status(400)
+        .json({ message: "Invalid organization data format" });
     }
     case "DELETE": {
       await organization.deleteOne();
-      return res.status(200).json({ organizationId: organization._id });
+      return res.status(200);
     }
   }
 };
