@@ -12,6 +12,7 @@ export const createAccountValidator = object().shape({
     [ref("password"), null],
     "Passwords must match"
   ),
+  org_code: string().trim().required("Nonprofit code is required"),
 });
 
 export const loginValidator = object().shape({

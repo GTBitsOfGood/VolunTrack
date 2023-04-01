@@ -19,16 +19,16 @@ export async function createUserFromCredentials(user) {
     };
   }
 
-  const organization = await Organization.findOne({ slug: user.company_code });
+  const organization = await Organization.findOne({ slug: user.org_code });
   if (!organization) {
     return {
       status: 400,
       message:
-        "The entered company code does not exist. Please contact your administrator for assistance.",
+        "The entered organization code does not exist. Please contact your administrator for assistance.",
     };
   }
 
-  if (organization.active == false) {
+  if (organization.active === false) {
     return {
       status: 400,
       message: "The entered company code is currently marked as inactive.",
