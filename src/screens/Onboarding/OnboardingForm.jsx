@@ -163,8 +163,8 @@ class OnboardingForm extends React.Component {
                     placeholder="xxx-xxx-xxxx"
                   />
                 </div>
-                <div className="m-auto mt-10 text-center">
-                  <Styled.Header2>
+                <div className="m-auto text-center">
+                  <Styled.Header2 className="mt-10">
                     Volunteer Management Information
                   </Styled.Header2>
                   <Styled.Subtitle>
@@ -176,7 +176,7 @@ class OnboardingForm extends React.Component {
                     to create the main volunteer administrator (Admin) account.{" "}
                     <br />
                     The main volunteer administrator account&nbsp;
-                    <b> cannot be changed.</b>&nbsp; It will have the
+                    <b>cannot be changed.</b>&nbsp;It will have the
                     <b>&nbsp;highest permission level</b>&nbsp;on this platform.
                   </Styled.Subtitle2>
                 </div>
@@ -196,8 +196,8 @@ class OnboardingForm extends React.Component {
                   <Styled.Subtitle2 className="mx-3.5 mt-4">
                     * Please customize&nbsp;
                     <b>your nonprofit code</b>&nbsp;for your volunteer
-                    management platform <br />
-                    Note: Your custom code must contain &nbsp;
+                    management platform Note: Your custom code <br />
+                    must contain&nbsp;
                     <b>3-20 letters or numbers.</b>&nbsp;Please do not use
                     spaces, symbols, or special characters.
                   </Styled.Subtitle2>
