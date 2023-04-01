@@ -6,6 +6,7 @@ import { CSVLink } from "react-csv";
 import styled from "styled-components";
 import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 // TODOCD: Implement Search Feature
 
@@ -64,24 +65,6 @@ const Styled = {
     width: 80%;
   `,
 };
-
-function authWrapper(Component) {
-  return function WrappedComponent(props) {
-    const {
-      data: { user },
-    } = useSession();
-    if (user.role !== "admin") {
-      return (
-        <Error
-          title="You are not authorized to access this page"
-          statusCode={403}
-        />
-      );
-    } else {
-      return <Component {...props} user={user} />;
-    }
-  };
-}
 
 class Volunteers extends React.Component {
   state = {
@@ -200,7 +183,7 @@ class Volunteers extends React.Component {
   }
 }
 
-export default authWrapper(Volunteers);
+export default AdminAuthWrapper(Volunteers);
 
 Volunteers.propTypes = {
   user: PropTypes.object.isRequired,

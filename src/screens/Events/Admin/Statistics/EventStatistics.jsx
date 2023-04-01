@@ -8,6 +8,7 @@ import {
 import EventTable from "../../../../components/EventTable";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -175,4 +176,4 @@ const EventStatistics = () => {
   );
 };
 
-export default EventStatistics;
+export default AdminAuthWrapper(EventStatistics);

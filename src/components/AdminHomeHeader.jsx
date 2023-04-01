@@ -214,7 +214,7 @@ const AdminHomeHeader = (props) => {
                     Upcoming Events
                   </p>
                 </div>
-                <hr className="my-2 mx-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
+                <hr className="mx-2 my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
                   <p className="pl-2 text-2xl">0</p>
                   <p className="text-md pl-2 text-slate-600"> Volunteers</p>
@@ -235,12 +235,12 @@ const AdminHomeHeader = (props) => {
                 <p className="pl-2 text-2xl">{props.numEvents}</p>
                 <p className="text-md pl-2 text-slate-600"> Events</p>
               </div>
-              <hr className="my-1 mx-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
+              <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
                 <p className="pl-2 text-2xl">{props.attend}</p>
                 <p className="text-md pl-2 text-slate-600"> Attendance</p>
               </div>
-              <hr className="my-1 mx-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
+              <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
                 <p className="pl-2 text-2xl">{props.hours}</p>
                 <p className="text-md pl-2 text-slate-600"> Hours</p>
