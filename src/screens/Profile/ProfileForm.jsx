@@ -11,16 +11,16 @@ class ProfileForm extends React.Component {
       user: props.user,
       visibleText: false,
       placeHolders: {
-        email: this.props.user.bio.email,
-        first_name: this.props.user.bio.first_name,
-        last_name: this.props.user.bio.last_name,
-        phone_number: this.props.user.bio.phone_number,
-        date_of_birth: this.props.user.bio.date_of_birth,
-        zip_code: this.props.user.bio.zip_code,
-        address: this.props.user.bio.address,
-        city: this.props.user.bio.city,
-        state: this.props.user.bio.state,
-        notes: this.props.user.bio.notes,
+        email: this.props.user.email,
+        first_name: this.props.user.first_name,
+        last_name: this.props.user.last_name,
+        phone_number: this.props.user.phone_number,
+        date_of_birth: this.props.user.date_of_birth,
+        zip_code: this.props.user.zip_code,
+        address: this.props.user.address,
+        city: this.props.user.city,
+        state: this.props.user.state,
+        notes: this.props.user.notes,
       },
     };
   }
@@ -30,7 +30,7 @@ class ProfileForm extends React.Component {
       visibleText: true,
     });
     let bio = {
-      email: this.props.user.bio.email,
+      email: this.props.user.email,
       first_name: values.first_name,
       last_name: values.last_name,
       phone_number: values.phone_number,

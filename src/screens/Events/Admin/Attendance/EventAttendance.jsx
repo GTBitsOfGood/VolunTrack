@@ -130,21 +130,13 @@ const EventAttendance = () => {
       searchValue.length > 0
         ? volunteers.filter(
             (v) =>
-              v.bio.last_name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase()) ||
-              v.bio.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.bio.first_name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase())
+              v.last_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.first_name?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>
-      a.bio.last_name > b.bio.last_name
-        ? 1
-        : b.bio.last_name > a.bio.last_name
-        ? -1
-        : 0
+      a.last_name > b.last_name ? 1 : b.last_name > a.last_name ? -1 : 0
     );
   };
 

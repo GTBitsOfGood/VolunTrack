@@ -22,12 +22,12 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
 
   const personalization = [
     {
-      email: user.bio.email,
+      email: user.email,
       data: {
         header: "Your Registration is Confirmed for",
         introLine: `Thanks for registering for ${event.title}! Please review the event details below.`,
         eventTitle: event.title,
-        volunteerName: user.bio.first_name,
+        volunteerName: user.first_name,
         eventDate: event.date.slice(0, 10),
         eventStartTime: convertTime(event.startTime),
         eventEndTime: convertTime(event.endTime),
@@ -63,13 +63,13 @@ export const sendEventEditedEmail = async (user, event) => {
 
   const personalization = [
     {
-      email: user.bio.email,
+      email: user.email,
       data: {
         header: `${nonprofit} edited`,
         introLine: `It looks like an admin at ${nonprofit} edited ${event.title}! 
         Please review the event details below and ensure they still work with your schedule.`,
         eventTitle: event.title,
-        volunteerName: user.bio.first_name,
+        volunteerName: user.first_name,
         eventDate: event.date.slice(0, 10),
         eventStartTime: convertTime(event.startTime),
         eventEndTime: convertTime(event.endTime),
@@ -109,10 +109,7 @@ const sendEmail = async (user, personalization, subject) => {
   });
 
   const recipients = [
-    new Recipient(
-      user.bio.email,
-      user.bio.first_name + " " + user.bio.last_name
-    ),
+    new Recipient(user.email, user.first_name + " " + user.last_name),
   ];
 
   const emailParams = new EmailParams()

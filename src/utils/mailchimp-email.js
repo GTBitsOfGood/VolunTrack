@@ -22,7 +22,7 @@ export const sendEventEmail = async () => {
 const getEventEmails = async (event) => {
   const eventVolunteers = await getEventVolunteers(event.volunteers);
   const eventVolunteerEmails = eventVolunteers.message.users.map(
-    (user) => user.bio.email
+    (user) => user.email
   );
   const formattedEventVolunteerEmails = eventVolunteerEmails.map(
     (userEmail) => ({ email: userEmail })
