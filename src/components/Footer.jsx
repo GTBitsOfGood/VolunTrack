@@ -14,7 +14,7 @@ export const AppFooter = () => {
             />
           </a>
           <Footer.LinkGroup>
-            <div className="flex flex-col text-right">
+            <div className="flex flex-col items-end">
               <a
                 href="https://bitsofgood.org"
                 className="pr-4 hover:no-underline md:hover:text-primaryColor"
@@ -24,9 +24,12 @@ export const AppFooter = () => {
 
               <a
                 href="https://www.netlify.com"
-                className="pr-4 hover:no-underline md:hover:text-primaryColor"
+                className="flex pr-4 hover:no-underline md:hover:text-primaryColor"
               >
-                Powered by Netlify
+                Powered by
+                <p className="pl-1 underline md:hover:text-primaryColor">
+                  Netlify
+                </p>
               </a>
             </div>
           </Footer.LinkGroup>
