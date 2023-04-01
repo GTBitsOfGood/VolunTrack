@@ -1,33 +1,23 @@
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import BoGButton from "../../components/BoGButton";
 import PropTypes from "prop-types";
 import React from "react";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import { Icon } from "../../components/Icon";
 import {
-  Button,
   Container,
   Modal,
   ModalBody,
   ModalFooter,
   ModalHeader,
 } from "reactstrap";
-import styled from "styled-components";
 import { updateUser } from "../../actions/queries";
 import EditUserForm from "../../components/Forms/EditUserForm";
-
-const Styled = {
-  Button: styled(Button)`
-    background: none;
-    border: none;
-  `,
-  Container: styled.div`
-    width: 100%;
-    height: 100%;
-    margin: auto;
-  `,
-};
+import {
+  PencilIcon,
+  TrashIcon,
+  DocumentDuplicateIcon,
+} from "@heroicons/react/24/solid";
 
 class AssistantTable extends React.Component {
   constructor(props) {
@@ -144,7 +134,7 @@ class AssistantTable extends React.Component {
     const roles = ["Administrator", "Admin Assistant", "Staff"];
     const defaultOption = roles[0];
     return (
-      <Styled.Container>
+      <div className="w-100% h-100% m-auto">
         <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
           <Table.Head>
             <Table.HeadCell>Name</Table.HeadCell>
@@ -163,14 +153,19 @@ class AssistantTable extends React.Component {
                   <Table.Row key={index} evenIndex={index % 2 === 0}>
                     <Table.Cell>{user.name}</Table.Cell>
                     <Table.Cell>
-                      {user.email}
-                      <Styled.Button
-                        onClick={() => {
-                          navigator.clipboard.writeText(user.email);
-                        }}
-                      >
-                        <Icon color="grey3" name="copy" />
-                      </Styled.Button>
+                      <div className="flex items-center">
+                        {user.email}
+                        <Tooltip content="Copy" style="light">
+                          <button
+                            className="mx-1"
+                            onClick={() => {
+                              navigator.clipboard.writeText(user.email);
+                            }}
+                          >
+                            <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                          </button>
+                        </Tooltip>
+                      </div>
                     </Table.Cell>
                     <Table.Cell>
                       {user.role === "admin"
@@ -184,27 +179,42 @@ class AssistantTable extends React.Component {
                     </Table.Cell>
                     {!invitedAdmins.includes(user.email) ? (
                       <Table.Cell>
-                        <Styled.Button
-                          onClick={() => this.onDisplayEditUserModal(user)}
-                        >
-                          <Icon color="grey3" name="create" />
-                        </Styled.Button>
-                        <Styled.Button
-                          onClick={() => this.onDisplayDeleteUserModal(user)}
-                        >
-                          <Icon color="grey3" name="delete" />
-                        </Styled.Button>
+                        <div className="flex">
+                          <Tooltip content="Edit" style="light">
+                            <button
+                              className="mx-1"
+                              onClick={() => this.onDisplayEditUserModal(user)}
+                            >
+                              <PencilIcon className="h-7 text-primaryColor" />
+                            </button>
+                          </Tooltip>
+                          <Tooltip content="Delete" style="light">
+                            <button
+                              className="mx-1"
+                              onClick={() =>
+                                this.onDisplayDeleteUserModal(user)
+                              }
+                            >
+                              <TrashIcon className="h-7 text-primaryColor" />
+                            </button>
+                          </Tooltip>
+                        </div>
                       </Table.Cell>
                     ) : (
                       <Table.Cell>
-                        Pending
-                        <Styled.Button
-                          onClick={() =>
-                            this.onDisplayDeletePending(user.email)
-                          }
-                        >
-                          <Icon color="grey3" name="delete" />
-                        </Styled.Button>
+                        <div className="flex">
+                          Pending
+                          <Tooltip content="Delete" style="light">
+                            <button
+                              className="mx-1"
+                              onClick={() =>
+                                this.onDisplayDeletePending(user.email)
+                              }
+                            >
+                              <TrashIcon className="h-7 text-primaryColor" />
+                            </button>
+                          </Tooltip>
+                        </div>
                       </Table.Cell>
                     )}
                   </Table.Row>
@@ -269,7 +279,7 @@ class AssistantTable extends React.Component {
           </ModalBody>
           <ModalFooter>
             <BoGButton
-              onClick={this.closePendingModal}
+              onClick={this.closeDeleteUserModal}
               text="Cancel"
               outline={true}
             />
@@ -284,7 +294,7 @@ class AssistantTable extends React.Component {
             updatePageCallback={this.updatePage}
           />
         )}
-      </Styled.Container>
+      </div>
     );
   }
 }
