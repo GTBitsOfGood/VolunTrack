@@ -1,5 +1,5 @@
 import "flowbite-react";
-import { Footer, Navbar } from "flowbite-react";
+import { Footer } from "flowbite-react";
 
 export const AppFooter = () => {
   return (
@@ -30,13 +30,7 @@ export const AppFooter = () => {
               </a>
             </div>
           </Footer.LinkGroup>
-
-          {/* <div>
-            Copyright (c) 2023 by Bits of Good. Powered by Netlify.
-          </div> */}
         </div>
-        {/*<Footer.Divider />*/}
-        {/* <Footer.Copyright href="#" by="Flowbite™" year={2022} /> */}
       </div>
     </Footer>
   );

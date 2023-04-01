@@ -95,6 +95,7 @@ const AuthPage = (props) => {
         </div>
       </Styled.Container>
       <div className="grow" />
+      <Footer />
     </Styled.Main>
   );
 };
