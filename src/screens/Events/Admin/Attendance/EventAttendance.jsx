@@ -10,6 +10,7 @@ import {
 } from "../../../../actions/queries";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import Footer from "./Footer";
+import Text from "../../../../components/Text";
 
 const Styled = {
   Container: styled.div`
@@ -150,6 +151,7 @@ const EventAttendance = () => {
     <>
       <Styled.Container>
         <Styled.HeaderRow>
+          <Text className="mb-4" href={`/events`} text="< Back to home" />
           <Styled.Header>Attendance</Styled.Header>
           <Styled.CheckedInData>
             <span style={{ fontWeight: "bold" }}>

@@ -11,6 +11,7 @@ import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
+import Text from "../../../components/Text";
 
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -310,11 +311,15 @@ const EventRegister = (event) => {
 
   return (
     <Styled.Container fluid="md">
-      <BoGButton text="Back" onClick={() => goBackToDetails()} />
-      <Styled.Title />
+      <Text
+        className="ml-12"
+        href={`/events`}
+        onClick={() => goBackToDetails()}
+        text="< Back to home"
+      />
       {!isRegistered && (
         <Styled.Row>
-          <Col xs="12" lg="6">
+          <Col xs="12" lg="6" className="mt-2">
             <Styled.MainText>Confirm Registration</Styled.MainText>
           </Col>
           <Col xs="12" lg={{ size: 4, offset: 2 }}></Col>
