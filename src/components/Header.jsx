@@ -181,7 +181,7 @@ const Header = () => {
                   rounded={true}
                 />
                 <div className="ml-3 flex flex-col gap-0 text-left">
-                  <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                  <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
                   <p className="mb-0 capitalize">{user.role}</p>
                 </div>
               </div>

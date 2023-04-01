@@ -1,6 +1,5 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
-import { Types } from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -70,24 +69,21 @@ export default NextAuth({
     // We can delete this and then add a new User from the defined User schema
     createUser: async (message) => {
       // this is only called for google auth
-
+      await dbConnect();
       const _id = new ObjectId(message.user.id);
+      console.log(message);
 
       await User.deleteOne({ _id });
 
       const user_data = {
         _id,
         imageUrl: message.user.image,
-        bio: {
-          first_name: message.user.name.split(" ")[0],
-          last_name: message.user.name.split(" ")[1],
-          phone_number: "",
-          email: message.user.email,
-        },
+        firstName: message.user.name.split(" ")[0],
+        lastName: message.user.name.split(" ")[1],
+        phone: "",
+        email: message.user.email,
       };
-
-      const user = new User(user_data);
-      await user.save();
+      await User.create(user_data);
     },
   },
   callbacks: {
@@ -99,7 +95,8 @@ export default NextAuth({
     async session({ session, token }) {
       await dbConnect();
 
-      const id = new Types.ObjectId(token.id);
+      const id = token.id;
+      console.log(id);
 
       const user = (await User.findById(id))._doc;
       const organization = (await Organization.findById(user?.organizationId))

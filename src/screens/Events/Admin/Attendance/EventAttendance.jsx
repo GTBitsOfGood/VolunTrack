@@ -1,18 +1,18 @@
+import "flowbite-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import BoGButton from "../../../../components/BoGButton";
+import SearchBar from "../../../../components/SearchBar";
+import Text from "../../../../components/Text";
 import {
   checkInVolunteer,
   checkOutVolunteer,
 } from "../../../../queries/attendances";
 import { getEvent, updateEvent } from "../../../../queries/events";
 import { getUsers } from "../../../../queries/users";
-import AttendanceFunctionality from "./AttendanceFunctionality";
-import SearchBar from "../../../../components/SearchBar";
-import "flowbite-react";
-import Text from "../../../../components/Text";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
-import BoGButton from "../../../../components/BoGButton";
+import AttendanceFunctionality from "./AttendanceFunctionality";
 
 const Styled = {
   Container: styled.div`
@@ -69,11 +69,11 @@ const EventAttendance = () => {
       const event = await getEvent(eventId);
       setEvent(event.data.event);
 
-      const fetchedMinors = {};
-      event.minors.forEach((m) => {
-        fetchedMinors[m.volunteer_id] = m.minor;
-      });
-      setMinors(fetchedMinors);
+      // const fetchedMinors = {};
+      // event.minors.forEach((m) => {
+      //   fetchedMinors[m.volunteer_id] = m.minor;
+      // });
+      // setMinors(fetchedMinors);
 
       setWaitingVolunteers(
         (await getEventVolunteersByAttendance(eventId, "waiting")).data
@@ -90,8 +90,8 @@ const EventAttendance = () => {
     })();
   }, []);
 
-  const checkIn = (volunteer) => {
-    checkInVolunteer(volunteer._id, eventId);
+  const checkIn = async (volunteer) => {
+    await checkInVolunteer(volunteer._id, eventId);
 
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(

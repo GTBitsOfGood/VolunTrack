@@ -131,9 +131,9 @@ const EventsList = ({
     return new Date(event.date) > currentDate;
   });
 
-  upcomingEvents = upcomingEvents.filter(function (event) {
-    return !event.volunteers.includes(user._id);
-  });
+  // upcomingEvents = upcomingEvents.filter(function (event) {
+  //   return !event.volunteers.includes(user._id);
+  // });
 
   if (upcomingEvents.length > 5) {
     upcomingEvents = upcomingEvents.slice(0, 5);

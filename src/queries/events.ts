@@ -25,7 +25,6 @@ export const getEvents = (
   startDateString?: string,
   endDateString?: string
 ) => {
-  console.log(organizationId);
   return axios.get<{ events: HydratedDocument<EventPopulatedData>[] }>(
     "/api/events",
     {

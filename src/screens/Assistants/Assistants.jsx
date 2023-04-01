@@ -55,7 +55,7 @@ class Assistants extends React.Component {
     getInvitedAdmins(this.props.user.organizationId).then((result) => {
       if (result && result.data) {
         this.setState({
-          invitedAdmins: result.data,
+          invitedAdmins: result.data.invitedAdmins,
         });
       }
     });
@@ -125,6 +125,7 @@ class Assistants extends React.Component {
   };
 
   filteredAndSortedAdmins = (admins) => {
+    console.log(admins);
     return (
       this.state.searchValue.length > 0
         ? admins.filter(

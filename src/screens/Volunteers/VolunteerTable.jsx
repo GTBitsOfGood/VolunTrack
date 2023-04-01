@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
 import styled from "styled-components";
+import EditUserForm from "../../components/Forms/EditUserForm";
 import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import EditUserForm from "../../components/Forms/EditUserForm";
 
 const Styled = {
   Button: styled(Button)`
@@ -64,6 +64,7 @@ class VolunteerTable extends React.Component {
 
   render() {
     const { users, loading } = this.props;
+    console.log(users);
     return (
       <div>
         <Table striped={true}>
@@ -86,7 +87,9 @@ class VolunteerTable extends React.Component {
             )
             .map((user, index) => (
               <Table.Row key={index} evenIndex={index % 2 === 0}>
-                <Table.Cell>{user.name}</Table.Cell>
+                <Table.Cell>
+                  {user.firstName} {user.lastName}
+                </Table.Cell>
                 <Table.Cell>
                   {user.email}
                   <Styled.Button

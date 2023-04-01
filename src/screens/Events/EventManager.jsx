@@ -15,7 +15,8 @@ import {
   getAttendances,
   getAttendanceStatistics
 } from "../../queries/attendances";
-import { getEvents } from "../../queries/events";
+import { getEvent, getEvents } from "../../queries/events";
+import { getRegistrations } from "../../queries/registrations";
 import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import { updateEvent } from "./eventHelpers";
@@ -128,6 +129,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [attend, setAttend] = useState(0);
   const [hours, setHours] = useState(0);
   const [eventState, setEventState] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
 
   const eventChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -135,25 +137,31 @@ const EventManager = ({ user, role, isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    getEvents(user.organizationId)
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-          setDates(result.data.events);
-        }
-        if (result?.data?.events) setNumEvents(result.data.events.length);
+    getEvents(user.organizationId).then((result) => {
+      if (result && result.data && result.data.events) {
+        setEvents(result.data.events);
+        setDates(result.data.events);
+      }
+      if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getAttendanceStatistics(undefined, startDate, endDate).then((stats) => {
+      getAttendanceStatistics(undefined, startDate, endDate).then(
+        async (stats) => {
           let totalAttendance = 0;
           let totalHours = 0;
-          for (let event of result?.data?.events ?? []) {
+          for (const statistic of stats.data.statistics ?? []) {
+            let event = {};
+            try {
+              event = (await getEvent(statistic._id)).data.event;
+            } catch (e) {
+              continue;
+            }
             let split = event.date.split("-");
             let index = parseInt(split[1]) - 1;
-            let stat = stats.data.find((s) => s._id === event._id);
+            let stat = stats.data.statistics.find((s) => s._id === event._id);
             if (stat) {
               hourChart[index] += Math.round(stat.minutes / 60.0);
-              attendChart[index] += stat.uniqueUsers.length;
-              totalAttendance += stat.uniqueUsers.length;
+              attendChart[index] += stat.users.length;
+              totalAttendance += stat.users.length;
               totalHours += stat.minutes / 60.0;
             }
             eventChart[index] = eventChart[index] + 1;
@@ -161,14 +169,19 @@ const EventManager = ({ user, role, isHomePage }) => {
 
           setAttend(totalAttendance);
           setHours(Math.round(totalHours * 100) / 100);
-        });
-        eventState.push(eventChart);
-        eventState.push(hourChart);
-        eventState.push(attendChart);
+        }
+      );
+      eventState.push(eventChart);
+      eventState.push(hourChart);
+      eventState.push(attendChart);
+    });
+    getRegistrations(undefined, user.id)
+      .then((result) => {
+        if (result.data.registrations) {
+          setRegistrations(result.data.registrations);
+        }
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   };
 
   const onCreateClicked = () => {

@@ -75,7 +75,12 @@ export const getAttendanceStatistics = (
   endDate?: Date
 ) =>
   axios.get<{
-    statistics: { num: number; users: Types.ObjectId[]; minutes: number }[];
+    statistics: {
+      _id: string;
+      num: number;
+      users: Types.ObjectId[];
+      minutes: number;
+    }[];
   }>(`/api/attendances/statistics`, {
     params: { eventId, startDate, endDate },
   });
