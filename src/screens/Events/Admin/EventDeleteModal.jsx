@@ -1,4 +1,3 @@
-
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
@@ -7,7 +6,6 @@ import { deleteEvent } from "../../../actions/queries";
 
 const EventDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
-  
 
   const handleSubmit = () => {
     setDeleting(true);

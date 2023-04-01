@@ -176,9 +176,11 @@ const EventStatistics = () => {
         toggle={toggleEditModal}
         event={currEvent}
       />
-      <BasicModal 
+      <BasicModal
         open={showDeleteModal}
-        title={`Are you sure you want to delete this entry ${<strong>permanently</strong>}?`}
+        title={`Are you sure you want to delete this entry ${(
+          <strong>permanently</strong>
+        )}?`}
         onConfirm={confirmDeleteModal}
         onCancel={toggleDeleteModal}
         cancelText={"Cancel"}
