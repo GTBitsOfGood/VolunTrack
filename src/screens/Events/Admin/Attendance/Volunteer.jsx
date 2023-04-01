@@ -50,10 +50,10 @@ const Volunteer = (
         <Table.Row>
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
-            {volunteer.bio.first_name} {volunteer.bio.last_name}
+            {volunteer.firstName} {volunteer.lastName}
           </Table.Cell>
-          <Table.Cell>{volunteer.bio.email}</Table.Cell>
-          <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
+          <Table.Cell>{volunteer.email}</Table.Cell>
+          <Table.Cell>{volunteer.phone_number}</Table.Cell>
           <Table.Cell>
             {" "}
             {/* {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
@@ -63,10 +63,10 @@ const Volunteer = (
         <Table.Row>
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
-            {volunteer.bio.first_name} {volunteer.bio.last_name}
+            {volunteer.firstName} {volunteer.lastName}
           </Table.Cell>
-          <Table.Cell>{volunteer.bio.email}</Table.Cell>
-          <Table.Cell>{volunteer.bio.phone_number}</Table.Cell>
+          <Table.Cell>{volunteer.email}</Table.Cell>
+          <Table.Cell>{volunteer.phone_number}</Table.Cell>
           <Table.Cell>
             {" "}
             {/* {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
