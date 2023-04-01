@@ -1,4 +1,5 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import BoGButton from "./BoGButton";
 import PropTypes from "prop-types";
 import { updateEvent } from "../screens/Events/eventHelpers";
 
@@ -27,12 +28,8 @@ const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
         Are you sure you want to cancel your registration for this event?
       </ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          No, keep it
-        </Button>
-        <Button color="primary" onClick={handleSubmit}>
-          Yes, cancel it
-        </Button>
+        <BoGButton text="No, keep it" onClick={toggle} outline={true} />
+        <BoGButton text="Yes, cancel it" onClick={handleSubmit} />
       </ModalFooter>
     </Modal>
   );

@@ -4,7 +4,8 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React from "react";
-import { capitalizeFirstLetter } from "../screens/Profile/helpers";
+import { useEffect } from "react";
+import { getOrganizationData } from "../actions/queries";
 
 const Header = () => {
   const router = useRouter();
@@ -24,6 +25,10 @@ const Header = () => {
     router.push("/history");
   };
 
+  const goToBogApprovalPortal = () => {
+    router.push("/bog-portal");
+  };
+
   const gotToSummary = () => {
     router.push("/events-summary");
   };
@@ -38,6 +43,10 @@ const Header = () => {
 
   const goToManageWaivers = () => {
     router.push("/manage-waivers");
+  };
+
+  const goToOrganizationSettings = () => {
+    router.push("/organization-settings");
   };
 
   const currPageMatches = (page) => router.pathname === page;
@@ -57,6 +66,13 @@ const Header = () => {
           </Dropdown.Item>
         </div>
       )}
+      {user.isBitsOfGoodAdmin === true && (
+        <div>
+          <Dropdown.Item onClick={goToBogApprovalPortal} href="/bog-portal">
+            BOG Approval Portal
+          </Dropdown.Item>
+        </div>
+      )}
       <Dropdown.Divider />
       <Dropdown.Item onClick={logout} href="/">
         Sign Out
@@ -64,24 +80,27 @@ const Header = () => {
     </React.Fragment>
   );
 
+  const [imageURL, setImageURL] = React.useState("/images/bog_logo.png");
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getOrganizationData(user.organizationId);
+      if (response.data.orgData) setImageURL(response.data.orgData.imageURL);
+    }
+    fetchData();
+  }, []);
+
   return (
     <Navbar fluid={false} rounded={true}>
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
-        <img
-          src="/images/helping_mamas_logo.png"
-          alt="helping mamas logo"
-          className="h-10"
-        />
+        <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      {/*<div className="w-48 sm:w-0 md:w-0" />*/}
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
           className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/home")
-              ? "text-primaryColor"
-              : "text-secondaryColor"
+            currPageMatches("/home") ? "text-primaryColor" : ""
           }`}
         >
           Home
@@ -90,9 +109,7 @@ const Header = () => {
           <Navbar.Link
             href="/volunteers"
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/volunteers")
-                ? "text-primaryColor"
-                : "text-secondaryColor"
+              currPageMatches("/volunteers") ? "text-primaryColor" : ""
             }`}
           >
             Volunteers
@@ -101,9 +118,7 @@ const Header = () => {
         <Navbar.Link
           href="/events"
           className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/events")
-              ? "text-primaryColor"
-              : "text-secondaryColor"
+            currPageMatches("/events") ? "text-primaryColor" : ""
           }`}
         >
           Events
@@ -113,9 +128,7 @@ const Header = () => {
             onClick={goToStats}
             href="/stats"
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/stats")
-                ? "text-primaryColor"
-                : "text-secondaryColor"
+              currPageMatches("/stats") ? "text-primaryColor" : ""
             }`}
           >
             Participation History
@@ -130,9 +143,10 @@ const Header = () => {
                 <div
                   className={`text-lg font-bold md:hover:text-primaryColor  ${
                     currPageMatches("/assistants") ||
-                    currPageMatches("/manage-waivers")
+                    currPageMatches("/manage-waivers") ||
+                    currPageMatches("/organization-settings")
                       ? "text-primaryColor"
-                      : "text-secondaryColor"
+                      : ""
                   }`}
                 >
                   Settings
@@ -144,6 +158,12 @@ const Header = () => {
               </Dropdown.Item>
               <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
                 Manage Waivers
+              </Dropdown.Item>
+              <Dropdown.Item
+                onClick={goToOrganizationSettings}
+                href="/organization-settings"
+              >
+                Organization Settings
               </Dropdown.Item>
             </Dropdown>
           )}
@@ -161,9 +181,7 @@ const Header = () => {
                 />
                 <div className="ml-3 flex flex-col gap-0 text-left">
                   <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
-                  <p className="mb-0">{`${capitalizeFirstLetter(
-                    user.role ?? ""
-                  )}`}</p>
+                  <p className="mb-0 capitalize">{user.role}</p>
                 </div>
               </div>
             }
@@ -178,10 +196,7 @@ const Header = () => {
             label={
               <div
                 className={`text-lg font-bold ${
-                  currPageMatches("/assistants") ||
-                  currPageMatches("/manage-waivers")
-                    ? "text-primaryColor"
-                    : "text-secondaryColor"
+                  currPageMatches("/profile") ? "text-primaryColor" : ""
                 }`}
               >
                 Profile Settings

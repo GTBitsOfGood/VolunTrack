@@ -1,10 +1,10 @@
 import { Table } from "flowbite-react";
+import BoGButton from "../../components/BoGButton";
 import PropTypes from "prop-types";
 import React from "react";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import { Icon } from "../../components/Icon";
-import "react-dropdown/style.css";
 import {
   Button,
   Container,
@@ -248,12 +248,12 @@ class AssistantTable extends React.Component {
             pending admin: {this.state.pendingSelectedForDelete}?
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.closePendingModal}>
-              Cancel
-            </Button>
-            <Button color="primary" onClick={this.handleSubmitForPending}>
-              Delete
-            </Button>
+            <BoGButton
+              onClick={this.closePendingModal}
+              text="Cancel"
+              outline={true}
+            />
+            <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
           </ModalFooter>
         </Modal>
         {/* Delete Current Admin Modal */}
@@ -268,12 +268,12 @@ class AssistantTable extends React.Component {
             {this.state.userSelectedForDelete?.name}?
           </ModalBody>
           <ModalFooter>
-            <Button color="secondary" onClick={this.closeDeleteUserModal}>
-              Cancel
-            </Button>
-            <Button color="primary" onClick={this.handleSubmitForDeleteUser}>
-              Delete
-            </Button>
+            <BoGButton
+              onClick={this.closePendingModal}
+              text="Cancel"
+              outline={true}
+            />
+            <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
           </ModalFooter>
         </Modal>
         {users.length !== 0 && (

@@ -1,20 +1,21 @@
-import { Field, Formik } from "formik";
+import { Formik } from "formik";
 import React, { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { fetchEvents, getEventStatistics } from "../../../actions/queries";
 import { useEffect } from "react";
 import EventTable from "../../../components/EventStatsTable";
-import { Button, Col, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
-import * as SForm from "../../sharedStyles/formStyles";
 import Loading from "../../../components/Loading";
 import { useSession } from "next-auth/react";
+import InputField from "../../../components/Forms/InputField";
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -145,38 +146,24 @@ const Stats = () => {
           <React.Fragment>
             <Row>
               <Col>
-                <SForm.Label>From</SForm.Label>
-                <Field name="startDate">
-                  {({ field }) => (
-                    <SForm.Input {...field} type="datetime-local" />
-                  )}
-                </Field>
+                <InputField
+                  label="From"
+                  name="startDate"
+                  type="datetime-local"
+                />
               </Col>
               <Col>
-                <SForm.Label>To</SForm.Label>
-
-                <Field name="endDate">
-                  {({ field }) => (
-                    <SForm.Input {...field} type="datetime-local" />
-                  )}
-                </Field>
+                <InputField label="To" name="endDate" type="datetime-local" />
               </Col>
             </Row>
             <Row>
               <Col>
-                <Button
-                  color="primary"
+                <BoGButton
+                  text="Search"
                   onClick={() => {
                     handleSubmit();
                   }}
-                  style={{
-                    backgroundColor: "ef4e79",
-                    borderColor: "ef4e79",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  Search
-                </Button>
+                />
               </Col>
             </Row>
           </React.Fragment>

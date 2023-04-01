@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { getHistoryEvents, getUsers } from "../../actions/queries";
 import { Table } from "flowbite-react";
 
+// TODOCD: Implement Search Feature
+
 const Styled = {
   Container: styled.div`
     width: 90vw;

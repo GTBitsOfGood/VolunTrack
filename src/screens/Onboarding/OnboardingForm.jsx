@@ -3,10 +3,11 @@ import styled from "styled-components";
 import PropTypes from "prop-types";
 import React from "react";
 import Image from "next/image";
-import { Label as Label, TextInput, Button } from "flowbite-react";
+import { Label as Label, TextInput } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
 import { createOrganizationValidator } from "./helpers";
 import { createOrganization } from "../../actions/queries";
+import BoGButton from "../../components/BoGButton";
 
 const Styled = {
   Container: styled.div`
@@ -49,10 +50,6 @@ const Styled = {
     font-size: 16px;
     line-height: 24px;
   `,
-  Button: styled(Button)`
-    background-color: #F05C61
-    padding: 14px 40px;
-  `,
   ErrorMessage: styled(ErrorMessage).attrs({
     component: "span",
   })`
@@ -91,7 +88,7 @@ class OnboardingForm extends React.Component {
             width="302px"
             layout="fixed"
             alt="Bits of Good Logo"
-            src="/images/bog_hac4impact_logo.png"
+            src="/images/bog_hack4impact_logo.png"
           />
 
           <Styled.Header>
@@ -218,7 +215,7 @@ class OnboardingForm extends React.Component {
                   </Styled.Subtitle2>
                 </div>
                 <div className="m-auto w-80">
-                  <Label className="mt-2 mb-1" htmlFor="organization_code">
+                  <Label className="mb-1 mt-2" htmlFor="organization_code">
                     Non-profit Code
                   </Label>
                   <Field
@@ -239,14 +236,11 @@ class OnboardingForm extends React.Component {
                   <Styled.ErrorMessage name="organization_code" />
                 </div>
                 <div className="m-auto mt-5 flex justify-center">
-                  <Button
-                    className="bg-pink-600"
-                    type="submit"
+                  <BoGButton
+                    text="Submit"
                     onClick={handleSubmit}
                     disabled={!isValid || isSubmitting}
-                  >
-                    Submit
-                  </Button>
+                  />
                 </div>
               </form>
             </div>

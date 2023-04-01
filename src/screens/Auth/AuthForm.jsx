@@ -1,9 +1,8 @@
-import { ErrorMessage, Field, Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Col, FormGroup as BFormGroup, Row } from "reactstrap";
-import * as SForm from "../sharedStyles/formStyles";
-
+import { Col, FormGroup as BFormGroup, Row } from "reactstrap";
+import BoGButton from "../../components/BoGButton";
 import styled from "styled-components";
 import { createAccountValidator, loginValidator } from "./helpers";
 import { signIn } from "next-auth/react";
@@ -112,79 +111,46 @@ class AuthForm extends React.Component {
                           placeholder="First Name"
                           label="First Name"
                         />
-                        {/*<SForm.Label>First Name</SForm.Label>*/}
-                        {/*<Field name="first_name">*/}
-                        {/*  {({ field }) => (*/}
-                        {/*    <SForm.Input*/}
-                        {/*      {...field}*/}
-                        {/*      type="text"*/}
-                        {/*      placeholder="First Name"*/}
-                        {/*    />*/}
-                        {/*  )}*/}
-                        {/*</Field>*/}
-                        {/*<Styled.ErrorMessage name="first_name" />*/}
                       </Col>
                       <Col>
-                        <SForm.Label>Last Name</SForm.Label>
-                        <Field name="last_name">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="text"
-                              placeholder="Last Name"
-                            />
-                          )}
-                        </Field>
-                        <Styled.ErrorMessage name="last_name" />
+                        <InputField
+                          name="last_name"
+                          label="Last Name"
+                          placeholder="Last Name"
+                        />
                       </Col>
                     </Row>
                   )}
                   <Row>
                     <Col>
-                      <SForm.Label>Email Address</SForm.Label>
-                      <Field name="email">
-                        {({ field }) => (
-                          <SForm.Input
-                            {...field}
-                            type="text"
-                            autoComplete="email"
-                            placeholder="Your Email"
-                          />
-                        )}
-                      </Field>
-                      <Styled.ErrorMessage name="email" />
+                      <InputField
+                        name="email"
+                        label="Email Address"
+                        placeholder="Your Email"
+                        type="email"
+                      />
                     </Col>
                   </Row>
                   <Row>
                     <Col>
-                      <SForm.Label>Password</SForm.Label>
-                      <Field name="password">
-                        {({ field }) => (
-                          <SForm.Input
-                            {...field}
-                            type="password"
-                            autoComplete="current-password"
-                            placeholder="Your Password"
-                          />
-                        )}
-                      </Field>
-                      <Styled.ErrorMessage name="password" />
+                      <InputField
+                        name="password"
+                        label="Password"
+                        type="password"
+                        placeholder="Your Password"
+                        autoComplete="current-password"
+                      />
                     </Col>
                   </Row>
                   {this.props.createAccount && (
                     <Row>
                       <Col>
-                        <SForm.Label>Confirm Password</SForm.Label>
-                        <Field name="password_confirm">
-                          {({ field }) => (
-                            <SForm.Input
-                              {...field}
-                              type="password"
-                              placeholder="Your Password"
-                            />
-                          )}
-                        </Field>
-                        <Styled.ErrorMessage name="password_confirm" />
+                        <InputField
+                          name="password_confirm"
+                          label="Confirm Password"
+                          type="password"
+                          placeholder="Your Password"
+                        />
                       </Col>
                     </Row>
                   )}
@@ -206,21 +172,19 @@ class AuthForm extends React.Component {
                     </Row>
                   )}
                   <Row>
-                    <Button
-                      type="submit"
-                      style={{
-                        backgroundColor: "#ef4e79",
-                        width: "92%",
-                        margin: "auto",
-                        color: "white",
-                      }}
-                      onClick={handleSubmit}
-                      disabled={!isValid || isSubmitting}
-                    >
-                      {this.props.createAccount
-                        ? "Create an account"
-                        : "Sign In"}
-                    </Button>
+                    <Col>
+                      <BoGButton
+                        type="submit"
+                        onClick={handleSubmit}
+                        disabled={!isValid || isSubmitting}
+                        text={
+                          this.props.createAccount
+                            ? "Create an account"
+                            : "Sign In"
+                        }
+                        className="w-full bg-primaryColor hover:bg-hoverColor"
+                      />
+                    </Col>
                   </Row>
                 </Styled.FormGroup>
               </form>

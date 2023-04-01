@@ -3,34 +3,22 @@ import Error from "next/error";
 import PropTypes from "prop-types";
 import React from "react";
 import { CSVLink } from "react-csv";
-import { Button } from "reactstrap";
 import styled from "styled-components";
 import { deleteUser, getUsers, updateUser } from "../../actions/queries";
 import VolunteerTable from "./VolunteerTable";
+
+// TODOCD: Implement Search Feature
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
     position: relative;
     left: 10%;
-  `,
-  Button: styled(Button)`
-    background: white;
-    border: none;
-    color: black;
-    &:hover {
-      background: gainsboro;
-    }
-    &:focus {
-      background: white;
-      box-shadow: none;
-    }
-    ${(props) => props.disabled && "background: white !important"}
   `,
   TableUsers: styled.div`
     width: 80%;
@@ -176,7 +164,7 @@ class Volunteers extends React.Component {
           <Styled.CSVLink
             data={this.state.users}
             filename={"volunteer-list.csv"}
-            className="btn btn-primary"
+            className="btn bg-primaryColor text-white"
             target="_blank"
           >
             Download to CSV

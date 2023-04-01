@@ -25,3 +25,21 @@ export async function createOrganization({
 
   return { status: 200, message: result };
 }
+
+export async function fetchOrganizations() {
+  await dbConnect();
+  const results = await Organization.find({}).sort({ createdAt: 1 });
+  console.log(results);
+  return { status: 200, message: results };
+}
+
+export async function toggleStatus(organizationId) {
+  await dbConnect();
+  const organization = await Organization.findOne({ _id: organizationId });
+  console.log(organization.active);
+  await Organization.updateOne(
+    { _id: organizationId },
+    { $set: { active: !organization.active } }
+  );
+  return { status: 200 };
+}

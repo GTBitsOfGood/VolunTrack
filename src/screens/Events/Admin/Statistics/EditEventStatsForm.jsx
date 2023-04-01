@@ -1,11 +1,12 @@
-import { Field, Form as FForm, Formik } from "formik";
+import { Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import { Button, Col, ModalBody, ModalFooter, Row } from "reactstrap";
+import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
+import BoGButton from "../../../../components/BoGButton";
 import styled from "styled-components";
 import { updateAttendance } from "../../../../actions/queries";
-import variables from "../../../../design-tokens/_variables.module.scss";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
+import InputField from "../../../../components/Forms/InputField";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -90,50 +91,32 @@ const EditEventStatsForm = ({ toggle, event }) => {
                       </Row>
                       <Row>
                         <Styled.Col>
-                          <SForm.Label>Name</SForm.Label>
-                          <Field name="name">
-                            {({ field }) => (
-                              <SForm.Input
-                                {...field}
-                                type="text"
-                                disabled={true}
-                              />
-                            )}
-                          </Field>
+                          <InputField
+                            name="name"
+                            label="Name"
+                            disabled={true}
+                          />
                         </Styled.Col>
                         <Styled.Col>
-                          <SForm.Label>Email</SForm.Label>
-                          <Field name="email">
-                            {({ field }) => (
-                              <SForm.Input
-                                {...field}
-                                type="text"
-                                disabled={true}
-                              />
-                            )}
-                          </Field>
+                          <InputField
+                            name="email"
+                            label="Email"
+                            disabled={true}
+                          />
                         </Styled.Col>
                         <Styled.Col>
-                          <SForm.Label>Check In Time</SForm.Label>
-                          <Field name="checkin">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="time" step="1" />
-                            )}
-                          </Field>
-                          {errors.checkin &&
-                            (touched.checkin || touched.checkout) && (
-                              <Styled.ErrorMessage>
-                                {errors.checkin}
-                              </Styled.ErrorMessage>
-                            )}
+                          <InputField
+                            name="checkin"
+                            label="Check In Time"
+                            type="time"
+                          />
                         </Styled.Col>
                         <Styled.Col>
-                          <SForm.Label>Check Out Time</SForm.Label>
-                          <Field name="checkout">
-                            {({ field }) => (
-                              <SForm.Input {...field} type="time" step="1" />
-                            )}
-                          </Field>
+                          <InputField
+                            name="checkout"
+                            label="Check Out Time"
+                            type="time"
+                          />
                         </Styled.Col>
                       </Row>
                     </Col>
@@ -142,31 +125,12 @@ const EditEventStatsForm = ({ toggle, event }) => {
               </Styled.Form>
             </Styled.ModalBody>
             <ModalFooter>
-              <Button
-                color="secondary"
-                onClick={toggle}
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: "transparent",
-                  color: variables["event-text"],
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                color="primary"
+              <BoGButton text="Cancel" onClick={toggle} outline={true} />
+              <BoGButton
+                text="Update"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
-                style={{
-                  backgroundColor: "ef4e79",
-                  borderColor: "ef4e79",
-                  // backgroundColor: variables["button-pink"],
-                  // borderColor: variables["button-pink"],
-                  marginLeft: "4rem",
-                }}
-              >
-                Update
-              </Button>
+              />
             </ModalFooter>
           </>
         );

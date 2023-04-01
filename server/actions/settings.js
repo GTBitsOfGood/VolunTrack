@@ -27,3 +27,23 @@ export async function removeInvitedAdmin(email, organizationId) {
     { $pull: { invitedAdmins: email } }
   );
 }
+
+export async function getOrganizationData(organizationId) {
+  await dbConnect();
+  // get organization data from the database, and return it
+
+  return await Organization.findOne({ _id: organizationId });
+}
+
+export async function updateOrganizationData(data, organizationId) {
+  await dbConnect();
+
+  // update the organization data in the database
+  return Organization.findOneAndUpdate(
+    { _id: organizationId },
+    { $set: data },
+    {
+      new: true,
+    }
+  );
+}
