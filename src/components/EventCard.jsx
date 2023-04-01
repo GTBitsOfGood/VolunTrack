@@ -14,7 +14,7 @@ import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import { getRegistrations } from "../queries/registrations";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
-import BasicModal from "./BasicModal";
+import ConfirmationModal from "../components/ConfirmationModal";
 import { deleteEvent } from "../actions/queries";
 
 const EventCard = (props) => {
@@ -147,7 +147,7 @@ const EventCard = (props) => {
                   <UsersIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
-              <BasicModal
+              <ConfirmationModal
                 open={showDeleteModal}
                 title={"Delete Event"}
                 text={"Are you sure you want to delete this event?"}

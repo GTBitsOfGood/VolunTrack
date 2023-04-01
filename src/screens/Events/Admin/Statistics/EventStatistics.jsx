@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StatsTable from "../../../../components/StatsTable";
+import ConfirmationModal from "../../../../components/ConfirmationModal";
 import BasicModal from "../../../../components/BasicModal";
 import { getAttendances } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";

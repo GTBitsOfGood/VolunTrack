@@ -3,7 +3,7 @@ import { Modal } from "flowbite-react";
 import PropTypes from "prop-types";
 import BoGButton from "./BoGButton";
 
-const BasicModal = (props) => {
+const ConfirmationModal = (props) => {
   return (
     <Modal
       show={props.open}
@@ -14,6 +14,7 @@ const BasicModal = (props) => {
       <Modal.Header>{props.title}</Modal.Header>
       <Modal.Body className="text-center">
         {props.text && <p>{props.text}</p>}
+        {props.form && <div>{props.form}</div>}
       </Modal.Body>
       <Modal.Footer className="flex justify-center gap-2">
         <BoGButton
@@ -27,7 +28,7 @@ const BasicModal = (props) => {
   );
 };
 
-BasicModal.propTypes = {
+ConfirmationModal.propTypes = {
   open: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   text: PropTypes.string,
@@ -35,6 +36,7 @@ BasicModal.propTypes = {
   cancelText: PropTypes.string.isRequired,
   onConfirm: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  form: PropTypes.element
 };
 
-export default BasicModal;
+export default ConfirmationModal;

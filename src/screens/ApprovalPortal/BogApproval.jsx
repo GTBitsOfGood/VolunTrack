@@ -3,6 +3,7 @@ import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useEffect, useState } from "react";
 import { getOrganizations } from "../../queries/organizations";
+import ConfirmationModal from "../../components/ConfirmationModal";
 import OrganizationCard from "./OrganizationCard";
 import OrganizationToggleModal from "./OrganizationToggleModal";
 import BasicModal from "../../components/BasicModal";
