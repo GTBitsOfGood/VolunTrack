@@ -1,32 +1,12 @@
-import { ErrorMessage, Formik } from "formik";
+import { Formik } from "formik";
 import PropTypes from "prop-types";
 import React from "react";
-import { Col, FormGroup as BFormGroup, Row } from "reactstrap";
 import BoGButton from "../../components/BoGButton";
-import styled from "styled-components";
 import { createAccountValidator, loginValidator } from "./helpers";
 import { signIn } from "next-auth/react";
 import { createUserFromCredentials } from "../../actions/queries";
 import InputField from "../../components/Forms/InputField";
-
-const Styled = {
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 0px;
-    padding-top: 0px;
-    display: inline-block;
-  `,
-  FormGroup: styled(BFormGroup)`
-    width: 100%;
-  `,
-};
+import { applyTheme } from "../../themes/themes";
 
 class AuthForm extends React.Component {
   constructor(props) {
@@ -35,9 +15,22 @@ class AuthForm extends React.Component {
 
     let url = new URL(window.location.href);
 
+    this.state = {
+      nonprofitCode:
+        url.pathname === "/create-account" || url.pathname === "/login"
+          ? ""
+          : url.pathname.substring(1),
+    };
+
+    console.log(url.pathname);
+    console.log(url.pathname.substring(1));
+    console.log(this.state.nonprofitCode);
+
     if (url.searchParams.has("error")) {
       this.props.context.startLoading();
       this.props.context.failed("Your username or password is incorrect.");
+    } else {
+      applyTheme("magenta"); // This applies a default theme before we know which org
     }
   }
 
@@ -76,6 +69,7 @@ class AuthForm extends React.Component {
             email: "",
             password: "",
             password_confirm: "",
+            org_code: this.state.nonprofitCode,
           }}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
@@ -87,85 +81,59 @@ class AuthForm extends React.Component {
           }
         >
           {({ handleSubmit, isValid, isSubmitting }) => (
-            <div style={{ width: "100%" }}>
-              <form>
-                <Styled.FormGroup>
-                  {/*<Row>*/}
-                  {/*  <Field as="select" name="nonprofit">*/}
-                  {/*    <option value="1">Helping Mamas</option>*/}
-                  {/*    <option value="2">Nonprofit 2</option>*/}
-                  {/*    <option value="3">Nonprofit 3</option>*/}
-                  {/*  </Field>*/}
-                  {/*</Row>*/}
-                  {this.props.createAccount && (
-                    <Row>
-                      <Col>
-                        <InputField
-                          name="first_name"
-                          placeholder="Frst Name"
-                          label="First Name"
-                        />
-                      </Col>
-                      <Col>
-                        <InputField
-                          name="last_name"
-                          label="Last Name"
-                          placeholder="Last Name"
-                        />
-                      </Col>
-                    </Row>
-                  )}
-                  <Row>
-                    <Col>
-                      <InputField
-                        name="email"
-                        label="Email Address"
-                        placeholder="Your Email"
-                        type="email"
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col>
-                      <InputField
-                        name="password"
-                        label="Password"
-                        type="password"
-                        placeholder="Your Password"
-                        autoComplete="current-password"
-                      />
-                    </Col>
-                  </Row>
-                  {this.props.createAccount && (
-                    <Row>
-                      <Col>
-                        <InputField
-                          name="password_confirm"
-                          label="Confirm Password"
-                          type="password"
-                          placeholder="Your Password"
-                        />
-                      </Col>
-                    </Row>
-                  )}
-                  <Row>
-                    <Col>
-                      <BoGButton
-                        type="submit"
-                        onClick={handleSubmit}
-                        disabled={!isValid || isSubmitting}
-                        text={
-                          this.props.createAccount
-                            ? "Create an account"
-                            : "Sign In"
-                        }
-                        className="w-full bg-primaryColor hover:bg-hoverColor"
-                      />
-                    </Col>
-                  </Row>
-                </Styled.FormGroup>
-              </form>
-            </div>
+            <form className="flex-column flex w-full space-y-2">
+              {this.props.createAccount && (
+                <div className="flex space-x-4">
+                  <InputField
+                    name="first_name"
+                    placeholder="First Name"
+                    label="First Name"
+                  />
+                  <InputField
+                    name="last_name"
+                    label="Last Name"
+                    placeholder="Last Name"
+                  />
+                </div>
+              )}
+              <InputField
+                name="email"
+                label="Email Address"
+                placeholder="Your Email"
+                type="email"
+              />
+              <InputField
+                name="password"
+                label="Password"
+                type="password"
+                placeholder="Your Password"
+                autoComplete="current-password"
+              />
+              {this.props.createAccount && (
+                <InputField
+                  name="password_confirm"
+                  label="Confirm Password"
+                  type="password"
+                  placeholder="Your Password"
+                />
+              )}
+              {this.props.createAccount && this.state.nonprofitCode === "" && (
+                <InputField
+                  name="org_code"
+                  label="Organization Code"
+                  placeholder="Your organization's code"
+                />
+              )}
+              <BoGButton
+                type="submit"
+                onClick={handleSubmit}
+                disabled={!isValid || isSubmitting}
+                text={
+                  this.props.createAccount ? "Create an account" : "Sign In"
+                }
+                className="w-full bg-primaryColor hover:bg-hoverColor"
+              />
+            </form>
           )}
         </Formik>
       </React.Fragment>
@@ -177,5 +145,6 @@ export default AuthForm;
 
 AuthForm.propTypes = {
   createAccount: PropTypes.bool,
+  companyCode: PropTypes.string,
   context: PropTypes.object.isRequired,
 };
