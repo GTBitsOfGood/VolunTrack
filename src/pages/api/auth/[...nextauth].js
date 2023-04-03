@@ -18,8 +18,6 @@ const options = {
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
 
-console.log("client", client);
-
 export default NextAuth({
   session: {
     strategy: "jwt",
@@ -79,15 +77,15 @@ export default NextAuth({
 
       await User.deleteOne({ _id });
 
+      console.log("message", message);
+
       const user_data = {
         _id,
         imageUrl: message.user.image,
-        bio: {
-          first_name: message.user.name.split(" ")[0],
-          last_name: message.user.name.split(" ")[1],
-          phone_number: "",
-          email: message.user.email,
-        },
+        firstName: message.user.name.split(" ")[0],
+        lastName: message.user.name.split(" ")[1],
+        phone: "",
+        email: message.user.email,
       };
 
       const user = new User(user_data);
@@ -103,29 +101,23 @@ export default NextAuth({
     async session({ session, token }) {
       await dbConnect();
       const _id = new ObjectId(token.id);
-      const currentUser = await User.findOne({ _id });
-      let user_data = {
-        ...currentUser._doc,
-      };
-      const organization = await Organization.findOne({
-        _id: user_data.organizationId,
-      });
-      if (organization?.invitedAdmins?.includes(user_data.bio.email)) {
-        user_data.role = "admin";
+      const user = await User.findOne({ _id });
+      const organization = await Organization.findById(user.organizationId);
+      if (organization?.invitedAdmins?.includes(user.email)) {
         await User.findOneAndUpdate({ _id }, { role: "admin" });
         await Organization.findOneAndUpdate(
           { _id: user_data.organizationid },
-          { $pull: { invitedAdmins: user_data.bio.email } },
+          { $pull: { invitedAdmins: user.email } },
           { new: true }
         );
       }
       return {
         ...session,
-        user: user_data,
+        user,
         theme: organization.theme,
       };
     },
-    async redirect({ baseUrl }) {
+    redirect({ baseUrl }) {
       if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },
