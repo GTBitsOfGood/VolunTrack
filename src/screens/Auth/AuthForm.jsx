@@ -31,7 +31,6 @@ class AuthForm extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    console.log(values);
     if (this.props.createAccount) {
       createUserFromCredentials(values)
         .then(() => {
@@ -128,7 +127,7 @@ class AuthForm extends React.Component {
                 text={
                   this.props.createAccount ? "Create an account" : "Sign In"
                 }
-                className="bg-primaryColor hover:bg-hoverColor w-full"
+                className="w-full bg-primaryColor hover:bg-hoverColor"
               />
             </form>
           )}

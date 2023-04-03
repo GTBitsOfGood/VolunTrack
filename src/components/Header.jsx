@@ -83,7 +83,6 @@ const Header = () => {
 
   useEffect(() => {
     async function fetchData() {
-      console.log(user.organizationId);
       const response = await getOrganization(user.organizationId);
       if (response.data.organization)
         setImageURL(response.data.organization.imageUrl);
@@ -100,7 +99,7 @@ const Header = () => {
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
             currPageMatches("/home") ? "text-primaryColor" : ""
           }`}
         >
@@ -109,7 +108,7 @@ const Header = () => {
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
-            className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/volunteers") ? "text-primaryColor" : ""
             }`}
           >
@@ -118,7 +117,7 @@ const Header = () => {
         )}
         <Navbar.Link
           href="/events"
-          className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
             currPageMatches("/events") ? "text-primaryColor" : ""
           }`}
         >
@@ -128,7 +127,7 @@ const Header = () => {
           <Navbar.Link
             onClick={goToStats}
             href="/stats"
-            className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/stats") ? "text-primaryColor" : ""
             }`}
           >
@@ -142,7 +141,7 @@ const Header = () => {
               inline={true}
               label={
                 <div
-                  className={`md:hover:text-primaryColor text-lg font-bold  ${
+                  className={`text-lg font-bold md:hover:text-primaryColor  ${
                     currPageMatches("/assistants") ||
                     currPageMatches("/manage-waivers") ||
                     currPageMatches("/organization-settings")

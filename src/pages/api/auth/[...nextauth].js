@@ -30,7 +30,6 @@ export default NextAuth({
       id: "credentials",
       name: "Login with Username and Password",
       async authorize(credentials) {
-        console.log("testing");
         const response = await verifyUserWithCredentials(
           credentials.email,
           credentials.password
@@ -77,8 +76,6 @@ export default NextAuth({
 
       await User.deleteOne({ _id });
 
-      console.log("message", message);
-
       const user_data = {
         _id,
         imageUrl: message.user.image,
@@ -100,16 +97,14 @@ export default NextAuth({
     // This determines what is returned from useSession and getSession calls
     async session({ session, token }) {
       await dbConnect();
-      const _id = new ObjectId(token.id);
-      const user = await User.findOne({ _id });
+
+      const id = new ObjectId(token.id);
+      const user = await User.findById(id);
       const organization = await Organization.findById(user.organizationId);
+
       if (organization?.invitedAdmins?.includes(user.email)) {
-        await User.findOneAndUpdate({ _id }, { role: "admin" });
-        await Organization.findOneAndUpdate(
-          { _id: user_data.organizationid },
-          { $pull: { invitedAdmins: user.email } },
-          { new: true }
-        );
+        await user.updateOne({ role: "admin" });
+        await organization.updateOne({ $pull: { invitedAdmins: user.email } });
       }
       return {
         ...session,

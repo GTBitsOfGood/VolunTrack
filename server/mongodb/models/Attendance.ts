@@ -20,6 +20,7 @@ const attendanceSchema = new Schema<AttendanceData>(
   { timestamps: true }
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 export default (models && "Attendance" in models
   ? (models.Attendance as Model<AttendanceData>)
   : undefined) ?? model<AttendanceData>("Attendance", attendanceSchema);

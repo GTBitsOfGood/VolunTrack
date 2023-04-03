@@ -32,4 +32,4 @@ const eventSchema = new Schema<EventData>(
 
 export default ("Event" in models
   ? (models.Event as Model<EventData>)
-  : undefined) ?? model<EventData>("Event", eventSchema, "events_copy");
+  : undefined) ?? model<EventData>("Event", eventSchema);

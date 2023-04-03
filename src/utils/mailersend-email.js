@@ -50,7 +50,7 @@ export const sendEventEditedEmail = async (user, event) => {
   const [nonprofit, setOrgName] = useState("");
 
   const loadData = async () => {
-    const data = await getOrganizationData(user.organizationId);
+    const data = await getOrganization(user.organizationId);
 
     if (data) {
       setOrgName(data.data.orgData.name);
@@ -92,7 +92,7 @@ const sendEmail = async (user, personalization, subject) => {
   const [bcc, setBcc] = useState("");
 
   const loadData = async () => {
-    const data = await getOrganizationData(user.organizationId);
+    const data = await getOrganization(user.organizationId);
 
     if (data) {
       setOrgName(data.data.orgData.name);

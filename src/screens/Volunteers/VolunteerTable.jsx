@@ -64,7 +64,6 @@ class VolunteerTable extends React.Component {
 
   render() {
     const { users, loading } = this.props;
-    console.log(users);
     return (
       <div>
         <Table striped={true}>

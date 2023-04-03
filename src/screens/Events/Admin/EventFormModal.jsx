@@ -93,11 +93,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       .catch((error) => {
         if (error.response.status !== 200) {
           context.startLoading();
-          let message =
-            error.response.data.errors[0].msg +
-            " for " +
-            error.response.data.errors[0].param;
-          context.failed(message);
+          context.failed(error.response.data.message);
         }
       })
       .finally(() => setSubmitting(false));

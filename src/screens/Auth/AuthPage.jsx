@@ -13,7 +13,6 @@ const AuthPage = (props) => {
   const login = async (e) => {
     e.preventDefault();
     const signin = signIn("google");
-    console.log(await signin);
   };
 
   return (
