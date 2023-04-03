@@ -2,17 +2,18 @@ import { Button } from "flowbite-react";
 import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
 import "normalize.css";
-import AuthForm from "./AuthForm";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import Footer from "../../components/Footer";
-import { RequestContext } from "../../providers/RequestProvider";
 import Text from "../../components/Text";
+import { RequestContext } from "../../providers/RequestProvider";
+import AuthForm from "./AuthForm";
 
 const AuthPage = (props) => {
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
-    signIn("google");
+    const signin = signIn("google");
+    console.log(await signin);
   };
 
   return (

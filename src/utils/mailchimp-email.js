@@ -1,7 +1,7 @@
 // const mailchimp = require("@mailchimp/mailchimp_transactional")(
 //   process.env.MAILCHIMP_API_KEY
 // );
-const { getEventVolunteers } = require("../../server/actions/users");
+const { getEventVolunteers } = require("../../server/actions/users_new");
 
 // TODO: convert survey emails to mailersend
 // Sends an email to all the users signed up to volunteer for an event

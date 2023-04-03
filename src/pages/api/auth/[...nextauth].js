@@ -4,7 +4,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users";
-import dbConnect from "../../../../server/mongodb";
+import dbConnect from "../../../../server/mongodb/index";
 import Organization from "../../../../server/mongodb/models/Organization";
 import User from "../../../../server/mongodb/models/User";
 
@@ -12,10 +12,13 @@ const uri = process.env.MONGO_DB;
 const options = {
   useUnifiedTopology: true,
   useNewUrlParser: true,
+  dbName: process.env.DB_NAME,
 };
 
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
+
+console.log("client", client);
 
 export default NextAuth({
   session: {
@@ -29,6 +32,7 @@ export default NextAuth({
       id: "credentials",
       name: "Login with Username and Password",
       async authorize(credentials) {
+        console.log("testing");
         const response = await verifyUserWithCredentials(
           credentials.email,
           credentials.password
@@ -70,54 +74,58 @@ export default NextAuth({
     createUser: async (message) => {
       // this is only called for google auth
       await dbConnect();
+
       const _id = new ObjectId(message.user.id);
-      console.log(message);
 
       await User.deleteOne({ _id });
 
       const user_data = {
         _id,
         imageUrl: message.user.image,
-        firstName: message.user.name.split(" ")[0],
-        lastName: message.user.name.split(" ")[1],
-        phone: "",
-        email: message.user.email,
+        bio: {
+          first_name: message.user.name.split(" ")[0],
+          last_name: message.user.name.split(" ")[1],
+          phone_number: "",
+          email: message.user.email,
+        },
       };
-      await User.create(user_data);
+
+      const user = new User(user_data);
+      await user.save();
     },
   },
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) token.id = user.id;
       return token;
     },
     // This determines what is returned from useSession and getSession calls
     async session({ session, token }) {
       await dbConnect();
-
-      const id = token.id;
-      console.log(id);
-
-      const user = (await User.findById(id))._doc;
-      const organization = (await Organization.findById(user?.organizationId))
-        ._doc;
-
-      if (!user || !organization) return {};
-
-      if (organization?.invitedAdmins?.includes(user.email)) {
-        await user.updateOne({ role: "admin" });
-        await organization.updateOne(
-          { $pull: { invitedAdmins: user.email } },
+      const _id = new ObjectId(token.id);
+      const currentUser = await User.findOne({ _id });
+      let user_data = {
+        ...currentUser._doc,
+      };
+      const organization = await Organization.findOne({
+        _id: user_data.organizationId,
+      });
+      if (organization?.invitedAdmins?.includes(user_data.bio.email)) {
+        user_data.role = "admin";
+        await User.findOneAndUpdate({ _id }, { role: "admin" });
+        await Organization.findOneAndUpdate(
+          { _id: user_data.organizationid },
+          { $pull: { invitedAdmins: user_data.bio.email } },
           { new: true }
         );
       }
       return {
         ...session,
-        user: user,
+        user: user_data,
         theme: organization.theme,
       };
     },
-    redirect({ baseUrl }) {
+    async redirect({ baseUrl }) {
       if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },

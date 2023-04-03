@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import dbConnect from "../mongodb/index";
-import User from "../mongodb/models/user";
-import Organization from "../mongodb/models/organization";
+import Organization from "../mongodb/models/Organization";
+import User from "../mongodb/models/User";
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");

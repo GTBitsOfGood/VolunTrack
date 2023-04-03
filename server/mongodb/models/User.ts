@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const userValidator = z.object({
   email: z.string().email(),
-  organizationId: z.instanceof(Types.ObjectId),
+  organizationId: z.instanceof(Types.ObjectId).optional(),
   role: z.enum(["admin", "volunteer", "manager"]).optional(),
   status: z.enum(["has_volunteered", "new"]).optional(),
   firstName: z.string().optional(),

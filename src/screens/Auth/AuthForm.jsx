@@ -5,8 +5,8 @@ import React from "react";
 import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
 import { createUserFromCredentials } from "../../queries/users";
-import { createAccountValidator, loginValidator } from "./helpers";
 import { applyTheme } from "../../themes/themes";
+import { createAccountValidator, loginValidator } from "./helpers";
 
 class AuthForm extends React.Component {
   constructor(props) {
@@ -31,6 +31,7 @@ class AuthForm extends React.Component {
   }
 
   handleSubmit = async (values) => {
+    console.log(values);
     if (this.props.createAccount) {
       createUserFromCredentials(values)
         .then(() => {
@@ -43,7 +44,7 @@ class AuthForm extends React.Component {
         .catch((error) => {
           if (error.response.status !== 200) {
             this.props.context.startLoading();
-            this.props.context.failed(error.response.data);
+            // this.props.context.failed(error.response.data);
           }
         });
     } else {
