@@ -6,9 +6,6 @@ import {
 } from "../../server/mongodb/models/Event";
 import { EventParentData } from "../../server/mongodb/models/EventParent";
 
-export type CreateEventRequestBody = Omit<EventData, "eventParent"> & {
-  eventParent: Types.ObjectId | EventParentData;
-};
 export type UpdateEventRequestBody = Partial<
   Omit<EventData, "eventParent"> & {
     eventParent?: Types.ObjectId | Partial<EventParentData>;
@@ -37,18 +34,41 @@ export const getEvents = (
   );
 };
 
-export const createEvent = (eventData: CreateEventRequestBody) =>
+/** Creates a new event with it's own event parent */
+export const createEvent = (eventData: EventPopulatedData) =>
   axios.post<{
     event?: HydratedDocument<EventPopulatedData>;
     message?: string;
   }>("/api/events", eventData);
 
+/** Creates a new event under an existing event parent */
+export const createChildEvent = (eventData: EventData) =>
+  axios.post<{
+    event?: HydratedDocument<EventData>;
+    message?: string;
+  }>("/api/events/child", eventData);
+
+/** Updates an event and event parent */
 export const updateEvent = (
   eventId: string,
-  eventData: UpdateEventRequestBody,
+  eventData: Partial<EventPopulatedData>,
   sendConfirmationEmail = true
 ) =>
   axios.put<{ event?: HydratedDocument<EventPopulatedData>; message?: string }>(
+    `/api/events/${eventId}`,
+    {
+      eventData,
+      sendConfirmationEmail,
+    }
+  );
+
+/** Updates a single event, no event parent */
+export const updateChildEvent = (
+  eventId: string,
+  eventData: Partial<EventData>,
+  sendConfirmationEmail = true
+) =>
+  axios.put<{ event?: HydratedDocument<EventData>; message?: string }>(
     `/api/events/${eventId}`,
     {
       eventData,

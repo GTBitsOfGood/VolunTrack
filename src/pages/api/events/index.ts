@@ -41,6 +41,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "POST": {
       if (eventPopulatedValidator.safeParse(req.body).success) {
+        // Create a new Event and EventParent
         const eventPopulatedData = req.body as EventPopulatedData;
         const eventParent = await EventParent.create(
           eventPopulatedData.eventParent

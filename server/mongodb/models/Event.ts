@@ -25,7 +25,7 @@ const eventSchema = new Schema<EventData>(
       type: Schema.Types.ObjectId,
       ref: "EventParent",
     },
-    isEnded: { type: Boolean, default: false, optional: true },
+    isEnded: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
