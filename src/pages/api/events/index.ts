@@ -1,16 +1,15 @@
 import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { getEvents } from "../../../../server/actions/events";
-import { createHistoryEventCreateEvent } from "../../../../server/actions/historyEvent";
-import { scheduler } from "../../../../server/jobs/scheduler";
 import dbConnect from "../../../../server/mongodb";
-import Event, {
-  EventData,
-  EventPopulatedData,
-  eventPopulatedValidator,
-  eventValidator,
-} from "../../../../server/mongodb/models/Event";
+import Event from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
+import {
+  EventInputData,
+  eventInputValidator,
+  EventPopulatedInputData,
+  eventPopulatedInputValidator,
+} from "../../../validators/events";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -40,39 +39,65 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "POST": {
-      if (eventPopulatedValidator.safeParse(req.body).success) {
+      if (req.body?.eventParentId) {
+        const result = eventInputValidator.safeParse(req.body);
+        if (!result.success) {
+          return res.status(400).json(result);
+        }
+
+        // Create a one off Event connected to an already existing EventParent
+        const eventInputData = req.body as EventInputData;
+        const event = await Event.create(eventInputData);
+
+        // TODO: fix these things
+        // await scheduler.scheduleNewEventJobs(
+        //   event._id,
+        //   event.date,
+        //   (
+        //     await EventParent.findById(event.eventParentId)
+        //   )?.endTime!
+        // );
+        // createHistoryEventCreateEvent(event);
+
+        return res
+          .status(201)
+          .json({ success: true, data: await event.populate("eventParentId") });
+      }
+
+      if (req.body?.eventParent) {
+        const result = eventPopulatedInputValidator.safeParse(req.body);
+        if (!result.success) {
+          return res.status(400).json(result);
+        }
+
         // Create a new Event and EventParent
-        const eventPopulatedData = req.body as EventPopulatedData;
+        const eventPopulatedInputData = req.body as EventPopulatedInputData;
         const eventParent = await EventParent.create(
-          eventPopulatedData.eventParent
+          eventPopulatedInputData.eventParent
         );
         const event = await Event.create({
-          ...eventPopulatedData,
-          eventParent: eventParent._id,
+          date: eventPopulatedInputData.date,
+          eventParentId: eventParent._id,
         });
 
-        await scheduler.scheduleNewEventJobs(event);
-        createHistoryEventCreateEvent(event);
+        // TODO: fix these things
+        // await scheduler.scheduleNewEventJobs(
+        //   event._id,
+        //   event.date,
+        //   eventParent.endTime
+        // );
+        // createHistoryEventCreateEvent();
 
         return res
           .status(201)
-          .json({ event: await event.populate("eventParent") });
+          .json({ success: true, data: await event.populate("eventParentId") });
       }
 
-      if (eventValidator.safeParse(req.body).success) {
-        // Create a one off Event connected to an already existing EventParent
-        const eventData = req.body as EventData;
-        const event = await Event.create(eventData);
-
-        await scheduler.scheduleNewEventJobs(event);
-        createHistoryEventCreateEvent(event);
-
-        return res
-          .status(201)
-          .json({ event: await event.populate("eventParent") });
-      }
-
-      return res.status(400).json({ message: "Invalid event data format" });
+      // Request body has neither eventParentId nor eventParent
+      return res.status(400).json({
+        success: false,
+        error: "Request body has neither eventParentId nor eventParent",
+      });
     }
   }
 };

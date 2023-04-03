@@ -1,4 +1,5 @@
 import { Model, model, models, Schema, Types } from "mongoose";
+import { EventParentData } from "./EventParent";
 
 export type EventData = {
   date: Date;

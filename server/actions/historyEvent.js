@@ -1,4 +1,4 @@
-import dbConnect from "../mongodb/";
+import dbConnect from "../mongodb";
 import HistoryEvent from "../mongodb/models/HistoryEvent";
 
 export const getAllHistoryEvents = async (organizationId) => {

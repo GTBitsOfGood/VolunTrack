@@ -5,6 +5,8 @@ import {
   EventPopulatedData,
 } from "../../server/mongodb/models/Event";
 import { EventParentData } from "../../server/mongodb/models/EventParent";
+import { PostRequestReturnType } from "../types/queries";
+import { EventInputData, EventPopulatedInputData } from "../validators/events";
 
 export type UpdateEventRequestBody = Partial<
   Omit<EventData, "eventParent"> & {
@@ -35,18 +37,18 @@ export const getEvents = (
 };
 
 /** Creates a new event with it's own event parent */
-export const createEvent = (eventData: EventPopulatedData) =>
-  axios.post<{
-    event?: HydratedDocument<EventPopulatedData>;
-    message?: string;
-  }>("/api/events", eventData);
+export const createEvent = (eventInputPopulatedData: EventPopulatedInputData) =>
+  axios.post<PostRequestReturnType<EventPopulatedData>>(
+    "/api/events",
+    eventInputPopulatedData
+  );
 
 /** Creates a new event under an existing event parent */
-export const createChildEvent = (eventData: EventData) =>
-  axios.post<{
-    event?: HydratedDocument<EventData>;
-    message?: string;
-  }>("/api/events/child", eventData);
+export const createChildEvent = (eventInputData: EventInputData) =>
+  axios.post<PostRequestReturnType<EventData>>(
+    "/api/events/child",
+    eventInputData
+  );
 
 /** Updates an event and event parent */
 export const updateEvent = (

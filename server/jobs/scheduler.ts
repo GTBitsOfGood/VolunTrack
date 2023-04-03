@@ -1,10 +1,13 @@
+import { Types } from "mongoose";
 import { agenda } from "./index";
 
 export const scheduler = {
   // Schedules relevant jobs when a new event is created, such as scheduling a survey email for when the event ends
-  scheduleNewEventJobs: async (event) => {
-    const { date, endTime } = event;
-
+  scheduleNewEventJobs: async (
+    eventId: Types.ObjectId,
+    date: Date,
+    endTime: string
+  ): Promise<void> => {
     // Get the end date and time of the event
     const endTimeSplit = endTime.split(":");
     const eventEndTime = new Date(
@@ -15,6 +18,6 @@ export const scheduler = {
     );
 
     // Schedule job for sending survey email when the event ends
-    agenda.schedule(eventEndTime, "send-survey-email", event._id);
+    await agenda.schedule(eventEndTime, "send-survey-email", eventId);
   },
 };
