@@ -2,12 +2,12 @@ export const eventPopulator = [
   {
     $lookup: {
       from: "eventparents",
-      let: { eventParent: "$eventParent" },
+      let: { eventParentId: "$eventParentId" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$eventParent"],
+              $eq: ["$_id", "$$eventParentId"],
             },
           },
         },
@@ -22,12 +22,12 @@ export const attendancePopulator = [
   {
     $lookup: {
       from: "events",
-      let: { event: "$event" },
+      let: { eventId: "$eventId" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$event"],
+              $eq: ["$_id", "$$eventId"],
             },
           },
         },
@@ -38,12 +38,12 @@ export const attendancePopulator = [
   {
     $lookup: {
       from: "users",
-      let: { user: "$user" },
+      let: { userId: "$userId" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$user"],
+              $eq: ["$_id", "$$userId"],
             },
           },
         },
@@ -59,12 +59,12 @@ export const registrationPopulator = [
   {
     $lookup: {
       from: "events",
-      let: { event: "$event" },
+      let: { eventId: "$eventId" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$event"],
+              $eq: ["$_id", "$$eventId"],
             },
           },
         },
@@ -75,12 +75,12 @@ export const registrationPopulator = [
   {
     $lookup: {
       from: "users",
-      let: { user: "$user" },
+      let: { userId: "$userId" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$user"],
+              $eq: ["$_id", "$$userId"],
             },
           },
         },
@@ -96,12 +96,12 @@ export const userPopulator = [
   {
     $lookup: {
       from: "organizations",
-      let: { organiztion: "$organization" },
+      let: { organiztionId: "$organizationId" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$organization"],
+              $eq: ["$_id", "$$organizationId"],
             },
           },
         },
