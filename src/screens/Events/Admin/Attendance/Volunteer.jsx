@@ -50,7 +50,7 @@ const Volunteer = (
         <Table.Row>
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
-            {volunteer.firstName} {volunteer.lastName}
+            {volunteer.first_name} {volunteer.last_name}
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone_number}</Table.Cell>
@@ -63,7 +63,7 @@ const Volunteer = (
         <Table.Row>
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
-            {volunteer.firstName} {volunteer.lastName}
+            {volunteer.first_name} {volunteer.last_name}
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone_number}</Table.Cell>

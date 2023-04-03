@@ -408,11 +408,11 @@ const EventRegister = (event) => {
           <Styled.VolunteerContainer>
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
-                {user.bio.first_name} {user.bio.last_name}
+                {user.first_name} {user.last_name}
               </Styled.SectionHeaderText>
             </Styled.VolunteerRow>
             <Styled.VolunteerRow>
-              <Styled.DetailText>{user.bio.email}</Styled.DetailText>
+              <Styled.DetailText>{user.email}</Styled.DetailText>
             </Styled.VolunteerRow>
           </Styled.VolunteerContainer>
           {events.minors &&
@@ -428,8 +428,8 @@ const EventRegister = (event) => {
                               {names}
                             </Styled.SectionHeaderText>
                             <Styled.DetailText>
-                              Minor with {user.bio.first_name}{" "}
-                              {user.bio.last_name}
+                              Minor with {user.first_name}{" "}
+                              {user.last_name}
                             </Styled.DetailText>
                           </Styled.VolunteerRow>
                         </div>
