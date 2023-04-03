@@ -85,7 +85,6 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       date: values.date,
       eventParent: values.eventParent,
     };
-    console.log(event);
     setSubmitting(true);
 
     createEvent(event)
@@ -204,7 +203,6 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       }
     >
       {({ values, errors, handleSubmit, isValid, isSubmitting }) => {
-        console.log(errors);
         return (
           <>
             <Styled.ModalBody>
