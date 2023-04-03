@@ -1,14 +1,11 @@
 import { Model, model, models, Schema, Types } from "mongoose";
-import { z } from "zod";
 
-export const attendanceValidator = z.object({
-  userId: z.instanceof(Types.ObjectId),
-  eventId: z.instanceof(Types.ObjectId),
-  checkinTime: z.date().optional(),
-  checkoutTime: z.date().optional(),
-});
-
-export type AttendanceData = z.infer<typeof attendanceValidator>;
+export type AttendanceData = {
+  userId: Types.ObjectId;
+  eventId: Types.ObjectId;
+  checkinTime?: Date;
+  checkoutTime?: Date;
+};
 
 const attendanceSchema = new Schema<AttendanceData>(
   {

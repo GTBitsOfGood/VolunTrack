@@ -12,6 +12,7 @@ const historyEventSchema = new Schema<HistoryEventData>(
   {
     keyword: {
       type: String,
+      required: true,
     },
     description: {
       type: String,

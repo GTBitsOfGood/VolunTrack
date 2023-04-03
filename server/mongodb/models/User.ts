@@ -1,27 +1,23 @@
 import { Model, model, models, Schema, Types } from "mongoose";
-import { z } from "zod";
 
-export const userValidator = z.object({
-  email: z.string().email(),
-  organizationId: z.instanceof(Types.ObjectId).optional(),
-  role: z.enum(["admin", "volunteer", "manager"]).optional(),
-  status: z.enum(["has_volunteered", "new"]).optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  phone: z.string().optional(),
-  dob: z.string().optional(),
-  zip: z.string().optional(),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  notes: z.string().optional(),
-  passwordHash: z.string().optional(),
-  imageUrl: z.string().optional(),
-  isBitsOfGoodAdmin: z.boolean().optional(),
-  password: z.string().optional(),
-});
-
-export type UserData = z.infer<typeof userValidator>;
+export type UserData = {
+  email: string;
+  organizationId: Types.ObjectId;
+  role: "admin" | "volunteer" | "manager";
+  status: "has_volunteered" | "new";
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  dob?: string;
+  zip?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  notes?: string;
+  passwordHash?: string;
+  imageUrl: string;
+  isBitsOfGoodAdmin: boolean;
+};
 
 const userSchema = new Schema<UserData>(
   {
@@ -30,19 +26,16 @@ const userSchema = new Schema<UserData>(
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",
-      required: true,
     },
     role: {
       type: String,
       enum: ["admin", "volunteer", "manager"],
       default: "volunteer",
-      required: true,
     },
     status: {
       type: String,
       default: "new",
       enum: ["has_volunteered", "new"],
-      required: true,
     },
     firstName: String,
     lastName: String,

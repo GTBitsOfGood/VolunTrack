@@ -1,30 +1,27 @@
 import { Model, model, models, Schema } from "mongoose";
-import { z } from "zod";
 
-export const organizationValidator = z.object({
-  name: z.string(),
-  url: z.string(),
-  imageUrl: z.string(),
-  notificationEmail: z.string(),
-  slug: z.string(),
-  theme: z.string(),
-  defaultEventState: z.string(),
-  defaultEventCity: z.string(),
-  defaultEventAddress: z.string(),
-  defaultEventZip: z.string(),
-  defaultContactName: z.string(),
-  defaultContactEmail: z.string(),
-  defaultContactPhone: z.string(),
-  invitedAdmins: z.string().array().optional(),
-  originalAdminEmail: z.string(),
-  active: z.boolean(),
-  eventSilver: z.number().optional(),
-  eventGold: z.number().optional(),
-  hoursSilver: z.number().optional(),
-  hoursGold: z.number().optional(),
-});
-
-export type OrganizationData = z.infer<typeof organizationValidator>;
+export type OrganizationData = {
+  name: string;
+  url: string;
+  imageUrl: string;
+  notificationEmail: string;
+  slug: string;
+  theme: string;
+  defaultEventState: string;
+  defaultEventCity: string;
+  defaultEventAddress: string;
+  defaultEventZip: string;
+  defaultContactName: string;
+  defaultContactEmail: string;
+  defaultContactPhone: string;
+  invitedAdmins: string[];
+  originalAdminEmail: string;
+  active: boolean;
+  eventSilver: number;
+  eventGold: number;
+  hoursSilver: number;
+  hoursGold: number;
+};
 
 const organizationSchema = new Schema<OrganizationData>(
   {
