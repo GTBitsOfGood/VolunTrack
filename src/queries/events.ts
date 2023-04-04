@@ -1,21 +1,13 @@
 import axios from "axios";
-import { HydratedDocument, Types } from "mongoose";
 import {
   EventData,
   EventPopulatedData,
 } from "../../server/mongodb/models/Event";
-import { EventParentData } from "../../server/mongodb/models/EventParent";
-import { PostRequestReturnType } from "../types/queries";
+import { ApiDeleteReturnType, ApiReturnType } from "../types/queries";
 import { EventInputData, EventPopulatedInputData } from "../validators/events";
 
-export type UpdateEventRequestBody = Partial<
-  Omit<EventData, "eventParent"> & {
-    eventParent?: Types.ObjectId | Partial<EventParentData>;
-  }
->;
-
 export const getEvent = (eventId: string) =>
-  axios.get<{ event?: HydratedDocument<EventPopulatedData>; message?: string }>(
+  axios.get<ApiReturnType<EventPopulatedData, "event">>(
     `/api/events/${eventId}`
   );
 
@@ -24,7 +16,7 @@ export const getEvents = (
   startDateString?: string,
   endDateString?: string
 ) => {
-  return axios.get<{ events: HydratedDocument<EventPopulatedData>[] }>(
+  return axios.get<ApiReturnType<EventPopulatedData, "events", true>>(
     "/api/events",
     {
       params: {
@@ -38,14 +30,14 @@ export const getEvents = (
 
 /** Creates a new event with it's own event parent */
 export const createEvent = (eventInputPopulatedData: EventPopulatedInputData) =>
-  axios.post<PostRequestReturnType<EventPopulatedData>>(
+  axios.post<ApiReturnType<EventPopulatedData, "event">>(
     "/api/events",
     eventInputPopulatedData
   );
 
 /** Creates a new event under an existing event parent */
 export const createChildEvent = (eventInputData: EventInputData) =>
-  axios.post<PostRequestReturnType<EventData>>(
+  axios.post<ApiReturnType<EventData, "event">>(
     "/api/events/child",
     eventInputData
   );
@@ -53,10 +45,10 @@ export const createChildEvent = (eventInputData: EventInputData) =>
 /** Updates an event and event parent */
 export const updateEvent = (
   eventId: string,
-  eventData: Partial<EventPopulatedData>,
+  eventData: Partial<EventPopulatedInputData>,
   sendConfirmationEmail = true
 ) =>
-  axios.put<{ event?: HydratedDocument<EventPopulatedData>; message?: string }>(
+  axios.put<ApiReturnType<EventPopulatedData, "event">>(
     `/api/events/${eventId}`,
     {
       eventData,
@@ -67,16 +59,13 @@ export const updateEvent = (
 /** Updates a single event, no event parent */
 export const updateChildEvent = (
   eventId: string,
-  eventData: Partial<EventData>,
+  eventData: Partial<EventInputData>,
   sendConfirmationEmail = true
 ) =>
-  axios.put<{ event?: HydratedDocument<EventData>; message?: string }>(
-    `/api/events/${eventId}`,
-    {
-      eventData,
-      sendConfirmationEmail,
-    }
-  );
+  axios.put<ApiReturnType<EventData, "event">>(`/api/events/${eventId}`, {
+    eventData,
+    sendConfirmationEmail,
+  });
 
 export const deleteEvent = (eventId: string) =>
-  axios.delete<{ message?: string }>(`/api/events/${eventId}`);
+  axios.delete<ApiDeleteReturnType>(`/api/events/${eventId}`);

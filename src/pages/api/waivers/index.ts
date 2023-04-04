@@ -12,21 +12,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         req.query.type &&
         !["adult", "minor"].includes(req.query.type as string)
       )
-        return res.status(400).json({ message: "Invalid type" });
+        return res.status(400).json({ success: false, error: "Invalid type" });
       if (
         req.query.organizationId &&
         !isValidObjectId(req.query.organizationId as string)
       )
-        return res.status(400).json({ message: "Invalid organizationId" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Invalid organizationId" });
 
       const type = req.query.type ? (req.query.type as string) : undefined;
       const organizationId = req.query.organizationId
         ? new Types.ObjectId(req.query.organizationId as string)
         : undefined;
 
-      return res
-        .status(200)
-        .json({ waivers: await Waiver.find({ type, organizationId }) });
+      return res.status(200).json({
+        success: true,
+        waivers: await Waiver.find({ type, organizationId }),
+      });
     }
   }
 };

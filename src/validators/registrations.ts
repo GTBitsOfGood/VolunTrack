@@ -1,20 +1,8 @@
-import axios from "axios";
-import { HydratedDocument } from "mongoose";
-import { RegistrationData } from "../../server/mongodb/models/Registration";
+import { z } from "zod";
 
-export const getRegistrations = (eventId?: string, userId?: string) =>
-  axios.get<{
-    registrations?: HydratedDocument<RegistrationData>[];
-    message?: string;
-  }>("/api/registrations", {
-    params: {
-      eventId,
-      userId,
-    },
-  });
-
-export const createRegistration = (registrationData: RegistrationData) =>
-  axios.post<{
-    registration?: HydratedDocument<RegistrationData>;
-    message?: string;
-  }>("/api/registrations", registrationData);
+export const registrationInputValidator = z.object({
+  eventId: z.string(),
+  userId: z.string(),
+  minors: z.array(z.string()).optional(),
+});
+export type RegistrationInputData = z.infer<typeof registrationInputValidator>;

@@ -4,8 +4,8 @@ export type HistoryEventData = {
   keyword: string;
   description: string;
   userId: Types.ObjectId;
+  organizationId: Types.ObjectId;
   eventId?: Types.ObjectId;
-  organizationId?: Types.ObjectId;
 };
 
 const historyEventSchema = new Schema<HistoryEventData>(
@@ -23,14 +23,14 @@ const historyEventSchema = new Schema<HistoryEventData>(
       ref: "User",
       required: true,
     },
-    eventId: {
-      type: Schema.Types.ObjectId,
-      ref: "Event",
-    },
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",
+    },
+    eventId: {
+      type: Schema.Types.ObjectId,
+      ref: "Event",
     },
   },
   { timestamps: true }

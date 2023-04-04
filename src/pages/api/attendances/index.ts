@@ -3,8 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Attendance, {
   AttendanceData,
-  attendanceValidator,
 } from "../../../../server/mongodb/models/Attendance";
+import { attendanceInputValidator } from "../../../validators/attendances";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -59,17 +59,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             attendance.checkoutTime <= checkoutTimeEnd
         );
 
-      return res.status(200).json({ attendances });
+      return res.status(200).json({ success: true, attendances });
     }
     case "POST": {
-      if (attendanceValidator.safeParse(req.body).success)
-        return res
-          .status(201)
-          .json({ attendance: await Attendance.create(req.body) });
+      if (attendanceInputValidator.safeParse(req.body).success)
+        return res.status(201).json({
+          success: true,
+          attendance: await Attendance.create(req.body),
+        });
 
       return res
         .status(400)
-        .json({ message: "Invalid attendance data format" });
+        .json({ success: false, error: "Invalid attendance data format" });
     }
   }
 };

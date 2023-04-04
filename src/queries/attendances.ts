@@ -1,8 +1,9 @@
 import axios from "axios";
-import { HydratedDocument, Types } from "mongoose";
+import { Types } from "mongoose";
 import Attendance, {
   AttendanceData,
 } from "../../server/mongodb/models/Attendance";
+import { ApiDeleteReturnType, ApiReturnType } from "../types/queries";
 
 // Helper functions for checking in and out volunteers
 export const checkInVolunteer = (userId: string, eventId: string) =>
@@ -24,10 +25,9 @@ export const checkOutVolunteer = async (userId: string, eventId: string) => {
 };
 
 export const getAttendance = (attendanceId: string) =>
-  axios.get<{
-    attendance?: HydratedDocument<AttendanceData>;
-    message?: string;
-  }>(`/api/attendances/${attendanceId}`);
+  axios.get<ApiReturnType<AttendanceData, "attendance">>(
+    `/api/attendances/${attendanceId}`
+  );
 
 export const getAttendances = (
   userId?: Types.ObjectId,
@@ -37,7 +37,7 @@ export const getAttendances = (
   checkoutTimeStart?: Date,
   checkoutTimeEnd?: Date
 ) =>
-  axios.get<{ attendances?: HydratedDocument<AttendanceData>[] }>(
+  axios.get<ApiReturnType<AttendanceData, "attendances", true>>(
     "/api/attendances",
     {
       params: {
@@ -52,35 +52,39 @@ export const getAttendances = (
   );
 
 export const createAttendance = (attendanceData: AttendanceData) =>
-  axios.post<{
-    attendance?: HydratedDocument<AttendanceData>;
-    message?: string;
-  }>("/api/attendances", attendanceData);
+  axios.post<ApiReturnType<AttendanceData, "attendance">>(
+    "/api/attendances",
+    attendanceData
+  );
 
 export const updateAttendance = (
   attendanceId: string,
   attendanceData: Partial<AttendanceData>
 ) =>
-  axios.put<{
-    attendance?: HydratedDocument<AttendanceData>;
-    message?: string;
-  }>(`/api/attendances/${attendanceId}`, attendanceData);
+  axios.put<ApiReturnType<AttendanceData, "attendance">>(
+    `/api/attendances/${attendanceId}`,
+    attendanceData
+  );
 
 export const deleteAttendance = (attendanceId: string) =>
-  axios.delete<{ message?: string }>(`/api/attendances/${attendanceId}`);
+  axios.delete<ApiDeleteReturnType>(`/api/attendances/${attendanceId}`);
 
 export const getAttendanceStatistics = (
   eventId?: string,
   startDate?: Date,
   endDate?: Date
 ) =>
-  axios.get<{
-    statistics: {
-      _id: string;
-      num: number;
-      users: Types.ObjectId[];
-      minutes: number;
-    }[];
-  }>(`/api/attendances/statistics`, {
+  axios.get<
+    ApiReturnType<
+      {
+        _id: string;
+        num: number;
+        users: Types.ObjectId[];
+        minutes: number;
+      },
+      "statistics",
+      true
+    >
+  >("/api/attendances/statistics", {
     params: { eventId, startDate, endDate },
   });

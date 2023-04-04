@@ -11,7 +11,7 @@ import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
-import { createEvent, editEvent } from "../../../queries/events";
+import { createEvent, updateEvent } from "../../../queries/events";
 import { eventPopulatedInputValidator } from "../../../validators/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator } from "./eventHelpers";
@@ -100,14 +100,11 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
 
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedEvent = {
-      ...values,
-      isValidForCourtHours,
-      description: content,
-      _id: event._id,
-      userId: user._id,
+      date: values.date,
+      eventParent: values.eventParent,
     };
     setSubmitting(true);
-    editEvent(editedEvent, sendConfirmationEmail);
+    updateEvent(event._id, editedEvent, sendConfirmationEmail);
     if (setEvent) {
       setEvent(editedEvent);
     }

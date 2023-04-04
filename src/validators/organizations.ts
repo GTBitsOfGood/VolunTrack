@@ -1,65 +1,25 @@
-import axios from "axios";
-import { HydratedDocument } from "mongoose";
-import { OrganizationData } from "../../server/mongodb/models/Organization";
+import { z } from "zod";
 
-export const getOrganization = (organizationId: string) => {
-  return axios.get<{
-    organization?: HydratedDocument<OrganizationData>;
-    message?: string;
-  }>(`/api/organizations/${organizationId}`);
-};
-
-export const getOrganizations = (
-  organizationData?: Partial<OrganizationData>
-) => {
-  return axios.get<{ organizations: HydratedDocument<OrganizationData>[] }>(
-    "/api/organizations",
-    {
-      params: organizationData,
-    }
-  );
-};
-
-export const createOrganization = (organizationData: OrganizationData) => {
-  return axios.post<{
-    organization?: HydratedDocument<OrganizationData>;
-    message?: string;
-  }>("/api/organizations", organizationData);
-};
-
-export const updateOrganization = (
-  organizationId: string,
-  organizationData: Partial<OrganizationData>
-) => {
-  return axios.put<{
-    organization?: HydratedDocument<OrganizationData>;
-    message?: string;
-  }>(`/api/organizations/${organizationId}`, organizationData);
-};
-
-export const toggleOrganizationActive = (organizationId: string) => {
-  return axios.post<{
-    organization?: HydratedDocument<OrganizationData>;
-    message?: string;
-  }>(`/api/organizations/${organizationId}/toggleActive`);
-};
-
-export const getInvitedAdmins = (organizationId: string) => {
-  return axios.get<{ invitedAdmins?: string[]; message?: string }>(
-    `/api/organizations/${organizationId}/invitedAdmins`
-  );
-};
-
-export const addInvitedAdmin = (organizationId: string, email: string) => {
-  return axios.post<{ invitedAdmins?: string[]; message?: string }>(
-    `/api/organizations/${organizationId}/invitedAdmins`,
-    email
-  );
-};
-
-export const deleteInvitedAdmin = (organizationId: string, email: string) => {
-  return axios.delete<{ invitedAdmins?: string[]; message?: string }>(
-    `/api/organizations/${organizationId}/invitedAdmins`,
-    { data: email }
-  );
-};
+export const organizationInputValidator = z.object({
+  name: z.string(),
+  url: z.string().url(),
+  imageUrl: z.string().url(),
+  notificationEmail: z.string().email(),
+  slug: z.string(),
+  theme: z.string(),
+  defaultEventState: z.string().regex(/^[A-Z]{2}$/),
+  defaultEventCity: z.string(),
+  defaultEventAddress: z.string(),
+  defaultEventZip: z.string().regex(/^\d{5}$/),
+  defaultContactName: z.string(),
+  defaultContactEmail: z.string().email(),
+  defaultContactPhone: z.string(),
+  invitedAdmins: z.array(z.string().email()).optional(),
+  originalAdminEmail: z.string().email(),
+  active: z.boolean().optional(),
+  eventSilver: z.number().optional(),
+  eventGold: z.number().optional(),
+  hoursSilver: z.number().optional(),
+  hoursGold: z.number().optional(),
+});
+export type OrganizationInputData = z.infer<typeof organizationInputValidator>;

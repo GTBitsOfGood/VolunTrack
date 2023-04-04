@@ -1,11 +1,10 @@
-import axios from "axios";
-import { HydratedDocument } from "mongoose";
-import { HistoryEventData } from "../../server/mongodb/models/HistoryEvent";
+import { z } from "zod";
 
-export const getHistoryEvents = (historyEventData: Partial<HistoryEventData>) =>
-  axios.get<{
-    historyEvents?: HydratedDocument<HistoryEventData>[];
-    message?: string;
-  }>("/api/historyEvents", {
-    params: historyEventData,
-  });
+export const historyEventInputValidator = z.object({
+  keyword: z.string(),
+  description: z.string(),
+  userId: z.string(),
+  organizationId: z.string(),
+  eventId: z.string().optional(),
+});
+export type HistoryEventInputData = z.infer<typeof historyEventInputValidator>;

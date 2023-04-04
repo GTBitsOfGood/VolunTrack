@@ -28,9 +28,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // TODO: validate date strings
 
       if (!isValidObjectId(organizationId))
-        return res.status(400).json({ message: "Invalid organizationId" });
+        return res
+          .status(400)
+          .json({ success: false, error: "Invalid organizationId" });
 
       return res.status(200).json({
+        success: true,
         events: await getEvents(
           new Types.ObjectId(organizationId),
           startDate,
@@ -59,9 +62,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // );
         // createHistoryEventCreateEvent(event);
 
-        return res
-          .status(201)
-          .json({ success: true, data: await event.populate("eventParentId") });
+        return res.status(201).json({
+          success: true,
+          event: await event.populate("eventParentId"),
+        });
       }
 
       if (req.body?.eventParent) {
@@ -88,9 +92,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // );
         // createHistoryEventCreateEvent();
 
-        return res
-          .status(201)
-          .json({ success: true, data: await event.populate("eventParentId") });
+        return res.status(201).json({
+          success: true,
+          event: await event.populate("eventParentId"),
+        });
       }
 
       // Request body has neither eventParentId nor eventParent

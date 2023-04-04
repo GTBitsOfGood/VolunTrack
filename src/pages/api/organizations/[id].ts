@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import Organization, {
-  OrganizationData,
-  organizationValidator,
-} from "../../../../server/mongodb/models/Organization";
+import Organization from "../../../../server/mongodb/models/Organization";
+import { organizationInputValidator } from "../../../validators/organizations";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -11,26 +9,25 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const organizationId = req.query.id as string;
   const organization = await Organization.findById(organizationId);
   if (!organization)
-    return res
-      .status(404)
-      .json({ message: `Organization with id ${organizationId} not found` });
+    return res.status(404).json({
+      success: false,
+      error: `Organization with id ${organizationId} not found`,
+    });
 
   switch (req.method) {
     case "GET": {
-      return res.status(200).json({ organization });
+      return res.status(200).json({ success: true, organization });
     }
     case "PUT": {
-      if (organizationValidator.partial().safeParse(req.body).success) {
-        await organization.updateOne(req.body as Partial<OrganizationData>);
-        return res.status(200).json({ organization });
-      }
-      return res
-        .status(400)
-        .json({ message: "Invalid organization data format" });
+      const result = organizationInputValidator.partial().safeParse(req.body);
+      if (!result.success) return res.status(400).json(result);
+
+      await organization.updateOne(result.data);
+      return res.status(200).json({ success: true, organization });
     }
     case "DELETE": {
       await organization.deleteOne();
-      return res.status(200);
+      return res.status(200).json({ success: true });
     }
   }
 };

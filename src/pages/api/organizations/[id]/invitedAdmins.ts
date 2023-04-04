@@ -9,16 +9,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const organizationId = req.query.id as string;
   const organization = await Organization.findById(organizationId);
   if (!organization) {
-    return res
-      .status(404)
-      .json({ message: `Organization with id ${organizationId} not found` });
+    return res.status(404).json({
+      success: false,
+      error: `Organization with id ${organizationId} not found`,
+    });
   }
 
   switch (req.method) {
     case "GET": {
       return res
         .status(200)
-        .json({ invitedAdmins: organization.invitedAdmins });
+        .json({ success: true, invitedAdmins: organization.invitedAdmins });
     }
     case "POST": {
       const email = req.body as string;
@@ -29,9 +30,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
         return res
           .status(200)
-          .json({ invitedAdmins: organization.invitedAdmins });
+          .json({ success: true, invitedAdmins: organization.invitedAdmins });
       }
-      return res.status(400).json({ message: "Invalid email" });
+      return res.status(400).json({ success: false, error: "Invalid email" });
     }
     case "DELETE": {
       const { data: email } = req.body as { data: string };
@@ -40,9 +41,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await organization.updateOne({ $pull: { invitedAdmins: email } });
         return res
           .status(200)
-          .json({ invitedAdmins: organization.invitedAdmins });
+          .json({ success: true, invitedAdmins: organization.invitedAdmins });
       }
-      return res.status(400).json({ message: "Invalid email" });
+      return res.status(400).json({ success: false, error: "Invalid email" });
     }
   }
 };

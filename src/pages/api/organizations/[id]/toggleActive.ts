@@ -8,15 +8,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const organizationId = req.query.id as string;
   const organization = await Organization.findById(organizationId);
   if (!organization) {
-    return res
-      .status(404)
-      .json({ message: `Organization with id ${organizationId} not found` });
+    return res.status(404).json({
+      success: false,
+      error: `Organization with id ${organizationId} not found`,
+    });
   }
 
   switch (req.method) {
     case "POST": {
       await organization.updateOne({ active: !organization.active });
-      return res.status(200).json({ organization });
+      return res.status(200).json({ success: true, organization });
     }
   }
 };

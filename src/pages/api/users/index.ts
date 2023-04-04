@@ -5,10 +5,8 @@ import {
   getUsers,
 } from "../../../../server/actions/users_new";
 import dbConnect from "../../../../server/mongodb";
-import {
-  UserData,
-  userValidator,
-} from "../../../../server/mongodb/models/User";
+import { UserData } from "../../../../server/mongodb/models/User";
+import { userInputValidator } from "../../../validators/users";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -42,18 +40,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         : undefined;
 
       const users = await getUsers(organizationId, role, eventId, isCheckedIn);
-      return res.status(200).json({ users });
+      return res.status(200).json({ success: true, users });
     }
     case "POST": {
-      if (userValidator.safeParse(req.body).success) {
-        const user = await createUserFromCredentials(
-          req.body as Omit<UserData, "password"> & { password: string }
-        );
-        if (!user)
-          return res.status(400).json({ message: "User already exists" });
-        return res.status(200).json({ user });
-      }
-      return res.status(400).json({ message: "Invalid user data format" });
+      const result = userInputValidator.safeParse(req.body);
+      if (!result.success) return res.status(400).json(result);
+
+      const user = await createUserFromCredentials(
+        req.body as Omit<UserData, "password"> & { password: string }
+      );
+      if (!user)
+        return res
+          .status(400)
+          .json({ success: false, error: "User already exists" });
+
+      return res.status(200).json({ success: true, user });
     }
   }
 };

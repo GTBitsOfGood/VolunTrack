@@ -1,9 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import Waiver, {
-  WaiverData,
-  waiverValidator,
-} from "../../../../server/mongodb/models/Waiver";
+import Waiver from "../../../../server/mongodb/models/Waiver";
+import { waiverInputValidator } from "../../../validators/waivers";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -13,14 +11,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!waiver)
     return res
       .status(404)
-      .json({ message: `Waiver with id ${waiverId} not found` });
+      .json({ success: false, error: `Waiver with id ${waiverId} not found` });
 
   switch (req.method) {
     case "PUT": {
-      if (waiverValidator.partial().safeParse(req.body).success) {
-        await waiver.updateOne(req.body as WaiverData);
-        return res.status(200).json({ waiver });
-      }
+      const result = waiverInputValidator.safeParse(req.body);
+      if (!result.success) return res.status(400).json(result);
+
+      await waiver.updateOne(result.data);
+      return res.status(200).json({ success: true, waiver });
     }
   }
 };

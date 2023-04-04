@@ -3,9 +3,9 @@ import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Registration, {
   RegistrationData,
-  registrationValidator,
 } from "../../../../server/mongodb/models/Registration";
 import { sendRegistrationConfirmationEmail } from "../../../utils/mailersend-email.js";
+import { registrationInputValidator } from "../../../validators/registrations";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -37,29 +37,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "POST": {
-      const registrationData = req.body as {
-        userId: string;
-        eventId: string;
-        minors?: string[];
-      };
-      const userId = new Types.ObjectId(registrationData.userId);
-      const eventId = new Types.ObjectId(registrationData.eventId);
+      const result = registrationInputValidator.safeParse(req.body);
+      if (!result.success) return res.status(400).json(result);
 
-      if (
-        registrationValidator.safeParse({
-          userId,
-          eventId,
-          minors: registrationData.minors,
-        }).success
-      ) {
-        await sendRegistrationConfirmationEmail(userId, eventId);
-        return res
-          .status(201)
-          .json({ registration: await Registration.create(registrationData) });
-      }
-      return res
-        .status(400)
-        .json({ message: "Invalid registration data format" });
+      await sendRegistrationConfirmationEmail(
+        result.data.userId,
+        result.data.eventId
+      );
+      return res.status(201).json({
+        success: true,
+        registration: await Registration.create(result.data),
+      });
     }
   }
 };

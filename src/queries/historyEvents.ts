@@ -1,11 +1,11 @@
 import axios from "axios";
-import { HydratedDocument } from "mongoose";
 import { HistoryEventData } from "../../server/mongodb/models/HistoryEvent";
+import { ApiReturnType } from "../types/queries";
 
 export const getHistoryEvents = (historyEventData: Partial<HistoryEventData>) =>
-  axios.get<{
-    historyEvents?: HydratedDocument<HistoryEventData>[];
-    message?: string;
-  }>("/api/historyEvents", {
-    params: historyEventData,
-  });
+  axios.get<ApiReturnType<HistoryEventData, "historyEvents", true>>(
+    "/api/historyEvents",
+    {
+      params: historyEventData,
+    }
+  );

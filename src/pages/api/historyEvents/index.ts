@@ -52,9 +52,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (event) match.eventId = eventId;
       if (organizationId) match.organizationId = organizationId;
 
-      return res
-        .status(200)
-        .json({ historyEvents: await HistoryEvent.find(match) });
+      return res.status(200).json({
+        success: false,
+        historyEvents: await HistoryEvent.find(match),
+      });
     }
   }
 };

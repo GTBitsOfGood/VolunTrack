@@ -52,7 +52,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         },
       ]);
 
-      return res.status(200).json({ statistics });
+      return res.status(200).json({ success: true, statistics });
     }
   }
 };
