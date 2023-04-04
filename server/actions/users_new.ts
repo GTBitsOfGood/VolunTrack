@@ -54,7 +54,8 @@ export const getUsers = async (
 };
 
 export const createUserFromCredentials = async (
-  userData: Partial<UserData> & Required<Pick<UserData, "password" | "email">>
+  userData: Partial<UserData> &
+    Required<Pick<UserData, "email">> & { password: string }
 ): Promise<HydratedDocument<UserData> | undefined> => {
   await dbConnect();
 
@@ -98,6 +99,6 @@ export const updateUser = async (
   const user = await User.findByIdAndUpdate(id, userData, { new: true });
   if (!user) return undefined;
 
-  createHistoryEventEditProfile(id);
+  await createHistoryEventEditProfile(user);
   return user._id;
 };
