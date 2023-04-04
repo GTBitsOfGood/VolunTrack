@@ -59,16 +59,13 @@ export const createUserFromCredentials = async (
 ): Promise<HydratedDocument<UserData> | undefined> => {
   await dbConnect();
 
-  if (await User.exists({ email: userData.email })) return undefined;
+  if (await User.exists({ email: userData.email })) {
+    return undefined;
+  }
 
-  hash(
-    `${userData.email} ${userData.password}`,
-    10,
-    async function (err, hash) {
-      userData.passwordHash = hash;
-      return await User.create(userData);
-    }
-  );
+  const hashString = await hash(`${userData.email}${userData.password}`, 10);
+  userData.passwordHash = hashString;
+  return await User.create(userData);
 };
 
 export const verifyUserWithCredentials = async (

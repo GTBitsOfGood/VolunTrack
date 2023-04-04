@@ -49,6 +49,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const user = await createUserFromCredentials(
         req.body as Omit<UserData, "password"> & { password: string }
       );
+      console.log(user);
       if (!user)
         return res
           .status(400)

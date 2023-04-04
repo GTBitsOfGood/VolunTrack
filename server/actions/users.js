@@ -11,7 +11,7 @@ import { createHistoryEventEditProfile } from "./historyEvent";
 export async function createUserFromCredentials(user) {
   await dbConnect();
 
-  const existingUser = await User.findOne({ "bio.email": user.email });
+  const existingUser = await User.findOne({ email: user.email });
   if (existingUser) {
     return {
       status: 400,
@@ -61,7 +61,7 @@ export async function createUserFromCredentials(user) {
 export async function verifyUserWithCredentials(email, password) {
   await dbConnect();
 
-  const user = await User.findOne({ "bio.email": email });
+  const user = await User.findOne({ email });
 
   if (!user) {
     return {

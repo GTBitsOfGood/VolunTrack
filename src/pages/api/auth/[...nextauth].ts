@@ -34,10 +34,12 @@ export const authOptions: AuthOptions = {
       id: "credentials",
       name: "Login with Username and Password",
       async authorize(credentials) {
+        console.log(credentials);
         const response = await verifyUserWithCredentials(
           credentials.email,
           credentials.password
         );
+        console.log(response);
 
         if (response.status === 200) {
           // this is the user object of the JWT
