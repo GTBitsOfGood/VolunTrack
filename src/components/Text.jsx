@@ -11,7 +11,7 @@ class Text extends React.Component {
       return (
         <a
           className={
-            "text-primaryColor hover:text-hoverColor text-sm underline " +
+            "text-sm text-primaryColor underline hover:text-hoverColor " +
             this.props.className
           }
           href={this.props.href}

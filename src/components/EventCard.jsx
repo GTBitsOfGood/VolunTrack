@@ -54,7 +54,7 @@ const EventCard = (props) => {
 
   return (
     <div
-      className="mx-18 bg-grey mb-2 flex flex-col rounded-xl border-2 px-6 py-3"
+      className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-grey px-6 py-3"
       onClick={open}
     >
       <div className="flex justify-between">
@@ -79,17 +79,17 @@ const EventCard = (props) => {
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
                 <button className="mx-1" onClick={editOnClick}>
-                  <PencilIcon className="text-primaryColor h-8" />
+                  <PencilIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <Tooltip content="Delete" style="light">
                 <button className="mx-1" onClick={deleteOnClick}>
-                  <TrashIcon className="text-primaryColor h-8" />
+                  <TrashIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <Tooltip content="Manage Attendance" style="light">
                 <button className="mx-1" onClick={manageAttendanceOnClick}>
-                  <UsersIcon className="text-primaryColor h-8" />
+                  <UsersIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <EventDeleteModal
@@ -112,7 +112,7 @@ const EventCard = (props) => {
                   className="align-items-center mx-1 flex"
                   onClick={registerOnClick}
                 >
-                  <CheckCircleIcon className="text-primaryColor h-8" />
+                  <CheckCircleIcon className="h-8 text-primaryColor" />
                   <span>Registered!</span>
                 </button>
               ) : (
@@ -120,7 +120,7 @@ const EventCard = (props) => {
                   className="align-items-center mx-1 flex"
                   onClick={registerOnClick}
                 >
-                  <PlusCircleIcon className="text-primaryColor h-8" />
+                  <PlusCircleIcon className="h-8 text-primaryColor" />
                   <span>Register</span>
                 </button>
               )}

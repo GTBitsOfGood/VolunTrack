@@ -171,7 +171,7 @@ class OnboardingForm extends React.Component {
                     Used as important information to generate your volunteer
                     management platform.
                   </Styled.Subtitle>
-                  <Styled.Subtitle2 className="mx-3.5 mt-4 mb-4">
+                  <Styled.Subtitle2 className="mx-3.5 mb-4 mt-4">
                     * Please provide an email address that you wish to be used
                     to create the main volunteer administrator (Admin) account.{" "}
                     <br />

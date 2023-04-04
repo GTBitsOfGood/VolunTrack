@@ -428,8 +428,7 @@ const EventRegister = (event) => {
                               {names}
                             </Styled.SectionHeaderText>
                             <Styled.DetailText>
-                              Minor with {user.first_name}{" "}
-                              {user.last_name}
+                              Minor with {user.first_name} {user.last_name}
                             </Styled.DetailText>
                           </Styled.VolunteerRow>
                         </div>

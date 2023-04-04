@@ -162,7 +162,7 @@ const EventInfo = () => {
     <>
       <Styled.EventTableAll>
         <Text
-          className="ml-16 mb-4"
+          className="mb-4 ml-16"
           href={`/events`}
           onClick={() => goBackToCal()}
           text="< Back to home"
@@ -196,13 +196,13 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <div className="mr-4 mb-4 ml-3">
+                  <div className="mb-4 ml-3 mr-4">
                     <BoGButton
                       text="Manage Attendance"
                       onClick={routeToRegisteredVolunteers}
                     />
                   </div>
-                  <div className="mr-3 mb-4 ml-4">
+                  <div className="mb-4 ml-4 mr-3">
                     <BoGButton
                       text="View Participation Statistics"
                       onClick={routeToStats}

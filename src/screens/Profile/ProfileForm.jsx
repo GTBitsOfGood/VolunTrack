@@ -60,7 +60,7 @@ class ProfileForm extends React.Component {
         <div className="w-3/4 rounded-md bg-white p-3 md:w-1/2">
           {this.state.user && (
             <div>
-              <p className="text-primaryColor text-2xl font-semibold">{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
+              <p className="text-2xl font-semibold text-primaryColor">{`${this.state.user.bio?.first_name} ${this.state.user.bio?.last_name}`}</p>
               <p className="mb-2 capitalize">{this.state.user.role}</p>
               <EditUserForm
                 userSelectedForEdit={this.state.placeHolders}

@@ -162,7 +162,7 @@ class AssistantTable extends React.Component {
                               navigator.clipboard.writeText(user.email);
                             }}
                           >
-                            <DocumentDuplicateIcon className="text-primaryColor ml-2 h-7" />
+                            <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
                           </button>
                         </Tooltip>
                       </div>
@@ -185,7 +185,7 @@ class AssistantTable extends React.Component {
                               className="mx-1"
                               onClick={() => this.onDisplayEditUserModal(user)}
                             >
-                              <PencilIcon className="text-primaryColor h-7" />
+                              <PencilIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
                           <Tooltip content="Delete" style="light">
@@ -195,7 +195,7 @@ class AssistantTable extends React.Component {
                                 this.onDisplayDeleteUserModal(user)
                               }
                             >
-                              <TrashIcon className="text-primaryColor h-7" />
+                              <TrashIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
                         </div>
@@ -211,7 +211,7 @@ class AssistantTable extends React.Component {
                                 this.onDisplayDeletePending(user.email)
                               }
                             >
-                              <TrashIcon className="text-primaryColor h-7" />
+                              <TrashIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
                         </div>

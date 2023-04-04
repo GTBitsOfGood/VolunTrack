@@ -75,11 +75,11 @@ const EventAttendance = () => {
       // });
       // setMinors(fetchedMinors);
 
-      setWaitingVolunteers(
-        (await getEventVolunteersByAttendance(eventId, "waiting")).data
-          .volunteers
-      );
-      console.log(waitingVolunteers);
+      // setWaitingVolunteers(
+      //   (await getEventVolunteersByAttendance(eventId, "waiting")).data
+      //     .volunteers
+      // );
+      // console.log(waitingVolunteers);
 
       setCheckedInVolunteers(
         (await getUsers(undefined, undefined, eventId, true)).data.users

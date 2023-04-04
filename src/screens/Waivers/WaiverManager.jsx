@@ -1,9 +1,9 @@
 import { Tabs } from "flowbite-react";
 import { useSession } from "next-auth/react";
-import Error from "next/error";
 import { useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import BoGButton from "../../components/BoGButton";
+import { getWaivers, updateWaiver } from "../../queries/waivers";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const WaiverManager = () => {
