@@ -7,13 +7,13 @@ import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import { Icon } from "../../../components/Icon";
+import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { getEvent } from "../../../queries/events";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-import Text from "../../../components/Text";
 
 const Styled = {
   Container: styled(Container)`
@@ -408,7 +408,7 @@ const EventRegister = (event) => {
           <Styled.VolunteerContainer>
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
-                {user.first_name} {user.last_name}
+                {user.firstName} {user.lastName}
               </Styled.SectionHeaderText>
             </Styled.VolunteerRow>
             <Styled.VolunteerRow>

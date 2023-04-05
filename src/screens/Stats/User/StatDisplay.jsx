@@ -8,7 +8,7 @@ import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventTable";
 import InputField from "../../../components/Forms/InputField";
 import ProgressDisplay from "../../../components/ProgressDisplay";
-import { getAttendancesByUserId } from "../../../queries/attendances";
+import { getAttendances } from "../../../queries/attendances";
 import { getUser } from "../../../queries/users";
 import { filterAttendance } from "../helper";
 import { getHours } from "./hourParsing";
@@ -64,7 +64,7 @@ const StatDisplay = ({ userId }) => {
 
   useEffect(() => {
     setLoading(true);
-    getAttendancesByUserId(userId)
+    getAttendances(userId)
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(

@@ -5,7 +5,6 @@ import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
-import { getRegistrations } from "../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -88,6 +87,7 @@ const EventsList = ({
   onUnregister,
   user,
   isHomePage,
+  registrations,
   onCreateClicked,
 }) => {
   if (!user) {
@@ -111,14 +111,12 @@ const EventsList = ({
     return new Date(event.date) === currentDate;
   });
 
-  // const registeredEvents = upcomingEvents.filter(function (event) {
-  //   return event.volunteers.includes(user._id);
-  // });
-  const registeredEvents = upcomingEvents.filter(async (event) => {
-    const userRegisteredEvents = (
-      await getRegistrations(event.id, user._id)
-    ).data.registrations?.map((registration) => registration.eventId);
-    return userRegisteredEvents.includes(event.id);
+  const registeredEventIds = new Set(
+    registrations.map((registration) => registration.eventId)
+  );
+
+  const registeredEvents = upcomingEvents.filter((event) => {
+    return registeredEventIds.has(event.id);
   });
 
   const todayRegisteredEvents = registeredEvents.filter(function (event) {
@@ -157,6 +155,7 @@ const EventsList = ({
             user={user}
             functions={functions}
             onRegisterClicked={onRegisterClicked}
+            isRegistered={registeredEventIds.has(event.id)}
           />
         ))}
         <Styled.Spacer />
@@ -183,6 +182,7 @@ const EventsList = ({
                       user={user}
                       functions={functions}
                       onRegisterClicked={onRegisterClicked}
+                      isRegistered={true}
                     />
                   ))}
                 </div>
@@ -199,6 +199,7 @@ const EventsList = ({
                       user={user}
                       functions={functions}
                       onRegisterClicked={onRegisterClicked}
+                      isRegistered={registeredEventIds.has(event.id)}
                     />
                   ))}
                 </div>

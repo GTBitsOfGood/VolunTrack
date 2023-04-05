@@ -27,7 +27,7 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
         header: "Your Registration is Confirmed for",
         introLine: `Thanks for registering for ${event.title}! Please review the event details below.`,
         eventTitle: event.title,
-        volunteerName: user.first_name,
+        volunteerName: user.firstName,
         eventDate: event.date.slice(0, 10),
         eventStartTime: convertTime(event.startTime),
         eventEndTime: convertTime(event.endTime),
@@ -109,7 +109,7 @@ const sendEmail = async (user, personalization, subject) => {
   });
 
   const recipients = [
-    new Recipient(user.email, user.first_name + " " + user.last_name),
+    new Recipient(user.email, `${user.firstName} ${user.lastName}`),
   ];
 
   const emailParams = new EmailParams()

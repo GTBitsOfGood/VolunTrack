@@ -177,9 +177,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     });
     getRegistrations(undefined, user.id)
       .then((result) => {
-        if (result.data.registrations) {
-          setRegistrations(result.data.registrations);
-        }
+        if (result.data.success) setRegistrations(result.data.registrations);
       })
       .finally(() => setLoading(false));
   };
@@ -397,6 +395,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               onRegisterClicked={goToRegistrationPage}
               onUnregister={onUnregister}
               user={user}
+              registrations={registrations}
               isHomePage={isHomePage}
             />
           )}
@@ -432,6 +431,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                 onRegisterClicked={goToRegistrationPage}
                 onUnregister={onUnregister}
                 user={user}
+                registrations={registrations}
                 isHomePage={isHomePage}
               />
             </div>
@@ -463,6 +463,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               onUnregister={onUnregister}
               user={user}
               isHomePage={isHomePage}
+              registrations={registrations}
               onCreateClicked={onCreateClicked}
             />
           </>

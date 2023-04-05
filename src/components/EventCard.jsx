@@ -19,6 +19,7 @@ const EventCard = (props) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [event, setEvent] = useState(props.event);
+  const isRegistered = props.isRegistered;
 
   const open = () => {
     setCollapse(!collapse);
@@ -107,7 +108,7 @@ const EventCard = (props) => {
           )}
           {props.user.role === "volunteer" && (
             <>
-              {props.event.volunteers.includes(props.user._id) ? (
+              {isRegistered ? (
                 <button
                   className="align-items-center mx-1 flex"
                   onClick={registerOnClick}

@@ -10,7 +10,7 @@ import {
   Modal,
   ModalFooter,
   ModalHeader,
-  Row,
+  Row
 } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
@@ -83,16 +83,15 @@ const EventWaiverModal = ({
   const [minorContent, setMinorContent] = useState("");
 
   const loadWaivers = async () => {
-    const adult = await getWaivers("adult", user.organizationId);
-
-    if (adult.data.waiver.length > 0) {
-      setAdultContent(adult.data.waiver[0].text);
+    const adultWaiverResponse = await getWaivers("adult", user.organizationId);
+    console.log(adultWaiverResponse);
+    if (adultWaiverResponse.data.success) {
+      setAdultContent(adultWaiverResponse.data.waivers[0].text);
     }
 
-    const minor = await getWaivers("minor", user.organizationId);
-
-    if (minor.data.waiver.length > 0) {
-      setMinorContent(minor.data.waiver[0].text);
+    const minorWaiverResponse = await getWaivers("minor", user.organizationId);
+    if (minorWaiverResponse.data.success) {
+      setMinorContent(minorWaiverResponse.data.waiver[0].text);
     }
   };
 

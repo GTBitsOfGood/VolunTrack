@@ -5,8 +5,8 @@ export type UserData = {
   organizationId: Types.ObjectId;
   role: "admin" | "volunteer" | "manager";
   status: "has_volunteered" | "new";
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   phone?: string;
   dob?: string;
   zip?: string;
