@@ -4,10 +4,10 @@
 
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
-import NextAuth, { AuthOptions, SessionStrategy } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { verifyUserWithCredentials } from "../../../../server/actions/users";
+import { verifyUserWithCredentials } from "../../../../server/actions/users_new";
 import dbConnect from "../../../../server/mongodb/index";
 import Organization from "../../../../server/mongodb/models/Organization";
 import User from "../../../../server/mongodb/models/User";
@@ -22,9 +22,9 @@ const options = {
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
 
-export const authOptions: AuthOptions = {
+export const authOptions = {
   session: {
-    strategy: "jwt" as SessionStrategy,
+    strategy: "jwt",
   },
   pages: {
     signIn: "/login",
@@ -45,10 +45,7 @@ export const authOptions: AuthOptions = {
           // this is the user object of the JWT
           return {
             id: response.message._id,
-            bio: response.message.bio,
-            role: response.message.role,
-            status: response.message.status,
-            imageUrl: response.message.imageUrl,
+            ...response.message
           };
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
@@ -58,8 +55,8 @@ export const authOptions: AuthOptions = {
         }
       },
       credentials: {
-        first_name: { label: "First Name", type: "text" },
-        last_name: { label: "Last Name", type: "text" },
+        firstName: { label: "First Name", type: "text" },
+        lastName: { label: "Last Name", type: "text" },
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },

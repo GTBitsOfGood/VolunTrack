@@ -130,13 +130,13 @@ const EventAttendance = () => {
       searchValue.length > 0
         ? volunteers.filter(
             (v) =>
-              v.last_name?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
               v.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.first_name?.toLowerCase().includes(searchValue.toLowerCase())
+              v.firstName?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>
-      a.last_name > b.last_name ? 1 : b.last_name > a.last_name ? -1 : 0
+      a.lastName > b.lastName ? 1 : b.lastName > a.lastName ? -1 : 0
     );
   };
 

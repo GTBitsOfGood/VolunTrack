@@ -2,6 +2,7 @@ import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Waiver from "../../../../server/mongodb/models/Waiver";
+import { waiverInputValidator } from "../../../validators/waivers";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -29,6 +30,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({
         success: true,
         waivers: await Waiver.find({ type, organizationId }),
+      });
+    }
+    case "POST": {
+      const type = req.body.type;
+      const organizationId = req.body.organizationId;
+      const text = req.body.text;
+
+      const result = waiverInputValidator.safeParse(req.body);
+      if (!result.success) return res.status(400).json(result);
+
+      await Waiver.findOneAndUpdate(
+          { type: type, organizationId: organizationId },
+          { text: text },
+          { upsert: true }
+      ).then((waiver) => {
+        return res.status(200).json({ success: true, waiver })
       });
     }
   }

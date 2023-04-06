@@ -20,10 +20,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const startDateString = req.query.startDateString as string | undefined;
       const endDateString = req.query.endDateString as string | undefined;
 
-      const startDate =
-        startDateString !== undefined ? new Date(startDateString) : undefined;
-      const endDate =
-        endDateString !== undefined ? new Date(endDateString) : undefined;
+      const startDate = startDateString ? new Date(startDateString) : undefined;
+      const endDate = endDateString ? new Date(endDateString) : undefined;
 
       // TODO: validate date strings
 

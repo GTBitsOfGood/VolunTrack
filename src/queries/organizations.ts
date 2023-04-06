@@ -54,7 +54,7 @@ export const addInvitedAdmin = (organizationId: string, email: string) => {
   return axios.post<
     | { success: true; invitedAdmins: string[] }
     | { success: false; error: ZodError | string }
-  >(`/api/organizations/${organizationId}/invitedAdmins`, email);
+  >(`/api/organizations/${organizationId}/invitedAdmins`, { data: email });
 };
 
 export const deleteInvitedAdmin = (organizationId: string, email: string) => {

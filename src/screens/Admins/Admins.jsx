@@ -20,7 +20,7 @@ import {
 } from "../../queries/organizations";
 import { deleteUser, getUsers } from "../../queries/users";
 import * as Form from "../sharedStyles/formStyles";
-import AssistantTable from "./AssistantTable";
+import AdminsTable from "./AdminsTable";
 import { invitedAdminValidator } from "./helpers";
 import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
@@ -36,7 +36,7 @@ const Styled = {
   `,
 };
 
-class Assistants extends React.Component {
+class Admins extends React.Component {
   state = {
     newInvitedAdmin: "",
     users: [],
@@ -85,7 +85,7 @@ class Assistants extends React.Component {
   };
 
   onEditUser = () => {
-    /** Code to update users in state at that specific index */
+    /** TODO: Code to update users in state at that specific index */
   };
 
   onDeletePending = (email) => {
@@ -115,12 +115,9 @@ class Assistants extends React.Component {
     });
   };
 
-  handleSubmit = async () => {
-    if (this.state.newInvitedAdmin?.length > 0)
-      await addInvitedAdmin(
-        this.props.user.organizationId,
-        this.state.newInvitedAdmin
-      );
+  handleSubmit = async (email) => {
+    await addInvitedAdmin(this.props.user.organizationId, email);
+    this.onModalClose();
     this.onRefresh();
   };
 
@@ -130,19 +127,19 @@ class Assistants extends React.Component {
       this.state.searchValue.length > 0
         ? admins.filter(
             (admin) =>
-              admin.last_name
+              admin.lastName
                 ?.toLowerCase()
                 .includes(this.state.searchValue.toLowerCase()) ||
               admin.email
                 ?.toLowerCase()
                 .includes(this.state.searchValue.toLowerCase()) ||
-              admin.first_name
+              admin.firstName
                 ?.toLowerCase()
                 .includes(this.state.searchValue.toLowerCase())
           )
         : admins
     ).sort((a, b) =>
-      a.last_name > b.last_name ? 1 : b.last_name > a.last_name ? -1 : 0
+      a.lastName > b.lastName ? 1 : b.lastName > a.lastName ? -1 : 0
     );
   };
 
@@ -169,7 +166,7 @@ class Assistants extends React.Component {
         </Styled.Row>
         <Styled.Row>
           <div className="w-[80%]">
-            <AssistantTable
+            <AdminsTable
               sessionUser={this.props.user}
               users={this.getUsersAtPage()}
               invitedAdmins={this.state.invitedAdmins}
@@ -187,7 +184,7 @@ class Assistants extends React.Component {
           }}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
-            this.handleSubmit(values);
+            this.handleSubmit(values.email);
             setSubmitting(false);
           }}
           validationSchema={invitedAdminValidator}
@@ -219,7 +216,7 @@ class Assistants extends React.Component {
                 <BoGButton
                   text="Cancel"
                   outline={true}
-                  onClick={() => this.onModalClose(false)}
+                  onClick={this.onModalClose}
                 />
                 <BoGButton
                   type="submit"
@@ -236,8 +233,8 @@ class Assistants extends React.Component {
   }
 }
 
-export default AdminAuthWrapper(Assistants);
+export default AdminAuthWrapper(Admins);
 
-Assistants.propTypes = {
+Admins.propTypes = {
   user: PropTypes.object.isRequired,
 };

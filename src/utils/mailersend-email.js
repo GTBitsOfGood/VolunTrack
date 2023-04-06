@@ -69,7 +69,7 @@ export const sendEventEditedEmail = async (user, event) => {
         introLine: `It looks like an admin at ${nonprofit} edited ${event.title}! 
         Please review the event details below and ensure they still work with your schedule.`,
         eventTitle: event.title,
-        volunteerName: user.first_name,
+        volunteerName: user.firstName,
         eventDate: event.date.slice(0, 10),
         eventStartTime: convertTime(event.startTime),
         eventEndTime: convertTime(event.endTime),

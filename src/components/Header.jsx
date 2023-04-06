@@ -37,7 +37,7 @@ const Header = () => {
   };
 
   const goToManageAdmins = () => {
-    router.push("/assistants");
+    router.push("/admins");
   };
 
   const goToManageWaivers = () => {
@@ -142,7 +142,7 @@ const Header = () => {
               label={
                 <div
                   className={`text-lg font-bold md:hover:text-primaryColor  ${
-                    currPageMatches("/assistants") ||
+                    currPageMatches("/admins") ||
                     currPageMatches("/manage-waivers") ||
                     currPageMatches("/organization-settings")
                       ? "text-primaryColor"
@@ -153,7 +153,7 @@ const Header = () => {
                 </div>
               }
             >
-              <Dropdown.Item onClick={goToManageAdmins} href="/assistants">
+              <Dropdown.Item onClick={goToManageAdmins} href="/admins">
                 Manage Admins
               </Dropdown.Item>
               <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">

@@ -41,7 +41,7 @@ const History = () => {
     (async () => {
       const fetchedHistoryEvents = (
         await getHistoryEvents({ organizationId: user.organizationId })
-      ).data;
+      ).data.historyEvents;
       const admins = (await getUsers(user.organizationId, "admin")).data.users;
       const mappedHistoryEvents = await Promise.all(
         fetchedHistoryEvents.map(async (event) => {
@@ -50,8 +50,8 @@ const History = () => {
           );
           return {
             ...event,
-            firstName: matchedAdmin?.first_name ?? "Unknown",
-            lastName: matchedAdmin?.last_name ?? "Admin",
+            firstName: matchedAdmin?.firstName ?? "Unknown",
+            lastName: matchedAdmin?.lastName ?? "Admin",
           };
         })
       );

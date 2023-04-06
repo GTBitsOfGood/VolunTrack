@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { HydratedDocument } from "mongoose";
 import { getServerSession } from "next-auth/next";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import {
@@ -13,7 +12,7 @@ import Attendance from "../../../../server/mongodb/models/Attendance";
 import Event from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
-import User, { UserData } from "../../../../server/mongodb/models/User";
+import User from "../../../../server/mongodb/models/User";
 import { sendEventEditedEmail } from "../../../utils/mailersend-email.js";
 import {
   eventInputValidator,
@@ -29,7 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res
       .status(400)
       .json({ success: false, error: "User session not found" });
-  const user = session.user as HydratedDocument<UserData>;
+  const user = session.user;
 
   const eventId = req.query.id as string;
 

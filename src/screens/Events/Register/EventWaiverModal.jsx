@@ -10,7 +10,7 @@ import {
   Modal,
   ModalFooter,
   ModalHeader,
-  Row
+  Row,
 } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";

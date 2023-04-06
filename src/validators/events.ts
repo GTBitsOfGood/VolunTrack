@@ -25,14 +25,14 @@ export const eventPopulatedInputValidator = z.object({
       localTime: z.string().optional(),
       address: z.string(),
       city: z.string(),
-      state: z.string().regex(/^[A-Z]{2}$/),
-      zip: z.string().regex(/^\d{5}$/),
+      state: z.string(), //.regex(/^[A-Z]{2}$/),
+      zip: z.string(), //.regex(/^\d{5}$/),
       eventContactPhone: z.string(),
       eventContactEmail: z.string().email(),
       maxVolunteers: z.number().min(1),
       isPrivate: z.boolean().optional(),
       isValidForCourtHours: z.boolean().optional(),
-      organizationId: z.string().length(24),
+      organizationId: z.string(), //.length(24),
       // Checking isValidObjectId(organizationId) through refine doesn't work with zod-formik-adapter for some reason, maybe they'll fix it?
       // .refine(
       //   (id) => isValidObjectId(id),
@@ -46,12 +46,12 @@ export const eventPopulatedInputValidator = z.object({
       orgCity: z.string().optional(),
       orgState: z
         .string()
-        .regex(/^[A-Z]{2}$/)
+        // .regex(/^[A-Z]{2}$/)
         .optional()
         .or(z.literal("")),
       orgZip: z
         .string()
-        .regex(/^\d{5}$/)
+        // .regex(/^\d{5}$/)
         .optional()
         .or(z.literal("")),
       description: z.string().optional(),
@@ -59,7 +59,7 @@ export const eventPopulatedInputValidator = z.object({
     .refine(
       (eventParent) => eventParent.startTime < eventParent.endTime,
       (eventParent) => ({
-        message: `EventParent startTime ${eventParent.startTime} must be before endTime ${eventParent.endTime}`,
+        message: `Event startTime ${eventParent.startTime} must be before endTime ${eventParent.endTime}`,
         path: ["startTime", "endTime"],
       })
     ),

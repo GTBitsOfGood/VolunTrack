@@ -22,10 +22,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ success: true, invitedAdmins: organization.invitedAdmins });
     }
     case "POST": {
-      const email = req.body as string;
+      const { data: email } = req.body as { data: string };
+      const result = z.string().email().safeParse(email)
 
-      if (z.string().email().safeParse(email).success) {
-        await organization.updateOne({
+      if (result.success) {
+        const response = await organization.updateOne({
           $push: { invitedAdmins: email },
         });
         return res
@@ -35,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ success: false, error: "Invalid email" });
     }
     case "DELETE": {
-      const { data: email } = req.body as { data: string };
+      const email = req.body as string;
 
       if (z.string().email().safeParse(email).success) {
         await organization.updateOne({ $pull: { invitedAdmins: email } });

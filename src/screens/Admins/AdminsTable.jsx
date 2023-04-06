@@ -19,7 +19,7 @@ import {
   DocumentDuplicateIcon,
 } from "@heroicons/react/24/solid";
 
-class AssistantTable extends React.Component {
+class AdminsTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -131,10 +131,8 @@ class AssistantTable extends React.Component {
 
   render() {
     const { users, invitedAdmins, loading } = this.props;
-    const roles = ["Administrator", "Admin Assistant", "Staff"];
-    const defaultOption = roles[0];
     return (
-      <div className="w-100% h-100% m-auto">
+      <div className="m-auto h-full w-full">
         <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
           <Table.Head>
             <Table.HeadCell>Name</Table.HeadCell>
@@ -151,21 +149,21 @@ class AssistantTable extends React.Component {
                 )
                 .map((user, index) => (
                   <Table.Row key={index} evenIndex={index % 2 === 0}>
-                    <Table.Cell>{user.name}</Table.Cell>
                     <Table.Cell>
-                      <div className="flex items-center">
-                        {user.email}
-                        <Tooltip content="Copy" style="light">
-                          <button
-                            className="mx-1"
-                            onClick={() => {
-                              navigator.clipboard.writeText(user.email);
-                            }}
-                          >
-                            <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
-                          </button>
-                        </Tooltip>
-                      </div>
+                      {(user.firstName ?? "") + " " + (user.lastName ?? "")}
+                    </Table.Cell>
+                    <Table.Cell className="flex items-center">
+                      {user.email}
+                      <Tooltip content="Copy" style="light">
+                        <button
+                          className="mx-1"
+                          onClick={() => {
+                            navigator.clipboard.writeText(user.email);
+                          }}
+                        >
+                          <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                        </button>
+                      </Tooltip>
                     </Table.Cell>
                     <Table.Cell>
                       {user.role === "admin"
@@ -299,9 +297,9 @@ class AssistantTable extends React.Component {
   }
 }
 
-export default AssistantTable;
+export default AdminsTable;
 
-AssistantTable.propTypes = {
+AdminsTable.propTypes = {
   sessionUser: PropTypes.object.isRequired,
   users: PropTypes.array.isRequired,
   invitedAdmins: PropTypes.array,

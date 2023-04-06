@@ -14,9 +14,9 @@ export const organizationSettingsPages: Page[] = [
       {
         title: "Nonprofit Information",
         fields: [
-          { name: "non_profit_name", label: "Nonprofit Name" },
-          { name: "non_profit_website", label: "Website" },
-          { name: "notification_email", label: "Email Address" },
+          { name: "name", label: "Nonprofit Name" },
+          { name: "website", label: "Website" },
+          { name: "notificationEmail", label: "Email Address" },
         ],
       },
     ],
@@ -30,7 +30,7 @@ export const organizationSettingsPages: Page[] = [
         title: "Nonprofit Logo",
         fields: [
           {
-            name: "logo_link",
+            name: "imageUrl",
             label: "Link to the Logo",
             placeholder: "https://bitsofgood.org/favicon.png",
           },
@@ -57,23 +57,23 @@ export const organizationSettingsPages: Page[] = [
       {
         title: "Event Location",
         fields: [
-          { name: "default_address", label: "Address" },
-          { name: "default_city", label: "City" },
-          { name: "default_state", label: "State" },
-          { name: "default_zip", label: "Zip Code" },
+          { name: "defaultEventAddress", label: "Address" },
+          { name: "defaultEventCity", label: "City" },
+          { name: "defaultEventState", label: "State" },
+          { name: "defaultEventZip", label: "Zip Code" },
         ],
       },
       {
         title: "Event Contact",
         fields: [
-          { name: "default_contact_name", label: "Full Name" },
+          { name: "defaultContactName", label: "Full Name" },
           {
-            name: "default_contact_email",
+            name: "defaultContactEmail",
             label: "Email Address",
             placeholder: "example@bitsofgood.com",
           },
           {
-            name: "default_contact_phone",
+            name: "defaultContactPhone",
             label: "Phone Number",
             placeholder: "xxx-xxx-xxxx",
           },
@@ -91,15 +91,15 @@ export const organizationSettingsPages: Page[] = [
       {
         title: "Event Medal Thresholds",
         fields: [
-          { name: "event_silver", label: "Silver Medal" },
-          { name: "event_gold", label: "Gold Medal" },
+          { name: "eventSilver", label: "Silver Medal", type: "number" },
+          { name: "eventGold", label: "Gold Medal", type: "number" },
         ],
       },
       {
         title: "Hours Volunteered Medal Thresholds",
         fields: [
-          { name: "hours_silver", label: "Silver Medal" },
-          { name: "hours_gold", label: "Gold Medal" },
+          { name: "hoursSilver", label: "Silver Medal", type: "number" },
+          { name: "hoursGold", label: "Gold Medal", type: "number" },
         ],
       },
     ],

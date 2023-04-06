@@ -11,18 +11,19 @@ export const userInputValidator = z.object({
   dob: z.string().optional(),
   zip: z
     .string()
-    .regex(/^\d{5}$/)
+    // .regex(/^\d{5}$/)
     .optional(),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z
     .string()
-    .regex(/^[A-Z]{2}$/)
+    // .regex(/^[A-Z]{2}$/)
     .optional(),
   notes: z.string().optional(),
   passwordHash: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
   password: z.string().optional(),
+  adminId: z.string().optional(),
 });
 export type UserInputData = z.infer<typeof userInputValidator>;

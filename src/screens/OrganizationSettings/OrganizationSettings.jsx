@@ -44,8 +44,8 @@ const OrganizationSettings = () => {
   useEffect(() => {
     async function fetchData() {
       const response = await getOrganization(user.organizationId);
-      if (response.data.orgData) {
-        setOrganizationData(response.data.orgData);
+      if (response.data.organization) {
+        setOrganizationData(response.data.organization);
       }
 
       // window.addEventListener("beforeunload", handleWindowClose);
@@ -54,52 +54,31 @@ const OrganizationSettings = () => {
   }, []);
 
   const handleSubmit = async (values) => {
-    const data = {
-      name: values.non_profit_name,
-      website: values.non_profit_website,
-      notificationEmail: values.notification_email,
-      theme: values.theme,
-      imageURL: values.logo_link,
-
-      defaultEventAddress: values.default_address,
-      defaultEventCity: values.default_city,
-      defaultEventState: values.default_state,
-      defaultEventZip: values.default_zip,
-      defaultContactName: values.default_contact_name,
-      defaultContactEmail: values.default_contact_email,
-      defaultContactPhone: values.default_contact_phone,
-
-      eventSilver: values.event_silver,
-      eventGold: values.event_gold,
-      hoursSilver: values.hours_silver,
-      hoursGold: values.hours_gold,
-    };
-
-    await updateOrganization(user.organizationId, data);
+    await updateOrganization(user.organizationId, values);
   };
 
   return (
     <div>
       <Formik
         initialValues={{
-          non_profit_name: organizationData.name,
-          non_profit_website: organizationData.website,
-          notification_email: organizationData.notificationEmail,
-          logo_link: organizationData.imageURL,
+          name: organizationData.name,
+          website: organizationData.website,
+          notificationEmail: organizationData.notificationEmail,
+          imageUrl: organizationData.imageUrl,
           theme: organizationData.theme,
 
-          default_address: organizationData.defaultEventAddress,
-          default_city: organizationData.defaultEventCity,
-          default_state: organizationData.defaultEventState,
-          default_zip: organizationData.defaultEventZip,
-          default_contact_name: organizationData.defaultContactName,
-          default_contact_email: organizationData.defaultContactEmail,
-          default_contact_phone: organizationData.defaultContactPhone,
+          defaultEventAddress: organizationData.defaultEventAddress,
+          defaultEventCity: organizationData.defaultEventCity,
+          defaultEventState: organizationData.defaultEventState,
+          defaultEventZip: organizationData.defaultEventZip,
+          defaultContactName: organizationData.defaultContactName,
+          defaultContactEmail: organizationData.defaultContactEmail,
+          defaultContactPhone: organizationData.defaultContactPhone,
 
-          event_silver: organizationData.eventSilver,
-          event_gold: organizationData.eventGold,
-          hours_silver: organizationData.hoursSilver,
-          hours_gold: organizationData.hoursGold,
+          eventSilver: organizationData.eventSilver,
+          eventGold: organizationData.eventGold,
+          hoursSilver: organizationData.hoursSilver,
+          hoursGold: organizationData.hoursGold,
         }}
         enableReinitialize={true}
         onSubmit={(values, { setSubmitting }) => {
@@ -199,6 +178,7 @@ const OrganizationSettings = () => {
                             </Field>
                           ) : (
                             <InputField
+                              type={field.type}
                               key={field.name}
                               name={field.name}
                               label={field.label}

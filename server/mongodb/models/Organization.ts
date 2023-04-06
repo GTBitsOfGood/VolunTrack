@@ -2,7 +2,7 @@ import { Model, model, models, Schema } from "mongoose";
 
 export type OrganizationData = {
   name: string;
-  url: string;
+  website: string;
   imageUrl: string;
   notificationEmail: string;
   slug: string;
@@ -26,7 +26,7 @@ export type OrganizationData = {
 const organizationSchema = new Schema<OrganizationData>(
   {
     name: { type: String, required: true },
-    url: { type: String, required: true },
+    website: { type: String, required: true },
     imageUrl: { type: String, required: true },
     notificationEmail: { type: String, required: true },
     slug: { type: String, required: true },

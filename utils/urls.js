@@ -7,7 +7,7 @@ export default {
     index: "/",
     events: "/events",
     volunteers: "/volunteers",
-    assistants: "/assistants",
+    admins: "/admins",
     settings: "/settings",
     profile: "/profile",
     register: "/register",

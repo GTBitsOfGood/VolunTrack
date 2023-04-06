@@ -10,11 +10,5 @@ export const getWaivers = async (
     params: { type, organizationId },
   });
 
-export const updateWaiver = async (
-  waiverId: string,
-  waiverData: Partial<WaiverData>
-) =>
-  axios.put<ApiReturnType<WaiverData, "waiver">>(
-    `/api/waivers/${waiverId}`,
-    waiverData
-  );
+export const updateWaiver = async (waiverData: Partial<WaiverData>) =>
+  axios.post<ApiReturnType<WaiverData, "waiver">>(`/api/waivers`, waiverData);

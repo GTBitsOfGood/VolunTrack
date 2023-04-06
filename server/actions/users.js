@@ -39,11 +39,9 @@ export async function createUserFromCredentials(user) {
     _id: new ObjectId(),
     imageUrl: "/images/gradient-avatar.png",
     organizationId: organization._id,
-    bio: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-    },
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
   };
 
   bcrypt.hash(user.email + user.password, 10, async function (err, hash) {
@@ -112,9 +110,9 @@ export async function getUsers(role, next) {
     { $match: filter },
     {
       $project: {
-        name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
-        first_name: "$bio.first_name",
-        last_name: "$bio.last_name",
+        name: { $concat: ["$bio.firstName", " ", "$bio.lastName"] },
+        first_name: "$bio.firstName",
+        last_name: "$bio.lastName",
         email: "$bio.email",
         phone_number: "$bio.phone_number",
         date_of_birth: "$bio.date_of_birth",

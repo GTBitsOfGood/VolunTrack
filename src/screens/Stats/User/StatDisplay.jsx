@@ -103,8 +103,10 @@ const StatDisplay = ({ userId }) => {
       });
 
     getUser(userId).then((response) => {
-      if (response.data)
-        setName(`${response.data.firstName} ${response.data.lastName}'s`);
+      if (response.data.user)
+        setName(
+          `${response.data.user.firstName} ${response.data.user.lastName}'s`
+        );
     });
   }, [startDate, endDate]);
 

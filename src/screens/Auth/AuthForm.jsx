@@ -60,12 +60,12 @@ class AuthForm extends React.Component {
       <React.Fragment>
         <Formik
           initialValues={{
-            first_name: "",
-            last_name: "",
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
-            password_confirm: "",
-            org_code: this.state.nonprofitCode,
+            passwordConfirm: "",
+            orgCode: this.state.nonprofitCode,
           }}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
@@ -81,12 +81,12 @@ class AuthForm extends React.Component {
               {this.props.createAccount && (
                 <div className="flex space-x-4">
                   <InputField
-                    name="first_name"
+                    name="firstName"
                     placeholder="First Name"
                     label="First Name"
                   />
                   <InputField
-                    name="last_name"
+                    name="lastName"
                     label="Last Name"
                     placeholder="Last Name"
                   />
@@ -107,7 +107,7 @@ class AuthForm extends React.Component {
               />
               {this.props.createAccount && (
                 <InputField
-                  name="password_confirm"
+                  name="passwordConfirm"
                   label="Confirm Password"
                   type="password"
                   placeholder="Your Password"
@@ -115,7 +115,7 @@ class AuthForm extends React.Component {
               )}
               {this.props.createAccount && this.state.nonprofitCode === "" && (
                 <InputField
-                  name="org_code"
+                  name="orgCode"
                   label="Organization Code"
                   placeholder="Your organization's code"
                 />

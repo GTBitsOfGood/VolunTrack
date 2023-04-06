@@ -5,6 +5,7 @@ import { deleteUser, getUsers, updateUser } from "../../queries/users";
 import VolunteerTable from "./VolunteerTable";
 import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
+import BoGButton from "../../components/BoGButton";
 
 class Volunteers extends React.Component {
   state = {
@@ -29,14 +30,14 @@ class Volunteers extends React.Component {
   onEditUser = (userId, updatedUser) => {
     /** Code to update users in state at that specific index */
     const adminId = this.props.user._id;
-    const userInfo = { adminId, bio: updatedUser };
-    updateUser(userId, userInfo);
+    updatedUser.adminId = adminId;
+    updateUser(userId, updatedUser);
 
     let updatedUsers = this.state.users.map((user) => {
       if (user.email === updatedUser.email) {
         return {
           ...updatedUser,
-          name: updatedUser.first_name + " " + updatedUser.last_name,
+          name: updatedUser.firstName + " " + updatedUser.lastName,
           _id: user._id,
           status: user.status,
           role: user.role,
@@ -81,16 +82,16 @@ class Volunteers extends React.Component {
   render() {
     const { loadingMoreUsers, searchValue } = this.state;
     return (
-      <div className="relative left-[10%] flex h-[100%] w-[100%] flex-col pt-[1rem]">
+      <div className="relative left-[10%] flex h-full w-full flex-col pt-[1rem]">
         <div className="flex w-[80%] flex-row justify-between">
           <div className="text-normal text-bold text-4xl">Volunteers</div>
           <CSVLink
             data={this.state.users}
             filename={"volunteer-list.csv"}
-            className="btn bg-primaryColor text-white"
             target="_blank"
+            className="no-underline"
           >
-            Download to CSV
+            <BoGButton text="Download to CSV" />
           </CSVLink>
         </div>
         <div className="mt-[0.7rem] flex w-[80%] flex-row">

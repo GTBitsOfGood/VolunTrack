@@ -41,19 +41,19 @@ const WaiverManager = () => {
   }, []);
 
   const submitAdult = () => {
-    updateWaiver("adult", adultContent, user.organizationId);
-  };
+    updateWaiver({type: "adult", text: adultContent, organizationId: user.organizationId});
+  }
 
   const submitMinor = () => {
-    updateWaiver("minor", minorContent, user.organizationId);
-  };
+    updateWaiver({type: "minor", text: minorContent, organizationId: user.organizationId});
+  }
 
   const setAdultTab = () => {
     setTab(true);
-  };
+  }
   const setMinorTab = () => {
     setTab(false);
-  };
+  }
 
   return (
     <div className="flex-column mx-auto my-16 flex w-3/5">

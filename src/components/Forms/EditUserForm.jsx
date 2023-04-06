@@ -23,7 +23,7 @@ class EditUserForm extends React.Component {
             <div className="grid grid-cols-6 gap-x-4 gap-y-1">
               <InputField
                 className="col-span-6 md:col-span-3"
-                name={"first_name"}
+                name={"firstName"}
                 label={"First Name"}
                 isRequired={true}
                 disabled={this.props.disableEdit}
@@ -31,7 +31,7 @@ class EditUserForm extends React.Component {
               />
               <InputField
                 className="col-span-6 md:col-span-3"
-                name={"last_name"}
+                name={"lastName"}
                 label={"Last Name"}
                 isRequired={true}
                 disabled={this.props.disableEdit}
@@ -48,7 +48,7 @@ class EditUserForm extends React.Component {
               />
               <InputField
                 className="col-span-6 md:col-span-3"
-                name={"phone_number"}
+                name={"phone"}
                 label={"Phone"}
                 isRequired={false}
                 disabled={this.props.disableEdit}
@@ -56,7 +56,7 @@ class EditUserForm extends React.Component {
               />
               <InputField
                 className="col-span-6 md:col-span-3"
-                name={"date_of_birth"}
+                name={"dob"}
                 label={"Date of Birth"}
                 isRequired={false}
                 disabled={this.props.disableEdit}
@@ -88,7 +88,7 @@ class EditUserForm extends React.Component {
               />
               <InputField
                 className="col-span-6 md:col-span-2"
-                name={"zip_code"}
+                name={"zip"}
                 label={"Zip Code"}
                 isRequired={false}
                 disabled={this.props.disableEdit}
