@@ -2,18 +2,22 @@ import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
 import "normalize.css";
 import AuthForm from "./AuthForm";
-import { Button } from "flowbite-react";
+import { Button, Modal, TextInput } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
+import { useState } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
 import Footer from "../../components/Footer";
 import Text from "../../components/Text";
+import InputField from "../../components/Forms/InputField";
 
 const AuthPage = (props) => {
   const login = (e) => {
     e.preventDefault();
     signIn("google");
   };
+
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="flex-column flex h-full w-full items-center justify-center">
@@ -49,17 +53,54 @@ const AuthPage = (props) => {
           createAccount={props.createAccount}
           context={useContext(RequestContext)}
         />
-        <div className="mt-1 flex items-center">
-          {props.createAccount
-            ? "Already have an account?"
-            : "Don't have an account?"}
-          <Text
-            text={props.createAccount ? "Sign In" : "Create an account"}
-            href={`${window.location.origin}/${
-              props.createAccount ? "login" : "create-account"
-            }`}
-            className="ml-2"
-          />
+        <div className="mt-1 flex flex-col items-center">
+          <div>
+            {props.createAccount
+              ? "Already have an account?"
+              : "Don't have an account?"}
+            <Text
+              text={props.createAccount ? "Sign In" : "Create an account"}
+              href={`${window.location.origin}/${
+                props.createAccount ? "login" : "create-account"
+              }`}
+              className="ml-2"
+            />
+          </div>
+          <div>
+            {!props.createAccount && (
+              <>
+                Forgot your password?
+                <Button
+                  onClick={() => setShowModal(true)}
+                  className="ml-2 bg-transparent"
+                  color="gray"
+                >Reset Password</Button>
+                <Modal show={showModal} onClose={() => setShowModal(false)}>
+                  <Modal.Header className="h-16">Reset Password</Modal.Header>
+                  <Modal.Body>
+                    <div className="space-y-6">
+                      <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                        Enter your email below and we'll send you a link to
+                        reset your password.
+                      </p>
+                      <TextInput
+                        id="email1"
+                        type="email"
+                        placeholder="example@bitsofgood.com"
+                        required={true}
+                      />
+                    </div>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button color="info">Send Email</Button>
+                    <Button color="gray" onClick={() => setShowModal(false)}>
+                      Cancel
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </>
+            )}
+          </div>
         </div>
       </div>
       <div className="grow" />
