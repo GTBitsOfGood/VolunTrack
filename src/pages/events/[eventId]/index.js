@@ -95,7 +95,7 @@ const convertTime = (time) => {
 const EventInfo = () => {
   const router = useRouter();
   const { eventId } = router.query;
-  const [event, setEvent] = useState([]);
+  let [event, setEvent] = useState([]);
 
   const { data: session } = useSession();
   const user = session.user;
@@ -174,7 +174,8 @@ const EventInfo = () => {
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
-                  {event.max_volunteers - event.volunteers.length} Slots
+                  {event.max_volunteers} Slots
+                  {/* TODO: {event.max_volunteers - event.volunteers.length} Slots*/}
                   Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>

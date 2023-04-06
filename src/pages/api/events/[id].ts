@@ -19,6 +19,7 @@ import {
   eventPopulatedInputValidator,
 } from "../../../validators/events";
 import { authOptions } from "../auth/[...nextauth]";
+import {eventPopulator} from "../../../../server/mongodb/aggregations";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -48,9 +49,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
+      let result = eventParent.toObject()
+      let eventParentId = result._id
+      result._id = event._id
+
       return res
         .status(200)
-        .json({ success: true, event: await event.populate("eventParentId") });
+        .json({ success: true, event: {...result, date: event.date, isEnded: event.isEnded, eventParentId}});
     }
     case "PUT": {
       if (!("eventParent" in req.body?.eventData)) {

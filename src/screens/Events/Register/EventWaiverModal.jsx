@@ -91,7 +91,7 @@ const EventWaiverModal = ({
 
     const minorWaiverResponse = await getWaivers("minor", user.organizationId);
     if (minorWaiverResponse.data.success) {
-      setMinorContent(minorWaiverResponse.data.waiver[0].text);
+      setMinorContent(minorWaiverResponse.data.waivers[0].text);
     }
   };
 
