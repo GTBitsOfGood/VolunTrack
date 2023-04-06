@@ -45,7 +45,7 @@ export const authOptions = {
           // this is the user object of the JWT
           return {
             id: response.message._id,
-            ...response.message
+            ...response.message,
           };
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
