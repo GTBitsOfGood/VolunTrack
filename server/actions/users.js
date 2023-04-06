@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
 
-export async function createUserFromCredentials(user) {
+export async function old_createUserFromCredentials(user) {
   await dbConnect();
 
   const existingUser = await User.findOne({ email: user.email });
@@ -56,7 +56,7 @@ export async function createUserFromCredentials(user) {
   };
 }
 
-export async function verifyUserWithCredentials(email, password) {
+export async function old_verifyUserWithCredentials(email, password) {
   await dbConnect();
 
   const user = await User.findOne({ email });
@@ -101,7 +101,7 @@ export async function getEventVolunteers(parsedVolunteers) {
     : { status: 404, message: { error: "No Users found" } };
 }
 
-export async function getUsers(role, next) {
+export async function old_getUsers(role, next) {
   await dbConnect();
   let filter = {};
   if (role && role !== "undefined") filter = { role: role };
@@ -132,7 +132,7 @@ export async function getUsers(role, next) {
     .catch((err) => next(err));
 }
 
-export async function getCurrentUser(userId, next) {
+export async function old_getCurrentUser(userId, next) {
   await dbConnect();
 
   return User.find({ _id: userId })
@@ -142,7 +142,7 @@ export async function getCurrentUser(userId, next) {
     .catch(next);
 }
 
-export async function updateUser(id, userInfo) {
+export async function old_updateUser(id, userInfo) {
   await dbConnect();
   const { adminId } = userInfo;
   if (adminId) createHistoryEventEditProfile(adminId);
@@ -165,7 +165,7 @@ export async function updateUser(id, userInfo) {
   return { status: 200 };
 }
 
-export async function getUserFromId(id, next) {
+export async function old_getUserFromId(id, next) {
   return User.findById(id)
     .then((user) => {
       if (!user) {
@@ -179,7 +179,7 @@ export async function getUserFromId(id, next) {
     .catch((err) => next(err));
 }
 
-export async function deleteUserById(user, id, next) {
+export async function old_deleteUserById(user, id, next) {
   // if (user && user.userDataId === id) {
   //   // User is trying to remove themselves, don't let that happen...
   //   return { status: 403, message: { error: "Cannot delete yourself!" } };

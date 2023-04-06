@@ -277,11 +277,11 @@ class AdminsTable extends React.Component {
           </ModalBody>
           <ModalFooter>
             <BoGButton
-              onClick={this.closeDeleteUserModal}
+              onClick={this.handleSubmitForDeleteUser}
               text="Cancel"
               outline={true}
             />
-            <BoGButton onClick={this.handleSubmitForPending} text="Delete" />
+            <BoGButton onClick={this.handleSubmitForDeleteUser} text="Delete" />
           </ModalFooter>
         </Modal>
         {users.length !== 0 && (

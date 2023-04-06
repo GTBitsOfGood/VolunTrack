@@ -83,9 +83,11 @@ export const createUserFromCredentials = async (
       message: "The entered company code is currently marked as inactive.",
     };
   }
-  console.log(organization);
-  // TODO: set user's org id
-  // userData.organizationId = new ObjectId(organization._id)
+  if (userData.email in organization.invitedAdmins) {
+    userData.role = "admin";
+  }
+
+  userData.organizationId = organization._id
   userData.passwordHash = await hash(`${userData.email}${userData.password}`, 10);
 
 
