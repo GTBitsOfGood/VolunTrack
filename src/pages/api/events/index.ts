@@ -64,9 +64,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           success: true,
           event: await event.populate("eventParentId"),
         });
-      }
-
-      if (req.body?.eventParent) {
+      } else if (req.body?.eventParent) {
         const result = eventPopulatedInputValidator.safeParse(req.body);
         if (!result.success) {
           return res.status(400).json(result);

@@ -64,6 +64,7 @@ export const eventPopulatedInputValidator = z.object({
       })
     ),
   isEnded: z.boolean().optional(),
+  sendConfirmationEmail: z.boolean().optional(),
 });
 export type EventPopulatedInputData = z.infer<
   typeof eventPopulatedInputValidator

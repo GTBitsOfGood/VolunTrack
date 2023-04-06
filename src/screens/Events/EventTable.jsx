@@ -184,11 +184,11 @@ const EventTable = ({
   });
 
   const registeredEvents = upcomingEvents.filter(function (event) {
-    return event.volunteers.includes(user._id);
+    return false; // TODO: event.volunteers.includes(user._id);
   });
 
   upcomingEvents = upcomingEvents.filter(function (event) {
-    return !event.volunteers.includes(user._id);
+    return true; // TODO: !event.volunteers.includes(user._id);
   });
 
   if (upcomingEvents.length > 5) {

@@ -131,13 +131,15 @@ const EventStatistics = () => {
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Slots Filled: </strong> {event.volunteers.length}
+                <strong>Total Slots Filled: </strong>
+                {event.volunteers.length}
               </p>
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
                 <strong>Open Slots Remaining: </strong>{" "}
-                {event.max_volunteers - event.volunteers.length}
+                {event.max_volunteers}
+                {/*{event.max_volunteers - event.volunteers.length}*/}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>

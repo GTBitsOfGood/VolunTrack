@@ -13,6 +13,7 @@ import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
+import {updateEvent} from "../screens/Events/eventHelpers";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -53,6 +54,34 @@ const EventCard = (props) => {
     setShowEditModal((prev) => !prev);
   };
 
+  const convertTime = (time) => {
+    let [hour, min] = time.split(":");
+    let hours = parseInt(hour);
+    let suffix = time[-2];
+    if (!(suffix in ["pm", "am", "PM", "AM"])) {
+      suffix = hours > 11 ? "pm" : "am";
+    }
+    hours = ((hours + 11) % 12) + 1;
+    return hours.toString() + ":" + min + suffix;
+  };
+
+  // const onUnregister = async (event) => {
+  //   const changedEvent = {
+  //     // remove current user id from event volunteers
+  //     ...event,
+  //     minors: event.volunteers.filter(
+  //         (minor) => minor.volunteer_id !== user._id
+  //     ),
+  //     volunteers: event.volunteers.filter(
+  //         (volunteer) => volunteer !== user._id
+  //     ),
+  //   };
+  //   const updatedEvent = await updateEvent(changedEvent);
+  //   setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
+  //
+  //   onRefresh();
+  // };
+
   return (
     <div
       className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-grey px-6 py-3"
@@ -68,9 +97,9 @@ const EventCard = (props) => {
             <Label class="text-xl font-bold">
               {props.event.eventParent.title}
             </Label>
-            <Label>{`${props.functions.convertTime(
+            <Label>{`${convertTime(
               props.event.eventParent.startTime
-            )} - ${props.functions.convertTime(
+            )} - ${convertTime(
               props.event.eventParent.endTime
             )} EST`}</Label>
           </div>
@@ -162,8 +191,6 @@ EventCard.propTypes = {
   key: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  functions: PropTypes.object.isRequired,
-  onRegisterClicked: PropTypes.func.isRequired,
   version: PropTypes.string,
 };
 

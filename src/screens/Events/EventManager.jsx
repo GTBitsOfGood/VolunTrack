@@ -72,14 +72,6 @@ const Styled = {
       width: 100%;
     }
   `,
-  ButtonRow: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-  `,
   DateRow: styled.div`
     display: flex;
     flex-direction: row;
@@ -144,6 +136,7 @@ const EventManager = ({ user, role, isHomePage }) => {
       }
       if (result?.data?.events) setNumEvents(result.data.events.length);
 
+      // TODO: fix logic. We should use getEvents for the events, registrations, and attendance separately for hours
       getAttendanceStatistics(undefined, startDate, endDate).then(
         async (stats) => {
           let totalAttendance = 0;
@@ -207,30 +200,6 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [attendance, setAttendance] = useState([]);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
-
-  const goToRegistrationPage = async (event) => {
-    if (event?.eventId) {
-      await router.push(`/events/${event.eventId}/register`);
-    }
-  };
-
-  const onUnregister = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      minors: event.volunteers.filter(
-        (minor) => minor.volunteer_id !== user._id
-      ),
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-
-    onRefresh();
-  };
-
   const [value, setDate] = useState(new Date());
 
   let splitDate = value.toDateString().split(" ");
@@ -347,7 +316,7 @@ const EventManager = ({ user, role, isHomePage }) => {
       {!isHomePage && (
         <Styled.Right>
           {role === "admin" ? (
-            <Styled.ButtonRow>
+            <div className="flex items-center justify-between w-full my-4">
               <Dropdown
                 inline={true}
                 arrowIcon={false}
@@ -376,7 +345,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                 </Dropdown.Item>
               </Dropdown>
               <BoGButton text="Create new event" onClick={onCreateClicked} />
-            </Styled.ButtonRow>
+            </div>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
           )}
@@ -392,8 +361,6 @@ const EventManager = ({ user, role, isHomePage }) => {
                     : events
                   : filterEvents(events, user)
               }
-              onRegisterClicked={goToRegistrationPage}
-              onUnregister={onUnregister}
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
@@ -402,13 +369,12 @@ const EventManager = ({ user, role, isHomePage }) => {
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
         </Styled.Right>
       )}
-      <Styled.HomePage>
         {isHomePage && user.role === "volunteer" && (
-          <>
+            <Styled.HomePage>
             <div className="flex-column flex">
               <div className="mb-4 justify-start">
                 <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-                <div className="flex flex-wrap">
+                <div className="flex flex-wrap mx-auto">
                   <ProgressDisplay
                     type={"Events"}
                     attendance={attendance}
@@ -428,20 +394,18 @@ const EventManager = ({ user, role, isHomePage }) => {
                     ? filteredEvents
                     : filterEvents(events, user)
                 }
-                onRegisterClicked={goToRegistrationPage}
-                onUnregister={onUnregister}
                 user={user}
                 registrations={registrations}
                 isHomePage={isHomePage}
               />
             </div>
-          </>
+          </Styled.HomePage>
         )}
 
         {isHomePage && user.role !== "volunteer" && (
-          <>
+            <Styled.HomePage>
             <AdminHomeHeader
-              data={events}
+              events={events}
               dateString={dateString}
               numEvents={numEvents}
               attend={attend}
@@ -459,16 +423,13 @@ const EventManager = ({ user, role, isHomePage }) => {
                     : events
                   : filterEvents(events, user)
               }
-              onRegisterClicked={goToRegistrationPage}
-              onUnregister={onUnregister}
               user={user}
               isHomePage={isHomePage}
               registrations={registrations}
               onCreateClicked={onCreateClicked}
             />
-          </>
+          </Styled.HomePage>
         )}
-      </Styled.HomePage>
     </Styled.Container>
   );
 };

@@ -1,5 +1,5 @@
 import { Label } from "flowbite-react";
-import { ErrorMessage, Field, Form as FForm, Formik } from "formik";
+import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useContext, useRef, useState } from "react";
@@ -9,28 +9,15 @@ import styled from "styled-components";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
-import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import { eventPopulatedInputValidator } from "../../../validators/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { groupEventValidator } from "./eventHelpers";
+import Text from "../../../components/Text";
 
 const Styled = {
   Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    margin-top: 0px;
-    padding-top: 0px;
-    display: inline-block;
-  `,
   Col: styled(Col)`
     padding: 5px;
     padding-bottom: 3px;
@@ -49,23 +36,8 @@ const Styled = {
     margin-left: 1.5rem;
     margin-right: -10px;
   `,
-  GenericText: styled.p`
-    color: ${variables["yiq-text-dark"]};
-  `,
-  RedText: styled.i`
-    color: red;
-  `,
   Row: styled(Row)`
     margin: 0.5rem 2rem 0.5rem 1rem;
-  `,
-  Errors: styled.div`
-    background-color: #f3f3f3;
-    border-radius: 6px;
-    max-width: 350px;
-    padding: 8px;
-  `,
-  ErrorBox: styled.ul`
-    margin: 0rem 2rem 0.5rem 1rem;
   `,
 };
 
@@ -106,7 +78,9 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
     setSubmitting(true);
     updateEvent(event._id, editedEvent, sendConfirmationEmail);
     if (setEvent) {
-      setEvent(editedEvent);
+      event.date = values.date;
+      event.eventParent = values.eventParent;
+      setEvent(event);
     }
     toggle();
   };
@@ -194,9 +168,10 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
           : onSubmitCreateEvent(values, setSubmitting);
       }}
       validationSchema={
-        isGroupEvent
-          ? groupEventValidator
-          : toFormikValidationSchema(eventPopulatedInputValidator)
+        // isGroupEvent
+        //   ? groupEventValidator
+        //   :
+        toFormikValidationSchema(eventPopulatedInputValidator)
       }
     >
       {({ values, errors, handleSubmit, isValid, isSubmitting }) => {
@@ -463,7 +438,6 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                           />
                         )}
                       </Field>
-                      <Styled.ErrorMessage name="description" />
                     </Styled.Col>
                   </Row>
                 </SForm.FormGroup>
@@ -478,20 +452,17 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                     type="checkbox"
                     onChange={onCourtRequiredHoursCheckbox}
                   />
-                  <Styled.GenericText>
-                    This event can count towards volunteer&apos;s court required
-                    hours
-                  </Styled.GenericText>
+                  <Text
+                    text="This event can count towards volunteer's court required
+                    hours"
+                  />
                   {containsExistingEvent(event) && (
                     <div>
                       <Input
                         type="checkbox"
                         onChange={onSendConfirmationEmailCheckbox}
                       />
-                      <Styled.GenericText>
-                        I would like to send an email to volunteers with updated
-                        information
-                      </Styled.GenericText>
+                      <Text text="I would like to send an email to volunteers with updated information" />
                     </div>
                   )}
                 </FormGroup>

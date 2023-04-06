@@ -59,7 +59,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         await event.updateOne(result.data);
       } else {
-        const result = eventPopulatedInputValidator.safeParse(req.body);
+        const result = eventPopulatedInputValidator.safeParse(req.body.eventData);
         if (!result.success) return res.status(400).json(result);
 
         await eventParent.updateOne(result.data.eventParent);
