@@ -88,8 +88,10 @@ export const createUserFromCredentials = async (
   // userData.organizationId = new ObjectId(organization._id)
   userData.passwordHash = await hash(`${userData.email}${userData.password}`, 10);
 
+
   return {
     status: 200,
+    // @ts-ignore
     user: User.create(userData),
   };
 };
@@ -118,10 +120,13 @@ export const verifyUserWithCredentials = async (
   const match = await bcrypt.compare(email + password, user.passwordHash);
 
   if (match)
-    return {
-      status: 200,
-      message: user,
-    };
+    {
+      return {
+            status: 200,
+            // @ts-ignore
+            message: user,
+          };
+    }
   else
     return {
       status: 400,

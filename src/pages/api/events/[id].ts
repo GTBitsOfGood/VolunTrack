@@ -23,6 +23,7 @@ import { authOptions } from "../auth/[...nextauth]";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
+  // @ts-ignore
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
     return res
