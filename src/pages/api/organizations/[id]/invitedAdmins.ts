@@ -23,7 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "POST": {
       const { data: email } = req.body as { data: string };
-      const result = z.string().email().safeParse(email)
+      const result = z.string().email().safeParse(email);
 
       if (result.success) {
         const response = await organization.updateOne({

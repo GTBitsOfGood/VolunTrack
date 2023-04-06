@@ -41,11 +41,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!result.success) return res.status(400).json(result);
 
       await Waiver.findOneAndUpdate(
-          { type: type, organizationId: organizationId },
-          { text: text },
-          { upsert: true }
+        { type: type, organizationId: organizationId },
+        { text: text },
+        { upsert: true }
       ).then((waiver) => {
-        return res.status(200).json({ success: true, waiver })
+        return res.status(200).json({ success: true, waiver });
       });
     }
   }
