@@ -34,11 +34,19 @@ export const createEvent = (event) => axios.post("/api/events", event);
 export const editEvent = (event, sendConfirmationEmail) =>
   axios.put("/api/events", {
     event: event,
-    sendConfirmationEmail: sendConfirmationEmail,
+    sendConfirmationEmail: sendConfirmationEmail,h
   });
 
 export const deleteEvent = (_id, userId) =>
   axios.delete(`/api/events/${_id}?userId=${userId}`);
+
+// reset password 
+
+export const sendResetPasswordEmail = (email) =>
+  axios.post(`/api/users/resetPassword`, { email });
+
+export const resetPassword = (resetCode, newPassword) =>
+  axios.post(`/api/users/resetPassword`, { email });
 
 // credentials signup
 export const createUserFromCredentials = (user) =>
