@@ -106,23 +106,23 @@ export const organizationSettingsPages: Page[] = [
   },
 ];
 
-interface Page {
+type Page = {
   title: string;
   key: string;
   icon: any; // TODO: can we style the icons?
   helperText?: string;
   sections: Section[];
-}
+};
 
-interface Section {
+type Section = {
   title: string;
   fields: Field[];
-}
+};
 
-interface Field {
+type Field = {
   name: string;
   label: string;
   isRequired?: boolean;
   placeholder?: string;
   type?: string;
-}
+};

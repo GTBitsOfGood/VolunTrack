@@ -24,13 +24,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         req.query.organizationId &&
         !isValidObjectId(req.query.organizationId)
       )
-        return res
-          .status(400)
-          .json({
-            message: `Invalid organization id: ${
-              req.query.organizationId as string
-            }`,
-          });
+        return res.status(400).json({
+          message: `Invalid organization id: ${
+            req.query.organizationId as string
+          }`,
+        });
 
       const eventId = req.query.eventId
         ? new Types.ObjectId(req.query.eventId as string)

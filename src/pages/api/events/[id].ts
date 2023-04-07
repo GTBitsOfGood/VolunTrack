@@ -24,7 +24,7 @@ import { eventPopulator } from "../../../../server/mongodb/aggregations";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  // @ts-ignore
+  // @ts-expect-error
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
     return res
@@ -49,21 +49,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
-      let result = eventParent.toObject();
-      let eventParentId = result._id;
+      const result = eventParent.toObject();
+      const eventParentId = result._id;
       result._id = event._id;
 
-      return res
-        .status(200)
-        .json({
-          success: true,
-          event: {
-            ...result,
-            date: event.date,
-            isEnded: event.isEnded,
-            eventParentId,
-          },
-        });
+      return res.status(200).json({
+        success: true,
+        event: {
+          ...result,
+          date: event.date,
+          isEnded: event.isEnded,
+          eventParentId,
+        },
+      });
     }
     case "PUT": {
       if (!("eventParent" in req.body?.eventData)) {
@@ -80,7 +78,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await eventParent.updateOne(result.data.eventParent);
         await event.updateOne({
           ...result.data,
-          eventParent: eventParent?._id,
+          eventParent: eventParent._id,
         });
       }
 

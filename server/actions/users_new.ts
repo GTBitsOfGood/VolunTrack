@@ -83,7 +83,7 @@ export const createUserFromCredentials = async (
     };
   }
 
-  if (organization.active === false) {
+  if (!organization.active) {
     return {
       status: 400,
       message: "The entered company code is currently marked as inactive.",
@@ -101,7 +101,7 @@ export const createUserFromCredentials = async (
 
   return {
     status: 200,
-    // @ts-ignore
+    // @ts-expect-error
     user: User.create(userData),
   };
 };
@@ -136,7 +136,7 @@ export const verifyUserWithCredentials = async (
   if (match) {
     return {
       status: 200,
-      // @ts-ignore
+      // @ts-expect-error
       message: user,
     };
   } else
