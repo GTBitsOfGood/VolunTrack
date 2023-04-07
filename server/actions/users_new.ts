@@ -1,11 +1,11 @@
-import bcrypt, {compare, hash} from "bcrypt";
-import {HydratedDocument, Types} from "mongoose";
+import bcrypt, { compare, hash } from "bcrypt";
+import { HydratedDocument, Types } from "mongoose";
 import dbConnect from "../mongodb/";
 import Attendance from "../mongodb/models/Attendance";
 import Registration from "../mongodb/models/Registration";
-import User, {UserData} from "../mongodb/models/User";
-import {createHistoryEventEditProfile} from "./historyEvent";
-import {ObjectId} from "mongodb";
+import User, { UserData } from "../mongodb/models/User";
+import { createHistoryEventEditProfile } from "./historyEvent";
+import { ObjectId } from "mongodb";
 import Organization from "../mongodb/models/Organization";
 
 export const getUsers = async (
@@ -57,8 +57,14 @@ export const getUsers = async (
 
 export const createUserFromCredentials = async (
   userData: Partial<UserData> &
-    Required<Pick<UserData, "email">> & { password: string } & { orgCode: string }
-): Promise<{user?: HydratedDocument<UserData> | undefined, message?: string, status: number}> => {
+    Required<Pick<UserData, "email">> & { password: string } & {
+      orgCode: string;
+    }
+): Promise<{
+  user?: HydratedDocument<UserData> | undefined;
+  message?: string;
+  status: number;
+}> => {
   await dbConnect();
 
   if (await User.exists({ email: userData.email })) {
@@ -73,7 +79,7 @@ export const createUserFromCredentials = async (
     return {
       status: 400,
       message:
-          "The entered organization code does not exist. Please contact your administrator for assistance.",
+        "The entered organization code does not exist. Please contact your administrator for assistance.",
     };
   }
 
@@ -87,9 +93,11 @@ export const createUserFromCredentials = async (
     userData.role = "admin";
   }
 
-  userData.organizationId = organization._id
-  userData.passwordHash = await hash(`${userData.email}${userData.password}`, 10);
-
+  userData.organizationId = organization._id;
+  userData.passwordHash = await hash(
+    `${userData.email}${userData.password}`,
+    10
+  );
 
   return {
     status: 200,
@@ -101,10 +109,14 @@ export const createUserFromCredentials = async (
 export const verifyUserWithCredentials = async (
   email: string,
   password: string
-): Promise<{ user?: HydratedDocument<UserData>; message?: string , status: number}> => {
+): Promise<{
+  user?: HydratedDocument<UserData>;
+  message?: string;
+  status: number;
+}> => {
   await dbConnect();
 
-  const user  = await User.findOne({ email });
+  const user = await User.findOne({ email });
 
   if (!user) {
     return {
@@ -121,15 +133,13 @@ export const verifyUserWithCredentials = async (
   }
   const match = await bcrypt.compare(email + password, user.passwordHash);
 
-  if (match)
-    {
-      return {
-            status: 200,
-            // @ts-ignore
-            message: user,
-          };
-    }
-  else
+  if (match) {
+    return {
+      status: 200,
+      // @ts-ignore
+      message: user,
+    };
+  } else
     return {
       status: 400,
       message: "Password is incorrect",

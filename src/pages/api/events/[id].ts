@@ -19,7 +19,7 @@ import {
   eventPopulatedInputValidator,
 } from "../../../validators/events";
 import { authOptions } from "../auth/[...nextauth]";
-import {eventPopulator} from "../../../../server/mongodb/aggregations";
+import { eventPopulator } from "../../../../server/mongodb/aggregations";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -49,13 +49,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
-      let result = eventParent.toObject()
-      let eventParentId = result._id
-      result._id = event._id
+      let result = eventParent.toObject();
+      let eventParentId = result._id;
+      result._id = event._id;
 
       return res
         .status(200)
-        .json({ success: true, event: {...result, date: event.date, isEnded: event.isEnded, eventParentId}});
+        .json({
+          success: true,
+          event: {
+            ...result,
+            date: event.date,
+            isEnded: event.isEnded,
+            eventParentId,
+          },
+        });
     }
     case "PUT": {
       if (!("eventParent" in req.body?.eventData)) {
@@ -64,7 +72,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         await event.updateOne(result.data);
       } else {
-        const result = eventPopulatedInputValidator.safeParse(req.body.eventData);
+        const result = eventPopulatedInputValidator.safeParse(
+          req.body.eventData
+        );
         if (!result.success) return res.status(400).json(result);
 
         await eventParent.updateOne(result.data.eventParent);

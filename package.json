@@ -16,10 +16,10 @@
     "dev": "next -p 3000",
     "build": "next build",
     "start": "next build && next start",
-    "lint": "eslint \"**/*.{js,jsx}\"",
-    "lint:fix": "eslint \"**/*.{js,jsx}\" --fix",
-    "format": "prettier \"**/*.{js,jsx}\" --write",
-    "format:check": "prettier \"**/*.{js,jsx}\" -l",
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix",
+    "format": "prettier \"**/*.{js,jsx,ts,tsx}\" --write",
+    "format:check": "prettier \"**/*.{js,jsx,ts,tsx}\" -l",
     "check": "npm run format; npm run lint:fix;"
   },
   "husky": {
