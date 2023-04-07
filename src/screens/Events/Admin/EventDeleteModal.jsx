@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
-import { deleteEvent } from "../../../actions/queries";
+import { deleteEvent } from "../../../queries/events";
 
 const EventDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
@@ -13,12 +13,10 @@ const EventDeleteModal = ({ open, toggle, event }) => {
 
   const handleSubmit = () => {
     setDeleting(true);
-    deleteEvent(event._id, user._id)
-      .then(() => {
-        toggle();
-        setDeleting(false);
-      })
-      .catch(console.log);
+    deleteEvent(event._id).then(() => {
+      toggle();
+      setDeleting(false);
+    });
   };
 
   return (

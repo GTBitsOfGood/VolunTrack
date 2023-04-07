@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import { Formik } from "formik";
 import { useSession } from "next-auth/react";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import "react-calendar/dist/Calendar.css";
+import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventTable";
-import {
-  fetchAttendanceByUserId,
-  getCurrentUser,
-} from "../../../actions/queries";
-import "react-calendar/dist/Calendar.css";
-import PropTypes from "prop-types";
-import { getHours } from "./hourParsing";
-import { Formik } from "formik";
-import { filterAttendance } from "../helper";
 import InputField from "../../../components/Forms/InputField";
 import ProgressDisplay from "../../../components/ProgressDisplay";
+import { getAttendances } from "../../../queries/attendances";
+import { getUser } from "../../../queries/users";
+import { filterAttendance } from "../helper";
+import { getHours } from "./hourParsing";
 
 const Styled = {
   Header: styled.div`
@@ -66,7 +64,7 @@ const StatDisplay = ({ userId }) => {
 
   useEffect(() => {
     setLoading(true);
-    fetchAttendanceByUserId(userId)
+    getAttendances(userId)
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
@@ -85,10 +83,10 @@ const StatDisplay = ({ userId }) => {
           let add = 0;
           // HAVE TO FIX THIS
           for (let i = 0; i < filteredAttendance.length; i++) {
-            if (filteredAttendance[i].timeCheckedOut != null) {
+            if (filteredAttendance[i].checkoutTime != null) {
               add += getHours(
-                filteredAttendance[i].timeCheckedIn.slice(11, 16),
-                filteredAttendance[i].timeCheckedOut.slice(11, 16)
+                filteredAttendance[i].checkinTime.slice(11, 16),
+                filteredAttendance[i].checkoutTime.slice(11, 16)
               );
             }
           }
@@ -104,18 +102,12 @@ const StatDisplay = ({ userId }) => {
         setLoading(false);
       });
 
-    getCurrentUser(userId)
-      .then((result) => {
-        if (result) {
-          setName(
-            result.data.result[0].bio.first_name +
-              " " +
-              result.data.result[0].bio.last_name +
-              "'s"
-          );
-        }
-      })
-      .finally(() => {});
+    getUser(userId).then((response) => {
+      if (response.data.user)
+        setName(
+          `${response.data.user.firstName} ${response.data.user.lastName}'s`
+        );
+    });
   }, [startDate, endDate]);
 
   return (

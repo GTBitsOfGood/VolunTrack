@@ -1,12 +1,12 @@
 import { Formik } from "formik";
+import { signIn } from "next-auth/react";
 import PropTypes from "prop-types";
 import React from "react";
 import BoGButton from "../../components/BoGButton";
-import { createAccountValidator, loginValidator } from "./helpers";
-import { signIn } from "next-auth/react";
-import { createUserFromCredentials } from "../../actions/queries";
 import InputField from "../../components/Forms/InputField";
+import { createUserFromCredentials } from "../../queries/users";
 import { applyTheme } from "../../themes/themes";
+import { createAccountValidator, loginValidator } from "./helpers";
 
 class AuthForm extends React.Component {
   constructor(props) {
@@ -21,10 +21,6 @@ class AuthForm extends React.Component {
           ? ""
           : url.pathname.substring(1),
     };
-
-    console.log(url.pathname);
-    console.log(url.pathname.substring(1));
-    console.log(this.state.nonprofitCode);
 
     if (url.searchParams.has("error")) {
       this.props.context.startLoading();
@@ -47,7 +43,7 @@ class AuthForm extends React.Component {
         .catch((error) => {
           if (error.response.status !== 200) {
             this.props.context.startLoading();
-            this.props.context.failed(error.response.data);
+            // this.props.context.failed(error.response.data);
           }
         });
     } else {
@@ -64,12 +60,12 @@ class AuthForm extends React.Component {
       <React.Fragment>
         <Formik
           initialValues={{
-            first_name: "",
-            last_name: "",
+            firstName: "",
+            lastName: "",
             email: "",
             password: "",
-            password_confirm: "",
-            org_code: this.state.nonprofitCode,
+            passwordConfirm: "",
+            orgCode: this.state.nonprofitCode,
           }}
           onSubmit={(values, { setSubmitting }) => {
             setSubmitting(true);
@@ -85,12 +81,12 @@ class AuthForm extends React.Component {
               {this.props.createAccount && (
                 <div className="flex space-x-4">
                   <InputField
-                    name="first_name"
+                    name="firstName"
                     placeholder="First Name"
                     label="First Name"
                   />
                   <InputField
-                    name="last_name"
+                    name="lastName"
                     label="Last Name"
                     placeholder="Last Name"
                   />
@@ -111,7 +107,7 @@ class AuthForm extends React.Component {
               />
               {this.props.createAccount && (
                 <InputField
-                  name="password_confirm"
+                  name="passwordConfirm"
                   label="Confirm Password"
                   type="password"
                   placeholder="Your Password"
@@ -119,7 +115,7 @@ class AuthForm extends React.Component {
               )}
               {this.props.createAccount && this.state.nonprofitCode === "" && (
                 <InputField
-                  name="org_code"
+                  name="orgCode"
                   label="Organization Code"
                   placeholder="Your organization's code"
                 />
@@ -131,7 +127,7 @@ class AuthForm extends React.Component {
                 text={
                   this.props.createAccount ? "Create an account" : "Sign In"
                 }
-                className="bg-primaryColor hover:bg-hoverColor w-full"
+                className="w-full bg-primaryColor hover:bg-hoverColor"
               />
             </form>
           )}

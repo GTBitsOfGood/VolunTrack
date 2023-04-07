@@ -1,13 +1,14 @@
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
 import styled from "styled-components";
+import EditUserForm from "../../components/Forms/EditUserForm";
 import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
-import EditUserForm from "../../components/Forms/EditUserForm";
+import { DocumentDuplicateIcon } from "@heroicons/react/24/solid";
 
 const Styled = {
   Button: styled(Button)`
@@ -86,24 +87,29 @@ class VolunteerTable extends React.Component {
             )
             .map((user, index) => (
               <Table.Row key={index} evenIndex={index % 2 === 0}>
-                <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>
+                  {user.firstName} {user.lastName}
+                </Table.Cell>
+                <Table.Cell className="flex items-center">
                   {user.email}
-                  <Styled.Button
-                    onClick={() => {
-                      navigator.clipboard.writeText(user.email);
-                    }}
-                  >
-                    <Icon color="grey3" name="copy" />
-                  </Styled.Button>
+                  <Tooltip content="Copy" style="light">
+                    <button
+                      className="mx-1"
+                      onClick={() => {
+                        navigator.clipboard.writeText(user.email);
+                      }}
+                    >
+                      <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                    </button>
+                  </Tooltip>
                 </Table.Cell>
                 <Table.Cell>
-                  {user.phone_number
-                    ? user.phone_number.substr(0, 3) +
+                  {user.phone
+                    ? user.phone.substr(0, 3) +
                       "-" +
-                      user.phone_number.substr(3, 3) +
+                      user.phone.substr(3, 3) +
                       "-" +
-                      user.phone_number.substr(6, 4)
+                      user.phone.substr(6, 4)
                     : ""}
                 </Table.Cell>
                 <Table.Cell>

@@ -1,13 +1,13 @@
+import { Label, TextInput } from "flowbite-react";
 import { ErrorMessage, Field, Formik } from "formik";
-import styled from "styled-components";
+import Image from "next/image";
 import PropTypes from "prop-types";
 import React from "react";
-import Image from "next/image";
-import { Label as Label, TextInput } from "flowbite-react";
-import InputField from "../../components/Forms/InputField";
-import { createOrganizationValidator } from "./helpers";
-import { createOrganization } from "../../actions/queries";
+import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
+import InputField from "../../components/Forms/InputField";
+import { createOrganization } from "../../queries/organizations";
+import { createOrganizationValidator } from "./helpers";
 
 const Styled = {
   Container: styled.div`
@@ -171,7 +171,7 @@ class OnboardingForm extends React.Component {
                     Used as important information to generate your volunteer
                     management platform.
                   </Styled.Subtitle>
-                  <Styled.Subtitle2 className="mx-3.5 mt-4 mb-4">
+                  <Styled.Subtitle2 className="mx-3.5 mb-4 mt-4">
                     * Please provide an email address that you wish to be used
                     to create the main volunteer administrator (Admin) account.{" "}
                     <br />

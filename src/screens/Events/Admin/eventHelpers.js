@@ -18,7 +18,7 @@ export const standardEventValidator = object().shape({
     .trim()
     .matches(/^\d+$/, " ZIP should have digits only")
     .required(" ZIP is required"),
-  max_volunteers: number()
+  maxVolunteers: number()
     .moreThan(-1, " Max volunteers must be 0 or more")
     .required(" Max volunteers is required"),
   localTime: string().required(),

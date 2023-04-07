@@ -2,19 +2,17 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import BoGButton from "../../../../components/BoGButton";
-import { deleteAttendance } from "../../../../actions/queries";
+import { deleteAttendance } from "../../../../queries/attendances";
 
 const EventStatsDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
 
   const handleSubmit = () => {
     setDeleting(true);
-    deleteAttendance(event._id, event.eventId)
-      .then(() => {
-        toggle();
-        setDeleting(false);
-      })
-      .catch(console.log);
+    deleteAttendance(event._id, event.eventId).then(() => {
+      toggle();
+      setDeleting(false);
+    });
   };
 
   return (
