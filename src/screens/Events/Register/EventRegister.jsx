@@ -6,12 +6,12 @@ import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
 import { fetchEventsById } from "../../../actions/queries";
-import { Icon } from "../../../components/Icon";
 import { registerForEvent } from "../eventHelpers";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
 import Text from "../../../components/Text";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -441,7 +441,7 @@ const EventRegister = (event) => {
                                 deleteMinor(events, names);
                               }}
                             >
-                              <Icon color="grey3" name="delete" />
+                              <TrashIcon className="text-primaryColor h-7" />
                             </Styled.DeleteButton>
                           </div>
                         )}

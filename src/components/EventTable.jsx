@@ -5,8 +5,8 @@ import { useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import { getHours } from "../screens/Stats/User/hourParsing";
-import { Icon } from "./Icon";
 import Pagination from "./PaginationComp";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 const Styled = {
   Button: styled(Button)`
@@ -120,7 +120,7 @@ const EventTable = ({
                           onEditClicked(event);
                         }}
                       >
-                        <Icon color="grey3" name="create" />
+                        <PencilIcon className="text-primaryColor h-7" />
                       </Styled.EditButton>
                       <Styled.DeleteButton
                         onClick={(e) => {
@@ -128,7 +128,7 @@ const EventTable = ({
                           onDeleteClicked(event);
                         }}
                       >
-                        <Icon color="grey3" name="delete" />
+                        <TrashIcon className="text-primaryColor h-7" />
                       </Styled.DeleteButton>
                     </Styled.Buttons>
                   </Table.Cell>

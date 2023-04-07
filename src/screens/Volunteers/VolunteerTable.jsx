@@ -4,10 +4,14 @@ import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
 import styled from "styled-components";
-import { Icon } from "../../components/Icon";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import EditUserForm from "../../components/Forms/EditUserForm";
+import {
+  ArrowTrendingUpIcon,
+  PencilIcon,
+  DocumentDuplicateIcon,
+} from "@heroicons/react/24/solid";
 
 const Styled = {
   Button: styled(Button)`
@@ -94,7 +98,7 @@ class VolunteerTable extends React.Component {
                       navigator.clipboard.writeText(user.email);
                     }}
                   >
-                    <Icon color="grey3" name="copy" />
+                    <DocumentDuplicateIcon className="text-primaryColor h-7" />
                   </Styled.Button>
                 </Table.Cell>
                 <Table.Cell>
@@ -110,48 +114,14 @@ class VolunteerTable extends React.Component {
                   <Styled.Button
                     onClick={() => this.onDisplayEditUserModal(user)}
                   >
-                    <Icon color="grey3" name="create" />
+                    <PencilIcon className="text-primaryColor h-7" />
                   </Styled.Button>
                   {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
                   {/*  <Icon color="grey3" name="delete" />*/}
                   {/*</Styled.Button>*/}
                   <Link href={`stats/${user._id}`}>
                     <Styled.Button>
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g clipPath="url(#clip0_2204_28336)">
-                          <path
-                            d="M5.04892 17.99L10.2446 12.7856L13.7084 16.2494L21.0689 7.97098L19.848 6.75L13.7084 13.6516L10.2446 10.1878L3.75 16.6911L5.04892 17.99Z"
-                            fill="#960034"
-                          />
-                          <line
-                            x1="0.975"
-                            y1="1"
-                            x2="0.975"
-                            y2="22.5"
-                            stroke="#960034"
-                            strokeWidth="1.7"
-                          />
-                          <line
-                            x1="0.25"
-                            y1="21.65"
-                            x2="22.75"
-                            y2="21.65"
-                            stroke="#960034"
-                            strokeWidth="1.7"
-                          />
-                        </g>
-                        <defs>
-                          <clipPath id="clip0_2204_28336">
-                            <rect width="24" height="24" fill="white" />
-                          </clipPath>
-                        </defs>
-                      </svg>
+                      <ArrowTrendingUpIcon className="text-primaryColor h-7" />
                     </Styled.Button>
                   </Link>
                 </Table.Cell>
