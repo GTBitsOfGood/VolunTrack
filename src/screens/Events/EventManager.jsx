@@ -168,7 +168,7 @@ const EventManager = ({ user, role, isHomePage }) => {
       eventState.push(hourChart);
       eventState.push(attendChart);
     });
-    getRegistrations(undefined, user.id)
+    getRegistrations(undefined, undefined, user.id)
       .then((result) => {
         if (result.data.success) setRegistrations(result.data.registrations);
       })

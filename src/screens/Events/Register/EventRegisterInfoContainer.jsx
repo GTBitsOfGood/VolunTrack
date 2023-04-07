@@ -27,8 +27,8 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
   }
 
   return (
-    <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-white py-2">
-      <div className="mx-6 mt-2 flex flex-row items-center justify-between">
+    <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-white p-4">
+      <div className="mt-2 flex flex-row items-center justify-between">
         <Text text={event.title} className="text-primaryColor" type="header" />
         <Text text="See Full Event Information" href={`/events/${eventId}`} />
       </div>
@@ -40,12 +40,12 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
           />
         )}
       </div>
-      <div className="space-4 flex flex-wrap">
-        <div className="mx-4 my-2 flex w-64 items-center rounded-md bg-grey p-2">
+      <div className="flex flex-wrap gap-2">
+        <div className="flex w-64 items-center rounded-md bg-grey p-2">
           <CalendarIcon class="h-6 w-6 text-primaryColor" />
           <Text text={event.date.slice(0, 10)} className="ml-2 font-bold" />
         </div>
-        <div className="mx-4 my-2 flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-grey p-2">
           <ClockIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={
@@ -55,7 +55,7 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
           />
           <Text text={event.localTime} />
         </div>
-        <div className="mx-4 my-2 flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-grey p-2">
           <MapPinIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={`${event.address}, ${event.city}, ${event.state}, ${event.zip}`}
@@ -63,15 +63,15 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
           />
         </div>
       </div>
-      <div className="ml-4 flex flex-col space-y-3 pb-4">
-        <Text text="Contact Us" type="subheader" />
-        <div className="flex items-center">
+      <Text text="Contact Event Host" type="subheader" className="mt-4" />
+      <div className="flex flex-wrap gap-2 pb-4">
+        <div className="flex w-64 items-center rounded-md bg-grey p-2">
           <EnvelopeIcon class="h-6 w-6 text-primaryColor" />
-          <Text text={event.eventContactEmail} className="ml-2" />
+          <Text text={event.eventContactEmail} className="ml-2 font-bold" />
         </div>
-        <div className="flex items-center">
+        <div className="flex w-64 items-center rounded-md bg-grey p-2">
           <PhoneIcon class="h-6 w-6 text-primaryColor" />
-          <Text text={event.eventContactPhone} className="ml-2" />
+          <Text text={event.eventContactPhone} className="ml-2 font-bold" />
         </div>
       </div>
     </div>

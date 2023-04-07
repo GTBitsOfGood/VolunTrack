@@ -165,7 +165,7 @@ const EventInfo = () => {
           className="mb-4 ml-16"
           href={`/events`}
           onClick={() => goBackToCal()}
-          text="< Back to home"
+          text="← Back to home"
         />
         <Styled.EventTable>
           <Col>
@@ -212,7 +212,7 @@ const EventInfo = () => {
                 </>
               )}
               {user.role === "volunteer" &&
-                event.volunteers.includes(user._id) &&
+                // event.volunteers.includes(user._id) &&
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"
@@ -314,8 +314,8 @@ const EventInfo = () => {
           </Col>
         </Styled.EventTable>
         {user.role === "volunteer" &&
-          event.max_volunteers - event.volunteers.length !== 0 &&
-          !event.volunteers.includes(user._id) &&
+          // event.max_volunteers - event.volunteers.length !== 0 &&
+          // !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               text="Register"
@@ -323,8 +323,8 @@ const EventInfo = () => {
             />
           )}
         {user.role === "volunteer" &&
-          event.max_volunteers - event.volunteers.length === 0 &&
-          !event.volunteers.includes(user._id) &&
+          // event.max_volunteers - event.volunteers.length === 0 &&
+          // !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               disabled={true}
@@ -333,7 +333,7 @@ const EventInfo = () => {
             />
           )}
         {user.role === "volunteer" &&
-          event.volunteers.includes(user._id) &&
+          // event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               text="You are registered for this event!"

@@ -46,7 +46,7 @@ const Styled = {
   `,
 };
 
-const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
+const EventMinorModal = ({ open, toggle, event, addMinor }) => {
   const minor = {
     firstName: "",
     lastName: "",
@@ -67,11 +67,12 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
         firstName: minor.firstName,
         lastName: minor.lastName,
       }}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
         if (checked) {
-          setHasMinorTrue(values.firstName, values.lastName);
+          addMinor(values.firstName, values.lastName);
         }
+        resetForm();
         toggle();
       }}
       validationSchema={minorNameValidator}
@@ -137,6 +138,6 @@ EventMinorModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   event: PropTypes.object.isRequired,
-  setHasMinorTrue: PropTypes.func.isRequired,
+  addMinor: PropTypes.func.isRequired,
 };
 export default EventMinorModal;

@@ -51,7 +51,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           orgCode: string;
         }
       );
-      console.log(user);
       if (!user)
         return res
           .status(400)

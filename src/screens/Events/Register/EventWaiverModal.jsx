@@ -1,6 +1,7 @@
 import { Tabs } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
+import Text from "../../../components/Text"
 import React, { useEffect, useRef, useState } from "react";
 import {
   Col,
@@ -138,9 +139,7 @@ const EventWaiverModal = ({
                       checked={waiverCheckboxSelected}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>
-                    I have read the waiver and agree to its terms and conditions
-                  </Styled.Text>
+                  <Text text="I have read the waiver and agree to its terms and conditions" className="ml-4"/>
                 </Styled.Row>
               )}
             </Tabs.Item>
@@ -157,9 +156,7 @@ const EventWaiverModal = ({
                       checked={waiverMinorCheckboxSelected}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>
-                    I have read the waiver and agree to its terms and conditions
-                  </Styled.Text>
+                  <Text text="I have read the waiver and agree to its terms and conditions" className="ml-4"/>
                 </Styled.Row>
               )}
             </Tabs.Item>
@@ -188,9 +185,7 @@ const EventWaiverModal = ({
                   checked={waiverCheckboxSelected}
                 />{" "}
               </FormGroup>
-              <Styled.Text>
-                I have read the waiver and agree to its terms and conditions
-              </Styled.Text>
+              <Text text="I have read the waiver and agree to its terms and conditions" className="ml-4"/>
             </Styled.Row>
           )}
         </>

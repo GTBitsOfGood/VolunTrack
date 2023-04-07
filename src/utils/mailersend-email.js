@@ -1,34 +1,21 @@
-import { useEffect, useState } from "react";
-import { getOrganization } from "../queries/organizations";
+import Organization from "../../server/mongodb/models/Organization";
 
 const Recipient = require("mailersend").Recipient;
 const EmailParams = require("mailersend").EmailParams;
 const MailerSend = require("mailersend");
 
 export const sendRegistrationConfirmationEmail = async (user, event) => {
-  const [orgName, setOrgName] = useState("");
-
-  const loadData = async () => {
-    const data = await getOrganization(user.organizationId);
-
-    if (data) {
-      setOrgName(data.data.orgData.name);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  const organization = await Organization.findById(user.organizationId).lean();
 
   const personalization = [
     {
       email: user.email,
       data: {
-        header: "Your Registration is Confirmed for",
+        header: `Your Registration is Confirmed for ${event.title}`,
         introLine: `Thanks for registering for ${event.title}! Please review the event details below.`,
         eventTitle: event.title,
         volunteerName: user.firstName,
-        eventDate: event.date.slice(0, 10),
+        eventDate: event.date?.slice(0, 10),
         eventStartTime: convertTime(event.startTime),
         eventEndTime: convertTime(event.endTime),
         eventLocale: event.localTime,
@@ -36,9 +23,9 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
         eventCity: event.city,
         eventState: event.state,
         eventZipCode: event.zip,
-        eventDescription: event.description.replace(/<[^>]+>/g, " "),
+        eventDescription: event.description?.replace(/<[^>]+>/g, " "),
         eventContactEmail: event.eventContactEmail,
-        nonprofitName: orgName,
+        nonprofitName: organization.name,
       },
     },
   ];
@@ -47,30 +34,18 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
 };
 
 export const sendEventEditedEmail = async (user, event) => {
-  const [nonprofit, setOrgName] = useState("");
-
-  const loadData = async () => {
-    const data = await getOrganization(user.organizationId);
-
-    if (data) {
-      setOrgName(data.data.orgData.name);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  let nonprofit = await Organization.findById(user.organizationId).lean().name;
 
   const personalization = [
     {
       email: user.email,
       data: {
-        header: `${nonprofit} edited`,
+        header: `${nonprofit} edited ${event.title}`,
         introLine: `It looks like an admin at ${nonprofit} edited ${event.title}! 
         Please review the event details below and ensure they still work with your schedule.`,
         eventTitle: event.title,
         volunteerName: user.firstName,
-        eventDate: event.date.slice(0, 10),
+        eventDate: event.date?.slice(0, 10),
         eventStartTime: convertTime(event.startTime),
         eventEndTime: convertTime(event.endTime),
         eventLocale: event.localTime,
@@ -78,7 +53,7 @@ export const sendEventEditedEmail = async (user, event) => {
         eventCity: event.city,
         eventState: event.state,
         eventZipCode: event.zip,
-        eventDescription: event.description.replace(/<[^>]+>/g, " "),
+        eventDescription: event.description?.replace(/<[^>]+>/g, " "),
         eventContactEmail: event.eventContactEmail,
         nonprofitName: nonprofit,
       },
@@ -88,21 +63,7 @@ export const sendEventEditedEmail = async (user, event) => {
 };
 
 const sendEmail = async (user, personalization, subject) => {
-  const [orgName, setOrgName] = useState("");
-  const [bcc, setBcc] = useState("");
-
-  const loadData = async () => {
-    const data = await getOrganization(user.organizationId);
-
-    if (data) {
-      setOrgName(data.data.orgData.name);
-      setBcc(data.data.orgData.notificationEmail);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
+  let organization = await Organization.findById(user.organizationId).lean();
 
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
@@ -113,11 +74,11 @@ const sendEmail = async (user, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom(personalization.data.eventContactEmail)
-    .setFromName(orgName)
+    .setFrom(personalization[0].data.eventContactEmail)
+    .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
-    .setBcc(bcc)
+    .setBcc(organization.notificationEmail)
     .setTemplateId("vywj2lpov8p47oqz")
     .setPersonalization(personalization);
 

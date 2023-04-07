@@ -17,17 +17,17 @@ export const AppFooter = () => {
             <div className="flex flex-col items-end">
               <a
                 href="https://bitsofgood.org"
-                className="pr-4 text-gray-800 hover:no-underline"
+                className="md:text-md pr-4 text-xs text-gray-800 hover:no-underline"
               >
-                Copyright (c) 2023 by Bits of Good
+                © 2023 | Bits of Good
               </a>
 
               <a
                 href="https://www.netlify.com"
-                className="flex pr-4 text-gray-800 hover:no-underline"
+                className="md:text-md flex pr-4 text-xs text-gray-800 hover:no-underline"
               >
                 Powered by
-                <p className="pl-1 underline">Netlify</p>
+                <p className="pl-1 underline ">Netlify</p>
               </a>
             </div>
           </Footer.LinkGroup>
