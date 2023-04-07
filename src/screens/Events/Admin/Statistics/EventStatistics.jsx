@@ -137,8 +137,7 @@ const EventStatistics = () => {
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Open Slots Remaining: </strong>{" "}
-                {event.max_volunteers}
+                <strong>Open Slots Remaining: </strong> {event.max_volunteers}
                 {/*{event.max_volunteers - event.volunteers.length}*/}
               </p>
             </Styled.StatsInfo>

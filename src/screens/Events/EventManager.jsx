@@ -316,7 +316,7 @@ const EventManager = ({ user, role, isHomePage }) => {
       {!isHomePage && (
         <Styled.Right>
           {role === "admin" ? (
-            <div className="flex items-center justify-between w-full my-4">
+            <div className="my-4 flex w-full items-center justify-between">
               <Dropdown
                 inline={true}
                 arrowIcon={false}
@@ -369,67 +369,67 @@ const EventManager = ({ user, role, isHomePage }) => {
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
         </Styled.Right>
       )}
-        {isHomePage && user.role === "volunteer" && (
-            <Styled.HomePage>
-            <div className="flex-column flex">
-              <div className="mb-4 justify-start">
-                <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-                <div className="flex flex-wrap mx-auto">
-                  <ProgressDisplay
-                    type={"Events"}
-                    attendance={attendance}
-                    header={"Events Attended"}
-                  />
-                  <ProgressDisplay
-                    type={"Hours"}
-                    attendance={attendance}
-                    header={"Hours Earned"}
-                  />
-                </div>
+      {isHomePage && user.role === "volunteer" && (
+        <Styled.HomePage>
+          <div className="flex-column flex">
+            <div className="mb-4 justify-start">
+              <p className="mb-2 text-2xl font-bold">Accomplishments</p>
+              <div className="mx-auto flex flex-wrap">
+                <ProgressDisplay
+                  type={"Events"}
+                  attendance={attendance}
+                  header={"Events Attended"}
+                />
+                <ProgressDisplay
+                  type={"Hours"}
+                  attendance={attendance}
+                  header={"Hours Earned"}
+                />
               </div>
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filteredEvents
-                    : filterEvents(events, user)
-                }
-                user={user}
-                registrations={registrations}
-                isHomePage={isHomePage}
-              />
             </div>
-          </Styled.HomePage>
-        )}
-
-        {isHomePage && user.role !== "volunteer" && (
-            <Styled.HomePage>
-            <AdminHomeHeader
-              events={events}
-              dateString={dateString}
-              numEvents={numEvents}
-              attend={attend}
-              hours={hours}
-              eventChart={eventState}
-              hourChart={hourChart}
-              attendChart={attendChart}
-            />
             <EventsList
               dateString={dateString}
               events={
                 user.role === "admin"
-                  ? filterOn
-                    ? filteredEvents
-                    : events
+                  ? filteredEvents
                   : filterEvents(events, user)
               }
               user={user}
-              isHomePage={isHomePage}
               registrations={registrations}
-              onCreateClicked={onCreateClicked}
+              isHomePage={isHomePage}
             />
-          </Styled.HomePage>
-        )}
+          </div>
+        </Styled.HomePage>
+      )}
+
+      {isHomePage && user.role !== "volunteer" && (
+        <Styled.HomePage>
+          <AdminHomeHeader
+            events={events}
+            dateString={dateString}
+            numEvents={numEvents}
+            attend={attend}
+            hours={hours}
+            eventChart={eventState}
+            hourChart={hourChart}
+            attendChart={attendChart}
+          />
+          <EventsList
+            dateString={dateString}
+            events={
+              user.role === "admin"
+                ? filterOn
+                  ? filteredEvents
+                  : events
+                : filterEvents(events, user)
+            }
+            user={user}
+            isHomePage={isHomePage}
+            registrations={registrations}
+            onCreateClicked={onCreateClicked}
+          />
+        </Styled.HomePage>
+      )}
     </Styled.Container>
   );
 };

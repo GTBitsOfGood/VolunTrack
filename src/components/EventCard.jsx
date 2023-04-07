@@ -13,7 +13,7 @@ import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
-import {updateEvent} from "../screens/Events/eventHelpers";
+import { updateEvent } from "../screens/Events/eventHelpers";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -99,9 +99,7 @@ const EventCard = (props) => {
             </Label>
             <Label>{`${convertTime(
               props.event.eventParent.startTime
-            )} - ${convertTime(
-              props.event.eventParent.endTime
-            )} EST`}</Label>
+            )} - ${convertTime(props.event.eventParent.endTime)} EST`}</Label>
           </div>
         </div>
         <div className="flex-column justify-end">
