@@ -12,6 +12,7 @@ import {
   fetchAttendanceByUserId,
   getEventStatistics,
 } from "../../actions/queries";
+import Text from "../../components/Text";
 
 import { filterAttendance } from "../Stats/helper";
 
@@ -81,6 +82,7 @@ const Styled = {
     justify-content: space-between;
     margin-top: 2rem;
     margin-bottom: 2vw;
+    width: 100%;
   `,
   DateRow: styled.div`
     display: flex;
@@ -123,7 +125,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterOn, setFilterOn] = useState(false);
-  const [dropdownVal, setDropdownVal] = useState("All Events");
+  const [dropdownVal, setDropdownVal] = useState("Public & Private Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
@@ -308,13 +310,13 @@ const EventManager = ({ user, role, isHomePage }) => {
   const changeValue = (label) => {
     setDropdownVal(label);
     const value = label;
-    if (value === "Public Events") {
+    if (value === "Public Events Only") {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => !event.isPrivate));
-    } else if (value === "Private Group Events") {
+    } else if (value === "Private Events Only") {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => event.isPrivate));
-    } else if (value === "All Events") {
+    } else if (value === "Public & Private Events") {
       setFilterOn(false);
     }
   };
@@ -325,12 +327,6 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.Left>
           <Styled.EventContainer>
             <Styled.Events>Events</Styled.Events>
-            <Styled.DateRow>
-              <Styled.Date>{dateString}</Styled.Date>
-              {showBack && (
-                <Styled.Back onClick={setDateBack}>View All Events</Styled.Back>
-              )}
-            </Styled.DateRow>
           </Styled.EventContainer>
           <Calendar
             onChange={onChange}
@@ -347,55 +343,74 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.Right>
           {role === "admin" ? (
             <Styled.ButtonRow>
-              <Dropdown
-                inline={true}
-                arrowIcon={false}
-                label={<BoGButton text="Filter Events" dropdown={true} />}
-              >
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("All Events");
-                  }}
+              <div className="flex items-end">
+                <Dropdown
+                  inline={true}
+                  arrowIcon={false}
+                  label={<BoGButton text={dropdownVal} dropdown={true} />}
                 >
-                  All Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Public Events");
-                  }}
-                >
-                  Public Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Private Group Events");
-                  }}
-                >
-                  Private Group Events
-                </Dropdown.Item>
-              </Dropdown>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Public & Private Events");
+                    }}
+                  >
+                    Public & Private Events
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Public Events Only");
+                    }}
+                  >
+                    Public Events Only
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Private Events Only");
+                    }}
+                  >
+                    Private Events Only
+                  </Dropdown.Item>
+                </Dropdown>
+                {showBack ? (
+                  <Styled.Back onClick={setDateBack}>
+                    Show Events for all Dates
+                  </Styled.Back>
+                ) : (
+                  <Text
+                    className="ml-2"
+                    text={"Showing events for all dates"}
+                  />
+                )}
+              </div>
               <BoGButton text="Create new event" onClick={onCreateClicked} />
             </Styled.ButtonRow>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
           )}
           {events.length === 0 ? (
-            <Styled.Events>No Events Scheduled on This Date</Styled.Events>
+            <div className="flex-column flex">
+              <div className="flex justify-between">
+                <Styled.Date>{dateString}</Styled.Date>
+              </div>
+              <img src={"/images/No Events.png"} alt="no events" />
+            </div>
           ) : (
-            <EventsList
-              dateString={dateString}
-              events={
-                user.role === "admin"
-                  ? filterOn
-                    ? filteredEvents
-                    : events
-                  : filterEvents(events, user)
-              }
-              onRegisterClicked={goToRegistrationPage}
-              onUnregister={onUnregister}
-              user={user}
-              isHomePage={isHomePage}
-            />
+            <div className="flex">
+              <EventsList
+                dateString={dateString}
+                events={
+                  user.role === "admin"
+                    ? filterOn
+                      ? filteredEvents
+                      : events
+                    : filterEvents(events, user)
+                }
+                onRegisterClicked={goToRegistrationPage}
+                onUnregister={onUnregister}
+                user={user}
+                isHomePage={isHomePage}
+              />
+            </div>
           )}
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
         </Styled.Right>

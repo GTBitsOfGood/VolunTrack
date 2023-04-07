@@ -59,12 +59,25 @@ const EventCard = (props) => {
     >
       <div className="flex justify-between">
         <div className="flex justify-start">
-          <DateDisplayComponent
-            date={props.event.date}
-            version={props.version ?? "Primary"}
-          />
+          {props.dateDisplay ? (
+            <DateDisplayComponent
+              date={props.event.date}
+              version={props.version ?? "Primary"}
+            />
+          ) : (
+            <></>
+          )}
           <div className="flex-column flex text-xl">
-            <Text text={props.event.title} type="subheading" />
+            <div className="flex">
+              <Text text={props.event.title} type="subheading" />
+              {props.private ? (
+                <p className="text-primaryColor bg-secondaryColor ml-2 flex items-center rounded-lg px-2 text-xs outline outline-1">
+                  Private Event
+                </p>
+              ) : (
+                <p></p>
+              )}
+            </div>
             <Label>{`${props.functions.convertTime(
               props.event.startTime
             )} - ${props.functions.convertTime(
@@ -161,6 +174,8 @@ EventCard.propTypes = {
   functions: PropTypes.object.isRequired,
   onRegisterClicked: PropTypes.func.isRequired,
   version: PropTypes.string,
+  private: PropTypes.bool,
+  dateDisplay: PropTypes.bool,
 };
 
 export default EventCard;

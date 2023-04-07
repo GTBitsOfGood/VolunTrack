@@ -5,6 +5,8 @@ import EventCard from "../../components/EventCard";
 import { useSession } from "next-auth/react";
 import BoGButton from "../../components/BoGButton";
 import Text from "../../components/Text";
+import { Pagination } from "flowbite-react";
+import { useState } from "react";
 
 const Styled = {
   Container: styled.div`
@@ -140,18 +142,63 @@ const EventsList = ({
     convertTime: convertTime,
   };
 
+  const [pageNum, setPageNum] = useState(1);
+  const onPageChange = () => {
+    setPageNum(pageNum + 10);
+  };
+
+  const formatDate = (date) => {
+    const split = date.split(" ");
+    return split[1] + " " + split[2] + ", " + split[3];
+  };
+
+  var pastDate = "";
+
+  const updateDate = (event) => {
+    const past = pastDate;
+    pastDate = formatDate(new Date(event.date).toDateString());
+    return past;
+  };
+
+  const past = () => {
+    return pastDate;
+  };
+
   if (!isHomePage) {
     return (
       <Styled.Container>
         {events.map((event) => (
-          <EventCard
-            key={event._id}
-            event={event}
-            user={user}
-            functions={functions}
-            onRegisterClicked={onRegisterClicked}
-          />
+          <>
+            {updateDate(event) !==
+            formatDate(new Date(event.date).toDateString()) ? (
+              <Text
+                type="subheader"
+                className="m\y-2"
+                text={formatDate(new Date(event.date).toDateString())}
+              />
+            ) : (
+              <></>
+            )}
+            <EventCard
+              key={event._id}
+              event={event}
+              user={user}
+              functions={functions}
+              onRegisterClicked={onRegisterClicked}
+              private={event.isPrivate}
+              dateDisplay={false}
+            />
+          </>
         ))}
+        {/* <div className="flex items-center justify-center text-center">
+          <Pagination
+            currentPage={pageNum}
+            layout="table"
+            onPageChange={onPageChange}
+            showIcons={true}
+            totalPages={1000}
+          />
+        </div> */}
         <Styled.Spacer />
       </Styled.Container>
     );
@@ -176,6 +223,7 @@ const EventsList = ({
                       user={user}
                       functions={functions}
                       onRegisterClicked={onRegisterClicked}
+                      dateDisplay={true}
                     />
                   ))}
                 </div>
@@ -192,6 +240,7 @@ const EventsList = ({
                       user={user}
                       functions={functions}
                       onRegisterClicked={onRegisterClicked}
+                      dateDisplay={true}
                     />
                   ))}
                 </div>
@@ -214,6 +263,7 @@ const EventsList = ({
                   user={user}
                   functions={functions}
                   onRegisterClicked={onRegisterClicked}
+                  dateDisplay={true}
                 />
               ))}
             {upcomingEvents.length === 0 && (
@@ -241,6 +291,7 @@ const EventsList = ({
                   user={user}
                   functions={functions}
                   onRegisterClicked={onRegisterClicked}
+                  dateDisplay={true}
                 />
               ))}
             <div className="justify-content-center flex">
@@ -264,6 +315,7 @@ const EventsList = ({
                     functions={functions}
                     onRegisterClicked={onRegisterClicked}
                     version={"Secondary"}
+                    dateDisplay={true}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
