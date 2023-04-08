@@ -5,7 +5,7 @@ import EventCard from "../../components/EventCard";
 import { useSession } from "next-auth/react";
 import BoGButton from "../../components/BoGButton";
 import Text from "../../components/Text";
-import { Pagination } from "flowbite-react";
+import Pagination from "../../components/PaginationComp";
 import { useState } from "react";
 
 const Styled = {
@@ -142,9 +142,9 @@ const EventsList = ({
     convertTime: convertTime,
   };
 
-  const [pageNum, setPageNum] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const onPageChange = () => {
-    setPageNum(pageNum + 10);
+    setCurrentPage(currentPage + 10);
   };
 
   const formatDate = (date) => {
@@ -160,6 +160,10 @@ const EventsList = ({
     return past;
   };
 
+  const updatePage = (pageNum) => {
+    setCurrentPage(pageNum);
+  };
+
   const past = () => {
     return pastDate;
   };
@@ -167,7 +171,7 @@ const EventsList = ({
   if (!isHomePage) {
     return (
       <Styled.Container>
-        {events.map((event) => (
+        {events.slice(currentPage * 10, (currentPage + 1) * 10).map((event) => (
           <>
             {updateDate(event) !==
             formatDate(new Date(event.date).toDateString()) ? (
@@ -190,15 +194,25 @@ const EventsList = ({
             />
           </>
         ))}
-        {/* <div className="flex items-center justify-center text-center">
-          <Pagination
-            currentPage={pageNum}
-            layout="table"
-            onPageChange={onPageChange}
-            showIcons={true}
-            totalPages={1000}
-          />
-        </div> */}
+        {events.length !== 0 && (
+          <div className="column-flex self-center">
+            <Text
+              className="justify-content-center flex"
+              text={`${currentPage * 10 + 1} - ${
+                currentPage * 10 + 10 > events.length
+                  ? events.length
+                  : currentPage * 10 + 10
+              } of total ${events.length} events`}
+              type="helper"
+            />
+            <Pagination
+              items={events}
+              pageSize={10}
+              currentPage={currentPage}
+              updatePageCallback={updatePage}
+            />
+          </div>
+        )}
         <Styled.Spacer />
       </Styled.Container>
     );

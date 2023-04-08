@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Label, Tooltip } from "flowbite-react";
+import { Label, Tooltip, Badge } from "flowbite-react";
 import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import { useState } from "react";
@@ -69,11 +69,11 @@ const EventCard = (props) => {
           )}
           <div className="flex-column flex text-xl">
             <div className="flex">
-              <Text text={props.event.title} type="subheading" />
+              <Text text={props.event.title} type="subtitle" className="flex" />
               {props.private ? (
-                <p className="text-primaryColor bg-secondaryColor ml-2 flex items-center rounded-lg px-2 text-xs outline outline-1">
+                <Badge color="info" className="items-center ml-2 flex">
                   Private Event
-                </p>
+                </Badge>
               ) : (
                 <p></p>
               )}

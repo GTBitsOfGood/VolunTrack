@@ -392,7 +392,11 @@ const EventManager = ({ user, role, isHomePage }) => {
               <div className="flex justify-between">
                 <Styled.Date>{dateString}</Styled.Date>
               </div>
-              <img src={"/images/No Events.png"} alt="no events" />
+              <Text
+                text="No Events Scheduled Today"
+                type="subheader"
+                className="text-primaryColor"
+              />
             </div>
           ) : (
             <div className="flex">
