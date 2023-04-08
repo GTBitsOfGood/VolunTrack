@@ -30,7 +30,7 @@ const AuthPage = (props) => {
       setShowModal(false);
       alert("Email sent!");
     } else {
-      alert("Error sending email");
+      alert("Error sending email. An account with that email may not exist.");
     }
   };
 
@@ -85,13 +85,13 @@ const AuthPage = (props) => {
             {!props.createAccount && (
               <>
                 Forgot your password?
-                <Button
+                <a
+                  className="ml-2 underline"
                   onClick={() => setShowModal(true)}
-                  className="ml-2 bg-transparent"
-                  color="gray"
+                  style={{ cursor: "pointer" }}
                 >
                   Reset Password
-                </Button>
+                </a>
                 <Modal show={showModal} onClose={() => setShowModal(false)}>
                   <Modal.Header className="h-16">Reset Password</Modal.Header>
                   <Modal.Body>
