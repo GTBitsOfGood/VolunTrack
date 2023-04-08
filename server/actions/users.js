@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
+import resetCode from "../mongodb/models/resetCode";
 
 export async function createUserFromCredentials(user) {
   await dbConnect();
@@ -61,6 +62,7 @@ export async function createUserFromCredentials(user) {
 export async function verifyUserWithCredentials(email, password) {
   await dbConnect();
 
+  console.log("HERE!");
   const user = await User.findOne({ "bio.email": email });
 
   if (!user) {
@@ -76,7 +78,15 @@ export async function verifyUserWithCredentials(email, password) {
       message: "Please sign in with Google",
     };
   }
+  console.log("CHECKING PASSWORD");
   const match = await bcrypt.compare(email + password, user.passwordHash);
+  console.log(user.passwordHash);
+  const check = await bcrypt.hash(email + password, 10);
+  console.log(check);
+  console.log(email);
+  console.log(password);
+
+  console.log(match);
 
   if (match)
     return {
@@ -150,6 +160,34 @@ export async function updateUser(id, userInfo) {
   if (adminId) createHistoryEventEditProfile(adminId);
   const { role } = userInfo;
   const { bio } = userInfo;
+  const { password } = userInfo;
+
+  if (password) {
+    console.log("HERE 1");
+    console.log(id);
+    const user = await User.findOne({ _id: mongoose.Types.ObjectId(id) });
+    console.log(user);
+
+    console.log("HERE 2");
+    if (!user.passwordHash) {
+      return {
+        status: 400,
+        message: "Please sign in with Google",
+      };
+    }
+
+    console.log("HERE 3");
+    const hash = await bcrypt.hash(user.bio.email + password, 10);
+
+    await User.updateOne(
+      { _id: mongoose.Types.ObjectId(id) },
+      { passwordHash: hash }
+    );
+
+    await resetCode.findOneAndDelete({ userId: mongoose.Types.ObjectId(id) });
+
+    console.log("HERE 5");
+  }
 
   if (bio) {
     if (!bio.email)

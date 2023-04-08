@@ -10,6 +10,7 @@ import { RequestContext } from "../../providers/RequestProvider";
 import Footer from "../../components/Footer";
 import Text from "../../components/Text";
 import InputField from "../../components/Forms/InputField";
+import { sendResetPasswordEmail } from "../../actions/queries";
 
 const AuthPage = (props) => {
   const login = (e) => {
@@ -18,6 +19,20 @@ const AuthPage = (props) => {
   };
 
   const [showModal, setShowModal] = useState(false);
+
+  const sendResetEmail = async () => {
+    // console.log("sending reset email")
+
+    const email = document.getElementById("email1").value;
+    const response = await sendResetPasswordEmail(email);
+
+    if (response.status === 200) {
+      setShowModal(false);
+      alert("Email sent!");
+    } else {
+      alert("Error sending email");
+    }
+  };
 
   return (
     <div className="flex-column flex h-full w-full items-center justify-center">
@@ -74,13 +89,15 @@ const AuthPage = (props) => {
                   onClick={() => setShowModal(true)}
                   className="ml-2 bg-transparent"
                   color="gray"
-                >Reset Password</Button>
+                >
+                  Reset Password
+                </Button>
                 <Modal show={showModal} onClose={() => setShowModal(false)}>
                   <Modal.Header className="h-16">Reset Password</Modal.Header>
                   <Modal.Body>
                     <div className="space-y-6">
                       <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                        Enter your email below and we'll send you a link to
+                        Enter your email below and we&apos;ll send you a link to
                         reset your password.
                       </p>
                       <TextInput
@@ -92,7 +109,9 @@ const AuthPage = (props) => {
                     </div>
                   </Modal.Body>
                   <Modal.Footer>
-                    <Button color="info">Send Email</Button>
+                    <Button color="info" onClick={() => sendResetEmail()}>
+                      Send Email
+                    </Button>
                     <Button color="gray" onClick={() => setShowModal(false)}>
                       Cancel
                     </Button>

@@ -46,6 +46,48 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
   sendEmail(user, personalization, `Registration Confirmed for ${event.title}`);
 };
 
+// TO DO
+export const sendResetCodeEmail = async (user, email, event) => {
+  const [orgName, setOrgName] = useState("");
+
+  const loadData = async () => {
+    const data = await getOrganizationData(user.organizationId);
+
+    if (data) {
+      setOrgName(data.data.orgData.name);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const personalization = [
+    {
+      email: email,
+      data: {
+        header: "Your Registration is Confirmed for",
+        introLine: `Thanks for registering for ${event.title}! Please review the event details below.`,
+        eventTitle: event.title,
+        volunteerName: user.bio.first_name,
+        eventDate: event.date.slice(0, 10),
+        eventStartTime: convertTime(event.startTime),
+        eventEndTime: convertTime(event.endTime),
+        eventLocale: event.localTime,
+        eventAddress: event.address,
+        eventCity: event.city,
+        eventState: event.state,
+        eventZipCode: event.zip,
+        eventDescription: event.description.replace(/<[^>]+>/g, " "),
+        eventContactEmail: event.eventContactEmail,
+        nonprofitName: orgName,
+      },
+    },
+  ];
+
+  sendEmail(user, personalization, `Registration Confirmed for ${event.title}`);
+};
+
 export const sendEventEditedEmail = async (user, event) => {
   const [nonprofit, setOrgName] = useState("");
 

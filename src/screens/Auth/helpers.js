@@ -15,6 +15,17 @@ export const createAccountValidator = object().shape({
   org_code: string().trim().required("Nonprofit code is required"),
 });
 
+export const changePasswordValidator = object().shape({
+  password: string()
+    .required("No password provided.")
+    .min(10, "Password is too short - should be 10 chars minimum.")
+    .matches(/[a-zA-Z]/, "Password should at least contain 1 letter"),
+  password_confirm: string().oneOf(
+    [ref("password"), null],
+    "Passwords must match"
+  ),
+});
+
 export const loginValidator = object().shape({
   email: string().trim().required("Email is required").email("Invalid email"),
   password: string()
