@@ -1,29 +1,27 @@
 // import { differenceInCalendarDays } from "date-fns";
+import "flowbite-react";
+import { Dropdown } from "flowbite-react";
+import router from "next/router";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { Dropdown } from "flowbite-react";
 import styled from "styled-components";
-import { fetchEvents } from "../../actions/queries";
-import variables from "../../design-tokens/_variables.module.scss";
-import EventCreateModal from "./Admin/EventCreateModal";
-import EventsList from "./EventsList";
-import {
-  fetchAttendanceByUserId,
-  getEventStatistics,
-} from "../../actions/queries";
-import Text from "../../components/Text";
-
-import { filterAttendance } from "../Stats/helper";
-
-import { useSession } from "next-auth/react";
-import router from "next/router";
-import PropTypes from "prop-types";
-import { updateEvent } from "./eventHelpers";
-import ProgressDisplay from "../../components/ProgressDisplay";
-import "flowbite-react";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
+import ProgressDisplay from "../../components/ProgressDisplay";
+import variables from "../../design-tokens/_variables.module.scss";
+import {
+  getAttendances,
+  getAttendanceStatistics,
+} from "../../queries/attendances";
+import { getEvent, getEvents } from "../../queries/events";
+import { getRegistrations } from "../../queries/registrations";
+import { filterAttendance } from "../Stats/helper";
+import EventCreateModal from "./Admin/EventCreateModal";
+import { updateEvent } from "./eventHelpers";
+import EventsList from "./EventsList";
+import Text from "../../components/Text";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -82,7 +80,6 @@ const Styled = {
     justify-content: space-between;
     margin-top: 2rem;
     margin-bottom: 2vw;
-    width: 100%;
   `,
   DateRow: styled.div`
     display: flex;
@@ -133,37 +130,40 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [attend, setAttend] = useState(0);
   const [hours, setHours] = useState(0);
   const [eventState, setEventState] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
 
   const eventChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   const hourChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  if (!user) {
-    const { data: session } = useSession();
-    user = session.user;
-  }
-
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents(undefined, undefined, user.organizationId)
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-          setDates(result.data.events);
-        }
-        if (result?.data?.events) setNumEvents(result.data.events.length);
+    getEvents(user.organizationId).then((result) => {
+      if (result && result.data && result.data.events) {
+        setEvents(result.data.events);
+        setDates(result.data.events);
+      }
+      if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getEventStatistics(startDate, endDate).then((stats) => {
-          var totalAttendance = 0;
-          var totalHours = 0;
-          for (let event of result?.data?.events) {
+      // TODO: fix logic. We should use getEvents for the events, registrations, and attendance separately for hours
+      getAttendanceStatistics(undefined, startDate, endDate).then(
+        async (stats) => {
+          let totalAttendance = 0;
+          let totalHours = 0;
+          for (const statistic of stats.data.statistics ?? []) {
+            let event = {};
+            try {
+              event = (await getEvent(statistic._id)).data.event;
+            } catch (e) {
+              continue;
+            }
             let split = event.date.split("-");
             let index = parseInt(split[1]) - 1;
-            let stat = stats.data.find((s) => s._id === event._id);
+            let stat = stats.data.statistics.find((s) => s._id === event._id);
             if (stat) {
               hourChart[index] += Math.round(stat.minutes / 60.0);
-              attendChart[index] += stat.uniqueUsers.length;
-              totalAttendance += stat.uniqueUsers.length;
+              attendChart[index] += stat.users.length;
+              totalAttendance += stat.users.length;
               totalHours += stat.minutes / 60.0;
             }
             eventChart[index] = eventChart[index] + 1;
@@ -171,14 +171,17 @@ const EventManager = ({ user, role, isHomePage }) => {
 
           setAttend(totalAttendance);
           setHours(Math.round(totalHours * 100) / 100);
-        });
-        eventState.push(eventChart);
-        eventState.push(hourChart);
-        eventState.push(attendChart);
+        }
+      );
+      eventState.push(eventChart);
+      eventState.push(hourChart);
+      eventState.push(attendChart);
+    });
+    getRegistrations(undefined, undefined, user.id)
+      .then((result) => {
+        if (result.data.success) setRegistrations(result.data.registrations);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   };
 
   const onCreateClicked = () => {
@@ -190,7 +193,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
-    fetchAttendanceByUserId(userId).then((result) => {
+    getAttendances(undefined, undefined).then((result) => {
       if (result?.data?.attendances) {
         const filteredAttendance = filterAttendance(
           result.data.attendances,
@@ -206,32 +209,6 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [attendance, setAttendance] = useState([]);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
-  const { data: session } = useSession();
-  const userId = session.user._id;
-
-  const goToRegistrationPage = async (event) => {
-    if (event?.eventId) {
-      await router.push(`/events/${event.eventId}/register`);
-    }
-  };
-
-  const onUnregister = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      minors: event.volunteers.filter(
-        (minor) => minor.volunteer_id !== user._id
-      ),
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-
-    onRefresh();
-  };
-
   const [value, setDate] = useState(new Date());
 
   let splitDate = value.toDateString().split(" ");
@@ -249,7 +226,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    fetchEvents(selectDate, selectDate, user.organizationId)
+    getEvents(user.organizationId, selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -399,73 +376,6 @@ const EventManager = ({ user, role, isHomePage }) => {
               />
             </div>
           ) : (
-            <div className="flex">
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filterOn
-                      ? filteredEvents
-                      : events
-                    : filterEvents(events, user)
-                }
-                onRegisterClicked={goToRegistrationPage}
-                onUnregister={onUnregister}
-                user={user}
-                isHomePage={isHomePage}
-              />
-            </div>
-          )}
-          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-        </Styled.Right>
-      )}
-      <Styled.HomePage>
-        {isHomePage && user.role === "volunteer" && (
-          <>
-            <div className="flex-column flex">
-              <div className="mb-4 justify-start">
-                <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-                <div className="flex flex-wrap">
-                  <ProgressDisplay
-                    type={"Events"}
-                    attendance={attendance}
-                    header={"Events Attended"}
-                  />
-                  <ProgressDisplay
-                    type={"Hours"}
-                    attendance={attendance}
-                    header={"Hours Earned"}
-                  />
-                </div>
-              </div>
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filteredEvents
-                    : filterEvents(events, user)
-                }
-                onRegisterClicked={goToRegistrationPage}
-                onUnregister={onUnregister}
-                user={user}
-                isHomePage={isHomePage}
-              />
-            </div>
-          </>
-        )}
-
-        {isHomePage && user.role !== "volunteer" && (
-          <>
-            <AdminHomeHeader
-              data={events}
-              dateString={dateString}
-              numEvents={numEvents}
-              attend={attend}
-              hours={hours}
-              eventChart={eventState}
-              hourChart={hourChart}
-              attendChart={attendChart}
-            />
             <EventsList
               dateString={dateString}
               events={
@@ -479,11 +389,72 @@ const EventManager = ({ user, role, isHomePage }) => {
               onUnregister={onUnregister}
               user={user}
               isHomePage={isHomePage}
-              onCreateClicked={onCreateClicked}
             />
-          </>
-        )}
-      </Styled.HomePage>
+          )}
+          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
+        </Styled.Right>
+      )}
+      {isHomePage && user.role === "volunteer" && (
+        <Styled.HomePage>
+          <div className="flex-column flex">
+            <div className="mb-4 justify-start">
+              <p className="mb-2 text-2xl font-bold">Accomplishments</p>
+              <div className="mx-auto flex flex-wrap">
+                <ProgressDisplay
+                  type={"Events"}
+                  attendance={attendance}
+                  header={"Events Attended"}
+                />
+                <ProgressDisplay
+                  type={"Hours"}
+                  attendance={attendance}
+                  header={"Hours Earned"}
+                />
+              </div>
+            </div>
+            <EventsList
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filteredEvents
+                  : filterEvents(events, user)
+              }
+              user={user}
+              registrations={registrations}
+              isHomePage={isHomePage}
+            />
+          </div>
+        </Styled.HomePage>
+      )}
+
+      {isHomePage && user.role !== "volunteer" && (
+        <Styled.HomePage>
+          <AdminHomeHeader
+            events={events}
+            dateString={dateString}
+            numEvents={numEvents}
+            attend={attend}
+            hours={hours}
+            eventChart={eventState}
+            hourChart={hourChart}
+            attendChart={attendChart}
+          />
+          <EventsList
+            dateString={dateString}
+            events={
+              user.role === "admin"
+                ? filterOn
+                  ? filteredEvents
+                  : events
+                : filterEvents(events, user)
+            }
+            user={user}
+            isHomePage={isHomePage}
+            registrations={registrations}
+            onCreateClicked={onCreateClicked}
+          />
+        </Styled.HomePage>
+      )}
     </Styled.Container>
   );
 };

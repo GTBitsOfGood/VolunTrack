@@ -1,11 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import {
-  fetchEventsById,
-  getAttendanceForEvent,
-} from "../../../../actions/queries";
 import EventTable from "../../../../components/EventTable";
+import { getAttendances } from "../../../../queries/attendances";
+import { getEvent } from "../../../../queries/events";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
@@ -75,14 +73,14 @@ const EventStatistics = () => {
   const [event, setEvent] = useState(null);
 
   const onRefresh = () => {
-    getAttendanceForEvent(eventId).then((result) => {
+    getAttendances(undefined, eventId).then((result) => {
       let stats = result.data.map((stat) => {
         stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
         return stat;
       });
       setAttendanceStats(stats);
     });
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       setEvent(result.data.event);
     });
   };
@@ -133,13 +131,14 @@ const EventStatistics = () => {
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Slots Filled: </strong> {event.volunteers.length}
+                <strong>Total Slots Filled: </strong>
+                {event.volunteers.length}
               </p>
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Open Slots Remaining: </strong>{" "}
-                {event.max_volunteers - event.volunteers.length}
+                <strong>Open Slots Remaining: </strong> {event.max_volunteers}
+                {/*{event.max_volunteers - event.volunteers.length}*/}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>

@@ -1,4 +1,5 @@
 import { Table, Tooltip } from "flowbite-react";
+import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
@@ -12,6 +13,8 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
+import EditUserForm from "../../components/Forms/EditUserForm";
+import { Icon } from "../../components/Icon";
 
 class VolunteerTable extends React.Component {
   constructor(props) {
@@ -82,8 +85,9 @@ class VolunteerTable extends React.Component {
             )
             .map((user, index) => (
               <Table.Row key={index} evenIndex={index % 2 === 0}>
-                <Table.Cell>{user.name}</Table.Cell>
                 <Table.Cell>
+                {user.firstName} {user.lastName}
+                </Table.Cell>
                   <div className="flex items-center">
                     {user.email}
                     <Tooltip content="Copy" style="light">
@@ -97,14 +101,13 @@ class VolunteerTable extends React.Component {
                       </button>
                     </Tooltip>
                   </div>
-                </Table.Cell>
                 <Table.Cell>
-                  {user.phone_number
-                    ? user.phone_number.substr(0, 3) +
+                  {user.phone
+                    ? user.phone.substr(0, 3) +
                       "-" +
-                      user.phone_number.substr(3, 3) +
+                      user.phone.substr(3, 3) +
                       "-" +
-                      user.phone_number.substr(6, 4)
+                      user.phone.substr(6, 4)
                     : ""}
                 </Table.Cell>
                 <Table.Cell>

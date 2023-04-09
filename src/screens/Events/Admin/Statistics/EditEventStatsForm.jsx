@@ -1,9 +1,9 @@
 import { Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
 import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
-import BoGButton from "../../../../components/BoGButton";
 import styled from "styled-components";
-import { updateAttendance } from "../../../../actions/queries";
+import BoGButton from "../../../../components/BoGButton";
+import { updateAttendance } from "../../../../queries/attendances";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
 import InputField from "../../../../components/Forms/InputField";
@@ -40,16 +40,16 @@ const EditEventStatsForm = ({ toggle, event }) => {
     const editedEvent = {
       ...event,
     };
-    editedEvent.timeCheckedIn = new Date(
+    editedEvent.checkinTime = new Date(
       new Date(
-        new Date(event.timeCheckedIn) - new Date().getTimezoneOffset() * 60_000
+        new Date(event.checkinTime) - new Date().getTimezoneOffset() * 60_000
       )
         .toISOString()
         .slice(0, 11) + values.checkin
     ).toISOString();
-    editedEvent.timeCheckedOut = new Date(
+    editedEvent.checkoutTime = new Date(
       new Date(
-        new Date(event.timeCheckedOut) - new Date().getTimezoneOffset() * 60_000
+        new Date(event.checkoutTime) - new Date().getTimezoneOffset() * 60_000
       )
         .toISOString()
         .slice(0, 11) + values.checkout
@@ -64,8 +64,8 @@ const EditEventStatsForm = ({ toggle, event }) => {
       initialValues={{
         name: event.volunteerName,
         email: event.volunteerEmail,
-        checkin: new Date(event.timeCheckedIn).toLocaleTimeString("en-GB"),
-        checkout: new Date(event.timeCheckedOut).toLocaleTimeString("en-GB"),
+        checkin: new Date(event.checkinTime).toLocaleTimeString("en-GB"),
+        checkout: new Date(event.checkoutTime).toLocaleTimeString("en-GB"),
       }}
       onSubmit={(values, { setSubmitting }) => {
         onSubmitEditEvent(values, setSubmitting);

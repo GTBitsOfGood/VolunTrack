@@ -1,6 +1,4 @@
-/**
- * User submitted non-unique email
- */
+/** User submitted non-unique email */
 class EmailInUseError extends Error {
   constructor(message, email) {
     super(`Email In Use Error: ${message}`);

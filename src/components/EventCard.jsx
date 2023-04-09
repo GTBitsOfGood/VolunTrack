@@ -1,24 +1,26 @@
-import PropTypes from "prop-types";
+import {
+  CheckCircleIcon,
+  PencilIcon,
+  PlusCircleIcon,
+  TrashIcon,
+  UsersIcon,
+} from "@heroicons/react/24/solid";
 import { Label, Tooltip, Badge } from "flowbite-react";
+import router from "next/router";
+import PropTypes from "prop-types";
+import { useState } from "react";
 import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
-import { useState } from "react";
-import {
-  UsersIcon,
-  PencilIcon,
-  TrashIcon,
-  CheckCircleIcon,
-  PlusCircleIcon,
-} from "@heroicons/react/24/solid";
-import router from "next/router";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
+import { updateEvent } from "../screens/Events/eventHelpers";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [event, setEvent] = useState(props.event);
+  const isRegistered = props.isRegistered;
 
   const open = () => {
     setCollapse(!collapse);
@@ -52,9 +54,37 @@ const EventCard = (props) => {
     setShowEditModal((prev) => !prev);
   };
 
+  const convertTime = (time) => {
+    let [hour, min] = time.split(":");
+    let hours = parseInt(hour);
+    let suffix = time[-2];
+    if (!(suffix in ["pm", "am", "PM", "AM"])) {
+      suffix = hours > 11 ? "pm" : "am";
+    }
+    hours = ((hours + 11) % 12) + 1;
+    return hours.toString() + ":" + min + suffix;
+  };
+
+  // const onUnregister = async (event) => {
+  //   const changedEvent = {
+  //     // remove current user id from event volunteers
+  //     ...event,
+  //     minors: event.volunteers.filter(
+  //         (minor) => minor.volunteer_id !== user._id
+  //     ),
+  //     volunteers: event.volunteers.filter(
+  //         (volunteer) => volunteer !== user._id
+  //     ),
+  //   };
+  //   const updatedEvent = await updateEvent(changedEvent);
+  //   setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
+  //
+  //   onRefresh();
+  // };
+
   return (
     <div
-      className="mx-18 bg-grey mb-2 flex flex-col rounded-xl border-2 px-6 py-3"
+      className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-grey px-6 py-3"
       onClick={open}
     >
       <div className="flex justify-between">
@@ -71,7 +101,7 @@ const EventCard = (props) => {
             <div className="flex">
               <Text text={props.event.title} type="subtitle" className="flex" />
               {props.private ? (
-                <Badge color="info" className="items-center ml-2 flex">
+                <Badge color="info" className="ml-2 flex items-center">
                   Private Event
                 </Badge>
               ) : (
@@ -90,17 +120,17 @@ const EventCard = (props) => {
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
                 <button className="mx-1" onClick={editOnClick}>
-                  <PencilIcon className="text-primaryColor h-8" />
+                  <PencilIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <Tooltip content="Delete" style="light">
                 <button className="mx-1" onClick={deleteOnClick}>
-                  <TrashIcon className="text-primaryColor h-8" />
+                  <TrashIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <Tooltip content="Manage Attendance" style="light">
                 <button className="mx-1" onClick={manageAttendanceOnClick}>
-                  <UsersIcon className="text-primaryColor h-8" />
+                  <UsersIcon className="h-8 text-primaryColor" />
                 </button>
               </Tooltip>
               <EventDeleteModal
@@ -118,12 +148,12 @@ const EventCard = (props) => {
           )}
           {props.user.role === "volunteer" && (
             <>
-              {props.event.volunteers.includes(props.user._id) ? (
+              {isRegistered ? (
                 <button
                   className="align-items-center mx-1 flex"
                   onClick={registerOnClick}
                 >
-                  <CheckCircleIcon className="text-primaryColor h-8" />
+                  <CheckCircleIcon className="h-8 text-primaryColor" />
                   <span>Registered!</span>
                 </button>
               ) : (
@@ -131,15 +161,14 @@ const EventCard = (props) => {
                   className="align-items-center mx-1 flex"
                   onClick={registerOnClick}
                 >
-                  <PlusCircleIcon className="text-primaryColor h-8" />
+                  <PlusCircleIcon className="h-8 text-primaryColor" />
                   <span>Register</span>
                 </button>
               )}
             </>
           )}
           <Label className="justify-end">
-            {props.event.max_volunteers - props.event.volunteers.length} slots
-            available
+            {props.event.eventParent.maxVolunteers} slots available
           </Label>
         </div>
       </div>
@@ -153,7 +182,9 @@ const EventCard = (props) => {
             <Label class="text-md mb-0 mr-1 font-bold">Description: </Label>
             <div
               className="h-12 overflow-hidden"
-              dangerouslySetInnerHTML={{ __html: props.event.description }}
+              dangerouslySetInnerHTML={{
+                __html: props.event.eventParent.description,
+              }}
             />
           </div>
           <Text
@@ -171,8 +202,6 @@ EventCard.propTypes = {
   key: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
-  functions: PropTypes.object.isRequired,
-  onRegisterClicked: PropTypes.func.isRequired,
   version: PropTypes.string,
   private: PropTypes.bool,
   dateDisplay: PropTypes.bool,
