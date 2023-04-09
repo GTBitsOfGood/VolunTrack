@@ -22,10 +22,6 @@ class AuthForm extends React.Component {
           : url.pathname.substring(1),
     };
 
-    console.log(url.pathname);
-    console.log(url.pathname.substring(1));
-    console.log(this.state.nonprofitCode);
-
     if (url.searchParams.has("error")) {
       this.props.context.startLoading();
       this.props.context.failed("Your username or password is incorrect.");

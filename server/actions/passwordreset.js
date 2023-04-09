@@ -1,3 +1,4 @@
+import { sendResetCodeEmail } from "../../src/utils/mailersend-email";
 import dbConnect from "../mongodb/index";
 import resetCode from "../mongodb/models/resetCode";
 import User from "../mongodb/models/user";
@@ -5,18 +6,14 @@ import User from "../mongodb/models/user";
 export async function getUserIdFromCode(code) {
   await dbConnect();
 
-  console.log("GETUSERID SERVER ACTIONS");
-  console.log(code);
   const userId = await resetCode.findOne({ code: code });
-  console.log("USER ID 2:");
-  console.log(userId);
+
   return userId;
 }
 
-export async function sendResetEmail(email) {
+export async function getUserFromEmail(email) {
   await dbConnect();
 
-  console.log("HERE IN SERVER ACTIONS");
   const existingUser = await User.findOne({ "bio.email": email });
   if (!existingUser) {
     return {
@@ -25,11 +22,13 @@ export async function sendResetEmail(email) {
     };
   }
 
-  const userId = existingUser._id;
-  console.log("USER ID:");
-  console.log(userId);
+  return existingUser;
+}
 
-  const code = makeCode(6);
+export async function uploadResetCode(existingUser, email, code) {
+  await dbConnect();
+
+  const userId = existingUser._id;
 
   await resetCode.create({
     userId: userId,
@@ -38,7 +37,6 @@ export async function sendResetEmail(email) {
     createdAt: new Date(),
   });
 
-  console.log("done");
   return { status: 200 };
 }
 

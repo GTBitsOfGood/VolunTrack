@@ -47,14 +47,16 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
 };
 
 // TO DO
-export const sendResetCodeEmail = async (user, email, event) => {
+export const sendResetCodeEmail = async (user, email, code) => {
   const [orgName, setOrgName] = useState("");
+  const [defaultEmail, setDefaultEmail] = useState("");
 
   const loadData = async () => {
     const data = await getOrganizationData(user.organizationId);
 
     if (data) {
       setOrgName(data.data.orgData.name);
+      setDefaultEmail(data.data.orgData.defaultContactEmail);
     }
   };
 
@@ -66,26 +68,16 @@ export const sendResetCodeEmail = async (user, email, event) => {
     {
       email: email,
       data: {
-        header: "Your Registration is Confirmed for",
-        introLine: `Thanks for registering for ${event.title}! Please review the event details below.`,
-        eventTitle: event.title,
         volunteerName: user.bio.first_name,
-        eventDate: event.date.slice(0, 10),
-        eventStartTime: convertTime(event.startTime),
-        eventEndTime: convertTime(event.endTime),
-        eventLocale: event.localTime,
-        eventAddress: event.address,
-        eventCity: event.city,
-        eventState: event.state,
-        eventZipCode: event.zip,
-        eventDescription: event.description.replace(/<[^>]+>/g, " "),
-        eventContactEmail: event.eventContactEmail,
+        code: code,
+        link: "https://volunteer.bitsofgood.org/passwordreset/" + code,
+        eventContactEmail: defaultEmail,
         nonprofitName: orgName,
       },
     },
   ];
 
-  sendEmail(user, personalization, `Registration Confirmed for ${event.title}`);
+  sendResetEmail(user, personalization, `Password Reset Request`);
 };
 
 export const sendEventEditedEmail = async (user, event) => {
@@ -127,6 +119,45 @@ export const sendEventEditedEmail = async (user, event) => {
     },
   ];
   sendEmail(user, personalization, `${event.title} has been updated`);
+};
+
+const sendResetEmail = async (user, personalization, subject) => {
+  const [orgName, setOrgName] = useState("");
+
+  const loadData = async () => {
+    const data = await getOrganizationData(user.organizationId);
+
+    if (data) {
+      setOrgName(data.data.orgData.name);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const mailersend = new MailerSend({
+    api_key: process.env.MAILERSEND_API_KEY,
+  });
+
+  const recipients = [
+    new Recipient(
+      user.bio.email,
+      user.bio.first_name + " " + user.bio.last_name
+    ),
+  ];
+
+  const emailParams = new EmailParams()
+    .setFrom(personalization.data.eventContactEmail)
+    .setFromName(orgName)
+    .setRecipients(recipients)
+    .setSubject(subject)
+    .setTemplateId("x2p03479p5pgzdrn")
+    .setPersonalization(personalization);
+
+  mailersend.send(emailParams).then((error) => {
+    console.log(error);
+  });
 };
 
 const sendEmail = async (user, personalization, subject) => {

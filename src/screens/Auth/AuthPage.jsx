@@ -28,7 +28,9 @@ const AuthPage = (props) => {
 
     if (response.status === 200) {
       setShowModal(false);
-      alert("Email sent!");
+      alert(
+        "If an account with that email exists, a password reset email has been sent."
+      );
     } else {
       alert("Error sending email. An account with that email may not exist.");
     }
@@ -86,11 +88,11 @@ const AuthPage = (props) => {
               <>
                 Forgot your password?
                 <a
-                  className="ml-2 underline"
+                  className="ml-2 text-sm underline"
                   onClick={() => setShowModal(true)}
                   style={{ cursor: "pointer" }}
                 >
-                  Reset Password
+                  <span className="underline">Reset Password</span>
                 </a>
                 <Modal show={showModal} onClose={() => setShowModal(false)}>
                   <Modal.Header className="h-16">Reset Password</Modal.Header>

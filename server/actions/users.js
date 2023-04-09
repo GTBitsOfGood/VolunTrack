@@ -62,7 +62,6 @@ export async function createUserFromCredentials(user) {
 export async function verifyUserWithCredentials(email, password) {
   await dbConnect();
 
-  console.log("HERE!");
   const user = await User.findOne({ "bio.email": email });
 
   if (!user) {
@@ -78,15 +77,8 @@ export async function verifyUserWithCredentials(email, password) {
       message: "Please sign in with Google",
     };
   }
-  console.log("CHECKING PASSWORD");
-  const match = await bcrypt.compare(email + password, user.passwordHash);
-  console.log(user.passwordHash);
-  const check = await bcrypt.hash(email + password, 10);
-  console.log(check);
-  console.log(email);
-  console.log(password);
 
-  console.log(match);
+  const match = await bcrypt.compare(email + password, user.passwordHash);
 
   if (match)
     return {
@@ -163,12 +155,8 @@ export async function updateUser(id, userInfo) {
   const { password } = userInfo;
 
   if (password) {
-    console.log("HERE 1");
-    console.log(id);
     const user = await User.findOne({ _id: mongoose.Types.ObjectId(id) });
-    console.log(user);
 
-    console.log("HERE 2");
     if (!user.passwordHash) {
       return {
         status: 400,
@@ -176,7 +164,6 @@ export async function updateUser(id, userInfo) {
       };
     }
 
-    console.log("HERE 3");
     const hash = await bcrypt.hash(user.bio.email + password, 10);
 
     await User.updateOne(
@@ -185,8 +172,6 @@ export async function updateUser(id, userInfo) {
     );
 
     await resetCode.findOneAndDelete({ userId: mongoose.Types.ObjectId(id) });
-
-    console.log("HERE 5");
   }
 
   if (bio) {

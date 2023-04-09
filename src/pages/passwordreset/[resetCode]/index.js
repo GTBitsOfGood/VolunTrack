@@ -26,12 +26,9 @@ const ResetPage = () => {
 
   const checkIfValidCode = async () => {
     // check if code is valid
-    console.log("check valid");
+
     const response = await getUserIdFromCode(resetCode);
 
-    console.log("CHECK VALID");
-    console.log("HEREEEEEE");
-    console.log(response);
     if (response.data.userId) {
       setUserId(response.data.userId.userId);
       setIsValidCode(true);
@@ -43,8 +40,6 @@ const ResetPage = () => {
   }, []);
 
   const handleSubmit = async (values) => {
-    console.log("HANDLE SUBMIT");
-    console.log(userId);
     await updateUser(userId, {
       password: values.password,
     });
