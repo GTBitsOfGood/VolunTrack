@@ -1,14 +1,22 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
-import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
 import { Tabs } from "flowbite-react";
-import PropTypes from "prop-types";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
-import { getWaivers } from "../../../actions/queries";
-import { Col, Row, Container } from "reactstrap";
-import variables from "../../../design-tokens/_variables.module.scss";
+import PropTypes from "prop-types";
+import Text from "../../../components/Text";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Col,
+  Container,
+  FormGroup,
+  Input,
+  Modal,
+  ModalFooter,
+  ModalHeader,
+  Row,
+} from "reactstrap";
+import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
+import variables from "../../../design-tokens/_variables.module.scss";
+import { getWaivers } from "../../../queries/waivers";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -76,16 +84,15 @@ const EventWaiverModal = ({
   const [minorContent, setMinorContent] = useState("");
 
   const loadWaivers = async () => {
-    const adult = await getWaivers("adult", user.organizationId);
-
-    if (adult.data.waiver.length > 0) {
-      setAdultContent(adult.data.waiver[0].text);
+    const adultWaiverResponse = await getWaivers("adult", user.organizationId);
+    console.log(adultWaiverResponse);
+    if (adultWaiverResponse.data.success) {
+      setAdultContent(adultWaiverResponse.data.waivers[0].text);
     }
 
-    const minor = await getWaivers("minor", user.organizationId);
-
-    if (minor.data.waiver.length > 0) {
-      setMinorContent(minor.data.waiver[0].text);
+    const minorWaiverResponse = await getWaivers("minor", user.organizationId);
+    if (minorWaiverResponse.data.success) {
+      setMinorContent(minorWaiverResponse.data.waivers[0].text);
     }
   };
 
@@ -132,9 +139,10 @@ const EventWaiverModal = ({
                       checked={waiverCheckboxSelected}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>
-                    I have read the waiver and agree to its terms and conditions
-                  </Styled.Text>
+                  <Text
+                    text="I have read the waiver and agree to its terms and conditions"
+                    className="ml-4"
+                  />
                 </Styled.Row>
               )}
             </Tabs.Item>
@@ -151,9 +159,10 @@ const EventWaiverModal = ({
                       checked={waiverMinorCheckboxSelected}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>
-                    I have read the waiver and agree to its terms and conditions
-                  </Styled.Text>
+                  <Text
+                    text="I have read the waiver and agree to its terms and conditions"
+                    className="ml-4"
+                  />
                 </Styled.Row>
               )}
             </Tabs.Item>
@@ -182,9 +191,10 @@ const EventWaiverModal = ({
                   checked={waiverCheckboxSelected}
                 />{" "}
               </FormGroup>
-              <Styled.Text>
-                I have read the waiver and agree to its terms and conditions
-              </Styled.Text>
+              <Text
+                text="I have read the waiver and agree to its terms and conditions"
+                className="ml-4"
+              />
             </Styled.Row>
           )}
         </>

@@ -4,21 +4,21 @@ export const filterAttendance = (allAttendance, start, end) => {
     return allAttendance;
   } else if (start === "undefined") {
     for (const attendance of allAttendance) {
-      if (new Date(attendance.timeCheckedOut) <= end) {
+      if (new Date(attendance.checkoutTime) <= end) {
         result.push(attendance);
       }
     }
   } else if (end === "undefined") {
     for (const attendance of allAttendance) {
-      if (new Date(attendance.timeCheckedIn) >= start) {
+      if (new Date(attendance.checkinTime) >= start) {
         result.push(attendance);
       }
     }
   } else {
     for (const attendance of allAttendance) {
       if (
-        new Date(attendance.timeCheckedIn) >= start &&
-        new Date(attendance.timeCheckedOut) <= end
+        new Date(attendance.checkinTime) >= start &&
+        new Date(attendance.checkoutTime) <= end
       ) {
         result.push(attendance);
       }

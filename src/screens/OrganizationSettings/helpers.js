@@ -1,32 +1,26 @@
-import { string, object } from "yup";
+import { string, object, number } from "yup";
 
 export const createOrganizationValidator = object().shape({
-  non_profit_name: string().trim().required("Organization name is required"),
-  non_profit_website: string().nullable().trim().url("Invalid URL"),
-  notification_email: string().nullable().trim().email("Invalid email"),
-  logo_link: string().nullable().trim().url("Invalid URL"),
-  default_address: string().nullable().trim(),
-  default_city: string().nullable().trim(),
-  default_state: string().nullable().trim(),
-  default_zip: string()
+  name: string().trim().required("Organization name is required"),
+  website: string().nullable().trim().url("Invalid URL"),
+  notificationEmail: string().nullable().trim().email("Invalid email"),
+  imageUrl: string().nullable().trim().url("Invalid URL"),
+  theme: string().nullable().trim(),
+
+  defaultEventAddress: string().nullable().trim(),
+  defaultEventCity: string().nullable().trim(),
+  defaultEventState: string().nullable().trim(),
+  defaultEventZip: string()
     .nullable()
     .trim()
     .matches(/^[0-9]+$/, "Must be a number"),
-  default_contact_name: string().nullable().trim(),
-  default_contact_email: string().nullable().trim().email("Invalid email"),
-  default_contact_phone: string().nullable().trim(),
-  theme: string().nullable().trim(),
 
-  event_silver: string()
-    .trim()
-    .matches(/^[0-9]+$/, "Must be a number"),
-  event_gold: string()
-    .trim()
-    .matches(/^[0-9]+$/, "Must be a number"),
-  hours_silver: string()
-    .trim()
-    .matches(/^[0-9]+$/, "Must be a number"),
-  hours_gold: string()
-    .trim()
-    .matches(/^[0-9]+$/, "Must be a number"),
+  defaultContactName: string().nullable().trim(),
+  defaultContactEmail: string().nullable().trim().email("Invalid email"),
+  defaultContactPhone: string().nullable().trim(),
+
+  eventSilver: number(),
+  eventGold: number(),
+  hoursSilver: number(),
+  hoursGold: number(),
 });

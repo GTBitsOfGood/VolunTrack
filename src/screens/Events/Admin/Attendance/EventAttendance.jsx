@@ -1,19 +1,18 @@
+import "flowbite-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import BoGButton from "../../../../components/BoGButton";
+import SearchBar from "../../../../components/SearchBar";
+import Text from "../../../../components/Text";
 import {
   checkInVolunteer,
   checkOutVolunteer,
-  fetchEventsById,
-  getEventVolunteersByAttendance,
-  updateEventById,
-} from "../../../../actions/queries";
-import AttendanceFunctionality from "./AttendanceFunctionality";
-import SearchBar from "../../../../components/SearchBar";
-import "flowbite-react";
-import Text from "../../../../components/Text";
+} from "../../../../queries/attendances";
+import { getEvent, updateEvent } from "../../../../queries/events";
+import { getUsers } from "../../../../queries/users";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
-import BoGButton from "../../../../components/BoGButton";
+import AttendanceFunctionality from "./AttendanceFunctionality";
 
 const Styled = {
   Container: styled.div`
@@ -67,43 +66,36 @@ const EventAttendance = () => {
 
   useEffect(() => {
     (async () => {
-      const fetchedEvent = (await fetchEventsById(eventId)).data.event;
-      setEvent(fetchedEvent);
+      const event = await getEvent(eventId);
+      setEvent(event.data.event);
 
-      const fetchedMinors = {};
-      fetchedEvent.minors.forEach((m) => {
-        fetchedMinors[m.volunteer_id] = m.minor;
-      });
-      setMinors(fetchedMinors);
+      // const fetchedMinors = {};
+      // event.minors.forEach((m) => {
+      //   fetchedMinors[m.volunteer_id] = m.minor;
+      // });
+      // setMinors(fetchedMinors);
 
-      setWaitingVolunteers(
-        (await getEventVolunteersByAttendance(eventId, "waiting")).data
-          .volunteers
-      );
-      console.log(waitingVolunteers);
+      // setWaitingVolunteers(
+      //   (await getEventVolunteersByAttendance(eventId, "waiting")).data
+      //     .volunteers
+      // );
+      // console.log(waitingVolunteers);
 
       setCheckedInVolunteers(
-        (await getEventVolunteersByAttendance(eventId, "checked in")).data
-          .volunteers
+        (await getUsers(undefined, undefined, eventId, true)).data.users
       );
       setCheckedOutVolunteers(
-        (await getEventVolunteersByAttendance(eventId, "checked out")).data
-          .volunteers
+        (await getUsers(undefined, undefined, eventId, false)).data.users
       );
     })();
   }, []);
 
-  const checkIn = (volunteer) => {
-    checkInVolunteer(
-      volunteer._id,
-      eventId,
-      event.title,
-      volunteer.bio.first_name + " " + volunteer.bio.last_name,
-      volunteer.bio.email
-    );
-    setCheckedInVolunteers((volunteers) => [...volunteers, volunteer]);
-    setWaitingVolunteers((volunteers) =>
-      volunteers.filter((v) => v._id !== volunteer._id)
+  const checkIn = async (volunteer) => {
+    await checkInVolunteer(volunteer._id, eventId);
+
+    setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
+    setCheckedOutVolunteers(
+      checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
@@ -118,7 +110,7 @@ const EventAttendance = () => {
   const endEvent = () => {
     const newEvent = { ...event, isEnded: true };
     setEvent(newEvent);
-    updateEventById(eventId, newEvent);
+    updateEvent(eventId, newEvent);
     checkedInVolunteers.forEach((v) => {
       checkOutVolunteer(v._id, eventId);
     });
@@ -129,7 +121,7 @@ const EventAttendance = () => {
   const reopenEvent = () => {
     const newEvent = { ...event, isEnded: false };
     setEvent(newEvent);
-    updateEventById(eventId, newEvent);
+    updateEvent(eventId, newEvent);
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {
@@ -138,21 +130,13 @@ const EventAttendance = () => {
       searchValue.length > 0
         ? volunteers.filter(
             (v) =>
-              v.bio.last_name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase()) ||
-              v.bio.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.bio.first_name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase())
+              v.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.firstName?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>
-      a.bio.last_name > b.bio.last_name
-        ? 1
-        : b.bio.last_name > a.bio.last_name
-        ? -1
-        : 0
+      a.lastName > b.lastName ? 1 : b.lastName > a.lastName ? -1 : 0
     );
   };
 

@@ -15,7 +15,7 @@ const IndexPage = () => {
   return (
     <>
       <h1>
-        Welcome {user.bio.first_name} {user.bio.last_name}
+        Welcome {user.firstName} {user.lastName}
       </h1>
       <h2>Role: {user.role}</h2>
     </>

@@ -1,10 +1,10 @@
 import { IconProps } from "./Icon";
 import { iconData } from "./iconData";
 
-interface IconSpecialProps extends IconProps {
+type IconSpecialProps = IconProps & {
   href: string;
   id: string;
-}
+};
 
 const IconSpecial = ({
   width,

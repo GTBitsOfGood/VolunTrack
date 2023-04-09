@@ -6,12 +6,12 @@ export const capitalizeFirstLetter = (s) => {
 };
 
 export const profileValidator = object().shape({
-  first_name: string().trim().required(" First name is required"),
-  last_name: string().trim().required(" Last name is required"),
+  firstName: string().trim().required(" First name is required"),
+  lastName: string().trim().required(" Last name is required"),
   email: string().trim().email("Invalid email"),
-  phone_number: string().trim().required("Phone number is required"),
-  date_of_birth: string().trim().required(" Date of birth is required"),
-  zip_code: string()
+  phone: string().trim().required("Phone number is required"),
+  dob: string().trim().required(" Date of birth is required"),
+  zip: string()
     .trim()
     .matches(/^\d+$/, " ZIP should have digits only")
     .required("Zip Code is required"),

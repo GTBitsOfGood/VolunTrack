@@ -1,21 +1,22 @@
+import { Button } from "flowbite-react";
 import "focus-visible/dist/focus-visible.min.js";
 import { signIn } from "next-auth/react";
 import "normalize.css";
 import AuthForm from "./AuthForm";
-import { Button, Modal, TextInput } from "flowbite-react";
+import { useState } from "react";
+import { Modal } from "flowbite-react";
+import { TextInput } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
-import { useState } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
+import { sendResetPasswordEmail } from "../../actions/queries";
 import Footer from "../../components/Footer";
 import Text from "../../components/Text";
-import InputField from "../../components/Forms/InputField";
-import { sendResetPasswordEmail } from "../../actions/queries";
 
 const AuthPage = (props) => {
-  const login = (e) => {
+  const login = async (e) => {
     e.preventDefault();
-    signIn("google");
+    const signin = signIn("google");
   };
 
   const [showModal, setShowModal] = useState(false);

@@ -8,6 +8,7 @@ const agendaOptions = {
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      dbName: process.env.DB_NAME,
     },
   },
   processEvery: "1 minute",
