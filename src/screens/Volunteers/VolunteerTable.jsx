@@ -13,7 +13,6 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
-import EditUserForm from "../../components/Forms/EditUserForm";
 import { Icon } from "../../components/Icon";
 
 class VolunteerTable extends React.Component {
@@ -86,21 +85,21 @@ class VolunteerTable extends React.Component {
             .map((user, index) => (
               <Table.Row key={index} evenIndex={index % 2 === 0}>
                 <Table.Cell>
-                {user.firstName} {user.lastName}
+                  {user.firstName} {user.lastName}
                 </Table.Cell>
-                  <div className="flex items-center">
-                    {user.email}
-                    <Tooltip content="Copy" style="light">
-                      <button
-                        className="mx-1"
-                        onClick={() => {
-                          navigator.clipboard.writeText(user.email);
-                        }}
-                      >
-                        <DocumentDuplicateIcon className="text-primaryColor ml-2 h-7" />
-                      </button>
-                    </Tooltip>
-                  </div>
+                <div className="flex items-center">
+                  {user.email}
+                  <Tooltip content="Copy" style="light">
+                    <button
+                      className="mx-1"
+                      onClick={() => {
+                        navigator.clipboard.writeText(user.email);
+                      }}
+                    >
+                      <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                    </button>
+                  </Tooltip>
+                </div>
                 <Table.Cell>
                   {user.phone
                     ? user.phone.substr(0, 3) +
@@ -117,7 +116,7 @@ class VolunteerTable extends React.Component {
                         className="mx-1"
                         onClick={() => this.onDisplayEditUserModal(user)}
                       >
-                        <PencilIcon className="text-primaryColor h-7" />
+                        <PencilIcon className="h-7 text-primaryColor" />
                       </button>
                     </Tooltip>
                     {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
@@ -128,7 +127,7 @@ class VolunteerTable extends React.Component {
                         className="mx-1"
                         onClick={() => this.statsOnClick(user)}
                       >
-                        <ChartBarIcon className="text-primaryColor h-7" />
+                        <ChartBarIcon className="h-7 text-primaryColor" />
                       </button>
                     </Tooltip>
                   </div>

@@ -385,8 +385,7 @@ const EventManager = ({ user, role, isHomePage }) => {
                     : events
                   : filterEvents(events, user)
               }
-              onRegisterClicked={goToRegistrationPage}
-              onUnregister={onUnregister}
+              registrations={registrations}
               user={user}
               isHomePage={isHomePage}
             />

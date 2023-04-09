@@ -86,10 +86,6 @@ const EventsList = ({
     upcomingEvents = upcomingEvents.slice(0, 2);
   }
 
-  const functions = {
-    convertTime: convertTime,
-  };
-
   const [currentPage, setCurrentPage] = useState(0);
   const onPageChange = () => {
     setCurrentPage(currentPage + 10);
