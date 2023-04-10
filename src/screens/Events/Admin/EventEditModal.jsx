@@ -1,24 +1,11 @@
-import { ErrorMessage, Form as FForm } from "formik";
 import { Modal, ModalHeader } from "reactstrap";
 import styled from "styled-components";
-
+import Text from "../../../components/Text";
 import PropTypes from "prop-types";
 import variables from "../../../design-tokens/_variables.module.scss";
 import EventFormModal from "./EventFormModal";
 
 const Styled = {
-  Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
-  `,
   ModalHeader: styled(ModalHeader)`
     border-color: transparent;
     p {
@@ -31,27 +18,17 @@ const Styled = {
       border-bottom: 2px solid ${variables["dark"]};
     }
   `,
-  HeaderText: styled.p`
-    color: ${variables["dark"]};
-    font-weight: 900;
-    font-size: 1.2em;
-    border-bottom: 2px solid ${variables["dark"]};
-    padding-right: 3.5rem;
-    padding-left: 2rem;
-    margin-left: 5rem;
-    margin-right: 5rem;
-    text-align: center;
-    display: inline;
-  `,
 };
 
 const EventEditModal = ({ open, toggle, event, setEvent }) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="xl">
       <Styled.ModalHeader toggle={toggle} />
-      <Styled.HeaderText>
-        <p>Edit Event</p>
-      </Styled.HeaderText>
+      <Text
+        className="mx-auto w-3/4 border-b-2 border-b-primaryColor text-center text-primaryColor"
+        text="Edit Event"
+        type="subheader"
+      />
       <EventFormModal
         toggle={toggle}
         event={event}

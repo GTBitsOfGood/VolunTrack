@@ -1,8 +1,9 @@
+import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { getHistoryEvents, getUsers } from "../../actions/queries";
-import { Table } from "flowbite-react";
+import { getHistoryEvents } from "../../queries/historyEvents";
+import { getUsers } from "../../queries/users";
 import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import Text from "../../components/Text";
@@ -17,8 +18,9 @@ const History = () => {
 
   useEffect(() => {
     (async () => {
-      const fetchedHistoryEvents = (await getHistoryEvents(user.organizationId))
-        .data;
+      const fetchedHistoryEvents = (
+        await getHistoryEvents({ organizationId: user.organizationId })
+      ).data.historyEvents;
       const admins = (await getUsers(user.organizationId, "admin")).data.users;
       const mappedHistoryEvents = await Promise.all(
         fetchedHistoryEvents.map(async (event) => {
@@ -27,8 +29,8 @@ const History = () => {
           );
           return {
             ...event,
-            firstName: matchedAdmin?.first_name ?? "Unknown",
-            lastName: matchedAdmin?.last_name ?? "Admin",
+            firstName: matchedAdmin?.firstName ?? "Unknown",
+            lastName: matchedAdmin?.lastName ?? "Admin",
           };
         })
       );

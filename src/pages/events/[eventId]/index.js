@@ -2,11 +2,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
-import BoGButton from "../../../components/BoGButton";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../actions/queries";
+import BoGButton from "../../../components/BoGButton";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
+import { getEvent } from "../../../queries/events";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
 
@@ -95,7 +95,7 @@ const convertTime = (time) => {
 const EventInfo = () => {
   const router = useRouter();
   const { eventId } = router.query;
-  const [event, setEvent] = useState([]);
+  let [event, setEvent] = useState([]);
 
   const { data: session } = useSession();
   const user = session.user;
@@ -104,7 +104,7 @@ const EventInfo = () => {
   const [showUnregisterModal, setUnregisterModal] = useState(false);
 
   const onRefresh = () => {
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       setEvent(result.data.event);
     });
   };
@@ -162,10 +162,10 @@ const EventInfo = () => {
     <>
       <Styled.EventTableAll>
         <Text
-          className="ml-16 mb-4"
+          className="mb-4 ml-16"
           href={`/events`}
           onClick={() => goBackToCal()}
-          text="< Back to home"
+          text="← Back to home"
         />
         <Styled.EventTable>
           <Col>
@@ -174,7 +174,8 @@ const EventInfo = () => {
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
-                  {event.max_volunteers - event.volunteers.length} Slots
+                  {event.max_volunteers} Slots
+                  {/* TODO: {event.max_volunteers - event.volunteers.length} Slots*/}
                   Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>
@@ -196,13 +197,13 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <div className="mr-4 mb-4 ml-3">
+                  <div className="mb-4 ml-3 mr-4">
                     <BoGButton
                       text="Manage Attendance"
                       onClick={routeToRegisteredVolunteers}
                     />
                   </div>
-                  <div className="mr-3 mb-4 ml-4">
+                  <div className="mb-4 ml-4 mr-3">
                     <BoGButton
                       text="View Participation Statistics"
                       onClick={routeToStats}
@@ -211,7 +212,7 @@ const EventInfo = () => {
                 </>
               )}
               {user.role === "volunteer" &&
-                event.volunteers.includes(user._id) &&
+                // event.volunteers.includes(user._id) &&
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"
@@ -313,8 +314,8 @@ const EventInfo = () => {
           </Col>
         </Styled.EventTable>
         {user.role === "volunteer" &&
-          event.max_volunteers - event.volunteers.length !== 0 &&
-          !event.volunteers.includes(user._id) &&
+          // event.max_volunteers - event.volunteers.length !== 0 &&
+          // !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               text="Register"
@@ -322,8 +323,8 @@ const EventInfo = () => {
             />
           )}
         {user.role === "volunteer" &&
-          event.max_volunteers - event.volunteers.length === 0 &&
-          !event.volunteers.includes(user._id) &&
+          // event.max_volunteers - event.volunteers.length === 0 &&
+          // !event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               disabled={true}
@@ -332,7 +333,7 @@ const EventInfo = () => {
             />
           )}
         {user.role === "volunteer" &&
-          event.volunteers.includes(user._id) &&
+          // event.volunteers.includes(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               text="You are registered for this event!"

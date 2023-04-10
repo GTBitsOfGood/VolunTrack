@@ -1,15 +1,15 @@
 import { Formik } from "formik";
-import React, { useState } from "react";
-import "react-quill/dist/quill.snow.css";
-import { fetchEvents, getEventStatistics } from "../../../actions/queries";
-import { useEffect } from "react";
-import EventTable from "../../../components/EventStatsTable";
-import { Col, Row } from "reactstrap";
-import BoGButton from "../../../components/BoGButton";
-import styled from "styled-components";
-import Loading from "../../../components/Loading";
 import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import "react-quill/dist/quill.snow.css";
+import { Col, Row } from "reactstrap";
+import styled from "styled-components";
+import BoGButton from "../../../components/BoGButton";
+import EventTable from "../../../components/EventStatsTable";
 import InputField from "../../../components/Forms/InputField";
+import Loading from "../../../components/Loading";
+import { getAttendances } from "../../../queries/attendances";
+import { getEvents } from "../../../queries/events";
 import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
 
 const Styled = {
@@ -80,36 +80,38 @@ const Stats = () => {
   const onRefresh = async () => {
     // grab the events
     setLoading(true);
-    fetchEvents(startDate, endDate, user.organizationId)
+    getEvents(startDate, endDate, user.organizationId)
       .then(async (result) => {
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getEventStatistics(startDate, endDate).then((stats) => {
-          let computedStats = [];
-          var totalAttendance = 0;
-          var totalHours = 0;
-          for (let event of result.data.events) {
-            let stat = stats.data.find((s) => s._id === event._id);
-            if (stat) {
-              totalAttendance += stat.uniqueUsers.length;
-              totalHours += stat.minutes / 60.0;
+        getAttendances(undefined, undefined, startDate, endDate).then(
+          (stats) => {
+            let computedStats = [];
+            var totalAttendance = 0;
+            var totalHours = 0;
+            for (let event of result.data.events) {
+              let stat = stats.data.find((s) => s._id === event._id);
+              if (stat) {
+                totalAttendance += stat.uniqueUsers.length;
+                totalHours += stat.minutes / 60.0;
 
-              computedStats.push({
-                _id: event._id,
-                title: event.title,
-                date: event.date,
-                startTime: event.startTime,
-                endTime: event.endTime,
-                attendance: stat.uniqueUsers.length,
-                hours: Math.round((stat.minutes / 60.0) * 100) / 100,
-              });
+                computedStats.push({
+                  _id: event._id,
+                  title: event.title,
+                  date: event.date,
+                  startTime: event.startTime,
+                  endTime: event.endTime,
+                  attendance: stat.uniqueUsers.length,
+                  hours: Math.round((stat.minutes / 60.0) * 100) / 100,
+                });
+              }
             }
-          }
 
-          setAttend(totalAttendance);
-          setHours(Math.round(totalHours * 100) / 100);
-          setComputedStats(computedStats);
-        });
+            setAttend(totalAttendance);
+            setHours(Math.round(totalHours * 100) / 100);
+            setComputedStats(computedStats);
+          }
+        );
       })
       .finally(() => {
         setLoading(false);

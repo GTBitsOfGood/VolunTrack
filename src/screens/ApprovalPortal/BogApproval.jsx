@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { fetchOrganizations } from "../../actions/queries";
-import OrganizationCard from "./OrganizationCard";
-import OrganizationToggleModal from "./OrganizationToggleModal";
+import { Spinner } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import { Spinner } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { getOrganizations } from "../../queries/organizations";
+import OrganizationCard from "./OrganizationCard";
+import OrganizationToggleModal from "./OrganizationToggleModal";
 
 const BogApproval = () => {
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ const BogApproval = () => {
 
   const onRefresh = () => {
     setLoading(true);
-    fetchOrganizations()
+    getOrganizations()
       .then((result) => {
         if (result) {
           setOrganizations(result.data);

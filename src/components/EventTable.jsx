@@ -84,20 +84,20 @@ const EventTable = ({
                       {event.eventName}
                     </Link>
                   </Table.Cell>
-                  <Table.Cell>{event.timeCheckedIn.slice(0, 10)}</Table.Cell>
+                  <Table.Cell>{event.checkinTime.slice(0, 10)}</Table.Cell>
                   <Table.Cell>
-                    {convertTime(event.timeCheckedIn.slice(11, 16))} -{" "}
-                    {event.timeCheckedOut == null
+                    {convertTime(event.checkinTime.slice(11, 16))} -{" "}
+                    {event.checkoutTime == null
                       ? "N/A"
-                      : convertTime(event.timeCheckedOut.slice(11, 16))}
+                      : convertTime(event.checkoutTime.slice(11, 16))}
                   </Table.Cell>
                   <Table.Cell>
                     &emsp;
-                    {event.timeCheckedOut == null
+                    {event.checkoutTime == null
                       ? "0 hour(s)"
                       : getHours(
-                          event.timeCheckedIn.slice(11, 16),
-                          event.timeCheckedOut.slice(11, 16)
+                          event.checkinTime.slice(11, 16),
+                          event.checkoutTime.slice(11, 16)
                         ) + " hour(s)"}
                   </Table.Cell>
                 </Table.Row>
