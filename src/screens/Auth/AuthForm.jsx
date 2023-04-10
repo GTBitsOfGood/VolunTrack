@@ -127,7 +127,7 @@ class AuthForm extends React.Component {
                 text={
                   this.props.createAccount ? "Create an account" : "Sign In"
                 }
-                className="bg-primaryColor hover:bg-hoverColor mb-4 w-full"
+                className="mb-4 w-full bg-primaryColor hover:bg-hoverColor"
               />
             </form>
           )}
