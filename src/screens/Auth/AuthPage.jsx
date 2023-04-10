@@ -27,7 +27,7 @@ const AuthPage = (props) => {
         <Text
           text={props.createAccount ? "Create an Account" : "Sign In"}
           type="header"
-          className="pb-2"
+          className="mb-4 pt-3"
         />
         <div className="flex w-full flex-wrap items-center gap-2">
           <Button color="light" className="w-full py-1" onClick={login}>
@@ -39,7 +39,7 @@ const AuthPage = (props) => {
             <p className="my-0 text-lg">Continue with Google</p>
           </Button>
         </div>
-        <div className="mt-2 flex w-full items-center justify-between">
+        <div className="mb-1 mt-4 flex w-full items-center justify-between">
           <hr size="150" width="150" color="#6C757D" />
           <Text text="OR" />
           <hr size="150" width="150" color="#6C757D" />
@@ -58,9 +58,21 @@ const AuthPage = (props) => {
             href={`${window.location.origin}/${
               props.createAccount ? "login" : "create-account"
             }`}
-            className="ml-2"
+            className="ml-2 text-sky-600"
           />
         </div>
+        {!props.createAccount && (
+          <div className="mt-1 flex items-center">
+            Forgot Password?
+            <Text
+              text={"Reset Password"}
+              href={`${window.location.origin}/${
+                props.createAccount ? "login" : "create-account"
+              }`}
+              className="ml-2 text-sky-600"
+            />
+          </div>
+        )}
       </div>
       <div className="grow" />
       <Footer />
