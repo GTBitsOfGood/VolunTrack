@@ -90,7 +90,7 @@ const ResetPage = () => {
                           onClick={handleSubmit}
                           disabled={!isValid || isSubmitting}
                           text={"Submit"}
-                          className="bg-primaryColor hover:bg-hoverColor w-full"
+                          className="w-full bg-primaryColor hover:bg-hoverColor"
                         />
                       </form>
                     )}

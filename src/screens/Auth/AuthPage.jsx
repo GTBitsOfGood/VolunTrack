@@ -22,8 +22,6 @@ const AuthPage = (props) => {
   const [showModal, setShowModal] = useState(false);
 
   const sendResetEmail = async () => {
-    // console.log("sending reset email")
-
     const email = document.getElementById("email1").value;
     const response = await sendResetPasswordEmail(email);
 

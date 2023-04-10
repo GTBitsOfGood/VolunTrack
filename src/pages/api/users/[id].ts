@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import User from "../../../../server/mongodb/models/User";
 import { userInputValidator } from "../../../validators/users";
+import bcrypt, { compare, hash } from "bcrypt";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -20,6 +21,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "PUT": {
       const result = userInputValidator.partial().safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
+
+      await user.updateOne(result.data);
+      return res.status(200).json({ success: true, user });
+    }
+    case "POST": {
+      const result = userInputValidator.partial().safeParse(req.body);
+      if (!result.success) return res.status(400).json(result);
+
+      result.data.passwordHash = await hash(
+        `${user.email}${result.data.password}`,
+        10
+      );
 
       await user.updateOne(result.data);
       return res.status(200).json({ success: true, user });

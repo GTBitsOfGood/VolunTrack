@@ -46,9 +46,6 @@ export const sendResetPasswordEmail = (email) =>
 
 export const getUserIdFromCode = (code) =>
   axios.get(`/api/auth/resetPassword?code=` + code);
-// returns the userId
-// export const resetPassword = (resetCode, newPassword) =>
-//   axios.post(`/api/users/resetPassword`, { email });
 
 // credentials signup
 export const createUserFromCredentials = (user) =>

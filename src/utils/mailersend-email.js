@@ -1,4 +1,6 @@
+import { ReceiptPercentIcon } from "@heroicons/react/24/solid";
 import Organization from "../../server/mongodb/models/Organization";
+import ResetCode from "../../server/mongodb/models/ResetCode";
 
 const Recipient = require("mailersend").Recipient;
 const EmailParams = require("mailersend").EmailParams;
@@ -36,22 +38,26 @@ export const sendRegistrationConfirmationEmail = async (user, event) => {
 export const sendResetCodeEmail = async (user, email, code) => {
   const organization = await Organization.findById(user.organizationId).lean();
 
-  console.log(user);
-  
   const personalization = [
     {
       email: email,
       data: {
-        volunteerName: user.bio.first_name,
+        // TO DO: change this
+        volunteerName: user.firstName,
         code: code,
         link: "https://volunteer.bitsofgood.org/passwordreset/" + code,
-        eventContactEmail: organization.defaultContactEmail,
+        eventContactEmail: organization.defaultContactEmail
+          ? organization.defaultContactEmail
+          : "hello@bitsofgood.org",
         nonprofitName: organization.name,
       },
     },
   ];
 
   sendResetEmail(user, personalization, `Password Reset Request`);
+
+  // delete the code from the ResetCode model
+  ResetCode.deleteOne({ code: code });
 };
 
 export const sendEventEditedEmail = async (user, event) => {

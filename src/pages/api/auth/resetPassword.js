@@ -13,6 +13,7 @@ export default async function handler(req, res, next) {
 
     const code = makeCode(6);
     await uploadResetCode(existingUser, email, code);
+
     sendResetCodeEmail(existingUser, email, code);
 
     res.status(200).json({ message: "Email Sent" });

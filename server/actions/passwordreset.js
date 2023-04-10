@@ -1,12 +1,12 @@
 import { sendResetCodeEmail } from "../../src/utils/mailersend-email";
 import dbConnect from "../mongodb/index";
-import resetCode from "../mongodb/models/resetCode";
+import ResetCode from "../mongodb/models/ResetCode";
 import User from "../mongodb/models/user";
 
 export async function getUserIdFromCode(code) {
   await dbConnect();
 
-  const userId = await resetCode.findOne({ code: code });
+  const userId = await ResetCode.findOne({ code: code });
 
   return userId;
 }
@@ -14,7 +14,7 @@ export async function getUserIdFromCode(code) {
 export async function getUserFromEmail(email) {
   await dbConnect();
 
-  const existingUser = await User.findOne({ "bio.email": email });
+  const existingUser = await User.findOne({ email: email });
   if (!existingUser) {
     return {
       status: 400,
@@ -30,7 +30,7 @@ export async function uploadResetCode(existingUser, email, code) {
 
   const userId = existingUser._id;
 
-  await resetCode.create({
+  await ResetCode.create({
     userId: userId,
     email: email,
     code: code,

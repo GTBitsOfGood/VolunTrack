@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
-import resetCode from "../mongodb/models/resetCode";
+import ResetCode from "../mongodb/models/ResetCode";
 
 export async function old_createUserFromCredentials(user) {
   await dbConnect();
@@ -169,7 +169,7 @@ export async function old_updateUser(id, userInfo) {
       { passwordHash: hash }
     );
 
-    await resetCode.findOneAndDelete({ userId: mongoose.Types.ObjectId(id) });
+    await ResetCode.findOneAndDelete({ userId: mongoose.Types.ObjectId(id) });
   }
 
   if (bio) {
