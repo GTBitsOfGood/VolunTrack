@@ -2,14 +2,14 @@ import "focus-visible/dist/focus-visible.min.js";
 import { SessionProvider } from "next-auth/react";
 import "normalize.css";
 import PropTypes from "prop-types";
+import "tailwindcss/tailwind.css";
 import "../../public/static/styles/App.css";
 import "../../public/static/styles/bootstrap.min.css";
-import "tailwindcss/tailwind.css";
+import Footer from "../components/Footer";
 import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
 import ThemeWrapper from "../providers/StyleProvider";
-import Footer from "../components/Footer";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (

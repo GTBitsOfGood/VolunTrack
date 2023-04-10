@@ -8,15 +8,16 @@ const AdminHomeHeader = (props) => {
   let events = 0;
   let volunteers = 0;
   let firstDate = "";
-  for (let i = 0; i < props.data.length; i++) {
-    let splitDate = new Date(props.data[i].date).toDateString().split(" ");
+
+  for (let i = 0; i < props.events.length; i++) {
+    let splitDate = new Date(props.events[i].date).toDateString().split(" ");
     let final = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     if (final === props.dateString) {
       events++;
-      volunteers += props.data[i].volunteers.length;
+      // volunteers += props.events[i].volunteers.length;
     }
-    if (i === props.data.length - 1) {
-      let split = props.data[i].date;
+    if (i === props.events.length - 1) {
+      let split = props.events[i].date;
       firstDate =
         split.substring(5, 7) +
         "/" +
@@ -220,17 +221,20 @@ const AdminHomeHeader = (props) => {
                 />
               </div>
               <div className="flex-column flex">
-                <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
-                  <p className="pl-2 text-2xl">{events}</p>
-                  <p className="text-md pl-2 text-slate-600">
+                <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                  <p className="mb-0 pl-2 text-2xl">{events}</p>
+                  <p className="text-md mb-0 pl-2 text-slate-600">
                     {" "}
-                    Upcoming Events
+                    Scheduled Events
                   </p>
                 </div>
                 <hr className="mx-2 my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-                <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
-                  <p className="pl-2 text-2xl">{volunteers}</p>
-                  <p className="text-md pl-2 text-slate-600"> Volunteers</p>
+                <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                  <p className="mb-0 pl-2 text-2xl">{volunteers}</p>
+                  <p className="text-md mb-0 pl-2 text-slate-600">
+                    {" "}
+                    Volunteers
+                  </p>
                 </div>
               </div>
             </div>
@@ -244,19 +248,19 @@ const AdminHomeHeader = (props) => {
               </p>
             </div>
             <div className="flex-column flex">
-              <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
-                <p className="pl-2 text-2xl">{props.numEvents}</p>
-                <p className="text-md pl-2 text-slate-600"> Events</p>
+              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                <p className="mb-0 pl-2 text-2xl">{props.numEvents}</p>
+                <p className="text-md mb-0 pl-2 text-slate-600"> Events</p>
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-              <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
-                <p className="pl-2 text-2xl">{props.attend}</p>
-                <p className="text-md pl-2 text-slate-600"> Attendance</p>
+              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                <p className="mb-0 pl-2 text-2xl">{props.attend}</p>
+                <p className="text-md mb-0 pl-2 text-slate-600"> Attendance</p>
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-              <div className="text-primaryColor flex flex-nowrap items-center font-semibold">
-                <p className="pl-2 text-2xl">{props.hours}</p>
-                <p className="text-md pl-2 text-slate-600"> Hours</p>
+              <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
+                <p className="mb-0 pl-2 text-2xl">{props.hours}</p>
+                <p className="text-md mb-0 pl-2 text-slate-600"> Hours</p>
               </div>
             </div>
           </div>
@@ -272,7 +276,7 @@ const AdminHomeHeader = (props) => {
 };
 
 AdminHomeHeader.propTypes = {
-  data: PropTypes.object.isRequired,
+  events: PropTypes.array.isRequired,
   dateString: PropTypes.string.isRequired,
   numEvents: PropTypes.object.isRequired,
   attend: PropTypes.object.isRequired,

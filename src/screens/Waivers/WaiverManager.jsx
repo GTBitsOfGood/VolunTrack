@@ -1,13 +1,9 @@
-import { useSession } from "next-auth/react";
-import Error from "next/error";
-import { useRef } from "react";
-import { useEffect, useState } from "react";
 import { Tabs } from "flowbite-react";
-import { getWaivers } from "../../actions/queries";
-
-import { updateWaiver } from "../../actions/queries";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import BoGButton from "../../components/BoGButton";
+import { getWaivers, updateWaiver } from "../../queries/waivers";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const WaiverManager = () => {
@@ -29,14 +25,14 @@ const WaiverManager = () => {
   const loadWaivers = async () => {
     const adult = await getWaivers("adult", user.organizationId);
 
-    if (adult.data.waiver.length > 0) {
-      setAdultContent(adult.data.waiver[0].text);
+    if (adult.data.waivers.length > 0) {
+      setAdultContent(adult.data.waivers[0].text);
     }
 
     const minor = await getWaivers("minor", user.organizationId);
 
-    if (minor.data.waiver.length > 0) {
-      setMinorContent(minor.data.waiver[0].text);
+    if (minor.data.waivers.length > 0) {
+      setMinorContent(minor.data.waivers[0].text);
     }
   };
 
@@ -45,11 +41,19 @@ const WaiverManager = () => {
   }, []);
 
   const submitAdult = () => {
-    updateWaiver("adult", adultContent, user.organizationId);
+    updateWaiver({
+      type: "adult",
+      text: adultContent,
+      organizationId: user.organizationId,
+    });
   };
 
   const submitMinor = () => {
-    updateWaiver("minor", minorContent, user.organizationId);
+    updateWaiver({
+      type: "minor",
+      text: minorContent,
+      organizationId: user.organizationId,
+    });
   };
 
   const setAdultTab = () => {

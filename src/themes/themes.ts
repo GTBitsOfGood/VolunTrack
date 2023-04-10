@@ -1,6 +1,6 @@
 export const applyTheme = (theme: string) => {
   const root = document.documentElement;
-  if (!theme || !themes[theme]) theme = "magenta";
+  if (!theme || !(theme in themes)) theme = "magenta";
   Object.keys(themes[theme]).forEach((cssVar) => {
     root.style.setProperty(cssVar, themes[theme][cssVar]);
   });
@@ -19,7 +19,7 @@ const createTheme = (
 // TODO: change these all to primary=800, hover=700, secondary=200?
 // Depends how we want the secondary color to be used. Regardless, the colors need to be adjusted
 
-export const themes = {
+export const themes: { [theme: string]: ThemeType } = {
   red: createTheme("#991b1b", "#dc2626", "#b91c1c"),
   orange: createTheme("#c2410c", "#f97316", "#ea580c"),
   yellow: createTheme("#854d0e", "#fef08a", "#a16207"),
@@ -30,6 +30,6 @@ export const themes = {
   magenta: createTheme("#9d174d", "#fbcfe8", "#be185d"),
 };
 
-interface ThemeType {
+type ThemeType = {
   [cssVariable: string]: string;
-}
+};

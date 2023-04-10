@@ -3,9 +3,8 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import React from "react";
-import { useEffect } from "react";
-import { getOrganizationData } from "../actions/queries";
+import React, { useEffect } from "react";
+import { getOrganization } from "../queries/organizations";
 
 const Header = () => {
   const router = useRouter();
@@ -38,7 +37,7 @@ const Header = () => {
   };
 
   const goToManageAdmins = () => {
-    router.push("/assistants");
+    router.push("/admins");
   };
 
   const goToManageWaivers = () => {
@@ -84,8 +83,9 @@ const Header = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const response = await getOrganizationData(user.organizationId);
-      if (response.data.orgData) setImageURL(response.data.orgData.imageURL);
+      const response = await getOrganization(user.organizationId);
+      if (response.data.organization)
+        setImageURL(response.data.organization.imageUrl);
     }
     fetchData();
   }, []);
@@ -99,7 +99,7 @@ const Header = () => {
       <Navbar.Collapse>
         <Navbar.Link
           href="/home"
-          className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
             currPageMatches("/home") ? "text-primaryColor" : ""
           }`}
         >
@@ -108,7 +108,7 @@ const Header = () => {
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
-            className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/volunteers") ? "text-primaryColor" : ""
             }`}
           >
@@ -117,7 +117,7 @@ const Header = () => {
         )}
         <Navbar.Link
           href="/events"
-          className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
             currPageMatches("/events") ? "text-primaryColor" : ""
           }`}
         >
@@ -127,7 +127,7 @@ const Header = () => {
           <Navbar.Link
             onClick={goToStats}
             href="/stats"
-            className={`md:hover:text-primaryColor text-lg font-bold hover:no-underline ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/stats") ? "text-primaryColor" : ""
             }`}
           >
@@ -141,8 +141,8 @@ const Header = () => {
               inline={true}
               label={
                 <div
-                  className={`md:hover:text-primaryColor text-lg font-bold  ${
-                    currPageMatches("/assistants") ||
+                  className={`text-lg font-bold md:hover:text-primaryColor  ${
+                    currPageMatches("/admins") ||
                     currPageMatches("/manage-waivers") ||
                     currPageMatches("/organization-settings")
                       ? "text-primaryColor"
@@ -153,7 +153,7 @@ const Header = () => {
                 </div>
               }
             >
-              <Dropdown.Item onClick={goToManageAdmins} href="/assistants">
+              <Dropdown.Item onClick={goToManageAdmins} href="/admins">
                 Manage Admins
               </Dropdown.Item>
               <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
@@ -180,7 +180,7 @@ const Header = () => {
                   rounded={true}
                 />
                 <div className="ml-3 flex flex-col gap-0 text-left">
-                  <p className="mb-0">{`${user.bio?.first_name} ${user.bio?.last_name}`}</p>
+                  <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
                   <p className="mb-0 capitalize">{user.role}</p>
                 </div>
               </div>
