@@ -1,10 +1,10 @@
-import { HydratedDocument, Types } from "mongoose";
+import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Attendance, {
-  AttendanceData,
+  AttendanceDocument,
+  attendanceInputServerValidator,
 } from "../../../../server/mongodb/models/Attendance";
-import { attendanceInputValidator } from "../../../validators/attendances";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -30,8 +30,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? new Date(req.query.checkoutTimeEnd as string)
         : undefined;
 
-      const attendances: HydratedDocument<AttendanceData>[] =
-        await Attendance.find();
+      const attendances: AttendanceDocument[] = await Attendance.find();
       if (userId)
         attendances.filter((attendance) => attendance.userId === userId);
       if (eventId)
@@ -46,31 +45,32 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           (attendance) =>
             attendance.checkinTime && attendance.checkinTime <= checkinTimeEnd
         );
-      if (checkoutTimeStart)
-        attendances.filter(
-          (attendance) =>
-            attendance.checkoutTime &&
-            attendance.checkoutTime >= checkoutTimeStart
-        );
-      if (checkoutTimeEnd)
-        attendances.filter(
-          (attendance) =>
-            attendance.checkoutTime &&
-            attendance.checkoutTime <= checkoutTimeEnd
-        );
+      if (checkoutTimeStart === null && checkoutTimeEnd === null)
+        attendances.filter((attendance) => attendance.checkoutTime === null);
+      else {
+        if (checkoutTimeStart)
+          attendances.filter(
+            (attendance) =>
+              attendance.checkoutTime &&
+              attendance.checkoutTime >= checkoutTimeStart
+          );
+        if (checkoutTimeEnd)
+          attendances.filter(
+            (attendance) =>
+              attendance.checkoutTime &&
+              attendance.checkoutTime <= checkoutTimeEnd
+          );
+      }
 
-      return res.status(200).json({ success: true, attendances });
+      return res.status(200).json({ attendances });
     }
     case "POST": {
-      if (attendanceInputValidator.safeParse(req.body).success)
-        return res.status(201).json({
-          success: true,
-          attendance: await Attendance.create(req.body),
-        });
+      const result = attendanceInputServerValidator.safeParse(req.body);
+      if (!result.success) return res.status(400).json({ error: result.error });
 
       return res
-        .status(400)
-        .json({ success: false, error: "Invalid attendance data format" });
+        .status(201)
+        .json({ attendance: await Attendance.create(result.data) });
     }
   }
 };

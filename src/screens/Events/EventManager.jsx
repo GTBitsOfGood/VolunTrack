@@ -1,9 +1,8 @@
 // import { differenceInCalendarDays } from "date-fns";
 import "flowbite-react";
 import { Dropdown } from "flowbite-react";
-import router from "next/router";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
@@ -11,6 +10,7 @@ import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
+import { UserContext } from "../../providers/AuthProvider";
 import {
   getAttendances,
   getAttendanceStatistics,
@@ -19,7 +19,6 @@ import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
 import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
-import { updateEvent } from "./eventHelpers";
 import EventsList from "./EventsList";
 
 // const isSameDay = (a) => (b) => {
@@ -108,7 +107,9 @@ const Styled = {
   `,
 };
 
-const EventManager = ({ user, role, isHomePage }) => {
+const EventManager = ({ isHomePage }) => {
+  const user = useContext(UserContext);
+
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);
   const [filteredEvents, setFilteredEvents] = useState([]);
@@ -130,7 +131,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
-      if (result && result.data && result.data.events) {
+      if (result?.data?.events) {
         setEvents(result.data.events);
         setDates(result.data.events);
       }
@@ -168,9 +169,10 @@ const EventManager = ({ user, role, isHomePage }) => {
       eventState.push(hourChart);
       eventState.push(attendChart);
     });
-    getRegistrations(undefined, undefined, user.id)
+    getRegistrations(undefined, user._id)
       .then((result) => {
-        if (result.data.success) setRegistrations(result.data.registrations);
+        if (result.data.registrations)
+          setRegistrations(result.data.registrations);
       })
       .finally(() => setLoading(false));
   };
@@ -280,10 +282,10 @@ const EventManager = ({ user, role, isHomePage }) => {
     const value = label;
     if (value === "Public Events") {
       setFilterOn(true);
-      setFilteredEvents(events.filter((event) => !event.isPrivate));
+      setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate));
     } else if (value === "Private Group Events") {
       setFilterOn(true);
-      setFilteredEvents(events.filter((event) => event.isPrivate));
+      setFilteredEvents(events.filter((event) => event.eventParent.isPrivate));
     } else if (value === "All Events") {
       setFilterOn(false);
     }
@@ -315,7 +317,7 @@ const EventManager = ({ user, role, isHomePage }) => {
       )}
       {!isHomePage && (
         <Styled.Right>
-          {role === "admin" ? (
+          {user.role === "admin" ? (
             <div className="my-4 flex w-full items-center justify-between">
               <Dropdown
                 inline={true}
@@ -437,7 +439,5 @@ const EventManager = ({ user, role, isHomePage }) => {
 export default EventManager;
 
 EventManager.propTypes = {
-  isHomePage: PropTypes.bool.isRequired,
-  role: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 };

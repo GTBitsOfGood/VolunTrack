@@ -66,41 +66,55 @@ const EventAttendance = () => {
 
   useEffect(() => {
     (async () => {
-      const event = await getEvent(eventId);
-      setEvent(event.data.event);
+      const eventResponse = await getEvent(eventId);
+      setEvent(eventResponse.data.event);
 
-      // const fetchedMinors = {};
-      // event.minors.forEach((m) => {
-      //   fetchedMinors[m.volunteer_id] = m.minor;
-      // });
-      // setMinors(fetchedMinors);
+      const waitingUsers = (
+        await getUsers(
+          eventResponse.data.event.eventParent.organizationId,
+          "volunteer",
+          eventId,
+          "waiting"
+        )
+      ).data.users;
+      const checkedInUsers = (
+        await getUsers(
+          eventResponse.data.event.eventParent.organizationId,
+          "volunteer",
+          eventId,
+          "checkedIn"
+        )
+      ).data.users;
+      const checkedOutUsers = (
+        await getUsers(
+          eventResponse.data.event.eventParent.organizationId,
+          "volunteer",
+          eventId,
+          "checkedOut"
+        )
+      ).data.users;
 
-      // setWaitingVolunteers(
-      //   (await getEventVolunteersByAttendance(eventId, "waiting")).data
-      //     .volunteers
-      // );
-      // console.log(waitingVolunteers);
-
-      setCheckedInVolunteers(
-        (await getUsers(undefined, undefined, eventId, true)).data.users
-      );
-      setCheckedOutVolunteers(
-        (await getUsers(undefined, undefined, eventId, false)).data.users
-      );
+      setWaitingVolunteers(waitingUsers);
+      setCheckedInVolunteers(checkedInUsers);
+      setCheckedOutVolunteers(checkedOutUsers);
     })();
   }, []);
 
   const checkIn = async (volunteer) => {
     await checkInVolunteer(volunteer._id, eventId);
 
+    setWaitingVolunteers(
+      waitingVolunteers.filter((v) => v._id !== volunteer._id)
+    );
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(
       checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
-  const checkOut = (volunteer) => {
-    checkOutVolunteer(volunteer._id, eventId);
+  const checkOut = async (volunteer) => {
+    await checkOutVolunteer(volunteer._id, eventId);
+
     setCheckedOutVolunteers((volunteers) => [...volunteers, volunteer]);
     setCheckedInVolunteers((volunteers) =>
       volunteers.filter((v) => v._id !== volunteer._id)

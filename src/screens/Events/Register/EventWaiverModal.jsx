@@ -1,7 +1,6 @@
 import { Tabs } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import Text from "../../../components/Text";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Col,
@@ -15,6 +14,7 @@ import {
 } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
+import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { getWaivers } from "../../../queries/waivers";
 
@@ -85,7 +85,6 @@ const EventWaiverModal = ({
 
   const loadWaivers = async () => {
     const adultWaiverResponse = await getWaivers("adult", user.organizationId);
-    console.log(adultWaiverResponse);
     if (adultWaiverResponse.data.success) {
       setAdultContent(adultWaiverResponse.data.waivers[0].text);
     }

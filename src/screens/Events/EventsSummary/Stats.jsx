@@ -1,6 +1,5 @@
 import { Formik } from "formik";
-import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Col, Row } from "reactstrap";
 import styled from "styled-components";
@@ -8,6 +7,7 @@ import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventStatsTable";
 import InputField from "../../../components/Forms/InputField";
 import Loading from "../../../components/Loading";
+import { UserContext } from "../../../providers/AuthProvider";
 import { getAttendances } from "../../../queries/attendances";
 import { getEvents } from "../../../queries/events";
 import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
@@ -62,6 +62,8 @@ const Styled = {
 };
 
 const Stats = () => {
+  const user = useContext(UserContext);
+
   const [computedStats, setComputedStats] = useState([]);
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
@@ -70,9 +72,6 @@ const Stats = () => {
   const [endDate, setEndDate] = useState("undefined");
   const [loading, setLoading] = useState(false);
 
-  const { data: session } = useSession();
-  let user = session.user;
-
   useEffect(() => {
     onRefresh();
   }, [startDate, endDate]);
@@ -80,7 +79,7 @@ const Stats = () => {
   const onRefresh = async () => {
     // grab the events
     setLoading(true);
-    getEvents(startDate, endDate, user.organizationId)
+    getEvents(user.organizationId, startDate, endDate)
       .then(async (result) => {
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
@@ -97,10 +96,10 @@ const Stats = () => {
 
                 computedStats.push({
                   _id: event._id,
-                  title: event.title,
+                  title: event.eventParent.title,
                   date: event.date,
-                  startTime: event.startTime,
-                  endTime: event.endTime,
+                  startTime: event.eventParent.startTime,
+                  endTime: event.eventParent.endTime,
                   attendance: stat.uniqueUsers.length,
                   hours: Math.round((stat.minutes / 60.0) * 100) / 100,
                 });

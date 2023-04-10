@@ -1,13 +1,14 @@
-import { Model, model, models, Schema, Types } from "mongoose";
+import {
+  HydratedDocument,
+  InferSchemaType,
+  Model,
+  model,
+  models,
+  Schema,
+} from "mongoose";
+export * from "./validators";
 
-export type AttendanceData = {
-  userId: Types.ObjectId;
-  eventId: Types.ObjectId;
-  checkinTime?: Date;
-  checkoutTime?: Date;
-};
-
-const attendanceSchema = new Schema<AttendanceData>(
+const attendanceSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     eventId: { type: Schema.Types.ObjectId, ref: "Event", required: true },
@@ -16,7 +17,14 @@ const attendanceSchema = new Schema<AttendanceData>(
   },
   { timestamps: true }
 );
+type AttendanceData = Omit<
+  InferSchemaType<typeof attendanceSchema>,
+  "checkinTime" | "checkoutTime"
+> & { checkinTime: Date | null; checkoutTime: Date | null };
 
+export type AttendanceDocument = HydratedDocument<AttendanceData>;
+
+// Need to disable in order to check that "models" is defined
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 export default (models && "Attendance" in models
   ? (models.Attendance as Model<AttendanceData>)

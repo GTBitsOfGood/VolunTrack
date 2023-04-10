@@ -105,11 +105,13 @@ const EventTable = ({
           {!isIndividualStats &&
             events
               .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-              .map((event) => (
+              .map((event) => {
                 <Table.Row key={event._id}>
-                  <Table.Cell>{event.volunteerName}</Table.Cell>
                   <Table.Cell>
-                    {event.volunteerEmail?.substring(0, 24) + "..."}
+                    {event.user.firstName} {event.user.lastName}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {event.user.email?.substring(0, 24) + "..."}
                   </Table.Cell>
                   <Table.Cell>{event.hours.toString().slice(0, 5)}</Table.Cell>
                   <Table.Cell>
@@ -132,8 +134,8 @@ const EventTable = ({
                       </Styled.DeleteButton>
                     </Styled.Buttons>
                   </Table.Cell>
-                </Table.Row>
-              ))}
+                </Table.Row>;
+              })}
         </Table.Body>
       </Table>
       {events.length !== 0 && (

@@ -15,18 +15,18 @@ import BoGButton from "../../../../components/BoGButton";
 //   isCheckedIn: boolean;
 //   isEnded: boolean;
 // }): JSX.Element => {
-const Volunteer = (
+const Volunteer = ({
   volunteer,
   minors,
   onClick,
   isCheckedIn,
   isEnded,
-  checkInStatus
-) => {
+  checkInStatus,
+}) => {
   const renderButton = () => {
     if (checkInStatus === "waiting")
       return <BoGButton text="Check In" onClick={() => onClick(volunteer)} />;
-    else if (checkInStatus === "checked in")
+    else if (checkInStatus === "checkedIn")
       return (
         <BoGButton
           className="bg-secondaryColor text-primaryColor"

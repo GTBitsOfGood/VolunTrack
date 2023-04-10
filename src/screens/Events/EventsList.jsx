@@ -59,7 +59,7 @@ const EventsList = ({
   );
 
   const registeredEvents = upcomingEvents.filter((event) => {
-    return registeredEventIds.has(event.id);
+    return registeredEventIds.has(event._id);
   });
 
   const todayRegisteredEvents = registeredEvents.filter(function (event) {
@@ -92,7 +92,7 @@ const EventsList = ({
             key={event._id}
             event={event}
             user={user}
-            isRegistered={registeredEventIds.has(event.id)}
+            isRegistered={registeredEventIds.has(event._id)}
           />
         ))}
         <Styled.Spacer />
@@ -132,7 +132,7 @@ const EventsList = ({
                       key={event._id}
                       event={event}
                       user={user}
-                      isRegistered={registeredEventIds.has(event.id)}
+                      isRegistered={true}
                     />
                   ))}
                 </div>
@@ -149,7 +149,12 @@ const EventsList = ({
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
             {upcomingEvents.length > 0 &&
               upcomingEvents.map((event) => (
-                <EventCard key={event._id} event={event} user={user} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  isRegistered={registeredEventIds.has(event._id)}
+                />
               ))}
             {upcomingEvents.length === 0 && (
               <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
@@ -189,6 +194,7 @@ const EventsList = ({
                     event={event}
                     user={user}
                     version={"Secondary"}
+                    isRegistered={registeredEventIds.has(event._id)}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />

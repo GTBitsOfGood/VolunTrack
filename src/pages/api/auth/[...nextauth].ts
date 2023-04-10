@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-nocheck
 
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { MongoClient, ObjectId } from "mongodb";
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { verifyUserWithCredentials } from "../../../../server/actions/users_new";
@@ -22,7 +26,7 @@ const options = {
 const client = new MongoClient(uri, options);
 const clientPromise = client.connect();
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
   session: {
     strategy: "jwt",
   },
@@ -34,12 +38,10 @@ export const authOptions = {
       id: "credentials",
       name: "Login with Username and Password",
       async authorize(credentials) {
-        console.log(credentials);
         const response = await verifyUserWithCredentials(
           credentials.email,
           credentials.password
         );
-        console.log(response);
 
         if (response.status === 200) {
           // this is the user object of the JWT

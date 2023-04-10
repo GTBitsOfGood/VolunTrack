@@ -208,7 +208,9 @@ const EventTable = ({
               <Link href={`events/${event._id}`}>
                 <Styled.EventContent>
                   <Styled.EventContentRow>
-                    <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                    <Styled.EventTitle>
+                      {event.eventParent.title}
+                    </Styled.EventTitle>
                     {role === "admin" && (
                       <Styled.EditButton
                         onClick={(e) => {
@@ -288,7 +290,9 @@ const EventTable = ({
                   <Link href={`events/${event._id}`}>
                     <Styled.EventContent>
                       <Styled.EventContentRow>
-                        <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                        <Styled.EventTitle>
+                          {event.eventParent.title}
+                        </Styled.EventTitle>
 
                         <Styled.EventSpace>
                           <Icon name="check" viewBox={"0 0 96 96"} />
@@ -321,7 +325,9 @@ const EventTable = ({
                   <Link href={`events/${event._id}`}>
                     <Styled.EventContent>
                       <Styled.EventContentRow>
-                        <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                        <Styled.EventTitle>
+                          {event.eventParent.title}
+                        </Styled.EventTitle>
                         <Styled.Button onClick={() => onRegisterClicked(event)}>
                           <Icon color="grey3" name="add" />
                           <span>Register</span>
@@ -360,7 +366,9 @@ const EventTable = ({
                 <Link href={`events/${event._id}`}>
                   <Styled.EventContent>
                     <Styled.EventContentRow>
-                      <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                      <Styled.EventTitle>
+                        {event.eventParent.title}
+                      </Styled.EventTitle>
 
                       <Styled.EventSpace>
                         <Icon name="check" viewBox={"0 0 96 96"} />
@@ -396,7 +404,9 @@ const EventTable = ({
                 <Link href={`events/${event._id}`}>
                   <Styled.EventContent>
                     <Styled.EventContentRow>
-                      <Styled.EventTitle>{event.title}</Styled.EventTitle>
+                      <Styled.EventTitle>
+                        {event.eventParent.title}
+                      </Styled.EventTitle>
                       <Styled.Button onClick={() => onRegisterClicked(event)}>
                         <Icon color="grey3" name="add" />
                         <span>Register</span>

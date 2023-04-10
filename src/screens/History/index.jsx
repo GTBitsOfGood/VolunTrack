@@ -3,9 +3,9 @@ import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import SearchBar from "../../components/SearchBar";
 import { getHistoryEvents } from "../../queries/historyEvents";
 import { getUsers } from "../../queries/users";
-import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const Styled = {

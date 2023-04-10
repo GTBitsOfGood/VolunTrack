@@ -1,15 +1,12 @@
-import { HydratedDocument } from "mongoose";
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
 import { createContext } from "react";
-import { UserData } from "../../server/mongodb/models/User";
+import { UserDocument } from "../../server/mongodb/models/User";
 import AuthPage from "../screens/Auth";
 import OnboardingPage from "../screens/Onboarding/OnboardingPage";
 
-export const UserContext = createContext<
-  HydratedDocument<UserData> | undefined
->(undefined);
+export const UserContext = createContext<UserDocument | undefined>(undefined);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session, status } = useSession();

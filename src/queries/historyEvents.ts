@@ -1,11 +1,16 @@
 import axios from "axios";
-import { HistoryEventData } from "../../server/mongodb/models/HistoryEvent";
-import { ApiReturnType } from "../types/queries";
+import { ZodError } from "zod";
+import {
+  HistoryEventDocument,
+  HistoryEventInputClient,
+} from "../../server/mongodb/models/HistoryEvent";
 
-export const getHistoryEvents = (historyEventData: Partial<HistoryEventData>) =>
-  axios.get<ApiReturnType<HistoryEventData, "historyEvents", true>>(
-    "/api/historyEvents",
-    {
-      params: historyEventData,
-    }
-  );
+export const getHistoryEvents = (
+  historyEventInput?: Partial<HistoryEventInputClient>
+) =>
+  axios.get<{
+    historyEvents?: HistoryEventDocument[];
+    error: ZodError | string;
+  }>("/api/historyEvents", {
+    params: historyEventInput,
+  });

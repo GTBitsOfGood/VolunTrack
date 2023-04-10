@@ -4,11 +4,11 @@ import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
+import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
-import EventUnregisterModal from "../../../components/EventUnregisterModal";
-import Text from "../../../components/Text";
 
 const Styled = {
   EventTableAll: styled.div`
@@ -170,7 +170,7 @@ const EventInfo = () => {
         <Styled.EventTable>
           <Col>
             <Styled.EventCol>
-              <Styled.EventName>{event.title}</Styled.EventName>
+              <Styled.EventName>{event.eventParent.title}</Styled.EventName>
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
@@ -181,7 +181,7 @@ const EventInfo = () => {
                 <Styled.Date>{lastUpdated}</Styled.Date>
               </Styled.EventSubhead>
               <Styled.Info>
-                {event.isValidForCourtHours && (
+                {event.eventParent.isValidForCourtHours && (
                   <span style={{ fontWeight: "bold" }}>
                     {"This event can count toward court required hours"}
                   </span>
@@ -189,7 +189,11 @@ const EventInfo = () => {
               </Styled.Info>
               <Styled.Info>
                 {" "}
-                <div dangerouslySetInnerHTML={{ __html: event.description }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: event.eventParent.description,
+                  }}
+                />
               </Styled.Info>
             </Styled.EventCol>
           </Col>
@@ -233,26 +237,27 @@ const EventInfo = () => {
                     <Styled.InfoTableText>
                       <b>Event Contact:</b>
                       <br></br>
-                      {event.eventContactPhone}
+                      {event.eventParent.eventContactPhone}
                       <br></br>
-                      {event.eventContactEmail}
+                      {event.eventParent.eventContactEmail}
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
                   <Styled.InfoTableCol>
                     <Styled.InfoTableText>
                       <b>Time:</b>
                       <br></br>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} {event.localTime}
+                      {convertTime(event.eventParent.startTime)} -{" "}
+                      {convertTime(event.eventParent.endTime)}{" "}
+                      {event.eventParent.localTime}
                     </Styled.InfoTableText>
                     <Styled.InfoTableText>
                       <b>Location:</b>
                       <br></br>
-                      {event.address}
+                      {event.eventParent.address}
                       <br></br>
-                      {event.city}, {event.state}
+                      {event.eventParent.city}, {event.eventParent.state}
                       <br></br>
-                      {event.zip}
+                      {event.eventParent.zip}
                       <br></br>
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
@@ -261,7 +266,7 @@ const EventInfo = () => {
             </Row>
             <br></br>
             <br></br>
-            {event.orgName !== "" && (
+            {event.eventParent.orgName !== "" && (
               <Row>
                 <Styled.EventCol2>
                   <Styled.InfoHead>Organization</Styled.InfoHead>
@@ -270,33 +275,34 @@ const EventInfo = () => {
                       <Styled.InfoTableText>
                         <b>Point of Contact Name</b>
                         <br></br>
-                        {event.pocName}
+                        {event.eventParent.pocName}
                       </Styled.InfoTableText>
                       <Styled.InfoTableText>
                         <b>Point of Contact Email</b>
                         <br></br>
-                        {event.pocEmail}
+                        {event.eventParent.pocEmail}
                       </Styled.InfoTableText>
                       <Styled.InfoTableText>
                         <b>Point of Contact Phone</b>
                         <br></br>
-                        {event.pocPhone}
+                        {event.eventParent.pocPhone}
                       </Styled.InfoTableText>
                     </Styled.InfoTableCol>
                     <Styled.InfoTableCol>
                       <Styled.InfoTableText>
                         <b>Organization Name</b>
                         <br></br>
-                        {event.orgName}
+                        {event.eventParent.orgName}
                       </Styled.InfoTableText>
                       <Styled.InfoTableText>
                         <b>Location</b>
                         <br></br>
-                        {event.orgAddress}
+                        {event.eventParent.orgAddress}
                         <br></br>
-                        {event.orgCity}, {event.orgState}
+                        {event.eventParent.orgCity},{" "}
+                        {event.eventParent.orgState}
                         <br></br>
-                        {event.orgZip}
+                        {event.eventParent.orgZip}
                       </Styled.InfoTableText>
                     </Styled.InfoTableCol>
                   </Styled.InfoTable>

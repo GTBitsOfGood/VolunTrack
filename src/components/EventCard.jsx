@@ -13,7 +13,6 @@ import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
-import { updateEvent } from "../screens/Events/eventHelpers";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -163,7 +162,7 @@ const EventCard = (props) => {
         <div className="ml-16 mt-2 space-y-2 pl-2">
           <div className="flex-column flex">
             <Label class="text-md mb-0 mr-1 font-bold">Address: </Label>
-            <p>{props.event.address}</p>
+            <p>{props.event.eventParent.address}</p>
           </div>
           <div className="flex-column flex">
             <Label class="text-md mb-0 mr-1 font-bold">Description: </Label>

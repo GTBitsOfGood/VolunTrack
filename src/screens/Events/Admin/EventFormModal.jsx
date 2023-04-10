@@ -7,14 +7,13 @@ import "react-quill/dist/quill.snow.css";
 import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { toFormikValidationSchema } from "zod-formik-adapter";
+import { eventPopulatedInputClientValidator } from "../../../../server/mongodb/models/Event";
 import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
+import Text from "../../../components/Text";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
-import { eventPopulatedInputValidator } from "../../../validators/events";
 import * as SForm from "../../sharedStyles/formStyles";
-import { groupEventValidator } from "./eventHelpers";
-import Text from "../../../components/Text";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -103,11 +102,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       .substring(4);
   };
 
-  const emptyStringField = "";
   const submitText = containsExistingEvent(event) ? "Save" : "Create Event";
-  const [content, setContent] = useState(
-    containsExistingEvent(event) ? event.description : emptyStringField
-  );
 
   // eslint-disable-next-line no-unused-vars
   const [press, setPressed] = useState(false);
@@ -171,10 +166,10 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
         // isGroupEvent
         //   ? groupEventValidator
         //   :
-        toFormikValidationSchema(eventPopulatedInputValidator)
+        toFormikValidationSchema(eventPopulatedInputClientValidator)
       }
     >
-      {({ values, errors, handleSubmit, isValid, isSubmitting }) => {
+      {({ values, handleSubmit, isValid, isSubmitting, setFieldValue }) => {
         return (
           <>
             <Styled.ModalBody>
@@ -427,12 +422,15 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                         </Label>
                       </div>
 
-                      <Field name="description">
+                      <Field name="eventParent.description">
                         {() => (
                           <ReactQuill
-                            value={content}
+                            value={values.eventParent.description}
                             onChange={(newValue) => {
-                              setContent(newValue);
+                              setFieldValue(
+                                "eventParent.description",
+                                newValue
+                              );
                             }}
                             ref={quill}
                           />

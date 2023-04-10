@@ -1,6 +1,6 @@
+import { Table } from "flowbite-react";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import { Table } from "flowbite-react";
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -32,8 +32,9 @@ const EventStatsTable = ({ events, isVolunteer }) => {
               </Table.Cell>
               <Table.Cell>{event.date.substring(0, 10)}</Table.Cell>
               <Table.Cell>
-                {convertTime(event.startTime)} - {convertTime(event.endTime)}{" "}
-                {event.localTime}
+                {convertTime(event.eventParent.startTime)} -{" "}
+                {convertTime(event.eventParent.endTime)}{" "}
+                {event.eventParent.localTime}
               </Table.Cell>
               <Table.Cell>{event.attendance}</Table.Cell>
               <Table.Cell>{event.hours}</Table.Cell>
