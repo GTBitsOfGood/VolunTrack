@@ -29,7 +29,7 @@ const Volunteer = ({
     else if (checkInStatus === "checkedIn")
       return (
         <BoGButton
-          className="bg-secondaryColor text-primaryColor"
+          className="bg-secondaryColor hover:bg-primaryColor"
           text="Check Out"
           onClick={() => onClick(volunteer)}
         />
@@ -37,7 +37,7 @@ const Volunteer = ({
     else
       return (
         <BoGButton
-          className="bg-stone-600	text-white hover:bg-stone-600"
+          className="bg-stone-600 text-white disabled:hover:bg-stone-600"
           text="Checked Out"
           disabled={true}
         />
