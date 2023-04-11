@@ -34,9 +34,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = waiverInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
 
-      const waiver = await Waiver.findOneAndUpdate(result.data, {
-        upsert: true,
-      });
+      const waiver = await Waiver.findOneAndUpdate(
+        { organizationId: result.data.organizationId, type: result.data.type },
+        result.data,
+        {
+          upsert: true,
+        }
+      );
 
       return res.status(200).json({ waiver });
     }
