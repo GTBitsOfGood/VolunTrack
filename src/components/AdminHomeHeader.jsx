@@ -215,10 +215,7 @@ const AdminHomeHeader = (props) => {
             </h3>
             <div className="flex">
               <div>
-                <DateDisplayComponent
-                  date={props.dateString}
-                  version={"Primary"}
-                />
+                <DateDisplayComponent date={Date.now()} version={"Primary"} />
               </div>
               <div className="flex-column flex">
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">

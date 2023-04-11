@@ -157,7 +157,7 @@ const EventAttendance = () => {
   return (
     <>
       <Styled.Container>
-        <Text className="mb-4" href={`/events`} text="< Back to home" />
+        <Text className="mb-4" href={`/events`} text="← Back to home" />
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
           <BoGButton text="End Event" onClick={endEvent} />

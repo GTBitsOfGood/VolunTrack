@@ -204,16 +204,16 @@ const EventManager = ({ isHomePage }) => {
   const [attendance, setAttendance] = useState([]);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
-  const [value, setDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-  let splitDate = value.toDateString().split(" ");
+  let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
   const onChange = (value) => {
     if (Date.now() !== value) setShowBack(true);
-    setDate(value);
+    setSelectedDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
@@ -257,7 +257,7 @@ const EventManager = ({ isHomePage }) => {
   const setDateBack = () => {
     const currentDate = new Date();
     setDates(currentDate);
-    setDate(currentDate);
+    setSelectedDate(currentDate);
     let splitDate = currentDate.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
@@ -312,7 +312,7 @@ const EventManager = ({ isHomePage }) => {
           </Styled.EventContainer>
           <Calendar
             onChange={onChange}
-            value={value}
+            value={selectedDate}
             tileClassName={({ date, view }) =>
               setMarkDates({ date, view }, markDates)
             }

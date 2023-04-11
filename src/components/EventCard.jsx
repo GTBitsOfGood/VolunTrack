@@ -28,6 +28,7 @@ const EventCard = (props) => {
     getRegistrations(event._id).then((res) => {
       setRegistrations(res.data.registrations);
     });
+    console.log(props.event);
   }, []);
 
   const open = () => {
