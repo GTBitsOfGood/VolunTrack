@@ -13,7 +13,7 @@ import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
 import {
   getAttendances,
-  getAttendanceStatistics
+  getAttendanceStatistics,
 } from "../../queries/attendances";
 import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
