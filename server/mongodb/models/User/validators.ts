@@ -48,7 +48,7 @@ export const userInputServerValidator = z.object({
     .string()
     .regex(/^[A-Z]{2}$/, "state must be a two-letter abbreviation")
     .optional(),
-  notes: z.string().optional(),
+  notes: z.string().nullable().optional(),
   passwordHash: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
