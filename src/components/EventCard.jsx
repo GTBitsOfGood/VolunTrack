@@ -22,6 +22,7 @@ const EventCard = (props) => {
   const [event, setEvent] = useState(props.event);
   const [registrations, setRegistrations] = useState([]);
   const isRegistered = props.isRegistered;
+  const onEventDelete = props.onEventDelete;
 
   useEffect(() => {
     getRegistrations(event._id).then((res) => {
@@ -131,6 +132,7 @@ const EventCard = (props) => {
                 open={showDeleteModal}
                 toggle={toggleDeleteModal}
                 event={event}
+                onEventDelete={onEventDelete}
               />
               <EventEditModal
                 open={showEditModal}

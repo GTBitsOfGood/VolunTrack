@@ -31,6 +31,7 @@ const EventsList = ({
   isHomePage,
   registrations,
   onCreateClicked,
+  onEventDelete,
 }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -92,6 +93,7 @@ const EventsList = ({
             event={event}
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
+            onEventDelete={onEventDelete}
           />
         ))}
         <Styled.Spacer />
@@ -172,7 +174,12 @@ const EventsList = ({
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
               todayEvents.map((event) => (
-                <EventCard key={event._id} event={event} user={user} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  onEventDelete={onEventDelete}
+                />
               ))}
             <div className="justify-content-center flex">
               {todayEvents.length === 0 && (
@@ -194,6 +201,7 @@ const EventsList = ({
                     user={user}
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
+                    onEventDelete={onEventDelete}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />

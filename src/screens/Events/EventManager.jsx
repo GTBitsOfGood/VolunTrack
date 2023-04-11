@@ -13,7 +13,7 @@ import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
 import {
   getAttendances,
-  getAttendanceStatistics,
+  getAttendanceStatistics
 } from "../../queries/attendances";
 import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
@@ -293,6 +293,10 @@ const EventManager = ({ isHomePage }) => {
     }
   };
 
+  const onEventDelete = (id) => {
+    setEvents(events.filter((event) => event._id !== id));
+  };
+
   return (
     <Styled.Container>
       {!isHomePage && (
@@ -368,6 +372,7 @@ const EventManager = ({ isHomePage }) => {
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
             />
           )}
           {showCreateModal && (
@@ -406,6 +411,7 @@ const EventManager = ({ isHomePage }) => {
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
             />
           </div>
         </Styled.HomePage>
@@ -436,6 +442,7 @@ const EventManager = ({ isHomePage }) => {
             isHomePage={isHomePage}
             registrations={registrations}
             onCreateClicked={onCreateClicked}
+            onEventDelete={onEventDelete}
           />
         </Styled.HomePage>
       )}
