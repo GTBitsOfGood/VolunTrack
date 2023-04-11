@@ -29,7 +29,7 @@ export const checkOutVolunteer = async (
     null,
     null
   );
-  const attendanceId = attendanceResponse.data?.attendances?.[0]._id;
+  const attendanceId = attendanceResponse.data.attendances?.[0]._id;
 
   if (!attendanceId) return;
   return updateAttendance(attendanceId, { checkoutTime: new Date() });

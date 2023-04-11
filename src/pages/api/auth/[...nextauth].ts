@@ -107,7 +107,7 @@ export const authOptions: AuthOptions = {
       const user = await User.findById(id);
       const organization = await Organization.findById(user.organizationId);
 
-      if (organization?.invitedAdmins?.includes(user.email)) {
+      if (organization?.invitedAdmins.includes(user.email)) {
         await user.updateOne({ role: "admin" });
         await organization.updateOne({ $pull: { invitedAdmins: user.email } });
       }

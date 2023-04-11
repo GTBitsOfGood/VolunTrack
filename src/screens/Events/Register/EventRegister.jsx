@@ -14,7 +14,7 @@ import { getEvent } from "../../../queries/events";
 import {
   getRegistrations,
   registerForEvent,
-  unregisterForEvent
+  unregisterForEvent,
 } from "../../../queries/registrations";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";

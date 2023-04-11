@@ -1,11 +1,11 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { UserData } from "../../../server/mongodb/models/User";
+import { UserDocument } from "../../../server/mongodb/models/User";
 import EditUserForm from "../../components/Forms/EditUserForm";
 import { RequestContext } from "../../providers/RequestProvider";
 import { updateUser } from "../../queries/users";
-import { UserInputData } from "../../validators/users";
+import { UserInputClient } from "../../../server/mongodb/models/User/validators";
 
 const Profile = () => {
   const { data: session } = useSession();
@@ -15,9 +15,10 @@ const Profile = () => {
   const context = useContext(RequestContext);
   const router = useRouter();
 
-  const [profileValues, setProfileValues] = useState<Partial<UserData>>(user);
+  const [profileValues, setProfileValues] =
+    useState<Partial<UserDocument>>(user);
 
-  const handleSubmit = async (values: Partial<UserInputData>) => {
+  const handleSubmit = async (values: Partial<UserInputClient>) => {
     await updateUser(user._id, values);
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
