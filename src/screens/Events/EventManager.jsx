@@ -142,7 +142,12 @@ const EventManager = ({ isHomePage }) => {
     // TODO: fix logic. We should use getEvents for the events, registrations, and attendance separately for hours
 
     // temp approach for demo
-    setCharts([[2, 5, 4, 0, 0, 0, 0, 0, 0, 1, 0, 3], [20, 100, 50, 0, 0, 0, 0, 0, 0, 12, 0, 30], [70, 200, 125, 0, 0, 0, 0, 0, 0, 40, 0, 85]]);
+    let test = [
+      [2, 5, 4, 0, 0, 0, 0, 0, 0, 1, 0, 3],
+      [20, 100, 50, 0, 0, 0, 0, 0, 0, 12, 0, 30],
+      [70, 200, 125, 0, 0, 0, 0, 0, 0, 40, 0, 85],
+    ];
+    setCharts(test);
 
     //   getAttendanceStatistics(undefined, startDate, endDate).then(
     //     async (stats) => {
