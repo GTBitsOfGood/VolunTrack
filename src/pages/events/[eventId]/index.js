@@ -9,6 +9,7 @@ import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
+import { getRegistrations } from "../../../queries/registrations";
 
 const Styled = {
   EventTableAll: styled.div`
@@ -100,12 +101,16 @@ const EventInfo = () => {
   const { data: session } = useSession();
   const user = session.user;
   const context = useContext(RequestContext);
+  const [registrations, setRegistrations] = useState([]);
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
 
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
       setEvent(result.data.event);
+    });
+    getRegistrations(eventId).then((result) => {
+      setRegistrations(result.data.registrations);
     });
   };
 
@@ -174,8 +179,7 @@ const EventInfo = () => {
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
-                  {event.max_volunteers} Slots
-                  {/* TODO: {event.max_volunteers - event.volunteers.length} Slots*/}
+                  {event.eventParent.maxVolunteers - registrations.length} Slots
                   Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>

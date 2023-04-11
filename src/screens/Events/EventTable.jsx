@@ -260,7 +260,7 @@ const EventTable = ({
                       event.eventParent.endTime
                     )} EST`}</Styled.Time>
                     <Styled.EventSlots>
-                      {event.eventParent.max_volunteers} slots available
+                      {event.eventParent.maxVolunteers} slots available
                     </Styled.EventSlots>
                   </Styled.EventContentRow>
                 </Styled.EventContent>

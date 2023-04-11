@@ -8,9 +8,10 @@ import {
 import { Label, Tooltip } from "flowbite-react";
 import router from "next/router";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DateDisplayComponent from "../components/DateDisplay";
 import Text from "../components/Text";
+import { getRegistrations } from "../queries/registrations";
 import EventDeleteModal from "../screens/Events/Admin/EventDeleteModal";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
 
@@ -19,7 +20,14 @@ const EventCard = (props) => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [collapse, setCollapse] = useState(false);
   const [event, setEvent] = useState(props.event);
+  const [registrations, setRegistrations] = useState([]);
   const isRegistered = props.isRegistered;
+
+  useEffect(() => {
+    getRegistrations(event._id).then((res) => {
+      setRegistrations(res.data.registrations);
+    });
+  }, []);
 
   const open = () => {
     setCollapse(!collapse);
@@ -154,7 +162,8 @@ const EventCard = (props) => {
             </>
           )}
           <Label className="justify-end">
-            {props.event.eventParent.maxVolunteers} slots available
+            {props.event.eventParent.maxVolunteers - registrations.length} slots
+            available
           </Label>
         </div>
       </div>

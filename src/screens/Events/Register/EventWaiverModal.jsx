@@ -82,15 +82,16 @@ const EventWaiverModal = ({
 
   const [adultContent, setAdultContent] = useState("");
   const [minorContent, setMinorContent] = useState("");
+  console.log(minorContent);
 
   const loadWaivers = async () => {
     const adultWaiverResponse = await getWaivers("adult", user.organizationId);
-    if (adultWaiverResponse.data.success) {
+    if (adultWaiverResponse.data.waivers.length > 0) {
       setAdultContent(adultWaiverResponse.data.waivers[0].text);
     }
 
     const minorWaiverResponse = await getWaivers("minor", user.organizationId);
-    if (minorWaiverResponse.data.success) {
+    if (minorWaiverResponse.data.waivers.length > 0) {
       setMinorContent(minorWaiverResponse.data.waivers[0].text);
     }
   };
