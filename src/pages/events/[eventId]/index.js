@@ -220,7 +220,9 @@ const EventInfo = () => {
                 </>
               )}
               {user.role === "volunteer" &&
-                // event.volunteers.includes(user._id) &&
+                registrations
+                  .map((registration) => registration.userId.toString())
+                  .includes(user._id.toString()) &&
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"

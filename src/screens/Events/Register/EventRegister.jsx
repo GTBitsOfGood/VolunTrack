@@ -1,20 +1,20 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "flowbite-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
-import { UserContext } from "../../../providers/AuthProvider";
 import { getEvent } from "../../../queries/events";
 import {
   getRegistrations,
   registerForEvent,
-  unregisterForEvent,
+  unregisterForEvent
 } from "../../../queries/registrations";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
@@ -102,7 +102,9 @@ const Styled = {
 };
 
 const EventRegister = () => {
-  const user = useContext(UserContext);
+  const {
+    data: { user },
+  } = useSession();
   const router = useRouter();
 
   const { eventId } = router.query;
@@ -179,12 +181,11 @@ const EventRegister = () => {
     if (minors.length === 0) setHasMinor(false);
   };
 
-  const onUnregister = async () => {
-    unregisterForEvent(event._id, user._id).then(() => {
-      setIsRegistered(false);
-      setMinors([]);
-      setHasMinor(false);
-    });
+  const onUnregister = () => {
+    unregisterForEvent(event._id, user._id);
+    setIsRegistered(false);
+    setMinors([]);
+    setHasMinor(false);
   };
 
   const goBackToDetails = () => {

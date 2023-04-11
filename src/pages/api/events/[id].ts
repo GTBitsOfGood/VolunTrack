@@ -55,7 +55,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
-        console.log(result.data.eventParent);
         await eventParent.updateOne(result.data.eventParent);
         delete result.data.eventParent;
         await event.updateOne(result.data);
@@ -103,7 +102,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       await agenda.cancel({ data: event._id });
       await createHistoryEventDeleteEvent(user, event, eventParent);
 
-      return res.status(200).json({ success: true });
+      return res.status(204).end();
     }
   }
 };

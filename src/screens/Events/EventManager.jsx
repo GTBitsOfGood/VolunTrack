@@ -1,8 +1,9 @@
 // import { differenceInCalendarDays } from "date-fns";
 import "flowbite-react";
 import { Dropdown } from "flowbite-react";
+import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
@@ -10,10 +11,9 @@ import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
-import { UserContext } from "../../providers/AuthProvider";
 import {
   getAttendances,
-  getAttendanceStatistics,
+  getAttendanceStatistics
 } from "../../queries/attendances";
 import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
@@ -108,7 +108,8 @@ const Styled = {
 };
 
 const EventManager = ({ isHomePage }) => {
-  const user = useContext(UserContext);
+  const { data: session } = useSession();
+  const user = session.user;
 
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState([]);

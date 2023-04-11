@@ -25,7 +25,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "DELETE": {
       await user.deleteOne();
-      return res.status(200).json({ success: true });
+      return res.status(204).end();
     }
   }
 };

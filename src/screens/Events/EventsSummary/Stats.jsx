@@ -1,5 +1,6 @@
 import { Formik } from "formik";
-import React, { useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Col, Row } from "reactstrap";
 import styled from "styled-components";
@@ -7,7 +8,6 @@ import BoGButton from "../../../components/BoGButton";
 import EventTable from "../../../components/EventStatsTable";
 import InputField from "../../../components/Forms/InputField";
 import Loading from "../../../components/Loading";
-import { UserContext } from "../../../providers/AuthProvider";
 import { getAttendances } from "../../../queries/attendances";
 import { getEvents } from "../../../queries/events";
 import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
@@ -62,7 +62,9 @@ const Styled = {
 };
 
 const Stats = () => {
-  const user = useContext(UserContext);
+  const {
+    data: { user },
+  } = useSession();
 
   const [computedStats, setComputedStats] = useState([]);
   const [numEvents, setNumEvents] = useState(0);

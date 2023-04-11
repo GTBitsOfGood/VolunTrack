@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Types } from "mongoose";
 import { ZodError } from "zod";
-import Registration, {
+import {
   RegistrationDocument,
   RegistrationInputClient,
 } from "../../server/mongodb/models/Registration";
@@ -40,8 +40,9 @@ export const unregisterForEvent = async (
   eventId: Types.ObjectId,
   userId: Types.ObjectId
 ) => {
-  const registrations = await Registration.find({ eventId, userId });
-  if (registrations.length === 0)
+  const registrationResponse = await getRegistrations(eventId, userId);
+  const registrations = registrationResponse.data.registrations;
+  if (registrations === undefined || registrations.length === 0)
     return {
       error: `No registrations with eventId ${eventId.toString()} and userId ${userId.toString()} found`,
     };

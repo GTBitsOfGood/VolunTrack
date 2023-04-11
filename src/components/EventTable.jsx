@@ -1,9 +1,11 @@
 import { Table } from "flowbite-react";
+import { Types } from "mongoose";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "reactstrap";
 import styled from "styled-components";
+import { getUser } from "../queries/users";
 import { getHours } from "../screens/Stats/User/hourParsing";
 import { Icon } from "./Icon";
 import Pagination from "./PaginationComp";
@@ -54,15 +56,37 @@ const EventTable = ({
   onDeleteClicked,
   onEditClicked,
 }) => {
+  console.log(events);
   const eventName = isIndividualStats ? "Event Name" : "Volunteer Name";
   const creation = isIndividualStats ? "Date" : "Email Address";
   const time = isIndividualStats ? "Time" : "Hours Participated";
   const textInfo = isIndividualStats ? "Hours Earned" : "";
   const [currentPage, setCurrentPage] = useState(0);
+  const [userEvents, setUserEvents] = useState([]);
   const pageSize = 10;
   const updatePage = (pageNum) => {
     setCurrentPage(pageNum);
   };
+
+  const eventsWithUser = () => {
+    const eventsWithUser = [];
+    for (const event of events) {
+      if ("users" in event) {
+        getUser(new Types.ObjectId(event.users[0])).then((response) => {
+          eventsWithUser.push({ ...event, user: response.data.user });
+        });
+      } else {
+        getUser(new Types.ObjectId(event.userId)).then((response) => {
+          eventsWithUser.push({ ...event, user: response.data.user });
+        });
+      }
+    }
+    return eventsWithUser;
+  };
+
+  useEffect(() => {
+    setUserEvents(eventsWithUser());
+  }, [events]);
 
   return (
     <Styled.Container>
@@ -81,7 +105,7 @@ const EventTable = ({
                 <Table.Row key={event._id}>
                   <Table.Cell>
                     <Link href={`events/${event.eventId}`}>
-                      {event.eventName}
+                      {event.eventName ?? "event"}
                     </Link>
                   </Table.Cell>
                   <Table.Cell>{event.checkinTime.slice(0, 10)}</Table.Cell>
@@ -103,9 +127,10 @@ const EventTable = ({
                 </Table.Row>
               ))}
           {!isIndividualStats &&
-            events
+            userEvents.length !== 0 &&
+            userEvents
               .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-              .map((event) => {
+              .map((event) => (
                 <Table.Row key={event._id}>
                   <Table.Cell>
                     {event.user.firstName} {event.user.lastName}
@@ -134,8 +159,8 @@ const EventTable = ({
                       </Styled.DeleteButton>
                     </Styled.Buttons>
                   </Table.Cell>
-                </Table.Row>;
-              })}
+                </Table.Row>
+              ))}
         </Table.Body>
       </Table>
       {events.length !== 0 && (

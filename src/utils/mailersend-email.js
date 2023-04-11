@@ -74,7 +74,6 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
 };
 
 const sendEmail = async (user, personalization, subject) => {
-  console.log(user, personalization, subject);
   let organization = await Organization.findById(user.organizationId).lean();
 
   const mailersend = new MailerSend({

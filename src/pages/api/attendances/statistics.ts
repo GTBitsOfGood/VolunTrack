@@ -37,6 +37,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             _id: "$eventId",
             num: { $count: {} },
             users: { $addToSet: "$userId" },
+            attendanceId: { $addToSet: "$_id" },
             minutes: {
               $sum: {
                 $dateDiff: {
