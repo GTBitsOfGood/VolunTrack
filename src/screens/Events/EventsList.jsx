@@ -57,7 +57,7 @@ const EventsList = ({
       } else if (eventDate.getUTCMonth() === currentDate.getUTCMonth()) {
         if (eventDate.getUTCDate() > currentDate.getUTCDate()) {
           return true;
-        } 
+        }
       }
     }
     return false;
@@ -65,7 +65,7 @@ const EventsList = ({
 
   const todayEvents = events.filter(function (event) {
     const currentDate = new Date();
-    const eventDate= new Date(event.date);
+    const eventDate = new Date(event.date);
     return (
       eventDate.getUTCMonth() === currentDate.getUTCMonth() &&
       eventDate.getUTCDate() === currentDate.getUTCDate() &&
@@ -100,12 +100,9 @@ const EventsList = ({
 
   orgRegistrations.map((reg) => {
     if (!registrationsMap.has(reg.eventId)) {
-      registrationsMap.set(reg.eventId, 0);
+      registrationsMap.set(reg.eventId, []);
     }
-    registrationsMap.set(
-      reg.eventId,
-      registrationsMap.get(reg.eventId) + 1 + reg.minors.length
-    );
+    registrationsMap.get(reg.eventId).push(reg);
   });
 
   // upcomingEvents = upcomingEvents.filter(function (event) {
@@ -132,7 +129,7 @@ const EventsList = ({
             registrations={
               registrationsMap.has(event._id)
                 ? registrationsMap.get(event._id)
-                : 0
+                : []
             }
           />
         ))}
@@ -162,7 +159,7 @@ const EventsList = ({
                       registrations={
                         registrationsMap.has(event._id)
                           ? registrationsMap.get(event._id)
-                          : 0
+                          : []
                       }
                     />
                   ))}
@@ -182,7 +179,7 @@ const EventsList = ({
                       registrations={
                         registrationsMap.has(event._id)
                           ? registrationsMap.get(event._id)
-                          : 0
+                          : []
                       }
                     />
                   ))}
@@ -200,19 +197,19 @@ const EventsList = ({
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
             {upcomingEvents.length > 0 &&
               upcomingEvents.map((event) => {
-                !registeredEventIds.has(event._id) && 
-                (
-                <EventCard
-                  key={event._id}
-                  event={event}
-                  user={user}
-                  registrations={
-                    registrationsMap.has(event._id)
-                      ? registrationsMap.get(event._id)
-                      : 0
-                  }
-                />
-              )})}
+                !registeredEventIds.has(event._id) && (
+                  <EventCard
+                    key={event._id}
+                    event={event}
+                    user={user}
+                    registrations={
+                      registrationsMap.has(event._id)
+                        ? registrationsMap.get(event._id)
+                        : []
+                    }
+                  />
+                );
+              })}
             {upcomingEvents.length === 0 && (
               <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
                 No new events!
@@ -237,7 +234,7 @@ const EventsList = ({
                   registrations={
                     registrationsMap.has(event._id)
                       ? registrationsMap.get(event._id)
-                      : 0
+                      : []
                   }
                 />
               ))}
@@ -263,7 +260,7 @@ const EventsList = ({
                     registrations={
                       registrationsMap.has(event._id)
                         ? registrationsMap.get(event._id)
-                        : 0
+                        : []
                     }
                   />
                 ))}

@@ -65,6 +65,11 @@ const EventCard = (props) => {
     return hours.toString() + ":" + min + suffix;
   };
 
+  let registrationCount = 0;
+  props.registrations.map((reg) => {
+    registrationCount += 1 + reg.minors.length;
+  });
+
   // const onUnregister = async (event) => {
   //   const changedEvent = {
   //     // remove current user id from event volunteers
@@ -155,7 +160,7 @@ const EventCard = (props) => {
             </>
           )}
           <Label className="justify-end">
-            {props.event.eventParent.maxVolunteers - props.registrations} slots
+            {props.event.eventParent.maxVolunteers - registrationCount} slots
             available
           </Label>
         </div>
@@ -191,7 +196,7 @@ EventCard.propTypes = {
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
-  registrations: PropTypes.number,
+  registrations: PropTypes.Array,
 };
 
 export default EventCard;

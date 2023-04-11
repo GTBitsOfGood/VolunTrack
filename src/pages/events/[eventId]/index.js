@@ -9,6 +9,7 @@ import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
+import { getRegistrations } from "../../../queries/registrations";
 
 const Styled = {
   EventTableAll: styled.div`
@@ -96,6 +97,8 @@ const EventInfo = () => {
   const router = useRouter();
   const { eventId } = router.query;
   let [event, setEvent] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [registrationsCount, setRegistrationsCount] = useState(0);
 
   const { data: session } = useSession();
   const user = session.user;
@@ -103,9 +106,21 @@ const EventInfo = () => {
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
 
+  const registeredUserIds = new Set(
+    registrations.map((registration) => registration.userId)
+  );
+
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
       setEvent(result.data.event);
+    });
+    getRegistrations(undefined, eventId, undefined).then((result) => {
+      setRegistrations(result.data.registrations);
+      let count = 0;
+      result.data.registrations.map((reg) => {
+        count += 1 + reg.minors.length;
+      });
+      setRegistrationsCount(count);
     });
   };
 
@@ -172,11 +187,9 @@ const EventInfo = () => {
             <Styled.EventCol>
               <Styled.EventName>{event.title}</Styled.EventName>
               <Styled.EventSubhead>
+                <Styled.Slots> {event.maxVolunteers} Slots</Styled.Slots>
                 <Styled.Slots>
-                  {" "}
-                  {event.max_volunteers} Slots
-                  {/* TODO: {event.max_volunteers - event.volunteers.length} Slots*/}
-                  Remaining
+                  {event.maxVolunteers - registrationsCount} Slots Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>
               </Styled.EventSubhead>
@@ -212,7 +225,7 @@ const EventInfo = () => {
                 </>
               )}
               {user.role === "volunteer" &&
-                // event.volunteers.includes(user._id) &&
+                registeredUserIds.has(user._id) &&
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"
@@ -314,8 +327,8 @@ const EventInfo = () => {
           </Col>
         </Styled.EventTable>
         {user.role === "volunteer" &&
-          // event.max_volunteers - event.volunteers.length !== 0 &&
-          // !event.volunteers.includes(user._id) &&
+          event.maxVolunteers - registrationsCount !== 0 &&
+          !registeredUserIds.has(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               text="Register"
@@ -323,8 +336,8 @@ const EventInfo = () => {
             />
           )}
         {user.role === "volunteer" &&
-          // event.max_volunteers - event.volunteers.length === 0 &&
-          // !event.volunteers.includes(user._id) &&
+          event.maxVolunteers - registrationsCount === 0 &&
+          !registeredUserIds.has(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               disabled={true}
@@ -333,7 +346,7 @@ const EventInfo = () => {
             />
           )}
         {user.role === "volunteer" &&
-          // event.volunteers.includes(user._id) &&
+          registeredUserIds.has(user._id) &&
           futureorTodaysDate && (
             <BoGButton
               text="You are registered for this event!"
@@ -344,7 +357,7 @@ const EventInfo = () => {
           open={showUnregisterModal}
           toggle={toggleUnregisterModal}
           eventData={event}
-          userId={user._id}
+          userId={user}
         />
       </Styled.EventTableAll>
     </>
