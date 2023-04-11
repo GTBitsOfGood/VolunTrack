@@ -325,33 +325,33 @@ const EventInfo = () => {
             )}
           </Col>
         </Styled.EventTable>
-        {user.role === "volunteer" &&
-          // event.max_volunteers - event.volunteers.length !== 0 &&
-          // !event.volunteers.includes(user._id) &&
-          futureorTodaysDate && (
-            <BoGButton
-              text="Register"
-              onClick={() => onRegisterClicked(event)}
-            />
-          )}
-        {user.role === "volunteer" &&
-          // event.max_volunteers - event.volunteers.length === 0 &&
-          // !event.volunteers.includes(user._id) &&
-          futureorTodaysDate && (
-            <BoGButton
-              disabled={true}
-              text="Registration Closed"
-              onClick={null}
-            />
-          )}
-        {user.role === "volunteer" &&
-          // event.volunteers.includes(user._id) &&
-          futureorTodaysDate && (
-            <BoGButton
-              text="You are registered for this event!"
-              disabled={true}
-            />
-          )}
+        {/*{user.role === "volunteer" &&*/}
+        {/*  // event.max_volunteers - event.volunteers.length !== 0 &&*/}
+        {/*  // !event.volunteers.includes(user._id) &&*/}
+        {/*  futureorTodaysDate && (*/}
+        {/*    <BoGButton*/}
+        {/*      text="Register"*/}
+        {/*      onClick={() => onRegisterClicked(event)}*/}
+        {/*    />*/}
+        {/*  )}*/}
+        {/*{user.role === "volunteer" &&*/}
+        {/*  // event.max_volunteers - event.volunteers.length === 0 &&*/}
+        {/*  // !event.volunteers.includes(user._id) &&*/}
+        {/*  futureorTodaysDate && (*/}
+        {/*    <BoGButton*/}
+        {/*      disabled={true}*/}
+        {/*      text="Registration Closed"*/}
+        {/*      onClick={null}*/}
+        {/*    />*/}
+        {/*  )}*/}
+        {/*{user.role === "volunteer" &&*/}
+        {/*  // event.volunteers.includes(user._id) &&*/}
+        {/*  futureorTodaysDate && (*/}
+        {/*    <BoGButton*/}
+        {/*      text="You are registered for this event!"*/}
+        {/*      disabled={true}*/}
+        {/*    />*/}
+        {/*  )}*/}
         <EventUnregisterModal
           open={showUnregisterModal}
           toggle={toggleUnregisterModal}
