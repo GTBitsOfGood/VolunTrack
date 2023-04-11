@@ -149,8 +149,8 @@ const EventManager = ({ isHomePage }) => {
     ];
     setCharts(test);
     setNumEvents(15);
-    setAttend(194)
-    setHours(501)
+    setAttend(194);
+    setHours(501);
 
     //   getAttendanceStatistics(undefined, startDate, endDate).then(
     //     async (stats) => {
