@@ -41,17 +41,20 @@ const EventsList = ({
   events.sort(function (a, b) {
     const c = new Date(a.date);
     const d = new Date(b.date);
-    return d - c;
+    return c - d;
   });
 
   let upcomingEvents = events.filter(function (event) {
-    const currentDate = new Date();
-    return new Date(event.date) > currentDate;
+    const currentDate = Date.now();
+    return new Date(event.date) > new Date(currentDate);
   });
 
   const todayEvents = events.filter(function (event) {
-    const currentDate = new Date();
-    return new Date(event.date) === currentDate;
+    let date = new Date(event.date);
+    date = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    );
+    return date.getDate() === new Date().getDate();
   });
 
   const registeredEventIds = new Set(
@@ -170,7 +173,7 @@ const EventsList = ({
     } else if (user.role === "admin") {
       return (
         <div className="w-3/5">
-          <div>
+          <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
               todayEvents.map((event) => (
@@ -181,14 +184,13 @@ const EventsList = ({
                   onEventDelete={onEventDelete}
                 />
               ))}
-            <div className="justify-content-center flex">
-              {todayEvents.length === 0 && (
+            {todayEvents.length === 0 && (
+              <div className="justify-content-center flex pb-16">
                 <p className="font-weight-bold pb-3 text-lg text-primaryColor">
                   No events scheduled today
                 </p>
-              )}
-              <div className="h-24" />
-            </div>
+              </div>
+            )}
           </div>
           <div>
             <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>

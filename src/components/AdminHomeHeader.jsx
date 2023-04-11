@@ -5,9 +5,19 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
 
 const AdminHomeHeader = (props) => {
-  let events = 0;
-  let volunteers = 0;
+  let events = 1;
+  let volunteers = 8;
   let firstDate = "";
+
+  if (props.events.length > 0) {
+    let split = props.events[0].date;
+    firstDate =
+      split.substring(5, 7) +
+      "/" +
+      split.substring(8, 10) +
+      "/" +
+      split.substring(0, 4);
+  }
 
   for (let i = 0; i < props.events.length; i++) {
     let splitDate = new Date(props.events[i].date).toDateString().split(" ");
@@ -15,15 +25,6 @@ const AdminHomeHeader = (props) => {
     if (final === props.dateString) {
       events++;
       // volunteers += props.events[i].volunteers.length;
-    }
-    if (i === props.events.length - 1) {
-      let split = props.events[i].date;
-      firstDate =
-        split.substring(5, 7) +
-        "/" +
-        split.substring(8, 10) +
-        "/" +
-        split.substring(0, 4);
     }
   }
 
@@ -154,52 +155,52 @@ const AdminHomeHeader = (props) => {
     {
       name: "Events",
       data: [
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][8],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][9],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][10],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][11],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][0],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][1],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][2],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][3],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][4],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][5],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][6],
-        props.eventChart[0] === undefined ? 0 : props.eventChart[0][7],
+        props.charts[0] === undefined ? 0 : props.charts[0][8],
+        props.charts[0] === undefined ? 0 : props.charts[0][9],
+        props.charts[0] === undefined ? 0 : props.charts[0][10],
+        props.charts[0] === undefined ? 0 : props.charts[0][11],
+        props.charts[0] === undefined ? 0 : props.charts[0][0],
+        props.charts[0] === undefined ? 0 : props.charts[0][1],
+        props.charts[0] === undefined ? 0 : props.charts[0][2],
+        props.charts[0] === undefined ? 0 : props.charts[0][3],
+        props.charts[0] === undefined ? 0 : props.charts[0][4],
+        props.charts[0] === undefined ? 0 : props.charts[0][5],
+        props.charts[0] === undefined ? 0 : props.charts[0][6],
+        props.charts[0] === undefined ? 0 : props.charts[0][7],
       ],
     },
     {
       name: "Hours",
       data: [
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][8],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][9],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][10],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][11],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][0],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][1],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][2],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][3],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][4],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][5],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][6],
-        props.eventChart[1] === undefined ? 0 : props.eventChart[1][7],
+        props.charts[1] === undefined ? 0 : props.charts[1][8],
+        props.charts[1] === undefined ? 0 : props.charts[1][9],
+        props.charts[1] === undefined ? 0 : props.charts[1][10],
+        props.charts[1] === undefined ? 0 : props.charts[1][11],
+        props.charts[1] === undefined ? 0 : props.charts[1][0],
+        props.charts[1] === undefined ? 0 : props.charts[1][1],
+        props.charts[1] === undefined ? 0 : props.charts[1][2],
+        props.charts[1] === undefined ? 0 : props.charts[1][3],
+        props.charts[1] === undefined ? 0 : props.charts[1][4],
+        props.charts[1] === undefined ? 0 : props.charts[1][5],
+        props.charts[1] === undefined ? 0 : props.charts[1][6],
+        props.charts[1] === undefined ? 0 : props.charts[1][7],
       ],
     },
     {
       name: "Attendance",
       data: [
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][8],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][9],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][10],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][11],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][0],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][1],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][2],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][3],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][4],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][5],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][6],
-        props.eventChart[2] === undefined ? 0 : props.eventChart[2][7],
+        props.charts[2] === undefined ? 0 : props.charts[2][8],
+        props.charts[2] === undefined ? 0 : props.charts[2][9],
+        props.charts[2] === undefined ? 0 : props.charts[2][10],
+        props.charts[2] === undefined ? 0 : props.charts[2][11],
+        props.charts[2] === undefined ? 0 : props.charts[2][0],
+        props.charts[2] === undefined ? 0 : props.charts[2][1],
+        props.charts[2] === undefined ? 0 : props.charts[2][2],
+        props.charts[2] === undefined ? 0 : props.charts[2][3],
+        props.charts[2] === undefined ? 0 : props.charts[2][4],
+        props.charts[2] === undefined ? 0 : props.charts[2][5],
+        props.charts[2] === undefined ? 0 : props.charts[2][6],
+        props.charts[2] === undefined ? 0 : props.charts[2][7],
       ],
     },
   ];
@@ -278,9 +279,7 @@ AdminHomeHeader.propTypes = {
   numEvents: PropTypes.object.isRequired,
   attend: PropTypes.object.isRequired,
   hours: PropTypes.object.isRequired,
-  eventChart: PropTypes.array.isRequired,
-  hourChart: PropTypes.array.isRequired,
-  attendChart: PropTypes.array.isRequired,
+  charts: PropTypes.array.isRequired,
 };
 
 export default AdminHomeHeader;
