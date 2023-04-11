@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import BoGButton from "../../components/BoGButton";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
 
@@ -200,11 +199,12 @@ const EventsList = ({
                 <Text href={`/events`} text="View More" />
               </div>
             )}
-            <div className="justify-content-center flex">
+            {/* disabling for now, popup doesn't work */}
+            {/* <div className="justify-content-center flex">
               {upcomingEvents.length === 0 && (
                 <BoGButton text="Create new event" onClick={onCreateClicked} />
               )}
-            </div>
+            </div> */}
             <div className="h-48" />
           </div>
         </div>

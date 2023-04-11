@@ -13,7 +13,7 @@ import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
 import {
   getAttendances,
-  getAttendanceStatistics
+  getAttendanceStatistics,
 } from "../../queries/attendances";
 import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
@@ -179,6 +179,7 @@ const EventManager = ({ isHomePage }) => {
   };
 
   const onCreateClicked = () => {
+    setShowCreateModal(false);
     setShowCreateModal(true);
   };
 
@@ -369,7 +370,12 @@ const EventManager = ({ isHomePage }) => {
               isHomePage={isHomePage}
             />
           )}
-          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
+          {showCreateModal && (
+            <EventCreateModal
+              open={showCreateModal}
+              toggle={toggleCreateModal}
+            />
+          )}
         </Styled.Right>
       )}
       {isHomePage && user.role === "volunteer" && (
