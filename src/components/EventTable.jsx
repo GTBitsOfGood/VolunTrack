@@ -56,7 +56,6 @@ const EventTable = ({
   onDeleteClicked,
   onEditClicked,
 }) => {
-  console.log(events);
   const eventName = isIndividualStats ? "Event Name" : "Volunteer Name";
   const creation = isIndividualStats ? "Date" : "Email Address";
   const time = isIndividualStats ? "Time" : "Hours Participated";
