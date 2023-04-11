@@ -144,10 +144,13 @@ const EventManager = ({ isHomePage }) => {
     // temp approach for demo
     let test = [
       [2, 5, 4, 0, 0, 0, 0, 0, 0, 1, 0, 3],
-      [20, 100, 50, 0, 0, 0, 0, 0, 0, 12, 0, 30],
-      [70, 200, 125, 0, 0, 0, 0, 0, 0, 40, 0, 85],
+      [22, 87, 43, 0, 0, 0, 0, 0, 0, 12, 0, 30],
+      [71, 186, 119, 0, 0, 0, 0, 0, 0, 40, 0, 85],
     ];
     setCharts(test);
+    setNumEvents(15);
+    setAttend(194)
+    setHours(501)
 
     //   getAttendanceStatistics(undefined, startDate, endDate).then(
     //     async (stats) => {

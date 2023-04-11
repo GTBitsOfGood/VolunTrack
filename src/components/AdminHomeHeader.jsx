@@ -5,8 +5,8 @@ const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
 
 const AdminHomeHeader = (props) => {
-  let events = 0;
-  let volunteers = 0;
+  let events = 1;
+  let volunteers = 8;
   let firstDate = "";
 
   if (props.events.length > 0) {
