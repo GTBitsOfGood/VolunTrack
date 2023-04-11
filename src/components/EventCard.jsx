@@ -3,7 +3,7 @@ import {
   PencilIcon,
   PlusCircleIcon,
   TrashIcon,
-  UsersIcon
+  UsersIcon,
 } from "@heroicons/react/24/solid";
 import { Label, Tooltip } from "flowbite-react";
 import router from "next/router";
