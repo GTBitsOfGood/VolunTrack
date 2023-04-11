@@ -170,8 +170,7 @@ const EventCard = (props) => {
             </>
           )}
           <Label className="justify-end">
-            {props.event.eventParent.maxVolunteers - regCount} slots
-            available
+            {props.event.eventParent.maxVolunteers - regCount} slots available
           </Label>
         </div>
       </div>

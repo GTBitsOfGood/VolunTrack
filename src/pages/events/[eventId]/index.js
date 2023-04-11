@@ -185,8 +185,7 @@ const EventInfo = () => {
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
-                  {event.eventParent.maxVolunteers - regCount} Slots
-                  Remaining
+                  {event.eventParent.maxVolunteers - regCount} Slots Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>
               </Styled.EventSubhead>
