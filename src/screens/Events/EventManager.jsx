@@ -122,6 +122,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const [hours, setHours] = useState(0);
   const [eventState, setEventState] = useState([]);
   const [registrations, setRegistrations] = useState([]);
+  const [orgRegistrations, setOrgRegistrations] = useState([]);
 
   const eventChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -168,12 +169,16 @@ const EventManager = ({ user, role, isHomePage }) => {
       eventState.push(hourChart);
       eventState.push(attendChart);
     });
+    getRegistrations(user.organizationId, undefined, undefined).then(
+      (result) => {
+        if (result.data?.registrations)
+          setOrgRegistrations(result.data.registrations);
+      }
+    );
     getRegistrations(undefined, undefined, user._id)
       .then((result) => {
-        if (result.data) {
+        if (result.data?.registrations)
           setRegistrations(result.data.registrations);
-          console.log("registrations set");
-        }
       })
       .finally(() => setLoading(false));
   };
@@ -367,6 +372,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
+              orgRegistrations={orgRegistrations}
             />
           )}
           <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
@@ -400,6 +406,7 @@ const EventManager = ({ user, role, isHomePage }) => {
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
+              orgRegistrations={orgRegistrations}
             />
           </div>
         </Styled.HomePage>
@@ -430,6 +437,7 @@ const EventManager = ({ user, role, isHomePage }) => {
             isHomePage={isHomePage}
             registrations={registrations}
             onCreateClicked={onCreateClicked}
+            orgRegistrations={orgRegistrations}
           />
         </Styled.HomePage>
       )}

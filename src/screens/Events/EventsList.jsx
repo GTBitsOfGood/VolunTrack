@@ -4,6 +4,7 @@ import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
+import { getRegistrations } from "../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -32,6 +33,7 @@ const EventsList = ({
   isHomePage,
   registrations,
   onCreateClicked,
+  orgRegistrations,
 }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -72,6 +74,18 @@ const EventsList = ({
     return new Date(event.date) > currentDate;
   });
 
+  const registrationsMap = new Map();
+
+  orgRegistrations.map((reg) => {
+    if (!registrationsMap.has(reg.eventId)) {
+      registrationsMap.set(reg.eventId, 0);
+    }
+    registrationsMap.set(
+      reg.eventId,
+      registrationsMap.get(reg.eventId) + 1 + reg.minors.length
+    );
+  });
+
   // upcomingEvents = upcomingEvents.filter(function (event) {
   //   return !event.volunteers.includes(user._id);
   // });
@@ -93,6 +107,11 @@ const EventsList = ({
             event={event}
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
+            registrations={
+              registrationsMap.has(event._id)
+                ? registrationsMap.get(event._id)
+                : 0
+            }
           />
         ))}
         <Styled.Spacer />
@@ -118,6 +137,11 @@ const EventsList = ({
                       event={event}
                       user={user}
                       isRegistered={true}
+                      registrations={
+                        registrationsMap.has(event._id)
+                          ? registrationsMap.get(event._id)
+                          : 0
+                      }
                     />
                   ))}
                 </div>
@@ -133,6 +157,11 @@ const EventsList = ({
                       event={event}
                       user={user}
                       isRegistered={registeredEventIds.has(event._id)}
+                      registrations={
+                        registrationsMap.has(event._id)
+                          ? registrationsMap.get(event._id)
+                          : 0
+                      }
                     />
                   ))}
                 </div>
@@ -149,7 +178,16 @@ const EventsList = ({
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
             {upcomingEvents.length > 0 &&
               upcomingEvents.map((event) => (
-                <EventCard key={event._id} event={event} user={user} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  registrations={
+                    registrationsMap.has(event._id)
+                      ? registrationsMap.get(event._id)
+                      : 0
+                  }
+                />
               ))}
             {upcomingEvents.length === 0 && (
               <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
@@ -168,7 +206,16 @@ const EventsList = ({
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
               todayEvents.map((event) => (
-                <EventCard key={event._id} event={event} user={user} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  registrations={
+                    registrationsMap.has(event._id)
+                      ? registrationsMap.get(event._id)
+                      : 0
+                  }
+                />
               ))}
             <div className="justify-content-center flex">
               {todayEvents.length === 0 && (
@@ -189,6 +236,11 @@ const EventsList = ({
                     event={event}
                     user={user}
                     version={"Secondary"}
+                    registrations={
+                      registrationsMap.has(event._id)
+                        ? registrationsMap.get(event._id)
+                        : 0
+                    }
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
@@ -218,6 +270,7 @@ EventsList.propTypes = {
   user: PropTypes.object,
   isHomePage: PropTypes.bool,
   onCreateClicked: PropTypes.func,
+  orgRegistrations: PropTypes.Array,
 };
 
 export default EventsList;
