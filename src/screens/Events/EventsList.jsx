@@ -48,12 +48,24 @@ const EventsList = ({
 
   let upcomingEvents = events.filter(function (event) {
     const currentDate = new Date();
-    return new Date(event.date) > currentDate;
+    const eventDate = new Date(event.date);
+    if (eventDate.getUTCFullYear() > currentDate.getUTCFullYear()) {
+      return true;
+    } else if (eventDate.getUTCFullYear() === currentDate.getUTCFullYear()) {
+      if (eventDate.getUTCMonth() > currentDate.getUTCMonth()) {
+        return true;
+      } else if (eventDate.getUTCMonth() === currentDate.getUTCMonth()) {
+        if (eventDate.getUTCDate() > currentDate.getUTCDate()) {
+          return true;
+        } 
+      }
+    }
+    return false;
   });
 
   const todayEvents = events.filter(function (event) {
     const currentDate = new Date();
-    const eventDate = new Date(event.date);
+    const eventDate= new Date(event.date);
     return (
       eventDate.getUTCMonth() === currentDate.getUTCMonth() &&
       eventDate.getUTCDate() === currentDate.getUTCDate() &&
@@ -65,7 +77,7 @@ const EventsList = ({
     registrations.map((registration) => registration.eventId)
   );
 
-  const registeredEvents = upcomingEvents.filter((event) => {
+  const registeredEvents = events.filter((event) => {
     return registeredEventIds.has(event._id);
   });
 
@@ -187,7 +199,9 @@ const EventsList = ({
           <Styled.ul>
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
             {upcomingEvents.length > 0 &&
-              upcomingEvents.map((event) => (
+              upcomingEvents.map((event) => {
+                !registeredEventIds.has(event._id) && 
+                (
                 <EventCard
                   key={event._id}
                   event={event}
@@ -198,7 +212,7 @@ const EventsList = ({
                       : 0
                   }
                 />
-              ))}
+              )})}
             {upcomingEvents.length === 0 && (
               <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
                 No new events!
