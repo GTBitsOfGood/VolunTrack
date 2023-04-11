@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "POST": {
-      await organization.updateOne({ active: !organization.active });
+      await organization.updateOne({ $set: { active: !organization.active }});
       return res.status(200).json({ organization });
     }
   }
