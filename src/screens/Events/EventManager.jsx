@@ -168,9 +168,13 @@ const EventManager = ({ user, role, isHomePage }) => {
       eventState.push(hourChart);
       eventState.push(attendChart);
     });
-    getRegistrations(undefined, undefined, user.id)
+    getRegistrations(undefined, undefined, user._id)
       .then((result) => {
-        if (result.data.success) setRegistrations(result.data.registrations);
+        if (result.data) {
+          console.log(user);
+          setRegistrations(result.data.registrations);
+          console.log("registrations set");
+        }
       })
       .finally(() => setLoading(false));
   };

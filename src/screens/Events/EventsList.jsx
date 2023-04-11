@@ -59,7 +59,7 @@ const EventsList = ({
   );
 
   const registeredEvents = upcomingEvents.filter((event) => {
-    return registeredEventIds.has(event.id);
+    return registeredEventIds.has(event._id);
   });
 
   const todayRegisteredEvents = registeredEvents.filter(function (event) {
@@ -92,7 +92,7 @@ const EventsList = ({
             key={event._id}
             event={event}
             user={user}
-            isRegistered={registeredEventIds.has(event.id)}
+            isRegistered={registeredEventIds.has(event._id)}
           />
         ))}
         <Styled.Spacer />
@@ -100,6 +100,10 @@ const EventsList = ({
     );
   } else {
     if (user.role == "volunteer" && upcomingEvents.length > 0) {
+      console.log("registered events");
+      console.log(registeredEvents);
+      console.log("upcoming registered events");
+      console.log(upcomingRegisteredEvents);
       return (
         <Styled.Container>
           <Styled.ul>
@@ -132,7 +136,7 @@ const EventsList = ({
                       key={event._id}
                       event={event}
                       user={user}
-                      isRegistered={registeredEventIds.has(event.id)}
+                      isRegistered={registeredEventIds.has(event._id)}
                     />
                   ))}
                 </div>
