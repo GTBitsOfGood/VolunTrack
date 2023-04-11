@@ -7,14 +7,17 @@ import DateDisplayComponent from "./DateDisplay";
 const AdminHomeHeader = (props) => {
   let events = 0;
   let volunteers = 0;
+  let firstDate = "";
 
-  let split = props.events[0].date;
-  let firstDate =
-    split.substring(5, 7) +
-    "/" +
-    split.substring(8, 10) +
-    "/" +
-    split.substring(0, 4);
+  if (props.events.length > 0) {
+    let split = props.events[0].date;
+    firstDate =
+      split.substring(5, 7) +
+      "/" +
+      split.substring(8, 10) +
+      "/" +
+      split.substring(0, 4);
+  }
 
   for (let i = 0; i < props.events.length; i++) {
     let splitDate = new Date(props.events[i].date).toDateString().split(" ");
