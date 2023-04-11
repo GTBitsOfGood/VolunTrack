@@ -21,12 +21,18 @@ const EventCard = (props) => {
   const [collapse, setCollapse] = useState(false);
   const [event, setEvent] = useState(props.event);
   const [registrations, setRegistrations] = useState([]);
+  const [regCount, setRegCount] = useState(0);
   const isRegistered = props.isRegistered;
   const onEventDelete = props.onEventDelete;
 
   useEffect(() => {
     getRegistrations(event._id).then((res) => {
       setRegistrations(res.data.registrations);
+      let count = 0;
+      res.data.registrations.map((reg) => {
+        count += 1 + reg.minors.length;
+      });
+      setRegCount(count);
     });
   }, []);
 
@@ -164,7 +170,7 @@ const EventCard = (props) => {
             </>
           )}
           <Label className="justify-end">
-            {props.event.eventParent.maxVolunteers - registrations.length} slots
+            {props.event.eventParent.maxVolunteers - regCount} slots
             available
           </Label>
         </div>
