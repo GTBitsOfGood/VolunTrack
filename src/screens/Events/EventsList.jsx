@@ -53,7 +53,12 @@ const EventsList = ({
 
   const todayEvents = events.filter(function (event) {
     const currentDate = new Date();
-    return new Date(event.date) === currentDate;
+    const eventDate = new Date(event.date);
+    return (
+      eventDate.getUTCMonth() === currentDate.getUTCMonth() &&
+      eventDate.getUTCDate() === currentDate.getUTCDate() &&
+      eventDate.getUTCFullYear() === currentDate.getUTCFullYear()
+    );
   });
 
   const registeredEventIds = new Set(
@@ -66,7 +71,12 @@ const EventsList = ({
 
   const todayRegisteredEvents = registeredEvents.filter(function (event) {
     const currentDate = new Date();
-    return new Date(event.date) === currentDate;
+    const eventDate = new Date(event.date);
+    return (
+      eventDate.getUTCMonth() === currentDate.getUTCMonth() &&
+      eventDate.getUTCDate() === currentDate.getUTCDate() &&
+      eventDate.getUTCFullYear() === currentDate.getUTCFullYear()
+    );
   });
 
   const upcomingRegisteredEvents = registeredEvents.filter(function (event) {
