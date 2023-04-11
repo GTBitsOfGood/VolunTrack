@@ -100,10 +100,6 @@ const EventsList = ({
     );
   } else {
     if (user.role == "volunteer" && upcomingEvents.length > 0) {
-      console.log("registered events");
-      console.log(registeredEvents);
-      console.log("upcoming registered events");
-      console.log(upcomingRegisteredEvents);
       return (
         <Styled.Container>
           <Styled.ul>

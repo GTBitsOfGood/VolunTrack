@@ -171,7 +171,6 @@ const EventManager = ({ user, role, isHomePage }) => {
     getRegistrations(undefined, undefined, user._id)
       .then((result) => {
         if (result.data) {
-          console.log(user);
           setRegistrations(result.data.registrations);
           console.log("registrations set");
         }
