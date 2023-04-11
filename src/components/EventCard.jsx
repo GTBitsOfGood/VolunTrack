@@ -3,7 +3,7 @@ import {
   PencilIcon,
   PlusCircleIcon,
   TrashIcon,
-  UsersIcon,
+  UsersIcon
 } from "@heroicons/react/24/solid";
 import { Label, Tooltip } from "flowbite-react";
 import router from "next/router";
@@ -28,7 +28,6 @@ const EventCard = (props) => {
     getRegistrations(event._id).then((res) => {
       setRegistrations(res.data.registrations);
     });
-    console.log(props.event);
   }, []);
 
   const open = () => {
