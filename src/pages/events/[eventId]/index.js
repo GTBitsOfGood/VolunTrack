@@ -102,6 +102,7 @@ const EventInfo = () => {
   const user = session.user;
   const context = useContext(RequestContext);
   const [registrations, setRegistrations] = useState([]);
+  const [regCount, setRegCount] = useState(0);
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
 
@@ -111,6 +112,11 @@ const EventInfo = () => {
     });
     getRegistrations(eventId).then((result) => {
       setRegistrations(result.data.registrations);
+      let count = 0;
+      result.data.registrations.map((reg) => {
+        count += 1 + reg.minors.length;
+      });
+      setRegCount(count);
     });
   };
 
@@ -179,8 +185,7 @@ const EventInfo = () => {
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
-                  {event.eventParent.maxVolunteers - registrations.length} Slots
-                  Remaining
+                  {event.eventParent.maxVolunteers - regCount} Slots Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>
               </Styled.EventSubhead>
