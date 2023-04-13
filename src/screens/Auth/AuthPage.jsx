@@ -17,7 +17,7 @@ const AuthPage = (props) => {
 
   return (
     <div className="flex-column flex h-full w-full items-center justify-center">
-      <div className="flex-column mx-auto my-2 flex w-1/2 items-center justify-center lg:w-1/4">
+      <div className="flex-column mx-auto my-2 flex w-2/3 items-center justify-center lg:w-1/4">
         {/* <img
           alt="Bits of Good Logo"
           src="/images/bog_logo.png"
@@ -58,7 +58,7 @@ const AuthPage = (props) => {
             href={`${window.location.origin}/${
               props.createAccount ? "login" : "create-account"
             }`}
-            className="ml-2 text-sky-600"
+            className="ml-2"
           />
         </div>
         {!props.createAccount && (
@@ -69,7 +69,7 @@ const AuthPage = (props) => {
               href={`${window.location.origin}/${
                 props.createAccount ? "login" : "create-account"
               }`}
-              className="ml-2 text-sky-600"
+              className="ml-2"
             />
           </div>
         )}
