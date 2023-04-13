@@ -10,12 +10,12 @@ export const userInputClientValidator = z.object({
   lastName: z.string(),
   phone: z.string().optional(),
   dob: z.string().optional(),
-  zip: z.string().regex(/^[0-9]{5}$/, "zip must be a five-digit number"),
+  zip: z.string().optional(), //.regex(/^[0-9]{5}$/, "zip must be a five-digit number"),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z
     .string()
-    .regex(/^[A-Z]{2}$/, "state must be a two-letter abbreviation")
+    // .regex(/^[A-Z]{2}$/, "state must be a two-letter abbreviation")
     .optional(),
   notes: z.string().optional(),
   passwordHash: z.string().optional(),
@@ -40,13 +40,13 @@ export const userInputServerValidator = z.object({
   dob: z.string().optional(),
   zip: z
     .string()
-    .regex(/^[0-9]{5}$/, "zip must be a five-digit number")
+    // .regex(/^[0-9]{5}$/, "zip must be a five-digit number")
     .optional(),
   address: z.string().optional(),
   city: z.string().optional(),
   state: z
     .string()
-    .regex(/^[A-Z]{2}$/, "state must be a two-letter abbreviation")
+    // .regex(/^[A-Z]{2}$/, "state must be a two-letter abbreviation")
     .optional(),
   notes: z.string().nullable().optional(),
   passwordHash: z.string().optional(),
