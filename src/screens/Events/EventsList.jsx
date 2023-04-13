@@ -65,6 +65,10 @@ const EventsList = ({
     return registeredEventIds.has(event._id);
   });
 
+  upcomingEvents = upcomingEvents.filter(
+    (event) => !registeredEventIds.has(event._id)
+  );
+
   const todayRegisteredEvents = registeredEvents.filter(function (event) {
     const currentDate = new Date();
     return new Date(event.date) === currentDate;
@@ -111,11 +115,11 @@ const EventsList = ({
               <p className="font-weight-bold pb-3 text-2xl">
                 Registered Events
               </p>
+              <p className="font-weight-bold pb-3 text-xl">
+                {"Today's Events"}
+              </p>
               {todayRegisteredEvents.length > 0 && (
                 <div>
-                  <p className="font-weight-bold pb-3 text-xl">
-                    {"Today's Events"}
-                  </p>
                   {todayRegisteredEvents.map((event) => (
                     <EventCard
                       key={event._id}
@@ -126,12 +130,17 @@ const EventsList = ({
                   ))}
                 </div>
               )}
+              {todayRegisteredEvents.length === 0 && (
+                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                  No events today
+                </p>
+              )}
               {upcomingRegisteredEvents.length > 0 && (
                 <div>
                   <p className="font-weight-bold pb-3 text-xl">
                     {"Upcoming Events"}
                   </p>
-                  {upcomingEvents.map((event) => (
+                  {upcomingRegisteredEvents.map((event) => (
                     <EventCard
                       key={event._id}
                       event={event}

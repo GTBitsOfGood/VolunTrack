@@ -22,10 +22,10 @@ const ProgressDisplay = ({ type, attendance, header }) => {
     let add = 0;
     outOf = 10;
     for (let i = 0; i < attendance.length; i++) {
-      if (attendance[i].timeCheckedOut != null) {
+      if (attendance[i].checkoutTime != null) {
         add += getHours(
-          attendance[i].timeCheckedIn.slice(11, 16),
-          attendance[i].timeCheckedOut.slice(11, 16)
+          attendance[i].checkinTime.slice(11, 16),
+          attendance[i].checkoutTime.slice(11, 16)
         );
       }
     }

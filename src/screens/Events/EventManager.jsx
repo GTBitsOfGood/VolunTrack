@@ -123,6 +123,9 @@ const EventManager = ({ isHomePage }) => {
   const [registrations, setRegistrations] = useState([]);
   const [attendances, setAttendances] = useState([]);
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
@@ -155,20 +158,12 @@ const EventManager = ({ isHomePage }) => {
 
     getAttendances(query).then((result) => {
       if (result?.data?.attendances) {
-        const filteredAttendance = filterAttendance(
-          result.data.attendances,
-          startDate,
-          endDate
-        );
-        setAttendances(filteredAttendance);
+        setAttendances(result.data.attendances);
       }
     });
     onRefresh();
   }, []);
 
-  const [startDate, setStartDate] = useState("undefined");
-  const [endDate, setEndDate] = useState("undefined");
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
   let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
