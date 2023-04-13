@@ -125,7 +125,6 @@ const EventManager = ({ isHomePage }) => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
@@ -163,7 +162,6 @@ const EventManager = ({ isHomePage }) => {
     });
     onRefresh();
   }, []);
-
 
   let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(

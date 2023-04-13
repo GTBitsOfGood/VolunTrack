@@ -148,27 +148,24 @@ const EventCard = (props) => {
               />
             </div>
           )}
-          {props.user.role === "volunteer" && (
-            <>
-              {isRegistered ? (
+            {props.user.role === "volunteer" && isRegistered && (
+              <button
+                className="align-items-center mx-1 flex"
+                onClick={registerOnClick}
+              >
+                <CheckCircleIcon className="h-8 text-primaryColor" />
+                <span>Registered!</span>
+              </button>
+            )}
+            {props.user.role === "volunteer" && !isRegistered && props.event.eventParent.maxVolunteers - regCount > 0 && (
                 <button
-                  className="align-items-center mx-1 flex"
-                  onClick={registerOnClick}
+                    className="align-items-center mx-1 flex"
+                    onClick={registerOnClick}
                 >
-                  <CheckCircleIcon className="h-8 text-primaryColor" />
-                  <span>Registered!</span>
-                </button>
-              ) : (
-                <button
-                  className="align-items-center mx-1 flex"
-                  onClick={registerOnClick}
-                >
-                  <PlusCircleIcon className="h-8 text-primaryColor" />
+                  <PlusCircleIcon className="h-8 text-primaryColor"/>
                   <span>Register</span>
                 </button>
-              )}
-            </>
-          )}
+            )}
           <Label className="justify-end">
             {props.event.eventParent.maxVolunteers - regCount} slots available
           </Label>

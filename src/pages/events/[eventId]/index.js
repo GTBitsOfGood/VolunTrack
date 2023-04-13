@@ -105,16 +105,19 @@ const EventInfo = () => {
   const [regCount, setRegCount] = useState(0);
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
       setEvent(result.data.event);
     });
-    getRegistrations(eventId).then((result) => {
+    getRegistrations({ eventId }).then((result) => {
       setRegistrations(result.data.registrations);
       let count = 0;
       result.data.registrations.map((reg) => {
         count += 1 + reg.minors.length;
+        if (user.role === "volunteer" && reg.userId === user._id)
+          setIsRegistered(true);
       });
       setRegCount(count);
     });
@@ -224,14 +227,32 @@ const EventInfo = () => {
                   </div>
                 </>
               )}
+              {/*It should only ever display one of the following buttons*/}
               {user.role === "volunteer" &&
-                registrations
-                  .map((registration) => registration.userId.toString())
-                  .includes(user._id.toString()) &&
+                isRegistered &&
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"
                     onClick={() => onUnregisterClicked(event)}
+                  />
+                )}
+              {user.role === "volunteer" &&
+                event.eventParent.maxVolunteers - regCount > 0 &&
+                !isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    text="Register"
+                    onClick={() => onRegisterClicked(event)}
+                  />
+                )}
+              {user.role === "volunteer" &&
+                event.eventParent.maxVolunteers - regCount <= 0 &&
+                !isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    disabled={true}
+                    text="Registration Closed"
+                    onClick={null}
                   />
                 )}
             </Row>
@@ -330,33 +351,6 @@ const EventInfo = () => {
             )}
           </Col>
         </Styled.EventTable>
-        {/*{user.role === "volunteer" &&*/}
-        {/*  // event.max_volunteers - event.volunteers.length !== 0 &&*/}
-        {/*  // !event.volunteers.includes(user._id) &&*/}
-        {/*  futureorTodaysDate && (*/}
-        {/*    <BoGButton*/}
-        {/*      text="Register"*/}
-        {/*      onClick={() => onRegisterClicked(event)}*/}
-        {/*    />*/}
-        {/*  )}*/}
-        {/*{user.role === "volunteer" &&*/}
-        {/*  // event.max_volunteers - event.volunteers.length === 0 &&*/}
-        {/*  // !event.volunteers.includes(user._id) &&*/}
-        {/*  futureorTodaysDate && (*/}
-        {/*    <BoGButton*/}
-        {/*      disabled={true}*/}
-        {/*      text="Registration Closed"*/}
-        {/*      onClick={null}*/}
-        {/*    />*/}
-        {/*  )}*/}
-        {/*{user.role === "volunteer" &&*/}
-        {/*  // event.volunteers.includes(user._id) &&*/}
-        {/*  futureorTodaysDate && (*/}
-        {/*    <BoGButton*/}
-        {/*      text="You are registered for this event!"*/}
-        {/*      disabled={true}*/}
-        {/*    />*/}
-        {/*  )}*/}
         <EventUnregisterModal
           open={showUnregisterModal}
           toggle={toggleUnregisterModal}

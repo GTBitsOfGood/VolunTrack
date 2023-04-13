@@ -87,7 +87,7 @@ const EventStatistics = () => {
     getEvent(eventId).then((result) => {
       setEvent(result.data.event);
     });
-    getRegistrations(eventId).then((result) => {
+    getRegistrations({ eventId }).then((result) => {
       setRegistrations(result.data.registrations);
     });
   };
