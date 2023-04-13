@@ -123,7 +123,6 @@ const EventManager = ({ isHomePage }) => {
   const [registrations, setRegistrations] = useState([]);
   const [attendances, setAttendances] = useState([]);
 
-
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
@@ -133,7 +132,7 @@ const EventManager = ({ isHomePage }) => {
       }
     });
 
-    getRegistrations({userId: user._id})
+    getRegistrations({ userId: user._id })
       .then((result) => {
         if (result.data.registrations)
           setRegistrations(result.data.registrations);
@@ -151,8 +150,8 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
-    let query = {organizationId: user.organizationId}
-    if (user.role === "volunteer") query.userId = user._id
+    let query = { organizationId: user.organizationId };
+    if (user.role === "volunteer") query.userId = user._id;
 
     getAttendances(query).then((result) => {
       if (result?.data?.attendances) {

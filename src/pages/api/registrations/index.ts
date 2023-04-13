@@ -28,14 +28,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? new Types.ObjectId(req.query.userId as string)
         : undefined;
       const organizationId = req.query.organizationId
-          ? new Types.ObjectId(req.query.organizationId as string)
-          : undefined;
+        ? new Types.ObjectId(req.query.organizationId as string)
+        : undefined;
 
       const match: Partial<RegistrationInputClient> = {};
       if (eventId) match.eventId = eventId;
       if (userId) match.userId = userId;
       if (organizationId) match.organizationId = organizationId;
-
 
       return res.status(200).json({
         registrations: await Registration.find(match),
@@ -73,9 +72,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       const match: Partial<RegistrationInputClient> = {};
       if (eventId) match.eventId = eventId;
-      else return res.status(500)
+      else return res.status(500);
       if (userId) match.userId = userId;
-      else return res.status(500)
+      else return res.status(500);
 
       return res.status(200).json({
         registration: await Registration.findOneAndDelete(match),

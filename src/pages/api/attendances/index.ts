@@ -2,10 +2,12 @@ import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Attendance, {
-  AttendanceDocument, AttendanceInputClient, attendanceInputClientValidator,
+  AttendanceDocument,
+  AttendanceInputClient,
+  attendanceInputClientValidator,
   attendanceInputServerValidator,
 } from "../../../../server/mongodb/models/Attendance";
-import {RegistrationInputClient} from "../../../../server/mongodb/models/Registration";
+import { RegistrationInputClient } from "../../../../server/mongodb/models/Registration";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -19,8 +21,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? new Types.ObjectId(req.query.eventId as string)
         : undefined;
       const organizationId = req.query.organizationId
-          ? new Types.ObjectId(req.query.organizationId as string)
-          : undefined;
+        ? new Types.ObjectId(req.query.organizationId as string)
+        : undefined;
       const checkinTimeStart = req.query.checkinTimeStart
         ? new Date(req.query.checkinTimeStart as string)
         : undefined;
@@ -40,7 +42,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (userId) match.userId = userId;
 
       const attendances: AttendanceDocument[] = await Attendance.find(match);
-
 
       if (checkinTimeStart)
         attendances.filter(

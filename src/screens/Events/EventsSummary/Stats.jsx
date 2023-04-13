@@ -85,34 +85,36 @@ const Stats = () => {
       .then(async (result) => {
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getAttendances({organizationId: user.organizationId}, startDate, endDate).then(
-          (stats) => {
-            let computedStats = [];
-            var totalAttendance = 0;
-            var totalHours = 0;
-            for (let event of result.data.events) {
-              let stat = stats.data.find((s) => s._id === event._id);
-              if (stat) {
-                totalAttendance += stat.uniqueUsers.length;
-                totalHours += stat.minutes / 60.0;
+        getAttendances(
+          { organizationId: user.organizationId },
+          startDate,
+          endDate
+        ).then((stats) => {
+          let computedStats = [];
+          var totalAttendance = 0;
+          var totalHours = 0;
+          for (let event of result.data.events) {
+            let stat = stats.data.find((s) => s._id === event._id);
+            if (stat) {
+              totalAttendance += stat.uniqueUsers.length;
+              totalHours += stat.minutes / 60.0;
 
-                computedStats.push({
-                  _id: event._id,
-                  title: event.eventParent.title,
-                  date: event.date,
-                  startTime: event.eventParent.startTime,
-                  endTime: event.eventParent.endTime,
-                  attendance: stat.uniqueUsers.length,
-                  hours: Math.round((stat.minutes / 60.0) * 100) / 100,
-                });
-              }
+              computedStats.push({
+                _id: event._id,
+                title: event.eventParent.title,
+                date: event.date,
+                startTime: event.eventParent.startTime,
+                endTime: event.eventParent.endTime,
+                attendance: stat.uniqueUsers.length,
+                hours: Math.round((stat.minutes / 60.0) * 100) / 100,
+              });
             }
-
-            setAttend(totalAttendance);
-            setHours(Math.round(totalHours * 100) / 100);
-            setComputedStats(computedStats);
           }
-        );
+
+          setAttend(totalAttendance);
+          setHours(Math.round(totalHours * 100) / 100);
+          setComputedStats(computedStats);
+        });
       })
       .finally(() => {
         setLoading(false);

@@ -127,7 +127,7 @@ const EventRegister = () => {
         setEvent(result.data.event);
       }
     });
-    getRegistrations({eventId, userId: user._id,}).then((result) => {
+    getRegistrations({ eventId, userId: user._id }).then((result) => {
       if (result?.data?.registrations?.length > 0) {
         setIsRegistered(true);
         setMinors(result.data.registrations[0].minors);
