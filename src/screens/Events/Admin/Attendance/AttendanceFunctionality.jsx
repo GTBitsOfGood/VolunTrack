@@ -6,7 +6,7 @@ import Volunteer from "./Volunteer";
 const Styled = {
   InfoText: styled.p`
     margin: 2rem 0 1rem 0;
-    padding 0;
+    padding: 0;
 
     color: gray;
   `,

@@ -5,15 +5,18 @@ import {
   AttendanceDocument,
   AttendanceInputClient,
 } from "../../server/mongodb/models/Attendance";
+import { QueryPartialMatch } from "./index";
 
 // Helper functions for checking in and out volunteers
 export const checkInVolunteer = (
   userId: Types.ObjectId,
-  eventId: Types.ObjectId
+  eventId: Types.ObjectId,
+  organizationId: Types.ObjectId
 ) =>
   createAttendance({
     userId,
     eventId,
+    organizationId,
     checkinTime: new Date(),
   });
 
@@ -22,8 +25,10 @@ export const checkOutVolunteer = async (
   eventId: Types.ObjectId
 ) => {
   const attendanceResponse = await getAttendances(
-    userId,
-    eventId,
+    {
+      userId,
+      eventId,
+    },
     undefined,
     undefined,
     null,
@@ -42,8 +47,7 @@ export const getAttendance = (attendanceId: Types.ObjectId) =>
   }>(`/api/attendances/${attendanceId.toString()}`);
 
 export const getAttendances = (
-  userId?: Types.ObjectId,
-  eventId?: Types.ObjectId,
+  query: QueryPartialMatch,
   checkinTimeStart?: Date,
   checkinTimeEnd?: Date,
   checkoutTimeStart?: Date | null,
@@ -54,8 +58,9 @@ export const getAttendances = (
     error?: ZodError | string;
   }>("/api/attendances", {
     params: {
-      userId,
-      eventId,
+      userId: query.userId,
+      eventId: query.eventId,
+      organizationId: query.organizationId,
       checkinTimeStart,
       checkinTimeEnd,
       checkoutTimeStart,

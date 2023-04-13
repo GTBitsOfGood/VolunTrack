@@ -10,6 +10,12 @@ export * from "./validators";
 
 const registrationSchema = new Schema(
   {
+    organizationId: {
+      type: Schema.Types.ObjectId,
+      ref: "Organization",
+      default: "63d6dcc4e1fb5fd6e69b1738",
+      required: true,
+    },
     eventId: { type: Schema.Types.ObjectId, ref: "Event", required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     minors: { type: [String], default: [] },

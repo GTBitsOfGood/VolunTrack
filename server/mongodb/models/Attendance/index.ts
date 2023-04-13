@@ -12,6 +12,12 @@ const attendanceSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     eventId: { type: Schema.Types.ObjectId, ref: "Event", required: true },
+    organizationId: {
+      type: Schema.Types.ObjectId,
+      ref: "Organization",
+      default: "63d6dcc4e1fb5fd6e69b1738",
+      required: true,
+    },
     checkinTime: { type: Date, default: null },
     checkoutTime: { type: Date, default: null },
   },

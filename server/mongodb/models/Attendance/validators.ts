@@ -4,6 +4,7 @@ import { z } from "zod";
 export const attendanceInputClientValidator = z.object({
   userId: z.instanceof(Types.ObjectId),
   eventId: z.instanceof(Types.ObjectId),
+  organizationId: z.instanceof(Types.ObjectId),
   checkinTime: z.date().optional(),
   checkoutTime: z.date().optional(),
 });
@@ -16,6 +17,10 @@ export const attendanceInputServerValidator = z.object({
   eventId: z.string().refine(
     (id) => isValidObjectId(id),
     (id) => ({ message: `eventId ${id} is not a valid ObjectId` })
+  ),
+  organizationId: z.string().refine(
+    (id) => isValidObjectId(id),
+    (id) => ({ message: `organizationId ${id} is not a valid ObjectId` })
   ),
   checkinTime: z.string().datetime().optional(),
   checkoutTime: z.string().datetime().optional(),

@@ -27,6 +27,7 @@ const historyEventSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",
+      required: true,
     },
     eventId: {
       type: Schema.Types.ObjectId,

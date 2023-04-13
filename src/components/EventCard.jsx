@@ -26,7 +26,7 @@ const EventCard = (props) => {
   const onEventDelete = props.onEventDelete;
 
   useEffect(() => {
-    getRegistrations(event._id).then((res) => {
+    getRegistrations({eventId: event._id}).then((res) => {
       setRegistrations(res.data.registrations);
       let count = 0;
       res.data.registrations.map((reg) => {

@@ -85,7 +85,7 @@ const Stats = () => {
       .then(async (result) => {
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getAttendances(undefined, undefined, startDate, endDate).then(
+        getAttendances({organizationId: user.organizationId}, startDate, endDate).then(
           (stats) => {
             let computedStats = [];
             var totalAttendance = 0;

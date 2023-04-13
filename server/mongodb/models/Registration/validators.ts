@@ -2,12 +2,19 @@ import { isValidObjectId, Types } from "mongoose";
 import { z } from "zod";
 
 export const registrationInputClientValidator = z.object({
+  organizationId: z.instanceof(Types.ObjectId),
   eventId: z.instanceof(Types.ObjectId),
   userId: z.instanceof(Types.ObjectId),
   minors: z.array(z.string()).optional(),
 });
 
 export const registrationInputServerValidator = z.object({
+  organizationId: z.string().refine(
+    (id) => isValidObjectId(id),
+    (id) => ({
+      message: `organizationId ${id} is not a valid ObjectId`,
+    })
+  ),
   eventId: z.string().refine(
     (id) => isValidObjectId(id),
     (id) => ({

@@ -112,22 +112,17 @@ const EventManager = ({ isHomePage }) => {
   const user = session.user;
 
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterOn, setFilterOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("All Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
-  const [numEvents, setNumEvents] = useState(0);
-  const [attend, setAttend] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [charts, setCharts] = useState([]);
-  const [registrations, setRegistrations] = useState([]);
 
-  const eventChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const hourChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [attendances, setAttendances] = useState([]);
+
 
   const onRefresh = () => {
     setLoading(true);
@@ -136,54 +131,9 @@ const EventManager = ({ isHomePage }) => {
         setEvents(result.data.events);
         setDates(result.data.events);
       }
-      if (result?.data?.events) setNumEvents(result.data.events.length);
     });
 
-    // TODO: fix logic. We should use getEvents for the events, registrations, and attendance separately for hours
-
-    // temp approach for demo
-    let test = [
-      [2, 5, 4, 0, 0, 0, 0, 0, 0, 1, 0, 3],
-      [22, 87, 43, 0, 0, 0, 0, 0, 0, 12, 0, 30],
-      [71, 186, 119, 0, 0, 0, 0, 0, 0, 40, 0, 85],
-    ];
-    setCharts(test);
-    setNumEvents(15);
-    setAttend(194);
-    setHours(501);
-
-    //   getAttendanceStatistics(undefined, startDate, endDate).then(
-    //     async (stats) => {
-    //       let totalAttendance = 0;
-    //       let totalHours = 0;
-    //       for (const statistic of stats.data.statistics ?? []) {
-    //         let event = {};
-    //         try {
-    //           event = (await getEvent(statistic._id)).data.event;
-    //         } catch (e) {
-    //           continue;
-    //         }
-    //         let split = event.date.split("-");
-    //         let index = parseInt(split[1]) - 1;
-    //         let stat = stats.data.statistics.find((s) => s._id === event._id);
-    //         if (stat) {
-    //           hourChart[index] += Math.round(stat.minutes / 60.0);
-    //           attendChart[index] += stat.users.length;
-    //           totalAttendance += stat.users.length;
-    //           totalHours += stat.minutes / 60.0;
-    //         }
-    //         eventChart[index] = eventChart[index] + 1;
-    //       }
-    //
-    //       setAttend(totalAttendance);
-    //       setHours(Math.round(totalHours * 100) / 100);
-    //     }
-    //   );
-    //   charts.push(eventChart);
-    //   charts.push(hourChart);
-    //   charts.push(attendChart);
-    // });
-    getRegistrations(undefined, user._id)
+    getRegistrations({userId: user._id})
       .then((result) => {
         if (result.data.registrations)
           setRegistrations(result.data.registrations);
@@ -201,20 +151,22 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
-    getAttendances(undefined, undefined).then((result) => {
+    let query = {organizationId: user.organizationId}
+    if (user.role === "volunteer") query.userId = user._id
+
+    getAttendances(query).then((result) => {
       if (result?.data?.attendances) {
         const filteredAttendance = filterAttendance(
           result.data.attendances,
           startDate,
           endDate
         );
-        setAttendance(filteredAttendance);
+        setAttendances(filteredAttendance);
       }
     });
     onRefresh();
   }, []);
 
-  const [attendance, setAttendance] = useState([]);
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -404,12 +356,12 @@ const EventManager = ({ isHomePage }) => {
               <div className="mx-auto flex flex-wrap">
                 <ProgressDisplay
                   type={"Events"}
-                  attendance={attendance}
+                  attendance={attendances}
                   header={"Events Attended"}
                 />
                 <ProgressDisplay
                   type={"Hours"}
-                  attendance={attendance}
+                  attendance={attendances}
                   header={"Hours Earned"}
                 />
               </div>
@@ -434,11 +386,9 @@ const EventManager = ({ isHomePage }) => {
         <Styled.HomePage>
           <AdminHomeHeader
             events={events}
+            attendances={attendances}
+            registrations={registrations}
             dateString={dateString}
-            numEvents={numEvents}
-            attend={attend}
-            hours={hours}
-            charts={charts}
           />
           <EventsList
             dateString={dateString}

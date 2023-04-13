@@ -3,11 +3,20 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
+import { getHours } from "../screens/Stats/User/hourParsing";
 
 const AdminHomeHeader = (props) => {
-  let events = 1;
-  let volunteers = 8;
+  let todaysEvents = 0;
+  let todaysRegistrations = 0;
   let firstDate = "";
+
+  let eventData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let hoursData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let attendanceData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  let eventTotal = 0;
+  let hoursTotal = 0;
+  let attendanceTotal = 0;
 
   if (props.events.length > 0) {
     let split = props.events[0].date;
@@ -23,15 +32,31 @@ const AdminHomeHeader = (props) => {
     let splitDate = new Date(props.events[i].date).toDateString().split(" ");
     let final = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     if (final === props.dateString) {
-      events++;
-      // volunteers += props.events[i].volunteers.length;
+      todaysEvents++;
+      todaysRegistrations += props.registrations.filter(
+        (r) => (r.eventId = props.events[i]._id)
+      ).length;
     }
+    let month = parseInt(props.events[i].date.slice(5, 7)) - 1;
+    eventData[month] += 1;
+    eventTotal += 1;
+  }
+  for (let i = 0; i < props.attendances.length; i++) {
+    let month = parseInt(props.attendances[i].checkinTime.slice(5, 7)) - 1;
+    if (props.attendances[i].checkoutTime != null) {
+      let duration = getHours(
+        props.attendances[i].checkinTime.slice(11, 16),
+        props.attendances[i].checkoutTime.slice(11, 16)
+      );
+      hoursData[month] += duration;
+      hoursTotal += duration;
+    }
+    attendanceData[month] += 1;
+    attendanceTotal += 1;
   }
 
   const borderColor = "#374151";
   const labelColor = "#93ACAF";
-  const opacityFrom = 0;
-  const opacityTo = 0;
 
   const options = (ApexCharts.ApexOptions = {
     stroke: {
@@ -49,8 +74,8 @@ const AdminHomeHeader = (props) => {
     fill: {
       type: "gradient",
       gradient: {
-        opacityFrom,
-        opacityTo,
+        opacityFrom: 0,
+        opacityTo: 0,
         type: "vertical",
       },
     },
@@ -82,10 +107,6 @@ const AdminHomeHeader = (props) => {
     },
     xaxis: {
       categories: [
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
         "Jan",
         "Feb",
         "Mar",
@@ -94,6 +115,10 @@ const AdminHomeHeader = (props) => {
         "Jun",
         "Jul",
         "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
       ],
       labels: {
         style: {
@@ -154,54 +179,15 @@ const AdminHomeHeader = (props) => {
   const series = [
     {
       name: "Events",
-      data: [
-        props.charts[0] === undefined ? 0 : props.charts[0][8],
-        props.charts[0] === undefined ? 0 : props.charts[0][9],
-        props.charts[0] === undefined ? 0 : props.charts[0][10],
-        props.charts[0] === undefined ? 0 : props.charts[0][11],
-        props.charts[0] === undefined ? 0 : props.charts[0][0],
-        props.charts[0] === undefined ? 0 : props.charts[0][1],
-        props.charts[0] === undefined ? 0 : props.charts[0][2],
-        props.charts[0] === undefined ? 0 : props.charts[0][3],
-        props.charts[0] === undefined ? 0 : props.charts[0][4],
-        props.charts[0] === undefined ? 0 : props.charts[0][5],
-        props.charts[0] === undefined ? 0 : props.charts[0][6],
-        props.charts[0] === undefined ? 0 : props.charts[0][7],
-      ],
+      data: eventData,
     },
     {
       name: "Hours",
-      data: [
-        props.charts[1] === undefined ? 0 : props.charts[1][8],
-        props.charts[1] === undefined ? 0 : props.charts[1][9],
-        props.charts[1] === undefined ? 0 : props.charts[1][10],
-        props.charts[1] === undefined ? 0 : props.charts[1][11],
-        props.charts[1] === undefined ? 0 : props.charts[1][0],
-        props.charts[1] === undefined ? 0 : props.charts[1][1],
-        props.charts[1] === undefined ? 0 : props.charts[1][2],
-        props.charts[1] === undefined ? 0 : props.charts[1][3],
-        props.charts[1] === undefined ? 0 : props.charts[1][4],
-        props.charts[1] === undefined ? 0 : props.charts[1][5],
-        props.charts[1] === undefined ? 0 : props.charts[1][6],
-        props.charts[1] === undefined ? 0 : props.charts[1][7],
-      ],
+      data: hoursData,
     },
     {
       name: "Attendance",
-      data: [
-        props.charts[2] === undefined ? 0 : props.charts[2][8],
-        props.charts[2] === undefined ? 0 : props.charts[2][9],
-        props.charts[2] === undefined ? 0 : props.charts[2][10],
-        props.charts[2] === undefined ? 0 : props.charts[2][11],
-        props.charts[2] === undefined ? 0 : props.charts[2][0],
-        props.charts[2] === undefined ? 0 : props.charts[2][1],
-        props.charts[2] === undefined ? 0 : props.charts[2][2],
-        props.charts[2] === undefined ? 0 : props.charts[2][3],
-        props.charts[2] === undefined ? 0 : props.charts[2][4],
-        props.charts[2] === undefined ? 0 : props.charts[2][5],
-        props.charts[2] === undefined ? 0 : props.charts[2][6],
-        props.charts[2] === undefined ? 0 : props.charts[2][7],
-      ],
+      data: attendanceData,
     },
   ];
 
@@ -220,18 +206,16 @@ const AdminHomeHeader = (props) => {
               </div>
               <div className="flex-column flex">
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                  <p className="mb-0 pl-2 text-2xl">{events}</p>
+                  <p className="mb-0 pl-2 text-2xl">{todaysEvents}</p>
                   <p className="text-md mb-0 pl-2 text-slate-600">
-                    {" "}
-                    Scheduled Events
+                    {`Scheduled Event${todaysEvents !== 1 ? "s" : ""}`}
                   </p>
                 </div>
                 <hr className="mx-2 my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                  <p className="mb-0 pl-2 text-2xl">{volunteers}</p>
+                  <p className="mb-0 pl-2 text-2xl">{todaysRegistrations}</p>
                   <p className="text-md mb-0 pl-2 text-slate-600">
-                    {" "}
-                    Volunteers
+                    {`Volunteer${todaysRegistrations !== 1 ? "s" : ""}`}
                   </p>
                 </div>
               </div>
@@ -247,17 +231,17 @@ const AdminHomeHeader = (props) => {
             </div>
             <div className="flex-column flex">
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{props.numEvents}</p>
+                <p className="mb-0 pl-2 text-2xl">{eventTotal}</p>
                 <p className="text-md mb-0 pl-2 text-slate-600"> Events</p>
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{props.attend}</p>
+                <p className="mb-0 pl-2 text-2xl">{attendanceTotal}</p>
                 <p className="text-md mb-0 pl-2 text-slate-600"> Attendance</p>
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{props.hours}</p>
+                <p className="mb-0 pl-2 text-2xl">{hoursTotal}</p>
                 <p className="text-md mb-0 pl-2 text-slate-600"> Hours</p>
               </div>
             </div>
@@ -275,11 +259,9 @@ const AdminHomeHeader = (props) => {
 
 AdminHomeHeader.propTypes = {
   events: PropTypes.array.isRequired,
+  attendances: PropTypes.array.isRequired,
+  registrations: PropTypes.array.isRequired,
   dateString: PropTypes.string.isRequired,
-  numEvents: PropTypes.object.isRequired,
-  attend: PropTypes.object.isRequired,
-  hours: PropTypes.object.isRequired,
-  charts: PropTypes.array.isRequired,
 };
 
 export default AdminHomeHeader;

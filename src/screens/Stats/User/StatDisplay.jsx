@@ -64,7 +64,7 @@ const StatDisplay = ({ userId }) => {
 
   useEffect(() => {
     setLoading(true);
-    getAttendances(userId)
+    getAttendances({ userId })
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
