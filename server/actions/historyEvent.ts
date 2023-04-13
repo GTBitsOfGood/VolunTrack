@@ -55,7 +55,7 @@ export const createHistoryEventEditEvent = (
 ) =>
   createHistoryEvent({
     keyword: "EDITED",
-    description: `${user.firstName} ${user.lastName} edited event ${eventParent.title}}`,
+    description: `${user.firstName} ${user.lastName} edited event ${eventParent.title}`,
     userId: user._id,
     organizationId: eventParent.organizationId,
     eventId: event._id,
