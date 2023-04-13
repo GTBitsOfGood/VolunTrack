@@ -29,7 +29,12 @@ const AdminHomeHeader = (props) => {
   }
 
   for (let i = 0; i < props.events.length; i++) {
-    let splitDate = new Date(props.events[i].date).toDateString().split(" ");
+    let date = new Date(props.events[i].date);
+    let splitDate = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    )
+      .toDateString()
+      .split(" ");
     let final = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     if (final === props.dateString) {
       todaysEvents++;
