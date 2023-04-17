@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import EventTable from "../../../../components/EventTable";
-import { getAttendances } from "../../../../queries/attendances";
+import StatsTable from "../../../../components/StatsTable";
+import { getAttendanceStatistics } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
+import { getRegistrations } from "../../../../queries/registrations";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
-import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 
 const Styled = {
   Container: styled.div`
@@ -71,17 +72,23 @@ const EventStatistics = () => {
   const eventId = router.query.eventId;
   const [attendanceStats, setAttendanceStats] = useState([]);
   const [event, setEvent] = useState(null);
+  const [registrations, setRegistrations] = useState([]);
 
   const onRefresh = () => {
-    getAttendances(undefined, eventId).then((result) => {
-      let stats = result.data.map((stat) => {
-        stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
-        return stat;
-      });
-      setAttendanceStats(stats);
+    getAttendanceStatistics(eventId, undefined, undefined).then((result) => {
+      if (result.data.statistics) {
+        let stats = result.data.statistics.map((stat) => {
+          stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
+          return stat;
+        });
+        setAttendanceStats(stats);
+      }
     });
     getEvent(eventId).then((result) => {
       setEvent(result.data.event);
+    });
+    getRegistrations({ eventId }).then((result) => {
+      setRegistrations(result.data.registrations);
     });
   };
 
@@ -132,13 +139,13 @@ const EventStatistics = () => {
             <Styled.StatsInfo>
               <p>
                 <strong>Total Slots Filled: </strong>
-                {event.volunteers.length}
+                {registrations.length}
               </p>
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Open Slots Remaining: </strong> {event.max_volunteers}
-                {/*{event.max_volunteers - event.volunteers.length}*/}
+                <strong>Open Slots Remaining: </strong>
+                {event.eventParent.maxVolunteers - registrations.length}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>
@@ -154,7 +161,7 @@ const EventStatistics = () => {
         )}
       </Styled.StatsContainer>
       <Styled.Table>
-        <EventTable
+        <StatsTable
           events={attendanceStats}
           isIndividualStats={false}
           onDeleteClicked={onDeleteClicked}

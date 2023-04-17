@@ -1,14 +1,14 @@
-import { model, Model, models, Schema, Types } from "mongoose";
+import {
+  HydratedDocument,
+  InferSchemaType,
+  model,
+  Model,
+  models,
+  Schema,
+} from "mongoose";
+export * from "./validators";
 
-export type HistoryEventData = {
-  keyword: string;
-  description: string;
-  userId: Types.ObjectId;
-  organizationId: Types.ObjectId;
-  eventId?: Types.ObjectId;
-};
-
-const historyEventSchema = new Schema<HistoryEventData>(
+const historyEventSchema = new Schema(
   {
     keyword: {
       type: String,
@@ -27,6 +27,7 @@ const historyEventSchema = new Schema<HistoryEventData>(
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",
+      required: true,
     },
     eventId: {
       type: Schema.Types.ObjectId,
@@ -35,7 +36,12 @@ const historyEventSchema = new Schema<HistoryEventData>(
   },
   { timestamps: true }
 );
+type HistoryEventData = InferSchemaType<typeof historyEventSchema>;
 
-export default ("HistoryEvent" in models
+export type HistoryEventDocument = HydratedDocument<HistoryEventData>;
+
+// Need to disable in order to check that "models" is defined
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export default (models && "HistoryEvent" in models
   ? (models.HistoryEvent as Model<HistoryEventData>)
   : undefined) ?? model<HistoryEventData>("HistoryEvent", historyEventSchema);

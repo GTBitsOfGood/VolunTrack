@@ -1,65 +1,77 @@
 import axios from "axios";
+import { Types } from "mongoose";
 import { ZodError } from "zod";
-import { OrganizationData } from "../../server/mongodb/models/Organization";
-import { ApiReturnType } from "../types/queries";
+import {
+  OrganizationDocument,
+  OrganizationInputClient,
+} from "../../server/mongodb/models/Organization";
 
-export const getOrganization = (organizationId: string) => {
-  return axios.get<ApiReturnType<OrganizationData, "organization">>(
-    `/api/organizations/${organizationId}`
-  );
+export const getOrganization = (organizationId: Types.ObjectId) => {
+  return axios.get<{
+    organization?: OrganizationDocument;
+    error?: ZodError | string;
+  }>(`/api/organizations/${organizationId.toString()}`);
 };
 
 export const getOrganizations = (
-  organizationData?: Partial<OrganizationData>
+  organizationInput?: Partial<OrganizationInputClient>
 ) => {
-  return axios.get<ApiReturnType<OrganizationData, "organizations", true>>(
-    "/api/organizations",
-    {
-      params: organizationData,
-    }
-  );
+  return axios.get<{
+    organizations?: OrganizationDocument[];
+    error?: ZodError | string;
+  }>("/api/organizations", {
+    params: organizationInput,
+  });
 };
 
-export const createOrganization = (organizationData: OrganizationData) => {
-  return axios.post<ApiReturnType<OrganizationData, "organization">>(
-    "/api/organizations",
-    organizationData
-  );
+export const createOrganization = (
+  organizationInput: OrganizationInputClient
+) => {
+  return axios.post<{
+    organization?: OrganizationDocument;
+    error?: ZodError | string;
+  }>("/api/organizations", organizationInput);
 };
 
 export const updateOrganization = (
-  organizationId: string,
-  organizationData: Partial<OrganizationData>
+  organizationId: Types.ObjectId,
+  organizationInput: Partial<OrganizationInputClient>
 ) => {
-  return axios.put<ApiReturnType<OrganizationData, "organization">>(
-    `/api/organizations/${organizationId}`,
-    organizationData
+  return axios.put<{
+    organization?: OrganizationDocument;
+    error?: ZodError | string;
+  }>(`/api/organizations/${organizationId.toString()}`, organizationInput);
+};
+
+export const toggleOrganizationActive = (organizationId: Types.ObjectId) => {
+  return axios.post<{
+    organization?: OrganizationDocument;
+    error?: ZodError | string;
+  }>(`/api/organizations/${organizationId.toString()}/toggleActive`);
+};
+
+export const getInvitedAdmins = (organizationId: Types.ObjectId) => {
+  return axios.get<{ invitedAdmins?: string[]; error?: ZodError | string }>(
+    `/api/organizations/${organizationId.toString()}/invitedAdmins`
   );
 };
 
-export const toggleOrganizationActive = (organizationId: string) => {
-  return axios.post<ApiReturnType<OrganizationData, "organization">>(
-    `/api/organizations/${organizationId}/toggleActive`
+export const addInvitedAdmin = (
+  organizationId: Types.ObjectId,
+  email: string
+) => {
+  return axios.post<{ invitedAdmins?: string[]; error?: ZodError | string }>(
+    `/api/organizations/${organizationId.toString()}/invitedAdmins`,
+    { data: email }
   );
 };
 
-export const getInvitedAdmins = (organizationId: string) => {
-  return axios.get<
-    | { success: true; invitedAdmins: string[] }
-    | { success: false; error: ZodError | string }
-  >(`/api/organizations/${organizationId}/invitedAdmins`);
-};
-
-export const addInvitedAdmin = (organizationId: string, email: string) => {
-  return axios.post<
-    | { success: true; invitedAdmins: string[] }
-    | { success: false; error: ZodError | string }
-  >(`/api/organizations/${organizationId}/invitedAdmins`, { data: email });
-};
-
-export const deleteInvitedAdmin = (organizationId: string, email: string) => {
-  return axios.delete<
-    | { success: true; invitedAdmins: string[] }
-    | { success: false; error: ZodError | string }
-  >(`/api/organizations/${organizationId}/invitedAdmins`, { data: email });
+export const deleteInvitedAdmin = (
+  organizationId: Types.ObjectId,
+  email: string
+) => {
+  return axios.delete<{ invitedAdmins?: string[]; error?: ZodError | string }>(
+    `/api/organizations/${organizationId.toString()}/invitedAdmins`,
+    { data: email }
+  );
 };

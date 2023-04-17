@@ -5,7 +5,7 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import { deleteEvent } from "../../../queries/events";
 
-const EventDeleteModal = ({ open, toggle, event }) => {
+const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
   const [isDeleting, setDeleting] = useState(false);
   const {
     data: { user },
@@ -13,6 +13,7 @@ const EventDeleteModal = ({ open, toggle, event }) => {
 
   const handleSubmit = () => {
     setDeleting(true);
+    onEventDelete(event._id);
     deleteEvent(event._id).then(() => {
       toggle();
       setDeleting(false);

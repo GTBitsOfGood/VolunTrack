@@ -2,11 +2,11 @@ import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
+import SearchBar from "../../components/SearchBar";
+import Text from "../../components/Text";
 import { getHistoryEvents } from "../../queries/historyEvents";
 import { getUsers } from "../../queries/users";
-import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
-import Text from "../../components/Text";
 
 const History = () => {
   const {

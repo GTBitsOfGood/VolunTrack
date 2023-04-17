@@ -38,7 +38,7 @@ class MyDocument extends Document {
             href="/static/favicon.png"
           />
         </Head>
-        <body>
+        <body id="app">
           <Main />
           <NextScript />
         </body>

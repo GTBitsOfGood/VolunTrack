@@ -9,28 +9,23 @@ import { agenda } from "../../../../server/jobs";
 import { scheduler } from "../../../../server/jobs/scheduler";
 import dbConnect from "../../../../server/mongodb";
 import Attendance from "../../../../server/mongodb/models/Attendance";
-import Event from "../../../../server/mongodb/models/Event";
+import Event, {
+  eventInputServerValidator,
+  eventPopulatedInputServerValidator,
+} from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
-import User from "../../../../server/mongodb/models/User";
+import User, { UserDocument } from "../../../../server/mongodb/models/User";
 import { sendEventEditedEmail } from "../../../utils/mailersend-email.js";
-import {
-  eventInputValidator,
-  eventPopulatedInputValidator,
-} from "../../../validators/events";
 import { authOptions } from "../auth/[...nextauth]";
-import { eventPopulator } from "../../../../server/mongodb/aggregations";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
-  // @ts-expect-error
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
-    return res
-      .status(400)
-      .json({ success: false, error: "User session not found" });
-  const user = session.user;
+    return res.status(400).json({ error: "User session not found" });
+  const user = session.user as UserDocument;
 
   const eventId = req.query.id as string;
 
@@ -38,48 +33,36 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (!event)
     return res
       .status(404)
-      .json({ success: false, error: `Event with id ${eventId} not found` });
+      .json({ error: `Event with id ${eventId} not found` });
 
-  const eventParent = await EventParent.findById(event.eventParentId);
+  const eventParent = await EventParent.findById(event.eventParent);
   if (!eventParent)
     return res.status(404).json({
-      success: false,
       error: `Event with id ${eventId} has no EventParent`,
     });
 
   switch (req.method) {
     case "GET": {
-      const result = eventParent.toObject();
-      const eventParentId = result._id;
-      result._id = event._id;
-
-      return res.status(200).json({
-        success: true,
-        event: {
-          ...result,
-          date: event.date,
-          isEnded: event.isEnded,
-          eventParentId,
-        },
-      });
+      return res
+        .status(200)
+        .json({ event: await event.populate("eventParent") });
     }
     case "PUT": {
-      if (!("eventParent" in req.body?.eventData)) {
-        const result = eventInputValidator.partial().safeParse(req.body);
+      if ("eventPopulatedInput" in req.body) {
+        const result = eventPopulatedInputServerValidator
+          .partial()
+          .safeParse(req.body?.eventPopulatedInput);
+        if (!result.success)
+          return res.status(400).json({ error: result.error });
+
+        await eventParent.updateOne(result.data.eventParent);
+        delete result.data.eventParent;
+        await event.updateOne(result.data);
+      } else {
+        const result = eventInputServerValidator.safeParse(req.body);
         if (!result.success) return res.status(400).json(result);
 
         await event.updateOne(result.data);
-      } else {
-        const result = eventPopulatedInputValidator.safeParse(
-          req.body.eventData
-        );
-        if (!result.success) return res.status(400).json(result);
-
-        await eventParent.updateOne(result.data.eventParent);
-        await event.updateOne({
-          ...result.data,
-          eventParent: eventParent._id,
-        });
       }
 
       if (req.body?.sendConfirmationEmail) {
@@ -88,7 +71,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         );
         const users = await User.find({ _id: { $in: userIds } });
         for (const user of users) {
-          await sendEventEditedEmail(user.email, event);
+          await sendEventEditedEmail(user, event, eventParent);
         }
       }
 
@@ -99,27 +82,27 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         event.date,
         eventParent.endTime
       );
-      await createHistoryEventEditEvent(user._id, event, eventParent);
+      await createHistoryEventEditEvent(user, event, eventParent);
 
       return res
         .status(200)
-        .json({ success: true, event: await event.populate("eventParentId") });
+        .json({ event: await event.populate("eventParent") });
     }
     case "DELETE": {
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });
       await event.deleteOne();
 
-      const eventParentId = event.eventParentId;
-      if ((await Event.count({ eventParentId: eventParentId })) === 0) {
+      const eventParentId = event.eventParent;
+      if ((await Event.count({ eventParent: eventParentId })) === 0) {
         await EventParent.findByIdAndDelete(eventParentId);
       }
 
       await agenda.start();
       await agenda.cancel({ data: event._id });
-      await createHistoryEventDeleteEvent(user._id, event, eventParent);
+      await createHistoryEventDeleteEvent(user, event, eventParent);
 
-      return res.status(200).json({ success: true });
+      return res.status(204).end();
     }
   }
 };

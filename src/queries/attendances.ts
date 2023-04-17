@@ -1,90 +1,107 @@
 import axios from "axios";
 import { Types } from "mongoose";
-import Attendance, {
-  AttendanceData,
+import { ZodError } from "zod";
+import {
+  AttendanceDocument,
+  AttendanceInputClient,
 } from "../../server/mongodb/models/Attendance";
-import { ApiDeleteReturnType, ApiReturnType } from "../types/queries";
+import { QueryPartialMatch } from "./index";
 
 // Helper functions for checking in and out volunteers
-export const checkInVolunteer = (userId: string, eventId: string) =>
+export const checkInVolunteer = (
+  userId: Types.ObjectId,
+  eventId: Types.ObjectId,
+  organizationId: Types.ObjectId
+) =>
   createAttendance({
-    userId: new Types.ObjectId(userId),
-    eventId: new Types.ObjectId(eventId),
+    userId,
+    eventId,
+    organizationId,
     checkinTime: new Date(),
   });
 
-export const checkOutVolunteer = async (userId: string, eventId: string) => {
-  const attendanceId = (
-    await Attendance.find({
-      userId: new Types.ObjectId(userId),
-      eventId: new Types.ObjectId(eventId),
-      checkoutTime: null,
-    })
-  )[0].id as string;
+export const checkOutVolunteer = async (
+  userId: Types.ObjectId,
+  eventId: Types.ObjectId
+) => {
+  const attendanceResponse = await getAttendances(
+    {
+      userId,
+      eventId,
+    },
+    undefined,
+    undefined,
+    null,
+    null
+  );
+  const attendanceId = attendanceResponse.data.attendances?.[0]._id;
+
+  if (!attendanceId) return;
   return updateAttendance(attendanceId, { checkoutTime: new Date() });
 };
 
-export const getAttendance = (attendanceId: string) =>
-  axios.get<ApiReturnType<AttendanceData, "attendance">>(
-    `/api/attendances/${attendanceId}`
-  );
+export const getAttendance = (attendanceId: Types.ObjectId) =>
+  axios.get<{
+    attendance?: AttendanceDocument;
+    error?: ZodError | string;
+  }>(`/api/attendances/${attendanceId.toString()}`);
 
 export const getAttendances = (
-  userId?: Types.ObjectId,
-  eventId?: Types.ObjectId,
+  query: QueryPartialMatch,
   checkinTimeStart?: Date,
   checkinTimeEnd?: Date,
-  checkoutTimeStart?: Date,
-  checkoutTimeEnd?: Date
+  checkoutTimeStart?: Date | null,
+  checkoutTimeEnd?: Date | null
 ) =>
-  axios.get<ApiReturnType<AttendanceData, "attendances", true>>(
-    "/api/attendances",
-    {
-      params: {
-        userId,
-        eventId,
-        checkinTimeStart,
-        checkinTimeEnd,
-        checkoutTimeStart,
-        checkoutTimeEnd,
-      },
-    }
-  );
+  axios.get<{
+    attendances?: AttendanceDocument[];
+    error?: ZodError | string;
+  }>("/api/attendances", {
+    params: {
+      userId: query.userId,
+      eventId: query.eventId,
+      organizationId: query.organizationId,
+      checkinTimeStart,
+      checkinTimeEnd,
+      checkoutTimeStart,
+      checkoutTimeEnd,
+    },
+  });
 
-export const createAttendance = (attendanceData: AttendanceData) =>
-  axios.post<ApiReturnType<AttendanceData, "attendance">>(
-    "/api/attendances",
-    attendanceData
-  );
+export const createAttendance = (attendanceInput: AttendanceInputClient) =>
+  axios.post<{
+    attendance?: AttendanceDocument;
+    error?: ZodError | string;
+  }>("/api/attendances", attendanceInput);
 
 export const updateAttendance = (
-  attendanceId: string,
-  attendanceData: Partial<AttendanceData>
+  attendanceId: Types.ObjectId,
+  attendanceInput: Partial<AttendanceInputClient>
 ) =>
-  axios.put<ApiReturnType<AttendanceData, "attendance">>(
-    `/api/attendances/${attendanceId}`,
-    attendanceData
+  axios.put<{
+    attendance?: AttendanceDocument;
+    error?: ZodError | string;
+  }>(`/api/attendances/${attendanceId.toString()}`, attendanceInput);
+
+export const deleteAttendance = (attendanceId: Types.ObjectId) =>
+  axios.delete<{ error?: ZodError | string }>(
+    `/api/attendances/${attendanceId.toString()}`
   );
 
-export const deleteAttendance = (attendanceId: string) =>
-  axios.delete<ApiDeleteReturnType>(`/api/attendances/${attendanceId}`);
-
 export const getAttendanceStatistics = (
-  eventId?: string,
+  eventId?: Types.ObjectId,
   startDate?: Date,
   endDate?: Date
 ) =>
   axios.get<
-    ApiReturnType<
-      {
+    {
+      statistics?: {
         _id: string;
         num: number;
         users: Types.ObjectId[];
         minutes: number;
-      },
-      "statistics",
-      true
-    >
+      };
+    }[]
   >("/api/attendances/statistics", {
     params: { eventId, startDate, endDate },
   });

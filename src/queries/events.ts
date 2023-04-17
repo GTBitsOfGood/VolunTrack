@@ -1,71 +1,78 @@
 import axios from "axios";
+import { Types } from "mongoose";
+import { ZodError } from "zod";
 import {
-  EventData,
-  EventPopulatedData,
+  EventDocument,
+  EventInputClient,
+  EventPopulatedDocument,
+  EventPopulatedInputClient,
 } from "../../server/mongodb/models/Event";
-import { ApiDeleteReturnType, ApiReturnType } from "../types/queries";
-import { EventInputData, EventPopulatedInputData } from "../validators/events";
 
-export const getEvent = (eventId: string) =>
-  axios.get<ApiReturnType<EventPopulatedData, "event">>(
-    `/api/events/${eventId}`
+export const getEvent = (eventId: Types.ObjectId) =>
+  axios.get<{ event?: EventPopulatedDocument; error?: ZodError | string }>(
+    `/api/events/${eventId.toString()}`
   );
 
 export const getEvents = (
-  organizationId: string,
+  organizationId: Types.ObjectId,
   startDateString?: string,
   endDateString?: string
 ) => {
-  return axios.get<ApiReturnType<EventPopulatedData, "events", true>>(
-    "/api/events",
-    {
-      params: {
-        organizationId,
-        startDateString,
-        endDateString,
-      },
-    }
-  );
+  return axios.get<{
+    events?: EventPopulatedDocument[];
+    error?: ZodError | string;
+  }>("/api/events", {
+    params: {
+      organizationId,
+      startDateString,
+      endDateString,
+    },
+  });
 };
 
 /** Creates a new event with it's own event parent */
-export const createEvent = (eventInputPopulatedData: EventPopulatedInputData) =>
-  axios.post<ApiReturnType<EventPopulatedData, "event">>(
-    "/api/events",
-    eventInputPopulatedData
-  );
+export const createEvent = (eventPopulatedInput: EventPopulatedInputClient) =>
+  axios.post<{
+    event?: EventPopulatedDocument;
+    error?: ZodError | string;
+  }>("/api/events", eventPopulatedInput);
 
 /** Creates a new event under an existing event parent */
-export const createChildEvent = (eventInputData: EventInputData) =>
-  axios.post<ApiReturnType<EventData, "event">>(
-    "/api/events/child",
-    eventInputData
-  );
+export const createChildEvent = (eventInput: EventInputClient) =>
+  axios.post<{
+    event?: EventDocument;
+    error?: ZodError | string;
+  }>("/api/events", eventInput);
 
 /** Updates an event and event parent */
 export const updateEvent = (
-  eventId: string,
-  eventData: Partial<EventPopulatedInputData>,
+  eventId: Types.ObjectId,
+  eventPopulatedInput: Partial<EventPopulatedInputClient>,
   sendConfirmationEmail = true
 ) =>
-  axios.put<ApiReturnType<EventPopulatedData, "event">>(
-    `/api/events/${eventId}`,
+  axios.put<{
+    event?: EventPopulatedDocument;
+    error?: ZodError | string;
+  }>(`/api/events/${eventId.toString()}`, {
+    eventPopulatedInput,
+    sendConfirmationEmail,
+  });
+
+/** Updates a single event, no event parent */
+export const updateChildEvent = (
+  eventId: Types.ObjectId,
+  eventInput: Partial<EventInputClient>,
+  sendConfirmationEmail = true
+) =>
+  axios.put<{ event?: EventDocument; error?: ZodError | string }>(
+    `/api/events/${eventId.toString()}`,
     {
-      eventData,
+      eventInput,
       sendConfirmationEmail,
     }
   );
 
-/** Updates a single event, no event parent */
-export const updateChildEvent = (
-  eventId: string,
-  eventData: Partial<EventInputData>,
-  sendConfirmationEmail = true
-) =>
-  axios.put<ApiReturnType<EventData, "event">>(`/api/events/${eventId}`, {
-    eventData,
-    sendConfirmationEmail,
-  });
-
-export const deleteEvent = (eventId: string) =>
-  axios.delete<ApiDeleteReturnType>(`/api/events/${eventId}`);
+export const deleteEvent = (eventId: Types.ObjectId) =>
+  axios.delete<{ error?: ZodError | string }>(
+    `/api/events/${eventId.toString()}`
+  );

@@ -1,34 +1,47 @@
 import axios from "axios";
 import { Types } from "mongoose";
-import { UserData } from "../../server/mongodb/models/User";
-import { ApiDeleteReturnType, ApiReturnType } from "../types/queries";
-import { UserInputData } from "../validators/users";
+import { ZodError } from "zod";
+import {
+  UserDocument,
+  UserInputClient,
+} from "../../server/mongodb/models/User";
 
-export const getUser = (userId: string) =>
-  axios.get<ApiReturnType<UserData, "user">>(`/api/users/${userId}`);
+export const getUser = (userId: Types.ObjectId) =>
+  axios.get<{ user?: UserDocument; error?: ZodError | string }>(
+    `/api/users/${userId.toString()}`
+  );
 
 export const getUsers = (
   organizationId?: Types.ObjectId,
   role?: "admin" | "volunteer" | "manager",
   eventId?: Types.ObjectId,
-  isCheckedIn?: boolean
+  checkinStatus?: "waiting" | "checkedIn" | "checkedOut"
 ) =>
-  axios.get<ApiReturnType<UserData, "users", true>>("/api/users", {
-    params: { organizationId, role, eventId, isCheckedIn },
-  });
+  axios.get<{ users?: UserDocument[]; error?: ZodError | string }>(
+    "/api/users",
+    {
+      params: { organizationId, role, eventId, checkinStatus },
+    }
+  );
 
 export const createUserFromCredentials = (
-  userData: Omit<UserData, "password"> & { password: string }
-) => axios.post<ApiReturnType<UserData, "user">>("/api/users", userData);
+  userInput: UserInputClient & { password: string }
+) =>
+  axios.post<{ user?: UserDocument; error?: ZodError | string }>(
+    "/api/users",
+    userInput
+  );
 
 export const updateUser = (
   userId: Types.ObjectId,
-  userData: Partial<UserInputData>
+  userInput: Partial<UserInputClient>
 ) =>
-  axios.put<ApiReturnType<UserData, "user">>(
+  axios.put<{ user?: UserDocument; error?: ZodError | string }>(
     `/api/users/${userId.toString()}`,
-    userData
+    userInput
   );
 
-export const deleteUser = (userId: string) =>
-  axios.delete<ApiDeleteReturnType>(`/api/users/${userId}`);
+export const deleteUser = (userId: Types.ObjectId) =>
+  axios.delete<{ error?: ZodError | string }>(
+    `/api/users/${userId.toString()}`
+  );

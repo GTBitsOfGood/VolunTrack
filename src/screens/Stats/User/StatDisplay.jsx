@@ -3,37 +3,19 @@ import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
-import EventTable from "../../../components/EventTable";
+import StatsTable from "../../../components/StatsTable";
 import InputField from "../../../components/Forms/InputField";
 import ProgressDisplay from "../../../components/ProgressDisplay";
 import { getAttendances } from "../../../queries/attendances";
 import { getUser } from "../../../queries/users";
 import { filterAttendance } from "../helper";
-import { getHours } from "./hourParsing";
-
-const Styled = {
-  Header: styled.div`
-    font-size: 27px;
-    font-weight: bold;
-    padding: 5px;
-  `,
-  Header2: styled.div`
-    font-size: 14px;
-    color: gray;
-    padding: 5px;
-  `,
-};
+import Text from "../../../components/Text";
 
 const StatDisplay = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [attendance, setAttendance] = useState([]);
-  const [length, setLength] = useState(0);
-  const [sum, setSum] = useState(0);
   const [name, setName] = useState("");
-  const [attend, setAttend] = useState("Bronze");
-  const [earn, setEarn] = useState("Bronze");
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
 
@@ -41,6 +23,8 @@ const StatDisplay = ({ userId }) => {
     const { data: session } = useSession();
     userId = session.user._id;
   }
+  const { data: session } = useSession();
+  let user = session.user;
 
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
@@ -64,7 +48,7 @@ const StatDisplay = ({ userId }) => {
 
   useEffect(() => {
     setLoading(true);
-    getAttendances(userId)
+    getAttendances({ userId, organizationId: user.organizationId })
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
@@ -73,29 +57,6 @@ const StatDisplay = ({ userId }) => {
             endDate
           );
           setAttendance(filteredAttendance);
-          setLength(filteredAttendance.length);
-
-          if (filteredAttendance.length > 1) {
-            setAttend("Silver");
-          } else if (filteredAttendance.length > 3) {
-            setAttend("Gold");
-          }
-          let add = 0;
-          // HAVE TO FIX THIS
-          for (let i = 0; i < filteredAttendance.length; i++) {
-            if (filteredAttendance[i].checkoutTime != null) {
-              add += getHours(
-                filteredAttendance[i].checkinTime.slice(11, 16),
-                filteredAttendance[i].checkoutTime.slice(11, 16)
-              );
-            }
-          }
-          setSum(add);
-          if (add >= 7) {
-            setEarn("Silver");
-          } else if (add >= 14) {
-            setEarn("Gold");
-          }
         }
       })
       .finally(() => {
@@ -112,18 +73,20 @@ const StatDisplay = ({ userId }) => {
 
   return (
     <React.Fragment>
-      <div className="flex-column mx-auto flex w-5/6 items-start">
-        <Styled.Header>{name} Volunteer Statistics</Styled.Header>
+      <div className="flex-column mx-auto mt-2 flex w-5/6 items-start gap-1">
+        <Text text={name + " Volunteer Statistics"} type="header" />
         <div className="my-2 flex justify-between">
           <ProgressDisplay
             type={"Events"}
             attendance={attendance}
             header={"Events Attended"}
+            medalDefaults={session.medalDefaults}
           />
           <ProgressDisplay
             type={"Hours"}
             attendance={attendance}
             header={"Hours Earned"}
+            medalDefaults={session.medalDefaults}
           />
         </div>
 
@@ -146,9 +109,12 @@ const StatDisplay = ({ userId }) => {
           )}
         />
         <div className="w-full">
-          <Styled.Header>Volunteer History</Styled.Header>
-          <Styled.Header2>{length} events</Styled.Header2>
-          <EventTable events={attendance} isIndividualStats={true} />
+          <Text text="Volunteer History" type="subheader" />
+          <Text
+            text={`${attendance.length} events`}
+            className="my-2 text-primaryColor"
+          />
+          <StatsTable events={attendance} isIndividualStats={true} />
         </div>
       </div>
     </React.Fragment>
