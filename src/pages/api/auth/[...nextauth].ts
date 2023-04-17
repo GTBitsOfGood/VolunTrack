@@ -120,7 +120,7 @@ export const authOptions: AuthOptions = {
           eventGold: organization.eventGold,
           hoursSilver: organization.hoursSilver,
           hoursGold: organization.hoursGold,
-        }
+        },
       };
     },
     redirect({ baseUrl }) {
