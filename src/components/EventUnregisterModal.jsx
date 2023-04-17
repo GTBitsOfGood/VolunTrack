@@ -1,15 +1,13 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
-import BoGButton from "./BoGButton";
 import PropTypes from "prop-types";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { unregisterForEvent } from "../queries/registrations";
 import { updateEvent } from "../screens/Events/eventHelpers";
+import BoGButton from "./BoGButton";
 
 const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
   const handleSubmit = () => {
-    onUnregisterClicked(eventData)
-      .then(() => {
-        toggle();
-      })
-      .catch(console.log);
+    unregisterForEvent(eventData._id, userId);
+    toggle();
   };
 
   const onUnregisterClicked = async (event) => {

@@ -91,12 +91,12 @@ const Header = () => {
   }, []);
 
   return (
-    <Navbar fluid={false} rounded={true}>
+    <Navbar fluid={false} rounded={true} className="py-0">
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      <Navbar.Collapse>
+      <Navbar.Collapse className="mt-2">
         <Navbar.Link
           href="/home"
           className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${

@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import BoGButton from "../../components/BoGButton";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
 
@@ -32,6 +31,7 @@ const EventsList = ({
   isHomePage,
   registrations,
   onCreateClicked,
+  onEventDelete,
 }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -41,17 +41,20 @@ const EventsList = ({
   events.sort(function (a, b) {
     const c = new Date(a.date);
     const d = new Date(b.date);
-    return d - c;
+    return c - d;
   });
 
   let upcomingEvents = events.filter(function (event) {
-    const currentDate = new Date();
-    return new Date(event.date) > currentDate;
+    const currentDate = Date.now();
+    return new Date(event.date) > new Date(currentDate);
   });
 
   const todayEvents = events.filter(function (event) {
-    const currentDate = new Date();
-    return new Date(event.date) === currentDate;
+    let date = new Date(event.date);
+    date = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    );
+    return date.getDate() === new Date().getDate();
   });
 
   const registeredEventIds = new Set(
@@ -59,8 +62,12 @@ const EventsList = ({
   );
 
   const registeredEvents = upcomingEvents.filter((event) => {
-    return registeredEventIds.has(event.id);
+    return registeredEventIds.has(event._id);
   });
+
+  upcomingEvents = upcomingEvents.filter(
+    (event) => !registeredEventIds.has(event._id)
+  );
 
   const todayRegisteredEvents = registeredEvents.filter(function (event) {
     const currentDate = new Date();
@@ -92,7 +99,8 @@ const EventsList = ({
             key={event._id}
             event={event}
             user={user}
-            isRegistered={registeredEventIds.has(event.id)}
+            isRegistered={registeredEventIds.has(event._id)}
+            onEventDelete={onEventDelete}
           />
         ))}
         <Styled.Spacer />
@@ -107,11 +115,11 @@ const EventsList = ({
               <p className="font-weight-bold pb-3 text-2xl">
                 Registered Events
               </p>
+              <p className="font-weight-bold pb-3 text-xl">
+                {"Today's Events"}
+              </p>
               {todayRegisteredEvents.length > 0 && (
                 <div>
-                  <p className="font-weight-bold pb-3 text-xl">
-                    {"Today's Events"}
-                  </p>
                   {todayRegisteredEvents.map((event) => (
                     <EventCard
                       key={event._id}
@@ -122,17 +130,22 @@ const EventsList = ({
                   ))}
                 </div>
               )}
+              {todayRegisteredEvents.length === 0 && (
+                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                  No events today
+                </p>
+              )}
               {upcomingRegisteredEvents.length > 0 && (
                 <div>
                   <p className="font-weight-bold pb-3 text-xl">
                     {"Upcoming Events"}
                   </p>
-                  {upcomingEvents.map((event) => (
+                  {upcomingRegisteredEvents.map((event) => (
                     <EventCard
                       key={event._id}
                       event={event}
                       user={user}
-                      isRegistered={registeredEventIds.has(event.id)}
+                      isRegistered={true}
                     />
                   ))}
                 </div>
@@ -149,7 +162,12 @@ const EventsList = ({
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
             {upcomingEvents.length > 0 &&
               upcomingEvents.map((event) => (
-                <EventCard key={event._id} event={event} user={user} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  isRegistered={registeredEventIds.has(event._id)}
+                />
               ))}
             {upcomingEvents.length === 0 && (
               <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
@@ -164,20 +182,24 @@ const EventsList = ({
     } else if (user.role === "admin") {
       return (
         <div className="w-3/5">
-          <div>
+          <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
               todayEvents.map((event) => (
-                <EventCard key={event._id} event={event} user={user} />
+                <EventCard
+                  key={event._id}
+                  event={event}
+                  user={user}
+                  onEventDelete={onEventDelete}
+                />
               ))}
-            <div className="justify-content-center flex">
-              {todayEvents.length === 0 && (
+            {todayEvents.length === 0 && (
+              <div className="justify-content-center flex pb-16">
                 <p className="font-weight-bold pb-3 text-lg text-primaryColor">
                   No events scheduled today
                 </p>
-              )}
-              <div className="h-24" />
-            </div>
+              </div>
+            )}
           </div>
           <div>
             <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
@@ -189,16 +211,19 @@ const EventsList = ({
                     event={event}
                     user={user}
                     version={"Secondary"}
+                    isRegistered={registeredEventIds.has(event._id)}
+                    onEventDelete={onEventDelete}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
               </div>
             )}
-            <div className="justify-content-center flex">
+            {/* disabling for now, popup doesn't work */}
+            {/* <div className="justify-content-center flex">
               {upcomingEvents.length === 0 && (
                 <BoGButton text="Create new event" onClick={onCreateClicked} />
               )}
-            </div>
+            </div> */}
             <div className="h-48" />
           </div>
         </div>

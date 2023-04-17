@@ -62,6 +62,10 @@ const Styled = {
 };
 
 const Stats = () => {
+  const {
+    data: { user },
+  } = useSession();
+
   const [computedStats, setComputedStats] = useState([]);
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
@@ -70,9 +74,6 @@ const Stats = () => {
   const [endDate, setEndDate] = useState("undefined");
   const [loading, setLoading] = useState(false);
 
-  const { data: session } = useSession();
-  let user = session.user;
-
   useEffect(() => {
     onRefresh();
   }, [startDate, endDate]);
@@ -80,38 +81,40 @@ const Stats = () => {
   const onRefresh = async () => {
     // grab the events
     setLoading(true);
-    getEvents(startDate, endDate, user.organizationId)
+    getEvents(user.organizationId, startDate, endDate)
       .then(async (result) => {
         if (result?.data?.events) setNumEvents(result.data.events.length);
 
-        getAttendances(undefined, undefined, startDate, endDate).then(
-          (stats) => {
-            let computedStats = [];
-            var totalAttendance = 0;
-            var totalHours = 0;
-            for (let event of result.data.events) {
-              let stat = stats.data.find((s) => s._id === event._id);
-              if (stat) {
-                totalAttendance += stat.uniqueUsers.length;
-                totalHours += stat.minutes / 60.0;
+        getAttendances(
+          { organizationId: user.organizationId },
+          startDate,
+          endDate
+        ).then((stats) => {
+          let computedStats = [];
+          var totalAttendance = 0;
+          var totalHours = 0;
+          for (let event of result.data.events) {
+            let stat = stats.data.find((s) => s._id === event._id);
+            if (stat) {
+              totalAttendance += stat.uniqueUsers.length;
+              totalHours += stat.minutes / 60.0;
 
-                computedStats.push({
-                  _id: event._id,
-                  title: event.title,
-                  date: event.date,
-                  startTime: event.startTime,
-                  endTime: event.endTime,
-                  attendance: stat.uniqueUsers.length,
-                  hours: Math.round((stat.minutes / 60.0) * 100) / 100,
-                });
-              }
+              computedStats.push({
+                _id: event._id,
+                title: event.eventParent.title,
+                date: event.date,
+                startTime: event.eventParent.startTime,
+                endTime: event.eventParent.endTime,
+                attendance: stat.uniqueUsers.length,
+                hours: Math.round((stat.minutes / 60.0) * 100) / 100,
+              });
             }
-
-            setAttend(totalAttendance);
-            setHours(Math.round(totalHours * 100) / 100);
-            setComputedStats(computedStats);
           }
-        );
+
+          setAttend(totalAttendance);
+          setHours(Math.round(totalHours * 100) / 100);
+          setComputedStats(computedStats);
+        });
       })
       .finally(() => {
         setLoading(false);

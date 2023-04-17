@@ -12,7 +12,7 @@ export const emailHandler = {
     const emailTemplateVariables = [
       {
         name: "eventTitle",
-        content: `${event.title}`,
+        content: `${event.eventParent.title}`,
       },
     ];
     await sendEventEmail(event, "event-survey", emailTemplateVariables);

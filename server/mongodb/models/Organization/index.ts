@@ -1,29 +1,14 @@
-import { Model, model, models, Schema } from "mongoose";
+import {
+  HydratedDocument,
+  InferSchemaType,
+  Model,
+  model,
+  models,
+  Schema,
+} from "mongoose";
+export * from "./validators";
 
-export type OrganizationData = {
-  name: string;
-  website: string;
-  imageUrl: string;
-  notificationEmail: string;
-  slug: string;
-  theme: string;
-  defaultEventState: string;
-  defaultEventCity: string;
-  defaultEventAddress: string;
-  defaultEventZip: string;
-  defaultContactName: string;
-  defaultContactEmail: string;
-  defaultContactPhone: string;
-  invitedAdmins: string[];
-  originalAdminEmail: string;
-  active: boolean;
-  eventSilver: number;
-  eventGold: number;
-  hoursSilver: number;
-  hoursGold: number;
-};
-
-const organizationSchema = new Schema<OrganizationData>(
+const organizationSchema = new Schema(
   {
     name: { type: String, required: true },
     website: { type: String, required: true },
@@ -48,7 +33,12 @@ const organizationSchema = new Schema<OrganizationData>(
   },
   { timestamps: true }
 );
+type OrganizationData = InferSchemaType<typeof organizationSchema>;
 
-export default ("Organization" in models
+export type OrganizationDocument = HydratedDocument<OrganizationData>;
+
+// Need to disable in order to check that "models" is defined
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export default (models && "Organization" in models
   ? (models.Organization as Model<OrganizationData>)
   : undefined) ?? model<OrganizationData>("Organization", organizationSchema);

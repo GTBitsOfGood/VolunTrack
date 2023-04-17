@@ -9,7 +9,7 @@ import OrganizationToggleModal from "./OrganizationToggleModal";
 const BogApproval = () => {
   const [loading, setLoading] = useState(true);
   const [organizations, setOrganizations] = useState([]);
-  const [currOrganizationId, setCurrOrganizationId] = useState(null);
+  const [currOrganization, setCurrOrganization] = useState(null);
   const [openModal, setOpenModal] = useState(false);
 
   const onRefresh = () => {
@@ -17,7 +17,7 @@ const BogApproval = () => {
     getOrganizations()
       .then((result) => {
         if (result) {
-          setOrganizations(result.data);
+          setOrganizations(result.data.organizations);
         }
       })
       .finally(() => {
@@ -36,7 +36,7 @@ const BogApproval = () => {
 
   const onCloseModal = () => {
     setOpenModal(false);
-    setCurrOrganizationId(null);
+    setCurrOrganization(null);
     onRefresh();
   };
 
@@ -62,7 +62,7 @@ const BogApproval = () => {
               <OrganizationCard
                 key={index}
                 org={organization}
-                setOrganization={setCurrOrganizationId}
+                setOrganization={setCurrOrganization}
                 setOpen={setOpenModal}
               />
             ))
@@ -80,17 +80,17 @@ const BogApproval = () => {
             <OrganizationCard
               key={index}
               org={organization}
-              setOrganization={setCurrOrganizationId}
+              setOrganization={setCurrOrganization}
               setOpen={setOpenModal}
             />
           ))}
       </div>
-      {currOrganizationId && (
+      {currOrganization && (
         <OrganizationToggleModal
           open={openModal}
           onClose={onCloseModal}
-          toggle={onToggleOrganization}
-          organizationId={currOrganizationId}
+          status={currOrganization.active}
+          organizationId={currOrganization._id}
         />
       )}
     </div>

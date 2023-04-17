@@ -1,12 +1,12 @@
-import styled from "styled-components";
-import Volunteer from "./Volunteer";
 import "flowbite-react";
 import { Table } from "flowbite-react";
+import styled from "styled-components";
+import Volunteer from "./Volunteer";
 
 const Styled = {
   InfoText: styled.p`
     margin: 2rem 0 1rem 0;
-    padding 0;
+    padding: 0;
 
     color: gray;
   `,
@@ -76,7 +76,7 @@ const AttendanceFunctionality = ({
               volunteer={volunteer}
               minors={minors[volunteer._id]}
               onClick={checkOut}
-              checkInStatus={"checked in"}
+              checkInStatus={"checkedIn"}
               isEnded={isEnded}
             />
           ))}
@@ -87,7 +87,7 @@ const AttendanceFunctionality = ({
               volunteer={volunteer}
               minors={minors[volunteer._id]}
               onClick={checkOut}
-              checkInStatus={"checked out"}
+              checkInStatus={"checkedOut"}
               isEnded={isEnded}
             />
           ))}

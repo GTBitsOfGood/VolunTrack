@@ -2,10 +2,10 @@ import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Registration, {
-  RegistrationData,
+  RegistrationInputClient,
+  registrationInputServerValidator,
 } from "../../../../server/mongodb/models/Registration";
 import { sendRegistrationConfirmationEmail } from "../../../utils/mailersend-email.js";
-import { registrationInputValidator } from "../../../validators/registrations";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -20,15 +20,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res
           .status(400)
           .json({ message: `Invalid user id: ${req.query.userId as string}` });
-      if (
-        req.query.organizationId &&
-        !isValidObjectId(req.query.organizationId)
-      )
-        return res.status(400).json({
-          message: `Invalid organization id: ${
-            req.query.organizationId as string
-          }`,
-        });
 
       const eventId = req.query.eventId
         ? new Types.ObjectId(req.query.eventId as string)
@@ -40,7 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? new Types.ObjectId(req.query.organizationId as string)
         : undefined;
 
-      const match: Partial<RegistrationData> = {};
+      const match: Partial<RegistrationInputClient> = {};
       if (eventId) match.eventId = eventId;
       if (userId) match.userId = userId;
       if (organizationId) match.organizationId = organizationId;
@@ -50,19 +41,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "POST": {
-      const obj = {
-        organizationId: req.body.event.organizationId,
-        eventId: req.body.event._id,
-        userId: req.body.user._id,
-        minors: req.body.minors,
-      };
-      const result = registrationInputValidator.safeParse(obj);
-      if (!result.success) return res.status(400).json(result);
+      const result = registrationInputServerValidator.safeParse(req.body);
+      if (!result.success) return res.status(400).json({ error: result.error });
 
       // TODO: logic to prevent duplicate signups
-      await sendRegistrationConfirmationEmail(req.body.user, req.body.event);
+      await sendRegistrationConfirmationEmail(
+        result.data.userId,
+        result.data.eventId
+      );
       return res.status(201).json({
-        success: true,
         registration: await Registration.create(result.data),
       });
     }
@@ -83,12 +70,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         ? new Types.ObjectId(req.query.userId as string)
         : undefined;
 
-      const match: Partial<RegistrationData> = {};
+      const match: Partial<RegistrationInputClient> = {};
       if (eventId) match.eventId = eventId;
+      else return res.status(500);
       if (userId) match.userId = userId;
+      else return res.status(500);
 
       return res.status(200).json({
-        success: true,
         registration: await Registration.findOneAndDelete(match),
       });
     }

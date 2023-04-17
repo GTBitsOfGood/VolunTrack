@@ -2,14 +2,11 @@ import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import { getEvents } from "../../../../server/actions/events";
 import dbConnect from "../../../../server/mongodb";
-import Event from "../../../../server/mongodb/models/Event";
+import Event, {
+  eventInputServerValidator,
+  eventPopulatedInputServerValidator,
+} from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
-import {
-  EventInputData,
-  eventInputValidator,
-  EventPopulatedInputData,
-  eventPopulatedInputValidator,
-} from "../../../validators/events";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -26,12 +23,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // TODO: validate date strings
 
       if (!isValidObjectId(organizationId))
-        return res
-          .status(400)
-          .json({ success: false, error: "Invalid organizationId" });
+        return res.status(400).json({ error: "Invalid organizationId" });
 
       return res.status(200).json({
-        success: true,
         events: await getEvents(
           new Types.ObjectId(organizationId),
           startDate,
@@ -41,14 +35,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "POST": {
       if (req.body?.eventParentId) {
-        const result = eventInputValidator.safeParse(req.body);
-        if (!result.success) {
-          return res.status(400).json(result);
-        }
+        const result = eventInputServerValidator.safeParse(req.body);
+        if (!result.success) return res.status(400).json(result);
 
-        // Create a one off Event connected to an already existing EventParent
-        const eventInputData = req.body as EventInputData;
-        const event = await Event.create(eventInputData);
+        const event = await Event.create({
+          date: result.data.date,
+          eventParent: result.data.eventParentId,
+        });
 
         // TODO: fix these things
         // await scheduler.scheduleNewEventJobs(
@@ -60,24 +53,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // );
         // createHistoryEventCreateEvent(event);
 
-        return res.status(201).json({
-          success: true,
-          event: await event.populate("eventParentId"),
-        });
+        return res.status(201).json({ event });
       } else if (req.body?.eventParent) {
-        const result = eventPopulatedInputValidator.safeParse(req.body);
-        if (!result.success) {
-          return res.status(400).json(result);
-        }
+        const result = eventPopulatedInputServerValidator.safeParse(req.body);
+        if (!result.success)
+          return res.status(400).json({ error: result.error });
 
-        // Create a new Event and EventParent
-        const eventPopulatedInputData = req.body as EventPopulatedInputData;
-        const eventParent = await EventParent.create(
-          eventPopulatedInputData.eventParent
-        );
+        const eventParent = await EventParent.create(result.data.eventParent);
         const event = await Event.create({
-          date: eventPopulatedInputData.date,
-          eventParentId: eventParent._id,
+          date: result.data.date,
+          eventParent: eventParent._id,
         });
 
         // TODO: fix these things
@@ -89,14 +74,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // createHistoryEventCreateEvent();
 
         return res.status(201).json({
-          success: true,
-          event: await event.populate("eventParentId"),
+          event: await event.populate("eventParent"),
         });
       }
 
       // Request body has neither eventParentId nor eventParent
       return res.status(400).json({
-        success: false,
         error: "Request body has neither eventParentId nor eventParent",
       });
     }

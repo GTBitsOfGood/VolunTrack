@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import Attendance from "../../../../server/mongodb/models/Attendance";
-import { attendanceInputValidator } from "../../../validators/attendances";
+import Attendance, {
+  attendanceInputServerValidator,
+} from "../../../../server/mongodb/models/Attendance";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -11,27 +12,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const attendance = await Attendance.findById(attendanceId);
   if (!attendance) {
     return res.status(404).json({
-      success: false,
       error: `Attendance with id ${attendanceId} not found`,
     });
   }
 
   switch (req.method) {
     case "GET": {
-      return res.status(200).json({ success: true, attendance });
+      return res.status(200).json({ attendance });
     }
     case "PUT": {
-      if (attendanceInputValidator.partial().safeParse(req.body).success) {
-        await attendance.updateOne();
-        return res.status(200).json({ success: true, attendance });
-      }
-      return res
-        .status(400)
-        .json({ success: false, error: "Invalid attendance data format" });
+      const result = attendanceInputServerValidator
+        .partial()
+        .safeParse(req.body);
+      if (!result.success) return res.status(400).json({ error: result.error });
+
+      await attendance.updateOne({
+        $set: { checkoutTime: result.data.checkoutTime },
+      });
+      return res.status(200).json({ attendance });
     }
     case "DELETE": {
       await attendance.deleteOne();
-      return res.status(204).json({ success: true });
+      return res.status(204);
     }
   }
 };

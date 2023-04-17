@@ -2,12 +2,12 @@ export const eventPopulator = [
   {
     $lookup: {
       from: "eventparents",
-      let: { eventParentId: "$eventParentId" },
+      let: { eventParent: "$eventParent" },
       pipeline: [
         {
           $match: {
             $expr: {
-              $eq: ["$_id", "$$eventParentId"],
+              $eq: ["$_id", "$$eventParent"],
             },
           },
         },

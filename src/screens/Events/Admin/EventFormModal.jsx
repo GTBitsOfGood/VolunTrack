@@ -2,19 +2,19 @@ import { Label } from "flowbite-react";
 import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import { toFormikValidationSchema } from "zod-formik-adapter";
+import { eventPopulatedInputClientValidator } from "../../../../server/mongodb/models/Event";
 import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
+import Text from "../../../components/Text";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
-import { eventPopulatedInputValidator } from "../../../validators/events";
 import * as SForm from "../../sharedStyles/formStyles";
-import { groupEventValidator } from "./eventHelpers";
-import Text from "../../../components/Text";
+import { getOrganization } from "../../../queries/organizations";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -43,6 +43,7 @@ const Styled = {
 
 const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
+  const [organization, setOrganization] = useState({});
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.isValidForCourtHours ?? false
   );
@@ -52,12 +53,23 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
 
   const context = useContext(RequestContext);
 
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getOrganization(user.organizationId);
+      if (response.data.organization)
+        setOrganization(response.data.organization);
+    }
+    fetchData();
+  }, []);
+
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
       date: values.date,
       eventParent: values.eventParent,
     };
     setSubmitting(true);
+    if (isGroupEvent) event.eventParent.isPrivate = true;
+    if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
 
     createEvent(event)
       .then(() => toggle())
@@ -103,11 +115,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       .substring(4);
   };
 
-  const emptyStringField = "";
   const submitText = containsExistingEvent(event) ? "Save" : "Create Event";
-  const [content, setContent] = useState(
-    containsExistingEvent(event) ? event.description : emptyStringField
-  );
 
   // eslint-disable-next-line no-unused-vars
   const [press, setPressed] = useState(false);
@@ -119,19 +127,9 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   }
   const quill = useRef(null);
 
-  // const [errorArray, setErrors] = useState([])
-
-  // const setTouched = ({ errors, touched }) => {
-  //   const requi = []
-  //   if (errors.title && touched.title) {
-  //     requi.push("Title")
-  //     setErrors("title")
-  //   }
-  // };
-  //
-
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
         date: event?.date ? event.date.split("T")[0] : "",
         eventParent: {
@@ -139,12 +137,22 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
           startTime: event?.eventParent?.startTime ?? "",
           endTime: event?.eventParent?.endTime ?? "",
           localTime: event?.eventParent?.localTime ?? "",
-          address: event?.eventParent?.address ?? "",
-          city: event?.eventParent?.city ?? "",
-          state: event?.eventParent?.state ?? "",
-          zip: event?.eventParent?.zip ?? "",
-          eventContactPhone: event?.eventParent?.eventContactPhone ?? "",
-          eventContactEmail: event?.eventParent?.eventContactEmail ?? "",
+          address:
+            event?.eventParent?.address ??
+            organization.defaultEventAddress ??
+            "",
+          city: event?.eventParent?.city ?? organization.defaultEventCity ?? "",
+          state:
+            event?.eventParent?.state ?? organization.defaultEventState ?? "",
+          zip: event?.eventParent?.zip ?? organization.defaultEventZip ?? "",
+          eventContactPhone:
+            event?.eventParent?.eventContactPhone ??
+            organization.defaultContactPhone ??
+            "",
+          eventContactEmail:
+            event?.eventParent?.eventContactEmail ??
+            organization.defaultContactEmail ??
+            "",
           maxVolunteers: event?.eventParent?.maxVolunteers ?? 1,
           isPrivate: event?.eventParent?.isPrivate ?? isGroupEvent,
           isValidForCourtHours:
@@ -171,10 +179,10 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
         // isGroupEvent
         //   ? groupEventValidator
         //   :
-        toFormikValidationSchema(eventPopulatedInputValidator)
+        toFormikValidationSchema(eventPopulatedInputClientValidator)
       }
     >
-      {({ values, errors, handleSubmit, isValid, isSubmitting }) => {
+      {({ values, handleSubmit, isValid, isSubmitting, setFieldValue }) => {
         return (
           <>
             <Styled.ModalBody>
@@ -427,12 +435,15 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                         </Label>
                       </div>
 
-                      <Field name="description">
+                      <Field name="eventParent.description">
                         {() => (
                           <ReactQuill
-                            value={content}
+                            value={values.eventParent.description}
                             onChange={(newValue) => {
-                              setContent(newValue);
+                              setFieldValue(
+                                "eventParent.description",
+                                newValue
+                              );
                             }}
                             ref={quill}
                           />

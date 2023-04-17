@@ -1,9 +1,7 @@
 import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import HistoryEvent, {
-  HistoryEventData,
-} from "../../../../server/mongodb/models/HistoryEvent";
+import HistoryEvent from "../../../../server/mongodb/models/HistoryEvent";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -53,7 +51,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // if (organizationId) match.organizationId = organizationId;
 
       return res.status(200).json({
-        success: false,
         historyEvents: await HistoryEvent.find({ organizationId }),
       });
     }

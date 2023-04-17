@@ -13,17 +13,17 @@ import {
 import styled from "styled-components";
 import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
+import SearchBar from "../../components/SearchBar";
 import {
   addInvitedAdmin,
   deleteInvitedAdmin,
   getInvitedAdmins,
 } from "../../queries/organizations";
 import { deleteUser, getUsers } from "../../queries/users";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import * as Form from "../sharedStyles/formStyles";
 import AdminsTable from "./AdminsTable";
 import { invitedAdminValidator } from "./helpers";
-import SearchBar from "../../components/SearchBar";
-import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const PAGE_SIZE = 10;
 
@@ -122,7 +122,6 @@ class Admins extends React.Component {
   };
 
   filteredAndSortedAdmins = (admins) => {
-    console.log(admins);
     return (
       this.state.searchValue.length > 0
         ? admins.filter(

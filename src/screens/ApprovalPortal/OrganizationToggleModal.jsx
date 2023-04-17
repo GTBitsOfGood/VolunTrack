@@ -5,8 +5,7 @@ import { toggleOrganizationActive } from "../../queries/organizations";
 
 const OrganizationToggleModal = (props) => {
   const handleSubmit = () => {
-    toggleOrganizationActive(props.organizationId);
-    props.onClose();
+    toggleOrganizationActive(props.organizationId).then(() => props.onClose());
   };
 
   return (
