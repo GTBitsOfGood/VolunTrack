@@ -1,41 +1,20 @@
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import { Types } from "mongoose";
 import Link from "next/link";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import { Button } from "reactstrap";
 import styled from "styled-components";
 import { getUser } from "../queries/users";
 import { getHours } from "../screens/Stats/User/hourParsing";
-import { Icon } from "./Icon";
 import Pagination from "./PaginationComp";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
 const Styled = {
-  Button: styled(Button)`
-    background: white;
-    border: none;
-    color: #000;
-    padding: 0;
-  `,
   Container: styled.div`
     width: 100%;
     height: 100%;
     margin: auto;
     margin-bottom: 70px;
-  `,
-  Buttons: styled.div`
-    flex-direction: row;
-  `,
-  EditButton: styled(Button)`
-    margin: 0 0 0 auto;
-
-    background: none;
-    border: none;
-  `,
-  DeleteButton: styled(Button)`
-    background: none;
-    border: none;
-    margin: 0 0 0 auto;
   `,
 };
 
@@ -50,7 +29,7 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventTable = ({
+const StatsTable = ({
   events,
   isIndividualStats,
   onDeleteClicked,
@@ -139,24 +118,30 @@ const EventTable = ({
                   </Table.Cell>
                   <Table.Cell>{event.hours.toString().slice(0, 5)}</Table.Cell>
                   <Table.Cell>
-                    <Styled.Buttons>
-                      <Styled.EditButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onEditClicked(event);
-                        }}
-                      >
-                        <Icon color="grey3" name="create" />
-                      </Styled.EditButton>
-                      <Styled.DeleteButton
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onDeleteClicked(event);
-                        }}
-                      >
-                        <Icon color="grey3" name="delete" />
-                      </Styled.DeleteButton>
-                    </Styled.Buttons>
+                    <div className="flex gap-1">
+                      <Tooltip content="Edit" style="light">
+                        <button
+                          className="mx-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEditClicked(event);
+                          }}
+                        >
+                          <PencilIcon className="h-8 text-primaryColor" />
+                        </button>
+                      </Tooltip>
+                      <Tooltip content="Delete" style="light">
+                        <button
+                          className="mx-1"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDeleteClicked(event);
+                          }}
+                        >
+                          <TrashIcon className="h-8 text-primaryColor" />
+                        </button>
+                      </Tooltip>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -173,11 +158,11 @@ const EventTable = ({
     </Styled.Container>
   );
 };
-EventTable.propTypes = {
+StatsTable.propTypes = {
   events: PropTypes.array,
   isIndividualStats: PropTypes.bool,
   onDeleteClicked: PropTypes.func,
   onEditClicked: PropTypes.func,
 };
 
-export default EventTable;
+export default StatsTable;

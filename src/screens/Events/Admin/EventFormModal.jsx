@@ -2,7 +2,7 @@ import { Label } from "flowbite-react";
 import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useContext, useRef, useState } from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import "react-quill/dist/quill.snow.css";
 import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
@@ -14,6 +14,7 @@ import Text from "../../../components/Text";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
+import {getOrganization} from "../../../queries/organizations";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -42,6 +43,7 @@ const Styled = {
 
 const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
+  const [organization, setOrganization] = useState({});
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.isValidForCourtHours ?? false
   );
@@ -51,12 +53,22 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
 
   const context = useContext(RequestContext);
 
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getOrganization(user.organizationId);
+      if (response.data.organization) setOrganization(response.data.organization);
+      }
+    fetchData();
+  }, []);
+
   const onSubmitCreateEvent = (values, setSubmitting) => {
     const event = {
       date: values.date,
       eventParent: values.eventParent,
     };
     setSubmitting(true);
+    if (isGroupEvent) event.eventParent.isPrivate = true;
+    if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
 
     createEvent(event)
       .then(() => toggle())
@@ -114,19 +126,8 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   }
   const quill = useRef(null);
 
-  // const [errorArray, setErrors] = useState([])
-
-  // const setTouched = ({ errors, touched }) => {
-  //   const requi = []
-  //   if (errors.title && touched.title) {
-  //     requi.push("Title")
-  //     setErrors("title")
-  //   }
-  // };
-  //
-
   return (
-    <Formik
+    <Formik enableReinitialize={true}
       initialValues={{
         date: event?.date ? event.date.split("T")[0] : "",
         eventParent: {
@@ -134,12 +135,12 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
           startTime: event?.eventParent?.startTime ?? "",
           endTime: event?.eventParent?.endTime ?? "",
           localTime: event?.eventParent?.localTime ?? "",
-          address: event?.eventParent?.address ?? "",
-          city: event?.eventParent?.city ?? "",
-          state: event?.eventParent?.state ?? "",
-          zip: event?.eventParent?.zip ?? "",
-          eventContactPhone: event?.eventParent?.eventContactPhone ?? "",
-          eventContactEmail: event?.eventParent?.eventContactEmail ?? "",
+          address: event?.eventParent?.address ?? organization.defaultEventAddress ?? "",
+          city: event?.eventParent?.city ?? organization.defaultEventCity ?? "",
+          state: event?.eventParent?.state ?? organization.defaultEventState ?? "",
+          zip: event?.eventParent?.zip ?? organization.defaultEventZip ?? "",
+          eventContactPhone: event?.eventParent?.eventContactPhone ?? organization.defaultContactPhone ?? "",
+          eventContactEmail: event?.eventParent?.eventContactEmail ?? organization.defaultContactEmail ?? "",
           maxVolunteers: event?.eventParent?.maxVolunteers ?? 1,
           isPrivate: event?.eventParent?.isPrivate ?? isGroupEvent,
           isValidForCourtHours:

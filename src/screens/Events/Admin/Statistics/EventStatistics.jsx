@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import EventTable from "../../../../components/EventTable";
+import StatsTable from "../../../../components/StatsTable";
 import { getAttendanceStatistics } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
 import { getRegistrations } from "../../../../queries/registrations";
@@ -161,7 +161,7 @@ const EventStatistics = () => {
         )}
       </Styled.StatsContainer>
       <Styled.Table>
-        <EventTable
+        <StatsTable
           events={attendanceStats}
           isIndividualStats={false}
           onDeleteClicked={onDeleteClicked}

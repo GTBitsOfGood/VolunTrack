@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
-import EventTable from "../../../components/EventTable";
+import StatsTable from "../../../components/StatsTable";
 import InputField from "../../../components/Forms/InputField";
 import ProgressDisplay from "../../../components/ProgressDisplay";
 import { getAttendances } from "../../../queries/attendances";
@@ -126,7 +126,7 @@ const StatDisplay = ({ userId }) => {
             text={`${attendance.length} events`}
             className="my-2 text-primaryColor"
           />
-          <EventTable events={attendance} isIndividualStats={true} />
+          <StatsTable events={attendance} isIndividualStats={true} />
         </div>
       </div>
     </React.Fragment>
