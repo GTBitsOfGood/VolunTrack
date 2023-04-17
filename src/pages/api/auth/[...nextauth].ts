@@ -115,6 +115,12 @@ export const authOptions: AuthOptions = {
         ...session,
         user,
         theme: organization.theme,
+        medalDefaults: {
+          eventSilver: organization.eventSilver,
+          eventGold: organization.eventGold,
+          hoursSilver: organization.hoursSilver,
+          hoursGold: organization.hoursGold,
+        }
       };
     },
     redirect({ baseUrl }) {

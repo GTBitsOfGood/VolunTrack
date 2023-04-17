@@ -3,7 +3,6 @@ import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
-import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import StatsTable from "../../../components/StatsTable";
 import InputField from "../../../components/Forms/InputField";
@@ -12,19 +11,6 @@ import { getAttendances } from "../../../queries/attendances";
 import { getUser } from "../../../queries/users";
 import { filterAttendance } from "../helper";
 import Text from "../../../components/Text";
-
-const Styled = {
-  Header: styled.div`
-    font-size: 27px;
-    font-weight: bold;
-    padding: 5px;
-  `,
-  Header2: styled.div`
-    font-size: 14px;
-    color: gray;
-    padding: 5px;
-  `,
-};
 
 const StatDisplay = ({ userId }) => {
   const [loading, setLoading] = useState(true);
@@ -94,11 +80,13 @@ const StatDisplay = ({ userId }) => {
             type={"Events"}
             attendance={attendance}
             header={"Events Attended"}
+            medalDefaults={session.medalDefaults}
           />
           <ProgressDisplay
             type={"Hours"}
             attendance={attendance}
             header={"Hours Earned"}
+            medalDefaults={session.medalDefaults}
           />
         </div>
 

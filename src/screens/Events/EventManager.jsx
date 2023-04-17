@@ -350,11 +350,13 @@ const EventManager = ({ isHomePage }) => {
                   type={"Events"}
                   attendance={attendances}
                   header={"Events Attended"}
+                  medalDefaults={session.medalDefaults}
                 />
                 <ProgressDisplay
                   type={"Hours"}
                   attendance={attendances}
                   header={"Hours Earned"}
+                  medalDefaults={session.medalDefaults}
                 />
               </div>
             </div>
