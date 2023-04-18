@@ -50,6 +50,7 @@ export const userInputServerValidator = z.object({
     .optional(),
   notes: z.string().nullable().optional(),
   passwordHash: z.string().optional(),
+  password: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
 });

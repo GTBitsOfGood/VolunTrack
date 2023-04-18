@@ -2,7 +2,6 @@ import { ReceiptPercentIcon } from "@heroicons/react/24/solid";
 import Organization from "../../server/mongodb/models/Organization";
 import ResetCode from "../../server/mongodb/models/ResetCode";
 import Event from "../../server/mongodb/models/Event";
-import Organization from "../../server/mongodb/models/Organization";
 import User from "../../server/mongodb/models/User";
 
 const Recipient = require("mailersend").Recipient;

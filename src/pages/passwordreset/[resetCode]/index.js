@@ -51,7 +51,7 @@ const ResetPage = () => {
     <>
       <div className="flex-column flex h-full w-full items-center justify-center">
         <div className="flex-column mx-auto my-2 flex w-1/2 items-center justify-center lg:w-1/4">
-          <div className="pt-5 pb-3 text-xl font-bold">Reset Password</div>
+          <div className="pb-3 pt-5 text-xl font-bold">Reset Password</div>
 
           {!isSubmitted ? (
             <>

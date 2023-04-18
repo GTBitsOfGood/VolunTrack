@@ -150,21 +150,6 @@ class AdminsTable extends React.Component {
                 .map((user, index) => (
                   <Table.Row key={index} evenIndex={index % 2 === 0}>
                     <Table.Cell>
-<<<<<<< HEAD:src/screens/Assistants/AssistantTable.jsx
-                      <div className="flex items-center">
-                        {user.email}
-                        <Tooltip content="Copy" style="light">
-                          <button
-                            className="mx-1"
-                            onClick={() => {
-                              navigator.clipboard.writeText(user.email);
-                            }}
-                          >
-                            <DocumentDuplicateIcon className="text-primaryColor ml-2 h-7" />
-                          </button>
-                        </Tooltip>
-                      </div>
-=======
                       {(user.firstName ?? "") + " " + (user.lastName ?? "")}
                     </Table.Cell>
                     <Table.Cell className="flex items-center">
@@ -179,7 +164,6 @@ class AdminsTable extends React.Component {
                           <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
                         </button>
                       </Tooltip>
->>>>>>> dev:src/screens/Admins/AdminsTable.jsx
                     </Table.Cell>
                     <Table.Cell>
                       {user.role === "admin"
@@ -199,7 +183,7 @@ class AdminsTable extends React.Component {
                               className="mx-1"
                               onClick={() => this.onDisplayEditUserModal(user)}
                             >
-                              <PencilIcon className="text-primaryColor h-7" />
+                              <PencilIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
                           <Tooltip content="Delete" style="light">
@@ -209,7 +193,7 @@ class AdminsTable extends React.Component {
                                 this.onDisplayDeleteUserModal(user)
                               }
                             >
-                              <TrashIcon className="text-primaryColor h-7" />
+                              <TrashIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
                         </div>
@@ -225,7 +209,7 @@ class AdminsTable extends React.Component {
                                 this.onDisplayDeletePending(user.email)
                               }
                             >
-                              <TrashIcon className="text-primaryColor h-7" />
+                              <TrashIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
                         </div>
