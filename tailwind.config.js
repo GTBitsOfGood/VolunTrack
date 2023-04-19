@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        grey: "#f5f5f5",
+        grey: "#F9F9F9",
         primaryColor: "var(--primary-color)",
         secondaryColor: "var(--secondary-color)",
         hoverColor: "var(--hover-color)",
