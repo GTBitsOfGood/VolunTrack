@@ -22,7 +22,6 @@ import EventWaiverModal from "./EventWaiverModal";
 
 const Styled = {
   Container: styled(Container)`
-    background-color: ${variables["gray-100"]};
     overflow-y: scroll;
     overflow-x: hidden;
     padding-top: 2rem;
@@ -57,7 +56,6 @@ const Styled = {
     overflow-wrap: break-word;
   `,
   VolunteerContainer: styled.div`
-    background-color: ${variables["white"]};
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
     margin-right: 2rem;
@@ -276,7 +274,7 @@ const EventRegister = () => {
           <Styled.MinorRow>
             {minors &&
               minors.map((minor) => (
-                <Styled.VolunteerContainer key={minor}>
+                <Styled.VolunteerContainer className="bg-grey" key={minor}>
                   <Styled.VolunteerCol>
                     <div>
                       <Styled.VolunteerRow>
