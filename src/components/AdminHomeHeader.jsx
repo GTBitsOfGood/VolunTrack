@@ -201,7 +201,7 @@ const AdminHomeHeader = (props) => {
       <p className="font-weight-bold mx-2 mt-2 pb-3 text-2xl">Overview</p>
       <div className="flex">
         <div className="flex-column">
-          <div className="flex-column m-2 flex rounded-lg bg-white p-4">
+          <div className="flex-column m-2 flex rounded-lg bg-grey p-4">
             <h3 className="font-weight-bold pb-3 text-lg">
               {"Today's Overview"}
             </h3>
@@ -227,7 +227,7 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
 
-          <div className="flex-column m-2 flex rounded-lg bg-white p-4">
+          <div className="flex-column m-2 flex rounded-lg bg-grey p-4">
             <div className="flex items-center pb-3">
               <h3 className="font-weight-bold text-lg">Total Data</h3>
               <p className="pl-2 text-sm text-slate-600">
@@ -252,7 +252,7 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
         </div>
-        <div className="mixed-chart m-2 rounded-lg bg-white">
+        <div className="mixed-chart m-2 rounded-lg bg-grey">
           {typeof window !== "undefined" && (
             <Chart width={600} options={options} series={series} type="area" />
           )}
