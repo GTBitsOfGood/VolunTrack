@@ -25,7 +25,7 @@ const OrganizationCard = (props) => {
         </div>
       </div>
       <hr className="my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-      <div className="flex justify-between">
+      <div className="flex justify-between bg-grey">
         <div className="flex flex-col">
           <div className="font-semibold">Non-Profit Name</div>
           <div>{props.org.name}</div>

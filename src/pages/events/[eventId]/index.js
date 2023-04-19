@@ -271,7 +271,7 @@ const EventInfo = () => {
                       {event.eventParent.eventContactEmail}
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
                       <b>Time:</b>
                       <br></br>
