@@ -274,8 +274,8 @@ const EventRegister = () => {
           <Styled.MinorRow>
             {minors &&
               minors.map((minor) => (
-                <Styled.VolunteerContainer className="bg-grey" key={minor}>
-                  <Styled.VolunteerCol>
+                <Styled.VolunteerContainer key={minor}>
+                  <Styled.VolunteerCol className="bg-grey">
                     <div>
                       <Styled.VolunteerRow>
                         <Styled.SectionHeaderText>
