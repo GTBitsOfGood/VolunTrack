@@ -268,6 +268,7 @@ const EventManager = ({ isHomePage }) => {
             </Styled.DateRow>
           </Styled.EventContainer>
           <Calendar
+            className="bg-grey"
             onChange={onChange}
             value={selectedDate}
             tileClassName={({ date, view }) =>
