@@ -261,7 +261,7 @@ const EventRegister = () => {
           className="py-2"
         />
         <Styled.Row>
-          <Styled.VolunteerContainer>
+          <Styled.VolunteerContainer className="bg-grey">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
                 {user.firstName} {user.lastName}
@@ -274,8 +274,8 @@ const EventRegister = () => {
           <Styled.MinorRow>
             {minors &&
               minors.map((minor) => (
-                <Styled.VolunteerContainer key={minor}>
-                  <Styled.VolunteerCol className="bg-grey">
+                <Styled.VolunteerContainer className="bg-grey" key={minor}>
+                  <Styled.VolunteerCol>
                     <div>
                       <Styled.VolunteerRow>
                         <Styled.SectionHeaderText>
