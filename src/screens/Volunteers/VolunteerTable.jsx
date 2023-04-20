@@ -9,7 +9,6 @@ import {
   DocumentDuplicateIcon,
   PencilIcon,
   ChartBarIcon,
-  TrashIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
 
