@@ -36,7 +36,7 @@ const AuthPage = (props) => {
               src="/images/google.svg"
               className="mr-2 h-6 w-6"
             />
-            <p className="bg-gray my-0 text-lg">Continue with Google</p>
+            <p className="my-0 text-lg">Continue with Google</p>
           </Button>
         </div>
         <div className="mb-1 mt-4 flex w-full items-center justify-between">
