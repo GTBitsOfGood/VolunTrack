@@ -16,11 +16,6 @@ body,
   padding: 0;
   position: relative;
   overflow: overlay;
-  background: hsl(
-    0,
-    0%,
-    100%
-  ); /* TODO this changes the background color of the app */
 }
 
 .App {

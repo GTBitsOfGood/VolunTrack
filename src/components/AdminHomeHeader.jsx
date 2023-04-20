@@ -252,9 +252,15 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
         </div>
-        <div className="mixed-chart m-2 rounded-lg bg-grey">
+        <div className="mixed-chart my-2 rounded-lg bg-grey p-2">
           {typeof window !== "undefined" && (
-            <Chart width={600} options={options} series={series} type="area" />
+            <Chart
+              width={600}
+              options={options}
+              series={series}
+              type="area"
+              className="bg-white pb-0"
+            />
           )}
         </div>
       </div>
