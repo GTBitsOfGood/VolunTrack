@@ -134,13 +134,15 @@ const Header = () => {
             Participation History
           </Navbar.Link>
         )}
-        <Navbar.Link className={`text-lg font-bold md:hover:text-primaryColor  ${
+        <Navbar.Link
+          className={`text-lg font-bold md:hover:text-primaryColor  ${
             currPageMatches("/admins") ||
             currPageMatches("/manage-waivers") ||
             currPageMatches("/organization-settings")
-                ? "text-primaryColor"
-                : ""
-        }`}>
+              ? "text-primaryColor"
+              : ""
+          }`}
+        >
           {user.role === "admin" && (
             <Dropdown
               arrowIcon={true}

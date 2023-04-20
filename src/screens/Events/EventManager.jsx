@@ -267,15 +267,15 @@ const EventManager = ({ isHomePage }) => {
               )}
             </Styled.DateRow>
           </Styled.EventContainer>
-          <div className="bg-gray-50 rounded-md p-2 m-2">
-          <Calendar
-            className="bg-white"
-            onChange={onChange}
-            value={selectedDate}
-            tileClassName={({ date, view }) =>
-              setMarkDates({ date, view }, markDates)
-            }
-          />
+          <div className="m-2 rounded-md bg-gray-50 p-2">
+            <Calendar
+              className="bg-white"
+              onChange={onChange}
+              value={selectedDate}
+              tileClassName={({ date, view }) =>
+                setMarkDates({ date, view }, markDates)
+              }
+            />
           </div>
           <Styled.LegendText>How to read the calendar?</Styled.LegendText>
           <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
