@@ -148,6 +148,7 @@ const Header = () => {
               arrowIcon={true}
               inline={true}
               label={<div>Settings</div>}
+              className="font-medium"
             >
               <Dropdown.Item onClick={goToManageAdmins} href="/admins">
                 Manage Admins
