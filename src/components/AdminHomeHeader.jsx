@@ -198,7 +198,7 @@ const AdminHomeHeader = (props) => {
 
   return (
     <div className="flex-column">
-      <p className="font-weight-bold mx-2 mt-2 pb-3 text-2xl">Overview</p>
+      <p className="font-weight-bold mx-2 mt-2 text-2xl">Overview</p>
       <div className="flex">
         <div className="flex-column">
           <div className="flex-column m-2 flex rounded-lg bg-grey p-4">

@@ -35,7 +35,7 @@ class Text extends React.Component {
             </h3>
           );
         case "helper":
-          theming = "text-grey ";
+          theming = "text-gray-400 ";
           break;
         default:
           theming = "text-md ";
