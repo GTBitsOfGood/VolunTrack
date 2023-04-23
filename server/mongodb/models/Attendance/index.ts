@@ -18,6 +18,21 @@ const attendanceSchema = new Schema(
       default: "63d6dcc4e1fb5fd6e69b1738",
       required: true,
     },
+    eventName: {
+      type: String,
+      required: true,
+      default: "Event",
+    },
+    volunteerName: {
+      type: String,
+      required: true,
+      default: "Volunteer",
+    },
+    volunteerEmail: {
+      type: String,
+      required: true,
+      default: "volunteer@gmail.com",
+    },
     checkinTime: { type: Date, default: null },
     checkoutTime: { type: Date, default: null },
   },

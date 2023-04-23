@@ -30,7 +30,7 @@ const convertTime = (time) => {
 };
 
 const StatsTable = ({
-  events,
+  attendances,
   isIndividualStats,
   onDeleteClicked,
   onEditClicked,
@@ -40,31 +40,10 @@ const StatsTable = ({
   const time = isIndividualStats ? "Time" : "Hours Participated";
   const textInfo = isIndividualStats ? "Hours Earned" : "";
   const [currentPage, setCurrentPage] = useState(0);
-  const [userEvents, setUserEvents] = useState([]);
   const pageSize = 10;
   const updatePage = (pageNum) => {
     setCurrentPage(pageNum);
   };
-
-  const eventsWithUser = () => {
-    const eventsWithUser = [];
-    for (const event of events) {
-      if ("users" in event) {
-        getUser(new Types.ObjectId(event.users[0])).then((response) => {
-          eventsWithUser.push({ ...event, user: response.data.user });
-        });
-      } else {
-        getUser(new Types.ObjectId(event.userId)).then((response) => {
-          eventsWithUser.push({ ...event, user: response.data.user });
-        });
-      }
-    }
-    return eventsWithUser;
-  };
-
-  useEffect(() => {
-    setUserEvents(eventsWithUser());
-  }, [events]);
 
   return (
     <Styled.Container>
@@ -77,46 +56,53 @@ const StatsTable = ({
         </Table.Head>
         <Table.Body>
           {isIndividualStats &&
-            events
+            attendances
               .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-              .map((event) => (
-                <Table.Row key={event._id}>
+              .map((attendance) => (
+                <Table.Row key={attendance._id}>
                   <Table.Cell>
-                    <Link href={`events/${event.eventId}`}>
-                      {event.eventName ?? "event"}
+                    <Link href={`events/${attendance.eventId}`}>
+                      {attendance.eventName ?? "event"}
                     </Link>
                   </Table.Cell>
-                  <Table.Cell>{event.checkinTime.slice(0, 10)}</Table.Cell>
+                  <Table.Cell>{attendance.checkinTime.slice(0, 10)}</Table.Cell>
                   <Table.Cell>
-                    {convertTime(event.checkinTime.slice(11, 16))} -{" "}
-                    {event.checkoutTime == null
+                    {convertTime(attendance.checkinTime.slice(11, 16))} -{" "}
+                    {attendance.checkoutTime == null
                       ? "N/A"
-                      : convertTime(event.checkoutTime.slice(11, 16))}
+                      : convertTime(attendance.checkoutTime.slice(11, 16))}
                   </Table.Cell>
                   <Table.Cell>
                     &emsp;
-                    {event.checkoutTime == null
+                    {attendance.checkoutTime == null
                       ? "0 hour(s)"
                       : getHours(
-                          event.checkinTime.slice(11, 16),
-                          event.checkoutTime.slice(11, 16)
+                          attendance.checkinTime.slice(11, 16),
+                          attendance.checkoutTime.slice(11, 16)
                         ) + " hour(s)"}
                   </Table.Cell>
                 </Table.Row>
               ))}
           {!isIndividualStats &&
-            userEvents.length !== 0 &&
-            userEvents
+            attendances
               .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-              .map((event) => (
-                <Table.Row key={event._id}>
+              .map((attendance) => (
+                <Table.Row key={attendance._id}>
                   <Table.Cell>
-                    {event.user.firstName} {event.user.lastName}
+                    {attendance.volunteerName ?? "Volunteer"}
                   </Table.Cell>
                   <Table.Cell>
-                    {event.user.email?.substring(0, 24) + "..."}
+                    {attendance.volunteerEmail?.substring(0, 24) + "..."}
                   </Table.Cell>
-                  <Table.Cell>{event.hours.toString().slice(0, 5)}</Table.Cell>
+                  <Table.Cell>
+                    &emsp;
+                    {attendance.checkoutTime == null
+                      ? "0 hour(s)"
+                      : getHours(
+                          attendance.checkinTime.slice(11, 16),
+                          attendance.checkoutTime.slice(11, 16)
+                        ) + " hour(s)"}
+                  </Table.Cell>
                   <Table.Cell>
                     <div className="flex gap-1">
                       <Tooltip content="Edit" style="light">
@@ -124,7 +110,7 @@ const StatsTable = ({
                           className="mx-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            onEditClicked(event);
+                            onEditClicked(attendance);
                           }}
                         >
                           <PencilIcon className="h-8 text-primaryColor" />
@@ -135,7 +121,7 @@ const StatsTable = ({
                           className="mx-1"
                           onClick={(e) => {
                             e.stopPropagation();
-                            onDeleteClicked(event);
+                            onDeleteClicked(attendance);
                           }}
                         >
                           <TrashIcon className="h-8 text-primaryColor" />
@@ -147,9 +133,9 @@ const StatsTable = ({
               ))}
         </Table.Body>
       </Table>
-      {events.length !== 0 && (
+      {attendances.length !== 0 && (
         <Pagination
-          items={events}
+          items={attendances}
           pageSize={pageSize}
           currentPage={currentPage}
           updatePageCallback={updatePage}
@@ -159,7 +145,7 @@ const StatsTable = ({
   );
 };
 StatsTable.propTypes = {
-  events: PropTypes.array,
+  attendances: PropTypes.array,
   isIndividualStats: PropTypes.bool,
   onDeleteClicked: PropTypes.func,
   onEditClicked: PropTypes.func,

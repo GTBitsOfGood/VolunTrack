@@ -11,12 +11,18 @@ import { QueryPartialMatch } from "./index";
 export const checkInVolunteer = (
   userId: Types.ObjectId,
   eventId: Types.ObjectId,
-  organizationId: Types.ObjectId
+  organizationId: Types.ObjectId,
+  volunteerName: string,
+  volunteerEmail: string,
+  eventName: string
 ) =>
   createAttendance({
     userId,
     eventId,
     organizationId,
+    volunteerName,
+    volunteerEmail,
+    eventName,
     checkinTime: new Date(),
   });
 

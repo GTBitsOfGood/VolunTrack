@@ -17,8 +17,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = organizationInputCreationValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
 
-      result.data["notificationEmail"] = result.data["originalAdminEmail"]
-      result.data["invitedAdmins"] = [result.data["originalAdminEmail"]]
+      result.data.notificationEmail = result.data.originalAdminEmail;
+      result.data.invitedAdmins = [result.data.originalAdminEmail];
 
       return res.status(201).json({
         organization: await Organization.create(result.data),

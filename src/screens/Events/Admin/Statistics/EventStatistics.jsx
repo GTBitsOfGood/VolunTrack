@@ -2,12 +2,16 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StatsTable from "../../../../components/StatsTable";
-import { getAttendanceStatistics } from "../../../../queries/attendances";
+import {
+  getAttendances,
+  getAttendanceStatistics,
+} from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
 import { getRegistrations } from "../../../../queries/registrations";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
+import { getHours } from "../../../Stats/User/hourParsing";
 
 const Styled = {
   Container: styled.div`
@@ -70,18 +74,14 @@ const Styled = {
 const EventStatistics = () => {
   const router = useRouter();
   const eventId = router.query.eventId;
-  const [attendanceStats, setAttendanceStats] = useState([]);
+  const [attendances, setAttendances] = useState([]);
   const [event, setEvent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
 
   const onRefresh = () => {
-    getAttendanceStatistics(eventId, undefined, undefined).then((result) => {
-      if (result.data.statistics) {
-        let stats = result.data.statistics.map((stat) => {
-          stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
-          return stat;
-        });
-        setAttendanceStats(stats);
+    getAttendances({ eventId: eventId }).then((result) => {
+      if (result.data) {
+        setAttendances(result.data.attendances);
       }
     });
     getEvent(eventId).then((result) => {
@@ -96,9 +96,16 @@ const EventStatistics = () => {
     onRefresh();
   }, []);
 
-  const hours = attendanceStats.reduce((prev, curr) => prev + curr.hours, 0.0);
+  let hours = 0;
+  attendances.forEach((attendance) => {
+    if (attendance.checkoutTime)
+      hours += getHours(
+        attendance.checkinTime.slice(11, 16),
+        attendance.checkoutTime.slice(11, 16)
+      );
+  });
   const totalVolunteers = [
-    ...new Set(attendanceStats.map((attendance) => attendance.userId)),
+    ...new Set(attendances.map((attendance) => attendance.userId)),
   ];
   const [showEditModal, setShowEditModal] = useState(false);
   const [currEvent, setCurrEvent] = useState(null);
@@ -162,7 +169,7 @@ const EventStatistics = () => {
       </Styled.StatsContainer>
       <Styled.Table>
         <StatsTable
-          events={attendanceStats}
+          attendances={attendances}
           isIndividualStats={false}
           onDeleteClicked={onDeleteClicked}
           onEditClicked={onEditClicked}
