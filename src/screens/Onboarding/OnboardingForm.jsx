@@ -95,14 +95,14 @@ class OnboardingForm extends React.Component {
         <hr className="mb-12 mt-4"></hr>
         <Formik
           initialValues={{
-            organization_name: "",
-            website_url: "",
-            contact_name: "",
-            contact_email: "",
-            contact_phone: "",
-            admin_email: "",
+            name: "",
+            website: "",
+            defaultContactName: "",
+            defaultContactEmail: "",
+            defaultContactPhone: "",
+            originalAdminEmail: "",
             confirm_admin_email: "",
-            organization_code: "",
+            slug: "",
           }}
           enableReinitialize={true}
           onSubmit={(values, { setSubmitting, resetForm }) => {
@@ -127,12 +127,9 @@ class OnboardingForm extends React.Component {
                 </div>
                 <div className="m-auto flex w-64 flex-col">
                   <p>Non-profit Name</p>
+                  <InputField name="name" placeholder="Non-profit Name" />
                   <InputField
-                    name="organization_name"
-                    placeholder="Non-profit Name"
-                  />
-                  <InputField
-                    name="website_url"
+                    name="website"
                     label="Non-profit Website"
                     placeholder="https://www.example.com"
                   />
@@ -148,17 +145,17 @@ class OnboardingForm extends React.Component {
                 </div>
                 <div className="m-auto w-64">
                   <InputField
-                    name="contact_name"
+                    name="defaultContactName"
                     label="Contact Name"
                     placeholder="Contact Name"
                   />
                   <InputField
-                    name="contact_email"
+                    name="defaultContactEmail"
                     label="Contact Email"
                     placeholder="example@email.com"
                   />
                   <InputField
-                    name="contact_phone"
+                    name="defaultContactPhone"
                     label="Phone"
                     placeholder="xxx-xxx-xxxx"
                   />
@@ -182,7 +179,7 @@ class OnboardingForm extends React.Component {
                 </div>
                 <div className="m-auto w-64">
                   <InputField
-                    name="admin_email"
+                    name="originalAdminEmail"
                     label="Primary Admin Account"
                     placeholder="example@email.com"
                   />
@@ -202,25 +199,22 @@ class OnboardingForm extends React.Component {
                   </Styled.Subtitle2>
                 </div>
                 <div className="m-auto w-80">
-                  <Label className="mb-3 mt-4" htmlFor="organization_code">
+                  <Label className="mb-3 mt-4" htmlFor="slug">
                     Non-profit Code
                   </Label>
-                  <Field
-                    className="flex justify-center"
-                    name="organization_code"
-                  >
+                  <Field className="flex justify-center" name="slug">
                     {({ field }) => (
                       <TextInput
                         {...field}
                         type="text"
                         addon="https://volunteer.bitsofgood.org/"
-                        placeholder={values.organization_name
+                        placeholder={values.name
                           .toLowerCase()
                           .replace(" ", "-")}
                       />
                     )}
                   </Field>
-                  <Styled.ErrorMessage name="organization_code" />
+                  <Styled.ErrorMessage name="slug" />
                 </div>
                 <div className="mb-12 mt-5 flex justify-center">
                   <BoGButton

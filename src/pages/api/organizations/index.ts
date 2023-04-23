@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Organization, {
-  organizationInputServerValidator,
+  organizationInputCreationValidator,
 } from "../../../../server/mongodb/models/Organization";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -14,8 +14,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ organizations: await Organization.find() });
     }
     case "POST": {
-      const result = organizationInputServerValidator.safeParse(req.body);
+      const result = organizationInputCreationValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
+
+      result.data["notificationEmail"] = result.data["originalAdminEmail"]
+      result.data["invitedAdmins"] = [result.data["originalAdminEmail"]]
 
       return res.status(201).json({
         organization: await Organization.create(result.data),
