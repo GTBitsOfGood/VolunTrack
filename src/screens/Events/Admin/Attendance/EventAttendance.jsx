@@ -200,6 +200,11 @@ const EventAttendance = () => {
             text={event?.eventParent?.description}
             className="mb-2 text-hoverColor"
           />
+          <Text
+            className="mt-4"
+            href={`/events/${eventId}`}
+            text="See More Details"
+          />
         </div>
 
         <div>
