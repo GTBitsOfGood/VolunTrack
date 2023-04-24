@@ -2,6 +2,7 @@ import "flowbite-react";
 import { Table } from "flowbite-react";
 import styled from "styled-components";
 import Volunteer from "./Volunteer";
+import Text from "../../../../components/Text";
 
 const Styled = {
   InfoText: styled.p`
@@ -30,35 +31,39 @@ const AttendanceFunctionality = ({
 }) => (
   <>
     <Styled.InfoText className="font-bold text-black">Check-In</Styled.InfoText>
-    <Table>
-      <Table.Head>
-        <Table.HeadCell>
-          <span className="sr-only">Check-In</span>
-        </Table.HeadCell>
-        <Table.HeadCell>Name</Table.HeadCell>
-        <Table.HeadCell>Email</Table.HeadCell>
-        <Table.HeadCell>Phone</Table.HeadCell>
-        <Table.HeadCell>Status</Table.HeadCell>
-      </Table.Head>
-      <Table.Body className="divide-y">
-        {waitingVolunteers?.length > 0 &&
-          waitingVolunteers.map((volunteer) => (
-            <Volunteer
-              key={volunteer._id}
-              volunteer={volunteer}
-              minors={minors[volunteer._id]}
-              onClick={checkIn}
-              checkInStatus={"waiting"}
-              isEnded={isEnded}
-            />
-          ))}
-      </Table.Body>
-    </Table>
+    {waitingVolunteers?.length > 0 && (
+      <Table>
+        <Table.Head>
+          <Table.HeadCell>
+            <span className="sr-only">Check-In</span>
+          </Table.HeadCell>
+          <Table.HeadCell>Name</Table.HeadCell>
+          <Table.HeadCell>Email</Table.HeadCell>
+          <Table.HeadCell>Phone</Table.HeadCell>
+          <Table.HeadCell>Status</Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide-y">
+          {waitingVolunteers?.length > 0 &&
+            waitingVolunteers.map((volunteer) => (
+              <Volunteer
+                key={volunteer._id}
+                volunteer={volunteer}
+                minors={minors[volunteer._id]}
+                onClick={checkIn}
+                checkInStatus={"waiting"}
+                isEnded={isEnded}
+              />
+            ))}
+        </Table.Body>
+      </Table>
+    )}
+    {waitingVolunteers?.length === 0 && (<Text text="Congratulations! All volunteers were checked in!" className="text-primaryColor flex justify-center" type="subheader"/>)}
 
     <Styled.InfoText className="font-bold text-black">
       Check-Out
     </Styled.InfoText>
-    <Table>
+    {checkedInVolunteers?.length > 0 || checkedOutVolunteers?.length > 0 &&
+    (<Table>
       <Table.Head>
         <Table.HeadCell>
           <span className="sr-only">Check-Out</span>
@@ -92,7 +97,8 @@ const AttendanceFunctionality = ({
             />
           ))}
       </Table.Body>
-    </Table>
+    </Table>)}
+    {checkedInVolunteers?.length === 0 || checkedOutVolunteers?.length === 0 && (<Text text="No one has been checked out yet." className="text-primaryColor flex justify-center" type="subheader"/>)}
   </>
 );
 export default AttendanceFunctionality;
