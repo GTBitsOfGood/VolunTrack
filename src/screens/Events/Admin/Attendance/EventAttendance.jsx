@@ -162,23 +162,67 @@ const EventAttendance = () => {
           <Styled.Header>Attendance Management</Styled.Header>
           <BoGButton text="End Event" onClick={endEvent} />
         </Styled.HeaderRow>
-        <SearchBar
-          placeholder="Search by Volunteer Name or Email"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
 
-        <AttendanceFunctionality
-          waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
-          checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
-          checkedOutVolunteers={filteredAndSortedVolunteers(
-            checkedOutVolunteers
-          )}
-          minors={minors}
-          checkIn={checkIn}
-          checkOut={checkOut}
-          isEnded={event?.isEnded}
-        />
+        <div className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-white px-6 py-3">
+          <Text
+            text={event?.eventParent?.title}
+            type="header"
+            className="mb-2 text-primaryColor"
+          />
+          <Text text="Time:" />
+          {/* Having Issues Displaying the date */}
+          <Text
+            text={
+              event?.eventParent?.date +
+              ", " +
+              event?.eventParent?.startTime +
+              "-" +
+              event?.eventParent?.endTime
+            }
+            className="mb-2 text-hoverColor"
+          />
+          <Text text="Address:" />
+          <Text
+            text={
+              event?.eventParent?.address +
+              ", " +
+              event?.eventParent?.city +
+              ", " +
+              event?.eventParent?.state +
+              " " +
+              event?.eventParent?.zip
+            }
+            className="mb-2 text-hoverColor"
+          />
+          <Text text="Description:" />
+          {/* Description is being saved with some sort of html baked in, not sure how to deal with it */}
+          <Text
+            text={event?.eventParent?.description}
+            className="mb-2 text-hoverColor"
+          />
+        </div>
+
+        <div>
+          <SearchBar
+            placeholder="Search by Volunteer Name or Email"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+
+          <AttendanceFunctionality
+            waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
+            checkedInVolunteers={filteredAndSortedVolunteers(
+              checkedInVolunteers
+            )}
+            checkedOutVolunteers={filteredAndSortedVolunteers(
+              checkedOutVolunteers
+            )}
+            minors={minors}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            isEnded={event?.isEnded}
+          />
+        </div>
       </Styled.Container>
       {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>
