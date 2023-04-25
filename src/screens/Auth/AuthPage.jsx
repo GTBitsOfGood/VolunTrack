@@ -61,18 +61,18 @@ const AuthPage = (props) => {
             className="ml-2"
           />
         </div>
-        {!props.createAccount && (
-          <div className="mt-1 flex items-center">
-            Forgot Password?
-            <Text
-              text={"Reset Password"}
-              href={`${window.location.origin}/${
-                props.createAccount ? "login" : "create-account"
-              }`}
-              className="ml-2"
-            />
-          </div>
-        )}
+        {/*{!props.createAccount && (*/}
+        {/*  <div className="mt-1 flex items-center">*/}
+        {/*    Forgot Password?*/}
+        {/*    <Text*/}
+        {/*      text={"Reset Password"}*/}
+        {/*      href={`${window.location.origin}/${*/}
+        {/*        props.createAccount ? "login" : "create-account"*/}
+        {/*      }`}*/}
+        {/*      className="ml-2"*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*)}*/}
       </div>
       <div className="grow" />
       <Footer />
