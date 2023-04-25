@@ -55,9 +55,10 @@ const EventsList = ({
     return registeredEventIds.has(event._id);
   });
 
-  upcomingEvents = upcomingEvents.filter(
-    (event) => !registeredEventIds.has(event._id)
-  );
+  if (user.role === "volunteer")
+    upcomingEvents = upcomingEvents.filter(
+      (event) => !registeredEventIds.has(event._id)
+    );
 
   if (upcomingEvents.length > 5) {
     upcomingEvents = upcomingEvents.slice(0, 5);
