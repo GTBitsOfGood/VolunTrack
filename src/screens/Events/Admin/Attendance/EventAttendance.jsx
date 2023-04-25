@@ -101,7 +101,14 @@ const EventAttendance = () => {
   }, []);
 
   const checkIn = async (volunteer) => {
-    await checkInVolunteer(volunteer._id, eventId, volunteer.organizationId);
+    await checkInVolunteer(
+      volunteer._id,
+      eventId,
+      volunteer.organizationId,
+      volunteer.firstName + " " + volunteer.lastName,
+      volunteer.email,
+      event.eventParent.title
+    );
 
     setWaitingVolunteers(
       waitingVolunteers.filter((v) => v._id !== volunteer._id)

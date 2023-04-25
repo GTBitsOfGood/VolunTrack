@@ -27,7 +27,7 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
   }
 
   return (
-    <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-white p-4">
+    <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-grey p-4">
       <div className="mt-2 flex flex-row items-center justify-between">
         <Text
           text={event.eventParent.title}
@@ -45,11 +45,11 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
         )}
       </div>
       <div className="flex flex-wrap gap-2">
-        <div className="flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-white p-2">
           <CalendarIcon class="h-6 w-6 text-primaryColor" />
           <Text text={event.date.slice(0, 10)} className="ml-2 font-bold" />
         </div>
-        <div className="flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-white p-2">
           <ClockIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={
@@ -61,7 +61,7 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
           />
           <Text text={event.eventParent.localTime} />
         </div>
-        <div className="flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-white p-2">
           <MapPinIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={`${event.eventParent.address}, ${event.eventParent.city}, ${event.eventParent.state}, ${event.eventParent.zip}`}
@@ -71,14 +71,14 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
       </div>
       <Text text="Contact Event Host" type="subheader" className="mt-4" />
       <div className="flex flex-wrap gap-2 pb-4">
-        <div className="flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-white p-2">
           <EnvelopeIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={event.eventParent.eventContactEmail}
             className="ml-2 font-bold"
           />
         </div>
-        <div className="flex w-64 items-center rounded-md bg-grey p-2">
+        <div className="flex w-64 items-center rounded-md bg-white p-2">
           <PhoneIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={event.eventParent.eventContactPhone}

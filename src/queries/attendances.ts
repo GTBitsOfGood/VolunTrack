@@ -11,12 +11,18 @@ import { QueryPartialMatch } from "./index";
 export const checkInVolunteer = (
   userId: Types.ObjectId,
   eventId: Types.ObjectId,
-  organizationId: Types.ObjectId
+  organizationId: Types.ObjectId,
+  volunteerName: string,
+  volunteerEmail: string,
+  eventName: string
 ) =>
   createAttendance({
     userId,
     eventId,
     organizationId,
+    volunteerName,
+    volunteerEmail,
+    eventName,
     checkinTime: new Date(),
   });
 
@@ -89,7 +95,7 @@ export const deleteAttendance = (attendanceId: Types.ObjectId) =>
   );
 
 export const getAttendanceStatistics = (
-  eventId?: Types.ObjectId,
+  organizationId?: Types.ObjectId,
   startDate?: Date,
   endDate?: Date
 ) =>
@@ -103,5 +109,5 @@ export const getAttendanceStatistics = (
       };
     }[]
   >("/api/attendances/statistics", {
-    params: { eventId, startDate, endDate },
+    params: { organizationId, startDate, endDate },
   });
