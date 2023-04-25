@@ -1,3 +1,3 @@
-import Stats from "./Stats";
+import OverallAttendanceSummary from "./OverallAttendanceSummary";
 
-export default Stats;
+export default OverallAttendanceSummary;

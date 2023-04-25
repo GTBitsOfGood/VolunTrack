@@ -114,7 +114,7 @@ const StatDisplay = ({ userId }) => {
             text={`${attendance.length} events`}
             className="my-2 text-primaryColor"
           />
-          <StatsTable events={attendance} isIndividualStats={true} />
+          <StatsTable attendances={attendance} isIndividualStats={true} />
         </div>
       </div>
     </React.Fragment>

@@ -13,7 +13,7 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventStatsTable = ({ events, isVolunteer }) => {
+const EventStatsTable = ({ stats, isVolunteer }) => {
   return (
     <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
       <Table.Head>
@@ -25,19 +25,17 @@ const EventStatsTable = ({ events, isVolunteer }) => {
       </Table.Head>
       <Table.Body>
         {isVolunteer === false &&
-          events.map((event) => (
-            <Table.Row key={event._id}>
+          stats.map((stat) => (
+            <Table.Row key={stat._id}>
               <Table.Cell>
-                <Link href={`events/${event._id}`}>{event.title}</Link>
+                <Link href={`events/${stat._id}`}>{stat.title}</Link>
               </Table.Cell>
-              <Table.Cell>{event.date.substring(0, 10)}</Table.Cell>
+              <Table.Cell>{stat.date.substring(0, 10)}</Table.Cell>
               <Table.Cell>
-                {convertTime(event.eventParent.startTime)} -{" "}
-                {convertTime(event.eventParent.endTime)}{" "}
-                {event.eventParent.localTime}
+                {convertTime(stat.startTime)} - {convertTime(stat.endTime)}{" "}
               </Table.Cell>
-              <Table.Cell>{event.attendance}</Table.Cell>
-              <Table.Cell>{event.hours}</Table.Cell>
+              <Table.Cell>{stat.attendance}</Table.Cell>
+              <Table.Cell>{stat.hours}</Table.Cell>
             </Table.Row>
           ))}
       </Table.Body>
@@ -45,7 +43,7 @@ const EventStatsTable = ({ events, isVolunteer }) => {
   );
 };
 EventStatsTable.propTypes = {
-  events: PropTypes.Array,
+  stats: PropTypes.Array,
   isVolunteer: PropTypes.Boolean,
   onDeleteClicked: PropTypes.func,
   onEditClicked: PropTypes.func,

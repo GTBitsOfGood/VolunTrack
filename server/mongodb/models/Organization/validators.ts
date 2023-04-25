@@ -70,6 +70,20 @@ export const organizationInputServerValidator = z.object({
   hoursGold: z.number().int().positive().optional(),
 });
 
+export const organizationInputCreationValidator = z.object({
+  name: z.string(),
+  website: z.string().url("website must be a valid URL"),
+  slug: z.string(),
+  originalAdminEmail: z.string().email("Admin Email must be a valid email"),
+  defaultContactName: z.string(),
+  defaultContactEmail: z
+    .string()
+    .email("defaultContactEmail must be a valid email"),
+  defaultContactPhone: z.string(),
+  notificationEmail: z.string().optional(),
+  invitedAdmins: z.array(z.string()).optional(),
+});
+
 export type OrganizationInputClient = z.infer<
   typeof organizationInputClientValidator
 >;

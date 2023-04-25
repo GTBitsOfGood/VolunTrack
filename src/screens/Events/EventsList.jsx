@@ -14,14 +14,6 @@ const Styled = {
     min-height: min-content;
     overflow-y: auto;
   `,
-  Spacer: styled.div`
-    height: 12rem;
-  `,
-  ul: styled.div`
-    display: flex;
-    flex-direction: column;
-    list-style-type: none;
-  `,
 };
 
 const EventsList = ({
@@ -37,7 +29,6 @@ const EventsList = ({
     const { data: session } = useSession();
     user = session.user;
   }
-
   events.sort(function (a, b) {
     const c = new Date(a.date);
     const d = new Date(b.date);
@@ -45,8 +36,7 @@ const EventsList = ({
   });
 
   let upcomingEvents = events.filter(function (event) {
-    const currentDate = Date.now();
-    return new Date(event.date) > new Date(currentDate);
+    return new Date(event.date) >= new Date(Date.now() - 2 * 86400000);
   });
 
   const todayEvents = events.filter(function (event) {
@@ -61,7 +51,7 @@ const EventsList = ({
     registrations.map((registration) => registration.eventId)
   );
 
-  const registeredEvents = upcomingEvents.filter((event) => {
+  let registeredEvents = upcomingEvents.filter((event) => {
     return registeredEventIds.has(event._id);
   });
 
@@ -69,26 +59,12 @@ const EventsList = ({
     (event) => !registeredEventIds.has(event._id)
   );
 
-  const todayRegisteredEvents = registeredEvents.filter(function (event) {
-    const currentDate = new Date();
-    return new Date(event.date) === currentDate;
-  });
-
-  const upcomingRegisteredEvents = registeredEvents.filter(function (event) {
-    const currentDate = new Date();
-    return new Date(event.date) > currentDate;
-  });
-
-  // upcomingEvents = upcomingEvents.filter(function (event) {
-  //   return !event.volunteers.includes(user._id);
-  // });
-
   if (upcomingEvents.length > 5) {
     upcomingEvents = upcomingEvents.slice(0, 5);
   }
 
   if (registeredEvents.length > 2) {
-    upcomingEvents = upcomingEvents.slice(0, 2);
+    registeredEvents = registeredEvents.slice(0, 2);
   }
 
   if (!isHomePage) {
@@ -103,62 +79,35 @@ const EventsList = ({
             onEventDelete={onEventDelete}
           />
         ))}
-        <Styled.Spacer />
+        <div className="h-12" />
       </Styled.Container>
     );
   } else {
-    if (user.role == "volunteer" && upcomingEvents.length > 0) {
+    if (user.role === "volunteer") {
       return (
         <Styled.Container>
-          <Styled.ul>
-            <div className="column-flex">
-              <p className="font-weight-bold pb-3 text-2xl">
-                Registered Events
+          <div className="column-flex">
+            <p className="font-weight-bold pb-3 text-2xl">Registered Events</p>
+            {registeredEvents.length > 0 && (
+              <div>
+                {registeredEvents.map((event) => (
+                  <EventCard
+                    key={event._id}
+                    event={event}
+                    user={user}
+                    isRegistered={true}
+                  />
+                ))}
+              </div>
+            )}
+            {registeredEvents.length === 0 && (
+              <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                Please register for an event!
               </p>
-              <p className="font-weight-bold pb-3 text-xl">
-                {"Today's Events"}
-              </p>
-              {todayRegisteredEvents.length > 0 && (
-                <div>
-                  {todayRegisteredEvents.map((event) => (
-                    <EventCard
-                      key={event._id}
-                      event={event}
-                      user={user}
-                      isRegistered={true}
-                    />
-                  ))}
-                </div>
-              )}
-              {todayRegisteredEvents.length === 0 && (
-                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
-                  No events today
-                </p>
-              )}
-              {upcomingRegisteredEvents.length > 0 && (
-                <div>
-                  <p className="font-weight-bold pb-3 text-xl">
-                    {"Upcoming Events"}
-                  </p>
-                  {upcomingRegisteredEvents.map((event) => (
-                    <EventCard
-                      key={event._id}
-                      event={event}
-                      user={user}
-                      isRegistered={true}
-                    />
-                  ))}
-                </div>
-              )}
-              {registeredEvents.length === 0 && (
-                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
-                  Please register for an event!
-                </p>
-              )}
-            </div>
-          </Styled.ul>
+            )}
+          </div>
 
-          <Styled.ul>
+          <div className="column-flex">
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
             {upcomingEvents.length > 0 &&
               upcomingEvents.map((event) => (
@@ -175,8 +124,8 @@ const EventsList = ({
               </p>
             )}
             <Text text="View More" href="/events" />
-          </Styled.ul>
-          <Styled.Spacer />
+          </div>
+          <div className="h-12" />
         </Styled.Container>
       );
     } else if (user.role === "admin") {

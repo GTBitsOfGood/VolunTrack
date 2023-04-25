@@ -15,14 +15,12 @@ const Styled = {
   EventTableAll: styled.div`
     display: flex;
     flex-direction: column;
-    background-color: ${variables["gray-100"]};
     padding-top: 2rem;
     padding-bottom: 4rem;
   `,
   EventTable: styled.div`
     display: flex;
     flex-direction: row;
-    background-color: ${variables["gray-100"]};
     height: 100vh;
   `,
   EventCol: styled.div`
@@ -67,7 +65,6 @@ const Styled = {
   InfoTableCol: styled.div`
     display: flex;
     flex-direction: column;
-    background-color: white;
     width: 250px;
   `,
   InfoTableText: styled.p`
@@ -260,7 +257,7 @@ const EventInfo = () => {
               <Styled.EventCol2 style={{ "margin-right": "auto" }}>
                 <Styled.InfoHead>Event Information</Styled.InfoHead>
                 <Styled.InfoTable>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
                       <b>Date:</b>
                       <br></br>
@@ -274,7 +271,7 @@ const EventInfo = () => {
                       {event.eventParent.eventContactEmail}
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
                       <b>Time:</b>
                       <br></br>
