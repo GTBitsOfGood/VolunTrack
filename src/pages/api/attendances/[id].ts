@@ -26,8 +26,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
 
+      let checkIn = attendance.checkinTime;
+      if (result.data.checkinTime) {
+        // @ts-expect-error
+        checkIn = result.data.checkinTime;
+      }
+
+      // @ts-expect-error
+      const mins =
+        (new Date(result.data.checkoutTime).getTime() -
+          new Date(checkIn).getTime()) /
+        (60 * 1000);
+
       await attendance.updateOne({
-        $set: { checkoutTime: result.data.checkoutTime },
+        $set: {
+          checkoutTime: result.data.checkoutTime,
+          checkinTime: result.data.checkinTime,
+          minutes: Math.abs(Math.round(mins)),
+        },
+        upsert: true,
+        returnDocument: "after",
       });
       return res.status(200).json({ attendance });
     }

@@ -41,13 +41,7 @@ const Styled = {
 
 const EditEventStatsForm = ({ toggle, stat }) => {
   console.log(stat);
-  const [attendance, setAttendance] = useState(undefined);
-
-  useEffect(() => {
-    getAttendance(stat._id).then((res) => {
-      setAttendance(res.data.attendance);
-    });
-  }, [stat]);
+  const [attendance, setAttendance] = useState(stat);
 
   const onSubmitEditEvent = (values, setSubmitting) => {
     const editedStat = {
@@ -70,7 +64,9 @@ const EditEventStatsForm = ({ toggle, stat }) => {
         .slice(0, 11) + values.checkout
     ).toISOString();
     setSubmitting(true);
-    updateAttendance(stat._id, editedStat);
+    updateAttendance(stat._id, editedStat).then((response) => {
+      setAttendance(response.data.attendance);
+    });
     toggle();
   };
 

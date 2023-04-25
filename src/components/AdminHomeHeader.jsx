@@ -39,7 +39,7 @@ const AdminHomeHeader = (props) => {
     if (final === props.dateString) {
       todaysEvents++;
       todaysRegistrations += props.registrations.filter(
-        (r) => (r.eventId = props.events[i]._id)
+        (r) => r.eventId === props.events[i]._id
       ).length;
     }
     let month = parseInt(props.events[i].date.slice(5, 7)) - 1;

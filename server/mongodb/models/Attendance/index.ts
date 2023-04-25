@@ -35,6 +35,7 @@ const attendanceSchema = new Schema(
     },
     checkinTime: { type: Date, default: null },
     checkoutTime: { type: Date, default: null },
+    minutes: { type: Number, required: true, default: 0 },
   },
   { timestamps: true }
 );

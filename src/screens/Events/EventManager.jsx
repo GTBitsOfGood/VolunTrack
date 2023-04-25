@@ -11,10 +11,7 @@ import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
-import {
-  getAttendances,
-  getAttendanceStatistics,
-} from "../../queries/attendances";
+import { getAttendances } from "../../queries/attendances";
 import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
 import { filterAttendance } from "../Stats/helper";
@@ -134,7 +131,11 @@ const EventManager = ({ isHomePage }) => {
       }
     });
 
-    getRegistrations({ userId: user._id })
+    let filter = { organizationId: user.organizationId };
+    if (user.role === "volunteer")
+      filter = { organizationId: user.organizationId, userId: user._id };
+
+    getRegistrations(filter)
       .then((result) => {
         if (result.data.registrations)
           setRegistrations(result.data.registrations);
@@ -222,13 +223,16 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   };
 
-  const filterEvents = (events, user) => {
+  const filterEventsForVolunteers = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
       if (
-        // hide past events for volunteers
+        // hide past events and private events they are not registered for
         new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
-        (!events[i].isPrivate || events[i].volunteers.includes(user._id))
+        (!events[i].eventParent.isPrivate ||
+          registrations.filter(
+            (r) => r.eventId === events[i]._id && r.userId === user._id
+          ).length > 0)
       ) {
         arr.push(events[i]);
       }
@@ -327,7 +331,7 @@ const EventManager = ({ isHomePage }) => {
                   ? filterOn
                     ? filteredEvents
                     : events
-                  : filterEvents(events, user)
+                  : filterEventsForVolunteers(events, user)
               }
               user={user}
               registrations={registrations}
@@ -368,7 +372,7 @@ const EventManager = ({ isHomePage }) => {
               events={
                 user.role === "admin"
                   ? filteredEvents
-                  : filterEvents(events, user)
+                  : filterEventsForVolunteers(events, user)
               }
               user={user}
               registrations={registrations}
@@ -394,7 +398,7 @@ const EventManager = ({ isHomePage }) => {
                 ? filterOn
                   ? filteredEvents
                   : events
-                : filterEvents(events, user)
+                : filterEventsForVolunteers(events, user)
             }
             user={user}
             isHomePage={isHomePage}

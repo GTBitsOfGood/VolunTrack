@@ -10,8 +10,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
-      const eventId = req.query.eventId
-        ? new Types.ObjectId(req.query.eventId as string)
+      const organizationId = req.query.organizationId
+        ? new Types.ObjectId(req.query.organizationId as string)
         : undefined;
       const startDate = req.query.startDate
         ? new Date(req.query.startDate as string)
@@ -26,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           checkoutTime: QuerySelector<Date>;
         }
       > = {};
-      if (eventId) match.eventId = eventId;
+      if (organizationId) match.organizationId = organizationId;
       if (startDate) match.checkinTime = { $gte: startDate };
       if (endDate) match.checkoutTime = { $lt: endDate };
 
@@ -38,18 +38,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             num: { $count: {} },
             users: { $addToSet: "$userId" },
             attendanceId: { $addToSet: "$_id" },
-            minutes: {
-              $sum: {
-                $dateDiff: {
-                  startDate: "$checkinTime",
-                  endDate: "$checkoutTime",
-                  unit: "minute",
-                },
-              },
-            },
+            minutes: { $sum: "$minutes" },
           },
         },
       ]);
+
+      // $sum: {
+      //   $dateDiff: {
+      //     startDate: "$checkinTime",
+      //     endDate: "$checkoutTime",
+      //     unit: "minute",
+      //   },
+      // },
 
       return res.status(200).json({ statistics });
     }

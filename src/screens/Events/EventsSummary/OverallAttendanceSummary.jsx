@@ -5,12 +5,13 @@ import "react-quill/dist/quill.snow.css";
 import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
 import Loading from "../../../components/Loading";
-import { getAttendances } from "../../../queries/attendances";
+import { getAttendanceStatistics } from "../../../queries/attendances";
 import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
-import { getHours } from "../../Stats/User/hourParsing";
 import Text from "../../../components/Text";
+import { getEvents } from "../../../queries/events";
+import EventStatsTable from "../../../components/EventStatsTable";
 
-const Stats = () => {
+const OverallAttendanceSummary = () => {
   const {
     data: { user },
   } = useSession();
@@ -18,9 +19,11 @@ const Stats = () => {
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
   const [hours, setHours] = useState(0);
-  const [startDate, setStartDate] = useState("undefined");
-  const [endDate, setEndDate] = useState("undefined");
+  const [events, setEvents] = useState([]);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [computedStats, setComputedStats] = useState([]);
 
   useEffect(() => {
     onRefresh();
@@ -29,62 +32,52 @@ const Stats = () => {
   const onRefresh = async () => {
     // grab the events
     setLoading(true);
-    // if (result?.data?.events) setNumEvents(result.data.events.length);
-    getAttendances({ organizationId: user.organizationId }, startDate, endDate)
-      .then((result) => {
-        let attendances = result.data.attendances;
-        const uniqueVolunteers = [
-          ...new Set(attendances.map((attendance) => attendance.userId)),
-        ];
-        setAttend(uniqueVolunteers.length);
-        const uniqueEvents = [
-          ...new Set(attendances.map((attendance) => attendance.eventId)),
-        ];
-        setNumEvents(uniqueEvents.length);
-        let hours = 0;
-        attendances.forEach((attendance) => {
-          if (attendance.checkoutTime)
-            hours += getHours(
-              attendance.checkinTime.slice(11, 16),
-              attendance.checkoutTime.slice(11, 16)
-            );
-        });
-        setHours(hours);
 
-        // let computedStats = [];
-        // var totalAttendance = 0;
-        // var totalHours = 0;
-        // for (let event of result.data.events) {
-        //   let stat = stats.data.find((s) => s._id === event._id);
-        //   if (stat) {
-        //     totalAttendance += stat.uniqueUsers.length;
-        //     totalHours += stat.minutes / 60.0;
-        //
-        //     computedStats.push({
-        //       _id: event._id,
-        //       title: event.eventParent.title,
-        //       date: event.date,
-        //       startTime: event.eventParent.startTime,
-        //       endTime: event.eventParent.endTime,
-        //       attendance: stat.uniqueUsers.length,
-        //       hours: Math.round((stat.minutes / 60.0) * 100) / 100,
-        //     });
-        //   }
-        // }
-        //
-        // setAttend(totalAttendance);
-        // setHours(Math.round(totalHours * 100) / 100);
-        // setComputedStats(computedStats);
+    await getEvents(user.organizationId)
+      .then((result) => {
+        if (result?.data?.events) {
+          setEvents(result.data.events);
+        }
       })
-      .finally(() => {
-        setLoading(false);
+      .then(() => {
+        getAttendanceStatistics(user.organizationId, startDate, endDate)
+          .then((result) => {
+            let stats = result.data.statistics;
+            let computedStats = [];
+            setNumEvents(stats.length);
+
+            let mins = 0;
+            let volunteers = 0;
+            stats.forEach((stat) => {
+              mins += stat.minutes;
+              volunteers += stat.users.length;
+              let event = events.filter((event) => stat._id === event._id);
+              if (event && event[0]) {
+                computedStats.push({
+                  _id: stat._id,
+                  title: event[0].eventParent.title,
+                  date: event[0].date,
+                  startTime: event[0].eventParent.startTime,
+                  endTime: event[0].eventParent.endTime,
+                  attendance: stat.users.length,
+                  hours: Math.round((stat.minutes / 60.0) * 100) / 100,
+                });
+              }
+            });
+            setAttend(volunteers);
+            setHours(Math.round((mins / 60) * 100) / 100);
+            setComputedStats(computedStats);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       });
   };
 
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
     if (!values.startDate) {
-      setStartDate("undefined");
+      setStartDate(null);
     } else {
       let start = new Date(values.startDate);
       start.setMinutes(start.getMinutes() - offset);
@@ -92,7 +85,7 @@ const Stats = () => {
     }
 
     if (!values.endDate) {
-      setEndDate("undefined");
+      setEndDate(null);
     } else {
       let end = new Date(values.endDate);
       end.setMinutes(end.getMinutes() - offset);
@@ -102,7 +95,7 @@ const Stats = () => {
 
   return (
     <div className="align-center mx-auto mt-6 flex w-5/6 flex-col items-center">
-      <Text text="Event Attendance Summary" type="header" className="my-4" />
+      <Text text="Overall Attendance Summary" type="header" className="my-4" />
       <Formik
         initialValues={{}}
         onSubmit={(values, { setSubmitting }) => {
@@ -131,7 +124,7 @@ const Stats = () => {
             <Text text={numEvents} type="subheader" />
           </div>
           <div className="flex-column flex items-center">
-            <Text text="Unique Volunteers:" type="subheader" />
+            <Text text="Total Volunteers:" type="subheader" />
             <Text text={attend} type="subheader" />
           </div>
           <div className="flex-column flex items-center">
@@ -142,13 +135,13 @@ const Stats = () => {
       )}
 
       {/* TODO: do the aggregation of events and stats for this to work*/}
-      {/*{!loading && (*/}
-      {/*  <div className="mt-2">*/}
-      {/*    <EventTable events={computedStats} isVolunteer={false} />*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {!loading && (
+        <div className="mt-2">
+          <EventStatsTable stats={computedStats} isVolunteer={false} />
+        </div>
+      )}
     </div>
   );
 };
 
-export default AdminAuthWrapper(Stats);
+export default AdminAuthWrapper(OverallAttendanceSummary);

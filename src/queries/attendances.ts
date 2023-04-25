@@ -95,7 +95,7 @@ export const deleteAttendance = (attendanceId: Types.ObjectId) =>
   );
 
 export const getAttendanceStatistics = (
-  eventId?: Types.ObjectId,
+  organizationId?: Types.ObjectId,
   startDate?: Date,
   endDate?: Date
 ) =>
@@ -109,5 +109,5 @@ export const getAttendanceStatistics = (
       };
     }[]
   >("/api/attendances/statistics", {
-    params: { eventId, startDate, endDate },
+    params: { organizationId, startDate, endDate },
   });
