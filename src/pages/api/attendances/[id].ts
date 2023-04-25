@@ -34,9 +34,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       // @ts-ignore
-      let date1 = new Date(result.data.checkoutTime).getTime();
+      const date1 = new Date(result.data.checkoutTime).getTime();
       // @ts-ignore
-      let date2 = new Date(checkIn).getTime();
+      const date2 = new Date(checkIn).getTime();
       const mins = (date1 - date2) / (60 * 1000);
 
       await attendance.updateOne({
