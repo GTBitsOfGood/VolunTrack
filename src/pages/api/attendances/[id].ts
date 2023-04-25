@@ -16,6 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
+  // @ts-ignore
   switch (req.method) {
     case "GET": {
       return res.status(200).json({ attendance });
@@ -32,11 +33,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         checkIn = result.data.checkinTime;
       }
 
-      // @ts-expect-error
-      const mins =
-        (new Date(result.data.checkoutTime).getTime() -
-          new Date(checkIn).getTime()) /
-        (60 * 1000);
+      // @ts-ignore
+      let date1 = new Date(result.data.checkoutTime).getTime();
+      // @ts-ignore
+      let date2 = new Date(checkIn).getTime();
+      const mins = (date1 - date2) / (60 * 1000);
 
       await attendance.updateOne({
         $set: {
