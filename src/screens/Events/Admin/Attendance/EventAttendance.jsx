@@ -162,7 +162,7 @@ const EventAttendance = () => {
   };
 
   const convertTime = (time) => {
-    if (!time) return ""
+    if (!time) return "";
     let [hour, min] = time.split(":");
     let hours = parseInt(hour);
     let suffix = time[-2];
@@ -197,9 +197,9 @@ const EventAttendance = () => {
             text={
               event?.date?.substring(0, 10) +
               ", " +
-                convertTime(event?.eventParent?.startTime) +
-                " - " +
-                convertTime(event?.eventParent?.endTime)
+              convertTime(event?.eventParent?.startTime) +
+              " - " +
+              convertTime(event?.eventParent?.endTime)
             }
             className="mb-2"
           />
@@ -217,8 +217,13 @@ const EventAttendance = () => {
             className="mb-2"
           />
 
-          <Text text="Description:" className="font-bold"/>
-          <div dangerouslySetInnerHTML={{ __html: event?.eventParent?.description }} className="h-24 overflow-hidden"/>
+          <Text text="Description:" className="font-bold" />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: event?.eventParent?.description,
+            }}
+            className="h-24 overflow-hidden"
+          />
           <Text
             className="mt-4"
             href={`/events/${eventId}`}
