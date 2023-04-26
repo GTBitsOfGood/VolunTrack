@@ -68,44 +68,43 @@ const AttendanceFunctionality = ({
     <Styled.InfoText className="font-bold text-black">
       Check-Out
     </Styled.InfoText>
-    {(checkedInVolunteers?.length > 0 ||
-      checkedOutVolunteers?.length > 0) && (
-        <Table>
-          <Table.Head>
-            <Table.HeadCell>
-              <span className="sr-only">Check-Out</span>
-            </Table.HeadCell>
-            <Table.HeadCell>Name</Table.HeadCell>
-            <Table.HeadCell>Email</Table.HeadCell>
-            <Table.HeadCell>Phone</Table.HeadCell>
-            <Table.HeadCell>Status</Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {checkedInVolunteers?.length > 0 &&
-              checkedInVolunteers.map((volunteer) => (
-                <Volunteer
-                  key={volunteer._id}
-                  volunteer={volunteer}
-                  minors={minors[volunteer._id]}
-                  onClick={checkOut}
-                  checkInStatus={"checkedIn"}
-                  isEnded={isEnded}
-                />
-              ))}
-            {checkedOutVolunteers?.length > 0 &&
-              checkedOutVolunteers.map((volunteer) => (
-                <Volunteer
-                  key={volunteer._id}
-                  volunteer={volunteer}
-                  minors={minors[volunteer._id]}
-                  onClick={checkOut}
-                  checkInStatus={"checkedOut"}
-                  isEnded={isEnded}
-                />
-              ))}
-          </Table.Body>
-        </Table>
-      )}
+    {(checkedInVolunteers?.length > 0 || checkedOutVolunteers?.length > 0) && (
+      <Table>
+        <Table.Head>
+          <Table.HeadCell>
+            <span className="sr-only">Check-Out</span>
+          </Table.HeadCell>
+          <Table.HeadCell>Name</Table.HeadCell>
+          <Table.HeadCell>Email</Table.HeadCell>
+          <Table.HeadCell>Phone</Table.HeadCell>
+          <Table.HeadCell>Status</Table.HeadCell>
+        </Table.Head>
+        <Table.Body className="divide-y">
+          {checkedInVolunteers?.length > 0 &&
+            checkedInVolunteers.map((volunteer) => (
+              <Volunteer
+                key={volunteer._id}
+                volunteer={volunteer}
+                minors={minors[volunteer._id]}
+                onClick={checkOut}
+                checkInStatus={"checkedIn"}
+                isEnded={isEnded}
+              />
+            ))}
+          {checkedOutVolunteers?.length > 0 &&
+            checkedOutVolunteers.map((volunteer) => (
+              <Volunteer
+                key={volunteer._id}
+                volunteer={volunteer}
+                minors={minors[volunteer._id]}
+                onClick={checkOut}
+                checkInStatus={"checkedOut"}
+                isEnded={isEnded}
+              />
+            ))}
+        </Table.Body>
+      </Table>
+    )}
     {checkedInVolunteers?.length === 0 &&
       checkedOutVolunteers?.length === 0 && (
         <Text

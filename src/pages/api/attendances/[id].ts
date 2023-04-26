@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   switch (req.method) {
     case "GET": {
       return res.status(200).json({ attendance });
@@ -33,9 +33,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         checkIn = result.data.checkinTime;
       }
 
-      // @ts-ignore
+      // @ts-expect-error
       const date1 = new Date(result.data.checkoutTime).getTime();
-      // @ts-ignore
+      // @ts-expect-error
       const date2 = new Date(checkIn).getTime();
       const mins = (date1 - date2) / (60 * 1000);
 
