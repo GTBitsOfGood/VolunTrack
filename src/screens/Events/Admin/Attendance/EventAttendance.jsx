@@ -68,6 +68,7 @@ const EventAttendance = () => {
     (async () => {
       const eventResponse = await getEvent(eventId);
       setEvent(eventResponse.data.event);
+      console.log(eventResponse.data.event);
 
       const waitingUsers = (
         await getUsers(
@@ -180,7 +181,7 @@ const EventAttendance = () => {
           {/* Having Issues Displaying the date */}
           <Text
             text={
-              event?.eventParent?.date +
+              event?.date?.substring(0, 10) +
               ", " +
               event?.eventParent?.startTime +
               "-" +
@@ -202,7 +203,6 @@ const EventAttendance = () => {
             className="mb-2 text-hoverColor"
           />
           <Text text="Description:" />
-          {/* Description is being saved with some sort of html baked in, not sure how to deal with it */}
           <Text
             text={event?.eventParent?.description}
             className="mb-2 text-hoverColor"

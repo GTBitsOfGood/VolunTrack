@@ -106,14 +106,14 @@ const AttendanceFunctionality = ({
           </Table.Body>
         </Table>
       ))}
-    {checkedInVolunteers?.length === 0 ||
-      (checkedOutVolunteers?.length === 0 && (
+    {checkedInVolunteers?.length === 0 &&
+      checkedOutVolunteers?.length === 0 && (
         <Text
           text="No one has been checked out yet."
           className="flex justify-center text-primaryColor"
           type="subheader"
         />
-      ))}
+      )}
   </>
 );
 export default AttendanceFunctionality;
