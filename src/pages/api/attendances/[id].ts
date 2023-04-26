@@ -16,7 +16,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  // @ts-expect-error
   switch (req.method) {
     case "GET": {
       return res.status(200).json({ attendance });

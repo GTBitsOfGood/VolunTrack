@@ -33,7 +33,7 @@ const AttendanceFunctionality = ({
     <Styled.InfoText className="font-bold text-black">Check-In</Styled.InfoText>
     {waitingVolunteers?.length > 0 && (
       <Table>
-        <Table.Head>
+        <Table.Head className="border-b bg-white">
           <Table.HeadCell>
             <span className="sr-only">Check-In</span>
           </Table.HeadCell>
@@ -70,7 +70,7 @@ const AttendanceFunctionality = ({
     </Styled.InfoText>
     {(checkedInVolunteers?.length > 0 || checkedOutVolunteers?.length > 0) && (
       <Table>
-        <Table.Head>
+        <Table.Head className="border-b bg-white">
           <Table.HeadCell>
             <span className="sr-only">Check-Out</span>
           </Table.HeadCell>

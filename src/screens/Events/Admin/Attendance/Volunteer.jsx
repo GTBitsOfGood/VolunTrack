@@ -47,7 +47,7 @@ const Volunteer = ({
     <>
       {isEnded ? (
         //event ended table
-        <Table.Row>
+        <Table.Row className="bg-white">
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
             {volunteer.firstName} {volunteer.lastName}
@@ -60,7 +60,7 @@ const Volunteer = ({
           </Table.Cell>
         </Table.Row>
       ) : (
-        <Table.Row>
+        <Table.Row className="bg-white">
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
             {volunteer.firstName} {volunteer.lastName}

@@ -1,6 +1,6 @@
 import "flowbite-react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BoGButton from "../../../../components/BoGButton";
 import SearchBar from "../../../../components/SearchBar";
@@ -161,6 +161,18 @@ const EventAttendance = () => {
     );
   };
 
+  const convertTime = (time) => {
+    if (!time) return ""
+    let [hour, min] = time.split(":");
+    let hours = parseInt(hour);
+    let suffix = time[-2];
+    if (!(suffix in ["pm", "am", "PM", "AM"])) {
+      suffix = hours > 11 ? "pm" : "am";
+    }
+    hours = ((hours + 11) % 12) + 1;
+    return hours.toString() + ":" + min + suffix;
+  };
+
   return (
     <>
       <Styled.Container>
@@ -174,25 +186,24 @@ const EventAttendance = () => {
           )}
         </Styled.HeaderRow>
 
-        <div className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-white px-6 py-3">
+        <div className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3">
           <Text
             text={event?.eventParent?.title}
             type="header"
             className="mb-2 text-primaryColor"
           />
-          <Text text="Time:" />
-          {/* Having Issues Displaying the date */}
+          <Text text="Date & Time:" className="font-bold" />
           <Text
             text={
               event?.date?.substring(0, 10) +
               ", " +
-              event?.eventParent?.startTime +
-              "-" +
-              event?.eventParent?.endTime
+                convertTime(event?.eventParent?.startTime) +
+                " - " +
+                convertTime(event?.eventParent?.endTime)
             }
-            className="mb-2 text-hoverColor"
+            className="mb-2"
           />
-          <Text text="Address:" />
+          <Text text="Address:" className="font-bold" />
           <Text
             text={
               event?.eventParent?.address +
@@ -203,13 +214,11 @@ const EventAttendance = () => {
               " " +
               event?.eventParent?.zip
             }
-            className="mb-2 text-hoverColor"
+            className="mb-2"
           />
-          <Text text="Description:" />
-          <Text
-            text={event?.eventParent?.description}
-            className="mb-2 text-hoverColor"
-          />
+
+          <Text text="Description:" className="font-bold"/>
+          <div dangerouslySetInnerHTML={{ __html: event?.eventParent?.description }} className="h-24 overflow-hidden"/>
           <Text
             className="mt-4"
             href={`/events/${eventId}`}
@@ -217,7 +226,7 @@ const EventAttendance = () => {
           />
         </div>
 
-        <div>
+        <div className="mx-18 my-8 flex flex-col rounded-xl bg-grey px-6 py-3">
           <SearchBar
             placeholder="Search by Volunteer Name or Email"
             value={searchValue}
