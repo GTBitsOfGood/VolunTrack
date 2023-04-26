@@ -68,7 +68,6 @@ const EventAttendance = () => {
     (async () => {
       const eventResponse = await getEvent(eventId);
       setEvent(eventResponse.data.event);
-      console.log(eventResponse.data.event);
 
       const waitingUsers = (
         await getUsers(
@@ -168,7 +167,11 @@ const EventAttendance = () => {
         <Text className="mb-4" href={`/events`} text="← Back to home" />
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
-          <BoGButton text="End Event" onClick={endEvent} />
+          {event.isEnded ? (
+            <BoGButton text="Reopen Event" onClick={reopenEvent} />
+          ) : (
+            <BoGButton text="End Event" onClick={endEvent} />
+          )}
         </Styled.HeaderRow>
 
         <div className="mx-18 mb-2 flex flex-col rounded-xl border-2 bg-white px-6 py-3">
