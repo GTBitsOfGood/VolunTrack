@@ -16,14 +16,18 @@ const AuthPage = (props) => {
   };
 
   return (
-    <div className="flex-column flex h-full w-full items-center justify-center">
-      <div className="flex-column mx-auto my-2 flex w-2/3 items-center justify-center lg:w-1/4">
+    <div className="flex-column my-4 flex h-full w-full items-center justify-center">
+      <div
+        className={
+          "flex-column mx-auto mb-8 flex w-5/6 items-center justify-center rounded-xl border p-8 shadow-xl sm:w-[28rem] " +
+          (props.createAccount ? "mt-64 md:mt-48" : "mt-16")
+        }
+      >
         {/* <img
           alt="Bits of Good Logo"
           src="/images/bog_logo.png"
           style={{ width: "100%", marginBottom: "2px" }}
         /> */}
-        <div className="h-28" />
         <Text
           text={props.createAccount ? "Create an Account" : "Sign In"}
           type="header"
