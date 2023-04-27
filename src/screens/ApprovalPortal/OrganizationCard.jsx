@@ -8,7 +8,7 @@ const OrganizationCard = (props) => {
   };
 
   return (
-    <Card className="w-full border-0">
+    <Card className="w-full border shadow-md">
       <div className="flex justify-center">
         <div className="flex">
           <div className="mr-2 font-semibold">Status:</div>
