@@ -53,11 +53,17 @@ const AdminHomeHeader = (props) => {
         props.attendances[i].checkinTime.slice(11, 16),
         props.attendances[i].checkoutTime.slice(11, 16)
       );
-      hoursData[month] += duration.toFixed(2);
+      hoursData[month] += Math.round(duration * 100) / 100;
       hoursTotal += duration;
     }
     attendanceData[month] += 1;
     attendanceTotal += 1;
+
+    // rounding
+    for (let i = 0; i < hoursData.length; i++) {
+      hoursData[i] = Math.round(hoursData[i] * 100) / 100;
+    }
+    hoursTotal = Math.round(hoursTotal * 100) / 100;
   }
 
   const borderColor = "#374151";
@@ -246,7 +252,7 @@ const AdminHomeHeader = (props) => {
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{hoursTotal.toFixed(2)}</p>
+                <p className="mb-0 pl-2 text-2xl">{hoursTotal}</p>
                 <p className="text-md mb-0 pl-2 text-slate-600"> Hours</p>
               </div>
             </div>
