@@ -30,7 +30,7 @@ class Text extends React.Component {
           );
         case "subheader":
           return (
-            <h3 className={"mb-0 text-xl  font-bold " + this.props.className}>
+            <h3 className={"mb-0 text-xl font-bold " + this.props.className}>
               {this.props.text}
             </h3>
           );

@@ -47,30 +47,30 @@ const Volunteer = ({
     <>
       {isEnded ? (
         //event ended table
-        <Table.Row>
+        <Table.Row className="bg-white">
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
             {volunteer.firstName} {volunteer.lastName}
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone}</Table.Cell>
-          <Table.Cell>
-            {" "}
-            {/* {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
-          </Table.Cell>
+          {/*<Table.Cell>*/}
+          {/*  {" "}*/}
+          {/*   {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
+          {/*</Table.Cell>*/}
         </Table.Row>
       ) : (
-        <Table.Row>
+        <Table.Row className="bg-white">
           <Table.Cell>{renderButton()}</Table.Cell>
           <Table.Cell>
             {volunteer.firstName} {volunteer.lastName}
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone}</Table.Cell>
-          <Table.Cell>
-            {" "}
-            {/* {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
-          </Table.Cell>
+          {/*<Table.Cell>*/}
+          {/*  {" "}*/}
+          {/*   {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
+          {/*</Table.Cell>*/}
         </Table.Row>
       )}
     </>
