@@ -40,7 +40,7 @@ const AttendanceFunctionality = ({
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
           <Table.HeadCell>Phone</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
+          {/*<Table.HeadCell>Status</Table.HeadCell>*/}
         </Table.Head>
         <Table.Body className="divide-y">
           {waitingVolunteers?.length > 0 &&
@@ -77,7 +77,7 @@ const AttendanceFunctionality = ({
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
           <Table.HeadCell>Phone</Table.HeadCell>
-          <Table.HeadCell>Status</Table.HeadCell>
+          {/*<Table.HeadCell>Status</Table.HeadCell>*/}
         </Table.Head>
         <Table.Body className="divide-y">
           {checkedInVolunteers?.length > 0 &&
