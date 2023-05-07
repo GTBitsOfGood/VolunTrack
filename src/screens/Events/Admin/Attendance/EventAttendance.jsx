@@ -1,15 +1,18 @@
+import "flowbite-react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import BoGButton from "../../../../components/BoGButton";
+import SearchBar from "../../../../components/SearchBar";
+import Text from "../../../../components/Text";
 import {
   checkInVolunteer,
   checkOutVolunteer,
-  fetchEventsById,
-  getEventVolunteersByAttendance,
-  updateEventById,
-} from "../../../../actions/queries";
+} from "../../../../queries/attendances";
+import { getEvent, updateEvent } from "../../../../queries/events";
+import { getUsers } from "../../../../queries/users";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import AttendanceFunctionality from "./AttendanceFunctionality";
-import Footer from "./Footer";
 
 const Styled = {
   Container: styled.div`
@@ -20,8 +23,7 @@ const Styled = {
   `,
   Header: styled.h1`
     margin: 0;
-
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: bold;
   `,
   HeaderRow: styled.div`
@@ -42,7 +44,7 @@ const Styled = {
     margin: 0;
     padding: 0 0.5rem;
 
-    font-size: 1.5rem;
+    font-size: 1rem;
 
     border: 1px solid lightgray;
     border-radius: 0.5rem;
@@ -58,57 +60,78 @@ const EventAttendance = () => {
 
   const [searchValue, setSearchValue] = useState("");
 
+  const [waitingVolunteers, setWaitingVolunteers] = useState([]);
   const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
   const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
 
   useEffect(() => {
     (async () => {
-      const fetchedEvent = (await fetchEventsById(eventId)).data.event;
-      setEvent(fetchedEvent);
+      const eventResponse = await getEvent(eventId);
+      setEvent(eventResponse.data.event);
 
-      const fetchedMinors = {};
-      fetchedEvent.minors.forEach((m) => {
-        fetchedMinors[m.volunteer_id] = m.minor;
-      });
-      setMinors(fetchedMinors);
+      const waitingUsers = (
+        await getUsers(
+          eventResponse.data.event.eventParent.organizationId,
+          "volunteer",
+          eventId,
+          "waiting"
+        )
+      ).data.users;
+      const checkedInUsers = (
+        await getUsers(
+          eventResponse.data.event.eventParent.organizationId,
+          "volunteer",
+          eventId,
+          "checkedIn"
+        )
+      ).data.users;
+      const checkedOutUsers = (
+        await getUsers(
+          eventResponse.data.event.eventParent.organizationId,
+          "volunteer",
+          eventId,
+          "checkedOut"
+        )
+      ).data.users;
 
-      setCheckedInVolunteers(
-        (await getEventVolunteersByAttendance(eventId, true)).data.volunteers
-      );
-      setCheckedOutVolunteers(
-        (await getEventVolunteersByAttendance(eventId, false)).data.volunteers
-      );
+      setWaitingVolunteers(waitingUsers);
+      setCheckedInVolunteers(checkedInUsers);
+      setCheckedOutVolunteers(checkedOutUsers);
     })();
   }, []);
 
-  const checkIn = (volunteer) => {
-    checkInVolunteer(
+  const checkIn = async (volunteer) => {
+    await checkInVolunteer(
       volunteer._id,
       eventId,
-      event.title,
-      volunteer.bio.first_name + " " + volunteer.bio.last_name,
-      volunteer.bio.email
+      volunteer.organizationId,
+      volunteer.firstName + " " + volunteer.lastName,
+      volunteer.email,
+      event.eventParent.title
     );
 
+    setWaitingVolunteers(
+      waitingVolunteers.filter((v) => v._id !== volunteer._id)
+    );
     setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
     setCheckedOutVolunteers(
       checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
-  const checkOut = (volunteer) => {
-    checkOutVolunteer(volunteer._id, eventId);
+  const checkOut = async (volunteer) => {
+    await checkOutVolunteer(volunteer._id, eventId);
 
-    setCheckedOutVolunteers(checkedOutVolunteers.concat(volunteer));
-    setCheckedInVolunteers(
-      checkedInVolunteers.filter((v) => v._id !== volunteer._id)
+    setCheckedOutVolunteers((volunteers) => [...volunteers, volunteer]);
+    setCheckedInVolunteers((volunteers) =>
+      volunteers.filter((v) => v._id !== volunteer._id)
     );
   };
 
   const endEvent = () => {
     const newEvent = { ...event, isEnded: true };
     setEvent(newEvent);
-    updateEventById(eventId, newEvent);
+    updateEvent(eventId, newEvent);
     checkedInVolunteers.forEach((v) => {
       checkOutVolunteer(v._id, eventId);
     });
@@ -119,7 +142,7 @@ const EventAttendance = () => {
   const reopenEvent = () => {
     const newEvent = { ...event, isEnded: false };
     setEvent(newEvent);
-    updateEventById(eventId, newEvent);
+    updateEvent(eventId, newEvent);
   };
 
   const filteredAndSortedVolunteers = (volunteers) => {
@@ -128,61 +151,111 @@ const EventAttendance = () => {
       searchValue.length > 0
         ? volunteers.filter(
             (v) =>
-              v.bio.last_name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase()) ||
-              v.bio.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.bio.first_name
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase())
+              v.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
+              v.firstName?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>
-      a.bio.last_name > b.bio.last_name
-        ? 1
-        : b.bio.last_name > a.bio.last_name
-        ? -1
-        : 0
+      a.lastName > b.lastName ? 1 : b.lastName > a.lastName ? -1 : 0
     );
+  };
+
+  const convertTime = (time) => {
+    if (!time) return "";
+    let [hour, min] = time.split(":");
+    let hours = parseInt(hour);
+    let suffix = time[-2];
+    if (!(suffix in ["pm", "am", "PM", "AM"])) {
+      suffix = hours > 11 ? "pm" : "am";
+    }
+    hours = ((hours + 11) % 12) + 1;
+    return hours.toString() + ":" + min + suffix;
   };
 
   return (
     <>
       <Styled.Container>
+        <Text className="mb-4" href={`/events`} text="← Back to home" />
         <Styled.HeaderRow>
-          <Styled.Header>Attendance</Styled.Header>
-          <Styled.CheckedInData>
-            <span style={{ fontWeight: "bold" }}>
-              <span style={{ fontWeight: "bold", fontSize: "3rem" }}>
-                {checkedInVolunteers.length}
-              </span>
-              <span style={{ fontWeight: "normal" }}>/</span>
-              {checkedInVolunteers.length + checkedOutVolunteers.length}
-            </span>{" "}
-            Checked In
-          </Styled.CheckedInData>
+          <Styled.Header>Attendance Management</Styled.Header>
+          {event.isEnded ? (
+            <BoGButton text="Reopen Event" onClick={reopenEvent} />
+          ) : (
+            <BoGButton text="End Event" onClick={endEvent} />
+          )}
         </Styled.HeaderRow>
 
-        <Styled.Search
-          placeholder="Search by Volunteer Name or Email"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <div className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3">
+          <Text
+            text={event?.eventParent?.title}
+            type="header"
+            className="mb-2 text-primaryColor"
+          />
+          <Text text="Date & Time:" className="font-bold" />
+          <Text
+            text={
+              event?.date?.substring(0, 10) +
+              ", " +
+              convertTime(event?.eventParent?.startTime) +
+              " - " +
+              convertTime(event?.eventParent?.endTime)
+            }
+            className="mb-2"
+          />
+          <Text text="Address:" className="font-bold" />
+          <Text
+            text={
+              event?.eventParent?.address +
+              ", " +
+              event?.eventParent?.city +
+              ", " +
+              event?.eventParent?.state +
+              " " +
+              event?.eventParent?.zip
+            }
+            className="mb-2"
+          />
 
-        <AttendanceFunctionality
-          checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
-          checkedOutVolunteers={filteredAndSortedVolunteers(
-            checkedOutVolunteers
-          )}
-          minors={minors}
-          checkIn={checkIn}
-          checkOut={checkOut}
-          isEnded={event?.isEnded}
-        />
+          <Text text="Description:" className="font-bold" />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: event?.eventParent?.description,
+            }}
+            className="h-24 overflow-hidden"
+          />
+          <Text
+            className="mt-4"
+            href={`/events/${eventId}`}
+            text="See More Details"
+          />
+        </div>
+
+        <div className="mx-18 my-8 flex flex-col rounded-xl bg-grey px-6 py-3">
+          <SearchBar
+            placeholder="Search by Volunteer Name or Email"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+
+          <AttendanceFunctionality
+            waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
+            checkedInVolunteers={filteredAndSortedVolunteers(
+              checkedInVolunteers
+            )}
+            checkedOutVolunteers={filteredAndSortedVolunteers(
+              checkedOutVolunteers
+            )}
+            minors={minors}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            isEnded={event?.isEnded}
+          />
+        </div>
       </Styled.Container>
-      <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} />
+      {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>
   );
 };
 
-export default EventAttendance;
+export default AdminAuthWrapper(EventAttendance);

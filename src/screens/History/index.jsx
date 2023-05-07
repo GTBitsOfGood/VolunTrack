@@ -1,47 +1,12 @@
+import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { getHistoryEvents, getUsers } from "../../actions/queries";
-import * as Table from "../sharedStyles/tableStyles";
-
-const Styled = {
-  Container: styled.div`
-    width: 90vw;
-    max-width: 96rem;
-    margin: 0 auto;
-    padding: 2rem 0 0 0;
-  `,
-  Header: styled.h1`
-    margin: 0;
-
-    font-size: 3rem;
-    font-weight: bold;
-  `,
-  HeaderRow: styled.div`
-    margin: 0 0 1rem 0;
-
-    display: flex;
-    justify-content: space-between;
-  `,
-  CheckedInData: styled.p`
-    margin: 0;
-
-    font-size: 2rem;
-    vertical-align: top;
-  `,
-  Search: styled.input`
-    height: 3rem;
-    width: 100%;
-    margin: 0;
-    padding: 0 0.5rem;
-
-    font-size: 1.5rem;
-
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
-  `,
-};
+import SearchBar from "../../components/SearchBar";
+import Text from "../../components/Text";
+import { getHistoryEvents } from "../../queries/historyEvents";
+import { getUsers } from "../../queries/users";
+import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 
 const History = () => {
   const {
@@ -53,8 +18,9 @@ const History = () => {
 
   useEffect(() => {
     (async () => {
-      const fetchedHistoryEvents = (await getHistoryEvents(user.organizationId))
-        .data;
+      const fetchedHistoryEvents = (
+        await getHistoryEvents({ organizationId: user.organizationId })
+      ).data.historyEvents;
       const admins = (await getUsers(user.organizationId, "admin")).data.users;
       const mappedHistoryEvents = await Promise.all(
         fetchedHistoryEvents.map(async (event) => {
@@ -63,8 +29,8 @@ const History = () => {
           );
           return {
             ...event,
-            firstName: matchedAdmin?.first_name ?? "Unknown",
-            lastName: matchedAdmin?.last_name ?? "Admin",
+            firstName: matchedAdmin?.firstName ?? "Unknown",
+            lastName: matchedAdmin?.lastName ?? "Admin",
           };
         })
       );
@@ -93,36 +59,37 @@ const History = () => {
   };
 
   return (
-    <Styled.Container>
-      <Styled.HeaderRow>
-        <Styled.Header>History</Styled.Header>
-      </Styled.HeaderRow>
+    <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] py-3">
+      <div className="mb-2">
+        <Text text="History" type="header" />
+      </div>
 
-      <Styled.Search
+      <SearchBar
         placeholder="Search by Admin Name or Actions"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
       />
-
-      <Table.Table>
-        <tbody>
-          <tr>
-            <th style={{ color: "#960034" }}>Name</th>
-            <th style={{ color: "#960034" }}>Change Description</th>
-            <th style={{ color: "#960034" }}>Time</th>
-          </tr>
+      <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
+        <Table.Head>
+          <Table.HeadCell>Name</Table.HeadCell>
+          <Table.HeadCell>Change Description</Table.HeadCell>
+          <Table.HeadCell>Time</Table.HeadCell>
+        </Table.Head>
+        <Table.Body>
           {filteredAndSortedHistoryEvents().map((event, index) => (
             <Table.Row key={index} evenIndex={index % 2 === 0}>
-              <td>
+              <Table.Cell>
                 {event.firstName} {event.lastName}
-              </td>
-              <td>{event.description}</td>
-              <td>{new Date(event.createdAt).toLocaleString()}</td>
+              </Table.Cell>
+              <Table.Cell>{event.description}</Table.Cell>
+              <Table.Cell>
+                {new Date(event.createdAt).toLocaleString()}
+              </Table.Cell>
             </Table.Row>
           ))}
-        </tbody>
-      </Table.Table>
-    </Styled.Container>
+        </Table.Body>
+      </Table>
+    </div>
   );
 };
 
@@ -130,4 +97,4 @@ History.propTypes = {
   historyEvents: PropTypes.array,
 };
 
-export default History;
+export default AdminAuthWrapper(History);

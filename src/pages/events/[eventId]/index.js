@@ -1,31 +1,26 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { Button, Col, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../actions/queries";
+import BoGButton from "../../../components/BoGButton";
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
+import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
-import { updateEvent } from "../../../screens/Events/eventHelpers";
+import { getEvent } from "../../../queries/events";
+import { getRegistrations } from "../../../queries/registrations";
 
 const Styled = {
-  Button: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: white;
-    margin-bottom: 2rem;
-    margin-left: 4rem;
-    margin-right: 4rem;
-    font-size: 20px;
-    position: fixed;
-    bottom: 0;
-    width: 90%;
+  EventTableAll: styled.div`
+    display: flex;
+    flex-direction: column;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
   `,
   EventTable: styled.div`
     display: flex;
     flex-direction: row;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-    background-color: ${variables["gray-100"]};
     height: 100vh;
   `,
   EventCol: styled.div`
@@ -70,7 +65,6 @@ const Styled = {
   InfoTableCol: styled.div`
     display: flex;
     flex-direction: column;
-    background-color: white;
     width: 250px;
   `,
   InfoTableText: styled.p`
@@ -82,22 +76,6 @@ const Styled = {
     flex-direction: column;
     background-color: white;
     padding-bottom: 1.5rem;
-  `,
-  PrivateLink: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: white;
-    font-size: 15px;
-    margin: auto;
-    bottom: 0;
-    width: 50%;
-  `,
-  Routing: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: white;
-    font-size: 15px;
-    margin: 1rem;
-    bottom: 0;
-    width: 32%;
   `,
 };
 
@@ -115,15 +93,30 @@ const convertTime = (time) => {
 const EventInfo = () => {
   const router = useRouter();
   const { eventId } = router.query;
-  const [event, setEvent] = useState([]);
+  let [event, setEvent] = useState([]);
 
   const { data: session } = useSession();
   const user = session.user;
   const context = useContext(RequestContext);
+  const [registrations, setRegistrations] = useState([]);
+  const [regCount, setRegCount] = useState(0);
+
+  const [showUnregisterModal, setUnregisterModal] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const onRefresh = () => {
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       setEvent(result.data.event);
+    });
+    getRegistrations({ eventId }).then((result) => {
+      setRegistrations(result.data.registrations);
+      let count = 0;
+      result.data.registrations.map((reg) => {
+        count += 1 + reg.minors.length;
+        if (user.role === "volunteer" && reg.userId === user._id)
+          setIsRegistered(true);
+      });
+      setRegCount(count);
     });
   };
 
@@ -134,6 +127,10 @@ const EventInfo = () => {
   if (!event || !event.date) {
     return <div />;
   }
+
+  const goBackToCal = () => {
+    router.replace(`/events`);
+  };
 
   const onRegisterClicked = () => {
     router.replace(`${eventId}/register`);
@@ -147,15 +144,12 @@ const EventInfo = () => {
     router.push(`${eventId}/statistics`);
   };
 
-  const onUnregisterClicked = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    await updateEvent(changedEvent);
+  const onUnregisterClicked = () => {
+    setUnregisterModal(true);
+  };
+
+  const toggleUnregisterModal = () => {
+    setUnregisterModal((prev) => !prev);
 
     onRefresh();
   };
@@ -174,165 +168,193 @@ const EventInfo = () => {
   const futureorTodaysDate =
     Date.parse(new Date(new Date().setHours(0, 0, 0, 0))) - 86400000 <=
     Date.parse(event.date);
+
   return (
     <>
-      <Styled.EventTable>
-        <Col>
-          <Styled.EventCol>
-            <Styled.EventName>{event.title}</Styled.EventName>
-            <Styled.EventSubhead>
-              <Styled.Slots>
+      <Styled.EventTableAll>
+        <Text
+          className="mb-4 ml-16"
+          href={`/events`}
+          onClick={() => goBackToCal()}
+          text="← Back to home"
+        />
+        <Styled.EventTable>
+          <Col>
+            <Styled.EventCol>
+              <Styled.EventName>{event.eventParent.title}</Styled.EventName>
+              <Styled.EventSubhead>
+                <Styled.Slots>
+                  {" "}
+                  {event.eventParent.maxVolunteers - regCount} Slots Remaining
+                </Styled.Slots>
+                <Styled.Date>{lastUpdated}</Styled.Date>
+              </Styled.EventSubhead>
+              <Styled.Info>
+                {event.eventParent.isValidForCourtHours && (
+                  <span style={{ fontWeight: "bold" }}>
+                    {"This event can count toward court required hours"}
+                  </span>
+                )}
+              </Styled.Info>
+              <Styled.Info>
                 {" "}
-                {event.max_volunteers - event.volunteers.length} Slots Remaining
-              </Styled.Slots>
-              <Styled.Date>{lastUpdated}</Styled.Date>
-            </Styled.EventSubhead>
-            <Styled.Info>
-              {event.isValidForCourtHours && (
-                <span style={{ fontWeight: "bold" }}>
-                  {"This event can count toward court required hours"}
-                </span>
-              )}
-            </Styled.Info>
-            <Styled.Info>
-              {" "}
-              <div dangerouslySetInnerHTML={{ __html: event.description }} />
-            </Styled.Info>
-          </Styled.EventCol>
-        </Col>
-        <Col>
-          <Row>
-            {user.role === "admin" && (
-              <>
-                <Styled.Routing onClick={routeToRegisteredVolunteers}>
-                  Manage Attendance
-                </Styled.Routing>
-                <Styled.Routing onClick={routeToStats}>
-                  View Participation Statistics
-                </Styled.Routing>
-              </>
-            )}
-            {user.role === "volunteer" &&
-              event.volunteers.includes(user._id) &&
-              futureorTodaysDate && (
-                <Styled.Routing onClick={() => onUnregisterClicked(event)}>
-                  Unregister
-                </Styled.Routing>
-              )}
-          </Row>
-          <Row>
-            <Styled.EventCol2 style={{ "margin-right": "auto" }}>
-              <Styled.InfoHead>Event Information</Styled.InfoHead>
-              <Styled.InfoTable>
-                <Styled.InfoTableCol>
-                  <Styled.InfoTableText>
-                    <b>Date:</b>
-                    <br></br>
-                    {event.date.slice(0, 10)}
-                  </Styled.InfoTableText>
-                  <Styled.InfoTableText>
-                    <b>Event Contact:</b>
-                    <br></br>
-                    {event.eventContactPhone}
-                    <br></br>
-                    {event.eventContactEmail}
-                  </Styled.InfoTableText>
-                </Styled.InfoTableCol>
-                <Styled.InfoTableCol>
-                  <Styled.InfoTableText>
-                    <b>Time:</b>
-                    <br></br>
-                    {convertTime(event.startTime)} -{" "}
-                    {convertTime(event.endTime)} {event.localTime}
-                  </Styled.InfoTableText>
-                  <Styled.InfoTableText>
-                    <b>Location:</b>
-                    <br></br>
-                    {event.address}
-                    <br></br>
-                    {event.city}, {event.state}
-                    <br></br>
-                    {event.zip}
-                    <br></br>
-                  </Styled.InfoTableText>
-                </Styled.InfoTableCol>
-              </Styled.InfoTable>
-            </Styled.EventCol2>
-          </Row>
-          <br></br>
-          <br></br>
-          {event.orgName !== "" && (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: event.eventParent.description,
+                  }}
+                />
+              </Styled.Info>
+            </Styled.EventCol>
+          </Col>
+          <Col>
             <Row>
-              <Styled.EventCol2>
-                <Styled.InfoHead>Organization</Styled.InfoHead>
+              {user.role === "admin" && (
+                <>
+                  <div className="mb-4 ml-3 mr-4">
+                    <BoGButton
+                      text="Manage Attendance"
+                      onClick={routeToRegisteredVolunteers}
+                    />
+                  </div>
+                  <div className="mb-4 ml-4 mr-3">
+                    <BoGButton
+                      text="View Participation Statistics"
+                      onClick={routeToStats}
+                    />
+                  </div>
+                </>
+              )}
+              {/*It should only ever display one of the following buttons*/}
+              {user.role === "volunteer" &&
+                isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    text="Unregister"
+                    onClick={() => onUnregisterClicked(event)}
+                  />
+                )}
+              {user.role === "volunteer" &&
+                event.eventParent.maxVolunteers - regCount > 0 &&
+                !isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    text="Register"
+                    onClick={() => onRegisterClicked(event)}
+                  />
+                )}
+              {user.role === "volunteer" &&
+                event.eventParent.maxVolunteers - regCount <= 0 &&
+                !isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    disabled={true}
+                    text="Registration Closed"
+                    onClick={null}
+                  />
+                )}
+            </Row>
+            <Row>
+              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
+                <Styled.InfoHead>Event Information</Styled.InfoHead>
                 <Styled.InfoTable>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
-                      <b>Point of Contact Name</b>
+                      <b>Date:</b>
                       <br></br>
-                      {event.pocName}
+                      {event.date.slice(0, 10)}
                     </Styled.InfoTableText>
                     <Styled.InfoTableText>
-                      <b>Point of Contact Email</b>
+                      <b>Event Contact:</b>
                       <br></br>
-                      {event.pocEmail}
-                    </Styled.InfoTableText>
-                    <Styled.InfoTableText>
-                      <b>Point of Contact Phone</b>
+                      {event.eventParent.eventContactPhone}
                       <br></br>
-                      {event.pocPhone}
+                      {event.eventParent.eventContactEmail}
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
-                      <b>Organization Name</b>
+                      <b>Time:</b>
                       <br></br>
-                      {event.orgName}
+                      {convertTime(event.eventParent.startTime)} -{" "}
+                      {convertTime(event.eventParent.endTime)}{" "}
+                      {event.eventParent.localTime}
                     </Styled.InfoTableText>
                     <Styled.InfoTableText>
-                      <b>Location</b>
+                      <b>Location:</b>
                       <br></br>
-                      {event.orgAddress}
+                      {event.eventParent.address}
                       <br></br>
-                      {event.orgCity}, {event.orgState}
+                      {event.eventParent.city}, {event.eventParent.state}
                       <br></br>
-                      {event.orgZip}
+                      {event.eventParent.zip}
+                      <br></br>
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
                 </Styled.InfoTable>
-                {user.role === "volunteer" && (
-                  <Styled.ButtonCol>
-                    <Styled.PrivateLink onClick={copyPrivateLink}>
-                      Share Private Event Link
-                    </Styled.PrivateLink>
-                  </Styled.ButtonCol>
-                )}
               </Styled.EventCol2>
             </Row>
-          )}
-        </Col>
-      </Styled.EventTable>
-      {user.role === "volunteer" &&
-        event.max_volunteers - event.volunteers.length !== 0 &&
-        !event.volunteers.includes(user._id) &&
-        futureorTodaysDate && (
-          <Styled.Button onClick={() => onRegisterClicked(event)}>
-            Register
-          </Styled.Button>
-        )}
-      {user.role === "volunteer" &&
-        event.max_volunteers - event.volunteers.length === 0 &&
-        !event.volunteers.includes(user._id) &&
-        futureorTodaysDate && (
-          <Styled.Button disabled={true}>Registration Closed</Styled.Button>
-        )}
-      {user.role === "volunteer" &&
-        event.volunteers.includes(user._id) &&
-        futureorTodaysDate && (
-          <Styled.Button disabled={true}>
-            You are registered for this event!
-          </Styled.Button>
-        )}
+            <br></br>
+            <br></br>
+            {event.eventParent.orgName !== "" && (
+              <Row>
+                <Styled.EventCol2>
+                  <Styled.InfoHead>Organization</Styled.InfoHead>
+                  <Styled.InfoTable>
+                    <Styled.InfoTableCol>
+                      <Styled.InfoTableText>
+                        <b>Point of Contact Name</b>
+                        <br></br>
+                        {event.eventParent.pocName}
+                      </Styled.InfoTableText>
+                      <Styled.InfoTableText>
+                        <b>Point of Contact Email</b>
+                        <br></br>
+                        {event.eventParent.pocEmail}
+                      </Styled.InfoTableText>
+                      <Styled.InfoTableText>
+                        <b>Point of Contact Phone</b>
+                        <br></br>
+                        {event.eventParent.pocPhone}
+                      </Styled.InfoTableText>
+                    </Styled.InfoTableCol>
+                    <Styled.InfoTableCol>
+                      <Styled.InfoTableText>
+                        <b>Organization Name</b>
+                        <br></br>
+                        {event.eventParent.orgName}
+                      </Styled.InfoTableText>
+                      <Styled.InfoTableText>
+                        <b>Location</b>
+                        <br></br>
+                        {event.eventParent.orgAddress}
+                        <br></br>
+                        {event.eventParent.orgCity},{" "}
+                        {event.eventParent.orgState}
+                        <br></br>
+                        {event.eventParent.orgZip}
+                      </Styled.InfoTableText>
+                    </Styled.InfoTableCol>
+                  </Styled.InfoTable>
+                  {user.role === "volunteer" && (
+                    <Styled.ButtonCol>
+                      <BoGButton
+                        text="Share Private Event Link"
+                        onClick={copyPrivateLink}
+                      />
+                    </Styled.ButtonCol>
+                  )}
+                </Styled.EventCol2>
+              </Row>
+            )}
+          </Col>
+        </Styled.EventTable>
+        <EventUnregisterModal
+          open={showUnregisterModal}
+          toggle={toggleUnregisterModal}
+          eventData={event}
+          userId={user._id}
+        />
+      </Styled.EventTableAll>
     </>
   );
 };

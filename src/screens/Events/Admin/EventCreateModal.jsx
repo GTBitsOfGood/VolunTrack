@@ -1,5 +1,4 @@
 import classnames from "classnames";
-import { ErrorMessage, Form as FForm } from "formik";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
@@ -8,18 +7,6 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import EventFormModal from "./EventFormModal";
 
 const Styled = {
-  Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
-  `,
   ModalHeader: styled(ModalHeader)`
     border-color: transparent;
     .org-event {
@@ -34,20 +21,10 @@ const Styled = {
     color: ${variables["dark"]};
     font-weight: 700;
     font-size: 1.2em;
-    // border-bottom: 2px solid ${variables["dark"]};
-    // padding-right: 3.5rem;
-    // padding-left: 2rem;
-    // margin-left: 5rem;
-    // margin-right: 5rem;
-    // text-align: center;
-    // display: inline;
   `,
   Nav: styled(Nav)`
     padding-left: 1.5rem;
     margin-top: -2rem;
-  `,
-  EventFormModal: styled(EventFormModal)`
-    // margin-left: 2rem;
   `,
 };
 
@@ -75,13 +52,7 @@ const EventCreateModal = ({ open, toggle }) => {
           >
             {" "}
             <Styled.HeaderText>
-              <p
-                style={{
-                  color: currentActiveTab === "1" ? "#7F1C3B" : "black",
-                }}
-              >
-                Public Event
-              </p>
+              <p className="text-primaryColor">Public Event</p>
             </Styled.HeaderText>
           </NavLink>
         </NavItem>
@@ -96,22 +67,16 @@ const EventCreateModal = ({ open, toggle }) => {
           >
             {" "}
             <Styled.HeaderText>
-              <p
-                style={{
-                  color: currentActiveTab === "2" ? "#7F1C3B" : "black",
-                }}
-              >
-                Private Group Event
-              </p>
+              <p className="text-primaryColor">Private Group Event</p>
             </Styled.HeaderText>
           </NavLink>
         </NavItem>
       </Styled.Nav>
-      <Styled.EventFormModal
+      <EventFormModal
         toggle={toggle}
         event={null}
         isGroupEvent={currentActiveTab === "2"}
-      ></Styled.EventFormModal>
+      />
     </Modal>
   );
 };

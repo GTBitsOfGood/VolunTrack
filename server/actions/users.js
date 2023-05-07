@@ -1,16 +1,17 @@
 import { ObjectId } from "mongodb";
 import dbConnect from "../mongodb/index";
-import User from "../mongodb/models/user";
+import Organization from "../mongodb/models/Organization";
+import User from "../mongodb/models/User";
 
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
 
-export async function createUserFromCredentials(user) {
+export async function old_createUserFromCredentials(user) {
   await dbConnect();
 
-  const existingUser = await User.findOne({ "bio.email": user.email });
+  const existingUser = await User.findOne({ email: user.email });
   if (existingUser) {
     return {
       status: 400,
@@ -18,14 +19,29 @@ export async function createUserFromCredentials(user) {
     };
   }
 
+  const organization = await Organization.findOne({ slug: user.org_code });
+  if (!organization) {
+    return {
+      status: 400,
+      message:
+        "The entered organization code does not exist. Please contact your administrator for assistance.",
+    };
+  }
+
+  if (organization.active === false) {
+    return {
+      status: 400,
+      message: "The entered company code is currently marked as inactive.",
+    };
+  }
+
   const user_data = {
     _id: new ObjectId(),
     imageUrl: "/images/gradient-avatar.png",
-    bio: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      email: user.email,
-    },
+    organizationId: organization._id,
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
   };
 
   bcrypt.hash(user.email + user.password, 10, async function (err, hash) {
@@ -40,10 +56,10 @@ export async function createUserFromCredentials(user) {
   };
 }
 
-export async function verifyUserWithCredentials(email, password) {
+export async function old_verifyUserWithCredentials(email, password) {
   await dbConnect();
 
-  const user = await User.findOne({ "bio.email": email });
+  const user = await User.findOne({ email });
 
   if (!user) {
     return {
@@ -85,7 +101,7 @@ export async function getEventVolunteers(parsedVolunteers) {
     : { status: 404, message: { error: "No Users found" } };
 }
 
-export async function getUsers(role, next) {
+export async function old_getUsers(role, next) {
   await dbConnect();
   let filter = {};
   if (role && role !== "undefined") filter = { role: role };
@@ -94,9 +110,9 @@ export async function getUsers(role, next) {
     { $match: filter },
     {
       $project: {
-        name: { $concat: ["$bio.first_name", " ", "$bio.last_name"] },
-        first_name: "$bio.first_name",
-        last_name: "$bio.last_name",
+        name: { $concat: ["$bio.firstName", " ", "$bio.lastName"] },
+        first_name: "$bio.firstName",
+        last_name: "$bio.lastName",
         email: "$bio.email",
         phone_number: "$bio.phone_number",
         date_of_birth: "$bio.date_of_birth",
@@ -116,7 +132,7 @@ export async function getUsers(role, next) {
     .catch((err) => next(err));
 }
 
-export async function getCurrentUser(userId, next) {
+export async function old_getCurrentUser(userId, next) {
   await dbConnect();
 
   return User.find({ _id: userId })
@@ -126,7 +142,7 @@ export async function getCurrentUser(userId, next) {
     .catch(next);
 }
 
-export async function updateUser(id, userInfo) {
+export async function old_updateUser(id, userInfo) {
   await dbConnect();
   const { adminId } = userInfo;
   if (adminId) createHistoryEventEditProfile(adminId);
@@ -149,7 +165,7 @@ export async function updateUser(id, userInfo) {
   return { status: 200 };
 }
 
-export async function getUserFromId(id, next) {
+export async function old_getUserFromId(id, next) {
   return User.findById(id)
     .then((user) => {
       if (!user) {
@@ -163,7 +179,7 @@ export async function getUserFromId(id, next) {
     .catch((err) => next(err));
 }
 
-export async function deleteUserById(user, id, next) {
+export async function old_deleteUserById(user, id, next) {
   // if (user && user.userDataId === id) {
   //   // User is trying to remove themselves, don't let that happen...
   //   return { status: 403, message: { error: "Cannot delete yourself!" } };

@@ -1,24 +1,11 @@
-import styled from "styled-components";
 import { Modal, ModalHeader } from "reactstrap";
-import { Form as FForm, ErrorMessage } from "formik";
+import styled from "styled-components";
 
 import PropTypes from "prop-types";
-import EditEventStatsForm from "./EditEventStatsForm";
 import variables from "../../../../design-tokens/_variables.module.scss";
+import EditEventStatsForm from "./EditEventStatsForm";
 
 const Styled = {
-  Form: styled(FForm)``,
-  ErrorMessage: styled(ErrorMessage).attrs({
-    component: "span",
-  })`
-    ::before {
-      content: "*";
-    }
-    color: #ef4e79;
-    font-size: 14px;
-    font-weight: bold;
-    display: inline-block;
-  `,
   ModalHeader: styled(ModalHeader)`
     border-color: transparent;
     p {
@@ -52,14 +39,14 @@ const EditEventStats = ({ open, toggle, event }) => {
       <Styled.HeaderText>
         <p>Edit Entry</p>
       </Styled.HeaderText>
-      <EditEventStatsForm toggle={toggle} event={event} />
+      <EditEventStatsForm toggle={toggle} stat={event} />
     </Modal>
   );
 };
 EditEventStats.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object,
 };
 
 export default EditEventStats;

@@ -1,19 +1,20 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import {
-  getAttendanceForEvent,
-  fetchEventsById,
-} from "../../../../actions/queries";
-import EventTable from "../../../../components/EventTable";
 import styled from "styled-components";
-import EventStatsDeleteModal from "./EventStatsDeleteModal";
+import StatsTable from "../../../../components/StatsTable";
+import { getAttendances } from "../../../../queries/attendances";
+import { getEvent } from "../../../../queries/events";
+import { getRegistrations } from "../../../../queries/registrations";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import EditEventStats from "./EditEventStats";
+import EventStatsDeleteModal from "./EventStatsDeleteModal";
+import { getHours } from "../../../Stats/User/hourParsing";
 
 const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -36,7 +37,12 @@ const Styled = {
     vertical-align: top;
   `,
   Table: styled.div`
-    margin: auto;
+    width: 50%;
+    height: 50%;
+    margin: 1rem 22.5rem;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
   `,
   StatsContainer: styled.div`
     width: 50%;
@@ -65,19 +71,21 @@ const Styled = {
 const EventStatistics = () => {
   const router = useRouter();
   const eventId = router.query.eventId;
-  const [attendanceStats, setAttendanceStats] = useState([]);
+  const [attendances, setAttendances] = useState([]);
   const [event, setEvent] = useState(null);
+  const [registrations, setRegistrations] = useState([]);
 
   const onRefresh = () => {
-    getAttendanceForEvent(eventId).then((result) => {
-      let stats = result.data.map((stat) => {
-        stat.hours = Math.round((stat.minutes / 60.0) * 100) / 100;
-        return stat;
-      });
-      setAttendanceStats(stats);
+    getAttendances({ eventId: eventId }).then((result) => {
+      if (result.data) {
+        setAttendances(result.data.attendances);
+      }
     });
-    fetchEventsById(eventId).then((result) => {
+    getEvent(eventId).then((result) => {
       setEvent(result.data.event);
+    });
+    getRegistrations({ eventId }).then((result) => {
+      setRegistrations(result.data.registrations);
     });
   };
 
@@ -85,9 +93,16 @@ const EventStatistics = () => {
     onRefresh();
   }, []);
 
-  const hours = attendanceStats.reduce((prev, curr) => prev + curr.hours, 0.0);
+  let hours = 0;
+  attendances.forEach((attendance) => {
+    if (attendance.checkoutTime)
+      hours += getHours(
+        attendance.checkinTime.slice(11, 16),
+        attendance.checkoutTime.slice(11, 16)
+      );
+  });
   const totalVolunteers = [
-    ...new Set(attendanceStats.map((attendance) => attendance.userId)),
+    ...new Set(attendances.map((attendance) => attendance.userId)),
   ];
   const [showEditModal, setShowEditModal] = useState(false);
   const [currEvent, setCurrEvent] = useState(null);
@@ -127,13 +142,14 @@ const EventStatistics = () => {
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Slots Filled: </strong> {event.volunteers.length}
+                <strong>Total Slots Filled: </strong>
+                {registrations.length}
               </p>
             </Styled.StatsInfo>
             <Styled.StatsInfo>
               <p>
-                <strong>Open Slots Remaining: </strong>{" "}
-                {event.max_volunteers - event.volunteers.length}
+                <strong>Open Slots Remaining: </strong>
+                {event.eventParent.maxVolunteers - registrations.length}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>
@@ -149,8 +165,8 @@ const EventStatistics = () => {
         )}
       </Styled.StatsContainer>
       <Styled.Table>
-        <EventTable
-          events={attendanceStats}
+        <StatsTable
+          attendances={attendances}
           isIndividualStats={false}
           onDeleteClicked={onDeleteClicked}
           onEditClicked={onEditClicked}
@@ -170,4 +186,4 @@ const EventStatistics = () => {
   );
 };
 
-export default EventStatistics;
+export default AdminAuthWrapper(EventStatistics);

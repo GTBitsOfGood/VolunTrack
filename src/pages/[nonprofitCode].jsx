@@ -1,3 +1,3 @@
-import Home from "../screens/Homepage";
+import AuthPage from "../screens/Auth";
 
-export default Home;
+export default AuthPage;

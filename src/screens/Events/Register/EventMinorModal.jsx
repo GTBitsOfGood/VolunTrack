@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {
-  Modal,
-  ModalHeader,
-  ModalFooter,
-  Button,
-  Input,
-  FormGroup,
-} from "reactstrap";
+import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
 import PropTypes from "prop-types";
 import { Col, Row, Container } from "reactstrap";
-import { Formik, Field } from "formik";
+import { Formik } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";
+import InputField from "../../../components/Forms/InputField";
+import { minorNameValidator } from "../eventHelpers";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -28,11 +24,6 @@ const Styled = {
   `,
   HighlightText: styled.p`
     color: ${variables["dark"]};
-  `,
-  MainButton: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: ${variables["white"]};
-    width: 100%;
   `,
   Col: styled(Col)`
     margin-top: 0.5rem;
@@ -55,13 +46,11 @@ const Styled = {
   `,
 };
 
-const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
+const EventMinorModal = ({ open, toggle, event, addMinor }) => {
   const minor = {
     firstName: "",
     lastName: "",
   };
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [checked, setCheck] = useState(false);
 
   const close = () => {
@@ -78,17 +67,16 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
         firstName: minor.firstName,
         lastName: minor.lastName,
       }}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting, resetForm }) => {
         setSubmitting(true);
-
-        if (checked && firstName !== "" && lastName !== "") {
-          setHasMinorTrue(firstName, lastName);
+        if (checked) {
+          addMinor(values.firstName, values.lastName);
         }
-        setFirstName("");
-        setLastName("");
+        resetForm();
         toggle();
       }}
-      render={({ handleSubmit, isSubmitting, handleBlur }) => (
+      validationSchema={minorNameValidator}
+      render={({ handleSubmit, isValid, isSubmitting }) => (
         <React.Fragment>
           <Modal
             isOpen={open}
@@ -104,35 +92,18 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               <Styled.Row />
               <Styled.Row>
                 <Styled.Col>
-                  <Styled.Text>First Name</Styled.Text>
-                  <Field name="firstName">
-                    {({ field }) => (
-                      <SForm.Input
-                        {...field}
-                        type="text"
-                        onBlur={handleBlur}
-                        value={firstName}
-                        onChange={(e) => {
-                          setFirstName(e.target.value);
-                        }}
-                      />
-                    )}
-                  </Field>
+                  <InputField
+                    name="firstName"
+                    placeholder="First Name"
+                    label="First Name"
+                  />
                 </Styled.Col>
                 <Styled.Col>
-                  <Styled.Text>Last Name</Styled.Text>
-                  <Field name="lastName">
-                    {({ field }) => (
-                      <SForm.Input
-                        {...field}
-                        type="text"
-                        value={lastName}
-                        onChange={(e) => {
-                          setLastName(e.target.value);
-                        }}
-                      />
-                    )}
-                  </Field>
+                  <InputField
+                    name="lastName"
+                    label="Last Name"
+                    placeholder="Last Name"
+                  />
                 </Styled.Col>
               </Styled.Row>
               <Styled.Row>
@@ -149,16 +120,12 @@ const EventMinorModal = ({ open, toggle, event, setHasMinorTrue }) => {
               </Styled.Row>
             </SForm.FormGroup>
             <ModalFooter>
-              <Button color="secondary" onClick={close}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
-                disabled={!checked || firstName == "" || lastName == ""}
+              <BoGButton text="Cancel" onClick={close} outline={true} />
+              <BoGButton
+                text="Add"
+                disabled={!checked || !isValid || isSubmitting}
                 onClick={handleSubmit}
-              >
-                Add
-              </Button>
+              />
             </ModalFooter>
           </Modal>
         </React.Fragment>
@@ -171,6 +138,6 @@ EventMinorModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   event: PropTypes.object.isRequired,
-  setHasMinorTrue: PropTypes.func.isRequired,
+  addMinor: PropTypes.func.isRequired,
 };
 export default EventMinorModal;

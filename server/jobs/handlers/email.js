@@ -1,4 +1,4 @@
-import { sendEventEmail } from "../../../src/utils/mailchimp-email.ts";
+import { sendEventEmail } from "../../../src/utils/mailchimp-email.js";
 import { getEventByID } from "../../actions/events";
 
 // Handlers for email job definitions
@@ -12,7 +12,7 @@ export const emailHandler = {
     const emailTemplateVariables = [
       {
         name: "eventTitle",
-        content: `${event.title}`,
+        content: `${event.eventParent.title}`,
       },
     ];
     await sendEventEmail(event, "event-survey", emailTemplateVariables);

@@ -1,42 +1,41 @@
 import { useSession } from "next-auth/react";
-import { useContext } from "react";
-import styled from "styled-components";
-import ProfileForm from "./ProfileForm";
-import { RequestContext } from "../../providers/RequestProvider";
 import { useRouter } from "next/router";
-
-const Styled = {
-  Container: styled.div`
-    width: 100%;
-    height: 100%;
-    background: ${(props) => props.theme.grey9};
-    padding-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: ;
-  `,
-  HeaderContainer: styled.div`
-    width: 95%;
-    max-width: 80rem;
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  `,
-};
+import { useContext, useState } from "react";
+import EditUserForm from "../../components/Forms/EditUserForm";
+import { RequestContext } from "../../providers/RequestProvider";
+import { updateUser } from "../../queries/users";
 
 const Profile = () => {
   const { data: session } = useSession();
+  if (!session) return "unauthenticated";
+  const user = session.user;
+  const context = useContext(RequestContext);
+  const router = useRouter();
+
+  const [profileValues, setProfileValues] = useState(user);
+
+  const handleSubmit = async (values) => {
+    await updateUser(user._id, values);
+
+    context.startLoading();
+    context.success("Profile successfully updated!");
+    router.reload();
+  };
 
   return (
-    <Styled.Container>
-      <ProfileForm
-        user={session.user}
-        isAdmin={session.user.role === "admin"}
-        router={useRouter()}
-        context={useContext(RequestContext)}
-      />
-    </Styled.Container>
+    <div className="flex w-full justify-center pt-4">
+      <div className="w-3/4 rounded-md bg-grey p-3 md:w-1/2">
+        <p className="text-2xl font-semibold text-primaryColor">{`${user.firstName} ${user.lastName}`}</p>
+        <p className="mb-2 capitalize">{user.role}</p>
+        <EditUserForm
+          userSelectedForEdit={profileValues}
+          isAdmin={user.role === "admin"}
+          isPopUp={false}
+          submitHandler={handleSubmit}
+          disableEdit={false}
+        />
+      </div>
+    </div>
   );
 };
 

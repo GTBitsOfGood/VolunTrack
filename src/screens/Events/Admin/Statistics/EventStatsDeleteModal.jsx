@@ -1,19 +1,18 @@
-import { useState } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
 import PropTypes from "prop-types";
-import { deleteAttendance } from "../../../../actions/queries";
+import { useState } from "react";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import BoGButton from "../../../../components/BoGButton";
+import { deleteAttendance } from "../../../../queries/attendances";
 
 const EventStatsDeleteModal = ({ open, toggle, event }) => {
   const [isDeleting, setDeleting] = useState(false);
 
   const handleSubmit = () => {
     setDeleting(true);
-    deleteAttendance(event._id, event.eventId)
-      .then(() => {
-        toggle();
-        setDeleting(false);
-      })
-      .catch(console.log);
+    deleteAttendance(event.attendanceId[0]).then(() => {
+      toggle();
+      setDeleting(false);
+    });
   };
 
   return (
@@ -23,12 +22,8 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
         Are you sure you want to delete this entry <strong>permanently</strong>?
       </ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
-          Delete
-        </Button>
+        <BoGButton text="Cancel" onClick={toggle} outline={true} />
+        <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting} />
       </ModalFooter>
     </Modal>
   );
@@ -37,6 +32,6 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
 EventStatsDeleteModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
+  event: PropTypes.object,
 };
 export default EventStatsDeleteModal;

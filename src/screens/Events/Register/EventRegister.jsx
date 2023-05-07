@@ -1,25 +1,30 @@
+import { TrashIcon } from "@heroicons/react/24/solid";
+import { Tooltip } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Container, ModalFooter, Row } from "reactstrap";
+import { Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
-import { fetchEventsById } from "../../../actions/queries";
-import { registerForEvent } from "../eventHelpers";
+import BoGButton from "../../../components/BoGButton";
+import Text from "../../../components/Text";
+import variables from "../../../design-tokens/_variables.module.scss";
+import { getEvent } from "../../../queries/events";
+import {
+  getRegistrations,
+  registerForEvent,
+  unregisterForEvent,
+} from "../../../queries/registrations";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-import Icon from "../../../components/Icon";
-
-import PropTypes from "prop-types";
-import variables from "../../../design-tokens/_variables.module.scss";
 
 const Styled = {
   Container: styled(Container)`
-    background-color: ${variables["gray-100"]};
     overflow-y: scroll;
     overflow-x: hidden;
-    font-family: "Aktiv Grotesk";
+    padding-top: 2rem;
   `,
   Row: styled(Row)`
     margin: 0 2rem 0.5rem 2rem;
@@ -27,18 +32,9 @@ const Styled = {
     flex-direction: row;
     align-items: center;
   `,
-  Button: styled(Button)`
-    background-color: ${variables["primary"]};
-    color: ${variables["white"]};
-    width: 90%;
-    margin: auto;
-  `,
   ModalFooter: styled(ModalFooter)`
     margin: 1rem -1rem 1rem -1rem;
     border: transparent;
-  `,
-  Title: styled.div`
-    margin-top: 2rem;
   `,
   MainText: styled.p`
     color: ${variables["yiq-text-dark"]};
@@ -46,52 +42,6 @@ const Styled = {
     font-weight: 900;
     text-align: left;
     overflow-wrap: break-word;
-  `,
-  VolunteerNumberText: styled.p`
-    color: ${variables["yiq-text-dark"]};
-    font-size: 1.3rem;
-    font-weight: 900;
-    text-align: left;
-    margin-left: 1rem;
-    padding-top: 0.5rem;
-    overflow-wrap: break-word;
-  `,
-  VolunteerText: styled.p`
-    color: ${variables["yiq-text-dark"]};
-    font-size: 1rem;
-    font-weight: 500;
-    text-align: left;
-    margin-left: 0.3rem;
-    padding-top: 0.8rem;
-    overflow-wrap: break-word;
-  `,
-  SectionText: styled.p`
-    color: ${variables["yiq-text-dark"]};
-    font-size: 1.3rem;
-    font-weight: 900;
-    text-align: left;
-    overflow-wrap: break-word;
-    margin-right: 1rem;
-  `,
-  LinkedButton: styled(Button)`
-    background-color: transparent;
-  `,
-  LinkedText: styled.p`
-    color: ${variables["primary"]};
-    font-size: 0.9rem;
-    font-weight: 900;
-    text-align: left;
-    text-decoration: underline;
-    padding-top: 0.4rem;
-    overflow-wrap: break-word;
-  `,
-  LinkedTextRight: styled.p`
-    color: ${variables["danger"]};
-    font-size: 0.9rem;
-    font-weight: 900;
-    text-align: right;
-    text-decoration: underline;
-    padding-top: 0.4rem;
   `,
   DetailText: styled.p`
     color: ${variables["gray-400"]};
@@ -105,16 +55,7 @@ const Styled = {
     margin-top: 0.8rem;
     overflow-wrap: break-word;
   `,
-  VolunteerInfoText: styled(Row)`
-    overflow-wrap: break-word;
-  `,
-  AccomodationRow: styled.div`
-    margin-left: 2rem;
-    margin-top: -1rem;
-    margin-bottom: 1rem;
-  `,
   VolunteerContainer: styled.div`
-    background-color: ${variables["white"]};
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
     margin-right: 2rem;
@@ -148,22 +89,9 @@ const Styled = {
     height: 100%;
     width: 90%;
   `,
-  MinorButton: styled.button`
-    background-color: ${variables["primary"]};
-    color: ${variables["white"]};
-    padding: 0.5rem;
-    border: transparent;
-    border-radius: 0.5rem;
-  `,
   BottomContainer: styled.div`
     margin-left: 1rem;
     margin-top: 2rem;
-  `,
-  DeleteButton: styled(Button)`
-    background: none;
-    border: none;
-
-    margin: 0 0 0 auto;
   `,
   MinorRow: styled.div`
     display: flex;
@@ -171,15 +99,19 @@ const Styled = {
   `,
 };
 
-const EventRegister = (event) => {
+const EventRegister = () => {
+  const {
+    data: { user },
+  } = useSession();
   const router = useRouter();
+
   const { eventId } = router.query;
-  const [events, setEvents] = useState({});
-  const { data: session } = useSession();
-  const user = session.user;
+
+  const [event, setEvent] = useState({});
   const [showMinorModal, setShowMinorModal] = useState(false);
   const [showWaiverModal, setShowWaiverModal] = useState(false);
   const [hasMinor, setHasMinor] = useState(false);
+  const [minors, setMinors] = useState([]);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -187,19 +119,17 @@ const EventRegister = (event) => {
     onLoadEvent();
   }, []);
 
-  const onRefresh = () => {
-    setIsLoading(true);
-    fetchEventsById(eventId)
-      .then()
-      .finally(() => {
-        setTimeout(() => setIsLoading(false), 7000);
-      });
-  };
-
   const onLoadEvent = () => {
-    fetchEventsById(eventId).then((result) => {
-      if (result && result.data && result.data.event) {
-        setEvents(result.data.event);
+    getEvent(eventId).then((result) => {
+      if (result?.data?.event) {
+        setEvent(result.data.event);
+      }
+    });
+    getRegistrations({ eventId, userId: user._id }).then((result) => {
+      if (result?.data?.registrations?.length > 0) {
+        setIsRegistered(true);
+        setMinors(result.data.registrations[0].minors);
+        if (result.data.registrations[0].minors.length > 0) setHasMinor(true);
       }
     });
   };
@@ -218,16 +148,17 @@ const EventRegister = (event) => {
 
   const onRegisterAfterWaiverClicked = () => {
     toggleWaiverModal();
-    onRefresh();
-    setIsRegistered(true);
-    if (!events.volunteers.includes(user._id)) {
-      events.volunteers.push(user._id);
-    }
-    let data = {
-      event: events,
-      user: user,
-    };
-    registerForEvent(data).then();
+    setIsLoading(true);
+
+    registerForEvent({
+      eventId: event._id,
+      userId: user._id,
+      organizationId: user.organizationId,
+      minors,
+    }).then(() => {
+      setIsRegistered(true);
+      setIsLoading(false);
+    });
   };
 
   const toggleMinorModal = () => {
@@ -238,67 +169,40 @@ const EventRegister = (event) => {
     setShowWaiverModal((prev) => !prev);
   };
 
-  const setHasMinorTrue = (firstName, lastName) => {
-    let added = false;
-    for (let minor of events.minors) {
-      if (minor.volunteer_id === user._id) {
-        minor.minor.push(firstName + " " + lastName);
-        added = true;
-        break;
-      }
-    }
-    if (!added) {
-      let result = {
-        minor: [firstName + " " + lastName],
-        volunteer_id: user._id,
-      };
-      events.minors.push(result);
-    }
+  const addMinor = (firstName, lastName) => {
+    minors.push(firstName + " " + lastName);
+    setMinors(minors);
     setHasMinor(true);
   };
 
-  // const onUnregister = async (event) => {
-  //   const changedEvent = {
-  //     // remove current user id from event volunteers
-  //     ...event,
-  //     minors: event.minors?.filter((minor) => minor.volunteer_id !== user._id),
-  //     volunteers: event.volunteers?.filter(
-  //       (volunteer) => volunteer !== user._id
-  //     ),
-  //   };
-  //   const updatedEvent = await updateEvent(changedEvent);
-  //   setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-  //
-  //   onRefresh();
-  // };
+  const removeMinor = (minorName) => {
+    setMinors(minors.filter((minor) => minor !== minorName));
+    if (minors.length === 0) setHasMinor(false);
+  };
 
-  const deleteMinor = async (event, deleteName) => {
-    let allMinors = event.minors;
-    let posMinor = 0;
-    for (let i = 0; i < allMinors.length; i++) {
-      if (allMinors[i].volunteer_id === user._id) {
-        posMinor = i;
-      }
-    }
+  const onUnregister = () => {
+    unregisterForEvent(event._id, user._id);
+    setIsRegistered(false);
+    setMinors([]);
+    setHasMinor(false);
+  };
 
-    event.minors[posMinor].minor = event.minors[posMinor].minor.filter(
-      (name) => name !== deleteName
-    );
-
-    const changedEvent = {
-      ...event,
-    };
-
-    setEvents(changedEvent);
+  const goBackToDetails = () => {
+    router.replace(`/events/${eventId}`);
   };
 
   return (
     <Styled.Container fluid="md">
-      <Styled.Title />
+      <Text
+        className="ml-12"
+        href={`/events`}
+        onClick={() => goBackToDetails()}
+        text="← Back to home"
+      />
       {!isRegistered && (
         <Styled.Row>
-          <Col xs="12" lg="6">
-            <Styled.MainText>Confirm Registration</Styled.MainText>
+          <Col xs="12" lg="6" className="mt-2">
+            <Styled.MainText>Complete Your Registration</Styled.MainText>
           </Col>
           <Col xs="12" lg={{ size: 4, offset: 2 }}></Col>
         </Styled.Row>
@@ -310,43 +214,25 @@ const EventRegister = (event) => {
               {/* eslint-disable-next-line react/no-unescaped-entities */}
               <Styled.MainText>You've registered successfully!</Styled.MainText>
             </Col>
-          </Styled.Row>
-          <Styled.Row>
             <Col xs="12" lg="2">
               <Styled.CheckGif src="/images/check.gif" alt="check" loop="0" />
             </Col>
-            <Col xs="12" lg="10">
-              <Styled.EventContainer>
-                <Styled.Row />
-                <Styled.Row />
-                <Styled.Row>
-                  <Styled.MainText>
-                    Please check your mailbox for a confirmation email.
-                  </Styled.MainText>
-                </Styled.Row>
-                <Styled.Row style={{ flex: 1 }}>
-                  {/*<Styled.LinkedText>Resend Confirmation</Styled.LinkedText>*/}
-                  <Styled.SectionText />
-                  <Styled.LinkedText
-                    style={{ cursor: "pointer" }}
-                    onClick={onCompleteRegistrationClicked}
-                  >
-                    View Waivers
-                  </Styled.LinkedText>
-                  <Styled.SectionText />
-                  {/*<Styled.LinkedTextRight onClick={() => onUnregister(event)}>*/}
-                  {/*  Cancel Registration*/}
-                  {/*</Styled.LinkedTextRight>*/}
-                </Styled.Row>
-                <Styled.Row>
-                  <Button color="primary" onClick={onReturnToHomeClicked}>
-                    Return to Home
-                  </Button>
-                </Styled.Row>
-                <Styled.Row></Styled.Row>
-              </Styled.EventContainer>
-            </Col>
           </Styled.Row>
+
+          <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-white p-4">
+            <Text
+              text="Please check your mailbox for a confirmation email"
+              type="subheader"
+              className="pl-2"
+            />
+            <div className="flex flex-wrap justify-start gap-2 p-2">
+              <BoGButton
+                text="View Waivers"
+                onClick={onCompleteRegistrationClicked}
+              />
+              <BoGButton text="Cancel Registration" onClick={onUnregister} />
+            </div>
+          </div>
         </React.Fragment>
       )}
       {isLoading && (
@@ -361,81 +247,65 @@ const EventRegister = (event) => {
           </Col>
         </React.Fragment>
       )}
-      <Styled.Row />
-      <Styled.Row>
-        <EventRegisterInfoContainer
-          event={events}
-          user={user}
-          eventId={eventId}
-        />
-      </Styled.Row>
+      <div className="h-6" />
+      <EventRegisterInfoContainer event={event} user={user} eventId={eventId} />
       <Styled.BottomContainer>
+        <Text text="Your Group" type="subheader" className="py-2" />
+        <Text
+          text="If a minor below 13 years of age will volunteer with you, please add
+          their information below."
+        />
+        <Text
+          text="Note: Minors at or above 13 years of age need to register using
+            their own account."
+          className="py-2"
+        />
         <Styled.Row>
-          <Styled.SectionText>Your Group</Styled.SectionText>
-        </Styled.Row>
-        <Styled.AccomodationRow>
-          If a minor below 13 years of age will volunteer with you, please add
-          their information below. <br></br>
-          <br></br>
-          <em>
-            Note: Minors at or above 13 years of age need to register using
-            their own account.
-          </em>
-        </Styled.AccomodationRow>
-        <Styled.Row>
-          <Styled.VolunteerContainer>
+          <Styled.VolunteerContainer className="bg-grey">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
-                {user.bio.first_name} {user.bio.last_name}
+                {user.firstName} {user.lastName}
               </Styled.SectionHeaderText>
             </Styled.VolunteerRow>
             <Styled.VolunteerRow>
-              <Styled.DetailText>{user.bio.email}</Styled.DetailText>
+              <Styled.DetailText>{user.email}</Styled.DetailText>
             </Styled.VolunteerRow>
           </Styled.VolunteerContainer>
-          {events.minors &&
-            events.minors.map((minor) => (
-              <Styled.MinorRow key={minor}>
-                {minor.volunteer_id === user._id &&
-                  minor.minor.map((names) => (
-                    <Styled.VolunteerContainer key={names}>
-                      <Styled.VolunteerCol>
-                        <div>
-                          <Styled.VolunteerRow>
-                            <Styled.SectionHeaderText>
-                              {names}
-                            </Styled.SectionHeaderText>
-                            <Styled.DetailText>
-                              Minor with {user.bio.first_name}{" "}
-                              {user.bio.last_name}
-                            </Styled.DetailText>
-                          </Styled.VolunteerRow>
-                        </div>
-                        {!isRegistered && (
-                          <div>
-                            <Styled.DeleteButton
-                              onClick={() => {
-                                deleteMinor(events, names);
-                              }}
-                            >
-                              <Icon color="grey3" name="delete" />
-                            </Styled.DeleteButton>
-                          </div>
-                        )}
-                      </Styled.VolunteerCol>
-                    </Styled.VolunteerContainer>
-                  ))}
-              </Styled.MinorRow>
-            ))}
+          <Styled.MinorRow>
+            {minors &&
+              minors.map((minor) => (
+                <Styled.VolunteerContainer className="bg-grey" key={minor}>
+                  <Styled.VolunteerCol>
+                    <div>
+                      <Styled.VolunteerRow>
+                        <Styled.SectionHeaderText>
+                          {minor}
+                        </Styled.SectionHeaderText>
+                        <Styled.DetailText>
+                          Minor with {user.firstName} {user.lastName}
+                        </Styled.DetailText>
+                      </Styled.VolunteerRow>
+                    </div>
+                    {!isRegistered && (
+                      <Tooltip content="Delete" style="light">
+                        <button
+                          className="mx-1"
+                          onClick={() => {
+                            removeMinor(minor);
+                          }}
+                        >
+                          <TrashIcon className="h-8 text-primaryColor" />
+                        </button>
+                      </Tooltip>
+                    )}
+                  </Styled.VolunteerCol>
+                </Styled.VolunteerContainer>
+              ))}
+          </Styled.MinorRow>
           <Col>
             {!isRegistered && (
               <Link href={`/events/${eventId}/register`}>
-                <Styled.MinorButton
-                  style={{ cursor: "pointer" }}
-                  onClick={onAddMinorClicked}
-                >
-                  Add a Minor
-                </Styled.MinorButton>
+                <BoGButton text={"Add a Minor"} onClick={onAddMinorClicked} />
               </Link>
             )}
           </Col>
@@ -443,16 +313,14 @@ const EventRegister = (event) => {
       </Styled.BottomContainer>
       {!isRegistered && (
         <Styled.ModalFooter>
-          <Styled.Button onClick={onCompleteRegistrationClicked}>
-            Register
-          </Styled.Button>
+          <BoGButton text="Register" onClick={onCompleteRegistrationClicked} />
         </Styled.ModalFooter>
       )}
       <EventMinorModal
         open={showMinorModal}
         toggle={toggleMinorModal}
-        event={events}
-        setHasMinorTrue={setHasMinorTrue}
+        event={event}
+        addMinor={addMinor}
       />
       <EventWaiverModal
         open={showWaiverModal}

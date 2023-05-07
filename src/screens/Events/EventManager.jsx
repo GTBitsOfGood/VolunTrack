@@ -1,27 +1,22 @@
 // import { differenceInCalendarDays } from "date-fns";
+import "flowbite-react";
+import { Dropdown } from "flowbite-react";
+import { useSession } from "next-auth/react";
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-} from "reactstrap";
 import styled from "styled-components";
-import { fetchEvents } from "../../actions/queries";
+import AdminHomeHeader from "../../components/AdminHomeHeader";
+import BoGButton from "../../components/BoGButton";
+import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
+import { getAttendances } from "../../queries/attendances";
+import { getEvent, getEvents } from "../../queries/events";
+import { getRegistrations } from "../../queries/registrations";
+import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
-import EventDeleteModal from "./Admin/EventDeleteModal";
-import EventEditModal from "./Admin/EventEditModal";
-import EventTable from "./EventTable";
-
-import { useSession } from "next-auth/react";
-import router from "next/router";
-import PropTypes from "prop-types";
-import StatDisplay from "../Stats/User/StatDisplay";
-import { updateEvent } from "./eventHelpers";
+import EventsList from "./EventsList";
 
 // const isSameDay = (a) => (b) => {
 //   return differenceInCalendarDays(a, b) === 0;
@@ -31,19 +26,11 @@ const Styled = {
   Container: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
     padding-y: 2rem;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     overflow: hidden;
-  `,
-  Button: styled(Button)`
-    background: ${variables.primary};
-    border: none;
-    color: white;
-    width: 9.5rem;
-    height: 2.5rem;
   `,
   TablePadding: styled.div`
     margin-top: 2rem;
@@ -81,14 +68,6 @@ const Styled = {
       width: 100%;
     }
   `,
-  ButtonRow: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-  `,
   DateRow: styled.div`
     display: flex;
     flex-direction: row;
@@ -105,7 +84,7 @@ const Styled = {
   HomePage: styled.div`
     width: 100%;
     height: 100%;
-    background: ${(props) => props.theme.grey9};
+
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -113,55 +92,59 @@ const Styled = {
     align-items: center;
     row-gap: 10px;
   `,
-  EventFilter: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: 2rem;
-  `,
   LegendText: styled.p`
     font-size: 20px;
     font-weight: bold;
     margin-top: 30px;
   `,
   LegendImage: styled.img`
+    margin-top: 20px;
     width: 20rem;
     height: 5rem;
   `,
 };
 
-const EventManager = ({ user, role, isHomePage }) => {
-  // eslint-disable-next-line no-unused-vars
+const EventManager = ({ isHomePage }) => {
+  const { data: session } = useSession();
+  const user = session.user;
+
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterOn, setFilterOn] = useState(false);
-  const [dropdownOn, setDropdownOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("All Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
 
-  if (!user) {
-    const { data: session } = useSession();
-    user = session.user;
-  }
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [attendances, setAttendances] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const onRefresh = () => {
     setLoading(true);
-    fetchEvents(undefined, undefined, user.organizationId)
+    getEvents(user.organizationId).then((result) => {
+      if (result?.data?.events) {
+        setEvents(result.data.events);
+        setDates(result.data.events);
+      }
+    });
+
+    let filter = { organizationId: user.organizationId };
+    if (user.role === "volunteer")
+      filter = { organizationId: user.organizationId, userId: user._id };
+
+    getRegistrations(filter)
       .then((result) => {
-        if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
-          setDates(result.data.events);
-        }
+        if (result.data.registrations)
+          setRegistrations(result.data.registrations);
       })
-      .finally(() => {
-        setLoading(false);
-      });
+      .finally(() => setLoading(false));
   };
 
   const onCreateClicked = () => {
+    setShowCreateModal(false);
     setShowCreateModal(true);
   };
 
@@ -170,63 +153,25 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
+    let query = { organizationId: user.organizationId };
+    if (user.role === "volunteer") query.userId = user._id;
+
+    getAttendances(query).then((result) => {
+      if (result?.data?.attendances) {
+        setAttendances(result.data.attendances);
+      }
+    });
     onRefresh();
   }, []);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const onEditClicked = (event) => {
-    setShowEditModal(true);
-    setCurrEvent(event);
-  };
-  const toggleEditModal = () => {
-    setShowEditModal((prev) => !prev);
-    onRefresh();
-  };
-  const onDeleteClicked = (event) => {
-    setShowDeleteModal(true);
-    setCurrEvent(event);
-  };
-  const toggleDeleteModal = () => {
-    setShowDeleteModal((prev) => !prev);
-    onRefresh();
-  };
-
-  const goToRegistrationPage = async (event) => {
-    if (event?.eventId) {
-      await router.push(`/events/${event.eventId}/register`);
-    }
-  };
-
-  const onUnregister = async (event) => {
-    const changedEvent = {
-      // remove current user id from event volunteers
-      ...event,
-      minors: event.volunteers.filter(
-        (minor) => minor.volunteer_id !== user._id
-      ),
-      volunteers: event.volunteers.filter(
-        (volunteer) => volunteer !== user._id
-      ),
-    };
-    const updatedEvent = await updateEvent(changedEvent);
-    setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-
-    onRefresh();
-  };
-
-  const [value, setDate] = useState(new Date());
-
-  let splitDate = value.toDateString().split(" ");
+  let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
   const onChange = (value) => {
     if (Date.now() !== value) setShowBack(true);
-    setDate(value);
+    setSelectedDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
@@ -234,7 +179,7 @@ const EventManager = ({ user, role, isHomePage }) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    fetchEvents(selectDate, selectDate, user.organizationId)
+    getEvents(user.organizationId, selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -270,7 +215,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const setDateBack = () => {
     const currentDate = new Date();
     setDates(currentDate);
-    setDate(currentDate);
+    setSelectedDate(currentDate);
     let splitDate = currentDate.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
@@ -278,13 +223,16 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
 
-  const filterEvents = (events, user) => {
+  const filterEventsForVolunteers = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
       if (
-        // hide past events for volunteers
+        // hide past events and private events they are not registered for
         new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
-        (!events[i].isPrivate || events[i].volunteers.includes(user._id))
+        (!events[i].eventParent.isPrivate ||
+          registrations.filter(
+            (r) => r.eventId === events[i]._id && r.userId === user._id
+          ).length > 0)
       ) {
         arr.push(events[i]);
       }
@@ -292,22 +240,22 @@ const EventManager = ({ user, role, isHomePage }) => {
     return arr;
   };
 
-  const toggle = () => {
-    setDropdownOn(!dropdownOn);
-  };
-
-  const changeValue = (e) => {
-    setDropdownVal(e.currentTarget.textContent);
-    const value = e.currentTarget.textContent;
+  const changeValue = (label) => {
+    setDropdownVal(label);
+    const value = label;
     if (value === "Public Events") {
       setFilterOn(true);
-      setFilteredEvents(events.filter((event) => !event.isPrivate));
+      setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate));
     } else if (value === "Private Group Events") {
       setFilterOn(true);
-      setFilteredEvents(events.filter((event) => event.isPrivate));
+      setFilteredEvents(events.filter((event) => event.eventParent.isPrivate));
     } else if (value === "All Events") {
       setFilterOn(false);
     }
+  };
+
+  const onEventDelete = (id) => {
+    setEvents(events.filter((event) => event._id !== id));
   };
 
   return (
@@ -323,95 +271,140 @@ const EventManager = ({ user, role, isHomePage }) => {
               )}
             </Styled.DateRow>
           </Styled.EventContainer>
-          <Calendar
-            onChange={onChange}
-            value={value}
-            tileClassName={({ date, view }) =>
-              setMarkDates({ date, view }, markDates)
-            }
-          />
+          <div className="m-2 rounded-md bg-gray-50 p-2">
+            <Calendar
+              className="bg-white"
+              onChange={onChange}
+              value={selectedDate}
+              tileClassName={({ date, view }) =>
+                setMarkDates({ date, view }, markDates)
+              }
+            />
+          </div>
           <Styled.LegendText>How to read the calendar?</Styled.LegendText>
           <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
         </Styled.Left>
       )}
       {!isHomePage && (
         <Styled.Right>
-          {role === "admin" ? (
-            <Styled.ButtonRow>
-              <Dropdown isOpen={dropdownOn} toggle={toggle}>
-                <DropdownToggle caret>{dropdownVal}</DropdownToggle>
-                <DropdownMenu>
-                  <DropdownItem>
-                    <div onClick={changeValue}>All Events</div>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <div onClick={changeValue}>Public Events</div>
-                  </DropdownItem>
-                  <DropdownItem>
-                    <div onClick={changeValue}>Private Group Events</div>
-                  </DropdownItem>
-                </DropdownMenu>
+          {user.role === "admin" ? (
+            <div className="my-4 flex w-full items-center justify-between">
+              <Dropdown
+                inline={true}
+                arrowIcon={false}
+                label={<BoGButton text="Filter Events" dropdown={true} />}
+              >
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("All Events");
+                  }}
+                >
+                  All Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Public Events");
+                  }}
+                >
+                  Public Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Private Group Events");
+                  }}
+                >
+                  Private Group Events
+                </Dropdown.Item>
               </Dropdown>
-              <Styled.Button onClick={onCreateClicked}>
-                <span style={{ color: "white" }}>Create new event</span>
-              </Styled.Button>
-            </Styled.ButtonRow>
+              <BoGButton text="Create new event" onClick={onCreateClicked} />
+            </div>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
           )}
           {events.length === 0 ? (
             <Styled.Events>No Events Scheduled on This Date</Styled.Events>
           ) : (
-            <EventTable
+            <EventsList
               dateString={dateString}
               events={
                 user.role === "admin"
                   ? filterOn
                     ? filteredEvents
                     : events
-                  : filterEvents(events, user)
+                  : filterEventsForVolunteers(events, user)
               }
-              onEditClicked={onEditClicked}
-              onDeleteClicked={onDeleteClicked}
-              onRegisterClicked={goToRegistrationPage}
-              onUnregister={onUnregister}
               user={user}
-              role={role}
+              registrations={registrations}
               isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
             />
           )}
-          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
-          <EventEditModal
-            open={showEditModal}
-            toggle={toggleEditModal}
-            event={currEvent}
-            setEvent={setCurrEvent}
-          />
-          <EventDeleteModal
-            open={showDeleteModal}
-            toggle={toggleDeleteModal}
-            event={currEvent}
-          />
+          {showCreateModal && (
+            <EventCreateModal
+              open={showCreateModal}
+              toggle={toggleCreateModal}
+            />
+          )}
         </Styled.Right>
       )}
-      {isHomePage && (
+      {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>
-          {/*<Styled.Events>Welcome {user.bio.first_name}!</Styled.Events>*/}
-          <StatDisplay onlyAchievements={true} />
-          <EventTable
+          <div className="flex-column flex">
+            <div className="mb-4 justify-start">
+              <p className="mb-2 text-2xl font-bold">Accomplishments</p>
+              <div className="mx-auto flex flex-wrap">
+                <ProgressDisplay
+                  type={"Events"}
+                  attendance={attendances}
+                  header={"Events Attended"}
+                  medalDefaults={session.medalDefaults}
+                />
+                <ProgressDisplay
+                  type={"Hours"}
+                  attendance={attendances}
+                  header={"Hours Earned"}
+                  medalDefaults={session.medalDefaults}
+                />
+              </div>
+            </div>
+            <EventsList
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filteredEvents
+                  : filterEventsForVolunteers(events, user)
+              }
+              user={user}
+              registrations={registrations}
+              isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
+            />
+          </div>
+        </Styled.HomePage>
+      )}
+
+      {isHomePage && user.role !== "volunteer" && (
+        <Styled.HomePage>
+          <AdminHomeHeader
+            events={events}
+            attendances={attendances}
+            registrations={registrations}
+            dateString={dateString}
+          />
+          <EventsList
             dateString={dateString}
             events={
               user.role === "admin"
-                ? filteredEvents
-                : filterEvents(events, user)
+                ? filterOn
+                  ? filteredEvents
+                  : events
+                : filterEventsForVolunteers(events, user)
             }
-            onEditClicked={onEditClicked}
-            onDeleteClicked={onDeleteClicked}
-            onRegisterClicked={goToRegistrationPage}
-            onUnregister={onUnregister}
             user={user}
-            role={role}
             isHomePage={isHomePage}
+            registrations={registrations}
+            onCreateClicked={onCreateClicked}
+            onEventDelete={onEventDelete}
           />
         </Styled.HomePage>
       )}
@@ -422,7 +415,5 @@ const EventManager = ({ user, role, isHomePage }) => {
 export default EventManager;
 
 EventManager.propTypes = {
-  isHomePage: PropTypes.bool.isRequired,
-  role: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 };

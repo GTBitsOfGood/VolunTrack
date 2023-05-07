@@ -1,10 +1,11 @@
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-import { deleteEvent } from "../../../actions/queries";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import BoGButton from "../../../components/BoGButton";
+import { deleteEvent } from "../../../queries/events";
 
-const EventDeleteModal = ({ open, toggle, event }) => {
+const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
   const [isDeleting, setDeleting] = useState(false);
   const {
     data: { user },
@@ -12,12 +13,11 @@ const EventDeleteModal = ({ open, toggle, event }) => {
 
   const handleSubmit = () => {
     setDeleting(true);
-    deleteEvent(event._id, user._id)
-      .then(() => {
-        toggle();
-        setDeleting(false);
-      })
-      .catch(console.log);
+    onEventDelete(event._id);
+    deleteEvent(event._id).then(() => {
+      toggle();
+      setDeleting(false);
+    });
   };
 
   return (
@@ -25,12 +25,8 @@ const EventDeleteModal = ({ open, toggle, event }) => {
       <ModalHeader toggle={toggle}>Delete Event</ModalHeader>
       <ModalBody>Are you sure you want to delete this event?</ModalBody>
       <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          Cancel
-        </Button>
-        <Button color="primary" onClick={handleSubmit} disabled={isDeleting}>
-          Delete
-        </Button>
+        <BoGButton text="Cancel" onClick={toggle} outline={true} />
+        <BoGButton text="Delete" onClick={handleSubmit} disabled={isDeleting} />
       </ModalFooter>
     </Modal>
   );
