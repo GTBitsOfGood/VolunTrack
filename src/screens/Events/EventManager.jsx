@@ -338,7 +338,7 @@ const EventManager = ({ isHomePage }) => {
                   </Styled.Back>
                 ) : (
                   <Text
-                    className="ml-2"
+                    className="mr-8"
                     text={"Showing events for all dates"}
                   />
                 )}

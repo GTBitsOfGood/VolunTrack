@@ -5,7 +5,7 @@ import {
   TrashIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
-import { Label, Tooltip, Badge } from "flowbite-react";
+import { Label, Tooltip } from "flowbite-react";
 import router from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
@@ -103,30 +103,17 @@ const EventCard = (props) => {
     >
       <div className="flex justify-between">
         <div className="flex justify-start">
-          {props.dateDisplay ? (
-            <DateDisplayComponent
-              date={props.event.date}
-              version={props.version ?? "Primary"}
-            />
-          ) : (
-            <></>
-          )}
+          <DateDisplayComponent
+            date={props.event.date}
+            version={props.version ?? "Primary"}
+          />
           <div className="flex-column flex text-xl">
-            <div className="flex">
-              <Text text={props.event.title} type="subtitle" className="flex" />
-              {props.private ? (
-                <Badge color="info" className="ml-2 flex items-center">
-                  Private Event
-                </Badge>
-              ) : (
-                <p></p>
-              )}
-            </div>
-            <Label>{`${props.functions.convertTime(
-              props.event.startTime
-            )} - ${props.functions.convertTime(
-              props.event.endTime
-            )} EST`}</Label>
+            <Label class="text-xl font-bold">
+              {props.event.eventParent.title}
+            </Label>
+            <Label>{`${convertTime(
+              props.event.eventParent.startTime
+            )} - ${convertTime(props.event.eventParent.endTime)} EST`}</Label>
           </div>
         </div>
         <div className="flex-column justify-end">
@@ -217,8 +204,6 @@ EventCard.propTypes = {
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
-  private: PropTypes.bool,
-  dateDisplay: PropTypes.bool,
 };
 
 export default EventCard;

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
-import Pagination from "../../components/PaginationComp";
+import PaginationComp from "../../components/PaginationComp";
 import { useState } from "react";
 
 const Styled = {
@@ -31,7 +31,7 @@ const EventsList = ({
     const { data: session } = useSession();
     user = session.user;
   }
-  events.sort(function (a, b) {
+  events.sort((a, b) => {
     const c = new Date(a.date);
     const d = new Date(b.date);
     return c - d;
@@ -132,7 +132,7 @@ const EventsList = ({
               } of total ${events.length} events`}
               type="helper"
             />
-            <Pagination
+            <PaginationComp
               items={events}
               pageSize={10}
               currentPage={currentPage}
@@ -140,7 +140,6 @@ const EventsList = ({
             />
           </div>
         )}
-        <Styled.Spacer />
       </Styled.Container>
     );
   } else {
