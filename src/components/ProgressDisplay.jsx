@@ -3,44 +3,44 @@ import { Label, Progress } from "flowbite-react";
 import "flowbite-react";
 import { getHours } from "../screens/Stats/User/hourParsing";
 
-const ProgressDisplay = ({ type, attendance, header }) => {
+const ProgressDisplay = ({ type, attendance, header, medalDefaults }) => {
   let level = "Bronze";
   let num = 0;
   let outOf;
 
   if (type === "Events") {
-    outOf = 10;
+    outOf = medalDefaults.eventSilver;
     if (attendance.length > 15) {
       level = "Gold";
-      outOf = 20;
+      outOf = medalDefaults.eventGold * 2;
     } else if (attendance.length > 10) {
       level = "Silver";
-      outOf = 15;
+      outOf = medalDefaults.eventGold;
     }
     num = attendance.length;
   } else {
     let add = 0;
-    outOf = 10;
+    outOf = medalDefaults.hoursSilver;
     for (let i = 0; i < attendance.length; i++) {
-      if (attendance[i].timeCheckedOut != null) {
+      if (attendance[i].checkoutTime != null) {
         add += getHours(
-          attendance[i].timeCheckedIn.slice(11, 16),
-          attendance[i].timeCheckedOut.slice(11, 16)
+          attendance[i].checkinTime.slice(11, 16),
+          attendance[i].checkoutTime.slice(11, 16)
         );
       }
     }
     if (add >= 15) {
       level = "Gold";
-      outOf = 20;
+      outOf = medalDefaults.hoursGold * 2;
     } else if (add >= 10) {
       level = "Silver";
-      outOf = 15;
+      outOf = medalDefaults.hoursGold;
     }
     num = Math.round(add * 10) / 10;
   }
 
   return (
-    <div className="ml-18 mr-8 rounded-md border-2 bg-white px-12 py-4">
+    <div className="ml-18 mr-8 rounded-md bg-grey px-12 py-4">
       <Label class="text-black-800 text-xl font-semibold">{header}</Label>
       <div className="flex flex-nowrap items-center">
         <img
@@ -63,6 +63,7 @@ ProgressDisplay.propTypes = {
   type: PropTypes.string.isRequired,
   attendance: PropTypes.object.isRequired,
   header: PropTypes.string.isRequired,
+  medalDefaults: PropTypes.object.isRequired,
 };
 
 export default ProgressDisplay;

@@ -1,3 +1,5 @@
+import { TrashIcon } from "@heroicons/react/24/solid";
+import { Tooltip } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -10,18 +12,16 @@ import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { getEvent } from "../../../queries/events";
 import {
+  getRegistrations,
   registerForEvent,
   unregisterForEvent,
 } from "../../../queries/registrations";
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import { Tooltip } from "flowbite-react";
 
 const Styled = {
   Container: styled(Container)`
-    background-color: ${variables["gray-100"]};
     overflow-y: scroll;
     overflow-x: hidden;
     padding-top: 2rem;
@@ -56,7 +56,6 @@ const Styled = {
     overflow-wrap: break-word;
   `,
   VolunteerContainer: styled.div`
-    background-color: ${variables["white"]};
     border-radius: 0.5rem;
     margin-bottom: 0.5rem;
     margin-right: 2rem;
@@ -101,11 +100,14 @@ const Styled = {
 };
 
 const EventRegister = () => {
+  const {
+    data: { user },
+  } = useSession();
   const router = useRouter();
+
   const { eventId } = router.query;
+
   const [event, setEvent] = useState({});
-  const { data: session } = useSession();
-  const user = session.user;
   const [showMinorModal, setShowMinorModal] = useState(false);
   const [showWaiverModal, setShowWaiverModal] = useState(false);
   const [hasMinor, setHasMinor] = useState(false);
@@ -119,8 +121,15 @@ const EventRegister = () => {
 
   const onLoadEvent = () => {
     getEvent(eventId).then((result) => {
-      if (result && result.data && result.data.event) {
+      if (result?.data?.event) {
         setEvent(result.data.event);
+      }
+    });
+    getRegistrations({ eventId, userId: user._id }).then((result) => {
+      if (result?.data?.registrations?.length > 0) {
+        setIsRegistered(true);
+        setMinors(result.data.registrations[0].minors);
+        if (result.data.registrations[0].minors.length > 0) setHasMinor(true);
       }
     });
   };
@@ -141,14 +150,12 @@ const EventRegister = () => {
     toggleWaiverModal();
     setIsLoading(true);
 
-    let data = {
-      event: event,
-      user: user,
-      minors: minors,
-    };
-    console.log(data);
-
-    registerForEvent(data).then(() => {
+    registerForEvent({
+      eventId: event._id,
+      userId: user._id,
+      organizationId: user.organizationId,
+      minors,
+    }).then(() => {
       setIsRegistered(true);
       setIsLoading(false);
     });
@@ -168,17 +175,16 @@ const EventRegister = () => {
     setHasMinor(true);
   };
 
-  const removeMinor = (firstName, lastName) => {
-    setMinors(minors.filter((minor) => minor !== firstName + " " + lastName));
+  const removeMinor = (minorName) => {
+    setMinors(minors.filter((minor) => minor !== minorName));
     if (minors.length === 0) setHasMinor(false);
   };
 
-  const onUnregister = async () => {
-    unregisterForEvent(event._id, user._id).then(() => {
-      setIsRegistered(false);
-      setMinors([]);
-      setHasMinor(false);
-    });
+  const onUnregister = () => {
+    unregisterForEvent(event._id, user._id);
+    setIsRegistered(false);
+    setMinors([]);
+    setHasMinor(false);
   };
 
   const goBackToDetails = () => {
@@ -255,7 +261,7 @@ const EventRegister = () => {
           className="py-2"
         />
         <Styled.Row>
-          <Styled.VolunteerContainer>
+          <Styled.VolunteerContainer className="bg-grey">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
                 {user.firstName} {user.lastName}
@@ -268,7 +274,7 @@ const EventRegister = () => {
           <Styled.MinorRow>
             {minors &&
               minors.map((minor) => (
-                <Styled.VolunteerContainer key={minor}>
+                <Styled.VolunteerContainer className="bg-grey" key={minor}>
                   <Styled.VolunteerCol>
                     <div>
                       <Styled.VolunteerRow>

@@ -8,7 +8,11 @@ class DateDisplayComponent extends React.Component {
   }
 
   componentDidMount = () => {
-    const date = new Date(new Date(this.props.date).getTime() + 86400000); // + 1 day in ms
+    // add the timezone offset for events
+    let date = new Date(this.props.date);
+    date = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    );
     const month = date.toLocaleString("default", { month: "short" });
     this.setState({ month: month, day: date.getDate() });
   };

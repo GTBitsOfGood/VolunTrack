@@ -1,6 +1,4 @@
-import { HydratedDocument } from "mongoose";
 import "next-auth";
-import { UserData } from "../../server/mongodb/models/User";
 
 declare module "next-auth" {
   /**
@@ -8,6 +6,6 @@ declare module "next-auth" {
    * `SessionProvider` React Context
    */
   type Session = {
-    user: HydratedDocument<UserData>;
+    user: UserDocument;
   };
 }

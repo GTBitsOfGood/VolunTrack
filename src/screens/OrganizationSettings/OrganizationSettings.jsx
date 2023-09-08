@@ -135,7 +135,7 @@ const OrganizationSettings = () => {
                 )}
                 <h3 className="text-2xl font-bold">{currentPage.title}</h3>
                 <p className="pb-3 text-slate-500">{currentPage.helperText}</p>
-                <div className="rounded-sm bg-white p-4">
+                <div className="rounded-sm bg-grey p-4">
                   {currentPage.sections.map((section, i) => (
                     <div key={i} className="py-4">
                       <h3 key={i} className="mb-2 text-lg font-bold">

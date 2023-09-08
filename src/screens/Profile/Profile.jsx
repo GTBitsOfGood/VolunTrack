@@ -1,35 +1,30 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
-import { UserData } from "../../../server/mongodb/models/User";
 import EditUserForm from "../../components/Forms/EditUserForm";
 import { RequestContext } from "../../providers/RequestProvider";
 import { updateUser } from "../../queries/users";
-import { UserInputData } from "../../validators/users";
 
 const Profile = () => {
   const { data: session } = useSession();
   if (!session) return "unauthenticated";
   const user = session.user;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const context = useContext(RequestContext);
   const router = useRouter();
 
-  const [profileValues, setProfileValues] = useState<Partial<UserData>>(user);
+  const [profileValues, setProfileValues] = useState(user);
 
-  const handleSubmit = async (values: Partial<UserInputData>) => {
+  const handleSubmit = async (values) => {
     await updateUser(user._id, values);
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     context.startLoading();
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
     context.success("Profile successfully updated!");
     router.reload();
   };
 
   return (
     <div className="flex w-full justify-center pt-4">
-      <div className="w-3/4 rounded-md bg-white p-3 md:w-1/2">
+      <div className="w-3/4 rounded-md bg-grey p-3 md:w-1/2">
         <p className="text-2xl font-semibold text-primaryColor">{`${user.firstName} ${user.lastName}`}</p>
         <p className="mb-2 capitalize">{user.role}</p>
         <EditUserForm

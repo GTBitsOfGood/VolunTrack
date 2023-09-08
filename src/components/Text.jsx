@@ -30,7 +30,7 @@ class Text extends React.Component {
           );
         case "subheader":
           return (
-            <h3 className={"mb-0 text-xl  font-bold " + this.props.className}>
+            <h3 className={"mb-0 text-xl font-bold " + this.props.className}>
               {this.props.text}
             </h3>
           );
@@ -41,7 +41,7 @@ class Text extends React.Component {
             </h3>
           );
         case "helper":
-          theming = "text-grey ";
+          theming = "text-gray-400 ";
           break;
         default:
           theming = "text-md ";

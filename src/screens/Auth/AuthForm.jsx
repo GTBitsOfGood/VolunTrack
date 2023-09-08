@@ -26,7 +26,7 @@ class AuthForm extends React.Component {
       this.props.context.startLoading();
       this.props.context.failed("Your username or password is incorrect.");
     } else {
-      applyTheme("magenta"); // This applies a default theme before we know which org
+      applyTheme("blue"); // This applies a default theme before we know which org
     }
   }
 
@@ -127,7 +127,7 @@ class AuthForm extends React.Component {
                 text={
                   this.props.createAccount ? "Create an account" : "Sign In"
                 }
-                className="w-full bg-primaryColor hover:bg-hoverColor"
+                className="mb-4 w-full bg-primaryColor hover:bg-hoverColor"
               />
             </form>
           )}

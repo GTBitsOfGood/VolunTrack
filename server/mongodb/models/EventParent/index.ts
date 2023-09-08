@@ -1,32 +1,14 @@
-import { Model, model, models, Schema, Types } from "mongoose";
+import {
+  HydratedDocument,
+  InferSchemaType,
+  Model,
+  model,
+  models,
+  Schema,
+} from "mongoose";
+export * from "./validators";
 
-export type EventParentData = {
-  title: string;
-  startTime: string;
-  endTime: string;
-  localTime: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  eventContactPhone: string;
-  eventContactEmail: string;
-  maxVolunteers: number;
-  isPrivate: boolean;
-  isValidForCourtHours: boolean;
-  organizationId: Types.ObjectId;
-  pocName?: string;
-  pocEmail?: string;
-  pocPhone?: string;
-  orgName?: string;
-  orgAddress?: string;
-  orgCity?: string;
-  orgState?: string;
-  orgZip?: string;
-  description?: string;
-};
-
-const eventParentSchema = new Schema<EventParentData>(
+export const eventParentSchema = new Schema(
   {
     title: { type: String, required: true },
     startTime: { type: String, required: true },
@@ -45,6 +27,7 @@ const eventParentSchema = new Schema<EventParentData>(
       type: Schema.Types.ObjectId,
       ref: "Organization",
       default: "63d6dcc4e1fb5fd6e69b1738",
+      required: true,
     },
     pocName: String,
     pocEmail: String,
@@ -58,7 +41,12 @@ const eventParentSchema = new Schema<EventParentData>(
   },
   { timestamps: true }
 );
+export type EventParentData = InferSchemaType<typeof eventParentSchema>;
 
-export default ("EventParent" in models
+export type EventParentDocument = HydratedDocument<EventParentData>;
+
+// Need to disable in order to check that "models" is defined
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+export default (models && "EventParent" in models
   ? (models.EventParent as Model<EventParentData>)
   : undefined) ?? model<EventParentData>("EventParent", eventParentSchema);

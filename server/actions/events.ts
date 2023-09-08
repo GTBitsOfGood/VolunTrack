@@ -1,13 +1,13 @@
-import { HydratedDocument, Types } from "mongoose";
+import { Types } from "mongoose";
 import dbConnect from "../mongodb";
 import { eventPopulator } from "../mongodb/aggregations";
-import Event, { EventPopulatedData } from "../mongodb/models/Event";
+import Event, { EventPopulatedDocument } from "../mongodb/models/Event";
 
 export const getEvents = async (
   organizationId: Types.ObjectId,
   startDate?: Date,
   endDate?: Date
-): Promise<HydratedDocument<EventPopulatedData>[]> => {
+): Promise<EventPopulatedDocument[]> => {
   await dbConnect();
 
   if (!startDate && !endDate) {

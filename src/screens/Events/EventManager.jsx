@@ -1,7 +1,7 @@
 // import { differenceInCalendarDays } from "date-fns";
 import "flowbite-react";
 import { Dropdown } from "flowbite-react";
-import router from "next/router";
+import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import Calendar from "react-calendar";
@@ -11,15 +11,11 @@ import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import variables from "../../design-tokens/_variables.module.scss";
-import {
-  getAttendances,
-  getAttendanceStatistics,
-} from "../../queries/attendances";
+import { getAttendances } from "../../queries/attendances";
 import { getEvent, getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
 import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
-import { updateEvent } from "./eventHelpers";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
 
@@ -117,74 +113,47 @@ const Styled = {
   `,
 };
 
-const EventManager = ({ user, role, isHomePage }) => {
+const EventManager = ({ isHomePage }) => {
+  const { data: session } = useSession();
+  const user = session.user;
+
   const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
   const [filterOn, setFilterOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("Public & Private Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
-  const [numEvents, setNumEvents] = useState(0);
-  const [attend, setAttend] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [eventState, setEventState] = useState([]);
-  const [registrations, setRegistrations] = useState([]);
 
-  const eventChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const attendChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const hourChart = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
+  const [attendances, setAttendances] = useState([]);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
-      if (result && result.data && result.data.events) {
+      if (result?.data?.events) {
         setEvents(result.data.events);
         setDates(result.data.events);
       }
-      if (result?.data?.events) setNumEvents(result.data.events.length);
-
-      // TODO: fix logic. We should use getEvents for the events, registrations, and attendance separately for hours
-      getAttendanceStatistics(undefined, startDate, endDate).then(
-        async (stats) => {
-          let totalAttendance = 0;
-          let totalHours = 0;
-          for (const statistic of stats.data.statistics ?? []) {
-            let event = {};
-            try {
-              event = (await getEvent(statistic._id)).data.event;
-            } catch (e) {
-              continue;
-            }
-            let split = event.date.split("-");
-            let index = parseInt(split[1]) - 1;
-            let stat = stats.data.statistics.find((s) => s._id === event._id);
-            if (stat) {
-              hourChart[index] += Math.round(stat.minutes / 60.0);
-              attendChart[index] += stat.users.length;
-              totalAttendance += stat.users.length;
-              totalHours += stat.minutes / 60.0;
-            }
-            eventChart[index] = eventChart[index] + 1;
-          }
-
-          setAttend(totalAttendance);
-          setHours(Math.round(totalHours * 100) / 100);
-        }
-      );
-      eventState.push(eventChart);
-      eventState.push(hourChart);
-      eventState.push(attendChart);
     });
-    getRegistrations(undefined, undefined, user.id)
+
+    let filter = { organizationId: user.organizationId };
+    if (user.role === "volunteer")
+      filter = { organizationId: user.organizationId, userId: user._id };
+
+    getRegistrations(filter)
       .then((result) => {
-        if (result.data.success) setRegistrations(result.data.registrations);
+        if (result.data.registrations)
+          setRegistrations(result.data.registrations);
       })
       .finally(() => setLoading(false));
   };
 
   const onCreateClicked = () => {
+    setShowCreateModal(false);
     setShowCreateModal(true);
   };
 
@@ -193,32 +162,25 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
   useEffect(() => {
-    getAttendances(undefined, undefined).then((result) => {
+    let query = { organizationId: user.organizationId };
+    if (user.role === "volunteer") query.userId = user._id;
+
+    getAttendances(query).then((result) => {
       if (result?.data?.attendances) {
-        const filteredAttendance = filterAttendance(
-          result.data.attendances,
-          startDate,
-          endDate
-        );
-        setAttendance(filteredAttendance);
+        setAttendances(result.data.attendances);
       }
     });
     onRefresh();
   }, []);
 
-  const [attendance, setAttendance] = useState([]);
-  const [startDate, setStartDate] = useState("undefined");
-  const [endDate, setEndDate] = useState("undefined");
-  const [value, setDate] = useState(new Date());
-
-  let splitDate = value.toDateString().split(" ");
+  let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
 
   const onChange = (value) => {
     if (Date.now() !== value) setShowBack(true);
-    setDate(value);
+    setSelectedDate(value);
     let datestr = value.toString();
     let splitDate = value.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
@@ -262,7 +224,7 @@ const EventManager = ({ user, role, isHomePage }) => {
   const setDateBack = () => {
     const currentDate = new Date();
     setDates(currentDate);
-    setDate(currentDate);
+    setSelectedDate(currentDate);
     let splitDate = currentDate.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
     setDateString(date);
@@ -270,13 +232,16 @@ const EventManager = ({ user, role, isHomePage }) => {
     onRefresh();
   };
 
-  const filterEvents = (events, user) => {
+  const filterEventsForVolunteers = (events, user) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
       if (
-        // hide past events for volunteers
+        // hide past events and private events they are not registered for
         new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
-        (!events[i].isPrivate || events[i].volunteers.includes(user._id))
+        (!events[i].eventParent.isPrivate ||
+          registrations.filter(
+            (r) => r.eventId === events[i]._id && r.userId === user._id
+          ).length > 0)
       ) {
         arr.push(events[i]);
       }
@@ -294,8 +259,17 @@ const EventManager = ({ user, role, isHomePage }) => {
       setFilterOn(true);
       setFilteredEvents(events.filter((event) => event.isPrivate));
     } else if (value === "Public & Private Events") {
+      setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate));
+    } else if (value === "Private Group Events") {
+      setFilterOn(true);
+      setFilteredEvents(events.filter((event) => event.eventParent.isPrivate));
+    } else if (value === "All Events") {
       setFilterOn(false);
     }
+  };
+
+  const onEventDelete = (id) => {
+    setEvents(events.filter((event) => event._id !== id));
   };
 
   return (
@@ -305,27 +279,37 @@ const EventManager = ({ user, role, isHomePage }) => {
           <Styled.EventContainer>
             <Styled.Events>Events</Styled.Events>
           </Styled.EventContainer>
-          <Calendar
-            onChange={onChange}
-            value={value}
-            tileClassName={({ date, view }) =>
-              setMarkDates({ date, view }, markDates)
-            }
-          />
+          <div className="m-2 rounded-md bg-gray-50 p-2">
+            <Calendar
+              className="bg-white"
+              onChange={onChange}
+              value={selectedDate}
+              tileClassName={({ date, view }) =>
+                setMarkDates({ date, view }, markDates)
+              }
+            />
+          </div>
           <Styled.LegendText>How to read the calendar?</Styled.LegendText>
           <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
         </Styled.Left>
       )}
       {!isHomePage && (
         <Styled.Right>
-          {role === "admin" ? (
+          {user.role === "admin" ? (
             <Styled.ButtonRow>
-              <div className="flex items-end">
+              <div className="my-4 flex w-full items-center justify-between">
                 <Dropdown
                   inline={true}
                   arrowIcon={false}
-                  label={<BoGButton text={dropdownVal} dropdown={true} />}
+                  label={<BoGButton text="Filter Events" dropdown={true} />}
                 >
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("All Events");
+                    }}
+                  >
+                    All Events
+                  </Dropdown.Item>
                   <Dropdown.Item
                     onClick={() => {
                       changeValue("Public & Private Events");
@@ -383,14 +367,20 @@ const EventManager = ({ user, role, isHomePage }) => {
                   ? filterOn
                     ? filteredEvents
                     : events
-                  : filterEvents(events, user)
+                  : filterEventsForVolunteers(events, user)
               }
               registrations={registrations}
               user={user}
               isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
             />
           )}
-          <EventCreateModal open={showCreateModal} toggle={toggleCreateModal} />
+          {showCreateModal && (
+            <EventCreateModal
+              open={showCreateModal}
+              toggle={toggleCreateModal}
+            />
+          )}
         </Styled.Right>
       )}
       {isHomePage && user.role === "volunteer" && (
@@ -401,13 +391,15 @@ const EventManager = ({ user, role, isHomePage }) => {
               <div className="mx-auto flex flex-wrap">
                 <ProgressDisplay
                   type={"Events"}
-                  attendance={attendance}
+                  attendance={attendances}
                   header={"Events Attended"}
+                  medalDefaults={session.medalDefaults}
                 />
                 <ProgressDisplay
                   type={"Hours"}
-                  attendance={attendance}
+                  attendance={attendances}
                   header={"Hours Earned"}
+                  medalDefaults={session.medalDefaults}
                 />
               </div>
             </div>
@@ -416,11 +408,12 @@ const EventManager = ({ user, role, isHomePage }) => {
               events={
                 user.role === "admin"
                   ? filteredEvents
-                  : filterEvents(events, user)
+                  : filterEventsForVolunteers(events, user)
               }
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
             />
           </div>
         </Styled.HomePage>
@@ -430,13 +423,9 @@ const EventManager = ({ user, role, isHomePage }) => {
         <Styled.HomePage>
           <AdminHomeHeader
             events={events}
+            attendances={attendances}
+            registrations={registrations}
             dateString={dateString}
-            numEvents={numEvents}
-            attend={attend}
-            hours={hours}
-            eventChart={eventState}
-            hourChart={hourChart}
-            attendChart={attendChart}
           />
           <EventsList
             dateString={dateString}
@@ -445,12 +434,13 @@ const EventManager = ({ user, role, isHomePage }) => {
                 ? filterOn
                   ? filteredEvents
                   : events
-                : filterEvents(events, user)
+                : filterEventsForVolunteers(events, user)
             }
             user={user}
             isHomePage={isHomePage}
             registrations={registrations}
             onCreateClicked={onCreateClicked}
+            onEventDelete={onEventDelete}
           />
         </Styled.HomePage>
       )}
@@ -461,7 +451,5 @@ const EventManager = ({ user, role, isHomePage }) => {
 export default EventManager;
 
 EventManager.propTypes = {
-  isHomePage: PropTypes.bool.isRequired,
-  role: PropTypes.string.isRequired,
   user: PropTypes.object.isRequired,
 };

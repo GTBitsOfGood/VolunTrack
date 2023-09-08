@@ -1,14 +1,24 @@
 import axios from "axios";
-import { WaiverData } from "../../server/mongodb/models/Waiver";
-import { ApiReturnType } from "../types/queries";
+import { Types } from "mongoose";
+import { ZodError } from "zod";
+import {
+  WaiverDocument,
+  WaiverInputClient,
+} from "../../server/mongodb/models/Waiver";
 
-export const getWaivers = async (
+export const getWaivers = (
   type: "adult" | "minor",
-  organizationId: string
+  organizationId: Types.ObjectId
 ) =>
-  axios.get<ApiReturnType<WaiverData, "waivers", true>>("/api/waivers", {
-    params: { type, organizationId },
-  });
+  axios.get<{ waivers?: WaiverDocument[]; error?: ZodError | string }>(
+    "/api/waivers",
+    {
+      params: { type, organizationId },
+    }
+  );
 
-export const updateWaiver = async (waiverData: Partial<WaiverData>) =>
-  axios.post<ApiReturnType<WaiverData, "waiver">>(`/api/waivers`, waiverData);
+export const updateWaiver = (waiverInput: Partial<WaiverInputClient>) =>
+  axios.post<{ waiver?: WaiverDocument; error?: ZodError | string }>(
+    `/api/waivers`,
+    waiverInput
+  );

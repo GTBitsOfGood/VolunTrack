@@ -59,6 +59,7 @@ class PaginationComp extends React.Component {
             >
               <PaginationItem disabled={this.state.currentPage <= 0}>
                 <Styled.PaginationLink
+                  className="text-gray-400 hover:text-primaryColor"
                   onClick={(e) =>
                     this.updateCurrentPage(e, this.state.currentPage - 1)
                   }
@@ -68,8 +69,19 @@ class PaginationComp extends React.Component {
                 </Styled.PaginationLink>
               </PaginationItem>
               {[...Array(this.state.pageCount)].map((page, i) => (
-                <PaginationItem active={i === this.state.currentPage} key={i}>
+                <PaginationItem
+                  // active={i === this.state.currentPage}
+                  key={i}
+                  className={
+                    i === this.state.currentPage ? "bg-primaryColor" : ""
+                  }
+                >
                   <Styled.PaginationLink
+                    className={`${
+                      i === this.state.currentPage
+                        ? "text-secondaryColor"
+                        : "text-gray-400"
+                    } hover:text-primaryColor`}
                     onClick={(e) => this.updateCurrentPage(e, i)}
                   >
                     {i + 1}
@@ -81,6 +93,7 @@ class PaginationComp extends React.Component {
                 disabled={this.state.currentPage >= this.state.pageCount - 1}
               >
                 <Styled.PaginationLink
+                  className="text-gray-400 hover:text-primaryColor"
                   onClick={(e) =>
                     this.updateCurrentPage(e, this.state.currentPage + 1)
                   }

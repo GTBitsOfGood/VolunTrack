@@ -5,8 +5,10 @@ import {
   getUsers,
 } from "../../../../server/actions/users_new";
 import dbConnect from "../../../../server/mongodb";
-import { UserData } from "../../../../server/mongodb/models/User";
-import { userInputValidator } from "../../../validators/users";
+import {
+  UserInputClient,
+  userInputServerValidator,
+} from "../../../../server/mongodb/models/User";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -35,28 +37,30 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const eventId = req.query.eventId
         ? new Types.ObjectId(req.query.eventId as string)
         : undefined;
-      const isCheckedIn = req.query.isCheckedIn
-        ? req.query.isCheckedIn === "true"
+      const checkinStatus = req.query.checkinStatus
+        ? (req.query.checkinStatus as "waiting" | "checkedIn" | "checkedOut")
         : undefined;
 
-      const users = await getUsers(organizationId, role, eventId, isCheckedIn);
-      return res.status(200).json({ success: true, users });
+      const users = await getUsers(
+        organizationId,
+        role,
+        eventId,
+        checkinStatus
+      );
+      return res.status(200).json({ users });
     }
     case "POST": {
-      const result = userInputValidator.safeParse(req.body);
+      const result = userInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
 
       const user = await createUserFromCredentials(
-        req.body as Omit<UserData, "password"> & { password: string } & {
+        req.body as Omit<UserInputClient, "password"> & { password: string } & {
           orgCode: string;
         }
       );
-      if (!user)
-        return res
-          .status(400)
-          .json({ success: false, error: "User already exists" });
+      if (!user) return res.status(400).json({ error: "User already exists" });
 
-      return res.status(200).json({ success: true, user });
+      return res.status(200).json({ user });
     }
   }
 };

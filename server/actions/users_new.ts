@@ -1,67 +1,80 @@
-import bcrypt, { compare, hash } from "bcrypt";
-import { HydratedDocument, Types } from "mongoose";
+import bcrypt, { hash } from "bcrypt";
+import { Types } from "mongoose";
 import dbConnect from "../mongodb/";
 import Attendance from "../mongodb/models/Attendance";
-import Registration from "../mongodb/models/Registration";
-import User, { UserData } from "../mongodb/models/User";
-import { createHistoryEventEditProfile } from "./historyEvent";
-import { ObjectId } from "mongodb";
 import Organization from "../mongodb/models/Organization";
+import Registration from "../mongodb/models/Registration";
+import User, { UserDocument, UserInputClient } from "../mongodb/models/User";
+import { createHistoryEventEditProfile } from "./historyEvent";
 
 export const getUsers = async (
   organizationId?: Types.ObjectId,
   role?: "admin" | "volunteer" | "manager",
   eventId?: Types.ObjectId,
-  isCheckedIn?: boolean
-): Promise<HydratedDocument<UserData>[]> => {
+  checkinStatus?: "waiting" | "checkedIn" | "checkedOut"
+): Promise<UserDocument[]> => {
   await dbConnect();
 
-  let users: HydratedDocument<UserData>[] = [];
+  let users: UserDocument[] = [];
 
-  if (!organizationId && !role) {
-    users = await User.find();
-  } else if (!organizationId) {
-    users = await User.find({ role });
-  } else if (!role) {
-    users = await User.find({ organizationId });
-  } else {
-    users = await User.find({ role, organizationId });
-  }
+  const match: Partial<UserInputClient> = {};
+  if (organizationId) match.organizationId = organizationId;
+  if (role) match.role = role;
+  users = await User.find(match);
 
   if (eventId) {
     const registrations = await Registration.find({ eventId });
     const userIds = new Set(
-      registrations.map((registration) => registration.userId)
+      registrations.map((registration) => registration.userId.toString())
     );
-    users = users.filter((user) => userIds.has(user._id));
+    users = users.filter((user) => userIds.has(user._id.toString()));
   }
 
-  if (isCheckedIn !== undefined) {
-    const attendances = await Attendance.find({
-      eventId,
-      checkinTime: { $ne: null },
-      checkoutTime: null,
-    });
-    const checkedInUserIds = new Set(
-      attendances.map((attendance) => attendance.userId)
-    );
-    if (isCheckedIn) {
-      users = users.filter((user) => checkedInUserIds.has(user._id));
-    } else {
-      users = users.filter((user) => !checkedInUserIds.has(user._id));
-    }
+  const checkedInAttendances = await Attendance.find({
+    eventId,
+    checkinTime: { $ne: null },
+    checkoutTime: null,
+  });
+  const checkedOutAttendances = await Attendance.find({
+    eventId,
+    checkinTime: { $ne: null },
+    checkoutTime: { $ne: null },
+  });
+  const checkedInUserIds = new Set(
+    checkedInAttendances.map((attendance) => attendance.userId.toString())
+  );
+  const checkedOutUserIds = new Set(
+    checkedOutAttendances.map((attendance) => attendance.userId.toString())
+  );
+
+  switch (checkinStatus) {
+    case "waiting":
+      users = users.filter(
+        (user) =>
+          !checkedInUserIds.has(user._id.toString()) &&
+          !checkedOutUserIds.has(user._id.toString())
+      );
+      break;
+    case "checkedIn":
+      users = users.filter((user) => checkedInUserIds.has(user._id.toString()));
+      break;
+    case "checkedOut":
+      users = users.filter((user) =>
+        checkedOutUserIds.has(user._id.toString())
+      );
+      break;
   }
 
   return users;
 };
 
 export const createUserFromCredentials = async (
-  userData: Partial<UserData> &
-    Required<Pick<UserData, "email">> & { password: string } & {
+  userData: Partial<UserInputClient> &
+    Required<Pick<UserInputClient, "email">> & { password: string } & {
       orgCode: string;
     }
 ): Promise<{
-  user?: HydratedDocument<UserData> | undefined;
+  user?: UserDocument | undefined;
   message?: string;
   status: number;
 }> => {
@@ -110,7 +123,7 @@ export const verifyUserWithCredentials = async (
   email: string,
   password: string
 ): Promise<{
-  user?: HydratedDocument<UserData>;
+  user?: UserDocument;
   message?: string;
   status: number;
 }> => {
@@ -148,7 +161,7 @@ export const verifyUserWithCredentials = async (
 
 export const updateUser = async (
   id: Types.ObjectId,
-  userData: Partial<UserData>
+  userData: Partial<UserInputClient>
 ): Promise<Types.ObjectId | undefined> => {
   await dbConnect();
 

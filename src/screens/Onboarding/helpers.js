@@ -1,24 +1,24 @@
 import { string, object, ref } from "yup";
 
 export const createOrganizationValidator = object().shape({
-  organization_name: string().trim().required("Organization name is required"),
-  website_url: string()
+  name: string().trim().required("Organization name is required"),
+  website: string()
     .trim()
     .required("Website URL is required")
     .url("Invalid URL"),
-  contact_name: string().trim().required("Contact name is required"),
-  contact_email: string()
+  defaultContactName: string().trim().required("Contact name is required"),
+  defaultContactEmail: string()
     .trim()
     .required("Contact email is required")
     .email("Invalid email"),
-  contact_phone: string().trim().required("Contact Phone is required"),
-  admin_email: string()
+  defaultContactPhone: string().trim().required("Contact Phone is required"),
+  originalAdminEmail: string()
     .trim()
     .required("Admin Email is required")
     .email("Invalid email"),
   confirm_admin_email: string().oneOf(
-    [ref("admin_email"), null],
+    [ref("originalAdminEmail"), null],
     "Emails must match"
   ),
-  organization_code: string().trim().required("Organization code is required"),
+  slug: string().trim().required("Organization code is required"),
 });

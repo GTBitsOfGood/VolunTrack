@@ -1,5 +1,4 @@
 import { Table, Tooltip } from "flowbite-react";
-import Link from "next/link";
 import PropTypes from "prop-types";
 import React from "react";
 import { Button, Modal, ModalHeader } from "reactstrap";
@@ -13,7 +12,7 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
-import { Icon } from "../../components/Icon";
+// import { Icon } from "../../components/Icon";
 
 class VolunteerTable extends React.Component {
   constructor(props) {
@@ -38,6 +37,10 @@ class VolunteerTable extends React.Component {
     this.props.deleteUserCallback(id);
   };
 
+  statsOnClick = (user) => {
+    router.push(`stats/${user._id}`);
+  };
+
   onModalClose = () => {
     this.setState({
       userSelectedForEdit: null,
@@ -54,10 +57,6 @@ class VolunteerTable extends React.Component {
   handleSubmit = (values) => {
     this.props.editUserCallback(this.state.userSelectedForEdit?._id, values);
     this.onModalClose();
-  };
-
-  statsOnClick = (user) => {
-    router.push(`stats/${user._id}`);
   };
 
   render() {

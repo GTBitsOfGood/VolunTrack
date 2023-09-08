@@ -16,18 +16,22 @@ const AuthPage = (props) => {
   };
 
   return (
-    <div className="flex-column flex h-full w-full items-center justify-center">
-      <div className="flex-column mx-auto my-2 flex w-1/2 items-center justify-center lg:w-1/4">
+    <div className="flex-column my-4 flex h-full w-full items-center justify-center">
+      <div
+        className={
+          "flex-column mx-auto mb-8 flex w-5/6 items-center justify-center rounded-xl border p-8 shadow-xl sm:w-[28rem] " +
+          (props.createAccount ? "mt-64 md:mt-48" : "mt-16")
+        }
+      >
         {/* <img
           alt="Bits of Good Logo"
           src="/images/bog_logo.png"
           style={{ width: "100%", marginBottom: "2px" }}
         /> */}
-        <div className="h-28" />
         <Text
           text={props.createAccount ? "Create an Account" : "Sign In"}
           type="header"
-          className="pb-2"
+          className="mb-4 pt-3"
         />
         <div className="flex w-full flex-wrap items-center gap-2">
           <Button color="light" className="w-full py-1" onClick={login}>
@@ -39,7 +43,7 @@ const AuthPage = (props) => {
             <p className="my-0 text-lg">Continue with Google</p>
           </Button>
         </div>
-        <div className="mt-2 flex w-full items-center justify-between">
+        <div className="mb-1 mt-4 flex w-full items-center justify-between">
           <hr size="150" width="150" color="#6C757D" />
           <Text text="OR" />
           <hr size="150" width="150" color="#6C757D" />
@@ -61,6 +65,18 @@ const AuthPage = (props) => {
             className="ml-2"
           />
         </div>
+        {/*{!props.createAccount && (*/}
+        {/*  <div className="mt-1 flex items-center">*/}
+        {/*    Forgot Password?*/}
+        {/*    <Text*/}
+        {/*      text={"Reset Password"}*/}
+        {/*      href={`${window.location.origin}/${*/}
+        {/*        props.createAccount ? "login" : "create-account"*/}
+        {/*      }`}*/}
+        {/*      className="ml-2"*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*)}*/}
       </div>
       <div className="grow" />
       <Footer />

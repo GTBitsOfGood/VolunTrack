@@ -4,24 +4,23 @@ import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
+import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
-import EventUnregisterModal from "../../../components/EventUnregisterModal";
-import Text from "../../../components/Text";
+import { getRegistrations } from "../../../queries/registrations";
 
 const Styled = {
   EventTableAll: styled.div`
     display: flex;
     flex-direction: column;
-    background-color: ${variables["gray-100"]};
     padding-top: 2rem;
     padding-bottom: 4rem;
   `,
   EventTable: styled.div`
     display: flex;
     flex-direction: row;
-    background-color: ${variables["gray-100"]};
     height: 100vh;
   `,
   EventCol: styled.div`
@@ -66,7 +65,6 @@ const Styled = {
   InfoTableCol: styled.div`
     display: flex;
     flex-direction: column;
-    background-color: white;
     width: 250px;
   `,
   InfoTableText: styled.p`
@@ -100,12 +98,25 @@ const EventInfo = () => {
   const { data: session } = useSession();
   const user = session.user;
   const context = useContext(RequestContext);
+  const [registrations, setRegistrations] = useState([]);
+  const [regCount, setRegCount] = useState(0);
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
       setEvent(result.data.event);
+    });
+    getRegistrations({ eventId }).then((result) => {
+      setRegistrations(result.data.registrations);
+      let count = 0;
+      result.data.registrations.map((reg) => {
+        count += 1 + reg.minors.length;
+        if (user.role === "volunteer" && reg.userId === user._id)
+          setIsRegistered(true);
+      });
+      setRegCount(count);
     });
   };
 
@@ -170,18 +181,16 @@ const EventInfo = () => {
         <Styled.EventTable>
           <Col>
             <Styled.EventCol>
-              <Styled.EventName>{event.title}</Styled.EventName>
+              <Styled.EventName>{event.eventParent.title}</Styled.EventName>
               <Styled.EventSubhead>
                 <Styled.Slots>
                   {" "}
-                  {event.max_volunteers} Slots
-                  {/* TODO: {event.max_volunteers - event.volunteers.length} Slots*/}
-                  Remaining
+                  {event.eventParent.maxVolunteers - regCount} Slots Remaining
                 </Styled.Slots>
                 <Styled.Date>{lastUpdated}</Styled.Date>
               </Styled.EventSubhead>
               <Styled.Info>
-                {event.isValidForCourtHours && (
+                {event.eventParent.isValidForCourtHours && (
                   <span style={{ fontWeight: "bold" }}>
                     {"This event can count toward court required hours"}
                   </span>
@@ -189,7 +198,11 @@ const EventInfo = () => {
               </Styled.Info>
               <Styled.Info>
                 {" "}
-                <div dangerouslySetInnerHTML={{ __html: event.description }} />
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: event.eventParent.description,
+                  }}
+                />
               </Styled.Info>
             </Styled.EventCol>
           </Col>
@@ -211,12 +224,32 @@ const EventInfo = () => {
                   </div>
                 </>
               )}
+              {/*It should only ever display one of the following buttons*/}
               {user.role === "volunteer" &&
-                // event.volunteers.includes(user._id) &&
+                isRegistered &&
                 futureorTodaysDate && (
                   <BoGButton
                     text="Unregister"
                     onClick={() => onUnregisterClicked(event)}
+                  />
+                )}
+              {user.role === "volunteer" &&
+                event.eventParent.maxVolunteers - regCount > 0 &&
+                !isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    text="Register"
+                    onClick={() => onRegisterClicked(event)}
+                  />
+                )}
+              {user.role === "volunteer" &&
+                event.eventParent.maxVolunteers - regCount <= 0 &&
+                !isRegistered &&
+                futureorTodaysDate && (
+                  <BoGButton
+                    disabled={true}
+                    text="Registration Closed"
+                    onClick={null}
                   />
                 )}
             </Row>
@@ -224,7 +257,7 @@ const EventInfo = () => {
               <Styled.EventCol2 style={{ "margin-right": "auto" }}>
                 <Styled.InfoHead>Event Information</Styled.InfoHead>
                 <Styled.InfoTable>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
                       <b>Date:</b>
                       <br></br>
@@ -233,26 +266,27 @@ const EventInfo = () => {
                     <Styled.InfoTableText>
                       <b>Event Contact:</b>
                       <br></br>
-                      {event.eventContactPhone}
+                      {event.eventParent.eventContactPhone}
                       <br></br>
-                      {event.eventContactEmail}
+                      {event.eventParent.eventContactEmail}
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
-                  <Styled.InfoTableCol>
+                  <Styled.InfoTableCol className="bg-grey">
                     <Styled.InfoTableText>
                       <b>Time:</b>
                       <br></br>
-                      {convertTime(event.startTime)} -{" "}
-                      {convertTime(event.endTime)} {event.localTime}
+                      {convertTime(event.eventParent.startTime)} -{" "}
+                      {convertTime(event.eventParent.endTime)}{" "}
+                      {event.eventParent.localTime}
                     </Styled.InfoTableText>
                     <Styled.InfoTableText>
                       <b>Location:</b>
                       <br></br>
-                      {event.address}
+                      {event.eventParent.address}
                       <br></br>
-                      {event.city}, {event.state}
+                      {event.eventParent.city}, {event.eventParent.state}
                       <br></br>
-                      {event.zip}
+                      {event.eventParent.zip}
                       <br></br>
                     </Styled.InfoTableText>
                   </Styled.InfoTableCol>
@@ -261,7 +295,7 @@ const EventInfo = () => {
             </Row>
             <br></br>
             <br></br>
-            {event.orgName !== "" && (
+            {event.eventParent.orgName !== "" && (
               <Row>
                 <Styled.EventCol2>
                   <Styled.InfoHead>Organization</Styled.InfoHead>
@@ -270,33 +304,34 @@ const EventInfo = () => {
                       <Styled.InfoTableText>
                         <b>Point of Contact Name</b>
                         <br></br>
-                        {event.pocName}
+                        {event.eventParent.pocName}
                       </Styled.InfoTableText>
                       <Styled.InfoTableText>
                         <b>Point of Contact Email</b>
                         <br></br>
-                        {event.pocEmail}
+                        {event.eventParent.pocEmail}
                       </Styled.InfoTableText>
                       <Styled.InfoTableText>
                         <b>Point of Contact Phone</b>
                         <br></br>
-                        {event.pocPhone}
+                        {event.eventParent.pocPhone}
                       </Styled.InfoTableText>
                     </Styled.InfoTableCol>
                     <Styled.InfoTableCol>
                       <Styled.InfoTableText>
                         <b>Organization Name</b>
                         <br></br>
-                        {event.orgName}
+                        {event.eventParent.orgName}
                       </Styled.InfoTableText>
                       <Styled.InfoTableText>
                         <b>Location</b>
                         <br></br>
-                        {event.orgAddress}
+                        {event.eventParent.orgAddress}
                         <br></br>
-                        {event.orgCity}, {event.orgState}
+                        {event.eventParent.orgCity},{" "}
+                        {event.eventParent.orgState}
                         <br></br>
-                        {event.orgZip}
+                        {event.eventParent.orgZip}
                       </Styled.InfoTableText>
                     </Styled.InfoTableCol>
                   </Styled.InfoTable>
@@ -313,33 +348,6 @@ const EventInfo = () => {
             )}
           </Col>
         </Styled.EventTable>
-        {user.role === "volunteer" &&
-          // event.max_volunteers - event.volunteers.length !== 0 &&
-          // !event.volunteers.includes(user._id) &&
-          futureorTodaysDate && (
-            <BoGButton
-              text="Register"
-              onClick={() => onRegisterClicked(event)}
-            />
-          )}
-        {user.role === "volunteer" &&
-          // event.max_volunteers - event.volunteers.length === 0 &&
-          // !event.volunteers.includes(user._id) &&
-          futureorTodaysDate && (
-            <BoGButton
-              disabled={true}
-              text="Registration Closed"
-              onClick={null}
-            />
-          )}
-        {user.role === "volunteer" &&
-          // event.volunteers.includes(user._id) &&
-          futureorTodaysDate && (
-            <BoGButton
-              text="You are registered for this event!"
-              disabled={true}
-            />
-          )}
         <EventUnregisterModal
           open={showUnregisterModal}
           toggle={toggleUnregisterModal}

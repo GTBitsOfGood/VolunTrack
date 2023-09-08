@@ -8,6 +8,7 @@ export default async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     dbName: process.env.DB_NAME,
+    maxPoolSize: 3,
   }).catch((e) => {
     throw e;
   });

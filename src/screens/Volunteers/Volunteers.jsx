@@ -70,9 +70,10 @@ class Volunteers extends React.Component {
     });
   };
   filteredAndSortedVolunteers = () => {
+    console.log(this.state.users);
     const filterArray = this.state.users.filter(
       (user) =>
-        user.name
+        (user.firstName + " " + user.lastName)
           ?.toLowerCase()
           .includes(this.state.searchValue.toLowerCase()) ||
         user.email?.toLowerCase().includes(this.state.searchValue.toLowerCase())

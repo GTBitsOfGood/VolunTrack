@@ -1,12 +1,16 @@
 import { Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../../components/BoGButton";
-import { updateAttendance } from "../../../../queries/attendances";
+import InputField from "../../../../components/Forms/InputField";
+import {
+  getAttendance,
+  updateAttendance,
+} from "../../../../queries/attendances";
 import * as SForm from "../../../sharedStyles/formStyles";
 import { timeValidator } from "../eventHelpers";
-import InputField from "../../../../components/Forms/InputField";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -35,112 +39,123 @@ const Styled = {
   `,
 };
 
-const EditEventStatsForm = ({ toggle, event }) => {
+const EditEventStatsForm = ({ toggle, stat }) => {
+  console.log(stat);
+  const [attendance, setAttendance] = useState(stat);
+
   const onSubmitEditEvent = (values, setSubmitting) => {
-    const editedEvent = {
-      ...event,
+    const editedStat = {
+      ...attendance,
     };
-    editedEvent.checkinTime = new Date(
+    editedStat.checkinTime = new Date(
       new Date(
-        new Date(event.checkinTime) - new Date().getTimezoneOffset() * 60_000
+        new Date(editedStat.checkinTime) -
+          new Date().getTimezoneOffset() * 60_000
       )
         .toISOString()
         .slice(0, 11) + values.checkin
     ).toISOString();
-    editedEvent.checkoutTime = new Date(
+    editedStat.checkoutTime = new Date(
       new Date(
-        new Date(event.checkoutTime) - new Date().getTimezoneOffset() * 60_000
+        new Date(editedStat.checkoutTime) -
+          new Date().getTimezoneOffset() * 60_000
       )
         .toISOString()
         .slice(0, 11) + values.checkout
     ).toISOString();
     setSubmitting(true);
-    updateAttendance(event._id, editedEvent);
+    updateAttendance(stat._id, editedStat).then((response) => {
+      setAttendance(response.data.attendance);
+    });
     toggle();
   };
 
   return (
-    <Formik
-      initialValues={{
-        name: event.volunteerName,
-        email: event.volunteerEmail,
-        checkin: new Date(event.checkinTime).toLocaleTimeString("en-GB"),
-        checkout: new Date(event.checkoutTime).toLocaleTimeString("en-GB"),
-      }}
-      onSubmit={(values, { setSubmitting }) => {
-        onSubmitEditEvent(values, setSubmitting);
-      }}
-      validationSchema={timeValidator}
-    >
-      {({ handleSubmit, isValid, isSubmitting, errors, touched, values }) => {
-        return (
-          <>
-            <Styled.ModalBody>
-              <Styled.Form>
-                <SForm.FormGroup>
-                  <Row>
-                    <Col>
-                      <Row
-                        style={{
-                          padding: "5px",
-                          fontWeight: "bold",
-                          color: "gray",
-                        }}
-                      >
-                        Event Information
-                      </Row>
-                      <Row>
-                        <Styled.Col>
-                          <InputField
-                            name="name"
-                            label="Name"
-                            disabled={true}
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <InputField
-                            name="email"
-                            label="Email"
-                            disabled={true}
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <InputField
-                            name="checkin"
-                            label="Check In Time"
-                            type="time"
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <InputField
-                            name="checkout"
-                            label="Check Out Time"
-                            type="time"
-                          />
-                        </Styled.Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </SForm.FormGroup>
-              </Styled.Form>
-            </Styled.ModalBody>
-            <ModalFooter>
-              <BoGButton text="Cancel" onClick={toggle} outline={true} />
-              <BoGButton
-                text="Update"
-                onClick={handleSubmit}
-                disabled={!isValid || isSubmitting}
-              />
-            </ModalFooter>
-          </>
-        );
-      }}
-    </Formik>
+    attendance && (
+      <Formik
+        initialValues={{
+          name: stat.volunteerName,
+          email: stat.volunteerEmail,
+          checkin: new Date(attendance.checkinTime).toLocaleTimeString("en-GB"),
+          checkout: new Date(attendance.checkoutTime).toLocaleTimeString(
+            "en-GB"
+          ),
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          onSubmitEditEvent(values, setSubmitting);
+        }}
+        validationSchema={timeValidator}
+      >
+        {({ handleSubmit, isValid, isSubmitting, errors, touched, values }) => {
+          return (
+            <>
+              <Styled.ModalBody>
+                <Styled.Form>
+                  <SForm.FormGroup>
+                    <Row>
+                      <Col>
+                        <Row
+                          style={{
+                            padding: "5px",
+                            fontWeight: "bold",
+                            color: "gray",
+                          }}
+                        >
+                          Event Information
+                        </Row>
+                        <Row>
+                          <Styled.Col>
+                            <InputField
+                              name="name"
+                              label="Name"
+                              disabled={true}
+                            />
+                          </Styled.Col>
+                          <Styled.Col>
+                            <InputField
+                              name="email"
+                              label="Email"
+                              disabled={true}
+                            />
+                          </Styled.Col>
+                          <Styled.Col>
+                            <InputField
+                              name="checkin"
+                              label="Check In Time"
+                              type="time"
+                            />
+                          </Styled.Col>
+                          <Styled.Col>
+                            <InputField
+                              name="checkout"
+                              label="Check Out Time"
+                              type="time"
+                            />
+                          </Styled.Col>
+                        </Row>
+                      </Col>
+                    </Row>
+                  </SForm.FormGroup>
+                </Styled.Form>
+              </Styled.ModalBody>
+              <ModalFooter>
+                <BoGButton text="Cancel" onClick={toggle} outline={true} />
+                <BoGButton
+                  text="Update"
+                  onClick={handleSubmit}
+                  disabled={!isValid || isSubmitting}
+                />
+              </ModalFooter>
+            </>
+          );
+        }}
+      </Formik>
+    )
   );
 };
 
 EditEventStatsForm.propTypes = {
-  event: PropTypes.object,
+  stat: PropTypes.object,
   toggle: PropTypes.func.isRequired,
 };
 
