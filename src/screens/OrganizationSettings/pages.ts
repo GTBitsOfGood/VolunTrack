@@ -3,7 +3,9 @@ import {
   BuildingOffice2Icon,
   AdjustmentsHorizontalIcon,
   DocumentTextIcon,
+  DocumentPlusIcon,
 } from "@heroicons/react/24/solid";
+import WaiverManager from "../Waivers/WaiverManager";
 
 export const organizationSettingsPages: Page[] = [
   {
@@ -88,6 +90,29 @@ export const organizationSettingsPages: Page[] = [
     helperText:
       "Motivate and engage volunteers by setting thresholds for different medals",
     sections: [
+      {
+        title: "Event Medal Thresholds",
+        fields: [
+          { name: "eventSilver", label: "Silver Medal", type: "number" },
+          { name: "eventGold", label: "Gold Medal", type: "number" },
+        ],
+      },
+      {
+        title: "Hours Volunteered Medal Thresholds",
+        fields: [
+          { name: "hoursSilver", label: "Silver Medal", type: "number" },
+          { name: "hoursGold", label: "Gold Medal", type: "number" },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Waiver Management",
+    key: "waivers",
+    icon: DocumentPlusIcon,
+    helperText: "Manage format and text within waivers for organization",
+    sections: [
+      // <WaiverManager>
       {
         title: "Event Medal Thresholds",
         fields: [
