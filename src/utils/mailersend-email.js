@@ -118,11 +118,11 @@ const sendResetEmail = async (user, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom(personalization[0].data.eventContactEmail) // .setFrom("volunteer@bitsofgood.org")
+    .setFrom(personalization[0].data.eventContactEmail)
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
-    // .setBcc([new Recipient(organization.notificationEmail)])
+    .setBcc([new Recipient(organization.notificationEmail)])
     .setTemplateId("x2p03479p5pgzdrn")
     .setPersonalization(personalization);
 
@@ -131,7 +131,8 @@ const sendResetEmail = async (user, personalization, subject) => {
   });
 };
 
-const sendEmail = async (user, organization, personalization, subject) => {
+const sendEmail = async (user, personalization, subject) => {
+  let organization = await Organization.findById(user.organizationId).lean();
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
