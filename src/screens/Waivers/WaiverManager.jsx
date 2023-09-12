@@ -5,6 +5,8 @@ import "react-quill/dist/quill.snow.css";
 import BoGButton from "../../components/BoGButton";
 import { getWaivers, updateWaiver } from "../../queries/waivers";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
+import { Toast } from "flowbite-react";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 const WaiverManager = () => {
   let ReactQuill;
@@ -21,6 +23,8 @@ const WaiverManager = () => {
   const [adultContent, setAdultContent] = useState("");
   const [minorContent, setMinorContent] = useState("");
   const [onAdultTab, setTab] = useState(true);
+  const [minorSaved, setMinorSaved] = useState(false);
+  const [adultSaved, setAdultSaved] = useState(false);
 
   const loadWaivers = async () => {
     const adult = await getWaivers("adult", user.organizationId);
@@ -46,6 +50,7 @@ const WaiverManager = () => {
       text: adultContent,
       organizationId: user.organizationId,
     });
+    setAdultSaved(true);
   };
 
   const submitMinor = () => {
@@ -54,6 +59,7 @@ const WaiverManager = () => {
       text: minorContent,
       organizationId: user.organizationId,
     });
+    setMinorSaved(true);
   };
 
   const setAdultTab = () => {
@@ -72,6 +78,19 @@ const WaiverManager = () => {
           onClick={setAdultTab}
           active={onAdultTab}
         >
+          {adultSaved && (
+            <div className="pb-3">
+              <Toast>
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                  <CheckCircleIcon className="h-5 w-5" />
+                </div>
+                <div className="ml-3 text-sm font-normal">
+                  Adult waiver saved successfully!
+                </div>
+                <Toast.Toggle />
+              </Toast>
+            </div>
+          )}
           <div className="mb-4 bg-white">
             <ReactQuill
               value={adultContent}
@@ -90,6 +109,19 @@ const WaiverManager = () => {
           onClick={setMinorTab}
           active={!onAdultTab}
         >
+          {minorSaved && (
+            <div className="pb-3">
+              <Toast>
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                  <CheckCircleIcon className="h-5 w-5" />
+                </div>
+                <div className="ml-3 text-sm font-normal">
+                  Minor waiver saved successfully!
+                </div>
+                <Toast.Toggle />
+              </Toast>
+            </div>
+          )}
           <div className="mb-4 bg-white">
             <ReactQuill
               value={minorContent}
