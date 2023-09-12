@@ -108,26 +108,9 @@ export const organizationSettingsPages: Page[] = [
   },
   {
     title: "Waiver Management",
-    key: "waivers",
+    key: "waiver",
     icon: DocumentPlusIcon,
-    helperText: "Manage format and text within waivers for organization",
-    sections: [
-      // <WaiverManager>
-      {
-        title: "Event Medal Thresholds",
-        fields: [
-          { name: "eventSilver", label: "Silver Medal", type: "number" },
-          { name: "eventGold", label: "Gold Medal", type: "number" },
-        ],
-      },
-      {
-        title: "Hours Volunteered Medal Thresholds",
-        fields: [
-          { name: "hoursSilver", label: "Silver Medal", type: "number" },
-          { name: "hoursGold", label: "Gold Medal", type: "number" },
-        ],
-      },
-    ],
+    sections: [],
   },
 ];
 
