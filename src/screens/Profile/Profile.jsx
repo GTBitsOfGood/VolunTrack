@@ -24,7 +24,7 @@ const Profile = () => {
 
   return (
     <div className="flex w-full justify-center pt-4">
-      <div className="w-3/4 rounded-md bg-white p-3 md:w-1/2">
+      <div className="w-3/4 rounded-md bg-grey p-3 md:w-1/2">
         <p className="text-2xl font-semibold text-primaryColor">{`${user.firstName} ${user.lastName}`}</p>
         <p className="mb-2 capitalize">{user.role}</p>
         <EditUserForm

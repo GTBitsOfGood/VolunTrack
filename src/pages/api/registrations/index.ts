@@ -44,7 +44,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = registrationInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
 
-      // TODO: logic to prevent duplicate signups
       await sendRegistrationConfirmationEmail(
         result.data.userId,
         result.data.eventId

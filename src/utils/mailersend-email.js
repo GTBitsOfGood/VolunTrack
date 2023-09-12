@@ -41,6 +41,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
 
   sendEmail(
     user,
+    organization,
     personalization,
     `Registration Confirmed for ${event.eventParent.title}`
   );
@@ -72,14 +73,14 @@ export const sendResetCodeEmail = async (user, email, code) => {
 };
 
 export const sendEventEditedEmail = async (user, event, eventParent) => {
-  let nonprofit = await Organization.findById(user.organizationId).lean().name;
+  let organization = await Organization.findById(user.organizationId).lean();
 
   const personalization = [
     {
       email: user.email,
       data: {
-        header: `${nonprofit} edited ${eventParent.title}`,
-        introLine: `It looks like an admin at ${nonprofit} edited ${eventParent.title}! 
+        header: `${organization.name} edited ${eventParent.title}`,
+        introLine: `It looks like an admin at ${organization.name} edited ${eventParent.title}! 
         Please review the event details below and ensure they still work with your schedule.`,
         eventTitle: eventParent.title,
         volunteerName: user.firstName,
@@ -93,11 +94,16 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
         eventZipCode: eventParent.zip,
         eventDescription: eventParent.description?.replace(/<[^>]+>/g, " "),
         eventContactEmail: eventParent.eventContactEmail,
-        nonprofitName: nonprofit,
+        nonprofitName: organization.name,
       },
     },
   ];
-  sendEmail(user, personalization, `${eventParent.title} has been updated`);
+  sendEmail(
+    user,
+    organization,
+    personalization,
+    `${eventParent.title} has been updated`
+  );
 };
 
 const sendResetEmail = async (user, personalization, subject) => {
@@ -112,10 +118,11 @@ const sendResetEmail = async (user, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom(personalization[0].data.eventContactEmail)
+    .setFrom(personalization[0].data.eventContactEmail) // .setFrom("volunteer@bitsofgood.org")
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
+    // .setBcc([new Recipient(organization.notificationEmail)])
     .setTemplateId("x2p03479p5pgzdrn")
     .setPersonalization(personalization);
 
@@ -124,9 +131,7 @@ const sendResetEmail = async (user, personalization, subject) => {
   });
 };
 
-const sendEmail = async (user, personalization, subject) => {
-  let organization = await Organization.findById(user.organizationId).lean();
-
+const sendEmail = async (user, organization, personalization, subject) => {
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
@@ -136,11 +141,11 @@ const sendEmail = async (user, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom(personalization[0].data.eventContactEmail)
+    .setFrom("volunteer@bitsofgood.org")
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
-    .setBcc(organization.notificationEmail)
+    .setBcc([new Recipient(organization.notificationEmail)])
     .setTemplateId("vywj2lpov8p47oqz")
     .setPersonalization(personalization);
 

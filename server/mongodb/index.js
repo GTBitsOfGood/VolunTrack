@@ -3,7 +3,6 @@ import urls from "../../utils/urls";
 
 export default async () => {
   if (connections?.[0].readyState) return;
-  console.log("db connect");
 
   await connect(urls.dbUrl, {
     useNewUrlParser: true,

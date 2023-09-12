@@ -39,37 +39,34 @@ const Styled = {
   `,
 };
 
-const EditEventStatsForm = ({ toggle, event }) => {
-  const [attendance, setAttendance] = useState(undefined);
-
-  useEffect(() => {
-    getAttendance(event.attendanceId[0]).then((res) => {
-      setAttendance(res.data.attendance);
-    });
-  }, [event]);
+const EditEventStatsForm = ({ toggle, stat }) => {
+  console.log(stat);
+  const [attendance, setAttendance] = useState(stat);
 
   const onSubmitEditEvent = (values, setSubmitting) => {
-    const editedEvent = {
+    const editedStat = {
       ...attendance,
     };
-    editedEvent.checkinTime = new Date(
+    editedStat.checkinTime = new Date(
       new Date(
-        new Date(editedEvent.checkinTime) -
+        new Date(editedStat.checkinTime) -
           new Date().getTimezoneOffset() * 60_000
       )
         .toISOString()
         .slice(0, 11) + values.checkin
     ).toISOString();
-    editedEvent.checkoutTime = new Date(
+    editedStat.checkoutTime = new Date(
       new Date(
-        new Date(editedEvent.checkoutTime) -
+        new Date(editedStat.checkoutTime) -
           new Date().getTimezoneOffset() * 60_000
       )
         .toISOString()
         .slice(0, 11) + values.checkout
     ).toISOString();
     setSubmitting(true);
-    updateAttendance(event.attendanceId, editedEvent);
+    updateAttendance(stat._id, editedStat).then((response) => {
+      setAttendance(response.data.attendance);
+    });
     toggle();
   };
 
@@ -77,8 +74,8 @@ const EditEventStatsForm = ({ toggle, event }) => {
     attendance && (
       <Formik
         initialValues={{
-          name: event.volunteerName,
-          email: event.volunteerEmail,
+          name: stat.volunteerName,
+          email: stat.volunteerEmail,
           checkin: new Date(attendance.checkinTime).toLocaleTimeString("en-GB"),
           checkout: new Date(attendance.checkoutTime).toLocaleTimeString(
             "en-GB"
@@ -158,7 +155,7 @@ const EditEventStatsForm = ({ toggle, event }) => {
 };
 
 EditEventStatsForm.propTypes = {
-  event: PropTypes.object,
+  stat: PropTypes.object,
   toggle: PropTypes.func.isRequired,
 };
 

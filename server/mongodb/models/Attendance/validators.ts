@@ -7,6 +7,9 @@ export const attendanceInputClientValidator = z.object({
   organizationId: z.instanceof(Types.ObjectId),
   checkinTime: z.date().optional(),
   checkoutTime: z.date().optional(),
+  eventName: z.string().optional(),
+  volunteerName: z.string().optional(),
+  volunteerEmail: z.string().optional(),
 });
 
 export const attendanceInputServerValidator = z.object({
@@ -22,6 +25,9 @@ export const attendanceInputServerValidator = z.object({
     (id) => isValidObjectId(id),
     (id) => ({ message: `organizationId ${id} is not a valid ObjectId` })
   ),
+  eventName: z.string().optional(),
+  volunteerName: z.string().optional(),
+  volunteerEmail: z.string().optional(),
   checkinTime: z.string().datetime().optional(),
   checkoutTime: z.string().datetime().optional(),
 });

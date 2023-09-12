@@ -1,6 +1,6 @@
 import "flowbite-react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BoGButton from "../../../../components/BoGButton";
 import SearchBar from "../../../../components/SearchBar";
@@ -101,7 +101,14 @@ const EventAttendance = () => {
   }, []);
 
   const checkIn = async (volunteer) => {
-    await checkInVolunteer(volunteer._id, eventId, volunteer.organizationId);
+    await checkInVolunteer(
+      volunteer._id,
+      eventId,
+      volunteer.organizationId,
+      volunteer.firstName + " " + volunteer.lastName,
+      volunteer.email,
+      event.eventParent.title
+    );
 
     setWaitingVolunteers(
       waitingVolunteers.filter((v) => v._id !== volunteer._id)
@@ -154,31 +161,97 @@ const EventAttendance = () => {
     );
   };
 
+  const convertTime = (time) => {
+    if (!time) return "";
+    let [hour, min] = time.split(":");
+    let hours = parseInt(hour);
+    let suffix = time[-2];
+    if (!(suffix in ["pm", "am", "PM", "AM"])) {
+      suffix = hours > 11 ? "pm" : "am";
+    }
+    hours = ((hours + 11) % 12) + 1;
+    return hours.toString() + ":" + min + suffix;
+  };
+
   return (
     <>
       <Styled.Container>
         <Text className="mb-4" href={`/events`} text="← Back to home" />
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
-          <BoGButton text="End Event" onClick={endEvent} />
-        </Styled.HeaderRow>
-        <SearchBar
-          placeholder="Search by Volunteer Name or Email"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-
-        <AttendanceFunctionality
-          waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
-          checkedInVolunteers={filteredAndSortedVolunteers(checkedInVolunteers)}
-          checkedOutVolunteers={filteredAndSortedVolunteers(
-            checkedOutVolunteers
+          {event.isEnded ? (
+            <BoGButton text="Reopen Event" onClick={reopenEvent} />
+          ) : (
+            <BoGButton text="End Event" onClick={endEvent} />
           )}
-          minors={minors}
-          checkIn={checkIn}
-          checkOut={checkOut}
-          isEnded={event?.isEnded}
-        />
+        </Styled.HeaderRow>
+
+        <div className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3">
+          <Text
+            text={event?.eventParent?.title}
+            type="header"
+            className="mb-2 text-primaryColor"
+          />
+          <Text text="Date & Time:" className="font-bold" />
+          <Text
+            text={
+              event?.date?.substring(0, 10) +
+              ", " +
+              convertTime(event?.eventParent?.startTime) +
+              " - " +
+              convertTime(event?.eventParent?.endTime)
+            }
+            className="mb-2"
+          />
+          <Text text="Address:" className="font-bold" />
+          <Text
+            text={
+              event?.eventParent?.address +
+              ", " +
+              event?.eventParent?.city +
+              ", " +
+              event?.eventParent?.state +
+              " " +
+              event?.eventParent?.zip
+            }
+            className="mb-2"
+          />
+
+          <Text text="Description:" className="font-bold" />
+          <div
+            dangerouslySetInnerHTML={{
+              __html: event?.eventParent?.description,
+            }}
+            className="h-24 overflow-hidden"
+          />
+          <Text
+            className="mt-4"
+            href={`/events/${eventId}`}
+            text="See More Details"
+          />
+        </div>
+
+        <div className="mx-18 my-8 flex flex-col rounded-xl bg-grey px-6 py-3">
+          <SearchBar
+            placeholder="Search by Volunteer Name or Email"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+
+          <AttendanceFunctionality
+            waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
+            checkedInVolunteers={filteredAndSortedVolunteers(
+              checkedInVolunteers
+            )}
+            checkedOutVolunteers={filteredAndSortedVolunteers(
+              checkedOutVolunteers
+            )}
+            minors={minors}
+            checkIn={checkIn}
+            checkOut={checkOut}
+            isEnded={event?.isEnded}
+          />
+        </div>
       </Styled.Container>
       {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>

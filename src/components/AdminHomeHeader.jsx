@@ -39,7 +39,7 @@ const AdminHomeHeader = (props) => {
     if (final === props.dateString) {
       todaysEvents++;
       todaysRegistrations += props.registrations.filter(
-        (r) => (r.eventId = props.events[i]._id)
+        (r) => r.eventId === props.events[i]._id
       ).length;
     }
     let month = parseInt(props.events[i].date.slice(5, 7)) - 1;
@@ -53,11 +53,17 @@ const AdminHomeHeader = (props) => {
         props.attendances[i].checkinTime.slice(11, 16),
         props.attendances[i].checkoutTime.slice(11, 16)
       );
-      hoursData[month] += duration;
+      hoursData[month] += Math.round(duration * 100) / 100;
       hoursTotal += duration;
     }
     attendanceData[month] += 1;
     attendanceTotal += 1;
+
+    // rounding
+    for (let i = 0; i < hoursData.length; i++) {
+      hoursData[i] = Math.round(hoursData[i] * 100) / 100;
+    }
+    hoursTotal = Math.round(hoursTotal * 100) / 100;
   }
 
   const borderColor = "#374151";
@@ -198,10 +204,10 @@ const AdminHomeHeader = (props) => {
 
   return (
     <div className="flex-column">
-      <p className="font-weight-bold mx-2 mt-2 pb-3 text-2xl">Overview</p>
+      <p className="font-weight-bold mx-2 mt-2 text-2xl">Overview</p>
       <div className="flex">
         <div className="flex-column">
-          <div className="flex-column m-2 flex rounded-lg bg-white p-4">
+          <div className="flex-column m-2 flex rounded-lg bg-grey p-4">
             <h3 className="font-weight-bold pb-3 text-lg">
               {"Today's Overview"}
             </h3>
@@ -227,7 +233,7 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
 
-          <div className="flex-column m-2 flex rounded-lg bg-white p-4">
+          <div className="flex-column m-2 flex rounded-lg bg-grey p-4">
             <div className="flex items-center pb-3">
               <h3 className="font-weight-bold text-lg">Total Data</h3>
               <p className="pl-2 text-sm text-slate-600">
@@ -252,9 +258,15 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
         </div>
-        <div className="mixed-chart m-2 rounded-lg bg-white">
+        <div className="mixed-chart my-2 rounded-lg bg-grey p-2">
           {typeof window !== "undefined" && (
-            <Chart width={600} options={options} series={series} type="area" />
+            <Chart
+              width={600}
+              options={options}
+              series={series}
+              type="area"
+              className="bg-white pb-0"
+            />
           )}
         </div>
       </div>
