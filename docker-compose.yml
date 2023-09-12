@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  web:
+    image: helping-mama
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+  db:
+    image: mongo
+    ports:
+      - "27017:27017" # Expose MongoDB to host
+    volumes:
+      - mongodb_data:/data/db
+
+
+volumes:
+  mongodb_data:
