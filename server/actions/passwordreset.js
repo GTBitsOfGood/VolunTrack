@@ -1,7 +1,6 @@
-import { sendResetCodeEmail } from "../../src/utils/mailersend-email";
 import dbConnect from "../mongodb/index";
 import ResetCode from "../mongodb/models/ResetCode";
-import User from "../mongodb/models/user";
+import User from "../mongodb/models/User";
 
 export async function getUserIdFromCode(code) {
   await dbConnect();
@@ -40,15 +39,15 @@ export async function uploadResetCode(existingUser, email, code) {
   return { status: 200 };
 }
 
-function makeCode(length) {
-  let result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  let counter = 0;
-  while (counter < length) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    counter += 1;
-  }
-  return result;
-}
+// function makeCode(length) {
+//   let result = "";
+//   const characters =
+//     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+//   const charactersLength = characters.length;
+//   let counter = 0;
+//   while (counter < length) {
+//     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+//     counter += 1;
+//   }
+//   return result;
+// }

@@ -5,11 +5,14 @@ import {
 import { sendResetCodeEmail } from "../../../utils/mailersend-email";
 import { getUserIdFromCode } from "../../../../server/actions/passwordreset";
 
-export default async function handler(req, res, next) {
+export default async function handler(req, res) {
   if (req.method === "POST") {
     const email = req.query.email;
 
     const existingUser = await getUserFromEmail(email);
+
+    if (existingUser?.status === 400)
+      return res.status(400).json({ message: "User Does not Exist" });
 
     const code = makeCode(6);
     await uploadResetCode(existingUser, email, code);

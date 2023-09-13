@@ -23,15 +23,17 @@ const AuthPage = (props) => {
 
   const sendResetEmail = async () => {
     const email = document.getElementById("email1").value;
-    const response = await sendResetPasswordEmail(email);
 
-    if (response.status === 200) {
+    const response = await sendResetPasswordEmail(email).catch((error) => {
+      if (error.response.status !== 200) {
+        setShowModal(false);
+        alert(`Error sending email to ${email}.`);
+      }
+    });
+
+    if (response?.status === 200) {
       setShowModal(false);
-      alert(
-        "If an account with that email exists, a password reset email has been sent."
-      );
-    } else {
-      alert("Error sending email. An account with that email may not exist.");
+      alert(`A password reset email has been sent to ${email}.`);
     }
   };
 
