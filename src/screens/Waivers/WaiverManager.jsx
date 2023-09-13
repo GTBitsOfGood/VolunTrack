@@ -70,7 +70,7 @@ const WaiverManager = () => {
   };
 
   return (
-    <div className="flex-column mx-auto my-16 flex w-3/5">
+    <div className="flex-column mx-2 my-2 flex w-3/5 rounded-sm bg-grey p-4">
       <h2 className="text-lg font-bold">Manage Waivers</h2>
       <Tabs.Group style="underline">
         <Tabs.Item
@@ -84,7 +84,7 @@ const WaiverManager = () => {
                 <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
                   <CheckCircleIcon className="h-5 w-5" />
                 </div>
-                <div className="ml-3 text-sm font-normal">
+                <div className="pl-2 text-sm font-normal">
                   Adult waiver saved successfully!
                 </div>
                 <Toast.Toggle />
@@ -115,7 +115,7 @@ const WaiverManager = () => {
                 <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
                   <CheckCircleIcon className="h-5 w-5" />
                 </div>
-                <div className="ml-3 text-sm font-normal">
+                <div className="pl-2 text-sm font-normal">
                   Minor waiver saved successfully!
                 </div>
                 <Toast.Toggle />

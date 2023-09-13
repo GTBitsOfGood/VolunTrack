@@ -49,7 +49,7 @@ const OrganizationSettings = () => {
         setOrganizationData(response.data.organization);
       }
 
-      // window.addEventListener("beforeunload", handleWindowClose);
+      //window.addEventListener("beforeunload", handleWindowClose);
     }
     fetchData();
   }, []);
@@ -135,11 +135,8 @@ const OrganizationSettings = () => {
                   </div>
                 )}
                 <h3 className="text-2xl font-bold">{currentPage.title}</h3>
-                <p className="pb-3 text-slate-500">{currentPage.helperText}</p>
                 {currentPage.key === "waiver" && (
-                  <div className="rounded-sm bg-grey p-4">
-                    <WaiverManager></WaiverManager>
-                  </div>
+                  <WaiverManager></WaiverManager>
                 )}
                 {currentPage.key !== "waiver" && (
                   <div className="rounded-sm bg-grey p-4">
