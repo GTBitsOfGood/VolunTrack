@@ -12,6 +12,7 @@ import { RequestContext } from "../../providers/RequestProvider";
 import { sendResetPasswordEmail } from "../../actions/queries";
 import Footer from "../../components/Footer";
 import Text from "../../components/Text";
+import { stringify } from "querystring";
 
 const AuthPage = (props) => {
   const login = async (e) => {
@@ -24,9 +25,11 @@ const AuthPage = (props) => {
   const sendResetEmail = async () => {
     const email = document.getElementById("email1").value;
 
-    const response = await sendResetPasswordEmail(email).catch((error) => {
+    console.log(stringify({ email: email }));
+    const response = await sendResetPasswordEmail(
+      stringify({ email: email })
+    ).catch((error) => {
       if (error.response.status !== 200) {
-        setShowModal(false);
         alert(`Error sending email to ${email}.`);
       }
     });

@@ -41,8 +41,8 @@ export const deleteEvent = (_id, userId) =>
   axios.delete(`/api/events/${_id}?userId=${userId}`);
 
 // reset password functionality
-export const sendResetPasswordEmail = (email) =>
-  axios.post(`/api/auth/resetPassword?email=` + email);
+export const sendResetPasswordEmail = (emailParam) =>
+  axios.post(`/api/auth/resetPassword?${emailParam}`);
 
 export const getUserIdFromCode = (code) =>
   axios.get(`/api/auth/resetPassword?code=` + code);
