@@ -1,9 +1,10 @@
 import {
   getUserFromEmail,
   uploadResetCode,
+  getUserIdFromCode,
+  deleteResetCode,
 } from "../../../../server/actions/passwordreset";
 import { sendResetCodeEmail } from "../../../utils/mailersend-email";
-import { getUserIdFromCode } from "../../../../server/actions/passwordreset";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -28,6 +29,13 @@ export default async function handler(req, res) {
     return res.status(200).json({
       userId,
     });
+  } else if (req.method === "DELETE") {
+    const code = req.query.code;
+    const userId = req.body.userId;
+
+    await deleteResetCode(userId, code);
+
+    return res.status(204).json({ code: code });
   } else {
     res.status(404).json({ message: "Invalid Request Method" });
   }

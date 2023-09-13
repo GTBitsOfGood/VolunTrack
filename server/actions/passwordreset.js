@@ -39,6 +39,17 @@ export async function uploadResetCode(existingUser, email, code) {
   return { status: 200 };
 }
 
+export async function deleteResetCode(userId, code) {
+  await dbConnect();
+
+  await ResetCode.deleteOne({
+    userId: userId,
+    code: code,
+  });
+
+  return { status: 200 };
+}
+
 // function makeCode(length) {
 //   let result = "";
 //   const characters =

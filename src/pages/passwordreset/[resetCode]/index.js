@@ -13,7 +13,7 @@ import { TextInput, Button } from "flowbite-react";
 import { changePasswordValidator } from "../../../screens/Auth/helpers";
 import { Formik } from "formik";
 import InputField from "../../../components/Forms/InputField";
-import { updateUser } from "../../../actions/queries";
+import { updateUser, deleteResetCode } from "../../../actions/queries";
 
 const ResetPage = () => {
   const router = useRouter();
@@ -43,6 +43,9 @@ const ResetPage = () => {
     await updateUser(userId, {
       password: values.password,
     });
+
+    // delete the code from the ResetCode model
+    await deleteResetCode(resetCode, userId);
 
     setIsSubmitted(true);
   };
