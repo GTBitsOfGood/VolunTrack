@@ -25,7 +25,6 @@ const AuthPage = (props) => {
   const sendResetEmail = async () => {
     const email = document.getElementById("email1").value;
 
-    console.log(stringify({ email: email }));
     const response = await sendResetPasswordEmail(
       stringify({ email: email })
     ).catch((error) => {
