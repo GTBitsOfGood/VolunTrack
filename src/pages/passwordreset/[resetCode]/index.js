@@ -118,10 +118,11 @@ const ResetPage = () => {
                >Submit</Button> */}
                 </>
               ) : (
-                <>
+                <div>
                   Code is not valid. It may have expired or been used already.
-                  Please request a new one.
-                </>
+                  Please request a new one. Click <a href="/login">here</a> to
+                  return to login.
+                </div>
               )}
             </>
           ) : (

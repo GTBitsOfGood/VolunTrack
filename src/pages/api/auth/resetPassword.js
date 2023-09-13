@@ -31,11 +31,11 @@ export default async function handler(req, res) {
     });
   } else if (req.method === "DELETE") {
     const code = req.query.code;
-    const userId = req.body.userId;
+    const userId = req.query.userId;
 
     await deleteResetCode(userId, code);
 
-    return res.status(204).json({ code: code });
+    return res.status(204).end();
   } else {
     res.status(404).json({ message: "Invalid Request Method" });
   }
