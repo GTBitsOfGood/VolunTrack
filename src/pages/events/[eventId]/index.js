@@ -8,10 +8,10 @@ import { RequestContext } from "../../../providers/RequestProvider";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
-import BasicModal from "../../../components/BasicModal";
 import { updateEvent } from "../../../screens/Events/eventHelpers";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -299,7 +299,7 @@ const EventInfo = () => {
             )}
           </Col>
         </div>
-        <BasicModal
+        <ConfirmationModal
           open={showUnregisterModal}
           title={
             "Are you sure you want to cancel your registration for this event?"

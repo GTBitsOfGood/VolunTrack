@@ -15,7 +15,7 @@ import Text from "../components/Text";
 import { getRegistrations } from "../queries/registrations";
 import EventEditModal from "../screens/Events/Admin/EventEditModal";
 import ConfirmationModal from "../components/ConfirmationModal";
-import { deleteEvent } from "../actions/queries";
+import { deleteEvent } from "../queries/events";
 
 const EventCard = (props) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StatsTable from "../../../../components/StatsTable";
 import ConfirmationModal from "../../../../components/ConfirmationModal";
-import BasicModal from "../../../../components/BasicModal";
 import { getAttendances } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
 import { getRegistrations } from "../../../../queries/registrations";
@@ -187,7 +186,7 @@ const EventStatistics = () => {
         toggle={toggleEditModal}
         event={currEvent}
       />
-      <BasicModal
+      <ConfirmationModal
         open={showDeleteModal}
         title={`Are you sure you want to delete this entry ${(
           <strong>permanently</strong>

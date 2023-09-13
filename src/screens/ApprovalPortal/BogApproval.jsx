@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import { getOrganizations } from "../../queries/organizations";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import OrganizationCard from "./OrganizationCard";
-import OrganizationToggleModal from "./OrganizationToggleModal";
-import BasicModal from "../../components/BasicModal";
 
 const BogApproval = () => {
   const [loading, setLoading] = useState(true);
@@ -91,7 +89,7 @@ const BogApproval = () => {
           ))}
       </div>
       {currOrganization && (
-        <BasicModal
+        <ConfirmationModal
           open={openModal}
           text={`By clicking the confirm button, this volunteer management platform \
             will become ${
