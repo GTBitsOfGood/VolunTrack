@@ -156,6 +156,8 @@ const EventInfo = () => {
                 <div
                   dangerouslySetInnerHTML={{
                     __html: event.eventParent.description,
+                  }}
+                />
               </p>
             </div>
           </Col>
