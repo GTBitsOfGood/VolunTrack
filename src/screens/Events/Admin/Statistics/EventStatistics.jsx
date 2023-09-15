@@ -178,7 +178,7 @@ const EventStatistics = () => {
         toggle={toggleEditModal}
         event={currEvent}
       />
-      <EventStatsDeleteModal  
+      <EventStatsDeleteModal
         open={showDeleteModal}
         toggle={toggleDeleteModal}
         event={currEvent}

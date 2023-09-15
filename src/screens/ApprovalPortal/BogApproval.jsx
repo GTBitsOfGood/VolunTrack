@@ -2,7 +2,10 @@ import { Spinner } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useEffect, useState } from "react";
-import { getOrganizations } from "../../queries/organizations";
+import {
+  getOrganizations,
+  toggleOrganizationActive,
+} from "../../queries/organizations";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import OrganizationCard from "./OrganizationCard";
 
@@ -30,7 +33,7 @@ const BogApproval = () => {
   }, []);
 
   const onConfirmModal = () => {
-    toggleStatus(currOrganization.organizationId);
+    toggleOrganizationActive(currOrganization.organizationId);
     onCloseModal();
     onRefresh();
   };
