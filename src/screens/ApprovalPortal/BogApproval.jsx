@@ -10,9 +10,6 @@ const BogApproval = () => {
   const [loading, setLoading] = useState(true);
   const [organizations, setOrganizations] = useState([]);
   const [currOrganization, setCurrOrganization] = useState(null);
-    organizationId: null,
-    status: null,
-  });
   const [openModal, setOpenModal] = useState(false);
 
   const onRefresh = () => {

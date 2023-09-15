@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import StatsTable from "../../../../components/StatsTable";
-import ConfirmationModal from "../../../../components/ConfirmationModal";
+import EventStatsDeleteModal from "./EventStatsDeleteModal";
 import { getAttendances } from "../../../../queries/attendances";
 import { getEvent } from "../../../../queries/events";
 import { getRegistrations } from "../../../../queries/registrations";
@@ -121,14 +121,6 @@ const EventStatistics = () => {
     setCurrEvent(event);
   };
 
-  const confirmDeleteModal = () => {
-    deleteAttendance(currEvent._id, currEvent.eventId)
-      .then(() => {
-        toggleDeleteModal();
-      })
-      .catch(console.log);
-  };
-
   const toggleDeleteModal = () => {
     setShowDeleteModal((prev) => !prev);
     onRefresh();
@@ -186,15 +178,10 @@ const EventStatistics = () => {
         toggle={toggleEditModal}
         event={currEvent}
       />
-      <ConfirmationModal
+      <EventStatsDeleteModal  
         open={showDeleteModal}
-        title={`Are you sure you want to delete this entry ${(
-          <strong>permanently</strong>
-        )}?`}
-        onConfirm={confirmDeleteModal}
-        onCancel={toggleDeleteModal}
-        cancelText={"Cancel"}
-        confirmText={"Delete"}
+        toggle={toggleDeleteModal}
+        event={currEvent}
       />
     </Styled.Container>
   );
