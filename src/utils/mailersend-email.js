@@ -64,7 +64,7 @@ export const sendResetCodeEmail = async (user, email, code) => {
     },
   ];
 
-  sendResetEmail(user, personalization, `Password Reset Request`);
+  sendResetEmail(user, personalization, organization, `Password Reset Request`);
 };
 
 export const sendEventEditedEmail = async (user, event, eventParent) => {
