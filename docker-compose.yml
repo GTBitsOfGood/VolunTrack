@@ -9,18 +9,27 @@ services:
       - "3000:3000"
     depends_on:
       - db
-    # env_file:
-    #   - .env
+    environment:
+      - MONGO_DB=mongodb://db:27017
     volumes:
       - .:/app
       - /app/node_modules
+    networks:
+      - helping-mamas 
+
   db:
     image: mongo
     ports:
       - "27017:27017" # Expose MongoDB to host
     volumes:
       - mongodb_data:/data/db
+    networks:
+      - helping-mamas 
 
 
 volumes:
   mongodb_data:
+
+networks:
+  helping-mamas:
+    driver: bridge
