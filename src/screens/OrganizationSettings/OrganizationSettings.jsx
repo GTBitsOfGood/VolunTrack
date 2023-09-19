@@ -13,6 +13,7 @@ import { applyTheme } from "../../themes/themes";
 import { createOrganizationValidator } from "./helpers";
 import { organizationSettingsPages as pages } from "./pages";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
+import WaiverManager from "../Waivers/WaiverManager";
 
 const OrganizationSettings = () => {
   const [organizationData, setOrganizationData] = useState({});
@@ -48,7 +49,7 @@ const OrganizationSettings = () => {
         setOrganizationData(response.data.organization);
       }
 
-      // window.addEventListener("beforeunload", handleWindowClose);
+      //window.addEventListener("beforeunload", handleWindowClose);
     }
     fetchData();
   }, []);
@@ -134,63 +135,68 @@ const OrganizationSettings = () => {
                   </div>
                 )}
                 <h3 className="text-2xl font-bold">{currentPage.title}</h3>
-                <p className="pb-3 text-slate-500">{currentPage.helperText}</p>
-                <div className="rounded-sm bg-grey p-4">
-                  {currentPage.sections.map((section, i) => (
-                    <div key={i} className="py-4">
-                      <h3 key={i} className="mb-2 text-lg font-bold">
-                        {section.title}
-                      </h3>
-                      <div className="flex gap-4">
-                        {section.fields.map((field, j) =>
-                          field.type === "dropdown" ? (
-                            <Field name={field.name} key={j}>
-                              {({ field }) => (
-                                <Dropdown
-                                  inline={true}
-                                  arrowIcon={false}
-                                  label={
-                                    <BoGButton
-                                      text="Set Theme"
-                                      dropdown={true}
-                                    />
-                                  }
-                                  id={field.name}
-                                  name={field.name}
-                                  key={j}
-                                >
-                                  {Object.keys(colors).map((color) => (
-                                    <Dropdown.Item
-                                      key={color}
-                                      onClick={() => {
-                                        setTheme(color);
-                                        setFieldValue("theme", color);
-                                      }}
-                                      className={
-                                        "font-bold capitalize " + colors[color]
-                                      }
-                                    >
-                                      {color}
-                                    </Dropdown.Item>
-                                  ))}
-                                </Dropdown>
-                              )}
-                            </Field>
-                          ) : (
-                            <InputField
-                              type={field.type}
-                              key={field.name}
-                              name={field.name}
-                              label={field.label}
-                              placeholder={field.placeholder}
-                              isRequired={field.isRequired}
-                            />
-                          )
-                        )}
+                {currentPage.key === "waiver" && (
+                  <WaiverManager></WaiverManager>
+                )}
+                {currentPage.key !== "waiver" && (
+                  <div className="rounded-sm bg-grey p-4">
+                    {currentPage.sections.map((section, i) => (
+                      <div key={i} className="py-4">
+                        <h3 key={i} className="mb-2 text-lg font-bold">
+                          {section.title}
+                        </h3>
+                        <div className="flex gap-4">
+                          {section.fields.map((field, j) =>
+                            field.type === "dropdown" ? (
+                              <Field name={field.name} key={j}>
+                                {({ field }) => (
+                                  <Dropdown
+                                    inline={true}
+                                    arrowIcon={false}
+                                    label={
+                                      <BoGButton
+                                        text="Set Theme"
+                                        dropdown={true}
+                                      />
+                                    }
+                                    id={field.name}
+                                    name={field.name}
+                                    key={j}
+                                  >
+                                    {Object.keys(colors).map((color) => (
+                                      <Dropdown.Item
+                                        key={color}
+                                        onClick={() => {
+                                          setTheme(color);
+                                          setFieldValue("theme", color);
+                                        }}
+                                        className={
+                                          "font-bold capitalize " +
+                                          colors[color]
+                                        }
+                                      >
+                                        {color}
+                                      </Dropdown.Item>
+                                    ))}
+                                  </Dropdown>
+                                )}
+                              </Field>
+                            ) : (
+                              <InputField
+                                type={field.type}
+                                key={field.name}
+                                name={field.name}
+                                label={field.label}
+                                placeholder={field.placeholder}
+                                isRequired={field.isRequired}
+                              />
+                            )
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
