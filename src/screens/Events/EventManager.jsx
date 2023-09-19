@@ -69,14 +69,6 @@ const Styled = {
       width: 100%;
     }
   `,
-  ButtonRow: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-  `,
   DateRow: styled.div`
     display: flex;
     flex-direction: row;
@@ -119,7 +111,7 @@ const EventManager = ({ isHomePage }) => {
 
   const [loading, setLoading] = useState(true);
   const [filterOn, setFilterOn] = useState(false);
-  const [dropdownVal, setDropdownVal] = useState("Public & Private Events");
+  const [dropdownVal, setDropdownVal] = useState("All Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
@@ -252,13 +244,8 @@ const EventManager = ({ isHomePage }) => {
   const changeValue = (label) => {
     setDropdownVal(label);
     const value = label;
-    if (value === "Public Events Only") {
+    if (value === "Public Events") {
       setFilterOn(true);
-      setFilteredEvents(events.filter((event) => !event.isPrivate));
-    } else if (value === "Private Events Only") {
-      setFilterOn(true);
-      setFilteredEvents(events.filter((event) => event.isPrivate));
-    } else if (value === "Public & Private Events") {
       setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate));
     } else if (value === "Private Group Events") {
       setFilterOn(true);
@@ -278,6 +265,11 @@ const EventManager = ({ isHomePage }) => {
         <Styled.Left>
           <Styled.EventContainer>
             <Styled.Events>Events</Styled.Events>
+            {showBack && (
+              <Styled.Back onClick={setDateBack}>
+                  Show Events for all Dates
+                </Styled.Back>
+            )}
           </Styled.EventContainer>
           <div className="m-2 rounded-md bg-gray-50 p-2">
             <Calendar
@@ -296,55 +288,36 @@ const EventManager = ({ isHomePage }) => {
       {!isHomePage && (
         <Styled.Right>
           {user.role === "admin" ? (
-            <Styled.ButtonRow>
-              <div className="my-4 flex w-full items-center justify-between">
-                <Dropdown
-                  inline={true}
-                  arrowIcon={false}
-                  label={<BoGButton text="Filter Events" dropdown={true} />}
+            <div className="mb-4 mt-12 flex w-full items-center justify-between">
+              <Dropdown
+                inline={true}
+                arrowIcon={false}
+                label={<BoGButton text={dropdownVal} dropdown={true} />}
+              >
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("All Events");
+                  }}
                 >
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("All Events");
-                    }}
-                  >
-                    All Events
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("Public & Private Events");
-                    }}
-                  >
-                    Public & Private Events
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("Public Events Only");
-                    }}
-                  >
-                    Public Events Only
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("Private Events Only");
-                    }}
-                  >
-                    Private Events Only
-                  </Dropdown.Item>
-                </Dropdown>
-                {showBack ? (
-                  <Styled.Back onClick={setDateBack}>
-                    Show Events for all Dates
-                  </Styled.Back>
-                ) : (
-                  <Text
-                    className="mr-8"
-                    text={"Showing events for all dates"}
-                  />
-                )}
-              </div>
-              <BoGButton text="Create new event" onClick={onCreateClicked} />
-            </Styled.ButtonRow>
+                  All Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Public Events");
+                  }}
+                >
+                  Public Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Private Group Events");
+                  }}
+                >
+                  Private Group Events
+                </Dropdown.Item>
+              </Dropdown>
+              <BoGButton text="Create event" onClick={onCreateClicked} />
+            </div>
           ) : (
             <Styled.TablePadding></Styled.TablePadding>
           )}
