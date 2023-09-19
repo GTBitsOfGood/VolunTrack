@@ -3,7 +3,9 @@ import {
   BuildingOffice2Icon,
   AdjustmentsHorizontalIcon,
   DocumentTextIcon,
+  DocumentPlusIcon,
 } from "@heroicons/react/24/solid";
+import WaiverManager from "../Waivers/WaiverManager";
 
 export const organizationSettingsPages: Page[] = [
   {
@@ -103,6 +105,12 @@ export const organizationSettingsPages: Page[] = [
         ],
       },
     ],
+  },
+  {
+    title: "Waiver Management",
+    key: "waiver",
+    icon: DocumentPlusIcon,
+    sections: [],
   },
 ];
 

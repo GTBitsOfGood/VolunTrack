@@ -69,6 +69,17 @@ A running instance of MongoDB is required this project.
 2. Navigate to this project in terminal and enter `yarn`
 3. Rename `example.env` to `.env` and fill it out with the dev config
 
+### Development with Docker
+
+To run the development environment using Docker:
+
+1. Make sure you have Docker and Docker Compose installed on your machine.
+2. Navigate to the project directory and build the Docker image (if needed, though typically not required for development as Docker Compose will handle it):
+docker build -t helping-mama .
+
+3. Navigate to the project directory and run the following command to start the containers:
+docker-compose up
+
 ## Running
 
 ### Development
@@ -107,3 +118,5 @@ Adding a success pop-up to any new actions
 ### Deployment
 
 Follow this guide here: https://www.notion.so/gtbitsofgood/General-Deployment-Pointers-Vercel-763e769ef0074ff8b12c85c3d4809ba9
+
+

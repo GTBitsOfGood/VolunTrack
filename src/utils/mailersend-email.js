@@ -1,5 +1,5 @@
-import Event from "../../server/mongodb/models/Event";
 import Organization from "../../server/mongodb/models/Organization";
+import Event from "../../server/mongodb/models/Event";
 import User from "../../server/mongodb/models/User";
 
 const Recipient = require("mailersend").Recipient;
@@ -45,6 +45,34 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   );
 };
 
+export const sendResetCodeEmail = async (user, email, code) => {
+  const organization = await Organization.findById(user.organizationId).lean();
+
+  const personalization = [
+    {
+      email: email,
+      data: {
+        // TO DO: change this
+        volunteerName: user.firstName,
+        code: code,
+        link: "https://volunteer.bitsofgood.org/passwordreset/" + code,
+        eventContactEmail: organization.defaultContactEmail
+          ? organization.defaultContactEmail
+          : "hello@bitsofgood.org",
+        nonprofitName: organization.name,
+      },
+    },
+  ];
+
+  sendEmail(
+    user,
+    organization,
+    personalization,
+    `Password Reset Request`,
+    "x2p03479p5pgzdrn"
+  );
+};
+
 export const sendEventEditedEmail = async (user, event, eventParent) => {
   let organization = await Organization.findById(user.organizationId).lean();
 
@@ -79,7 +107,14 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
   );
 };
 
-const sendEmail = async (user, organization, personalization, subject) => {
+// templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
+const sendEmail = async (
+  user,
+  organization,
+  personalization,
+  subject,
+  template = "vywj2lpov8p47oqz"
+) => {
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
@@ -89,12 +124,12 @@ const sendEmail = async (user, organization, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom("volunteer@bitsofgood.org")
+    .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
     .setBcc([new Recipient(organization.notificationEmail)])
-    .setTemplateId("vywj2lpov8p47oqz")
+    .setTemplateId(template)
     .setPersonalization(personalization);
 
   mailersend.send(emailParams).then((error) => {
