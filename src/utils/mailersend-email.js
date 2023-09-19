@@ -64,8 +64,13 @@ export const sendResetCodeEmail = async (user, email, code) => {
     },
   ];
 
-
-  sendEmail(user, personalization, `Password Reset Request`, "x2p03479p5pgzdrn");
+  sendEmail(
+    user,
+    organization,
+    personalization,
+    `Password Reset Request`,
+    "x2p03479p5pgzdrn"
+  );
 };
 
 export const sendEventEditedEmail = async (user, event, eventParent) => {
@@ -105,11 +110,11 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
 const sendEmail = async (
   user,
+  organization,
   personalization,
   subject,
   template = "vywj2lpov8p47oqz"
 ) => {
-  let organization = await Organization.findById(user.organizationId).lean();
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
