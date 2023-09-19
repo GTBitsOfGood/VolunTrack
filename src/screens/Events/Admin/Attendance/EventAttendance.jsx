@@ -151,9 +151,10 @@ const EventAttendance = () => {
       searchValue.length > 0
         ? volunteers.filter(
             (v) =>
-              v.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.email?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              v.firstName?.toLowerCase().includes(searchValue.toLowerCase())
+              (v.firstName + " " + v.lastName)
+                ?.toLowerCase()
+                .includes(searchValue.toLowerCase()) ||
+              v.email?.toLowerCase().includes(searchValue.toLowerCase())
           )
         : volunteers
     ).sort((a, b) =>

@@ -40,10 +40,6 @@ const Header = () => {
     router.push("/admins");
   };
 
-  const goToManageWaivers = () => {
-    router.push("/manage-waivers");
-  };
-
   const goToOrganizationSettings = () => {
     router.push("/organization-settings");
   };
@@ -152,9 +148,6 @@ const Header = () => {
             >
               <Dropdown.Item onClick={goToManageAdmins} href="/admins">
                 Manage Admins
-              </Dropdown.Item>
-              <Dropdown.Item onClick={goToManageWaivers} href="/manage-waivers">
-                Manage Waivers
               </Dropdown.Item>
               <Dropdown.Item
                 onClick={goToOrganizationSettings}
