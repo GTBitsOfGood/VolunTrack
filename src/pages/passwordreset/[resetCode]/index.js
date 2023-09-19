@@ -4,7 +4,11 @@ import BoGButton from "../../../components/BoGButton";
 import { changePasswordValidator } from "../../../screens/Auth/helpers";
 import { Formik } from "formik";
 import InputField from "../../../components/Forms/InputField";
-import { updateUser, deleteResetCode, getUserIdFromCode } from "../../../queries/users";
+import {
+  updateUser,
+  deleteResetCode,
+  getUserIdFromCode,
+} from "../../../queries/users";
 
 const ResetPage = () => {
   const router = useRouter();
