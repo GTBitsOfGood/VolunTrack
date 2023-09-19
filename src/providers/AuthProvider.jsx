@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
+import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
 import OnboardingPage from "../screens/Onboarding/OnboardingPage";
 
@@ -22,6 +23,8 @@ const AuthProvider = ({ children }) => {
       else if (router.pathname === "/login") return <AuthPage />;
       else if (router.pathname === "/[nonprofitCode]")
         return <AuthPage createAccount={true} nonprofitCode={true} />;
+      else if (router.pathname === "/passwordreset/[resetCode]")
+        return <ResetPage></ResetPage>;
       return <AuthPage />;
   }
 };
