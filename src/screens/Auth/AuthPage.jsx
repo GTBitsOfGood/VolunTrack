@@ -9,7 +9,7 @@ import { TextInput } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useContext } from "react";
 import { RequestContext } from "../../providers/RequestProvider";
-import { sendResetPasswordEmail } from "../../actions/queries";
+import { sendResetPasswordEmail } from "../../queries/users";
 import Footer from "../../components/Footer";
 import Text from "../../components/Text";
 import { stringify } from "querystring";

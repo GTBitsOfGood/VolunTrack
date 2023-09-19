@@ -64,7 +64,8 @@ export const sendResetCodeEmail = async (user, email, code) => {
     },
   ];
 
-  sendResetEmail(user, personalization, organization, `Password Reset Request`);
+
+  sendEmail(user, personalization, `Password Reset Request`, "x2p03479p5pgzdrn");
 };
 
 export const sendEventEditedEmail = async (user, event, eventParent) => {
@@ -101,30 +102,13 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
   );
 };
 
-const sendResetEmail = async (user, personalization, organization, subject) => {
-  const mailersend = new MailerSend({
-    api_key: process.env.MAILERSEND_API_KEY,
-  });
-
-  const recipients = [
-    new Recipient(user.email, `${user.firstName} ${user.lastName}`),
-  ];
-
-  const emailParams = new EmailParams()
-    .setFrom(personalization[0].data.eventContactEmail)
-    .setFromName(organization.name)
-    .setRecipients(recipients)
-    .setSubject(subject)
-    .setBcc([new Recipient(organization.notificationEmail)])
-    .setTemplateId("x2p03479p5pgzdrn")
-    .setPersonalization(personalization);
-
-  mailersend.send(emailParams).then((error) => {
-    console.log(error);
-  });
-};
-
-const sendEmail = async (user, personalization, subject) => {
+// templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
+const sendEmail = async (
+  user,
+  personalization,
+  subject,
+  template = "vywj2lpov8p47oqz"
+) => {
   let organization = await Organization.findById(user.organizationId).lean();
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
@@ -135,12 +119,12 @@ const sendEmail = async (user, personalization, subject) => {
   ];
 
   const emailParams = new EmailParams()
-    .setFrom("volunteer@bitsofgood.org")
+    .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
     .setBcc([new Recipient(organization.notificationEmail)])
-    .setTemplateId("vywj2lpov8p47oqz")
+    .setTemplateId(template)
     .setPersonalization(personalization);
 
   mailersend.send(emailParams).then((error) => {

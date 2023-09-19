@@ -1,19 +1,10 @@
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useContext, useEffect, useState } from "react";
-import { Col, Row } from "reactstrap";
+import { useEffect, useState } from "react";
 import BoGButton from "../../../components/BoGButton";
-import styled from "styled-components";
-import { fetchEventsById, getUserIdFromCode } from "../../../actions/queries";
-import variables from "../../../design-tokens/_variables.module.scss";
-import { RequestContext } from "../../../providers/RequestProvider";
-import EventUnregisterModal from "../../../components/EventUnregisterModal";
-import Text from "../../../components/Text";
-import { TextInput, Button } from "flowbite-react";
 import { changePasswordValidator } from "../../../screens/Auth/helpers";
 import { Formik } from "formik";
 import InputField from "../../../components/Forms/InputField";
-import { updateUser, deleteResetCode } from "../../../actions/queries";
+import { updateUser, deleteResetCode, getUserIdFromCode } from "../../../queries/users";
 
 const ResetPage = () => {
   const router = useRouter();
@@ -22,11 +13,8 @@ const ResetPage = () => {
   const [userId, setUserId] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [showUnregisterModal, setUnregisterModal] = useState(false);
-
   const checkIfValidCode = async () => {
     // check if code is valid
-
     const response = await getUserIdFromCode(resetCode);
 
     if (response.data.userId) {
@@ -93,29 +81,11 @@ const ResetPage = () => {
                           onClick={handleSubmit}
                           disabled={!isValid || isSubmitting}
                           text={"Submit"}
-                          className="w-full bg-primaryColor hover:bg-hoverColor"
+                          className="w-full bg-blue-500 hover:bg-blue-400"
                         />
                       </form>
                     )}
                   </Formik>
-                  {/* New Password:
-              <TextInput
-                name="password"
-                label="Password"
-                type="password"
-                placeholder="Your Password"
-                autoComplete="current-password"
-              />
-              Confirm Password:
-              <TextInput
-                name="password_confirm"
-                label="Confirm Password"
-                type="password"
-                placeholder="Your Password"
-              />
-              <Button color="info" onClick= {submitPassword}
-
-               >Submit</Button> */}
                 </>
               ) : (
                 <div>
@@ -128,7 +98,7 @@ const ResetPage = () => {
           ) : (
             <>
               <div>
-                Password submitted. Click <a href="/login">here</a> to login.
+                Password updated! Click <a href="/login">here</a> to login.
               </div>
             </>
           )}

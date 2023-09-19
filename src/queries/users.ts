@@ -45,3 +45,13 @@ export const deleteUser = (userId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(
     `/api/users/${userId.toString()}`
   );
+
+// reset password functionality
+export const sendResetPasswordEmail = (emailParam: string) =>
+  axios.post(`/api/auth/resetPassword?${emailParam}`);
+
+export const deleteResetCode = (code: string, userId: string) =>
+  axios.delete(`/api/auth/resetPassword?code=${code}&userId=${userId}`);
+
+export const getUserIdFromCode = (code: string) =>
+  axios.get(`/api/auth/resetPassword?code=` + code);
