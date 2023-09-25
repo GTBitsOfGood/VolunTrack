@@ -10,7 +10,7 @@ const goToLogin = () => {
 export default function Main() {
   return (
     <div>
-      <div className="flex flex-col">
+      <div className="flex h-[100vh] flex-col justify-between">
         {/* <div className="grotesk space-around mb-16 mt-6 flex flex-row items-center justify-between px-4 py-4 sm:mx-0 sm:mb-20 sm:px-0 md:px-6"> */}
         <div className="mt-4 flex flex-row justify-between self-stretch pb-4 pl-16 pt-6">
           <a
@@ -19,7 +19,7 @@ export default function Main() {
           >
             VolunTrack
           </a>
-          <div className="flex w-[25%] justify-between pl-14">
+          <div className="flex hidden w-[25%] justify-between pl-14 md:flex md:w-[35%]">
             <a
               href="/"
               className="flex self-center align-middle text-xl text-black"
@@ -53,9 +53,19 @@ export default function Main() {
             Log In
           </Button>
         </div>
-        <div className="flex flex-row">
-          <div className="flex flex-col"></div>
-          <div className="flex flex-col"></div>
+        <div className="flex h-5/6 flex-row items-stretch justify-around">
+          <div className="flex flex-col pt-4">
+            <p className="w-fit self-center border-b-4 border-purple-700 text-3xl">
+              Simplify Volunteer Coordination
+            </p>
+            <p className="border-purple-700 text-xl">
+              Create your account to get started with our volunteer management
+              system
+            </p>
+          </div>
+          <div className="flex h-[100%] flex-col self-stretch">
+            <img src={"/images/Landing Page Example.png"} className="h-full" />
+          </div>
         </div>
       </div>
     </div>
