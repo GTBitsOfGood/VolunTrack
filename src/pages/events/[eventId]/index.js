@@ -2,7 +2,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Col, Row } from "reactstrap";
-import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
@@ -10,74 +9,6 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
-
-const Styled = {
-  EventTableAll: styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-  `,
-  EventTable: styled.div`
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-  `,
-  EventCol: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 3rem;
-    margin-right: 1rem;
-  `,
-  EventCol2: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 1rem;
-  `,
-  EventName: styled.h1`
-    color: black;
-    font-weight: bold;
-    margin-bottom: 4px;
-    font-size: 40px;
-  `,
-  EventSubhead: styled.div`
-    display: flex;
-    flex-direction: row;
-  `,
-  Slots: styled.p`
-    font-weight: 600;
-    margin-right: 20px;
-  `,
-  Date: styled.p`
-    font-weight: 200;
-  `,
-  Info: styled.p`
-    font-size: 18px;
-  `,
-  InfoHead: styled.h1`
-    font-size: 25px;
-    font-weight: bold;
-  `,
-  InfoTable: styled.div`
-    display: flex;
-    flex-direction: row;
-  `,
-  InfoTableCol: styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-  `,
-  InfoTableText: styled.p`
-    font-size: 16px;
-    margin: 20px;
-  `,
-  ButtonCol: styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding-bottom: 1.5rem;
-  `,
-};
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -171,40 +102,42 @@ const EventInfo = () => {
 
   return (
     <>
-      <Styled.EventTableAll>
+      <div className="flex flex-col pb-16 pt-8">
         <Text
           className="mb-4 ml-16"
           href={`/events`}
           onClick={() => goBackToCal()}
           text="← Back to home"
         />
-        <Styled.EventTable>
+        <div className="flex h-screen flex-row">
           <Col>
-            <Styled.EventCol>
-              <Styled.EventName>{event.eventParent.title}</Styled.EventName>
-              <Styled.EventSubhead>
-                <Styled.Slots>
+            <div className="ml-12 mr-4 flex flex-col">
+              <h1 className="mb-1 text-4xl font-bold text-black">
+                {event.eventParent.title}
+              </h1>
+              <div className="flex flex-row">
+                <p className="mr-3 font-semibold">
                   {" "}
                   {event.eventParent.maxVolunteers - regCount} Slots Remaining
-                </Styled.Slots>
-                <Styled.Date>{lastUpdated}</Styled.Date>
-              </Styled.EventSubhead>
-              <Styled.Info>
+                </p>
+                <p className="font-extralight">{lastUpdated}</p>
+              </div>
+              <div className="text-lg">
                 {event.eventParent.isValidForCourtHours && (
-                  <span style={{ fontWeight: "bold" }}>
+                  <span className="font-bold">
                     {"This event can count toward court required hours"}
                   </span>
                 )}
-              </Styled.Info>
-              <Styled.Info>
+              </div>
+              <div className="text-lg">
                 {" "}
                 <div
                   dangerouslySetInnerHTML={{
                     __html: event.eventParent.description,
                   }}
                 />
-              </Styled.Info>
-            </Styled.EventCol>
+              </div>
+            </div>
           </Col>
           <Col>
             <Row>
@@ -254,32 +187,32 @@ const EventInfo = () => {
                 )}
             </Row>
             <Row>
-              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
-                <Styled.InfoHead>Event Information</Styled.InfoHead>
-                <Styled.InfoTable>
-                  <Styled.InfoTableCol className="bg-grey">
-                    <Styled.InfoTableText>
+              <div className="ml-4 mr-auto flex flex-col">
+                <h1 className="text-2xl font-bold">Event Information</h1>
+                <div className="flex flex-row">
+                  <div className="flex w-64 flex-col bg-grey">
+                    <p className="m-4 text-base">
                       <b>Date:</b>
                       <br></br>
                       {event.date.slice(0, 10)}
-                    </Styled.InfoTableText>
-                    <Styled.InfoTableText>
+                    </p>
+                    <p className="m-4 text-base">
                       <b>Event Contact:</b>
                       <br></br>
                       {event.eventParent.eventContactPhone}
                       <br></br>
                       {event.eventParent.eventContactEmail}
-                    </Styled.InfoTableText>
-                  </Styled.InfoTableCol>
-                  <Styled.InfoTableCol className="bg-grey">
-                    <Styled.InfoTableText>
+                    </p>
+                  </div>
+                  <div className="flex w-64 flex-col bg-grey">
+                    <p className="m-4 text-base">
                       <b>Time:</b>
                       <br></br>
                       {convertTime(event.eventParent.startTime)} -{" "}
                       {convertTime(event.eventParent.endTime)}{" "}
                       {event.eventParent.localTime}
-                    </Styled.InfoTableText>
-                    <Styled.InfoTableText>
+                    </p>
+                    <p className="m-4 text-base">
                       <b>Location:</b>
                       <br></br>
                       {event.eventParent.address}
@@ -288,42 +221,42 @@ const EventInfo = () => {
                       <br></br>
                       {event.eventParent.zip}
                       <br></br>
-                    </Styled.InfoTableText>
-                  </Styled.InfoTableCol>
-                </Styled.InfoTable>
-              </Styled.EventCol2>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </Row>
             <br></br>
             <br></br>
             {event.eventParent.orgName !== "" && (
               <Row>
-                <Styled.EventCol2>
-                  <Styled.InfoHead>Organization</Styled.InfoHead>
-                  <Styled.InfoTable>
-                    <Styled.InfoTableCol>
-                      <Styled.InfoTableText>
+                <div className="ml-4 flex flex-col">
+                  <h1 className="text-2xl font-bold">Organization</h1>
+                  <div className="flex flex-row">
+                    <div className="flex w-64 flex-col">
+                      <p className="m-4 text-base">
                         <b>Point of Contact Name</b>
                         <br></br>
                         {event.eventParent.pocName}
-                      </Styled.InfoTableText>
-                      <Styled.InfoTableText>
+                      </p>
+                      <p className="m-4 text-base">
                         <b>Point of Contact Email</b>
                         <br></br>
                         {event.eventParent.pocEmail}
-                      </Styled.InfoTableText>
-                      <Styled.InfoTableText>
+                      </p>
+                      <p className="m-4 text-base">
                         <b>Point of Contact Phone</b>
                         <br></br>
                         {event.eventParent.pocPhone}
-                      </Styled.InfoTableText>
-                    </Styled.InfoTableCol>
-                    <Styled.InfoTableCol>
-                      <Styled.InfoTableText>
+                      </p>
+                    </div>
+                    <div className="flex w-64 flex-col">
+                      <p className="font-base m-4">
                         <b>Organization Name</b>
                         <br></br>
                         {event.eventParent.orgName}
-                      </Styled.InfoTableText>
-                      <Styled.InfoTableText>
+                      </p>
+                      <p className="font-base m-4">
                         <b>Location</b>
                         <br></br>
                         {event.eventParent.orgAddress}
@@ -332,29 +265,29 @@ const EventInfo = () => {
                         {event.eventParent.orgState}
                         <br></br>
                         {event.eventParent.orgZip}
-                      </Styled.InfoTableText>
-                    </Styled.InfoTableCol>
-                  </Styled.InfoTable>
+                      </p>
+                    </div>
+                  </div>
                   {user.role === "volunteer" && (
-                    <Styled.ButtonCol>
+                    <div className="flex flex-col bg-white pb-6">
                       <BoGButton
                         text="Share Private Event Link"
                         onClick={copyPrivateLink}
                       />
-                    </Styled.ButtonCol>
+                    </div>
                   )}
-                </Styled.EventCol2>
+                </div>
               </Row>
             )}
           </Col>
-        </Styled.EventTable>
+        </div>
         <EventUnregisterModal
           open={showUnregisterModal}
           toggle={toggleUnregisterModal}
           eventData={event}
           userId={user._id}
         />
-      </Styled.EventTableAll>
+      </div>
     </>
   );
 };
