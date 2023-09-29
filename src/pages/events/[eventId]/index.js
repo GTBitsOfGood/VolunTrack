@@ -109,14 +109,14 @@ const EventInfo = () => {
           onClick={() => goBackToCal()}
           text="← Back to home"
         />
-        <div className="flex h-screen flex-row">
+        <div className="flex flex-col md:flex-row">
           <Col>
-            <div className="ml-12 mr-4 flex flex-col">
+            <div className="ml-3 mr-3 flex flex-col md:ml-12 md:mr-4">
               <h1 className="mb-1 text-4xl font-bold text-black">
                 {event.eventParent.title}
               </h1>
-              <div className="flex flex-row">
-                <p className="mr-3 font-semibold">
+              <div className="flex flex-col md:flex-row">
+                <p className="mb-0 font-semibold md:mb-4 md:mr-3">
                   {" "}
                   {event.eventParent.maxVolunteers - regCount} Slots Remaining
                 </p>
@@ -143,14 +143,16 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <div className="mb-4 ml-3 mr-4">
+                  <div className="mb-2 ml-4 mr-4 w-full md:mb-4 md:ml-3 md:mr-4 md:w-auto">
                     <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
                       text="Manage Attendance"
                       onClick={routeToRegisteredVolunteers}
                     />
                   </div>
-                  <div className="mb-4 ml-4 mr-3">
+                  <div className="mb-4 ml-4 mr-4 w-full md:mb-4 md:ml-4 md:mr-3 md:w-auto">
                     <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
                       text="View Participation Statistics"
                       onClick={routeToStats}
                     />
@@ -187,10 +189,10 @@ const EventInfo = () => {
                 )}
             </Row>
             <Row>
-              <div className="ml-4 mr-auto flex flex-col">
+              <div className="ml-4 mr-4 flex w-full flex-col md:mr-auto">
                 <h1 className="text-2xl font-bold">Event Information</h1>
-                <div className="flex flex-row">
-                  <div className="flex w-64 flex-col bg-grey">
+                <div className="flex flex-col md:flex-row">
+                  <div className="flex flex-col bg-grey md:w-64">
                     <p className="m-4 text-base">
                       <b>Date:</b>
                       <br></br>
@@ -204,7 +206,7 @@ const EventInfo = () => {
                       {event.eventParent.eventContactEmail}
                     </p>
                   </div>
-                  <div className="flex w-64 flex-col bg-grey">
+                  <div className="flex w-full flex-col bg-grey md:w-64">
                     <p className="m-4 text-base">
                       <b>Time:</b>
                       <br></br>
@@ -230,9 +232,9 @@ const EventInfo = () => {
             <br></br>
             {event.eventParent.orgName !== "" && (
               <Row>
-                <div className="ml-4 flex flex-col">
+                <div className="ml-4 mr-4 flex w-full flex-col md:mr-auto">
                   <h1 className="text-2xl font-bold">Organization</h1>
-                  <div className="flex flex-row">
+                  <div className="flex flex-col bg-grey md:flex-row">
                     <div className="flex w-64 flex-col">
                       <p className="m-4 text-base">
                         <b>Point of Contact Name</b>
