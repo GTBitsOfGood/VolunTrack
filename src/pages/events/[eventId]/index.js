@@ -143,7 +143,7 @@ const EventInfo = () => {
             <Row>
               {user.role === "admin" && (
                 <>
-                  <div className="mb-2 ml-4 mr-4 w-full md:mb-4 md:ml-3 md:mr-4 md:w-auto">
+                  <div className="mb-4 ml-4 mr-4 w-full md:mb-4 md:ml-3 md:mr-4 md:w-auto">
                     <BoGButton
                       className="w-full bg-primaryColor hover:bg-hoverColor"
                       text="Manage Attendance"
@@ -160,33 +160,38 @@ const EventInfo = () => {
                 </>
               )}
               {/*It should only ever display one of the following buttons*/}
-              {user.role === "volunteer" &&
-                isRegistered &&
-                futureorTodaysDate && (
-                  <BoGButton
-                    text="Unregister"
-                    onClick={() => onUnregisterClicked(event)}
-                  />
-                )}
-              {user.role === "volunteer" &&
-                event.eventParent.maxVolunteers - regCount > 0 &&
-                !isRegistered &&
-                futureorTodaysDate && (
-                  <BoGButton
-                    text="Register"
-                    onClick={() => onRegisterClicked(event)}
-                  />
-                )}
-              {user.role === "volunteer" &&
-                event.eventParent.maxVolunteers - regCount <= 0 &&
-                !isRegistered &&
-                futureorTodaysDate && (
-                  <BoGButton
-                    disabled={true}
-                    text="Registration Closed"
-                    onClick={null}
-                  />
-                )}
+              <div className="mb-4 ml-4 mr-4 w-full md:mb-4 md:ml-3 md:mr-4 md:w-auto">
+                {user.role === "volunteer" &&
+                  isRegistered &&
+                  futureorTodaysDate && (
+                    <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Unregister"
+                      onClick={() => onUnregisterClicked(event)}
+                    />
+                  )}
+                {user.role === "volunteer" &&
+                  event.eventParent.maxVolunteers - regCount > 0 &&
+                  !isRegistered &&
+                  futureorTodaysDate && (
+                    <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Register"
+                      onClick={() => onRegisterClicked(event)}
+                    />
+                  )}
+                {user.role === "volunteer" &&
+                  event.eventParent.maxVolunteers - regCount <= 0 &&
+                  !isRegistered &&
+                  futureorTodaysDate && (
+                    <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
+                      disabled={true}
+                      text="Registration Closed"
+                      onClick={null}
+                    />
+                  )}
+              </div>
             </Row>
             <Row>
               <div className="ml-4 mr-4 flex w-full flex-col md:mr-auto">
