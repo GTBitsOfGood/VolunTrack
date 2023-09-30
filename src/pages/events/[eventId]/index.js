@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-//import { Col, Row } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
@@ -110,7 +109,7 @@ const EventInfo = () => {
           text="← Back to home"
         />
         <div className="flex flex-col md:flex-row">
-          <div className="mb-4 ml-4 mr-4 flex-1">
+          <div className="ml-4 mr-4 flex-1">
             <div className="flex flex-col md:ml-12 md:mr-4">
               <h1 className="mb-1 text-4xl font-bold text-black">
                 {event.eventParent.title}
@@ -121,21 +120,6 @@ const EventInfo = () => {
                   {event.eventParent.maxVolunteers - regCount} Slots Remaining
                 </p>
                 <p className="font-extralight">{lastUpdated}</p>
-              </div>
-              <div className="text-lg">
-                {event.eventParent.isValidForCourtHours && (
-                  <span className="font-bold">
-                    {"This event can count toward court required hours"}
-                  </span>
-                )}
-              </div>
-              <div className="text-lg">
-                {" "}
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: event.eventParent.description,
-                  }}
-                />
               </div>
             </div>
           </div>
@@ -191,6 +175,29 @@ const EventInfo = () => {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row">
+          <div className="mb-4 ml-4 mr-4 flex-1">
+            <div className="flex flex-col md:ml-12 md:mr-4">
+              <div className="text-lg">
+                {event.eventParent.isValidForCourtHours && (
+                  <span className="font-bold">
+                    {"This event can count toward court required hours"}
+                  </span>
+                )}
+              </div>
+              <div className="text-lg">
+                {" "}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: event.eventParent.description,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="ml-4 mr-4 flex-1 md:-mt-4">
             <div className="mb-12 flex w-full flex-col md:mr-auto">
               <h1 className="text-2xl font-bold">Event Information</h1>
               <div className="flex flex-col md:flex-row">
