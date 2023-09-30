@@ -162,14 +162,13 @@ const EventInfo = () => {
               {user.role === "volunteer" && (
                 // It should only ever display one of the following buttons
                 <div className="mb-4 w-full md:mb-4 md:w-auto">
-                  {isRegistered &&
-                    futureorTodaysDate && (
-                      <BoGButton
-                        className="w-full bg-primaryColor hover:bg-hoverColor"
-                        text="Unregister"
-                        onClick={() => onUnregisterClicked(event)}
-                      />
-                    )}
+                  {isRegistered && futureorTodaysDate && (
+                    <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Unregister"
+                      onClick={() => onUnregisterClicked(event)}
+                    />
+                  )}
                   {event.eventParent.maxVolunteers - regCount > 0 &&
                     !isRegistered &&
                     futureorTodaysDate && (
@@ -192,7 +191,7 @@ const EventInfo = () => {
                 </div>
               )}
             </div>
-            <div className="flex w-full flex-col mb-12 md:mr-auto">
+            <div className="mb-12 flex w-full flex-col md:mr-auto">
               <h1 className="text-2xl font-bold">Event Information</h1>
               <div className="flex flex-col md:flex-row">
                 <div className="flex flex-col bg-grey md:w-64">
@@ -230,10 +229,10 @@ const EventInfo = () => {
                 </div>
               </div>
             </div>
-            {event.eventParent.orgName === "" && (
+            {event.eventParent.orgName !== "" && (
               <div className="flex w-full flex-col md:mr-auto">
                 <h1 className="text-2xl font-bold">Organization</h1>
-                <div className="flex flex-col mb-4 md:flex-row">
+                <div className="mb-4 flex flex-col md:flex-row">
                   <div className="flex flex-col bg-grey md:w-64">
                     <p className="m-4 text-base">
                       <b>Point of Contact Name</b>
@@ -262,8 +261,7 @@ const EventInfo = () => {
                       <br></br>
                       {event.eventParent.orgAddress}
                       <br></br>
-                      {event.eventParent.orgCity},{" "}
-                      {event.eventParent.orgState}
+                      {event.eventParent.orgCity}, {event.eventParent.orgState}
                       <br></br>
                       {event.eventParent.orgZip}
                     </p>
