@@ -91,13 +91,13 @@ const LandingPage = () => {
           </a>
           <div className="flex hidden w-[25%] justify-between pl-14 md:flex md:w-[35%]">
             <a
-              href="/"
+              href="https://bitsofgood.org/"
               className="flex self-center align-middle text-xl text-black"
             >
               About
             </a>
             <a
-              href="/"
+              href="https://bitsofgood.org/"
               className="flex self-center align-middle text-xl text-black"
             >
               Contact Us
