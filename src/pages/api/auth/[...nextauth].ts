@@ -105,6 +105,21 @@ export const authOptions: AuthOptions = {
 
       const id = new ObjectId(token.id);
       const user = await User.findById(id);
+
+      if (!user?.organizationId) {
+        return {
+          ...session,
+          user,
+          theme: null,
+          medalDefaults: {
+            eventSilver: null,
+            eventGold: null,
+            hoursSilver: null,
+            hoursGold: null,
+          },
+        };
+      }
+
       const organization = await Organization.findById(user.organizationId);
 
       if (organization?.invitedAdmins.includes(user.email)) {

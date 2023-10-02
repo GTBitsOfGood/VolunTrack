@@ -12,7 +12,7 @@ const userSchema = new Schema(
   {
     email: { type: String, index: true, unique: true, required: true },
     organizationId: {
-      type: [Schema.Types.ObjectId, null],
+      type: Schema.Types.ObjectId,
       ref: "Organization",
     },
     role: {

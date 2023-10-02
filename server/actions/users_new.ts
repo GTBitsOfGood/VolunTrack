@@ -171,3 +171,53 @@ export const updateUser = async (
   await createHistoryEventEditProfile(user);
   return user._id;
 };
+
+export const updateUserOrganizationId = async (id: string,orgCode: string): Promise<{
+  user?: UserDocument | undefined;
+  message?: string;
+  status: number;
+}> => {
+  await dbConnect();
+
+  const user = User.findById(id);
+  if (!user) {
+    return {
+      status: 404,
+      message: "User not found",
+    };
+  }
+
+  const organization = await Organization.findOne({ slug: orgCode });
+  if (!organization) {
+    return {
+      status: 400,
+      message:
+        "The entered organization code does not exist. Please try to enter a different org code",
+    };
+  }
+
+  if (!organization.active) {
+    return {
+      status: 400,
+      message: "The entered company code is currently marked as inactive.",
+    };
+  }
+
+  let userUpdates = {};
+  if (user?.email in organization.invitedAdmins) {
+    await user.updateOne({
+      organizationId: organization._id,
+      role: "admin",
+    });
+  } else {
+    await user.updateOne({
+      organizationId: organization._id,
+    });
+  }
+
+  return {
+    status: 200,
+    // @ts-expect-error
+    user,
+  };
+};
