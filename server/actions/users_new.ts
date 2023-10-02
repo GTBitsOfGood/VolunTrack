@@ -172,14 +172,17 @@ export const updateUser = async (
   return user._id;
 };
 
-export const updateUserOrganizationId = async (id: string,orgCode: string): Promise<{
+export const updateUserOrganizationId = async (
+  id: string,
+  orgCode: string
+): Promise<{
   user?: UserDocument | undefined;
   message?: string;
   status: number;
 }> => {
   await dbConnect();
 
-  const user = User.findById(id);
+  const user: UserDocument | undefined = User.findById(id);
   if (!user) {
     return {
       status: 404,
@@ -203,8 +206,7 @@ export const updateUserOrganizationId = async (id: string,orgCode: string): Prom
     };
   }
 
-  let userUpdates = {};
-  if (user?.email in organization.invitedAdmins) {
+  if (user.email in organization.invitedAdmins) {
     await user.updateOne({
       organizationId: organization._id,
       role: "admin",

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
 import OnboardingPage from "../screens/Onboarding/OnboardingPage";
-import AddOrganizationModal from "../components/AddOrganizationModal"; 
+import AddOrganizationModal from "../components/AddOrganizationModal";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {

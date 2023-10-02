@@ -4,7 +4,7 @@ import React from "react";
 import BoGButton from "./BoGButton";
 import InputField from "./Forms/InputField";
 import "flowbite-react";
-import { updateUserOrganizationId } from "../../../queries/users";
+import { updateUserOrganizationId } from "../queries/users";
 
 class AddOrganizationModal extends React.Component {
   constructor(props) {
