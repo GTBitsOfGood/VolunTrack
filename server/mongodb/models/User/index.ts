@@ -12,10 +12,8 @@ const userSchema = new Schema(
   {
     email: { type: String, index: true, unique: true, required: true },
     organizationId: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId, null],
       ref: "Organization",
-      default: "63d6dcc4e1fb5fd6e69b1738",
-      required: true,
     },
     role: {
       type: String,
