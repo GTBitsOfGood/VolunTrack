@@ -15,7 +15,7 @@ const AuthProvider = ({ children }) => {
       if (data?.user?.organizationId) {
         return <>{children}</>;
       } else {
-        return <AddOrganizationModal user={data.user} />;
+        return <AddOrganizationModal userId={data?.user?._id} />;
       }
     case "loading":
       return <p>loading...</p>;

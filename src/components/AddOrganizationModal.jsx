@@ -18,7 +18,7 @@ class AddOrganizationModal extends React.Component {
   }
 
   handleSubmit = async (values) => {
-    updateUserOrganizationId(props.userId, values.orgCode)
+    updateUserOrganizationId(this.props.userId, values.orgCode)
       .then(() => {
         // redirect the user to the home page
       })
