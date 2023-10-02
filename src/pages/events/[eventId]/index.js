@@ -1,8 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { Col, Row } from "reactstrap";
-import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
@@ -10,74 +8,6 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
-
-const Styled = {
-  EventTableAll: styled.div`
-    display: flex;
-    flex-direction: column;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-  `,
-  EventTable: styled.div`
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-  `,
-  EventCol: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 3rem;
-    margin-right: 1rem;
-  `,
-  EventCol2: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 1rem;
-  `,
-  EventName: styled.h1`
-    color: black;
-    font-weight: bold;
-    margin-bottom: 4px;
-    font-size: 40px;
-  `,
-  EventSubhead: styled.div`
-    display: flex;
-    flex-direction: row;
-  `,
-  Slots: styled.p`
-    font-weight: 600;
-    margin-right: 20px;
-  `,
-  Date: styled.p`
-    font-weight: 200;
-  `,
-  Info: styled.p`
-    font-size: 18px;
-  `,
-  InfoHead: styled.h1`
-    font-size: 25px;
-    font-weight: bold;
-  `,
-  InfoTable: styled.div`
-    display: flex;
-    flex-direction: row;
-  `,
-  InfoTableCol: styled.div`
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-  `,
-  InfoTableText: styled.p`
-    font-size: 16px;
-    margin: 20px;
-  `,
-  ButtonCol: styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding-bottom: 1.5rem;
-  `,
-};
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -171,190 +101,198 @@ const EventInfo = () => {
 
   return (
     <>
-      <Styled.EventTableAll>
+      <div className="flex flex-col pb-16 pt-8">
         <Text
           className="mb-4 ml-16"
           href={`/events`}
           onClick={() => goBackToCal()}
           text="← Back to home"
         />
-        <Styled.EventTable>
-          <Col>
-            <Styled.EventCol>
-              <Styled.EventName>{event.eventParent.title}</Styled.EventName>
-              <Styled.EventSubhead>
-                <Styled.Slots>
+        <div className="flex flex-col md:flex-row">
+          <div className="ml-4 mr-4 flex-1">
+            <div className="flex flex-col md:ml-12 md:mr-4">
+              <h1 className="mb-1 text-4xl font-bold text-black">
+                {event.eventParent.title}
+              </h1>
+              <div className="flex flex-col md:flex-row">
+                <p className="mb-0 font-semibold md:mb-4 md:mr-3">
                   {" "}
                   {event.eventParent.maxVolunteers - regCount} Slots Remaining
-                </Styled.Slots>
-                <Styled.Date>{lastUpdated}</Styled.Date>
-              </Styled.EventSubhead>
-              <Styled.Info>
-                {event.eventParent.isValidForCourtHours && (
-                  <span style={{ fontWeight: "bold" }}>
-                    {"This event can count toward court required hours"}
-                  </span>
-                )}
-              </Styled.Info>
-              <Styled.Info>
-                {" "}
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: event.eventParent.description,
-                  }}
-                />
-              </Styled.Info>
-            </Styled.EventCol>
-          </Col>
-          <Col>
-            <Row>
+                </p>
+                <p className="font-extralight">{lastUpdated}</p>
+              </div>
+            </div>
+          </div>
+          <div className="ml-4 mr-4 flex-1">
+            <div className="flex flex-col md:flex-row">
               {user.role === "admin" && (
                 <>
-                  <div className="mb-4 ml-3 mr-4">
+                  <div className="mb-2 w-full md:mb-4 md:mr-4 md:w-auto">
                     <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
                       text="Manage Attendance"
                       onClick={routeToRegisteredVolunteers}
                     />
                   </div>
-                  <div className="mb-4 ml-4 mr-3">
+                  <div className="mb-4 w-full md:mb-4 md:ml-4 md:mr-3 md:w-auto">
                     <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
                       text="View Participation Statistics"
                       onClick={routeToStats}
                     />
                   </div>
                 </>
               )}
-              {/*It should only ever display one of the following buttons*/}
-              {user.role === "volunteer" &&
-                isRegistered &&
-                futureorTodaysDate && (
-                  <BoGButton
-                    text="Unregister"
-                    onClick={() => onUnregisterClicked(event)}
-                  />
-                )}
-              {user.role === "volunteer" &&
-                event.eventParent.maxVolunteers - regCount > 0 &&
-                !isRegistered &&
-                futureorTodaysDate && (
-                  <BoGButton
-                    text="Register"
-                    onClick={() => onRegisterClicked(event)}
-                  />
-                )}
-              {user.role === "volunteer" &&
-                event.eventParent.maxVolunteers - regCount <= 0 &&
-                !isRegistered &&
-                futureorTodaysDate && (
-                  <BoGButton
-                    disabled={true}
-                    text="Registration Closed"
-                    onClick={null}
-                  />
-                )}
-            </Row>
-            <Row>
-              <Styled.EventCol2 style={{ "margin-right": "auto" }}>
-                <Styled.InfoHead>Event Information</Styled.InfoHead>
-                <Styled.InfoTable>
-                  <Styled.InfoTableCol className="bg-grey">
-                    <Styled.InfoTableText>
-                      <b>Date:</b>
-                      <br></br>
-                      {event.date.slice(0, 10)}
-                    </Styled.InfoTableText>
-                    <Styled.InfoTableText>
-                      <b>Event Contact:</b>
-                      <br></br>
-                      {event.eventParent.eventContactPhone}
-                      <br></br>
-                      {event.eventParent.eventContactEmail}
-                    </Styled.InfoTableText>
-                  </Styled.InfoTableCol>
-                  <Styled.InfoTableCol className="bg-grey">
-                    <Styled.InfoTableText>
-                      <b>Time:</b>
-                      <br></br>
-                      {convertTime(event.eventParent.startTime)} -{" "}
-                      {convertTime(event.eventParent.endTime)}{" "}
-                      {event.eventParent.localTime}
-                    </Styled.InfoTableText>
-                    <Styled.InfoTableText>
-                      <b>Location:</b>
-                      <br></br>
-                      {event.eventParent.address}
-                      <br></br>
-                      {event.eventParent.city}, {event.eventParent.state}
-                      <br></br>
-                      {event.eventParent.zip}
-                      <br></br>
-                    </Styled.InfoTableText>
-                  </Styled.InfoTableCol>
-                </Styled.InfoTable>
-              </Styled.EventCol2>
-            </Row>
-            <br></br>
-            <br></br>
-            {event.eventParent.orgName !== "" && (
-              <Row>
-                <Styled.EventCol2>
-                  <Styled.InfoHead>Organization</Styled.InfoHead>
-                  <Styled.InfoTable>
-                    <Styled.InfoTableCol>
-                      <Styled.InfoTableText>
-                        <b>Point of Contact Name</b>
-                        <br></br>
-                        {event.eventParent.pocName}
-                      </Styled.InfoTableText>
-                      <Styled.InfoTableText>
-                        <b>Point of Contact Email</b>
-                        <br></br>
-                        {event.eventParent.pocEmail}
-                      </Styled.InfoTableText>
-                      <Styled.InfoTableText>
-                        <b>Point of Contact Phone</b>
-                        <br></br>
-                        {event.eventParent.pocPhone}
-                      </Styled.InfoTableText>
-                    </Styled.InfoTableCol>
-                    <Styled.InfoTableCol>
-                      <Styled.InfoTableText>
-                        <b>Organization Name</b>
-                        <br></br>
-                        {event.eventParent.orgName}
-                      </Styled.InfoTableText>
-                      <Styled.InfoTableText>
-                        <b>Location</b>
-                        <br></br>
-                        {event.eventParent.orgAddress}
-                        <br></br>
-                        {event.eventParent.orgCity},{" "}
-                        {event.eventParent.orgState}
-                        <br></br>
-                        {event.eventParent.orgZip}
-                      </Styled.InfoTableText>
-                    </Styled.InfoTableCol>
-                  </Styled.InfoTable>
-                  {user.role === "volunteer" && (
-                    <Styled.ButtonCol>
-                      <BoGButton
-                        text="Share Private Event Link"
-                        onClick={copyPrivateLink}
-                      />
-                    </Styled.ButtonCol>
+              {user.role === "volunteer" && (
+                // It should only ever display one of the following buttons
+                <div className="mb-4 w-full md:mb-4 md:w-auto">
+                  {isRegistered && futureorTodaysDate && (
+                    <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Unregister"
+                      onClick={() => onUnregisterClicked(event)}
+                    />
                   )}
-                </Styled.EventCol2>
-              </Row>
+                  {event.eventParent.maxVolunteers - regCount > 0 &&
+                    !isRegistered &&
+                    futureorTodaysDate && (
+                      <BoGButton
+                        className="w-full bg-primaryColor hover:bg-hoverColor"
+                        text="Register"
+                        onClick={() => onRegisterClicked(event)}
+                      />
+                    )}
+                  {event.eventParent.maxVolunteers - regCount <= 0 &&
+                    !isRegistered &&
+                    futureorTodaysDate && (
+                      <BoGButton
+                        className="w-full bg-primaryColor hover:bg-hoverColor"
+                        disabled={true}
+                        text="Registration Closed"
+                        onClick={null}
+                      />
+                    )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row">
+          <div className="mb-4 ml-4 mr-4 flex-1">
+            <div className="flex flex-col md:ml-12 md:mr-4">
+              <div className="text-lg">
+                {event.eventParent.isValidForCourtHours && (
+                  <span className="font-bold">
+                    {"This event can count toward court required hours"}
+                  </span>
+                )}
+              </div>
+              <div className="text-lg">
+                {" "}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: event.eventParent.description,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="ml-4 mr-4 flex-1 md:-mt-4">
+            <div className="mb-12 flex w-full flex-col md:mr-auto">
+              <h1 className="text-2xl font-bold">Event Information</h1>
+              <div className="flex flex-col md:flex-row">
+                <div className="flex flex-col bg-grey md:w-64">
+                  <p className="m-4 text-base">
+                    <b>Date:</b>
+                    <br></br>
+                    {event.date.slice(0, 10)}
+                  </p>
+                  <p className="m-4 text-base">
+                    <b>Event Contact:</b>
+                    <br></br>
+                    {event.eventParent.eventContactPhone}
+                    <br></br>
+                    {event.eventParent.eventContactEmail}
+                  </p>
+                </div>
+                <div className="flex w-full flex-col bg-grey md:w-64">
+                  <p className="m-4 text-base">
+                    <b>Time:</b>
+                    <br></br>
+                    {convertTime(event.eventParent.startTime)} -{" "}
+                    {convertTime(event.eventParent.endTime)}{" "}
+                    {event.eventParent.localTime}
+                  </p>
+                  <p className="m-4 text-base">
+                    <b>Location:</b>
+                    <br></br>
+                    {event.eventParent.address}
+                    <br></br>
+                    {event.eventParent.city}, {event.eventParent.state}
+                    <br></br>
+                    {event.eventParent.zip}
+                    <br></br>
+                  </p>
+                </div>
+              </div>
+            </div>
+            {event.eventParent.orgName !== "" && (
+              <div className="flex w-full flex-col md:mr-auto">
+                <h1 className="text-2xl font-bold">Organization</h1>
+                <div className="mb-4 flex flex-col md:flex-row">
+                  <div className="flex flex-col bg-grey md:w-64">
+                    <p className="m-4 text-base">
+                      <b>Point of Contact Name</b>
+                      <br></br>
+                      {event.eventParent.pocName}
+                    </p>
+                    <p className="m-4 text-base">
+                      <b>Point of Contact Email</b>
+                      <br></br>
+                      {event.eventParent.pocEmail}
+                    </p>
+                    <p className="m-4 text-base">
+                      <b>Point of Contact Phone</b>
+                      <br></br>
+                      {event.eventParent.pocPhone}
+                    </p>
+                  </div>
+                  <div className="flex flex-col bg-grey md:w-64">
+                    <p className="font-base m-4">
+                      <b>Organization Name</b>
+                      <br></br>
+                      {event.eventParent.orgName}
+                    </p>
+                    <p className="font-base m-4">
+                      <b>Location</b>
+                      <br></br>
+                      {event.eventParent.orgAddress}
+                      <br></br>
+                      {event.eventParent.orgCity}, {event.eventParent.orgState}
+                      <br></br>
+                      {event.eventParent.orgZip}
+                    </p>
+                  </div>
+                </div>
+                {user.role === "volunteer" && (
+                  <div className="flex flex-col bg-white pb-6 md:w-64">
+                    <BoGButton
+                      text="Share Private Event Link"
+                      onClick={copyPrivateLink}
+                    />
+                  </div>
+                )}
+              </div>
             )}
-          </Col>
-        </Styled.EventTable>
+          </div>
+        </div>
         <EventUnregisterModal
           open={showUnregisterModal}
           toggle={toggleUnregisterModal}
           eventData={event}
           userId={user._id}
         />
-      </Styled.EventTableAll>
+      </div>
     </>
   );
 };
