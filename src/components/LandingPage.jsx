@@ -63,11 +63,19 @@ const goToLogin = () => {
   router.push("/login");
 };
 
+const goToCreateAcc = () => {
+  router.push("/create-account");
+};
+
 const LandingPage = () => {
   const [pages, setPages] = useState(1);
 
   const goNextPage = () => {
     setPages(pages + 1);
+  };
+
+  const goBackPage = () => {
+    setPages(pages - 1);
   };
 
   const handleSubmit = async (values) => {
@@ -103,23 +111,33 @@ const LandingPage = () => {
               Contact Us
             </a>
           </div>
-          <Button
-            onClick={goToLogin}
-            className="mr-16 flex bg-purple-700 align-middle hover:bg-purple-700"
-            size="lg"
-            outline
-            pill
-            type="button"
-          >
-            Log In
-          </Button>
+          <div className="flex flex-row">
+            <Button
+              onClick={goToLogin}
+              className="mr-16 flex bg-purple-600 align-middle hover:bg-purple-700"
+              size="lg"
+              pill
+              type="button"
+            >
+              Log In
+            </Button>
+            <Button
+              onClick={goToCreateAcc}
+              className="mr-16 flex bg-purple-600 align-middle hover:bg-purple-700"
+              size="lg"
+              pill
+              type="button"
+            >
+              Create Account
+            </Button>
+          </div>
         </div>
         <div className="flex h-5/6 flex-row items-stretch justify-around">
           <div className="flex flex-col pt-4">
             <p className="w-fit self-center border-b-4 border-purple-700 text-3xl">
               Simplify Volunteer Coordination
             </p>
-            <p className="ml-4 border-purple-700 text-xl">
+            <p className="ml-4 self-center border-purple-700 text-xl">
               Create your account to get started with our volunteer management
               system
             </p>
@@ -139,7 +157,7 @@ const LandingPage = () => {
                 enableReinitialize={true}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                   setSubmitting(true);
-                  this.handleSubmit(values);
+                  handleSubmit(values);
                   setSubmitting(false);
                   resetForm();
                 }}
@@ -148,10 +166,10 @@ const LandingPage = () => {
                 {({ handleSubmit, isValid, isSubmitting, values }) => (
                   <div className="flex flex-col justify-center">
                     <form>
-                      {pages === 2 && (
+                      {pages === 1 && (
                         <>
                           <div className="m-auto flex flex-col">
-                            <div className="mb-2 mt-4 flex flex-row self-center text-2xl font-bold text-purple-700">
+                            <div className="mb-2 ml-6 mr-6 mt-4 flex flex-row self-center text-2xl font-bold text-purple-700">
                               Non-profit Information
                             </div>
                             <p className="border-purple-700 text-xl">
@@ -160,7 +178,7 @@ const LandingPage = () => {
                             </p>
                           </div>
 
-                          <div className="m-auto flex w-64 flex-col">
+                          <div className="mx-10 flex flex-col self-stretch">
                             <p>Non-profit Name</p>
                             <InputField
                               name="name"
@@ -173,9 +191,8 @@ const LandingPage = () => {
                             />
                             <Button
                               onClick={goNextPage}
-                              className="flex self-center self-stretch bg-purple-700 align-middle hover:bg-purple-700"
+                              className="flex w-64 self-center bg-purple-600 align-middle hover:bg-purple-700"
                               size="lg"
-                              outline
                               pill
                               type="button"
                             >
@@ -184,18 +201,18 @@ const LandingPage = () => {
                           </div>
                         </>
                       )}
-                      {pages === 1 && (
+                      {pages === 2 && (
                         <>
                           <div className="m-auto flex flex-col">
-                            <div className="mb-2 mt-4 flex flex-row self-center text-2xl font-bold text-purple-700">
+                            <div className="mb-2 ml-6 mr-6 mt-4 flex flex-row self-center text-2xl font-bold text-purple-700">
                               Contact Information
                             </div>
-                            <p className="border-purple-700 text-xl">
+                            <p className="self-center border-purple-700 text-xl">
                               Create your account to get started with our
                               volunteer management system
                             </p>
                           </div>
-                          <div className="m-auto flex w-64 flex-col">
+                          <div className="mx-10 flex flex-col self-stretch">
                             <InputField
                               name="defaultContactName"
                               label="Contact Name"
@@ -211,32 +228,43 @@ const LandingPage = () => {
                               label="Phone"
                               placeholder="xxx-xxx-xxxx"
                             />
-                            <Button
-                              onClick={goNextPage}
-                              className="flex self-center self-stretch bg-purple-700 align-middle hover:bg-purple-700"
-                              size="lg"
-                              outline
-                              pill
-                              type="button"
-                            >
-                              Next
-                            </Button>
+                            <div className="space-between flex flex-row self-center">
+                              <Button
+                                onClick={goBackPage}
+                                className="mx-5 flex w-64 self-stretch bg-purple-600 align-middle hover:bg-purple-700 text-purple-700"
+                                size="lg"
+                                outline
+                                pill
+                                type="button"
+                              >
+                                Back
+                              </Button>
+                              <Button
+                                onClick={goNextPage}
+                                className="mx-5 flex w-64 self-stretch bg-purple-600 align-middle hover:bg-purple-700"
+                                size="lg"
+                                pill
+                                type="button"
+                              >
+                                Next
+                              </Button>
+                            </div>
                           </div>
                         </>
                       )}
                       {pages === 3 && (
                         <>
                           <div className="m-auto flex flex-col">
-                            <div className="mb-2 mt-4 flex flex-row self-center text-2xl font-bold text-purple-700">
+                            <div className="mx-6 mb-2 mt-4 flex flex-row self-center text-2xl font-bold text-purple-700">
                               Volunteer Management Information
                             </div>
-                            <p className="border-purple-700 text-xl">
+                            <p className="self-center border-purple-700 text-xl">
                               Used as important information to generate your
                               volunteer management platform.
                             </p>
                           </div>
 
-                          <div className="m-auto w-64">
+                          <div className="mx-10 flex flex-col self-stretch">
                             <Tooltip
                               className="flex flex-row"
                               content="Provide an email address that you wish to
@@ -260,9 +288,8 @@ const LandingPage = () => {
                               label="Confirm Primary Admin Account"
                               placeholder="example@email.com"
                             />
-                          </div>
 
-                          <div className="m-auto w-80">
+                            {/* <div className="m-auto w-80"> */}
                             <Tooltip
                               className="flex flex-row"
                               content="Please customize your link to
@@ -293,12 +320,21 @@ const LandingPage = () => {
                               )}
                             </Field>
                             <Styled.ErrorMessage name="slug" />
-                            <div className="mb-12 mt-5 flex justify-center">
+                            <div className="mb-12 mt-5 flex flex-row justify-between">
                               <Button
-                                onClick={handleSubmit}
-                                className="flex self-center self-stretch bg-purple-700 align-middle hover:bg-purple-700"
+                                onClick={goBackPage}
+                                className="mx-5 flex w-64 self-stretch bg-purple-600 align-middle hover:bg-purple-700"
                                 size="lg"
                                 outline
+                                pill
+                                type="button"
+                              >
+                                Back
+                              </Button>
+                              <Button
+                                onClick={handleSubmit}
+                                className="mx-5 flex w-64 self-center self-stretch bg-purple-600 align-middle hover:bg-purple-700"
+                                size="lg"
                                 pill
                                 type="button"
                                 text="Submit"
