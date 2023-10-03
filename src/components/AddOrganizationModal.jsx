@@ -5,6 +5,7 @@ import BoGButton from "./BoGButton";
 import InputField from "./Forms/InputField";
 import "flowbite-react";
 import { updateUserOrganizationId } from "../queries/users";
+import router from "next/router";
 
 class AddOrganizationModal extends React.Component {
   constructor(props) {
@@ -13,18 +14,18 @@ class AddOrganizationModal extends React.Component {
 
     this.state = {
       userId: props.userId,
-      incorrectOrg: false,
+      prompt: "Enter OrgId:"
     };
   }
 
   handleSubmit = async (values) => {
     updateUserOrganizationId(this.props.userId, values.orgCode)
       .then(() => {
-        // redirect the user to the home page
+        router.push("/home");
       })
       .catch((error) => {
         if (error.response.status !== 200) {
-          this.state.incorrectOrg = True;
+          this.state.prompt = "The provided ORG CODE was incorrect. Please try again";
         }
       });
   };
@@ -45,14 +46,12 @@ class AddOrganizationModal extends React.Component {
           {({ handleSubmit, isSubmitting }) => (
             <form className="flex-column flex w-full space-y-2">
               <div className="flex space-x-4">
-                <InputField name="orgCode" label="Org Code" />
+                <InputField name="orgCode" label={this.state.prompt} />
               </div>
               <BoGButton
-                type="submit"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 text="Submit Code"
-                className="mb-4 w-full bg-primaryColor hover:bg-hoverColor"
               />
             </form>
           )}
