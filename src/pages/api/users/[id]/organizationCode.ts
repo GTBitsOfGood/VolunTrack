@@ -15,16 +15,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "PUT": {
-      const updatedUser = await updateUserOrganizationId(id, orgCode);
-      if (!updatedUser) {
-        return res.status(400).json({
-          error: `Error has occurred`,
-        });
-      } else {
-        return res.status(200).json({
-          user: updatedUser,
-        });
-      }
+      const result = await updateUserOrganizationId(id, orgCode);
+
+      return res.status(result.status).json({
+        message: result.message,
+        user: result.user,
+      });
     }
   }
 };

@@ -182,7 +182,7 @@ export const updateUserOrganizationId = async (
 }> => {
   await dbConnect();
 
-  const user: UserDocument | undefined = User.findById(id);
+  const user = await User.findById(id);
   if (!user) {
     return {
       status: 404,
@@ -206,7 +206,7 @@ export const updateUserOrganizationId = async (
     };
   }
 
-  if (user.email in organization.invitedAdmins) {
+  if (user?.email in organization.invitedAdmins) {
     await user.updateOne({
       organizationId: organization._id,
       role: "admin",

@@ -13,21 +13,25 @@ class AddOrganizationModal extends React.Component {
     this.error = false;
 
     this.state = {
-      userId: props.userId,
-      prompt: "Enter OrgId:"
+      prompt: "Enter OrgId:",
     };
   }
 
   handleSubmit = async (values) => {
-    updateUserOrganizationId(this.props.userId, values.orgCode)
-      .then(() => {
-        router.push("/home");
-      })
-      .catch((error) => {
-        if (error.response.status !== 200) {
-          this.state.prompt = "The provided ORG CODE was incorrect. Please try again";
-        }
-      });
+    if (this.props.data.user) {
+      updateUserOrganizationId(this.props.data.user?._id, values.orgCode)
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            router.reload();
+          }
+        })
+        .catch(() => {
+          this.setState({
+            prompt: "The provided ORG CODE was incorrect. Please try again",
+          });
+        });
+    }
   };
 
   render() {
@@ -49,9 +53,11 @@ class AddOrganizationModal extends React.Component {
                 <InputField name="orgCode" label={this.state.prompt} />
               </div>
               <BoGButton
+                className="color-blue"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
                 text="Submit Code"
+                type="submit"
               />
             </form>
           )}
@@ -62,7 +68,7 @@ class AddOrganizationModal extends React.Component {
 }
 
 AddOrganizationModal.propTypes = {
-  userId: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
 export default AddOrganizationModal;
