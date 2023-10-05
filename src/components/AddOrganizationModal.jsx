@@ -13,7 +13,7 @@ class AddOrganizationModal extends React.Component {
     this.error = false;
 
     this.state = {
-      prompt: "Enter OrgId:",
+      prompt: "",
     };
   }
 
@@ -36,33 +36,42 @@ class AddOrganizationModal extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <Formik
-          initialValues={{
-            orgCode: "",
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-            this.handleSubmit(values);
-            setSubmitting(false);
-          }}
-        >
-          {({ handleSubmit, isSubmitting }) => (
-            <form className="flex-column flex w-full space-y-2">
-              <div className="flex space-x-4">
-                <InputField name="orgCode" label={this.state.prompt} />
-              </div>
-              <BoGButton
-                className="color-blue"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                text="Submit Code"
-                type="submit"
-              />
-            </form>
-          )}
-        </Formik>
-      </React.Fragment>
+      <div className="flex h-screen flex-col items-center justify-center">
+        <div className="flex h-screen w-1/4 flex-col items-center justify-center">
+          <h2 className="mb-4 text-2xl font-semibold">Enter Org Code</h2>
+          <React.Fragment>
+            <Formik
+              initialValues={{
+                orgCode: "",
+              }}
+              onSubmit={(values, { setSubmitting }) => {
+                setSubmitting(true);
+                this.handleSubmit(values);
+                setSubmitting(false);
+              }}
+            >
+              {({ handleSubmit, isSubmitting }) => (
+                <form className="flex-column flex w-full space-y-2">
+                  <div className="flex space-x-4">
+                    <InputField
+                      name="orgCode"
+                      label={this.state.prompt}
+                      className="w-full"
+                    />
+                  </div>
+                  <BoGButton
+                    className="color-blue"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    text="Submit Code"
+                    type="submit"
+                  />
+                </form>
+              )}
+            </Formik>
+          </React.Fragment>
+        </div>
+      </div>
     );
   }
 }
