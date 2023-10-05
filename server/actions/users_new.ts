@@ -219,7 +219,6 @@ export const updateUserOrganizationId = async (
 
   return {
     status: 200,
-    // @ts-expect-error
     user,
   };
 };

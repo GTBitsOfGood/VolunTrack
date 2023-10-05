@@ -41,7 +41,7 @@ export const createHistoryEventCreateEvent = (
   eventParent: EventParentDocument
 ) => {
   if (user.organizationId)
-    createHistoryEvent({
+    return createHistoryEvent({
       keyword: "CREATED",
       description: `${user.firstName} ${user.lastName} created event ${eventParent.title}`,
       userId: user._id,
@@ -55,7 +55,7 @@ export const createHistoryEventEditEvent = (
   eventParent: EventParentDocument
 ) => {
   if (user.organizationId)
-    createHistoryEvent({
+    return createHistoryEvent({
       keyword: "EDITED",
       description: `${user.firstName} ${user.lastName} edited event ${eventParent.title}`,
       userId: user._id,
@@ -70,7 +70,7 @@ export const createHistoryEventDeleteEvent = (
   eventParent: EventParentDocument
 ) => {
   if (user.organizationId)
-    createHistoryEvent({
+    return createHistoryEvent({
       keyword: "DELETED",
       description: `${user.firstName} ${
         user.lastName
@@ -83,7 +83,7 @@ export const createHistoryEventDeleteEvent = (
 
 export const createHistoryEventEditProfile = (user: UserDocument) => {
   if (user.organizationId)
-    createHistoryEvent({
+    return createHistoryEvent({
       keyword: "EDITED",
       description: `Edited profile of user ${user.email}`,
       userId: user._id,
@@ -93,7 +93,7 @@ export const createHistoryEventEditProfile = (user: UserDocument) => {
 
 export const createHistoryEventDeleteProfile = (user: UserDocument) => {
   if (user.organizationId)
-    createHistoryEvent({
+    return createHistoryEvent({
       keyword: "DELETED",
       description: `Deleted profile of userId ${user._id.toString()}`,
       userId: user._id,
