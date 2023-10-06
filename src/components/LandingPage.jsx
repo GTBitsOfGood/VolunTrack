@@ -143,6 +143,42 @@ const LandingPage = () => {
             </p>
             <>
               <hr className="mb-12 mt-4"></hr>
+              <div className="mx-auto w-11/12 lg:w-2/6">
+                <div className="flex h-1 items-center justify-between bg-gray-200">
+                  <div className="flex h-1 w-1/2 items-center bg-indigo-700">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-700 shadow">
+                      1
+                    </div>
+                  </div>
+                  {pages >= 2 && (
+                    <div className="flex h-1 w-1/2 items-center self-center bg-indigo-700">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-700 shadow">
+                        2
+                      </div>
+                    </div>
+                  )}
+                  {pages === 1 && (
+                    <div className="flex h-1 w-1/2 items-center self-center">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow">
+                        2
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-end">
+                    {pages >= 3 && (
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-700 shadow">
+                        3
+                      </div>
+                    )}
+                    {pages <= 2 && (
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white shadow">
+                        3
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
               <Formik
                 initialValues={{
                   name: "",
@@ -231,7 +267,7 @@ const LandingPage = () => {
                             <div className="space-between flex flex-row self-center">
                               <Button
                                 onClick={goBackPage}
-                                className="mx-5 flex w-64 self-stretch bg-purple-600 align-middle hover:bg-purple-700 text-purple-700"
+                                className="mx-5 flex w-64 self-stretch bg-purple-600 align-middle text-purple-700 hover:bg-purple-700"
                                 size="lg"
                                 outline
                                 pill
