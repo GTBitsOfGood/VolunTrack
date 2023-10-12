@@ -131,7 +131,7 @@ const EventsList = ({
       );
     } else if (user.role === "admin") {
       return (
-        <div className="w-3/5">
+        <div className="w-full">
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
