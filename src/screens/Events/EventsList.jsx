@@ -24,6 +24,7 @@ const EventsList = ({
   registrations,
   onCreateClicked,
   onEventDelete,
+  onEditClicked,
 }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -78,6 +79,7 @@ const EventsList = ({
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
             onEventDelete={onEventDelete}
+            onEditClicked={onEditClicked}
           />
         ))}
         <div className="h-12" />
@@ -97,6 +99,7 @@ const EventsList = ({
                     event={event}
                     user={user}
                     isRegistered={true}
+                    onEditClicked={onEditClicked}
                   />
                 ))}
               </div>
@@ -117,6 +120,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   isRegistered={registeredEventIds.has(event._id)}
+                  onEditClicked={onEditClicked}
                 />
               ))}
             {upcomingEvents.length === 0 && (
@@ -141,6 +145,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
+                  onEditClicked={onEditClicked}
                 />
               ))}
             {todayEvents.length === 0 && (
@@ -163,6 +168,7 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
+                    onEditClicked={onEditClicked}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
@@ -193,6 +199,7 @@ EventsList.propTypes = {
   user: PropTypes.object,
   isHomePage: PropTypes.bool,
   onCreateClicked: PropTypes.func,
+  onEditClicked: PropTypes.func,
 };
 
 export default EventsList;

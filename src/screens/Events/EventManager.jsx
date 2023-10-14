@@ -148,6 +148,10 @@ const EventManager = ({ isHomePage }) => {
     setShowCreateModal(true);
   };
 
+  const onEditClicked = () => {
+    onRefresh();
+  }
+
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
     onRefresh();
@@ -337,6 +341,7 @@ const EventManager = ({ isHomePage }) => {
               registrations={registrations}
               isHomePage={isHomePage}
               onEventDelete={onEventDelete}
+              onEditClicked={onEditClicked}
             />
           )}
           {showCreateModal && (
@@ -378,6 +383,7 @@ const EventManager = ({ isHomePage }) => {
               registrations={registrations}
               isHomePage={isHomePage}
               onEventDelete={onEventDelete}
+              onEditClicked={onEditClicked}
             />
           </div>
         </Styled.HomePage>
@@ -405,6 +411,7 @@ const EventManager = ({ isHomePage }) => {
             registrations={registrations}
             onCreateClicked={onCreateClicked}
             onEventDelete={onEventDelete}
+            onEditClicked={onEditClicked}
           />
         </Styled.HomePage>
       )}

@@ -65,6 +65,9 @@ const EventCard = (props) => {
   };
 
   const toggleEditModal = () => {
+    if (showEditModal) {
+      props.onEditClicked();
+    }
     setShowEditModal((prev) => !prev);
   };
 
@@ -204,6 +207,7 @@ EventCard.propTypes = {
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
+  onEditClicked: PropTypes.func,
 };
 
 export default EventCard;
