@@ -41,6 +41,15 @@ export const updateUser = (
     userInput
   );
 
+export const updateUserOrganizationId = (
+  userId: Types.ObjectId,
+  orgCode: string
+) =>
+  axios.put<{ user?: UserDocument; error?: ZodError | string }>(
+    `/api/users/${userId.toString()}/organizationCode`,
+    { orgCode }
+  );
+
 export const deleteUser = (userId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(
     `/api/users/${userId.toString()}`

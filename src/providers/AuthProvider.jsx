@@ -5,14 +5,19 @@ import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
 import LandingPage from "../components/LandingPage";
 import OnboardingPage from "../screens/Onboarding/OnboardingPage";
+import AddOrganizationModal from "../components/AddOrganizationModal";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {
-  const { status } = useSession();
+  const { status, data, update } = useSession();
 
   switch (status) {
     case "authenticated":
-      return <>{children}</>;
+      if (data?.user?.organizationId) {
+        return <>{children}</>;
+      } else {
+        return <AddOrganizationModal data={data} />;
+      }
     case "loading":
       return <p>loading...</p>;
     default:
