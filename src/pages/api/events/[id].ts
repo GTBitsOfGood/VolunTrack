@@ -22,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
     return res.status(400).json({ error: "User session not found" });
-  const user = session.user as UserDocument;
+  const user = session.user;
 
   const eventId = req.query.id as string;
 

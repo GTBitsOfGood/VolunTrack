@@ -15,9 +15,13 @@ import Text from "../../components/Text";
 import { stringify } from "querystring";
 
 const AuthPage = (props) => {
+  // let url = new URL(window.location.href).pathname;
+  // let nonprofitCode =
+  //   url === "/create-account" || url === "/login" ? "" : url.substring(1);
+
   const login = async (e) => {
     e.preventDefault();
-    const signin = signIn("google");
+    await signIn("google"); // { callbackUrl: `/?orgCode=${nonprofitCode}` }
   };
 
   const [showModal, setShowModal] = useState(false);
