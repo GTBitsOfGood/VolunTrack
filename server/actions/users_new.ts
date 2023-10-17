@@ -194,28 +194,20 @@ export const updateUserOrganizationId = async (
   if (!organization) {
     return {
       status: 400,
-      message:
-        "The entered organization code does not exist. Please try to enter a different org code",
+      message: "The entered organization code does not exist. Please try to enter a different org code",
     };
   }
 
   if (!organization.active) {
     return {
       status: 400,
-      message: "The entered company code is currently marked as inactive.",
+      message: "The organization corresponding to the entered code is currently marked as inactive.",
     };
   }
 
-  if (user?.email in organization.invitedAdmins) {
-    await user.updateOne({
-      organizationId: organization._id,
-      role: "admin",
-    });
-  } else {
-    await user.updateOne({
-      organizationId: organization._id,
-    });
-  }
+  await user.updateOne({
+    organizationId: organization._id,
+  });
 
   return {
     status: 200,

@@ -84,8 +84,8 @@ export const authOptions: AuthOptions = {
       const user_data = {
         _id,
         imageUrl: message.user.image,
-        firstName: message.user.name.split(" ")[0],
-        lastName: message.user.name.split(" ")[1],
+        firstName: message.user.name.split(" ")[0] ?? "first",
+        lastName: message.user.name.split(" ")[1] ?? "last",
         phone: "",
         email: message.user.email,
       };

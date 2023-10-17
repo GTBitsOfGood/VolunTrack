@@ -6,6 +6,7 @@ import InputField from "./Forms/InputField";
 import "flowbite-react";
 import { updateUserOrganizationId } from "../queries/users";
 import router from "next/router";
+import { signOut } from "next-auth/react";
 
 class AddOrganizationModal extends React.Component {
   constructor(props) {
@@ -66,6 +67,9 @@ class AddOrganizationModal extends React.Component {
                     text="Submit Code"
                     type="submit"
                   />
+                  <button className="mt-8 hover:underline" onClick={signOut}>
+                    Wrong account? Log out
+                  </button>
                 </form>
               )}
             </Formik>
