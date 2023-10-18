@@ -70,7 +70,6 @@ class Volunteers extends React.Component {
     });
   };
   filteredAndSortedVolunteers = () => {
-    console.log(this.state.users);
     const filterArray = this.state.users.filter(
       (user) =>
         (user.firstName + " " + user.lastName)

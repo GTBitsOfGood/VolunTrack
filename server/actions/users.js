@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
 import { createHistoryEventEditProfile } from "./historyEvent";
+import ResetCode from "../mongodb/models/ResetCode";
 
 export async function old_createUserFromCredentials(user) {
   await dbConnect();
@@ -74,6 +75,7 @@ export async function old_verifyUserWithCredentials(email, password) {
       message: "Please sign in with Google",
     };
   }
+
   const match = await bcrypt.compare(email + password, user.passwordHash);
 
   if (match)
@@ -148,6 +150,27 @@ export async function old_updateUser(id, userInfo) {
   if (adminId) createHistoryEventEditProfile(adminId);
   const { role } = userInfo;
   const { bio } = userInfo;
+  const { password } = userInfo;
+
+  if (password) {
+    const user = await User.findOne({ _id: mongoose.Types.ObjectId(id) });
+
+    if (!user.passwordHash) {
+      return {
+        status: 400,
+        message: "Please sign in with Google",
+      };
+    }
+
+    const hash = await bcrypt.hash(user.bio.email + password, 10);
+
+    await User.updateOne(
+      { _id: mongoose.Types.ObjectId(id) },
+      { passwordHash: hash }
+    );
+
+    await ResetCode.findOneAndDelete({ userId: mongoose.Types.ObjectId(id) });
+  }
 
   if (bio) {
     if (!bio.email)

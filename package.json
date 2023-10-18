@@ -41,7 +41,6 @@
     "@types/jest": "^29.4.0",
     "@types/react-dom": "^18.0.11",
     "acorn": "^8.8.2",
-    "agenda": "^4.2.1",
     "apexcharts": "^3.37.1",
     "autoprefixer": "^10.4.13",
     "axios": "^0.24.0",

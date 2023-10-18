@@ -1,16 +1,23 @@
 import { useSession } from "next-auth/react";
 import router from "next/router";
 import PropTypes from "prop-types";
+import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
+import LandingPage from "../components/LandingPage";
 import OnboardingPage from "../screens/Onboarding/OnboardingPage";
+import AddOrganizationModal from "../components/AddOrganizationModal";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {
-  const { status } = useSession();
+  const { status, data, update } = useSession();
 
   switch (status) {
     case "authenticated":
-      return <>{children}</>;
+      if (data?.user?.organizationId) {
+        return <>{children}</>;
+      } else {
+        return <AddOrganizationModal data={data} />;
+      }
     case "loading":
       return <p>loading...</p>;
     default:
@@ -22,7 +29,9 @@ const AuthProvider = ({ children }) => {
       else if (router.pathname === "/login") return <AuthPage />;
       else if (router.pathname === "/[nonprofitCode]")
         return <AuthPage createAccount={true} nonprofitCode={true} />;
-      return <AuthPage />;
+      else if (router.pathname === "/passwordreset/[resetCode]")
+        return <ResetPage></ResetPage>;
+      return <LandingPage />;
   }
 };
 

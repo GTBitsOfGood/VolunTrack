@@ -37,16 +37,23 @@ const EventsList = ({
     return c - d;
   });
 
-  let upcomingEvents = events.filter(function (event) {
-    return new Date(event.date) >= new Date(Date.now() - 2 * 86400000);
-  });
-
   const todayEvents = events.filter(function (event) {
     let date = new Date(event.date);
     date = new Date(
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
     );
-    return date.getDate() === new Date().getDate();
+    return (
+      date.getTime() / (1000 * 60 * 60 * 24) ===
+      new Date().getDate() / (1000 * 60 * 60 * 24)
+    );
+  });
+
+  let upcomingEvents = events.filter(function (event) {
+    return (
+      new Date(event.date) >=
+        new Date().getDate() / (1000 * 60 * 60 * 24) - 1 &&
+      !todayEvents.includes(event)
+    );
   });
 
   const registeredEventIds = new Set(
@@ -233,7 +240,7 @@ const EventsList = ({
       );
     } else if (user.role === "admin") {
       return (
-        <div className="w-3/5">
+        <div className="w-11/12 md:w-3/5">
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&

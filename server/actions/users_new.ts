@@ -171,3 +171,46 @@ export const updateUser = async (
   await createHistoryEventEditProfile(user);
   return user._id;
 };
+
+export const updateUserOrganizationId = async (
+  id: string,
+  orgCode: string
+): Promise<{
+  user?: UserDocument | undefined;
+  message?: string;
+  status: number;
+}> => {
+  await dbConnect();
+
+  const user = await User.findById(id);
+  if (!user) {
+    return {
+      status: 404,
+      message: "User not found",
+    };
+  }
+
+  const organization = await Organization.findOne({ slug: orgCode });
+  if (!organization) {
+    return {
+      status: 400,
+      message: "The entered organization code does not exist. Please try to enter a different org code",
+    };
+  }
+
+  if (!organization.active) {
+    return {
+      status: 400,
+      message: "The organization corresponding to the entered code is currently marked as inactive.",
+    };
+  }
+
+  await user.updateOne({
+    organizationId: organization._id,
+  });
+
+  return {
+    status: 200,
+    user,
+  };
+};

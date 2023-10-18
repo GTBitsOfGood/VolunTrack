@@ -1,4 +1,5 @@
 import "next-auth";
+import { UserDocument } from "../../server/mongodb/models/User";
 
 declare module "next-auth" {
   /**

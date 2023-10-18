@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { getServerSession } from "next-auth/next";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import {
   createHistoryEventDeleteEvent,
   createHistoryEventEditEvent,
 } from "../../../../server/actions/historyEvent";
-import { agenda } from "../../../../server/jobs";
-import { scheduler } from "../../../../server/jobs/scheduler";
 import dbConnect from "../../../../server/mongodb";
 import Attendance from "../../../../server/mongodb/models/Attendance";
 import Event, {
@@ -25,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
     return res.status(400).json({ error: "User session not found" });
-  const user = session.user as UserDocument;
+  const user = session.user;
 
   const eventId = req.query.id as string;
 
@@ -75,13 +72,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
       }
 
-      await agenda.start();
-      await agenda.cancel({ data: event._id });
-      await scheduler.scheduleNewEventJobs(
-        event._id,
-        event.date,
-        eventParent.endTime
-      );
       await createHistoryEventEditEvent(user, event, eventParent);
 
       return res
@@ -98,8 +88,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         await EventParent.findByIdAndDelete(eventParentId);
       }
 
-      await agenda.start();
-      await agenda.cancel({ data: event._id });
       await createHistoryEventDeleteEvent(user, event, eventParent);
 
       return res.status(204).end();
