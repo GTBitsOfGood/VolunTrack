@@ -6,10 +6,6 @@ import Text from "../../components/Text";
 
 const Styled = {
   Container: styled.div`
-    width: 48vw;
-    @media (max-width: 768px) {
-      width: 100%;
-    }
     max-height: 100vh;
     min-height: min-content;
     overflow-y: auto;
@@ -40,16 +36,27 @@ const EventsList = ({
     date = new Date(
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
     );
+    let today = new Date();
     return (
-      date.getTime() / (1000 * 60 * 60 * 24) ===
-      new Date().getDate() / (1000 * 60 * 60 * 24)
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
     );
   });
 
   let upcomingEvents = events.filter(function (event) {
+    let date = new Date(event.date);
+    date = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    );
+    let today = new Date();
     return (
-      new Date(event.date) >=
-        new Date().getDate() / (1000 * 60 * 60 * 24) - 1 &&
+      (date.getFullYear() > today.getFullYear() ||
+        (date.getFullYear() === today.getFullYear() &&
+          date.getMonth() > today.getMonth()) ||
+        (date.getFullYear() === today.getFullYear() &&
+          date.getMonth() === today.getMonth() &&
+          date.getDate() >= today.getDate())) &&
       !todayEvents.includes(event)
     );
   });

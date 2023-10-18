@@ -153,17 +153,19 @@ class AdminsTable extends React.Component {
                       {(user.firstName ?? "") + " " + (user.lastName ?? "")}
                     </Table.Cell>
                     <Table.Cell className="flex items-center">
-                      {user.email}
-                      <Tooltip content="Copy" style="light">
-                        <button
-                          className="mx-1"
-                          onClick={() => {
-                            navigator.clipboard.writeText(user.email);
-                          }}
-                        >
-                          <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
-                        </button>
-                      </Tooltip>
+                      <div className="flex items-center">
+                        {user.email}
+                        <Tooltip content="Copy" style="light">
+                          <button
+                            className="mx-1"
+                            onClick={() => {
+                              navigator.clipboard.writeText(user.email);
+                            }}
+                          >
+                            <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                          </button>
+                        </Tooltip>
+                      </div>
                     </Table.Cell>
                     <Table.Cell>
                       {user.role === "admin"

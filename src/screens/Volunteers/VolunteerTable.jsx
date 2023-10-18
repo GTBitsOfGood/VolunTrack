@@ -1,16 +1,18 @@
 import { Table, Tooltip } from "flowbite-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Modal, ModalHeader } from "reactstrap";
-import EditUserForm from "../../components/Forms/EditUserForm";
+import { Button, Modal, ModalHeader } from "reactstrap";
+import styled from "styled-components";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
+import EditUserForm from "../../components/Forms/EditUserForm";
 import {
-  DocumentDuplicateIcon,
   PencilIcon,
+  DocumentDuplicateIcon,
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
+// import { Icon } from "../../components/Icon";
 
 class VolunteerTable extends React.Component {
   constructor(props) {
@@ -84,7 +86,7 @@ class VolunteerTable extends React.Component {
                 <Table.Cell>
                   {user.firstName} {user.lastName}
                 </Table.Cell>
-                <Table.Cell className="flex items-center">
+                <div className="flex items-center">
                   {user.email}
                   <Tooltip content="Copy" style="light">
                     <button
@@ -96,7 +98,7 @@ class VolunteerTable extends React.Component {
                       <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
                     </button>
                   </Tooltip>
-                </Table.Cell>
+                </div>
                 <Table.Cell>
                   {user.phone
                     ? user.phone.substr(0, 3) +
@@ -116,15 +118,10 @@ class VolunteerTable extends React.Component {
                         <PencilIcon className="h-7 text-primaryColor" />
                       </button>
                     </Tooltip>
-                    {/*<Tooltip content="Delete" style="light">*/}
-                    {/*  <button*/}
-                    {/*    className="mx-1"*/}
-                    {/*    onClick={() => this.deleteUser(user._id)}*/}
-                    {/*  >*/}
-                    {/*    <TrashIcon className="h-7 text-primaryColor" />*/}
-                    {/*  </button>*/}
-                    {/*</Tooltip>*/}
-                    <Tooltip content="Participation Stats" style="light">
+                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                    {/*  <Icon color="grey3" name="delete" />*/}
+                    {/*</Styled.Button>*/}
+                    <Tooltip content="Stats" style="light">
                       <button
                         className="mx-1"
                         onClick={() => this.statsOnClick(user)}
