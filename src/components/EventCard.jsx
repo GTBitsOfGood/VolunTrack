@@ -97,10 +97,9 @@ const EventCard = (props) => {
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (
-                <Badge
-                  className="ml-2 flex items-center bg-secondaryColor text-primaryColor"
-                >
-                  Private Event
+                <Badge className="ml-2 mr-1 flex items-center bg-secondaryColor text-primaryColor">
+                  <span className="hidden md:inline">Private Event</span>
+                  <span className="inline md:hidden">Private</span>
                 </Badge>
               )}
             </div>

@@ -1,4 +1,3 @@
-// import { differenceInCalendarDays } from "date-fns";
 import "flowbite-react";
 import { Dropdown } from "flowbite-react";
 import { useSession } from "next-auth/react";
@@ -10,18 +9,12 @@ import styled from "styled-components";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
-import variables from "../../design-tokens/_variables.module.scss";
 import { getAttendances } from "../../queries/attendances";
-import { getEvent, getEvents } from "../../queries/events";
+import { getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
-import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
-
-// const isSameDay = (a) => (b) => {
-//   return differenceInCalendarDays(a, b) === 0;
-// };
 
 const Styled = {
   Container: styled.div`
@@ -33,44 +26,6 @@ const Styled = {
     align-items: flex-start;
     overflow: hidden;
   `,
-  TablePadding: styled.div`
-    margin-top: 2rem;
-    margin-bottom: 2vw;
-  `,
-  Content: styled.div``,
-  Events: styled.div`
-    text-align: left;
-    font-size: 36px;
-    font-weight: bold;
-  `,
-  Date: styled.div`
-    text-align: left;
-    font-size: 28px;
-    font-weight: bold;
-  `,
-  // Left: styled.div`
-  //   margin-top: 2rem;
-  //   margin-left: 10vw;
-  //   display: flex;
-  //   flex-direction: column;
-  //   @media (max-width: 768px) {
-  //     display: none;
-  //   }
-  // `,
-  // Right: styled.div`
-  //   margin-top: 2rem;
-  //   display: flex;
-  //   flex-direction: column;
-  //   margin-left: 3vw;
-  //   @media (max-width: 768px) {
-  //     width: 100%;
-  //   }
-  // `,
-  DateRow: styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  `,
   HomePage: styled.div`
     width: 100%;
     height: 100%;
@@ -81,16 +36,6 @@ const Styled = {
     margin: 0 auto;
     align-items: center;
     row-gap: 10px;
-  `,
-  LegendText: styled.p`
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 30px;
-  `,
-  LegendImage: styled.img`
-    margin-top: 20px;
-    width: 20rem;
-    height: 5rem;
   `,
 };
 
@@ -265,8 +210,12 @@ const EventManager = ({ isHomePage }) => {
               }
             />
           </div>
-          <Styled.LegendText>How to read the calendar?</Styled.LegendText>
-          <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
+          <Text text="How to read the calendar?" type="subheader" />
+          <img
+            className="h-48"
+            src="/images/Calendar Legend.svg"
+            alt="legend"
+          />
         </div>
       )}
       {!isHomePage && (
@@ -304,7 +253,7 @@ const EventManager = ({ isHomePage }) => {
                 <BoGButton text="Create event" onClick={onCreateClicked} />
               </div>
             ) : (
-              <Styled.TablePadding></Styled.TablePadding>
+              <div className="h-16" />
             )}
             {events.length === 0 ? (
               <div className="mt-8">
