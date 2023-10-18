@@ -11,13 +11,6 @@ const Styled = {
 
     color: gray;
   `,
-  VolunteerContainer: styled.div`
-    width: 100%;
-
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-  `,
 };
 
 const AttendanceFunctionality = ({
