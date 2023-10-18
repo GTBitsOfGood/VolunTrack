@@ -79,23 +79,6 @@ const EventCard = (props) => {
     return hours.toString() + ":" + min + suffix;
   };
 
-  // const onUnregister = async (event) => {
-  //   const changedEvent = {
-  //     // remove current user id from event volunteers
-  //     ...event,
-  //     minors: event.volunteers.filter(
-  //         (minor) => minor.volunteer_id !== user._id
-  //     ),
-  //     volunteers: event.volunteers.filter(
-  //         (volunteer) => volunteer !== user._id
-  //     ),
-  //   };
-  //   const updatedEvent = await updateEvent(changedEvent);
-  //   setEvents(events.map((e) => (e._id === event._id ? updatedEvent : e)));
-  //
-  //   onRefresh();
-  // };
-
   return (
     <div
       className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3"
@@ -109,9 +92,7 @@ const EventCard = (props) => {
             version={props.version ?? "Primary"}
           />
           <div className="flex-column flex text-xl">
-            <Label class="text-xl font-bold">
-              {event.eventParent.title}
-            </Label>
+            <Label class="text-xl font-bold">{event.eventParent.title}</Label>
             <Label>{`${convertTime(
               event.eventParent.startTime
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
