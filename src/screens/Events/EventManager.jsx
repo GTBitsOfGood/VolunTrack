@@ -150,7 +150,7 @@ const EventManager = ({ isHomePage }) => {
 
   const onEditClicked = () => {
     onRefresh();
-  }
+  };
 
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
