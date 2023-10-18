@@ -71,7 +71,7 @@ const LandingPage = () => {
                 href="/"
                 className="flex self-center align-middle text-lg text-black"
               >
-                Features
+                Product
               </a>
               <a
                 href="https://bitsofgood.org/about"
@@ -106,7 +106,7 @@ const LandingPage = () => {
           </div>
           <div className="flex h-5/6 flex-col items-stretch justify-around md:flex-row">
             <div className="flex w-full flex-col px-1 pt-4 md:w-5/12">
-              <p className="w-fit self-center border-b-4 border-purple-700 text-center text-3xl">
+              <p className="w-fit self-center border-b-4 border-purple-700 text-center text-4xl">
                 Simplify Volunteer Coordination
               </p>
               <p className="self-center border-purple-700 text-center text-xl">
@@ -196,7 +196,7 @@ const LandingPage = () => {
                         {pages === 1 && (
                           <>
                             <div className="m-auto flex flex-col">
-                              <div className="m-6 mt-8 flex flex-row self-center text-2xl font-bold text-purple-700">
+                              <div className="m-6 mt-8 flex flex-row self-center text-xl font-bold text-purple-700">
                                 Nonprofit Information
                               </div>
                               {/*<p className="border-purple-700 text-xl">*/}
@@ -232,7 +232,7 @@ const LandingPage = () => {
                         {pages === 2 && (
                           <>
                             <div className="m-auto flex flex-col">
-                              <div className="m-6 mt-8 flex flex-row self-center text-2xl font-bold text-purple-700">
+                              <div className="m-6 mt-8 flex flex-row self-center text-xl font-bold text-purple-700">
                                 Contact Information
                               </div>
                               {/*<p className="self-center border-purple-700 text-xl">*/}
@@ -279,7 +279,7 @@ const LandingPage = () => {
                         {pages === 3 && (
                           <>
                             <div className="m-auto flex flex-col">
-                              <div className="m-6 mt-8 flex flex-row self-center text-2xl font-bold text-purple-700">
+                              <div className="m-6 mt-8 flex flex-row self-center text-xl font-bold text-purple-700">
                                 Platform Information
                               </div>
                               {/*<p className="self-center border-purple-700 text-xl">*/}
