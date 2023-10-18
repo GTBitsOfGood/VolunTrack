@@ -37,7 +37,10 @@ const EventsList = ({
   });
 
   let upcomingEvents = events.filter(function (event) {
-    return new Date(event.date) >= new Date(Date.now() - 2 * 86400000);
+    return (
+      new Date(event.date).getTime() / (1000 * 60 * 60 * 24) >=
+      new Date().getTime() / (1000 * 60 * 60 * 24)
+    );
   });
 
   const todayEvents = events.filter(function (event) {
@@ -135,7 +138,7 @@ const EventsList = ({
       );
     } else if (user.role === "admin") {
       return (
-        <div className="w-3/5">
+        <div className="w-11/12 md:w-3/5">
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&

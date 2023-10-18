@@ -87,12 +87,16 @@ const Header = () => {
   }, []);
 
   return (
-    <Navbar fluid={false} rounded={true} className="py-0">
+    <Navbar
+      fluid={false}
+      rounded={true}
+      className="py-0 md:mx-auto md:w-5/6 md:border-b"
+    >
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      <Navbar.Collapse className="mt-2">
+      <Navbar.Collapse className="mt-2 items-center">
         <Navbar.Link
           href="/home"
           className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
@@ -158,7 +162,7 @@ const Header = () => {
             </Dropdown>
           )}
         </Navbar.Link>
-        <div className="mr-2 flex hidden md:order-2 md:block">
+        <div className="flex hidden md:order-2 md:block">
           <Dropdown
             arrowIcon={true}
             inline={true}

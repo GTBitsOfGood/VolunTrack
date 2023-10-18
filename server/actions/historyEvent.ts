@@ -39,55 +39,64 @@ export const createHistoryEventCreateEvent = (
   user: UserDocument,
   event: EventDocument,
   eventParent: EventParentDocument
-) =>
-  createHistoryEvent({
-    keyword: "CREATED",
-    description: `${user.firstName} ${user.lastName} created event ${eventParent.title}`,
-    userId: user._id,
-    organizationId: eventParent.organizationId,
-    eventId: event._id,
-  });
-
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "CREATED",
+      description: `${user.firstName} ${user.lastName} created event ${eventParent.title}`,
+      userId: user._id,
+      organizationId: eventParent.organizationId,
+      eventId: event._id,
+    });
+};
 export const createHistoryEventEditEvent = (
   user: UserDocument,
   event: EventDocument,
   eventParent: EventParentDocument
-) =>
-  createHistoryEvent({
-    keyword: "EDITED",
-    description: `${user.firstName} ${user.lastName} edited event ${eventParent.title}`,
-    userId: user._id,
-    organizationId: eventParent.organizationId,
-    eventId: event._id,
-  });
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "EDITED",
+      description: `${user.firstName} ${user.lastName} edited event ${eventParent.title}`,
+      userId: user._id,
+      organizationId: eventParent.organizationId,
+      eventId: event._id,
+    });
+};
 
 export const createHistoryEventDeleteEvent = (
   user: UserDocument,
   event: EventDocument,
   eventParent: EventParentDocument
-) =>
-  createHistoryEvent({
-    keyword: "DELETED",
-    description: `${user.firstName} ${
-      user.lastName
-    } deleted event with id ${event._id.toString()}`,
-    userId: user._id,
-    organizationId: eventParent.organizationId,
-    eventId: event._id,
-  });
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "DELETED",
+      description: `${user.firstName} ${
+        user.lastName
+      } deleted event with id ${event._id.toString()}`,
+      userId: user._id,
+      organizationId: eventParent.organizationId,
+      eventId: event._id,
+    });
+};
 
-export const createHistoryEventEditProfile = (user: UserDocument) =>
-  createHistoryEvent({
-    keyword: "EDITED",
-    description: `Edited profile of user ${user.email}`,
-    userId: user._id,
-    organizationId: user.organizationId,
-  });
+export const createHistoryEventEditProfile = (user: UserDocument) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "EDITED",
+      description: `Edited profile of user ${user.email}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
 
-export const createHistoryEventDeleteProfile = (user: UserDocument) =>
-  createHistoryEvent({
-    keyword: "DELETED",
-    description: `Deleted profile of userId ${user._id.toString()}`,
-    userId: user._id,
-    organizationId: user.organizationId,
-  });
+export const createHistoryEventDeleteProfile = (user: UserDocument) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "DELETED",
+      description: `Deleted profile of userId ${user._id.toString()}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
