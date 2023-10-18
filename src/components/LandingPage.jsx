@@ -112,8 +112,8 @@ const LandingPage = () => {
               <p className="self-center border-purple-700 text-center text-xl">
                 Interesting in joining as a nonprofit? Apply below!
               </p>
-              <hr className="mb-8 mt-4"></hr>
-              <div className="rounded-md bg-slate-50 py-4 shadow-sm">
+              {/*<hr className="mb-8 mt-4"></hr>*/}
+              <div className="rounded-md bg-slate-50 py-12 shadow-sm">
                 <div className="mx-auto w-11/12 lg:w-2/6">
                   <div className="flex h-1 items-center justify-between bg-gray-200">
                     <div className="flex h-1 w-1/2 items-center bg-indigo-700">
@@ -196,13 +196,9 @@ const LandingPage = () => {
                         {pages === 1 && (
                           <>
                             <div className="m-auto flex flex-col">
-                              <div className="m-6 mt-8 flex flex-row self-center text-xl font-bold text-purple-700">
+                              <div className="m-6 mt-8 flex flex-row self-center text-2xl font-bold text-purple-700">
                                 Nonprofit Information
                               </div>
-                              {/*<p className="border-purple-700 text-xl">*/}
-                              {/*  Used to verify your organization. We may ask you*/}
-                              {/*  for more information if needed.*/}
-                              {/*</p>*/}
                             </div>
 
                             <div className="mx-10 flex flex-col self-stretch">
@@ -232,13 +228,9 @@ const LandingPage = () => {
                         {pages === 2 && (
                           <>
                             <div className="m-auto flex flex-col">
-                              <div className="m-6 mt-8 flex flex-row self-center text-xl font-bold text-purple-700">
+                              <div className="m-6 mt-8 flex flex-row self-center text-2xl font-bold text-purple-700">
                                 Contact Information
                               </div>
-                              {/*<p className="self-center border-purple-700 text-xl">*/}
-                              {/*  Create your account to get started with our*/}
-                              {/*  volunteer management system*/}
-                              {/*</p>*/}
                             </div>
                             <div className="mx-10 flex flex-col self-stretch">
                               <InputField
@@ -279,13 +271,9 @@ const LandingPage = () => {
                         {pages === 3 && (
                           <>
                             <div className="m-auto flex flex-col">
-                              <div className="m-6 mt-8 flex flex-row self-center text-xl font-bold text-purple-700">
+                              <div className="m-6 mt-8 flex flex-row self-center text-2xl font-bold text-purple-700">
                                 Platform Information
                               </div>
-                              {/*<p className="self-center border-purple-700 text-xl">*/}
-                              {/*  Used as important information to generate your*/}
-                              {/*  volunteer management platform.*/}
-                              {/*</p>*/}
                             </div>
 
                             <div className="mx-10 flex flex-col self-stretch">
@@ -306,11 +294,11 @@ const LandingPage = () => {
                               >
                                 <div className="flex flex-row self-center">
                                   <Label
-                                    className="mb-1 flex h-6 items-center"
+                                    className="mb-1 flex h-6 items-center font-medium text-slate-600"
                                     htmlFor="slug"
                                   >
                                     Organization Code
-                                    <InformationCircleIcon className="ml-1 flex w-4"></InformationCircleIcon>
+                                    <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
                                   </Label>
                                 </div>
                               </Tooltip>

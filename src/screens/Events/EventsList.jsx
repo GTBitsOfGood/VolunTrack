@@ -35,19 +35,23 @@ const EventsList = ({
     return c - d;
   });
 
-  let upcomingEvents = events.filter(function (event) {
-    return (
-      new Date(event.date).getTime() / (1000 * 60 * 60 * 24) >=
-      new Date().getTime() / (1000 * 60 * 60 * 24)
-    );
-  });
-
   const todayEvents = events.filter(function (event) {
     let date = new Date(event.date);
     date = new Date(
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
     );
-    return date.getDate() === new Date().getDate();
+    return (
+      date.getTime() / (1000 * 60 * 60 * 24) ===
+      new Date().getDate() / (1000 * 60 * 60 * 24)
+    );
+  });
+
+  let upcomingEvents = events.filter(function (event) {
+    return (
+      new Date(event.date) >=
+        new Date().getDate() / (1000 * 60 * 60 * 24) - 1 &&
+      !todayEvents.includes(event)
+    );
   });
 
   const registeredEventIds = new Set(
