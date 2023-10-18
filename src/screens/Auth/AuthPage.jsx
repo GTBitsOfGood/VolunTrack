@@ -43,6 +43,25 @@ const AuthPage = (props) => {
     }
   };
 
+  const [showModal, setShowModal] = useState(false);
+
+  const sendResetEmail = async () => {
+    const email = document.getElementById("email1").value;
+
+    const response = await sendResetPasswordEmail(
+      stringify({ email: email })
+    ).catch((error) => {
+      if (error.response.status !== 200) {
+        alert(`Error sending email to ${email}.`);
+      }
+    });
+
+    if (response?.status === 200) {
+      setShowModal(false);
+      alert(`A password reset email has been sent to ${email}.`);
+    }
+  };
+
   return (
     <div className="flex-column my-4 flex h-full w-full items-center justify-center">
       <div
