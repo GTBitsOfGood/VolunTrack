@@ -139,6 +139,7 @@ export const authOptions: AuthOptions = {
       };
     },
     redirect({ baseUrl }) {
+      console.log(baseUrl);
       if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },
