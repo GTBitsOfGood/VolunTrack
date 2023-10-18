@@ -1,18 +1,35 @@
-import { Label, TextInput } from "flowbite-react";
+import { Label, TextInput, Tooltip } from "flowbite-react";
 import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 const InputField = (props) => (
   <div className={props.className + " mb-3"}>
     {props.label && (
       <div className="flex flex-row">
-        <Label
-          className="mb-1 h-6 font-medium text-slate-600"
-          htmlFor={props.name}
-        >
-          {props.label}
-        </Label>
-        {props.isRequired && <p className="mb-0 text-red-600">*</p>}
+        {props.tooltip && (
+          <Tooltip className="flex flex-row" content={props.tooltip}>
+            <Label
+              className="mb-1 flex h-6 items-center font-medium text-slate-600"
+              htmlFor={props.name}
+            >
+              {props.label}
+              <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
+            </Label>
+            {props.isRequired && <p className="mb-0 text-red-600">*</p>}
+          </Tooltip>
+        )}
+        {!props.tooltip && (
+          <>
+            <Label
+              className="mb-1 h-6 font-medium text-slate-600"
+              htmlFor={props.name}
+            >
+              {props.label}
+            </Label>
+            {props.isRequired && <p className="mb-0 text-red-600">*</p>}
+          </>
+        )}
       </div>
     )}
     <Field name={props.name}>
@@ -44,6 +61,7 @@ InputField.propTypes = {
   disabled: PropTypes.bool,
   type: PropTypes.string,
   className: PropTypes.string,
+  tooltip: PropTypes.string,
 };
 
 export default InputField;
