@@ -84,8 +84,8 @@ export const authOptions: AuthOptions = {
       const user_data = {
         _id,
         imageUrl: message.user.image,
-        firstName: message.user.name.split(" ")[0],
-        lastName: message.user.name.split(" ")[1],
+        firstName: message.user.name.split(" ")[0] ?? "first",
+        lastName: message.user.name.split(" ")[1] ?? "last",
         phone: "",
         email: message.user.email,
       };
@@ -105,6 +105,21 @@ export const authOptions: AuthOptions = {
 
       const id = new ObjectId(token.id);
       const user = await User.findById(id);
+
+      if (!user?.organizationId) {
+        return {
+          ...session,
+          user,
+          theme: null,
+          medalDefaults: {
+            eventSilver: null,
+            eventGold: null,
+            hoursSilver: null,
+            hoursGold: null,
+          },
+        };
+      }
+
       const organization = await Organization.findById(user.organizationId);
 
       if (organization?.invitedAdmins.includes(user.email)) {
@@ -124,6 +139,7 @@ export const authOptions: AuthOptions = {
       };
     },
     redirect({ baseUrl }) {
+      console.log(baseUrl);
       if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },
