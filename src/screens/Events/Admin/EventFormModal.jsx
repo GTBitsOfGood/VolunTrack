@@ -45,7 +45,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
-    event?.isValidForCourtHours ?? false
+    event?.eventParent?.isValidForCourtHours ?? false
   );
   const {
     data: { user },
@@ -83,6 +83,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
   };
 
   const onSubmitEditEvent = (values, setSubmitting) => {
+    values.eventParent.isValidForCourtHours = isValidForCourtHours;
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,

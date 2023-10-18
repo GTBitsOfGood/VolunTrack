@@ -38,11 +38,6 @@ const Styled = {
     margin-bottom: 2vw;
   `,
   Content: styled.div``,
-  EventContainer: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-  `,
   Events: styled.div`
     text-align: left;
     font-size: 36px;
@@ -53,34 +48,28 @@ const Styled = {
     font-size: 28px;
     font-weight: bold;
   `,
-  Left: styled.div`
-    margin-left: 10vw;
-    display: flex;
-    flex-direction: column;
-    @media (max-width: 768px) {
-      display: none;
-    }
-  `,
-  Right: styled.div`
-    display: flex;
-    flex-direction: column;
-    margin-left: 3vw;
-    @media (max-width: 768px) {
-      width: 100%;
-    }
-  `,
+  // Left: styled.div`
+  //   margin-top: 2rem;
+  //   margin-left: 10vw;
+  //   display: flex;
+  //   flex-direction: column;
+  //   @media (max-width: 768px) {
+  //     display: none;
+  //   }
+  // `,
+  // Right: styled.div`
+  //   margin-top: 2rem;
+  //   display: flex;
+  //   flex-direction: column;
+  //   margin-left: 3vw;
+  //   @media (max-width: 768px) {
+  //     width: 100%;
+  //   }
+  // `,
   DateRow: styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-  `,
-  Back: styled.p`
-    font-size: 14px;
-    margin-left: 10px;
-    padding-top: 8px;
-    text-decoration: underline;
-    color: ${variables.primary};
-    cursor: pointer;
   `,
   HomePage: styled.div`
     width: 100%;
@@ -262,16 +251,11 @@ const EventManager = ({ isHomePage }) => {
   return (
     <Styled.Container>
       {!isHomePage && (
-        <Styled.Left>
-          <Styled.EventContainer>
-            <Styled.Events>Events</Styled.Events>
-            {showBack && (
-              <Styled.Back onClick={setDateBack}>
-                  Show Events for all Dates
-                </Styled.Back>
-            )}
-          </Styled.EventContainer>
-          <div className="m-2 rounded-md bg-gray-50 p-2">
+        <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
+          <div className="my-1 ml-2 flex flex-col items-start">
+            <Text text="Events" type="header" />
+          </div>
+          <div className="m-2 w-fit rounded-md bg-gray-50 p-2">
             <Calendar
               className="bg-white"
               onChange={onChange}
@@ -283,78 +267,84 @@ const EventManager = ({ isHomePage }) => {
           </div>
           <Styled.LegendText>How to read the calendar?</Styled.LegendText>
           <Styled.LegendImage src="/images/Calendar Legend.svg" alt="legend" />
-        </Styled.Left>
+        </div>
       )}
       {!isHomePage && (
-        <Styled.Right>
-          {user.role === "admin" ? (
-            <div className="mb-4 mt-12 flex w-full items-center justify-between">
-              <Dropdown
-                inline={true}
-                arrowIcon={false}
-                label={<BoGButton text={dropdownVal} dropdown={true} />}
-              >
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("All Events");
-                  }}
+        <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
+          <div className="flex flex-col lg:w-5/6">
+            {user.role === "admin" ? (
+              <div className="mb-4 flex w-full items-center justify-between">
+                <Dropdown
+                  inline={true}
+                  arrowIcon={false}
+                  label={<BoGButton text={dropdownVal} dropdown={true} />}
                 >
-                  All Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Public Events");
-                  }}
-                >
-                  Public Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Private Group Events");
-                  }}
-                >
-                  Private Group Events
-                </Dropdown.Item>
-              </Dropdown>
-              <BoGButton text="Create event" onClick={onCreateClicked} />
-            </div>
-          ) : (
-            <Styled.TablePadding></Styled.TablePadding>
-          )}
-          {events.length === 0 ? (
-            <div className="flex-column flex">
-              <div className="flex justify-between">
-                <Styled.Date>{dateString}</Styled.Date>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("All Events");
+                    }}
+                  >
+                    All Events
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Public Events");
+                    }}
+                  >
+                    Public Events
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Private Group Events");
+                    }}
+                  >
+                    Private Group Events
+                  </Dropdown.Item>
+                </Dropdown>
+                <BoGButton text="Create event" onClick={onCreateClicked} />
               </div>
-              <Text
-                text="No Events Scheduled Today"
-                type="subheader"
-                className="text-primaryColor"
+            ) : (
+              <Styled.TablePadding></Styled.TablePadding>
+            )}
+            {events.length === 0 ? (
+              <div className="mt-8">
+                <Text
+                  text={"No Events Scheduled on " + dateString}
+                  type="subheader"
+                />
+                {showBack && (
+                  <button
+                    className="text-primaryColor hover:underline"
+                    onClick={setDateBack}
+                  >
+                    Show Events for all Dates
+                  </button>
+                )}
+              </div>
+            ) : (
+              <EventsList
+                dateString={dateString}
+                events={
+                  user.role === "admin"
+                    ? filterOn
+                      ? filteredEvents
+                      : events
+                    : filterEventsForVolunteers(events, user)
+                }
+                registrations={registrations}
+                user={user}
+                isHomePage={isHomePage}
+                onEventDelete={onEventDelete}
               />
-            </div>
-          ) : (
-            <EventsList
-              dateString={dateString}
-              events={
-                user.role === "admin"
-                  ? filterOn
-                    ? filteredEvents
-                    : events
-                  : filterEventsForVolunteers(events, user)
-              }
-              registrations={registrations}
-              user={user}
-              isHomePage={isHomePage}
-              onEventDelete={onEventDelete}
-            />
-          )}
-          {showCreateModal && (
-            <EventCreateModal
-              open={showCreateModal}
-              toggle={toggleCreateModal}
-            />
-          )}
-        </Styled.Right>
+            )}
+            {showCreateModal && (
+              <EventCreateModal
+                open={showCreateModal}
+                toggle={toggleCreateModal}
+              />
+            )}
+          </div>
+        </div>
       )}
       {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>

@@ -8,15 +8,11 @@ import variables from "../design-tokens/_variables.module.scss";
 
 const Styled = {
   Pagination: styled(Pagination)`
-    margin-x: 2vw;
-    margin-bottom: 2vw;
-    margin-top: 1vw;
+    margin: 2vw;
   `,
   PaginationLink: styled(PaginationLink)`
     background-color: transparent;
     border: none;
-    color: ${variables["gray-400"]};
-    background: transparent;
   `,
 };
 

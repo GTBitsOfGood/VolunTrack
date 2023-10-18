@@ -3,15 +3,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
-import PaginationComp from "../../components/PaginationComp";
-import { useState } from "react";
 
 const Styled = {
   Container: styled.div`
-    width: 48vw;
-    @media (max-width: 768px) {
-      width: 100%;
-    }
     max-height: 100vh;
     min-height: min-content;
     overflow-y: auto;
@@ -31,7 +25,7 @@ const EventsList = ({
     const { data: session } = useSession();
     user = session.user;
   }
-  events.sort((a, b) => {
+  events.sort(function (a, b) {
     const c = new Date(a.date);
     const d = new Date(b.date);
     return c - d;
@@ -42,16 +36,27 @@ const EventsList = ({
     date = new Date(
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
     );
+    let today = new Date();
     return (
-      date.getTime() / (1000 * 60 * 60 * 24) ===
-      new Date().getDate() / (1000 * 60 * 60 * 24)
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
     );
   });
 
   let upcomingEvents = events.filter(function (event) {
+    let date = new Date(event.date);
+    date = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    );
+    let today = new Date();
     return (
-      new Date(event.date) >=
-        new Date().getDate() / (1000 * 60 * 60 * 24) - 1 &&
+      (date.getFullYear() > today.getFullYear() ||
+        (date.getFullYear() === today.getFullYear() &&
+          date.getMonth() > today.getMonth()) ||
+        (date.getFullYear() === today.getFullYear() &&
+          date.getMonth() === today.getMonth() &&
+          date.getDate() >= today.getDate())) &&
       !todayEvents.includes(event)
     );
   });
@@ -77,76 +82,19 @@ const EventsList = ({
     registeredEvents = registeredEvents.slice(0, 2);
   }
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const onPageChange = () => {
-    setCurrentPage(currentPage + 10);
-  };
-
-  const formatDate = (date) => {
-    const split = date.split(" ");
-    return split[1] + " " + split[2] + ", " + split[3];
-  };
-
-  var pastDate = "";
-
-  const updateDate = (event) => {
-    const past = pastDate;
-    pastDate = formatDate(new Date(event.date).toDateString());
-    return past;
-  };
-
-  const updatePage = (pageNum) => {
-    setCurrentPage(pageNum);
-  };
-
-  const past = () => {
-    return pastDate;
-  };
-
   if (!isHomePage) {
     return (
       <Styled.Container>
-        {events.slice(currentPage * 10, (currentPage + 1) * 10).map((event) => (
-          <>
-            {updateDate(event) !==
-            formatDate(new Date(event.date).toDateString()) ? (
-              <Text
-                type="subheader"
-                className="m\y-2"
-                text={formatDate(new Date(event.date).toDateString())}
-              />
-            ) : (
-              <></>
-            )}
-            <EventCard
-              key={event._id}
-              event={event}
-              user={user}
-              isRegistered={registeredEventIds.has(event.id)}
-              private={event.isPrivate}
-              dateDisplay={false}
-            />
-          </>
+        {events.map((event) => (
+          <EventCard
+            key={event._id}
+            event={event}
+            user={user}
+            isRegistered={registeredEventIds.has(event._id)}
+            onEventDelete={onEventDelete}
+          />
         ))}
-        {events.length !== 0 && (
-          <div className="column-flex self-center">
-            <Text
-              className="justify-content-center flex"
-              text={`${currentPage * 10 + 1} - ${
-                currentPage * 10 + 10 > events.length
-                  ? events.length
-                  : currentPage * 10 + 10
-              } of total ${events.length} events`}
-              type="helper"
-            />
-            <PaginationComp
-              items={events}
-              pageSize={10}
-              currentPage={currentPage}
-              updatePageCallback={updatePage}
-            />
-          </div>
-        )}
+        <div className="h-12" />
       </Styled.Container>
     );
   } else {
@@ -168,53 +116,11 @@ const EventsList = ({
               </div>
             )}
             {registeredEvents.length === 0 && (
-              <div>
-                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
-                  Please register for an event!
-                </p>
-                {todayEvents.length > 0 && (
-                  <div>
-                    <p className="font-weight-bold pb-3 text-xl">
-                      {"Today's Events"}
-                    </p>
-                    {todayEvents.map((event) => (
-                      <EventCard
-                        key={event._id}
-                        event={event}
-                        user={user}
-                        isRegistered={true}
-                        dateDisplay={true}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-            {upcomingEvents.length > 0 && (
-              <div>
-                <p className="font-weight-bold pb-3 text-xl">
-                  {"Upcoming Events"}
-                </p>
-                {upcomingEvents.map((event) => (
-                  <EventCard
-                    key={event._id}
-                    event={event}
-                    user={user}
-                    isRegistered={registeredEventIds.has(event.id)}
-                    dateDisplay={true}
-                  />
-                ))}
-              </div>
-            )}
-            {registeredEvents.length === 0 && (
               <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
                 Please register for an event!
               </p>
             )}
           </div>
-          {/* </Styled.Container> */}
-          {/* )} */}
-          {/* <Styled.Container> */}
 
           <div className="column-flex">
             <p className="font-weight-bold pb-3 text-2xl">New Events</p>
@@ -224,7 +130,6 @@ const EventsList = ({
                   key={event._id}
                   event={event}
                   user={user}
-                  dateDisplay={true}
                   isRegistered={registeredEventIds.has(event._id)}
                 />
               ))}
@@ -235,7 +140,7 @@ const EventsList = ({
             )}
             <Text text="View More" href="/events" />
           </div>
-          {/* <div className="h-12" /> */}
+          <div className="h-12" />
         </Styled.Container>
       );
     } else if (user.role === "admin") {
@@ -249,7 +154,6 @@ const EventsList = ({
                   key={event._id}
                   event={event}
                   user={user}
-                  dateDisplay={true}
                   onEventDelete={onEventDelete}
                 />
               ))}
@@ -271,7 +175,6 @@ const EventsList = ({
                     event={event}
                     user={user}
                     version={"Secondary"}
-                    dateDisplay={true}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
                   />

@@ -5,7 +5,7 @@ import {
   TrashIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
-import { Label, Tooltip } from "flowbite-react";
+import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
 import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
@@ -92,7 +92,18 @@ const EventCard = (props) => {
             version={props.version ?? "Primary"}
           />
           <div className="flex-column flex text-xl">
-            <Label class="text-xl font-bold">{event.eventParent.title}</Label>
+            <div className="mb-1 flex items-center">
+              <Label class="mb-0 text-xl font-bold">
+                {event.eventParent.title}
+              </Label>
+              {event.eventParent.isPrivate && (
+                <Badge
+                  className="ml-2 flex items-center bg-secondaryColor text-primaryColor"
+                >
+                  Private Event
+                </Badge>
+              )}
+            </div>
             <Label>{`${convertTime(
               event.eventParent.startTime
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>

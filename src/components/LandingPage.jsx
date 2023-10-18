@@ -8,6 +8,8 @@ import { router } from "next/router";
 import { createOrganization } from "../queries/organizations";
 import React, { useState } from "react";
 import { createOrganizationValidator } from "../screens/Onboarding/helpers";
+import Footer from "../screens/Events/Admin/Attendance/Footer";
+import AppFooter from "./Footer";
 
 const goToLogin = () => {
   router.push("/login");
@@ -357,6 +359,7 @@ const LandingPage = () => {
         </div>
       </div>
       {/*<div className="h-80">test</div>*/}
+      <AppFooter />
     </>
   );
 };
