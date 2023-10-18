@@ -32,23 +32,6 @@ const Styled = {
     display: flex;
     justify-content: space-between;
   `,
-  CheckedInData: styled.p`
-    margin: 0;
-
-    font-size: 2rem;
-    vertical-align: top;
-  `,
-  Search: styled.input`
-    height: 3rem;
-    width: 100%;
-    margin: 0;
-    padding: 0 0.5rem;
-
-    font-size: 1rem;
-
-    border: 1px solid lightgray;
-    border-radius: 0.5rem;
-  `,
 };
 
 const EventAttendance = () => {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import PropTypes from "prop-types";
-import { Col, Row, Container } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import { Formik } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";
@@ -22,9 +22,6 @@ const Styled = {
     font-weight: 900;
     margin-bottom: 0rem;
   `,
-  HighlightText: styled.p`
-    color: ${variables["dark"]};
-  `,
   Col: styled(Col)`
     margin-top: 0.5rem;
   `,
@@ -33,16 +30,6 @@ const Styled = {
   `,
   Text: styled.p`
     color: ${variables["yiq-text-dark"]};
-  `,
-  Container: styled(Container)`
-    background-color: ${variables["success"]};
-    border-radius: 0.1rem;
-  `,
-  ConfirmationModal: styled(Modal)`
-    bottom: 0;
-  `,
-  BoldText: styled.span`
-    font-weight: 900;
   `,
 };
 

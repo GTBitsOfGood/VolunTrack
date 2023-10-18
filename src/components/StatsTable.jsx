@@ -1,10 +1,8 @@
 import { Table, Tooltip } from "flowbite-react";
-import { Types } from "mongoose";
 import Link from "next/link";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { getUser } from "../queries/users";
 import { getHours } from "../screens/Stats/User/hourParsing";
 import Pagination from "./PaginationComp";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
