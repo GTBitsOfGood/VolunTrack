@@ -41,12 +41,12 @@ const EventCard = (props) => {
   };
 
   const registerOnClick = (e) => {
-    router.push(`/events/${props.event._id}/register`);
+    router.push(`/events/${event._id}/register`);
     e.stopPropagation();
   };
 
   const manageAttendanceOnClick = (e) => {
-    router.push(`/events/${props.event._id}/attendance`);
+    router.push(`/events/${event._id}/attendance`);
     e.stopPropagation();
   };
 
@@ -65,9 +65,6 @@ const EventCard = (props) => {
   };
 
   const toggleEditModal = () => {
-    if (showEditModal) {
-      props.onEditClicked();
-    }
     setShowEditModal((prev) => !prev);
   };
 
@@ -107,16 +104,17 @@ const EventCard = (props) => {
       <div className="flex justify-between">
         <div className="flex justify-start">
           <DateDisplayComponent
-            date={props.event.date}
+            key={event.date}
+            date={event.date}
             version={props.version ?? "Primary"}
           />
           <div className="flex-column flex text-xl">
             <Label class="text-xl font-bold">
-              {props.event.eventParent.title}
+              {event.eventParent.title}
             </Label>
             <Label>{`${convertTime(
-              props.event.eventParent.startTime
-            )} - ${convertTime(props.event.eventParent.endTime)} EST`}</Label>
+              event.eventParent.startTime
+            )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
           </div>
         </div>
         <div className="flex-column justify-end">
@@ -162,7 +160,7 @@ const EventCard = (props) => {
           )}
           {props.user.role === "volunteer" &&
             !isRegistered &&
-            props.event.eventParent.maxVolunteers - regCount > 0 && (
+            event.eventParent.maxVolunteers - regCount > 0 && (
               <button
                 className="align-items-center mx-1 flex"
                 onClick={registerOnClick}
@@ -172,7 +170,7 @@ const EventCard = (props) => {
               </button>
             )}
           <Label className="justify-end">
-            {props.event.eventParent.maxVolunteers - regCount} slots available
+            {event.eventParent.maxVolunteers - regCount} slots available
           </Label>
         </div>
       </div>
@@ -180,20 +178,20 @@ const EventCard = (props) => {
         <div className="ml-16 mt-2 space-y-2 pl-2">
           <div className="flex-column flex">
             <Label class="text-md mb-0 mr-1 font-bold">Address: </Label>
-            <p>{props.event.eventParent.address}</p>
+            <p>{event.eventParent.address}</p>
           </div>
           <div className="flex-column flex">
             <Label class="text-md mb-0 mr-1 font-bold">Description: </Label>
             <div
               className="h-12 overflow-hidden"
               dangerouslySetInnerHTML={{
-                __html: props.event.eventParent.description,
+                __html: event.eventParent.description,
               }}
             />
           </div>
           <Text
             className="mt-4"
-            href={`events/${props.event._id}`}
+            href={`events/${event._id}`}
             text="More Information"
           />
         </div>
@@ -207,7 +205,6 @@ EventCard.propTypes = {
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
-  onEditClicked: PropTypes.func,
 };
 
 export default EventCard;

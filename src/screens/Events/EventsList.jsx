@@ -24,7 +24,6 @@ const EventsList = ({
   registrations,
   onCreateClicked,
   onEventDelete,
-  onEditClicked,
 }) => {
   if (!user) {
     const { data: session } = useSession();
@@ -36,19 +35,23 @@ const EventsList = ({
     return c - d;
   });
 
-  let upcomingEvents = events.filter(function (event) {
-    return (
-      new Date(event.date).getTime() / (1000 * 60 * 60 * 24) >=
-      new Date().getTime() / (1000 * 60 * 60 * 24)
-    );
-  });
-
   const todayEvents = events.filter(function (event) {
     let date = new Date(event.date);
     date = new Date(
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
     );
-    return date.getDate() === new Date().getDate();
+    return (
+      date.getTime() / (1000 * 60 * 60 * 24) ===
+      new Date().getDate() / (1000 * 60 * 60 * 24)
+    );
+  });
+
+  let upcomingEvents = events.filter(function (event) {
+    return (
+      new Date(event.date) >=
+        new Date().getDate() / (1000 * 60 * 60 * 24) - 1 &&
+      !todayEvents.includes(event)
+    );
   });
 
   const registeredEventIds = new Set(
@@ -82,7 +85,6 @@ const EventsList = ({
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
             onEventDelete={onEventDelete}
-            onEditClicked={onEditClicked}
           />
         ))}
         <div className="h-12" />
@@ -102,7 +104,6 @@ const EventsList = ({
                     event={event}
                     user={user}
                     isRegistered={true}
-                    onEditClicked={onEditClicked}
                   />
                 ))}
               </div>
@@ -123,7 +124,6 @@ const EventsList = ({
                   event={event}
                   user={user}
                   isRegistered={registeredEventIds.has(event._id)}
-                  onEditClicked={onEditClicked}
                 />
               ))}
             {upcomingEvents.length === 0 && (
@@ -148,7 +148,6 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
-                  onEditClicked={onEditClicked}
                 />
               ))}
             {todayEvents.length === 0 && (
@@ -171,7 +170,6 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
-                    onEditClicked={onEditClicked}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
@@ -202,7 +200,6 @@ EventsList.propTypes = {
   user: PropTypes.object,
   isHomePage: PropTypes.bool,
   onCreateClicked: PropTypes.func,
-  onEditClicked: PropTypes.func,
 };
 
 export default EventsList;
