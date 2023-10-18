@@ -43,6 +43,6 @@ class DateDisplayComponent extends React.Component {
 export default DateDisplayComponent;
 
 DateDisplayComponent.propTypes = {
-  date: PropTypes.object.isRequired,
+  date: PropTypes.string.isRequired,
   version: PropTypes.string.isRequired,
 };

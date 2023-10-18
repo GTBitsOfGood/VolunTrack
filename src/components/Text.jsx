@@ -34,6 +34,12 @@ class Text extends React.Component {
               {this.props.text}
             </h3>
           );
+        case "subtitle":
+          return (
+            <h3 className={"text-base font-bold " + this.props.className}>
+              {this.props.text}
+            </h3>
+          );
         case "helper":
           theming = "text-gray-400 ";
           break;

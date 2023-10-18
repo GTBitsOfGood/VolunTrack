@@ -6,10 +6,6 @@ import Text from "../../components/Text";
 
 const Styled = {
   Container: styled.div`
-    width: 48vw;
-    @media (max-width: 768px) {
-      width: 100%;
-    }
     max-height: 100vh;
     min-height: min-content;
     overflow-y: auto;
@@ -35,19 +31,34 @@ const EventsList = ({
     return c - d;
   });
 
-  let upcomingEvents = events.filter(function (event) {
-    return (
-      new Date(event.date).getTime() / (1000 * 60 * 60 * 24) >=
-      new Date().getTime() / (1000 * 60 * 60 * 24)
-    );
-  });
-
   const todayEvents = events.filter(function (event) {
     let date = new Date(event.date);
     date = new Date(
       date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
     );
-    return date.getDate() === new Date().getDate();
+    let today = new Date();
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  });
+
+  let upcomingEvents = events.filter(function (event) {
+    let date = new Date(event.date);
+    date = new Date(
+      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+    );
+    let today = new Date();
+    return (
+      (date.getFullYear() > today.getFullYear() ||
+        (date.getFullYear() === today.getFullYear() &&
+          date.getMonth() > today.getMonth()) ||
+        (date.getFullYear() === today.getFullYear() &&
+          date.getMonth() === today.getMonth() &&
+          date.getDate() >= today.getDate())) &&
+      !todayEvents.includes(event)
+    );
   });
 
   const registeredEventIds = new Set(
