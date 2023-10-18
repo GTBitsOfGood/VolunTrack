@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Col,
-  Container,
   FormGroup,
   Input,
   Modal,
@@ -36,12 +35,6 @@ const Styled = {
   Col: styled(Col)``,
   Row: styled(Row)`
     margin: 0.5rem 2rem 0.5rem 1rem;
-  `,
-  Text: styled.p`
-    color: ${variables["yiq-text-dark"]};
-  `,
-  Container: styled(Container)`
-    background-color: ${variables["success"]};
   `,
   WaiverBox: styled.p`
     border: 0.1rem solid ${variables["gray-200"]};

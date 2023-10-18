@@ -30,12 +30,6 @@ const Styled = {
 
     display: flex;
   `,
-  TotalHours: styled.p`
-    margin: 0 2rem;
-
-    font-size: 2rem;
-    vertical-align: top;
-  `,
   Table: styled.div`
     width: 50%;
     height: 50%;
