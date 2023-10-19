@@ -43,6 +43,8 @@ export const authOptions: AuthOptions = {
           credentials.password
         );
 
+        console.log(response);
+
         if (response.status === 200) {
           // this is the user object of the JWT
           return {
@@ -50,10 +52,7 @@ export const authOptions: AuthOptions = {
             ...response.message,
           };
         } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-          // TODO: reject this callback with an error with the message as response.error
-          return Error(response.message);
+          return null; //Error(response.message);
         }
       },
       credentials: {
@@ -139,7 +138,6 @@ export const authOptions: AuthOptions = {
       };
     },
     redirect({ baseUrl }) {
-      console.log(baseUrl);
       if (baseUrl.includes("bitsofgood.org")) return process.env.BASE_URL;
       return baseUrl;
     },

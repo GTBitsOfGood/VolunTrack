@@ -12,7 +12,9 @@ const AuthProvider = ({ children }) => {
 
   switch (status) {
     case "authenticated":
-      if (data?.user?.organizationId) {
+      if (data?.user == null) {
+        return <AuthPage />;
+      } else if (data?.user?.organizationId) {
         return <>{children}</>;
       } else {
         return <AddOrganizationModal data={data} />;

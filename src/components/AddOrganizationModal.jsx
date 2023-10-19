@@ -22,7 +22,6 @@ class AddOrganizationModal extends React.Component {
     if (this.props.data.user) {
       updateUserOrganizationId(this.props.data.user?._id, values.orgCode)
         .then((res) => {
-          console.log(res);
           if (res.status === 200) {
             router.reload();
           }
