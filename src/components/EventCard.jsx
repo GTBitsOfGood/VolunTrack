@@ -81,7 +81,7 @@ const EventCard = (props) => {
 
   return (
     <div
-      className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3"
+      className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6"
       onClick={open}
     >
       <div className="flex justify-between">
@@ -91,7 +91,7 @@ const EventCard = (props) => {
             date={event.date}
             version={props.version ?? "Primary"}
           />
-          <div className="flex-column flex text-xl">
+          <div className="flex-column flex flex-1 text-xl">
             <div className="mb-1 flex items-center">
               <Label class="mb-0 text-xl font-bold">
                 {event.eventParent.title}
@@ -113,17 +113,17 @@ const EventCard = (props) => {
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
                 <button className="mx-1" onClick={editOnClick}>
-                  <PencilIcon className="h-8 text-primaryColor" />
+                  <PencilIcon className="h-5 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <Tooltip content="Delete" style="light">
                 <button className="mx-1" onClick={deleteOnClick}>
-                  <TrashIcon className="h-8 text-primaryColor" />
+                  <TrashIcon className="h-5 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <Tooltip content="Manage Attendance" style="light">
                 <button className="mx-1" onClick={manageAttendanceOnClick}>
-                  <UsersIcon className="h-8 text-primaryColor" />
+                  <UsersIcon className="h-5 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <EventDeleteModal
@@ -160,7 +160,7 @@ const EventCard = (props) => {
                 <span>Register</span>
               </button>
             )}
-          <Label className="justify-end">
+          <Label className="justify-end text-right">
             {event.eventParent.maxVolunteers - regCount} slots available
           </Label>
         </div>
