@@ -3,7 +3,13 @@ import { Label, Progress } from "flowbite-react";
 import "flowbite-react";
 import { getHours } from "../screens/Stats/User/hourParsing";
 
-const ProgressDisplay = ({ type, attendance, header, medalDefaults }) => {
+const ProgressDisplay = ({
+  className,
+  type,
+  attendance,
+  header,
+  medalDefaults,
+}) => {
   let level = "Bronze";
   let num = 0;
   let outOf;
@@ -40,7 +46,7 @@ const ProgressDisplay = ({ type, attendance, header, medalDefaults }) => {
   }
 
   return (
-    <div className="ml-18 mr-8 rounded-md bg-grey px-12 py-4">
+    <div className={"rounded-md bg-grey px-12 py-4 " + (className || "")}>
       <Label class="text-black-800 text-xl font-semibold">{header}</Label>
       <div className="flex flex-nowrap items-center">
         <img
