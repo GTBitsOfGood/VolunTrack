@@ -94,7 +94,7 @@ const OverallAttendanceSummary = () => {
   };
 
   return (
-    <div className="align-center mx-auto mt-6 flex w-5/6 flex-col items-center">
+    <div className="align-center mx-auto mt-6 flex w-5/6 flex-col">
       <Text text="Overall Attendance Summary" type="header" className="my-4" />
       <Formik
         initialValues={{}}
@@ -102,7 +102,7 @@ const OverallAttendanceSummary = () => {
           onSubmitValues(values, setSubmitting);
         }}
         render={({ handleSubmit }) => (
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center">
             <InputField label="From" name="startDate" type="datetime-local" />
             <InputField label="To" name="endDate" type="datetime-local" />
             <BoGButton
@@ -118,7 +118,7 @@ const OverallAttendanceSummary = () => {
       {loading && <Loading />}
 
       {!loading && (
-        <div className="align-center my-8 flex items-center gap-16">
+        <div className="align-center my-8 flex flex-col gap-4 md:flex-row md:items-center md:gap-16">
           <div className="flex-column flex items-center">
             <Text text="Unique Events:" type="subheader" />
             <Text text={numEvents} type="subheader" />
