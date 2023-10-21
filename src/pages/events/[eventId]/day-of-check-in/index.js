@@ -1,97 +1,102 @@
 import { Formik } from "formik";
-import { signIn } from "next-auth/react";
-import PropTypes from "prop-types";
-import React from "react";
-import BoGButton from "../../../../components/BoGButton";
+import React, { useEffect, useState } from "react";
 import InputField from "../../../../components/Forms/InputField";
 import { checkInValidator } from "./helpers";
 import { checkInVolunteer }  from "../../../../queries/attendances"
+import { getWaivers } from "../../../../queries/waivers";
+import { useRouter } from "next/router";
+import { getEvent } from "../../../../queries/events";
+import { Button } from "flowbite-react";
 
-class DayOfCheckin extends React.Component {
-  constructor(props) {
-    super(props);
-    this.error = false;
+//const adultWaiverResponse = await getWaivers("adult", user.organizationId);
+//<div dangerouslySetInnerHTML={{ __html: adultWaiverResponse.data.waivers[0].text }} />
+const DayOfCheckin = () => {
+  const router = useRouter();
+  const { eventId } = router.query;
+  let [event, setEvent] = useState([]);
+  let [adultContent, setAdultContent] = useState();
+  
 
-    let url = new URL(window.location.href);
+  const onRefresh = async() => {
+    getEvent(eventId).then((result) => {
+      setEvent(result.data.event.eventParent);
+    });
+    const adultWaiverResponse = await getWaivers("adult", event.organizationId);
+    setAdultContent(adultWaiverResponse.data.waivers[0]?.text);
   };
 
-  handleSubmit = async (values) => {
-    if (this.props.createAccount) {
-      
-    }
-  };
+  
 
-  render() {
-    return (
-      <React.Fragment>
-        <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            phoneNumber: "",
-            signature: "",
-          }}
-          onSubmit={(values, { setSubmitting }) => {
-            setSubmitting(true);
-            this.handleSubmit(values);
-            setSubmitting(false);
-          }}
-          validationSchema={
-            checkInValidator
-          }
-        >
-          {({ handleSubmit, isValid, isSubmitting }) => (
-            <form className="flex-column flex w-full space-y-2">
+  useEffect(() => {
+    onRefresh();
+  }, []);
+
+  const checkIn = (values) => {
+    checkInVals = {volunteerName: values.firstName + " " + values.lastName, volunteerEmail: values.volunteerEmail};
+    console.log(checkInVals)
+  }
+
+  return (
+    <React.Fragment>
+      <Formik
+        initialValues={{
+          firstName: "",
+          lastName: "",
+          volunteerEmail: "",
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setSubmitting(true);
+          checkIn(values);
+          setSubmitting(false);
+        }}
+        validationSchema={checkInValidator}
+      >
+        {({ handleSubmit, isValid, isSubmitting }) => (
+          <form className="flex-column flex items-center w-f space-y-2">
+            <h1>Check-In for {event.title}</h1>
             <div className="flex space-x-4">
                 <InputField
-                name="firstName"
-                placeholder="First Name"
-                label="First Name"
+                  name="firstName"
+                  placeholder="First Name"
+                  label="First Name"
                 />
                 <InputField
-                name="lastName"
-                label="Last Name"
-                placeholder="Last Name"
+                  name="lastName"
+                  label="Last Name"
+                  placeholder="Last Name"
                 />
             </div>
-              <InputField
-                name="email"
-                label="Email Address"
-                placeholder="Your Email"
-                type="email"
-              />
-              <InputField 
-                name="phoneNumber"
-                label="Phone Number"
-                placeholder="Your Phone Number"
-                type="phoneNumber"
-              />
-              <InputField
-                name="signature"
-                label="Signature"
-                placeholder="Enter your initials"
-                type="signature"
-              />
-              <BoGButton
-                type="submit"
-                onClick={handleSubmit}
-                disabled={!isValid || isSubmitting}
-                text="Check-In"
-                className="mb-4 w-full bg-primaryColor hover:bg-hoverColor"
-              />
-            </form>
-          )}
-        </Formik>
-      </React.Fragment>
-    );
-  };
+            <InputField
+              name="volunteerEmail"
+              label="Email Address"
+              placeholder="Your Email"
+              type="email"
+            />
+            {adultContent && (
+              <>
+                <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+                <InputField
+                  name="signature"
+                  label="Signature"
+                  placeholder="Enter your initials"
+                  type="signature"
+                />
+              </>
+            )}
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={!isValid || isSubmitting}
+              className="bg-purple-600 align-middle hover:bg-purple-700"
+              size="sm"
+            >
+              Check-In
+            </Button>
+          </form>
+        )}
+      </Formik>
+    </React.Fragment>
+  );
 }
 
 export default DayOfCheckin;
-
-DayOfCheckin.propTypes = {
-  createAccount: PropTypes.bool,
-  companyCode: PropTypes.string,
-  context: PropTypes.object.isRequired,
-};

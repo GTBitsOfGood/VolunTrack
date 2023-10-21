@@ -8,6 +8,7 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
+import {QRCodeCanvas} from 'qrcode.react';
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -33,6 +34,7 @@ const EventInfo = () => {
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false)
 
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
@@ -80,6 +82,12 @@ const EventInfo = () => {
 
   const toggleUnregisterModal = () => {
     setUnregisterModal((prev) => !prev);
+
+    onRefresh();
+  };
+  
+  const toggleQRCode = () => {
+    setShowQRCode((prev) => !prev);
 
     onRefresh();
   };
@@ -139,6 +147,13 @@ const EventInfo = () => {
                       className="w-full bg-primaryColor hover:bg-hoverColor"
                       text="View Participation Statistics"
                       onClick={routeToStats}
+                    />
+                  </div>
+                  <div className="mb-4 w-full md:mb-4 md:ml-4 md:mr-3 md:w-auto">
+                    <BoGButton
+                      className="w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Toggle Check-In QR Code"
+                      onClick={toggleQRCode}
                     />
                   </div>
                 </>
@@ -235,6 +250,9 @@ const EventInfo = () => {
                   </p>
                 </div>
               </div>
+              {user.role === "admin" && showQRCode === true && (
+                <QRCodeCanvas value={window.location.href + "/day-of-check-in"}/>
+              )}
             </div>
             {event.eventParent.orgName !== "" && (
               <div className="flex w-full flex-col md:mr-auto">
