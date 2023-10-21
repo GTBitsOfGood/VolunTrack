@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
 import LandingPage from "../components/LandingPage";
+import DayOfCheckin from "../pages/events/[eventId]/day-of-check-in";
 import AddOrganizationModal from "../components/AddOrganizationModal";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app
@@ -30,6 +31,7 @@ const AuthProvider = ({ children }) => {
       else if (router.pathname === "/passwordreset/[resetCode]")
         return <ResetPage></ResetPage>;
       return <LandingPage />;
+        return <DayOfCheckin></DayOfCheckin>;
   }
 };
 
