@@ -2,7 +2,7 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import InputField from "../../../../components/Forms/InputField";
 import { checkInValidator } from "./helpers";
-import { checkInVolunteer }  from "../../../../queries/attendances"
+import { checkInVolunteer } from "../../../../queries/attendances";
 import { getWaivers } from "../../../../queries/waivers";
 import { useRouter } from "next/router";
 import { getEvent } from "../../../../queries/events";
@@ -15,9 +15,8 @@ const DayOfCheckin = () => {
   const { eventId } = router.query;
   let [event, setEvent] = useState([]);
   let [adultContent, setAdultContent] = useState();
-  
 
-  const onRefresh = async() => {
+  const onRefresh = async () => {
     getEvent(eventId).then((result) => {
       setEvent(result.data.event.eventParent);
     });
@@ -25,16 +24,17 @@ const DayOfCheckin = () => {
     setAdultContent(adultWaiverResponse.data.waivers[0]?.text);
   };
 
-  
-
   useEffect(() => {
     onRefresh();
   }, []);
 
   const checkIn = (values) => {
-    checkInVals = {volunteerName: values.firstName + " " + values.lastName, volunteerEmail: values.volunteerEmail};
-    console.log(checkInVals)
-  }
+    checkInVals = {
+      volunteerName: values.firstName + " " + values.lastName,
+      volunteerEmail: values.volunteerEmail,
+    };
+    console.log(checkInVals);
+  };
 
   return (
     <React.Fragment>
@@ -52,19 +52,19 @@ const DayOfCheckin = () => {
         validationSchema={checkInValidator}
       >
         {({ handleSubmit, isValid, isSubmitting }) => (
-          <form className="flex-column flex items-center w-f space-y-2">
+          <form className="flex-column w-f flex items-center space-y-2">
             <h1>Check-In for {event.title}</h1>
             <div className="flex space-x-4">
-                <InputField
-                  name="firstName"
-                  placeholder="First Name"
-                  label="First Name"
-                />
-                <InputField
-                  name="lastName"
-                  label="Last Name"
-                  placeholder="Last Name"
-                />
+              <InputField
+                name="firstName"
+                placeholder="First Name"
+                label="First Name"
+              />
+              <InputField
+                name="lastName"
+                label="Last Name"
+                placeholder="Last Name"
+              />
             </div>
             <InputField
               name="volunteerEmail"
@@ -97,6 +97,6 @@ const DayOfCheckin = () => {
       </Formik>
     </React.Fragment>
   );
-}
+};
 
 export default DayOfCheckin;

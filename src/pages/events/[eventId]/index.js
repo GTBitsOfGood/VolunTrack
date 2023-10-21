@@ -8,7 +8,7 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
-import {QRCodeCanvas} from 'qrcode.react';
+import { QRCodeCanvas } from "qrcode.react";
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -34,7 +34,7 @@ const EventInfo = () => {
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
-  const [showQRCode, setShowQRCode] = useState(false)
+  const [showQRCode, setShowQRCode] = useState(false);
 
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
@@ -85,7 +85,7 @@ const EventInfo = () => {
 
     onRefresh();
   };
-  
+
   const toggleQRCode = () => {
     setShowQRCode((prev) => !prev);
 
@@ -251,7 +251,9 @@ const EventInfo = () => {
                 </div>
               </div>
               {user.role === "admin" && showQRCode === true && (
-                <QRCodeCanvas value={window.location.href + "/day-of-check-in"}/>
+                <QRCodeCanvas
+                  value={window.location.href + "/day-of-check-in"}
+                />
               )}
             </div>
             {event.eventParent.orgName !== "" && (
