@@ -7,6 +7,7 @@ import { getWaivers } from "../../../../queries/waivers";
 import { useRouter } from "next/router";
 import { getEvent } from "../../../../queries/events";
 import { Button } from "flowbite-react";
+import { createUserFromCredentials } from "../../../../queries/users";
 
 //const adultWaiverResponse = await getWaivers("adult", user.organizationId);
 //<div dangerouslySetInnerHTML={{ __html: adultWaiverResponse.data.waivers[0].text }} />
@@ -29,11 +30,18 @@ const DayOfCheckin = () => {
   }, []);
 
   const checkIn = (values) => {
-    checkInVals = {
-      volunteerName: values.firstName + " " + values.lastName,
-      volunteerEmail: values.volunteerEmail,
+    const createUserVals = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      email: values.volunteerEmail,
+      organizationId: event.organizationId,
     };
-    console.log(checkInVals);
+    console.log(createUserVals)
+    createUserFromCredentials(createUserVals).then(() => {
+      checkInVolunteer({
+        
+      })
+    });
   };
 
   return (
@@ -43,6 +51,7 @@ const DayOfCheckin = () => {
           firstName: "",
           lastName: "",
           volunteerEmail: "",
+          signature: "",
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
