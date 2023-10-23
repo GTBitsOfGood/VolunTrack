@@ -1,35 +1,28 @@
-version: '3'
-
 services:
-  web:
-    image: helping-mamas-web
-    build: .
-    restart: always
+  app:
+    build:
+      dockerfile: ./Dockerfile.dev
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
     ports:
       - "3000:3000"
-    depends_on:
-      - db
+    entrypoint: ./entrypoint.sh
     environment:
-      - MONGO_DB=mongodb://db:27017
-    volumes:
-      - .:/app
-      - /app/node_modules
+      MONGO_DB: mongodb://mongo:27017/
     networks:
-      - helping-mamas 
+      - voluntrack-net
+    depends_on:
+      - mongo
 
-  db:
+  mongo:
     image: mongo
     ports:
-      - "27017:27017" # Expose MongoDB to host
-    volumes:
-      - mongodb_data:/data/db
+      - "27017:27017"
     networks:
-      - helping-mamas 
-
-
-volumes:
-  mongodb_data:
+      - voluntrack-net
 
 networks:
-  helping-mamas:
+  voluntrack-net:
     driver: bridge

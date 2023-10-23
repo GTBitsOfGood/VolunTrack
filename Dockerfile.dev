@@ -1,0 +1,12 @@
+FROM node:16 AS deps
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+RUN yarn config set network-timeout 600000 -g
+RUN yarn install --legacy-peer-deps
+
+FROM node:16 as dev
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
