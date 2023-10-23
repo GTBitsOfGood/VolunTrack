@@ -70,7 +70,7 @@ const WaiverManager = () => {
   };
 
   return (
-    <div className="flex-column mx-2 my-2 flex w-3/5 rounded-sm bg-grey p-4">
+    <div className="flex-column mx-2 my-2 flex rounded-sm bg-grey p-4 md:w-3/5">
       <h2 className="text-lg font-bold">Manage Waivers</h2>
       <Tabs.Group style="underline">
         <Tabs.Item

@@ -203,11 +203,11 @@ const AdminHomeHeader = (props) => {
   ];
 
   return (
-    <div className="flex-column">
-      <p className="font-weight-bold mx-2 mt-2 text-2xl">Overview</p>
-      <div className="flex">
+    <div className="w-full flex-col md:w-auto">
+      <p className="font-weight-bold mt-2 text-2xl">Overview</p>
+      <div className="mb-2 flex flex-col md:flex-row">
         <div className="flex-column">
-          <div className="flex-column m-2 flex rounded-lg bg-grey p-4">
+          <div className="flex-column mb-2 flex rounded-lg bg-grey p-4 md:mr-2">
             <h3 className="font-weight-bold pb-3 text-lg">
               {"Today's Overview"}
             </h3>
@@ -233,7 +233,7 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
 
-          <div className="flex-column m-2 flex rounded-lg bg-grey p-4">
+          <div className="flex-column mt-2 flex rounded-lg bg-grey p-4 md:mr-2">
             <div className="flex items-center pb-3">
               <h3 className="font-weight-bold text-lg">Total Data</h3>
               <p className="pl-2 text-sm text-slate-600">
@@ -258,10 +258,11 @@ const AdminHomeHeader = (props) => {
             </div>
           </div>
         </div>
-        <div className="mixed-chart my-2 rounded-lg bg-grey p-2">
+        <div className="mixed-chart my-[0.5rem] h-60 w-full rounded-lg bg-grey p-2 md:my-0 md:h-auto md:w-[600px]">
           {typeof window !== "undefined" && (
             <Chart
-              width={600}
+              width={"100%"}
+              height={"100%"}
               options={options}
               series={series}
               type="area"

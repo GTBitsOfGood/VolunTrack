@@ -100,7 +100,7 @@ const OrganizationSettings = () => {
                 <BoGButton text="Save" onClick={handleSubmit} type="submit" />
               </div>
             </div>
-            <div className="flex">
+            <div className="flex flex-col md:flex-row">
               <Sidebar className="h-full">
                 <Sidebar.Items>
                   <Sidebar.ItemGroup className="!mt-0 !pt-0">
@@ -145,7 +145,7 @@ const OrganizationSettings = () => {
                         <h3 key={i} className="mb-2 text-lg font-bold">
                           {section.title}
                         </h3>
-                        <div className="flex gap-4">
+                        <div className="flex flex-col gap-4 md:flex-row">
                           {section.fields.map((field, j) =>
                             field.type === "dropdown" ? (
                               <Field name={field.name} key={j}>

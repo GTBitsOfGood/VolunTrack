@@ -75,14 +75,16 @@ const StatDisplay = ({ userId }) => {
     <React.Fragment>
       <div className="flex-column mx-auto mt-2 flex w-5/6 items-start gap-1">
         <Text text={name + " Volunteer Statistics"} type="header" />
-        <div className="my-2 flex justify-between">
+        <div className="my-2 flex w-full flex-col justify-between md:w-auto md:flex-row">
           <ProgressDisplay
+            className={"md:ml-18 mb-8 md:mb-0 md:mr-8"}
             type={"Events"}
             attendance={attendance}
             header={"Events Attended"}
             medalDefaults={session.medalDefaults}
           />
           <ProgressDisplay
+            className={"md:ml-18 md:mr-8"}
             type={"Hours"}
             attendance={attendance}
             header={"Hours Earned"}
@@ -96,7 +98,7 @@ const StatDisplay = ({ userId }) => {
             onSubmitValues(values, setSubmitting);
           }}
           render={({ handleSubmit }) => (
-            <div className="my-2 flex items-center space-x-8">
+            <div className="my-2 flex w-full flex-col md:w-auto md:flex-row md:items-center md:space-x-8">
               <InputField label="From" name="startDate" type="datetime-local" />
               <InputField label="To" name="endDate" type="datetime-local" />
               <BoGButton

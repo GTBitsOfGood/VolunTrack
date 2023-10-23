@@ -84,28 +84,27 @@ class Volunteers extends React.Component {
     return (
       <div className="relative left-[10%] flex h-full w-full flex-col pt-[1rem]">
         <div className="flex w-[80%] flex-row justify-between">
-          <div className="text-normal text-bold text-4xl">Volunteers</div>
-          <CSVLink
-            data={this.state.users}
-            filename={"volunteer-list.csv"}
-            target="_blank"
-            className="no-underline"
-          >
-            <BoGButton text="Download to CSV" />
-          </CSVLink>
+          <div className="text-normal text-bold text-4xl">
+            Volunteers ({this.state.users.length} total)
+          </div>
         </div>
-        <div className="mt-[0.7rem] flex w-[80%] flex-row">
+        <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
           <SearchBar
             placeholder="Search Name"
             value={searchValue}
             onChange={(evt) =>
               this.setState({ searchValue: evt.target.value, searchOn: true })
             }
-            className="w-full"
+            className="mr-3 flex-1"
           />
-          <div className="mt-[0.3rem] w-[13%] text-center text-sm font-bold">
-            Total Volunteers: {this.state.users.length}
-          </div>
+          <CSVLink
+            data={this.state.users}
+            filename={"volunteer-list.csv"}
+            target="_blank"
+            className="mb-3 no-underline"
+          >
+            <BoGButton text="Download to CSV" />
+          </CSVLink>
         </div>
         <div className="w-[80%]">
           <VolunteerTable

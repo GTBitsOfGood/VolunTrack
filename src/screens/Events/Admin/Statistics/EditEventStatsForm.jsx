@@ -40,7 +40,6 @@ const Styled = {
 };
 
 const EditEventStatsForm = ({ toggle, stat }) => {
-  console.log(stat);
   const [attendance, setAttendance] = useState(stat);
 
   const onSubmitEditEvent = (values, setSubmitting) => {

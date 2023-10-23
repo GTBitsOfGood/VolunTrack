@@ -12,16 +12,16 @@ import { getHours } from "../../../Stats/User/hourParsing";
 
 const Styled = {
   Container: styled.div`
-    width: 100%;
+    width: 80%;
     height: 100%;
+    align-self: center;
 
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
   `,
   Header: styled.h1`
-    margin: 0 22rem;
-
+    width: 100%;
     font-size: 3rem;
     font-weight: bold;
   `,
@@ -31,9 +31,9 @@ const Styled = {
     display: flex;
   `,
   Table: styled.div`
-    width: 50%;
+    width: 100%;
     height: 50%;
-    margin: 1rem 22.5rem;
+    margin: 1rem 0;
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
@@ -41,20 +41,27 @@ const Styled = {
   StatsContainer: styled.div`
     width: 50%;
     height: 50%;
-    margin: 1rem 22.5rem;
-    padding: 0.5rem;
+    margin: 1rem 0rem;
     background: white;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   `,
   StatsHeader: styled.h4`
-    margin: 1rem 2rem;
+    margin-bottom: 1rem;
   `,
   StatsInfoContainer: styled.div`
-    margin: 0rem 2rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      flex-direction: column;
+    }
   `,
   StatsInfo: styled.div`
     display: flex;

@@ -27,7 +27,6 @@ const Styled = {
     overflow: hidden;
   `,
   HomePage: styled.div`
-    width: 100%;
     height: 100%;
 
     padding-top: 1rem;
@@ -36,6 +35,12 @@ const Styled = {
     margin: 0 auto;
     align-items: center;
     row-gap: 10px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
   `,
 };
 
