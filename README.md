@@ -69,16 +69,18 @@ A running instance of MongoDB is required this project.
 2. Navigate to this project in terminal and enter `yarn`
 3. Rename `example.env` to `.env` and fill it out with the dev config
 
-### Development with Docker
+## Run With Docker (Preferred)
 
-To run the development environment using Docker:
+1. Install [Docker](https://docs.docker.com/engine/install/)
+2. Start the application with Docker Compose: `docker compose up`
 
-1. Make sure you have Docker and Docker Compose installed on your machine.
-2. Navigate to the project directory and build the Docker image (if needed, though typically not required for development as Docker Compose will handle it):
-docker build -t helping-mama .
+If you make any changes to the packages, you may need to rebuild the images. To do this, append `--build` to the above docker compose up command.
 
-3. Navigate to the project directory and run the following command to start the containers:
-docker-compose up
+The Dockerized application will have live-reloading of changes made on the host machine.
+
+Note: On linux-based operating systems, if you come across an entrypoint permission error (i.e. `process: exec: "./entrypoint.sh": permission denied: unknown`), run `chmod +x ./entrypoint.sh` to make the shell file an executable.
+
+Windows Users: If you come across this error `exec ./entrypoint.sh: no such file or directory` when running the docker compose command, please follow this [Stackoverflow thread](https://stackoverflow.com/questions/40452508/docker-error-on-an-entrypoint-script-no-such-file-or-directory) to fix it.
 
 ## Running
 
