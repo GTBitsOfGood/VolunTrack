@@ -7,6 +7,10 @@ import {
   EventPopulatedDocument,
   EventPopulatedInputClient,
 } from "../../server/mongodb/models/Event";
+import {
+  UserDocument,
+  UserInputClient,
+} from "../../server/mongodb/models/User";
 
 export const getEvent = (eventId: Types.ObjectId) =>
   axios.get<{ event?: EventPopulatedDocument; error?: ZodError | string }>(
@@ -71,6 +75,16 @@ export const updateChildEvent = (
       sendConfirmationEmail,
     }
   );
+
+export const createUserFromCheckIn = (
+  dayOfCheckIn: UserInputClient
+) => {
+  axios.post<{ user?: UserDocument; error?: ZodError | string }>(
+    "/api/events/day-of-check-in",
+    dayOfCheckIn
+  );
+}
+  
 
 export const deleteEvent = (eventId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(

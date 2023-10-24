@@ -5,7 +5,7 @@ import { checkInValidator } from "./helpers";
 import { checkInVolunteer } from "../../../../queries/attendances";
 import { getWaivers } from "../../../../queries/waivers";
 import { useRouter } from "next/router";
-import { getEvent } from "../../../../queries/events";
+import { createUserFromCheckIn, getEvent } from "../../../../queries/events";
 import { Button } from "flowbite-react";
 import { createUserFromCredentials } from "../../../../queries/users";
 
@@ -34,14 +34,12 @@ const DayOfCheckin = () => {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.volunteerEmail,
+    };
+    const attendanceVals = {
+      eventId: eventId,
       organizationId: event.organizationId,
     };
-    console.log(createUserVals)
-    createUserFromCredentials(createUserVals).then(() => {
-      checkInVolunteer({
-        
-      })
-    });
+    createUserFromCheckIn(createUserVals, attendanceVals)
   };
 
   return (
