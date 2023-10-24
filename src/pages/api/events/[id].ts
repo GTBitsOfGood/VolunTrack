@@ -18,12 +18,6 @@ import { authOptions } from "../auth/[...nextauth]";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
-
-  const session = await getServerSession(req, res, authOptions);
-  if (!session?.user)
-    return res.status(400).json({ error: "User session not found" });
-  const user = session.user as UserDocument;
-
   const eventId = req.query.id as string;
 
   const event = await Event.findById(eventId);
@@ -37,13 +31,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).json({
       error: `Event with id ${eventId} has no EventParent`,
     });
+  //This doesn't need a user session check because we need this for check-in.
+  if (req.method === "GET") {
+    return res
+      .status(200)
+      .json({ event: await event.populate("eventParent") });
+  }
 
+  const session = await getServerSession(req, res, authOptions);
+  if (!session?.user)
+    return res.status(400).json({ error: "User session not found" });
+  
   switch (req.method) {
-    case "GET": {
-      return res
-        .status(200)
-        .json({ event: await event.populate("eventParent") });
-    }
     case "PUT": {
       if ("eventPopulatedInput" in req.body) {
         const result = eventPopulatedInputServerValidator
