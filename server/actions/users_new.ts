@@ -119,41 +119,6 @@ export const createUserFromCredentials = async (
   };
 };
 
-export const createUserFromCheckIn = async (
-    userData: Partial<UserInputClient> &
-      Required<Pick<UserInputClient, "email">>
-  ): Promise<{
-    user?: UserDocument | undefined;
-    message?: string;
-    status: number;
-  }> => {
-    await dbConnect();
-
-    if (await User.exists({ email: userData.email })) {
-      return {
-        status: 400,
-        message: "Email address already exists, please login.",
-      };
-    }
-
-    const organization = await Organization.findOne({ _id: userData.organizationId });
-    if (!organization) {
-      return {
-        status: 400,
-        message:
-          "The entered organization code does not exist. Please contact your administrator for assistance.",
-      };
-    }
-
-    userData.organizationId = organization._id;
-
-    return {
-      status: 200,
-      // @ts-expect-error
-      user: User.create(userData)
-    };
-  }
-
 export const verifyUserWithCredentials = async (
   email: string,
   password: string
