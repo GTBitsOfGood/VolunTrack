@@ -37,7 +37,7 @@ const DayOfCheckin = () => {
       organizationId: event.organizationId
     };
 
-    createUserFromCheckIn(eventId, createUserVals);
+    createUserFromCheckIn(eventId, createUserVals, event.title);
   };
 
   return (
