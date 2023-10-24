@@ -20,13 +20,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const attendanceInput = {
       userId: user?._id.toString(),
       eventId,
-      organizationId: user?.organizationId.toString(),
+      organizationId: user?.organizationId?.toString(),
       eventName,
       volunteerName: user?.firstName + " " + user?.lastName,
       volunteerEmail: user?.email,
       checkinTime: new Date().toISOString()
     }
-    console.log(attendanceInput.checkinTime)
 
     const attendanceValid = attendanceInputServerValidator.safeParse(attendanceInput);
     if (!attendanceValid.success) return res.status(400).json({ error: attendanceValid.error });
