@@ -11,6 +11,27 @@ import { createOrganizationValidator } from "../screens/Onboarding/helpers";
 import Footer from "../screens/Events/Admin/Attendance/Footer";
 import AppFooter from "./Footer";
 
+const features = [
+  {
+    title: "Track your impact",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    imageUrl: "/images/landing-feature-steps.svg",
+  },
+  {
+    title: "Plan memorable events",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    imageUrl: "/images/landing-feature-schedule.svg",
+  },
+  {
+    title: "Track your impact",
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    imageUrl: "/images/landing-feature-steps.svg",
+  },
+];
+
 const goToLogin = () => {
   router.push("/login");
 };
@@ -42,7 +63,7 @@ const LandingPage = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col">
       <div className="h-fit bg-cover bg-center bg-no-repeat md:bg-[url('/images/background-art.png')]">
         <div className="flex h-fit flex-col justify-between md:h-screen">
           <div className="mb-8 ml-2 flex flex-row justify-between self-stretch pb-4 pt-6 md:pl-14">
@@ -359,8 +380,29 @@ const LandingPage = () => {
         </div>
       </div>
       {/*<div className="h-80">test</div>*/}
+      {features.map((feature, index) => (
+        <div
+          key={index}
+          className={
+            "flex h-screen items-center " +
+            (index % 2 === 0
+              ? "bg-purple-100"
+              : "flex-row-reverse bg-white text-right")
+          }
+        >
+          <div className="flex-1 px-20">
+            <h1 className="mb-4 font-semibold text-purple-800">
+              {feature.title}
+            </h1>
+            <p>{feature.description}</p>
+          </div>
+          <div className="flex flex-1 items-center justify-center">
+            <img className="max-h-full max-w-full" src={feature.imageUrl} />
+          </div>
+        </div>
+      ))}
       <AppFooter />
-    </>
+    </div>
   );
 };
 
