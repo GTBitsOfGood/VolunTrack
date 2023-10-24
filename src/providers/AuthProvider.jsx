@@ -30,8 +30,11 @@ const AuthProvider = ({ children }) => {
         return <AuthPage createAccount={true} nonprofitCode={true} />;
       else if (router.pathname === "/passwordreset/[resetCode]")
         return <ResetPage></ResetPage>;
-      return <LandingPage />;
+      else if (router.pathname === "/events/[eventId]/day-of-check-in")
         return <DayOfCheckin></DayOfCheckin>;
+      else
+        return <LandingPage />;
+        
   }
 };
 
