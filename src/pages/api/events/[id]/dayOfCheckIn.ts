@@ -1,28 +1,37 @@
-import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../../server/mongodb";
 import User, {
   userInputServerValidator,
 } from "../../../../../server/mongodb/models/User";
-import { attendanceInputServerValidator } from "../../../../../server/mongodb/models/Attendance";
+import Attendance, { attendanceInputServerValidator } from "../../../../../server/mongodb/models/Attendance";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     await dbConnect();
-    const userInput = req.body;
+    const userInput = req.body.userInput;
     const eventId = req.query.id;
+    const eventName = req.query.id;
 
-    const result = userInputServerValidator.safeParse(userInput);
-    if (!result.success) return res.status(400).json(result);
+    const userValid = userInputServerValidator.safeParse(userInput);
+    if (!userValid.success) return res.status(400).json({ error: userValid.error });
     
-    if (await User.exists({ email: userInput.email }))
-    const user = await User.create();
+    const user = await User.exists({ email: userInput.email }) ? await User.findOne({ email: userInput.email }) : await User.create(userValid);
+    const createdUser = await User.exists({ email: userInput.email }) ? false : true;
 
-    const attendance = attendanceInputServerValidator.safeParse();
-    if (!attendance.success) return res.status(400).json({ error: attendance.error });
+    const attendanceInput = {
+      userId: user?._id.toString(),
+      eventId,
+      organizationId: user?.organizationId.toString(),
+      eventName,
+      volunteerName: user?.firstName + " " + user?.lastName,
+      volunteerEmail: user?.email,
+      checkinTime: new Date().toISOString()
+    }
+    console.log(attendanceInput.checkinTime)
 
-    return res
-        .status(201)
-        .json({ attendance: await Attendance.create(result.data) });
+    const attendanceValid = attendanceInputServerValidator.safeParse(attendanceInput);
+    if (!attendanceValid.success) return res.status(400).json({ error: attendanceValid.error });
 
-    return res.status(200).json({ user });
+    const attendance = await Attendance.create(attendanceValid.data);
+
+    return res.status(200).json({ attendance, createdUser});
 };

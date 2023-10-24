@@ -78,11 +78,12 @@ export const updateChildEvent = (
 
 export const createUserFromCheckIn = (
   eventId: Types.ObjectId,
-  userInput: UserInputClient
+  userInput: UserInputClient,
+  eventName: string
 ) => {
   axios.post<{ user?: UserDocument; error?: ZodError | string }>(
     `/api/events/${eventId.toString()}/dayOfCheckIn`,
-      userInput
+      { userInput, eventName }
   );
 }
   
