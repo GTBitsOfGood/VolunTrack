@@ -34,12 +34,10 @@ const DayOfCheckin = () => {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.volunteerEmail,
+      organizationId: event.organizationId
     };
-    const attendanceVals = {
-      eventId: eventId,
-      organizationId: event.organizationId,
-    };
-    createUserFromCheckIn(createUserVals, attendanceVals)
+
+    createUserFromCheckIn(eventId, createUserVals);
   };
 
   return (
