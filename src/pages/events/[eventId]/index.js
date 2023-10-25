@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from "react";
 import BoGButton from "../../../components/BoGButton";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
-import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
