@@ -185,6 +185,7 @@ const EventRegister = () => {
     setIsRegistered(false);
     setMinors([]);
     setHasMinor(false);
+    router.replace(`/events/${eventId}`);
   };
 
   const goBackToDetails = () => {
