@@ -39,7 +39,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
     return res.status(400).json({ error: "User session not found" });
-
+  const user = session.user;
   switch (req.method) {
     case "PUT": {
       if ("eventPopulatedInput" in req.body) {
