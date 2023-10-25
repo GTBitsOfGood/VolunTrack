@@ -29,7 +29,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     eventId,
     organizationId: user?.organizationId?.toString(),
     eventName,
-    volunteerName: user?.firstName + ' ' + user?.lastName,
+    volunteerName: String(user?.firstName) + " " + String(user?.lastName),
     volunteerEmail: user?.email,
     checkinTime: new Date().toISOString(),
   };

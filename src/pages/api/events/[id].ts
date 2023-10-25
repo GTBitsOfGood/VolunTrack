@@ -41,7 +41,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "User session not found" });
   const user = session.user;
 
-  
   switch (req.method) {
     case "PUT": {
       if ("eventPopulatedInput" in req.body) {
