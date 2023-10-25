@@ -33,15 +33,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   //This doesn't need a user session check because we need this for check-in.
   if (req.method === "GET") {
-    return res
-      .status(200)
-      .json({ event: await event.populate("eventParent") });
+    return res.status(200).json({ event: await event.populate("eventParent") });
   }
 
   const session = await getServerSession(req, res, authOptions);
   if (!session?.user)
     return res.status(400).json({ error: "User session not found" });
-  
+
   switch (req.method) {
     case "PUT": {
       if ("eventPopulatedInput" in req.body) {

@@ -83,10 +83,9 @@ export const createUserFromCheckIn = (
 ) => {
   axios.post<{ user?: UserDocument; error?: ZodError | string }>(
     `/api/events/${eventId.toString()}/dayOfCheckIn`,
-      { userInput, eventName }
+    { userInput, eventName }
   );
-}
-  
+};
 
 export const deleteEvent = (eventId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(

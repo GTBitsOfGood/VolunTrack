@@ -32,9 +32,7 @@ const AuthProvider = ({ children }) => {
         return <ResetPage></ResetPage>;
       else if (router.pathname === "/events/[eventId]/day-of-check-in")
         return <DayOfCheckin></DayOfCheckin>;
-      else
-        return <LandingPage />;
-        
+      else return <LandingPage />;
   }
 };
 

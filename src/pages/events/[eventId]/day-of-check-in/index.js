@@ -34,7 +34,7 @@ const DayOfCheckin = () => {
       firstName: values.firstName,
       lastName: values.lastName,
       email: values.volunteerEmail,
-      organizationId: event.organizationId
+      organizationId: event.organizationId,
     };
 
     createUserFromCheckIn(eventId, createUserVals, event.title);

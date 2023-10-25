@@ -7,5 +7,5 @@ export const checkInValidator = object().shape({
     .trim()
     .required("Email is required")
     .email("Invalid email"),
-  signature: string().trim()
+  signature: string().trim(),
 });
