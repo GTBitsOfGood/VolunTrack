@@ -1,4 +1,4 @@
-import { Formik } from "formik";
+import { Field, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import InputField from "../../../../components/Forms/InputField";
 import { checkInValidator } from "./helpers";
@@ -18,7 +18,7 @@ const DayOfCheckin = () => {
   let [adultContent, setAdultContent] = useState();
 
   const onRefresh = async () => {
-    getEvent(eventId).then((result) => {
+    await getEvent(eventId).then((result) => {
       setEvent(result.data.event.eventParent);
     });
     const adultWaiverResponse = await getWaivers("adult", event.organizationId);
@@ -57,37 +57,40 @@ const DayOfCheckin = () => {
         validationSchema={checkInValidator}
       >
         {({ handleSubmit, isValid, isSubmitting }) => (
-          <form className="flex-column w-f flex items-center space-y-2">
-            <h1>Check-In for {event.title}</h1>
-            <div className="flex space-x-4">
-              <InputField
-                name="firstName"
-                placeholder="First Name"
-                label="First Name"
-              />
-              <InputField
-                name="lastName"
-                label="Last Name"
-                placeholder="Last Name"
-              />
-            </div>
-            <InputField
-              name="volunteerEmail"
-              label="Email Address"
-              placeholder="Your Email"
-              type="email"
-            />
-            {adultContent && (
-              <>
-                <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+          <form className="flex-column flex items-center space-y-2">
+            <h1 className="font-semibold">Check-In for {event.title}</h1>
+            <div className="w-4/5">
+              <div className="flex w-full justify-evenly space-x-5">
                 <InputField
-                  name="signature"
-                  label="Signature"
-                  placeholder="Enter your initials"
-                  type="signature"
+                  name="firstName"
+                  placeholder="First Name"
+                  label="First Name"
                 />
-              </>
-            )}
+
+                <InputField
+                  name="lastName"
+                  label="Last Name"
+                  placeholder="Last Name"
+                />
+              </div>
+              <InputField
+                name="volunteerEmail"
+                label="Email Address"
+                placeholder="Your Email"
+                type="email"
+              />
+              {adultContent && (
+                <>
+                  <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+                  <InputField
+                    name="signature"
+                    label="Signature"
+                    placeholder="Enter your initials"
+                    type="signature"
+                  />
+                </>
+              )}
+            </div>
             <Button
               type="submit"
               onClick={handleSubmit}
