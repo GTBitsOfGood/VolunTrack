@@ -364,19 +364,19 @@ const LandingPage = () => {
         <div
           key={index}
           className={
-            "flex h-screen items-center " +
+            "flex flex-col md:h-screen items-center [text-align:center] " + // workaround to prevent bootstrap conflict
             (index % 2 === 0
-              ? "bg-purple-100"
-              : "flex-row-reverse bg-white text-right")
+              ? "bg-purple-100 md:flex-row md:text-left"
+              : "md:flex-row-reverse bg-white md:text-right")
           }
         >
-          <div className="flex-1 px-20">
-            <h1 className="mb-4 font-semibold text-purple-800">
+          <div className="flex-1 px-20 mt-20 md:mt-0">
+            <h1 className="mb-4 font-semibold text-purple-700">
               {feature.title}
             </h1>
             <p>{feature.description}</p>
           </div>
-          <div className="flex flex-1 items-center justify-center">
+          <div className="flex flex-1 items-center justify-center m-16">
             <img className="max-h-full max-w-full" src={feature.imageUrl} />
           </div>
         </div>
