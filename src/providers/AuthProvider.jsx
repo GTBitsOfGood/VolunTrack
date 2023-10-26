@@ -3,7 +3,7 @@ import router from "next/router";
 import PropTypes from "prop-types";
 import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
-import LandingPage from "../components/LandingPage";
+import LandingPage from "../screens/LandingPage";
 import AddOrganizationModal from "../components/AddOrganizationModal";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app
