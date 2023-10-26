@@ -2,7 +2,6 @@ import { Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import InputField from "../../components/Forms/InputField";
 import { checkInValidator } from "./helpers";
-import { checkInVolunteer } from "../../queries/attendances";
 import { getWaivers } from "../../queries/waivers";
 import { useRouter } from "next/router";
 import { createUserFromCheckIn, getEvent } from "../../queries/events";
@@ -15,7 +14,7 @@ const DayOfCheckin = () => {
   const { eventId } = router.query;
   let [event, setEvent] = useState([]);
   let [didAgree, setDidAgree] = useState(false);
-  let [adultContent, setAdultContent] = useState();
+  let [adultWaiver, setAdultWaiver] = useState();
 
   const onRefresh = async () => {
     await getEvent(eventId).then(async (result) => {
@@ -25,7 +24,7 @@ const DayOfCheckin = () => {
         result.data.event.eventParent.organizationId
       ).then((result) => {
         if (result.data.waivers.length > 0) {
-          setAdultContent(result.data.waivers[0]?.text);
+          setAdultWaiver(result.data.waivers[0]?.text);
         }
       });
     });
@@ -43,7 +42,9 @@ const DayOfCheckin = () => {
       organizationId: event.organizationId,
     };
 
-    createUserFromCheckIn(eventId, createUserVals, event.title);
+    createUserFromCheckIn(eventId, createUserVals, event.title).then(() => {
+      router.replace("/login");
+    });
   };
 
   const changeAgreement = () => {
@@ -57,7 +58,6 @@ const DayOfCheckin = () => {
           firstName: "",
           lastName: "",
           volunteerEmail: "",
-          signature: "",
         }}
         onSubmit={(values, { setSubmitting }) => {
           setSubmitting(true);
@@ -89,14 +89,14 @@ const DayOfCheckin = () => {
                 placeholder="Your Email"
                 type="email"
               />
-              {adultContent && (
+              {adultWaiver && (
                 <div>
                   <Label className="mb-1 h-6 font-medium text-slate-600">
                     Participation Waiver
                   </Label>
                   <div
                     className="h-96 overflow-auto rounded-sm border p-1"
-                    dangerouslySetInnerHTML={{ __html: adultContent }}
+                    dangerouslySetInnerHTML={{ __html: adultWaiver }}
                   />
                   <FormGroup className="ml-4 mt-2">
                     <Input type="checkbox" onChange={changeAgreement} />
