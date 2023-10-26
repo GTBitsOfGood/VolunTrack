@@ -148,13 +148,6 @@ const EventInfo = () => {
                       onClick={routeToStats}
                     />
                   </div>
-                  <div className="mb-4 w-full md:mb-4 md:ml-4 md:mr-3 md:w-auto">
-                    <BoGButton
-                      className="w-full bg-primaryColor hover:bg-hoverColor"
-                      text="Toggle Check-In QR Code"
-                      onClick={toggleQRCode}
-                    />
-                  </div>
                 </>
               )}
               {user.role === "volunteer" && (
@@ -302,6 +295,13 @@ const EventInfo = () => {
                   </div>
                 )}
               </div>
+            )}
+            {user.role === "admin" && (
+              <BoGButton
+                className="w-52 bg-primaryColor hover:bg-hoverColor"
+                text="Toggle Check-In QR Code"
+                onClick={toggleQRCode}
+              />
             )}
           </div>
         </div>
