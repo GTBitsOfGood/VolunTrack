@@ -68,7 +68,11 @@ const DayOfCheckin = () => {
       >
         {({ handleSubmit, isValid, isSubmitting }) => (
           <form className="flex-column flex items-center space-y-2">
-            <Text type="subheader" text={`Check in for ${event.title}`}></Text>
+            <Text
+              className="px-3"
+              type="subheader"
+              text={`Check in for ${event.title}`}
+            ></Text>
             <div className="w-11/12">
               <div className="flex w-full justify-evenly space-x-5">
                 <InputField
