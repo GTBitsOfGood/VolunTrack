@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
