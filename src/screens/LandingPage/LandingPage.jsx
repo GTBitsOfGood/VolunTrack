@@ -45,7 +45,7 @@ const LandingPage = () => {
   return (
     <div className="flex flex-col">
       <div className="h-fit bg-cover bg-center bg-no-repeat md:bg-[url('/images/background-art.png')]">
-        <div className="flex h-fit flex-col justify-between md:h-screen">
+        <div className="flex h-fit flex-col justify-between md:min-h-screen">
           <div className="mb-8 ml-2 flex flex-row justify-between self-stretch pb-4 pt-6 md:pl-14">
             <div className="">
               <a
@@ -349,7 +349,7 @@ const LandingPage = () => {
                 </Formik>
               </div>
             </div>
-            <div className="flex h-full flex-col self-stretch p-4 md:p-0">
+            <div className="flex h-full flex-col self-stretch p-4 md:w-[33rem] md:p-0">
               <img
                 src={"/images/admin-home-page.png"}
                 className="h-full rounded-md shadow-lg"
@@ -364,13 +364,13 @@ const LandingPage = () => {
         <div
           key={index}
           className={
-            "flex flex-col items-center [text-align:center] md:h-screen " + // workaround to prevent bootstrap conflict
+            "flex flex-col items-center [text-align:center] md:min-h-screen " + // workaround to prevent bootstrap conflict
             (index % 2 === 0
               ? "bg-purple-100 md:flex-row md:text-left"
               : "bg-white md:flex-row-reverse md:text-right")
           }
         >
-          <div className="mt-20 flex-1 px-20 md:mt-0">
+          <div className="mt-20 flex-1 px-20 py-16 md:mt-0">
             <h1 className="mb-4 font-semibold text-purple-700">
               {feature.title}
             </h1>
