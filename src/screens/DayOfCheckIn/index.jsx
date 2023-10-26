@@ -6,22 +6,29 @@ import { checkInVolunteer } from "../../queries/attendances";
 import { getWaivers } from "../../queries/waivers";
 import { useRouter } from "next/router";
 import { createUserFromCheckIn, getEvent } from "../../queries/events";
-import { Button } from "flowbite-react";
+import { Button, Label } from "flowbite-react";
+import Text from "../../components/Text";
+import { FormGroup, Input } from "reactstrap";
 
-//const adultWaiverResponse = await getWaivers("adult", user.organizationId);
-//<div dangerouslySetInnerHTML={{ __html: adultWaiverResponse.data.waivers[0].text }} />
 const DayOfCheckin = () => {
   const router = useRouter();
   const { eventId } = router.query;
   let [event, setEvent] = useState([]);
+  let [didAgree, setDidAgree] = useState(false);
   let [adultContent, setAdultContent] = useState();
 
   const onRefresh = async () => {
-    await getEvent(eventId).then((result) => {
+    await getEvent(eventId).then(async (result) => {
       setEvent(result.data.event.eventParent);
+      await getWaivers(
+        "adult",
+        result.data.event.eventParent.organizationId
+      ).then((result) => {
+        if (result.data.waivers.length > 0) {
+          setAdultContent(result.data.waivers[0]?.text);
+        }
+      });
     });
-    const adultWaiverResponse = await getWaivers("adult", event.organizationId);
-    setAdultContent(adultWaiverResponse.data.waivers[0]?.text);
   };
 
   useEffect(() => {
@@ -39,8 +46,12 @@ const DayOfCheckin = () => {
     createUserFromCheckIn(eventId, createUserVals, event.title);
   };
 
+  const changeAgreement = () => {
+    setDidAgree(!didAgree);
+  };
+
   return (
-    <React.Fragment>
+    <div className="flex-column mx-auto mb-8 mt-16 flex w-5/6 items-center justify-center rounded-xl border py-8 shadow-xl sm:w-[28rem]">
       <Formik
         initialValues={{
           firstName: "",
@@ -57,8 +68,8 @@ const DayOfCheckin = () => {
       >
         {({ handleSubmit, isValid, isSubmitting }) => (
           <form className="flex-column flex items-center space-y-2">
-            <h1 className="font-semibold">Check-In for {event.title}</h1>
-            <div className="w-4/5">
+            <Text type="subheader" text={`Check in for ${event.title}`}></Text>
+            <div className="w-11/12">
               <div className="flex w-full justify-evenly space-x-5">
                 <InputField
                   name="firstName"
@@ -79,21 +90,25 @@ const DayOfCheckin = () => {
                 type="email"
               />
               {adultContent && (
-                <>
-                  <div dangerouslySetInnerHTML={{ __html: adultContent }} />
-                  <InputField
-                    name="signature"
-                    label="Signature"
-                    placeholder="Enter your initials"
-                    type="signature"
+                <div>
+                  <Label className="mb-1 h-6 font-medium text-slate-600">
+                    Participation Waiver
+                  </Label>
+                  <div
+                    className="h-96 overflow-auto rounded-sm border p-1"
+                    dangerouslySetInnerHTML={{ __html: adultContent }}
                   />
-                </>
+                  <FormGroup className="ml-4 mt-2">
+                    <Input type="checkbox" onChange={changeAgreement} />
+                    <Text text="I agree to the above waiver" />
+                  </FormGroup>
+                </div>
               )}
             </div>
             <Button
               type="submit"
               onClick={handleSubmit}
-              disabled={!isValid || isSubmitting}
+              disabled={!isValid || isSubmitting || !didAgree}
               className="bg-purple-600 align-middle hover:bg-purple-700"
               size="sm"
             >
@@ -102,7 +117,7 @@ const DayOfCheckin = () => {
           </form>
         )}
       </Formik>
-    </React.Fragment>
+    </div>
   );
 };
 
