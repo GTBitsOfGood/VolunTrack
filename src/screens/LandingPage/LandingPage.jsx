@@ -366,8 +366,8 @@ const LandingPage = () => {
           className={
             "flex flex-col items-center [text-align:center] md:min-h-screen " + // workaround to prevent bootstrap conflict
             (index % 2 === 1
-              ? "bg-purple-100 md:flex-row md:text-left"
-              : "bg-white md:flex-row-reverse md:text-right")
+              ? "bg-white md:flex-row md:text-left"
+              : "bg-purple-100 md:flex-row-reverse md:text-right")
           }
         >
           <div className="mt-20 flex-1 px-20 py-16 md:mt-0">
