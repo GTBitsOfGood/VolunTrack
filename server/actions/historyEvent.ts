@@ -100,3 +100,73 @@ export const createHistoryEventDeleteProfile = (user: UserDocument) => {
       organizationId: user.organizationId,
     });
 };
+
+export const createHistoryEventInviteAdmin = (user: UserDocument) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "CREATED",
+      description: `Invited admin to ${user.email}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
+
+export const createHistoryEventAttendanceEdited = (
+  user: UserDocument,
+  event: EventDocument
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "EDITED",
+      description: `${user._id.toString()} ${
+        user.lastName
+      } edited attendance for event with id ${event._id.toString()}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+      eventId: event._id,
+    });
+};
+
+export const createHistoryEventAttendanceDeleted = (
+  user: UserDocument,
+  event: EventDocument
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "DELETED",
+      description: `${
+        user.firstName
+      } attendance editted for event with id ${event._id.toString()}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+      eventId: event._id,
+    });
+};
+
+export const createHistoryEventWaiverEdited = (
+  user: UserDocument,
+  waiverType: string
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "EDITED",
+      description: `User with id ${user._id.toString()} edited ${waiverType.toLowerCase()} waiver for event with id ${user.organizationId.toString()}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
+
+export const createHistoryEventOrganizationSettingsUpdated = (
+  user: UserDocument,
+  organizationId: Types.ObjectId
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "UPDATED",
+      description: `User with id ${user._id.toString()} ${user.firstName} ${
+        user.lastName
+      } updated organization settings for organization with id ${organizationId.toString()}`,
+      userId: user._id,
+      organizationId: organizationId,
+    });
+};
