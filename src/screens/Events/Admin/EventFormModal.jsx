@@ -1,4 +1,4 @@
-import { Label } from "flowbite-react";
+import { Dropdown, Label, Select } from "flowbite-react";
 import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
@@ -15,6 +15,7 @@ import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
+import SelectField from "../../../components/Forms/SelectField";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -58,6 +59,7 @@ const EventFormModal = ({
     data: { user },
   } = useSession();
 
+  const recurringOptions = ["Never", "Daily", "Every Sunday", "Every Monday", "Every Tuesday", "Every Wednesday", "Every Thursday", "Every Friday", "Every Saturday"]
   const context = useContext(RequestContext);
 
   useEffect(() => {
@@ -187,6 +189,7 @@ const EventFormModal = ({
           orgState: isGroupEvent ? event?.eventParent?.orgState ?? "" : "",
           orgZip: isGroupEvent ? event?.eventParent?.orgZip ?? "" : "",
           description: event?.eventParent?.description ?? "",
+          isRecurring: event?.eventParent?.isRecurring ?? ""
         },
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -251,6 +254,16 @@ const EventFormModal = ({
                             name="date"
                             type="date"
                           />
+                        </Styled.Col>
+                        <Styled.Col>
+                          <SelectField 
+                            label="Repeat"
+                            name="eventParent.isRecurring"
+                            options={recurringOptions}
+                            isRequired={true}
+                            isCheckBox={false}
+                          />
+                          {console.log(values.eventParent.isRecurring)}
                         </Styled.Col>
                         <Styled.Col>
                           <InputField
