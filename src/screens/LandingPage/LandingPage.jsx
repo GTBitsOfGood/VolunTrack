@@ -1,15 +1,16 @@
 import { Button, Label, TextInput, Tooltip } from "flowbite-react";
-import InputField from "./Forms/InputField";
+import InputField from "../../components/Forms/InputField";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 import { Field, Formik } from "formik";
 
 import { router } from "next/router";
-import { createOrganization } from "../queries/organizations";
+import { createOrganization } from "../../queries/organizations";
 import React, { useState } from "react";
-import { createOrganizationValidator } from "../screens/Onboarding/helpers";
-import Footer from "../screens/Events/Admin/Attendance/Footer";
-import AppFooter from "./Footer";
+import { createOrganizationValidator } from "../Onboarding/helpers";
+import Footer from "../Events/Admin/Attendance/Footer";
+import AppFooter from "../../components/Footer";
+import { features } from "./features";
 
 const goToLogin = () => {
   router.push("/login");
@@ -42,9 +43,9 @@ const LandingPage = () => {
   };
 
   return (
-    <>
+    <div className="flex flex-col">
       <div className="h-fit bg-cover bg-center bg-no-repeat md:bg-[url('/images/background-art.png')]">
-        <div className="flex h-fit flex-col justify-between md:h-screen">
+        <div className="flex h-fit flex-col justify-between md:min-h-screen">
           <div className="mb-8 ml-2 flex flex-row justify-between self-stretch pb-4 pt-6 md:pl-14">
             <div className="">
               <a
@@ -348,7 +349,7 @@ const LandingPage = () => {
                 </Formik>
               </div>
             </div>
-            <div className="flex h-full flex-col self-stretch p-4 md:p-0">
+            <div className="flex h-full flex-col self-stretch p-4 md:w-[33rem] md:p-0">
               <img
                 src={"/images/admin-home-page.png"}
                 className="h-full rounded-md shadow-lg"
@@ -359,8 +360,29 @@ const LandingPage = () => {
         </div>
       </div>
       {/*<div className="h-80">test</div>*/}
+      {features.map((feature, index) => (
+        <div
+          key={index}
+          className={
+            "flex flex-col items-center [text-align:center] md:min-h-screen " + // workaround to prevent bootstrap conflict
+            (index % 2 === 1
+              ? "bg-white md:flex-row md:text-left"
+              : "bg-purple-100 md:flex-row-reverse md:text-right")
+          }
+        >
+          <div className="mt-20 flex-1 px-20 py-16 md:mt-0">
+            <h1 className="mb-4 font-semibold text-purple-700">
+              {feature.title}
+            </h1>
+            <p>{feature.description}</p>
+          </div>
+          <div className="m-16 flex flex-1 items-center justify-center">
+            <img className="max-h-full max-w-full" src={feature.imageUrl} />
+          </div>
+        </div>
+      ))}
       <AppFooter />
-    </>
+    </div>
   );
 };
 
