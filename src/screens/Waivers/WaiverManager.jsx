@@ -91,8 +91,9 @@ const WaiverManager = () => {
               </Toast>
             </div>
           )}
-          <div className="mb-4 bg-white">
+          <div className="mb-16 bg-white">
             <ReactQuill
+              className="h-96"
               value={adultContent}
               onChange={(newValue) => {
                 setAdultContent(newValue);

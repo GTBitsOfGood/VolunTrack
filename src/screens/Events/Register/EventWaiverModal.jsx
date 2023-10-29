@@ -44,6 +44,8 @@ const Styled = {
     margin-right: 10px;
     margin-bottom: 1rem;
     font-size: 0.7rem;
+    height: 45vh;
+    overflow-y: scroll;
   `,
 };
 
