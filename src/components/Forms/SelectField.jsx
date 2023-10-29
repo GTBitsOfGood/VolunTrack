@@ -40,6 +40,7 @@ const SelectField = (props) => (
           name={props.name}
           {...field}
           disabled={props.disabled}
+          onChange={props.onChange}
         >
             {console.log(props.options)}
             {!props.isCheckBox && props.options.map((option, key) => {
@@ -64,7 +65,7 @@ SelectField.propTypes = {
   disabled: PropTypes.bool,
   className: PropTypes.string,
   tooltip: PropTypes.string,
-  isCheckBox: PropTypes.bool,
+  onChange: PropTypes.func,
 };
 
 export default SelectField;

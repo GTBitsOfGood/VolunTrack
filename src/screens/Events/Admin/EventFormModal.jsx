@@ -60,6 +60,17 @@ const EventFormModal = ({
   } = useSession();
 
   const recurringOptions = ["Never", "Daily", "Every Sunday", "Every Monday", "Every Tuesday", "Every Wednesday", "Every Thursday", "Every Friday", "Every Saturday"]
+  const recurrenceMapping = {
+    "Never":Array(7).fill(false),
+    "Daily":Array(7).fill(true),
+    "Every Sunday":[true].concat(Array(6).fill(false)),
+    "Every Monday":[false, true].concat(Array(5).fill(false)),
+    "Every Tuesday":[false, false, true].concat(Array(4).fill(false)),
+    "Every Wednesday":[false, false, false, true].concat(Array(3).fill(false)),
+    "Every Thursday":Array(4).fill(false).concat([true, false, false]),
+    "Every Friday":Array(5).fill(false).concat([true, false]),
+    "Every Saturday":Array(6).fill(false).concat([true]),
+  }
   const context = useContext(RequestContext);
 
   useEffect(() => {
@@ -261,9 +272,9 @@ const EventFormModal = ({
                             name="eventParent.isRecurring"
                             options={recurringOptions}
                             isRequired={true}
-                            isCheckBox={false}
+                            onChange={(value) => setFieldValue("eventParent.isRecurring", recurrenceMapping.value)}
                           />
-                          {console.log(values.eventParent.isRecurring)}
+                          {console.log(recurrenceMapping)}
                         </Styled.Col>
                         <Styled.Col>
                           <InputField
