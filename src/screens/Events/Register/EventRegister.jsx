@@ -186,6 +186,7 @@ const EventRegister = () => {
     setIsRegistered(false);
     setMinors([]);
     setHasMinor(false);
+    router.push("/events");
   };
 
   const goBackToDetails = () => {
