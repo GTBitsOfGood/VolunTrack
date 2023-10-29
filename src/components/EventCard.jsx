@@ -137,6 +137,7 @@ const EventCard = (props) => {
                 toggle={toggleEditModal}
                 event={event}
                 setEvent={setEvent}
+                regCount={regCount}
               />
             </div>
           )}

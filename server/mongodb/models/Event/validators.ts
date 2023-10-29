@@ -12,11 +12,12 @@ export const eventInputClientValidator = z.object({
   isEnded: z.boolean().optional(),
 });
 
-export const eventPopulatedInputClientValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
-  eventParent: eventParentInputClientValidator,
-  isEnded: z.boolean().optional(),
-});
+export const eventPopulatedInputClientValidator = (minMaxVolunteers?: number) =>
+  z.object({
+    date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
+    eventParent: eventParentInputClientValidator(minMaxVolunteers),
+    isEnded: z.boolean().optional(),
+  });
 
 export const eventInputServerValidator = z.object({
   date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
@@ -35,7 +36,7 @@ export const eventPopulatedInputServerValidator = z.object({
 
 export type EventInputClient = z.infer<typeof eventInputClientValidator>;
 export type EventPopulatedInputClient = z.infer<
-  typeof eventPopulatedInputClientValidator
+  ReturnType<typeof eventPopulatedInputClientValidator>
 >;
 export type EventInputServer = z.infer<typeof eventInputServerValidator>;
 export type EventPopulatedInputServer = z.infer<

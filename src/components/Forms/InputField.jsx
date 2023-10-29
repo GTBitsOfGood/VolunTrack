@@ -67,7 +67,7 @@ InputField.propTypes = {
   tooltip: PropTypes.string,
   maxLength: PropTypes.number,
   min: PropTypes.number,
-  max: PropTypes.number
+  max: PropTypes.number,
 };
 
 export default InputField;
