@@ -98,7 +98,20 @@ class Volunteers extends React.Component {
             className="mr-3 flex-1"
           />
           <CSVLink
-            data={this.state.users}
+            data={this.state.users.map((user) => {
+              return {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                city: user.city,
+                state: user.state,
+                zip: user.zip,
+                dob: user.dob,
+                notes: user.notes,
+              };
+            })}
             filename={"volunteer-list.csv"}
             target="_blank"
             className="mb-3 no-underline"
