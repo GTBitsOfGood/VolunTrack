@@ -279,31 +279,36 @@ const LandingPage = () => {
                             </div>
 
                             <div className="mx-10 flex flex-col self-stretch">
-                              <InputField
-                                name="originalAdminEmail"
-                                label="Primary Admin Account"
-                                placeholder="example@email.com"
-                                tooltip="This will be the main volunteer administrator email and cannot be changed"
-                              />
+
+                                <InputField
+                                  name="originalAdminEmail"
+                                  label="Primary Admin Account"
+                                  placeholder="example@email.com"
+                                  tooltip="This will be the main volunteer administrator email and cannot be changed"
+                                />
                               <InputField
                                 name="confirm_admin_email"
                                 label="Confirm Primary Admin Account"
                                 placeholder="example@email.com"
                               />
+                              <div className="flex flex-row">
+                                  <Label
+                                    className="mb-1 flex h-6 items-center font-medium text-slate-600"
+                                    htmlFor="slug"
+                                  >
+                                    {"Organization code "}
+                                  </Label>
                               <Tooltip
                                 className="flex flex-row"
                                 content="Note: Your organization code must contain 3-20 letters or numbers"
                               >
                                 <div className="flex flex-row self-center">
-                                  <Label
-                                    className="mb-1 flex h-6 items-center font-medium text-slate-600"
-                                    htmlFor="slug"
-                                  >
-                                    Organization Code
+                                  <Label className="flex h-6 items-center">
                                     <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
                                   </Label>
                                 </div>
                               </Tooltip>
+                              </div>
                               <Field
                                 className="flex justify-center"
                                 name="slug"

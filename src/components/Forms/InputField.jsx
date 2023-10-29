@@ -8,16 +8,20 @@ const InputField = (props) => (
     {props.label && (
       <div className="flex flex-row">
         {props.tooltip && (
-          <Tooltip className="flex flex-row" content={props.tooltip}>
+          <div className="flex flex-row">
             <Label
-              className="mb-1 flex h-6 items-center font-medium text-slate-600"
-              htmlFor={props.name}
+            className="mb-1 flex h-6 items-center font-medium text-slate-600"
+            htmlFor={props.name}
             >
               {props.label}
-              <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
             </Label>
-            {props.isRequired && <p className="mb-0 text-red-600">*</p>}
+          <Tooltip className="flex flex-row" content={props.tooltip}>
+            <div className="flex h-6 items-center">
+              <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
+              {props.isRequired && <p className="mb-0 text-red-600">*</p>}
+            </div>
           </Tooltip>
+          </div>
         )}
         {!props.tooltip && (
           <>
