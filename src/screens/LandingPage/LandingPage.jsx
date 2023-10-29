@@ -35,6 +35,7 @@ const LandingPage = () => {
       if (res.status < 300) {
         // submission completed!
         setPages(4);
+        
       } else {
         setPages(5);
       }

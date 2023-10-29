@@ -38,10 +38,34 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   ];
 
   sendEmail(
-    user,
+    [user],
     organization,
     personalization,
     `Registration Confirmed for ${event.eventParent.title}`
+  );
+};
+
+export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
+  const BoGRecipient = { firstName: "Bits of Good", lastName: "Administration", email:"hello@bitsofgood.org" }
+  const H4IRecipient = { firstName: "GT Hack 4 Impact", lastName: "Non-Profit Partnership", email:"gt.nonprofit_partnership@hack4impact.org" }
+  const volunTrackOrganization = { name: "VolunTrack" notificationEmail: }
+  const personalization = [
+    {
+      email: BoGRecipient.email,
+      data: {
+        nonprofit: orgName,
+        website: orgWebsite,
+      },
+    },
+  ];
+
+  sendEmail(
+    [BoGRecipient, H4IRecipient],
+    volunTrackOrganization,
+    personalization,
+    `New NonProfit Application: ${orgName}`,
+    "jpzkmgqn2z1g059v",
+    false
   );
 };
 
@@ -65,11 +89,11 @@ export const sendResetCodeEmail = async (user, email, code) => {
   ];
 
   sendEmail(
-    user,
+    [user],
     organization,
     personalization,
     `Password Reset Request`,
-    "x2p03479p5pgzdrn"
+    "x2p03479p5pgzdrn",
   );
 };
 
@@ -100,7 +124,7 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
     },
   ];
   sendEmail(
-    user,
+    [user],
     organization,
     personalization,
     `${eventParent.title} has been updated`
@@ -109,26 +133,26 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
 
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
 const sendEmail = async (
-  user,
+  users,
   organization,
   personalization,
   subject,
-  template = "vywj2lpov8p47oqz"
+  template = "vywj2lpov8p47oqz",
+  notify = true,
 ) => {
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
-
-  const recipients = [
-    new Recipient(user.email, `${user.firstName} ${user.lastName}`),
-  ];
-
+  const recipients = [];
+  for (let user in users) {
+    recipients.push(new Recipient(user.email, `${user.firstName} ${user.lastName}`));
+  }
   const emailParams = new EmailParams()
     .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
-    .setBcc([new Recipient(organization.notificationEmail)])
+    .setBcc(notify ? [new Recipient(organization.notificationEmail)] : [])
     .setTemplateId(template)
     .setPersonalization(personalization);
 
