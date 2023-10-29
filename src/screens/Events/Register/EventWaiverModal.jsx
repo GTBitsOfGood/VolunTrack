@@ -16,7 +16,6 @@ import BoGButton from "../../../components/BoGButton";
 import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { getWaivers } from "../../../queries/waivers";
-import { addIssueToContext } from "zod";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -92,7 +91,7 @@ const EventWaiverModal = ({
     } else {
       setMinorContent(null);
       setMinorWaiverCheckboxSelected(true);
-    } 
+    }
   };
 
   useEffect(() => {
@@ -105,16 +104,16 @@ const EventWaiverModal = ({
         {!isRegistered && (
           <Styled.MainText>Complete Registration</Styled.MainText>
         )}
-        {(isRegistered && !(adultContent === null && minorContent === null)) && (
+        {isRegistered && !(adultContent === null && minorContent === null) && (
           <Styled.MainText>View Waivers</Styled.MainText>
         )}
-        {(isRegistered && (adultContent === null && minorContent === null)) && (
+        {isRegistered && adultContent === null && minorContent === null && (
           <Styled.MainText>No Waivers to View</Styled.MainText>
         )}
       </Styled.ModalHeader>
       <Styled.Row />
 
-      {(hasMinor && !(minorContent === null && adultContent === null)) ? (
+      {hasMinor && !(minorContent === null && adultContent === null) ? (
         <>
           {!isRegistered && (
             <Styled.Row>
@@ -123,17 +122,18 @@ const EventWaiverModal = ({
                 waivers for yourself and your accompanying minors.
               </Styled.HighlightText>
             </Styled.Row>
-          )}  
+          )}
           <Tabs.Group
             style="underline"
             ref={tabsRef}
             onActiveTabChange={(tab) => setActiveTab(tab)}
-          > 
+          >
             <Tabs.Item title="Guardian Waiver" className="overflow-auto">
-              {!(adultContent === null || adultContent === "") &&
-              <Styled.WaiverBox>
-                <div dangerouslySetInnerHTML={{ __html: adultContent }} />
-              </Styled.WaiverBox>}
+              {!(adultContent === null || adultContent === "") && (
+                <Styled.WaiverBox>
+                  <div dangerouslySetInnerHTML={{ __html: adultContent }} />
+                </Styled.WaiverBox>
+              )}
               {!isRegistered && !(adultContent === null) && (
                 <Styled.Row>
                   <FormGroup check>
@@ -149,18 +149,17 @@ const EventWaiverModal = ({
                   />
                 </Styled.Row>
               )}
-              {adultContent === null &&
-                <Text 
-                  text = "There is no adult waiver, please check the minor waiver."
-                />
-              }
+              {adultContent === null && (
+                <Text text="There is no adult waiver, please check the minor waiver." />
+              )}
             </Tabs.Item>
 
             <Tabs.Item title="Minor Waiver" className="overflow-auto">
-              {!(minorContent === null) &&
-              <Styled.WaiverBox>
-                <div dangerouslySetInnerHTML={{ __html: minorContent }} />
-              </Styled.WaiverBox>}
+              {!(minorContent === null) && (
+                <Styled.WaiverBox>
+                  <div dangerouslySetInnerHTML={{ __html: minorContent }} />
+                </Styled.WaiverBox>
+              )}
               {!isRegistered && !(minorContent === null) && (
                 <Styled.Row>
                   <FormGroup check>
@@ -176,11 +175,9 @@ const EventWaiverModal = ({
                   />
                 </Styled.Row>
               )}
-              {minorContent === null &&
-                <Text 
-                  text = "There is no minor waiver, please check the adult waiver."
-                />
-              }
+              {minorContent === null && (
+                <Text text="There is no minor waiver, please check the adult waiver." />
+              )}
             </Tabs.Item>
           </Tabs.Group>
         </>
@@ -193,22 +190,21 @@ const EventWaiverModal = ({
                 waiver.
               </Styled.HighlightText>
             </Styled.Row>
-          )} 
+          )}
 
           {!isRegistered && adultContent === null && (
-            
             <Styled.Row>
               <Styled.HighlightText>
                 Click to confirm registration.
               </Styled.HighlightText>
             </Styled.Row>
-          )} 
+          )}
 
-          {adultContent !== null &&
+          {adultContent !== null && (
             <Styled.WaiverBox>
               <div dangerouslySetInnerHTML={{ __html: adultContent }} />
             </Styled.WaiverBox>
-          }
+          )}
           {!(isRegistered || adultContent === null) && (
             <Styled.Row>
               <FormGroup check>
@@ -227,21 +223,25 @@ const EventWaiverModal = ({
         </>
       )}
       <ModalFooter>
-        {(!isRegistered) && (!hasMinor || (adultContent === null && minorContent === null)) && (
-          <BoGButton
-            text="Register"
-            disabled={!waiverCheckboxSelected}
-            onClick={() => onRegisterAfterWaiverClicked()}
-          />
-        )}
+        {!isRegistered &&
+          (!hasMinor || (adultContent === null && minorContent === null)) && (
+            <BoGButton
+              text="Register"
+              disabled={!waiverCheckboxSelected}
+              onClick={() => onRegisterAfterWaiverClicked()}
+            />
+          )}
 
-        {hasMinor && !isRegistered && activeTab === 0 && !(adultContent === null && minorContent === null) && (
-          <BoGButton
-            onClick={() => tabsRef.current?.setActiveTab(1)}
-            disabled={!waiverCheckboxSelected}
-            text="Next"
-          />
-        )}
+        {hasMinor &&
+          !isRegistered &&
+          activeTab === 0 &&
+          !(adultContent === null && minorContent === null) && (
+            <BoGButton
+              onClick={() => tabsRef.current?.setActiveTab(1)}
+              disabled={!waiverCheckboxSelected}
+              text="Next"
+            />
+          )}
         {hasMinor && !isRegistered && activeTab === 1 && (
           <React.Fragment>
             <BoGButton

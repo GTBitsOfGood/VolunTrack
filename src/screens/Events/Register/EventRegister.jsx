@@ -176,8 +176,9 @@ const EventRegister = () => {
   };
 
   const removeMinor = (minorName) => {
-    setMinors(minors.filter((minor) => minor !== minorName));
-    if (minors.length === 0) setHasMinor(false);
+    let newMinors = minors.filter((minor) => minor !== minorName);
+    setMinors(newMinors);
+    if (newMinors.length === 0) setHasMinor(false);
   };
 
   const onUnregister = () => {
