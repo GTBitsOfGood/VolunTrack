@@ -93,10 +93,6 @@ const Styled = {
     margin-left: 1rem;
     margin-top: 2rem;
   `,
-  MinorRow: styled.div`
-    display: flex;
-    flex-direction: row;
-  `,
 };
 
 const EventRegister = () => {
@@ -262,8 +258,8 @@ const EventRegister = () => {
             their own account."
           className="py-2"
         />
-        <Styled.Row>
-          <Styled.VolunteerContainer className="bg-grey">
+        <div className="flex flex-row flex-wrap pt-2 pr-10">
+          <Styled.VolunteerContainer className="bg-grey mt-2">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
                 {user.firstName} {user.lastName}
@@ -273,10 +269,9 @@ const EventRegister = () => {
               <Styled.DetailText>{user.email}</Styled.DetailText>
             </Styled.VolunteerRow>
           </Styled.VolunteerContainer>
-          <Styled.MinorRow>
             {minors &&
               minors.map((minor) => (
-                <Styled.VolunteerContainer className="bg-grey" key={minor}>
+                <Styled.VolunteerContainer className="bg-grey mt-2" key={minor}>
                   <Styled.VolunteerCol>
                     <div>
                       <Styled.VolunteerRow>
@@ -303,15 +298,14 @@ const EventRegister = () => {
                   </Styled.VolunteerCol>
                 </Styled.VolunteerContainer>
               ))}
-          </Styled.MinorRow>
-          <Col>
+          <div className="flex flex-col items-center justify-center">
             {!isRegistered && (
               <Link href={`/events/${eventId}/register`}>
                 <BoGButton text={"Add a Minor"} onClick={onAddMinorClicked} />
               </Link>
             )}
-          </Col>
-        </Styled.Row>
+          </div>
+        </div>
       </Styled.BottomContainer>
       {!isRegistered && (
         <Styled.ModalFooter>
