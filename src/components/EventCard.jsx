@@ -93,7 +93,7 @@ const EventCard = (props) => {
           />
           <div className="flex-column flex flex-1 text-xl">
             <div className="mb-1 flex items-center">
-              <Label class="mb-0 text-xl font-bold">
+              <Label class="mb-0 text-xl font-bold line-clamp-1">
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (
@@ -142,7 +142,7 @@ const EventCard = (props) => {
           )}
           {props.user.role === "volunteer" && isRegistered && (
             <button
-              className="align-items-center mx-1 flex"
+              className="mx-1 flex items-center justify-end"
               onClick={registerOnClick}
             >
               <CheckCircleIcon className="h-8 text-primaryColor" />
@@ -153,14 +153,14 @@ const EventCard = (props) => {
             !isRegistered &&
             event.eventParent.maxVolunteers - regCount > 0 && (
               <button
-                className="align-items-center mx-1 flex"
+                className="mx-1 flex items-center justify-end"
                 onClick={registerOnClick}
               >
                 <PlusCircleIcon className="h-8 text-primaryColor" />
                 <span>Register</span>
               </button>
             )}
-          <Label className="justify-end text-right">
+          <Label className="text-end">
             {event.eventParent.maxVolunteers - regCount} slots available
           </Label>
         </div>
@@ -168,8 +168,8 @@ const EventCard = (props) => {
       {collapse && (
         <div className="ml-16 mt-2 space-y-2 pl-2">
           <div className="flex-column flex">
-            <Label class="text-md mb-0 mr-1 font-bold">Address: </Label>
-            <p>{event.eventParent.address}</p>
+            <Label className="text-md mb-0 mr-1 font-bold">Address: </Label>
+            <p className="line-clamp-1">{event.eventParent.address}</p>
           </div>
           <div className="flex-column flex">
             <Label class="text-md mb-0 mr-1 font-bold">Description: </Label>
