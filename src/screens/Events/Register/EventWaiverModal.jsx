@@ -99,9 +99,6 @@ const EventWaiverModal = ({
     loadWaivers();
   }, []);
 
-console.log(adultContent);
-console.log(minorContent);
-
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
       <Styled.ModalHeader>
