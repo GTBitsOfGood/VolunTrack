@@ -118,14 +118,14 @@ const LandingPage = () => {
               <div className="rounded-md bg-slate-50 py-12 shadow-sm">
                 <div className="mx-auto w-11/12 lg:w-2/6">
                   <div className="flex h-1 items-center justify-between bg-gray-200">
-                    <div className="flex h-1 w-1/2 items-center bg-indigo-700">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-700 text-white shadow">
+                    <div className="flex h-1 w-1/2 items-center bg-purple-700">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-700 text-white shadow">
                         1
                       </div>
                     </div>
                     {pages >= 2 && (
-                      <div className="flex h-1 w-1/2 items-center self-center bg-indigo-700 text-white">
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-700 shadow">
+                      <div className="flex h-1 w-1/2 items-center self-center bg-purple-700 text-white">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-700 shadow">
                           2
                         </div>
                       </div>
@@ -140,7 +140,7 @@ const LandingPage = () => {
 
                     <div className="flex justify-end">
                       {pages >= 3 && (
-                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-indigo-700 text-white shadow">
+                        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-purple-700 text-white shadow">
                           3
                         </div>
                       )}
