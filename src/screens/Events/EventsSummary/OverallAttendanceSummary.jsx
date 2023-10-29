@@ -26,15 +26,16 @@ const OverallAttendanceSummary = () => {
   const [computedStats, setComputedStats] = useState([]);
 
   useEffect(() => {
-    onRefresh();
+    computeStats();
   }, [startDate, endDate]);
 
-  const onRefresh = async () => {
+  const computeStats = async () => {
     // grab the events
     setLoading(true);
 
-    await getEvents(user.organizationId)
+    await getEvents(user.organizationId, startDate, endDate)
       .then((result) => {
+        console.log(result);
         if (result?.data?.events) {
           setEvents(result.data.events);
         }
@@ -64,6 +65,22 @@ const OverallAttendanceSummary = () => {
                 });
               }
             });
+            if (computedStats.length !== events.length) {
+              events.forEach((event) => {
+                let eventStats = computedStats.filter((stat) => stat._id === event._id);
+                if (!eventStats.length) {
+                  computedStats.push({
+                    _id: event._id,
+                    title: event.eventParent.title,
+                    date: event.date,
+                    startTime: event.eventParent.startTime,
+                    endTime: event.eventParent.endTime,
+                    attendance: 0,
+                    hours: 0,
+                  });
+                }
+              });
+            }
             setAttend(volunteers);
             setHours(Math.round((mins / 60) * 100) / 100);
             setComputedStats(computedStats);
@@ -91,6 +108,7 @@ const OverallAttendanceSummary = () => {
       end.setMinutes(end.getMinutes() - offset);
       setEndDate(end);
     }
+    computeStats();
   };
 
   return (
