@@ -206,6 +206,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             label="Title"
                             isRequired={true}
                             name="eventParent.title"
+                            maxLength={40}
                           />
                         </Styled.Col>
                         <Styled.ThirdCol>
@@ -214,6 +215,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             isRequired={true}
                             name="eventParent.maxVolunteers"
                             type="number"
+                            min={1}
                           />
                         </Styled.ThirdCol>
                       </Row>
