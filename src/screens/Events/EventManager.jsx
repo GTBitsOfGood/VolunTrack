@@ -144,9 +144,9 @@ const EventManager = ({ isHomePage }) => {
     let tileClassName = "";
     let dates = [];
     for (let i = 0; i < markDates.length; i++) {
-      if (user.role == "admin") {
+      if (user.role === "admin") {
         dates.push(markDates[i].date.slice(0, 10));
-      } else if (!markDates[i].eventParent.isPrivate){
+      } else if (!markDates[i].eventParent.isPrivate) {
         dates.push(markDates[i].date.slice(0, 10));
       }
     }
@@ -309,7 +309,7 @@ const EventManager = ({ isHomePage }) => {
           <div className="flex-column flex">
             <div className="mb-4 justify-start">
               <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-              <div className="mx-auto flex flex-wrap">
+              <div className="mx-auto flex flex-wrap space-y-1 md:space-x-1 md:space-y-0">
                 <ProgressDisplay
                   type={"Events"}
                   attendance={attendances}

@@ -80,9 +80,12 @@ const EventCard = (props) => {
   };
 
   return (
-    
     <div
-      className={`mx-18 mb-2 flex flex-col ${props.user.role === "admin" && "max-w-4xl"} ${props.user.role === "volunteer" && "max-w-xl"} rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
+      className={`mx-18 mb-2 flex flex-col ${
+        props.user.role === "admin" && "max-w-4xl"
+      } ${
+        props.user.role === "volunteer" && "max-w-xl"
+      } rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
       <div className="flex justify-between">
@@ -94,7 +97,7 @@ const EventCard = (props) => {
           />
           <div className="flex-column flex flex-1 text-xl">
             <div className="mb-1 flex items-center">
-              <Label class="mb-0 text-xl font-bold line-clamp-1">
+              <Label class="mb-0 line-clamp-1 text-xl font-bold">
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (
