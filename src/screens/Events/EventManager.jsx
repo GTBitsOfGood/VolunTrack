@@ -260,7 +260,7 @@ const EventManager = ({ isHomePage }) => {
             ) : (
               <div className="h-16" />
             )}
-            {events.length === 0 ? (
+            {filteredEvents.length === 0 ? (
               <div className="mt-8">
                 <Text
                   text={"No Events Scheduled on " + dateString}
