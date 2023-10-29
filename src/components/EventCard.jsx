@@ -80,8 +80,9 @@ const EventCard = (props) => {
   };
 
   return (
+    
     <div
-      className="mx-18 mb-2 flex flex-col max-w-xl rounded-xl bg-grey px-[0.75rem] py-3 md:px-6"
+      className={`mx-18 mb-2 flex flex-col ${props.user.role === "admin" && "max-w-4xl"} ${props.user.role === "volunteer" && "max-w-xl"} rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
       <div className="flex justify-between">
