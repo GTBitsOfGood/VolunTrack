@@ -7,20 +7,17 @@ import {
 } from "../EventParent/validators";
 
 export const eventInputClientValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
   eventParentId: z.instanceof(Types.ObjectId),
   isEnded: z.boolean().optional(),
 });
 
 export const eventPopulatedInputClientValidator = (minMaxVolunteers?: number) =>
   z.object({
-    date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
     eventParent: eventParentInputClientValidator(minMaxVolunteers),
     isEnded: z.boolean().optional(),
   });
 
 export const eventInputServerValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
   eventParentId: z.string().refine(
     (id) => isValidObjectId(id),
     (id) => ({ message: `eventParentId ${id} is not a valid ObjectId` })
@@ -29,7 +26,6 @@ export const eventInputServerValidator = z.object({
 });
 
 export const eventPopulatedInputServerValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
   eventParent: eventParentInputServerValidator,
   isEnded: z.boolean().optional(),
 });
