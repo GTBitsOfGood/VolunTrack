@@ -7,6 +7,7 @@ import Text from "../../components/Text";
 import { getHistoryEvents } from "../../queries/historyEvents";
 import { getUsers } from "../../queries/users";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
+import Pagination from "../../components/PaginationComp";
 
 const History = () => {
   const {
@@ -15,6 +16,9 @@ const History = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const [historyEvents, setHistoryEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pageSize = 20;
 
   useEffect(() => {
     (async () => {
@@ -76,19 +80,29 @@ const History = () => {
           <Table.HeadCell>Time</Table.HeadCell>
         </Table.Head>
         <Table.Body>
-          {filteredAndSortedHistoryEvents().map((event, index) => (
-            <Table.Row key={index} evenIndex={index % 2 === 0}>
-              <Table.Cell>
-                {event.firstName} {event.lastName}
-              </Table.Cell>
-              <Table.Cell>{event.description}</Table.Cell>
-              <Table.Cell>
-                {new Date(event.createdAt).toLocaleString()}
-              </Table.Cell>
-            </Table.Row>
-          ))}
+          {filteredAndSortedHistoryEvents()
+            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+            .map((event, index) => (
+              <Table.Row key={index} evenIndex={index % 2 === 0}>
+                <Table.Cell>
+                  {event.firstName} {event.lastName}
+                </Table.Cell>
+                <Table.Cell>{event.description}</Table.Cell>
+                <Table.Cell>
+                  {new Date(event.createdAt).toLocaleString()}
+                </Table.Cell>
+              </Table.Row>
+            ))}
         </Table.Body>
       </Table>
+      {filteredAndSortedHistoryEvents().length !== 0 && (
+        <Pagination
+          items={filteredAndSortedHistoryEvents()}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          updatePageCallback={setCurrentPage}
+        />
+      )}
     </div>
   );
 };
