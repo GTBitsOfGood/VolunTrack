@@ -142,11 +142,15 @@ const EventManager = ({ isHomePage }) => {
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
-    let test = [];
+    let dates = [];
     for (let i = 0; i < markDates.length; i++) {
-      test.push(markDates[i].date.slice(0, 10));
+      if (user.role == "admin") {
+        dates.push(markDates[i].date.slice(0, 10));
+      } else if (!markDates[i].eventParent.isPrivate){
+        dates.push(markDates[i].date.slice(0, 10));
+      }
     }
-    if (test.includes(fDate)) {
+    if (dates.includes(fDate)) {
       tileClassName = "marked";
     }
     return tileClassName !== "" ? tileClassName : null;
