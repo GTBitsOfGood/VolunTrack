@@ -2,10 +2,7 @@ import { string, object, ref } from "yup";
 
 export const createOrganizationValidator = object().shape({
   name: string().trim().required("Organization name is required"),
-  website: string()
-    .trim()
-    .required("Website URL is required")
-    .url("Invalid URL"),
+  website: string().trim().required("Organization website is required"),
   defaultContactName: string().trim().required("Contact name is required"),
   defaultContactEmail: string()
     .trim()

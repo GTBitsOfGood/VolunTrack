@@ -2,13 +2,12 @@ import { Button, Label, TextInput, Tooltip } from "flowbite-react";
 import InputField from "../../components/Forms/InputField";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
-import { Field, Formik } from "formik";
+import { Field, Formik, ErrorMessage } from "formik";
 
 import { router } from "next/router";
 import { createOrganization } from "../../queries/organizations";
 import React, { useState } from "react";
 import { createOrganizationValidator } from "../Onboarding/helpers";
-import Footer from "../Events/Admin/Attendance/Footer";
 import AppFooter from "../../components/Footer";
 import { features } from "./features";
 
@@ -321,6 +320,11 @@ const LandingPage = () => {
                                   />
                                 )}
                               </Field>
+                              <ErrorMessage
+                                component="slug"
+                                className="mt-1 inline-block pt-0 text-sm text-red-600"
+                                name="slug"
+                              />{" "}
                               <div className="mt-3 flex items-center justify-end">
                                 <button
                                   onClick={goBackPage}
@@ -359,7 +363,6 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
-      {/*<div className="h-80">test</div>*/}
       {features.map((feature, index) => (
         <div
           key={index}
