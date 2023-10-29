@@ -1,7 +1,7 @@
 import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar";
 import Text from "../../components/Text";
 import { getHistoryEvents } from "../../queries/historyEvents";
@@ -42,7 +42,7 @@ const History = () => {
     })();
   }, []);
 
-  const filteredAndSortedHistoryEvents = () => {
+  const filteredAndSortedHistoryEvents = useCallback(() => {
     return (
       searchValue.length > 0
         ? historyEvents.filter(
@@ -60,7 +60,7 @@ const History = () => {
           )
         : historyEvents
     ).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  };
+  }, [historyEvents, searchValue]);
 
   return (
     <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] py-3">
