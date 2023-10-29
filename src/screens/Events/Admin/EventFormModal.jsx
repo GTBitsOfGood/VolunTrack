@@ -218,7 +218,7 @@ const EventFormModal = ({
                             label="Title"
                             isRequired={true}
                             name="eventParent.title"
-                            maxLength={40}
+                            maxLength={80}
                           />
                         </Styled.Col>
                         <Styled.ThirdCol>
