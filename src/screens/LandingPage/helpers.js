@@ -17,5 +17,10 @@ export const createOrganizationValidator = object().shape({
     [ref("originalAdminEmail"), null],
     "Emails must match"
   ),
-  slug: string().trim().required("Organization code is required"),
+  slug: string()
+    .trim()
+    .required("Organization code is required")
+    .matches(/^[a-zA-Z0-9_.-]*$/, "Must be only letters or numbers")
+    .min(3, "Must be between 3 and 20 letters or numbers")
+    .max(20, "Must be between 3 and 20 letters or numbers"),
 });

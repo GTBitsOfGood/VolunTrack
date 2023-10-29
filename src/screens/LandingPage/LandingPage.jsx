@@ -7,7 +7,7 @@ import { Field, Formik, ErrorMessage } from "formik";
 import { router } from "next/router";
 import { createOrganization } from "../../queries/organizations";
 import React, { useState } from "react";
-import { createOrganizationValidator } from "../Onboarding/helpers";
+import { createOrganizationValidator } from "./helpers";
 import AppFooter from "../../components/Footer";
 import { features } from "./features";
 
