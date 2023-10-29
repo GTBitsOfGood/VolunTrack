@@ -304,7 +304,6 @@ const LandingPage = () => {
                                   </Label>
                                 </div>
                               </Tooltip>
-
                               <Field
                                 className="flex justify-center"
                                 name="slug"
