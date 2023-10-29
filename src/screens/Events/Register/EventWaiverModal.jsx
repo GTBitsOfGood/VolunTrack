@@ -86,11 +86,6 @@ const EventWaiverModal = ({
       setWaiverCheckboxSelected(true);
     }
 
-    if (adultContent === "") {
-      setAdultContent(null);
-      setWaiverCheckboxSelected(true);
-    }
-
     const minorWaiverResponse = await getWaivers("minor", user.organizationId);
     if (minorWaiverResponse.data.waivers.length > 0) {
       setMinorContent(minorWaiverResponse.data.waivers[0].text);
@@ -98,24 +93,26 @@ const EventWaiverModal = ({
       setMinorContent(null);
       setMinorWaiverCheckboxSelected(true);
     } 
-
-    if (minorContent === "") {
-      setMinorContent(null);
-      setMinorWaiverCheckboxSelected(true);
-    }
   };
 
   useEffect(() => {
     loadWaivers();
   }, []);
 
+console.log(adultContent);
+console.log(minorContent);
+
   return (
     <Modal isOpen={open} toggle={toggle} size="lg" centered="true">
       <Styled.ModalHeader>
-        {!isRegistered ? (
+        {!isRegistered && (
           <Styled.MainText>Complete Registration</Styled.MainText>
-        ) : (
+        )}
+        {(isRegistered && !(adultContent === null && minorContent === null)) && (
           <Styled.MainText>View Waivers</Styled.MainText>
+        )}
+        {(isRegistered && (adultContent === null && minorContent === null)) && (
+          <Styled.MainText>No Waivers to View</Styled.MainText>
         )}
       </Styled.ModalHeader>
       <Styled.Row />
@@ -136,7 +133,7 @@ const EventWaiverModal = ({
             onActiveTabChange={(tab) => setActiveTab(tab)}
           > 
             <Tabs.Item title="Guardian Waiver" className="overflow-auto">
-              {!(adultContent === null) &&
+              {!(adultContent === null || adultContent === "") &&
               <Styled.WaiverBox>
                 <div dangerouslySetInnerHTML={{ __html: adultContent }} />
               </Styled.WaiverBox>}
@@ -201,7 +198,8 @@ const EventWaiverModal = ({
             </Styled.Row>
           )} 
 
-          {adultContent === null && (
+          {!isRegistered && adultContent === null && (
+            
             <Styled.Row>
               <Styled.HighlightText>
                 Click to confirm registration.
@@ -239,7 +237,7 @@ const EventWaiverModal = ({
             onClick={() => onRegisterAfterWaiverClicked()}
           />
         )}
-        
+
         {hasMinor && !isRegistered && activeTab === 0 && !(adultContent === null && minorContent === null) && (
           <BoGButton
             onClick={() => tabsRef.current?.setActiveTab(1)}
