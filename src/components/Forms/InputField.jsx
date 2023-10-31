@@ -42,6 +42,9 @@ const InputField = (props) => (
           type={props.type ?? "text"}
           placeholder={props.placeholder}
           disabled={props.disabled}
+          maxLength={props.maxLength}
+          min={props.min}
+          max={props.max}
         />
       )}
     </Field>
@@ -62,6 +65,9 @@ InputField.propTypes = {
   type: PropTypes.string,
   className: PropTypes.string,
   tooltip: PropTypes.string,
+  maxLength: PropTypes.number,
+  min: PropTypes.number,
+  max: PropTypes.number,
 };
 
 export default InputField;
