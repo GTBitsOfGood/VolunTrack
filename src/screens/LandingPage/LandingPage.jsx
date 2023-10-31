@@ -41,13 +41,6 @@ const LandingPage = () => {
     });
   };
 
-  const customTheme = {
-    textInput: {
-      addon:
-        "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400",
-    },
-  };
-
   return (
     <div className="flex flex-col">
       <div className="h-fit bg-cover bg-center bg-no-repeat md:bg-[url('/images/background-art.png')]">
