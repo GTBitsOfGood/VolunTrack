@@ -4,10 +4,11 @@ import { useContext, useEffect, useState } from "react";
 import BoGButton from "../../../components/BoGButton";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import Text from "../../../components/Text";
-import variables from "../../../design-tokens/_variables.module.scss";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { getEvent } from "../../../queries/events";
 import { getRegistrations } from "../../../queries/registrations";
+import { QRCodeCanvas } from "qrcode.react";
+import { Modal } from "flowbite-react";
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -33,6 +34,7 @@ const EventInfo = () => {
 
   const [showUnregisterModal, setUnregisterModal] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [showQRCode, setShowQRCode] = useState(false);
 
   const onRefresh = () => {
     getEvent(eventId).then((result) => {
@@ -84,6 +86,12 @@ const EventInfo = () => {
     onRefresh();
   };
 
+  const toggleQRCode = () => {
+    setShowQRCode((prev) => !prev);
+
+    onRefresh();
+  };
+
   const copyPrivateLink = () => {
     window.navigator.clipboard.writeText(window.location.href);
     context.startLoading();
@@ -127,20 +135,21 @@ const EventInfo = () => {
             <div className="flex flex-col md:flex-row">
               {user.role === "admin" && (
                 <>
-                  <div className="mb-2 w-full md:mb-4 md:mr-4 md:w-auto">
-                    <BoGButton
-                      className="w-full bg-primaryColor hover:bg-hoverColor"
-                      text="Manage Attendance"
-                      onClick={routeToRegisteredVolunteers}
-                    />
-                  </div>
-                  <div className="mb-4 w-full md:mb-4 md:ml-4 md:mr-3 md:w-auto">
-                    <BoGButton
-                      className="w-full bg-primaryColor hover:bg-hoverColor"
-                      text="View Participation Statistics"
-                      onClick={routeToStats}
-                    />
-                  </div>
+                  <BoGButton
+                    className="mb-2 w-full bg-primaryColor hover:bg-hoverColor md:mb-4 md:mr-2 md:w-auto"
+                    text="Manage Attendance"
+                    onClick={routeToRegisteredVolunteers}
+                  />
+                  <BoGButton
+                    className="mb-2 w-full bg-primaryColor hover:bg-hoverColor md:mb-4 md:ml-2 md:mr-2 md:w-auto"
+                    text="Participation Statistics"
+                    onClick={routeToStats}
+                  />
+                  <BoGButton
+                    className="mb-2 w-full bg-primaryColor hover:bg-hoverColor md:mb-4 md:ml-2 md:mr-2 md:w-auto"
+                    text="Check In QR Code"
+                    onClick={toggleQRCode}
+                  />
                 </>
               )}
               {user.role === "volunteer" && (
@@ -201,7 +210,7 @@ const EventInfo = () => {
             <div className="mb-12 flex w-full flex-col md:mr-auto">
               <h1 className="text-2xl font-bold">Event Information</h1>
               <div className="flex flex-col md:flex-row">
-                <div className="flex flex-col bg-grey md:w-64">
+                <div className="flex flex-col bg-grey md:w-80">
                   <p className="m-4 text-base">
                     <b>Date:</b>
                     <br></br>
@@ -235,12 +244,38 @@ const EventInfo = () => {
                   </p>
                 </div>
               </div>
+              {user.role === "admin" && showQRCode === true && (
+                <Modal
+                  dismissible
+                  size="2xl"
+                  show={showQRCode}
+                  onClose={() => setShowQRCode(false)}
+                >
+                  <Modal.Header className="!pb-2">
+                    <Text
+                      className="mb-2"
+                      type="header"
+                      text="Day of Check In"
+                    ></Text>
+                    <Text
+                      type="subtitle"
+                      text="Volunteers can scan the QR code below to quickly check in to the event. Even if they don't have an account!"
+                    ></Text>
+                  </Modal.Header>
+                  <Modal.Body className="flex justify-center">
+                    <QRCodeCanvas
+                      size={400}
+                      value={window.location.href + "/day-of-check-in"}
+                    />
+                  </Modal.Body>
+                </Modal>
+              )}
             </div>
             {event.eventParent.orgName !== "" && (
               <div className="flex w-full flex-col md:mr-auto">
                 <h1 className="text-2xl font-bold">Organization</h1>
                 <div className="mb-4 flex flex-col md:flex-row">
-                  <div className="flex flex-col bg-grey md:w-64">
+                  <div className="flex flex-col bg-grey md:w-80">
                     <p className="m-4 text-base">
                       <b>Point of Contact Name</b>
                       <br></br>

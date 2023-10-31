@@ -7,19 +7,20 @@ import {
 } from "../EventParent/validators";
 
 export const eventInputClientValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
+  date: z.coerce.date(),
   eventParentId: z.instanceof(Types.ObjectId),
   isEnded: z.boolean().optional(),
 });
 
-export const eventPopulatedInputClientValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
-  eventParent: eventParentInputClientValidator,
-  isEnded: z.boolean().optional(),
-});
+export const eventPopulatedInputClientValidator = (minMaxVolunteers?: number) =>
+  z.object({
+    date: z.coerce.date(),
+    eventParent: eventParentInputClientValidator(minMaxVolunteers),
+    isEnded: z.boolean().optional(),
+  });
 
 export const eventInputServerValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
+  date: z.coerce.date(),
   eventParentId: z.string().refine(
     (id) => isValidObjectId(id),
     (id) => ({ message: `eventParentId ${id} is not a valid ObjectId` })
@@ -28,14 +29,14 @@ export const eventInputServerValidator = z.object({
 });
 
 export const eventPopulatedInputServerValidator = z.object({
-  date: z.coerce.date().min(getYesterday(), "Date cannot be in the past"),
+  date: z.coerce.date(),
   eventParent: eventParentInputServerValidator,
   isEnded: z.boolean().optional(),
 });
 
 export type EventInputClient = z.infer<typeof eventInputClientValidator>;
 export type EventPopulatedInputClient = z.infer<
-  typeof eventPopulatedInputClientValidator
+  ReturnType<typeof eventPopulatedInputClientValidator>
 >;
 export type EventInputServer = z.infer<typeof eventInputServerValidator>;
 export type EventPopulatedInputServer = z.infer<
