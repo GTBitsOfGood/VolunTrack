@@ -8,16 +8,20 @@ const InputField = (props) => (
     {props.label && (
       <div className="flex flex-row">
         {props.tooltip && (
-          <Tooltip className="flex flex-row" content={props.tooltip}>
+          <div className="flex flex-row">
             <Label
               className="mb-1 flex h-6 items-center font-medium text-slate-600"
               htmlFor={props.name}
             >
               {props.label}
-              <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
             </Label>
-            {props.isRequired && <p className="mb-0 text-red-600">*</p>}
-          </Tooltip>
+            <Tooltip className="flex flex-row" content={props.tooltip}>
+              <div className="flex h-6 items-center">
+                <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
+                {props.isRequired && <p className="mb-0 text-red-600">*</p>}
+              </div>
+            </Tooltip>
+          </div>
         )}
         {!props.tooltip && (
           <>
@@ -42,6 +46,9 @@ const InputField = (props) => (
           type={props.type ?? "text"}
           placeholder={props.placeholder}
           disabled={props.disabled}
+          maxLength={props.maxLength}
+          min={props.min}
+          max={props.max}
         />
       )}
     </Field>
@@ -62,6 +69,9 @@ InputField.propTypes = {
   type: PropTypes.string,
   className: PropTypes.string,
   tooltip: PropTypes.string,
+  maxLength: PropTypes.number,
+  min: PropTypes.number,
+  max: PropTypes.number,
 };
 
 export default InputField;
