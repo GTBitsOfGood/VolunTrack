@@ -67,7 +67,9 @@ const EventManager = ({ isHomePage }) => {
     getEvents(user.organizationId).then((result) => {
       if (result?.data?.events) {
         setEvents(result.data.events);
+        setFilteredEvents(result.data.events);
         setDates(result.data.events);
+        setDropdownVal("All Events");
       }
     });
 
@@ -123,6 +125,8 @@ const EventManager = ({ isHomePage }) => {
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
+          setFilteredEvents(result.data.events);
+          setDropdownVal("All Events");
         }
       })
       .finally(() => {
@@ -200,6 +204,7 @@ const EventManager = ({ isHomePage }) => {
 
   const onEventDelete = (id) => {
     setEvents(events.filter((event) => event._id !== id));
+    setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
   };
 
   return (

@@ -21,9 +21,11 @@ const goToCreateAcc = () => {
 
 const LandingPage = () => {
   const [pages, setPages] = useState(1);
+  const [reachedSubmit, setReachedSubmit] = useState(false);
 
   const goNextPage = () => {
     setPages(pages + 1);
+    if (pages + 1 === 3) setReachedSubmit(true);
   };
 
   const goBackPage = () => {
@@ -208,7 +210,7 @@ const LandingPage = () => {
                               <InputField
                                 name="website"
                                 label="Nonprofit Website"
-                                placeholder="https://www.example.com"
+                                placeholder="www.example.com"
                               />
                               <div className="flex items-center justify-end">
                                 <Button
@@ -346,6 +348,12 @@ const LandingPage = () => {
                               </div>
                             </div>
                           </>
+                        )}
+                        {!isValid && reachedSubmit && (
+                          <p className="mt-2 pt-0 text-center text-sm text-red-600">
+                            There are errors in your input. Be sure to check
+                            that all field are filled out and correct.
+                          </p>
                         )}
                       </form>
                     </div>
