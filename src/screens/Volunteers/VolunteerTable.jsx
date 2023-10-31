@@ -12,6 +12,7 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
+import SearchBar from "../../components/SearchBar";
 // import { Icon } from "../../components/Icon";
 
 class VolunteerTable extends React.Component {
@@ -63,93 +64,103 @@ class VolunteerTable extends React.Component {
     const { users, loading } = this.props;
     return (
       <div>
-        <Table striped={true}>
-          <Table.Head className="dark:border-red-700">
-            <Table.HeadCell className="text-primaryColor">
-              Volunteer Name
-            </Table.HeadCell>
-            <Table.HeadCell className="text-primaryColor">
-              Email Address
-            </Table.HeadCell>
-            <Table.HeadCell className="text-primaryColor">
-              Phone Number
-            </Table.HeadCell>
-            <Table.HeadCell className="text-primaryColor"> </Table.HeadCell>
-          </Table.Head>
-          {users
-            .slice(
-              this.state.currentPage * this.state.pageSize,
-              (this.state.currentPage + 1) * this.state.pageSize
-            )
-            .map((user, index) => (
-              <Table.Row key={index} evenIndex={index % 2 === 0}>
-                <Table.Cell>
-                  {user.firstName} {user.lastName}
-                </Table.Cell>
-                <div className="flex items-center">
-                  {user.email}
-                  <Tooltip content="Copy" style="light">
-                    <button
-                      className="mx-1"
-                      onClick={() => {
-                        navigator.clipboard.writeText(user.email);
-                      }}
-                    >
-                      <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
-                    </button>
-                  </Tooltip>
-                </div>
-                <Table.Cell>
-                  {user.phone
-                    ? user.phone.substr(0, 3) +
-                      "-" +
-                      user.phone.substr(3, 3) +
-                      "-" +
-                      user.phone.substr(6, 4)
-                    : ""}
-                </Table.Cell>
-                <Table.Cell>
-                  <div className="flex">
-                    <Tooltip content="Edit" style="light">
+        <div className="bg-gray-50 shadow-md sm:rounded-b-lg pt-2">
+          <SearchBar
+            placeholder="Search Name"
+            onChange={(evt) =>
+              this.setState({ searchValue: evt.target.value, searchOn: true })
+            }
+            className="m-4"
+          />
+          <div className="mx-4 border-b border-gray-200"/>
+          <Table striped={true}>
+            <Table.Head className="dark:border-red-700">
+              <Table.HeadCell className="text-primaryColor">
+                Volunteer Name
+              </Table.HeadCell>
+              <Table.HeadCell className="text-primaryColor">
+                Email Address
+              </Table.HeadCell>
+              <Table.HeadCell className="text-primaryColor">
+                Phone Number
+              </Table.HeadCell>
+              <Table.HeadCell className="text-primaryColor"> </Table.HeadCell>
+            </Table.Head>
+            {users
+              .slice(
+                this.state.currentPage * this.state.pageSize,
+                (this.state.currentPage + 1) * this.state.pageSize
+              )
+              .map((user, index) => (
+                <Table.Row key={index} evenIndex={index % 2 === 0}>
+                  <Table.Cell>
+                    {user.firstName} {user.lastName}
+                  </Table.Cell>
+                  <div className="flex items-center">
+                    {user.email}
+                    <Tooltip content="Copy" style="light">
                       <button
                         className="mx-1"
-                        onClick={() => this.onDisplayEditUserModal(user)}
+                        onClick={() => {
+                          navigator.clipboard.writeText(user.email);
+                        }}
                       >
-                        <PencilIcon className="h-7 text-primaryColor" />
-                      </button>
-                    </Tooltip>
-                    {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
-                    {/*  <Icon color="grey3" name="delete" />*/}
-                    {/*</Styled.Button>*/}
-                    <Tooltip content="Stats" style="light">
-                      <button
-                        className="mx-1"
-                        onClick={() => this.statsOnClick(user)}
-                      >
-                        <ChartBarIcon className="h-7 text-primaryColor" />
+                        <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
                       </button>
                     </Tooltip>
                   </div>
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          {loading && <Loading />}
-          <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
-            <ModalHeader color="#ef4e79">
-              {this.state.userSelectedForEdit?.name ?? ""}
-            </ModalHeader>
-            <div className="p-3">
-              <EditUserForm
-                userSelectedForEdit={this.state.userSelectedForEdit}
-                submitHandler={this.handleSubmit}
-                isPopUp={true}
-                isAdmin={this.props.isAdmin}
-                closePopUp={this.onModalClose}
-                disableEdit={false}
-              />
-            </div>
-          </Modal>
-        </Table>
+                  <Table.Cell>
+                    {user.phone
+                      ? user.phone.substr(0, 3) +
+                        "-" +
+                        user.phone.substr(3, 3) +
+                        "-" +
+                        user.phone.substr(6, 4)
+                      : ""}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex">
+                      <Tooltip content="Edit" style="light">
+                        <button
+                          className="mx-1"
+                          onClick={() => this.onDisplayEditUserModal(user)}
+                        >
+                          <PencilIcon className="h-7 text-primaryColor" />
+                        </button>
+                      </Tooltip>
+                      {/*<Styled.Button onClick={() => this.deleteUser(user._id)}>*/}
+                      {/*  <Icon color="grey3" name="delete" />*/}
+                      {/*</Styled.Button>*/}
+                      <Tooltip content="Stats" style="light">
+                        <button
+                          className="mx-1"
+                          onClick={() => this.statsOnClick(user)}
+                        >
+                          <ChartBarIcon className="h-7 text-primaryColor" />
+                        </button>
+                      </Tooltip>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            {loading && <Loading />}
+            <Modal style={{ maxWidth: "750px" }} isOpen={this.state.modalOpen}>
+              <ModalHeader color="#ef4e79">
+                {this.state.userSelectedForEdit?.name ?? ""}
+              </ModalHeader>
+              <div className="p-3">
+                <EditUserForm
+                  userSelectedForEdit={this.state.userSelectedForEdit}
+                  submitHandler={this.handleSubmit}
+                  isPopUp={true}
+                  isAdmin={this.props.isAdmin}
+                  closePopUp={this.onModalClose}
+                  disableEdit={false}
+                />
+              </div>
+            </Modal>
+          </Table>
+        </div>
         {users.length !== 0 && (
           <Pagination
             items={users}

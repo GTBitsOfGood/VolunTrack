@@ -87,38 +87,58 @@ class Volunteers extends React.Component {
           <div className="text-normal text-bold text-4xl">
             Volunteers ({this.state.users.length} total)
           </div>
-        </div>
-        <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
-          <SearchBar
-            placeholder="Search Name"
-            value={searchValue}
-            onChange={(evt) =>
-              this.setState({ searchValue: evt.target.value, searchOn: true })
-            }
-            className="mr-3 flex-1"
-          />
           <CSVLink
-            data={this.state.users.map((user) => {
-              return {
-                firstName: user.firstName,
-                lastName: user.lastName,
-                email: user.email,
-                phone: user.phone,
-                address: user.address,
-                city: user.city,
-                state: user.state,
-                zip: user.zip,
-                dob: user.dob,
-                notes: user.notes,
-              };
-            })}
-            filename={"volunteer-list.csv"}
-            target="_blank"
-            className="mb-3 no-underline"
+              data={this.state.users.map((user) => {
+                return {
+                  firstName: user.firstName,
+                  lastName: user.lastName,
+                  email: user.email,
+                  phone: user.phone,
+                  address: user.address,
+                  city: user.city,
+                  state: user.state,
+                  zip: user.zip,
+                  dob: user.dob,
+                  notes: user.notes,
+                };
+              })}
+              filename={"volunteer-list.csv"}
+              target="_blank"
+              className="mb-3 no-underline"
           >
             <BoGButton text="Download to CSV" />
           </CSVLink>
         </div>
+        {/*<div className="mt-[0.7rem] flex w-[80%] flex-row items-center">*/}
+        {/*  /!*<SearchBar*!/*/}
+        {/*  /!*  placeholder="Search Name"*!/*/}
+        {/*  /!*  value={searchValue}*!/*/}
+        {/*  /!*  onChange={(evt) =>*!/*/}
+        {/*  /!*    this.setState({ searchValue: evt.target.value, searchOn: true })*!/*/}
+        {/*  /!*  }*!/*/}
+        {/*  /!*  className="mr-3 flex-1"*!/*/}
+        {/*  <CSVLink*/}
+        {/*    data={this.state.users.map((user) => {*/}
+        {/*      return {*/}
+        {/*        firstName: user.firstName,*/}
+        {/*        lastName: user.lastName,*/}
+        {/*        email: user.email,*/}
+        {/*        phone: user.phone,*/}
+        {/*        address: user.address,*/}
+        {/*        city: user.city,*/}
+        {/*        state: user.state,*/}
+        {/*        zip: user.zip,*/}
+        {/*        dob: user.dob,*/}
+        {/*        notes: user.notes,*/}
+        {/*      };*/}
+        {/*    })}*/}
+        {/*    filename={"volunteer-list.csv"}*/}
+        {/*    target="_blank"*/}
+        {/*    className="mb-3 no-underline"*/}
+        {/*  >*/}
+        {/*    <BoGButton text="Download to CSV" />*/}
+        {/*  </CSVLink>*/}
+        {/*</div>*/}
         <div className="w-[80%]">
           <VolunteerTable
             users={
