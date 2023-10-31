@@ -26,9 +26,8 @@ class AuthForm extends React.Component {
     if (url.searchParams.has("error")) {
       this.props.context.startLoading();
       this.props.context.failed("Your username or password is incorrect.");
-    } else {
-      applyTheme("purple"); // This applies a default theme before we know which org
     }
+    applyTheme("purple"); // This applies a default theme before we know which org
   }
 
   handleSubmit = async (values) => {

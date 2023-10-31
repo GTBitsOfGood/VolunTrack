@@ -142,11 +142,15 @@ const EventManager = ({ isHomePage }) => {
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
-    let test = [];
+    let dates = [];
     for (let i = 0; i < markDates.length; i++) {
-      test.push(markDates[i].date.slice(0, 10));
+      if (user.role === "admin") {
+        dates.push(markDates[i].date.slice(0, 10));
+      } else if (!markDates[i].eventParent.isPrivate) {
+        dates.push(markDates[i].date.slice(0, 10));
+      }
     }
-    if (test.includes(fDate)) {
+    if (dates.includes(fDate)) {
       tileClassName = "marked";
     }
     return tileClassName !== "" ? tileClassName : null;
@@ -260,7 +264,7 @@ const EventManager = ({ isHomePage }) => {
             ) : (
               <div className="h-16" />
             )}
-            {events.length === 0 ? (
+            {filteredEvents.length === 0 ? (
               <div className="mt-8">
                 <Text
                   text={"No Events Scheduled on " + dateString}
@@ -305,7 +309,7 @@ const EventManager = ({ isHomePage }) => {
           <div className="flex-column flex">
             <div className="mb-4 justify-start">
               <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-              <div className="mx-auto flex flex-wrap">
+              <div className="mx-auto flex flex-wrap space-y-1 md:space-x-1 md:space-y-0">
                 <ProgressDisplay
                   type={"Events"}
                   attendance={attendances}
