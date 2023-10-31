@@ -166,7 +166,8 @@ const EventCard = (props) => {
               </button>
             )}
           <Label className="text-end">
-            {event.eventParent.maxVolunteers - regCount}/{event.eventParent.maxVolunteers} slots available
+            {event.eventParent.maxVolunteers - regCount}/
+            {event.eventParent.maxVolunteers} slots available
           </Label>
         </div>
       </div>
