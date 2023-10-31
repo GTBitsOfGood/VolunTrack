@@ -323,9 +323,11 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                           style={{
                             marginLeft: "0.5rem",
                             padding: "5px",
+                            fontWeight: "bold",
+                            color: "gray",
                           }}
                         >
-                          <SForm.Label>Organization Information</SForm.Label>
+                          Organization Information
                         </Row>
                         <div
                           style={{
@@ -384,13 +386,12 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                           </Row>
                           <Row
                             style={{
-                              padding: "5px",
+                              marginLeft: "-0.7rem",
                               fontWeight: "bold",
                               color: "gray",
                             }}
                           >
-                            <Styled.Col>Point of Contact</Styled.Col>
-                            &nbsp;
+                            Point of Contact
                           </Row>
                           <Row>
                             <Styled.Col>
