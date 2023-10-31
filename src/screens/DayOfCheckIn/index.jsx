@@ -34,7 +34,7 @@ const DayOfCheckin = () => {
     onRefresh();
   }, []);
 
-  const checkIn = (values) => {
+  const checkIn = async (values) => {
     const createUserVals = {
       firstName: values.firstName,
       lastName: values.lastName,
@@ -45,6 +45,7 @@ const DayOfCheckin = () => {
     createUserFromCheckIn(eventId, createUserVals, event.title).then(() => {
       router.replace("/login");
     });
+    const response = await sendResetPasswordEmail(createUserVals.email, true)
   };
 
   const changeAgreement = () => {

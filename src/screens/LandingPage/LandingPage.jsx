@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { createOrganizationValidator } from "./helpers";
 import AppFooter from "../../components/Footer";
 import { features } from "./features";
+import { sendOrganizationApplicationAlert } from "../../utils/mailersend-email";
 
 const goToLogin = () => {
   router.push("/login");
@@ -35,7 +36,7 @@ const LandingPage = () => {
       if (res.status < 300) {
         // submission completed!
         setPages(4);
-        
+        sendOrganizationApplicationAlert(values.name, values.website)
       } else {
         setPages(5);
       }

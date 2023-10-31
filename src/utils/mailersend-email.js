@@ -48,7 +48,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
 export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
   const BoGRecipient = { firstName: "Bits of Good", lastName: "Administration", email:"hello@bitsofgood.org" }
   const H4IRecipient = { firstName: "GT Hack 4 Impact", lastName: "Non-Profit Partnership", email:"gt.nonprofit_partnership@hack4impact.org" }
-  const volunTrackOrganization = { name: "VolunTrack" notificationEmail: }
+  const volunTrackOrganization = { name: "VolunTrack" }
   const personalization = [
     {
       email: BoGRecipient.email,
@@ -69,7 +69,7 @@ export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
   );
 };
 
-export const sendResetCodeEmail = async (user, email, code) => {
+export const sendResetCodeEmail = async (user, email, code, checkedIn) => {
   const organization = await Organization.findById(user.organizationId).lean();
 
   const personalization = [
@@ -92,7 +92,7 @@ export const sendResetCodeEmail = async (user, email, code) => {
     [user],
     organization,
     personalization,
-    `Password Reset Request`,
+    checkedIn ? `Complete VolunTrack Registration` : `Password Reset Request`,
     "x2p03479p5pgzdrn",
   );
 };

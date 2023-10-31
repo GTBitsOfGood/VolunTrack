@@ -9,6 +9,7 @@ import { sendResetCodeEmail } from "../../../utils/mailersend-email";
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const email = req.query.email;
+    const isCheckedIn = req.body.isCheckedIn;
 
     const existingUser = await getUserFromEmail(email);
 
@@ -18,7 +19,7 @@ export default async function handler(req, res) {
     const code = makeCode(6);
     await uploadResetCode(existingUser, email, code);
 
-    sendResetCodeEmail(existingUser, email, code);
+    sendResetCodeEmail(existingUser, email, code, isCheckedIn);
 
     res.status(200).json({ message: "Email Sent" });
   } else if (req.method === "GET") {
