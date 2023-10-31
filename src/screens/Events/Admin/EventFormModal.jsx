@@ -200,7 +200,9 @@ const EventFormModal = ({
           orgState: isGroupEvent ? event?.eventParent?.orgState ?? "" : "",
           orgZip: isGroupEvent ? event?.eventParent?.orgZip ?? "" : "",
           description: event?.eventParent?.description ?? "",
-          isRecurring: event?.eventParent?.isRecurring ?? ""
+          isRecurring: event?.eventParent?.isRecurring ?? Array(7).fill(false),
+          isRecurringString: event?.eventParent?.isRecurringString ?? "",
+          recurrenceEndDate: event?.eventParent?.recurrenceEndDate ? event.eventParent?.recurrenceEndDate.split("T")[0] : "",
         },
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -269,12 +271,19 @@ const EventFormModal = ({
                         <Styled.Col>
                           <SelectField 
                             label="Repeat"
-                            name="eventParent.isRecurring"
+                            name="isRecurringString"
                             options={recurringOptions}
                             isRequired={true}
-                            onChange={(value) => setFieldValue("eventParent.isRecurring", recurrenceMapping.value)}
+                            onChange={(el) => {
+                              setFieldValue("eventParent.isRecurring", recurrenceMapping[el.target.value])
+                            }}
                           />
-                          {console.log(recurrenceMapping)}
+                          <InputField
+                            label="Repeat Ends on"
+                            isRequired={false}
+                            name="recurrenceEndDate"
+                            type="date"
+                          />
                         </Styled.Col>
                         <Styled.Col>
                           <InputField

@@ -42,10 +42,9 @@ const SelectField = (props) => (
           disabled={props.disabled}
           onChange={props.onChange}
         >
-            {console.log(props.options)}
-            {!props.isCheckBox && props.options.map((option, key) => {
-                return (<option key={key}>{option}</option>)
-            })}
+          {!props.isCheckBox && props.options.map((option, key) => {
+              return (<option key={key}>{option}</option>)
+          })}
         </Select>
       )}
     </Field>
