@@ -41,26 +41,29 @@ const LandingPage = () => {
     });
   };
 
+  const customTheme = {
+    textInput: {
+      addon:
+        "inline-flex items-center rounded-l-md border border-r-0 border-gray-300 bg-gray-200 px-3 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-400",
+    },
+  };
+
   return (
     <div className="flex flex-col">
       <div className="h-fit bg-cover bg-center bg-no-repeat md:bg-[url('/images/background-art.png')]">
         <div className="flex h-fit flex-col justify-between md:min-h-screen">
           <div className="mb-8 ml-2 flex flex-row justify-between self-stretch pb-4 pt-6 md:pl-14">
-            <div className="">
-              <a
-                href="/"
-                className="flex align-middle text-3xl font-bold text-purple-700"
-              >
-                VolunTrack
-              </a>
-              <div className="ml-1 flex items-center">
-                <span className="items-center">Created by</span>
+            <div className="lg:ml-6">
+              <a href="/" className="flex">
                 <img
-                  src={"/images/bog.svg"}
+                  src={"/images/voluntrack.svg"}
                   alt="org logo"
-                  className="ml-2 h-5"
+                  className="h-10"
                 />
-              </div>
+              </a>
+              <a href="https://bitsofgood.org/" className="flex">
+                <img src={"/images/bog.svg"} alt="org logo" className="h-6" />
+              </a>
             </div>
             <div className="hidden w-[40%] justify-evenly md:flex">
               <a
@@ -70,7 +73,7 @@ const LandingPage = () => {
                 Home
               </a>
               <a
-                href="/"
+                href="#product"
                 className="flex self-center align-middle text-lg text-black"
               >
                 Product
@@ -115,7 +118,7 @@ const LandingPage = () => {
                 Interesting in joining as a nonprofit? Apply below!
               </p>
               {/*<hr className="mb-8 mt-4"></hr>*/}
-              <div className="rounded-md bg-slate-50 py-12 shadow-sm">
+              <div className="mx-2 rounded-md bg-slate-50 py-12 shadow-sm">
                 <div className="mx-auto w-11/12 lg:w-2/6">
                   <div className="flex h-1 items-center justify-between bg-gray-200">
                     <div className="flex h-1 w-1/2 items-center bg-purple-700">
@@ -279,35 +282,34 @@ const LandingPage = () => {
                             </div>
 
                             <div className="mx-10 flex flex-col self-stretch">
-
-                                <InputField
-                                  name="originalAdminEmail"
-                                  label="Primary Admin Account"
-                                  placeholder="example@email.com"
-                                  tooltip="This will be the main volunteer administrator email and cannot be changed"
-                                />
+                              <InputField
+                                name="originalAdminEmail"
+                                label="Primary Admin Account"
+                                placeholder="example@email.com"
+                                tooltip="This will be the main volunteer administrator email and cannot be changed"
+                              />
                               <InputField
                                 name="confirm_admin_email"
                                 label="Confirm Primary Admin Account"
                                 placeholder="example@email.com"
                               />
                               <div className="flex flex-row">
-                                  <Label
-                                    className="mb-1 flex h-6 items-center font-medium text-slate-600"
-                                    htmlFor="slug"
-                                  >
-                                    {"Organization code "}
-                                  </Label>
-                              <Tooltip
-                                className="flex flex-row"
-                                content="Note: Your organization code must contain 3-20 letters or numbers"
-                              >
-                                <div className="flex flex-row self-center">
-                                  <Label className="flex h-6 items-center">
-                                    <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
-                                  </Label>
-                                </div>
-                              </Tooltip>
+                                <Label
+                                  className="mb-1 flex h-6 items-center font-medium text-slate-600"
+                                  htmlFor="slug"
+                                >
+                                  Organization code
+                                </Label>
+                                <Tooltip
+                                  className="flex flex-row"
+                                  content="Note: Your organization code must contain 3-20 letters or numbers"
+                                >
+                                  <div className="flex flex-row self-center">
+                                    <Label className="flex h-6 items-center">
+                                      <InformationCircleIcon className="ml-1 flex w-4 text-black"></InformationCircleIcon>
+                                    </Label>
+                                  </div>
+                                </Tooltip>
                               </div>
                               <Field
                                 className="flex justify-center"
@@ -316,6 +318,7 @@ const LandingPage = () => {
                                 {({ field }) => (
                                   <TextInput
                                     {...field}
+                                    class="mt-0 block h-10 w-full rounded-r-lg border border-gray-300 bg-white p-2.5 text-gray-900"
                                     type="text"
                                     addon="https://volunteer.bitsofgood.org/"
                                     placeholder={values.name
@@ -368,7 +371,8 @@ const LandingPage = () => {
         </div>
       </div>
       {features.map((feature, index) => (
-        <div
+        <section
+          id="product"
           key={index}
           className={
             "flex flex-col items-center [text-align:center] md:min-h-screen " + // workaround to prevent bootstrap conflict
@@ -386,7 +390,7 @@ const LandingPage = () => {
           <div className="m-16 flex flex-1 items-center justify-center">
             <img className="max-h-full max-w-full" src={feature.imageUrl} />
           </div>
-        </div>
+        </section>
       ))}
       <AppFooter />
     </div>
