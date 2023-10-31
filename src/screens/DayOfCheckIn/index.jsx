@@ -42,10 +42,12 @@ const DayOfCheckin = () => {
       organizationId: event.organizationId,
     };
 
-    createUserFromCheckIn(eventId, createUserVals, event.title).then(() => {
+    createUserFromCheckIn(eventId, createUserVals, event.title).then(async (result) => {
+      if (result.createdUser) {
+        await sendResetPasswordEmail(createUserVals.email, true)
+      }
       router.replace("/login");
     });
-    const response = await sendResetPasswordEmail(createUserVals.email, true)
   };
 
   const changeAgreement = () => {
