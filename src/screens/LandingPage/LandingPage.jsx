@@ -87,14 +87,14 @@ const LandingPage = () => {
             <div className="flex flex-col items-end md:mr-24 md:flex-row md:items-center">
               <button
                 onClick={goToLogin}
-                className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
+                className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
                 type="button"
               >
                 Login
               </button>
               <Button
                 onClick={goToCreateAcc}
-                className="mr-2 flex border-0 bg-purple-600 align-middle hover:bg-purple-700"
+                className="mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600"
                 size="sm"
                 type="button"
               >
@@ -213,7 +213,7 @@ const LandingPage = () => {
                               <div className="flex items-center justify-end">
                                 <Button
                                   onClick={goNextPage}
-                                  className="bg-purple-600 align-middle hover:bg-purple-700"
+                                  className="bg-purple-700 align-middle hover:bg-purple-600"
                                   size="sm"
                                   type="button"
                                 >
@@ -249,14 +249,14 @@ const LandingPage = () => {
                               <div className="flex items-center justify-end">
                                 <button
                                   onClick={goBackPage}
-                                  className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
+                                  className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
                                   type="button"
                                 >
                                   ← Back
                                 </button>
                                 <Button
                                   onClick={goNextPage}
-                                  className="bg-purple-600 align-middle hover:bg-purple-700"
+                                  className="bg-purple-700 align-middle hover:bg-purple-600"
                                   size="sm"
                                   type="button"
                                 >
@@ -328,14 +328,14 @@ const LandingPage = () => {
                               <div className="mt-3 flex items-center justify-end">
                                 <button
                                   onClick={goBackPage}
-                                  className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
+                                  className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
                                   type="button"
                                 >
                                   ← Back
                                 </button>
                                 <Button
                                   onClick={handleSubmit}
-                                  className="self-stretch bg-purple-600 align-middle hover:bg-purple-700"
+                                  className="self-stretch bg-purple-700 align-middle hover:bg-purple-600"
                                   size="sm"
                                   type="button"
                                   text="Submit"

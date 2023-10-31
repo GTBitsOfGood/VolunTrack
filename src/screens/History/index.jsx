@@ -1,12 +1,13 @@
 import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar";
 import Text from "../../components/Text";
 import { getHistoryEvents } from "../../queries/historyEvents";
 import { getUsers } from "../../queries/users";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
+import Pagination from "../../components/PaginationComp";
 
 const History = () => {
   const {
@@ -15,6 +16,9 @@ const History = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const [historyEvents, setHistoryEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const pageSize = 20;
 
   useEffect(() => {
     (async () => {
@@ -38,7 +42,7 @@ const History = () => {
     })();
   }, []);
 
-  const filteredAndSortedHistoryEvents = () => {
+  const filteredAndSortedHistoryEvents = useCallback(() => {
     return (
       searchValue.length > 0
         ? historyEvents.filter(
@@ -56,7 +60,7 @@ const History = () => {
           )
         : historyEvents
     ).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  };
+  }, [historyEvents, searchValue]);
 
   return (
     <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] py-3">
@@ -76,19 +80,29 @@ const History = () => {
           <Table.HeadCell>Time</Table.HeadCell>
         </Table.Head>
         <Table.Body>
-          {filteredAndSortedHistoryEvents().map((event, index) => (
-            <Table.Row key={index} evenIndex={index % 2 === 0}>
-              <Table.Cell>
-                {event.firstName} {event.lastName}
-              </Table.Cell>
-              <Table.Cell>{event.description}</Table.Cell>
-              <Table.Cell>
-                {new Date(event.createdAt).toLocaleString()}
-              </Table.Cell>
-            </Table.Row>
-          ))}
+          {filteredAndSortedHistoryEvents()
+            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+            .map((event, index) => (
+              <Table.Row key={index} evenIndex={index % 2 === 0}>
+                <Table.Cell>
+                  {event.firstName} {event.lastName}
+                </Table.Cell>
+                <Table.Cell>{event.description}</Table.Cell>
+                <Table.Cell>
+                  {new Date(event.createdAt).toLocaleString()}
+                </Table.Cell>
+              </Table.Row>
+            ))}
         </Table.Body>
       </Table>
+      {filteredAndSortedHistoryEvents().length !== 0 && (
+        <Pagination
+          items={filteredAndSortedHistoryEvents()}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          updatePageCallback={setCurrentPage}
+        />
+      )}
     </div>
   );
 };
