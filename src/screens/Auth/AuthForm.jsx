@@ -7,6 +7,7 @@ import InputField from "../../components/Forms/InputField";
 import { createUserFromCredentials } from "../../queries/users";
 import { applyTheme } from "../../themes/themes";
 import { createAccountValidator, loginValidator } from "./helpers";
+import { Button } from "flowbite-react";
 
 class AuthForm extends React.Component {
   constructor(props) {
@@ -120,15 +121,15 @@ class AuthForm extends React.Component {
                   placeholder="Your organization's code"
                 />
               )}
-              <BoGButton
+              <Button
+                className="mb-4 bg-purple-700 align-middle hover:bg-purple-600"
+                size="sm"
                 type="submit"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
-                text={
-                  this.props.createAccount ? "Create an account" : "Sign In"
-                }
-                className="mb-4 w-full bg-primaryColor hover:bg-hoverColor"
-              />
+              >
+                {this.props.createAccount ? "Create an account" : "Sign In"}
+              </Button>
             </form>
           )}
         </Formik>
