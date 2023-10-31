@@ -41,7 +41,13 @@ const Styled = {
   `,
 };
 
-const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
+const EventFormModal = ({
+  toggle,
+  event,
+  isGroupEvent,
+  setEvent,
+  regCount,
+}) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
@@ -180,7 +186,13 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
         // isGroupEvent
         //   ? groupEventValidator
         //   :
-        toFormikValidationSchema(eventPopulatedInputClientValidator)
+        toFormikValidationSchema(
+          eventPopulatedInputClientValidator(
+            regCount === null || regCount === undefined
+              ? 0
+              : Math.max(0, regCount - 1)
+          )
+        )
       }
     >
       {({ values, handleSubmit, isValid, isSubmitting, setFieldValue }) => {
@@ -206,6 +218,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             label="Title"
                             isRequired={true}
                             name="eventParent.title"
+                            maxLength={80}
                           />
                         </Styled.Col>
                         <Styled.ThirdCol>
@@ -214,6 +227,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             isRequired={true}
                             name="eventParent.maxVolunteers"
                             type="number"
+                            min={1}
                           />
                         </Styled.ThirdCol>
                       </Row>

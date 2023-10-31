@@ -70,8 +70,8 @@ const WaiverManager = () => {
   };
 
   return (
-    <div className="flex-column mx-2 my-2 flex rounded-sm bg-grey p-4 md:w-3/5">
-      <h2 className="text-lg font-bold">Manage Waivers</h2>
+    <div className="flex-column mx-1 my-2 flex rounded-sm bg-grey p-4 md:w-5/6">
+      <h2 className="text-lg font-bold">Edit Waivers</h2>
       <Tabs.Group style="underline">
         <Tabs.Item
           title="Adult Waiver"
@@ -91,8 +91,9 @@ const WaiverManager = () => {
               </Toast>
             </div>
           )}
-          <div className="mb-4 bg-white">
+          <div className="mb-16 bg-white">
             <ReactQuill
+              className="h-96"
               value={adultContent}
               onChange={(newValue) => {
                 setAdultContent(newValue);

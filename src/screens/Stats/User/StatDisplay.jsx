@@ -73,9 +73,13 @@ const StatDisplay = ({ userId }) => {
 
   return (
     <React.Fragment>
-      <div className="flex-column mx-auto mt-6 flex w-5/6 items-start gap-1">
-        <Text text={name + " Volunteer Statistics"} type="header" />
-        <div className="my-4 flex w-full flex-col justify-between md:w-auto md:flex-row">
+      <div className="flex-column mx-auto mt-2 flex w-5/6 items-start gap-1 p-10">
+        <Text
+          className="pb-10"
+          text={name + " Volunteer Statistics"}
+          type="header"
+        />
+        <div className="my-2 flex w-full flex-col justify-between md:w-auto md:flex-row">
           <ProgressDisplay
             className={"md:ml-18 mb-8 md:mb-0 md:mr-8"}
             type={"Events"}
