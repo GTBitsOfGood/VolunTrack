@@ -49,7 +49,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .safeParse(req.body?.eventPopulatedInput);
         if (!result.success)
           return res.status(400).json({ error: result.error });
-
         await eventParent.updateOne(result.data.eventParent);
         delete result.data.eventParent;
         await event.updateOne(result.data);

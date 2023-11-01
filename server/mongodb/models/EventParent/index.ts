@@ -38,7 +38,8 @@ export const eventParentSchema = new Schema(
     orgState: String,
     orgZip: String,
     description: String,
-    isRecurring: [{ type: Boolean, default: false }]
+    isRecurring: [{ type: Boolean, default: false }],
+    recurrenceEndDate: Date
   },
   { timestamps: true }
 );
