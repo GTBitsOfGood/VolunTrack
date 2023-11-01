@@ -7,6 +7,8 @@ import HistoryEvent, {
   HistoryEventInputClient,
 } from "../mongodb/models/HistoryEvent";
 import { UserDocument } from "../mongodb/models/User";
+import { OrganizationDocument } from "../mongodb/models/Organization";
+import { AttendanceDocument } from "../mongodb/models/Attendance";
 
 export const getHistoryEvents = async (
   userId: Types.ObjectId,
@@ -49,6 +51,7 @@ export const createHistoryEventCreateEvent = (
       eventId: event._id,
     });
 };
+
 export const createHistoryEventEditEvent = (
   user: UserDocument,
   event: EventDocument,
@@ -101,11 +104,14 @@ export const createHistoryEventDeleteProfile = (user: UserDocument) => {
     });
 };
 
-export const createHistoryEventInviteAdmin = (user: UserDocument) => {
+export const createHistoryEventInviteAdmin = (
+  user: UserDocument,
+  invitedEmail: string
+) => {
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "CREATED",
-      description: `Invited admin to ${user.email}`,
+      description: `${user.firstName} ${user.lastName} sent an admin invite to ${invitedEmail}`,
       userId: user._id,
       organizationId: user.organizationId,
     });
@@ -113,60 +119,57 @@ export const createHistoryEventInviteAdmin = (user: UserDocument) => {
 
 export const createHistoryEventAttendanceEdited = (
   user: UserDocument,
-  event: EventDocument
+  attendance: AttendanceDocument
 ) => {
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "EDITED",
-      description: `${user._id.toString()} ${
-        user.lastName
-      } edited attendance for event with id ${event._id.toString()}`,
+      description: `${user.firstName} ${user.lastName} edited attendance for ${attendance.userId} for event ${attendance.eventName}`,
       userId: user._id,
       organizationId: user.organizationId,
-      eventId: event._id,
+      eventId: attendance.eventId,
     });
 };
 
 export const createHistoryEventAttendanceDeleted = (
   user: UserDocument,
-  event: EventDocument
+  attendance: AttendanceDocument
 ) => {
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "DELETED",
-      description: `${
-        user.firstName
-      } attendance editted for event with id ${event._id.toString()}`,
+      description: `${user.firstName} ${user.lastName} deleted attendance for ${attendance.userId} for event ${attendance.eventName}`,
       userId: user._id,
       organizationId: user.organizationId,
-      eventId: event._id,
+      eventId: attendance.eventId,
     });
 };
 
 export const createHistoryEventWaiverEdited = (
   user: UserDocument,
-  waiverType: string
+  waiverType: string | undefined
 ) => {
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "EDITED",
-      description: `User with id ${user._id.toString()} edited ${waiverType.toLowerCase()} waiver for event with id ${user.organizationId.toString()}`,
+      description: `User with id ${user._id.toString()} edited ${
+        waiverType?.toLowerCase() ? waiverType : "adult"
+      } waiver`,
       userId: user._id,
       organizationId: user.organizationId,
     });
 };
 
 export const createHistoryEventOrganizationSettingsUpdated = (
-  user: UserDocument,
-  organizationId: Types.ObjectId
+  user: UserDocument
 ) => {
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "UPDATED",
       description: `User with id ${user._id.toString()} ${user.firstName} ${
         user.lastName
-      } updated organization settings for organization with id ${organizationId.toString()}`,
+      } updated organization settings`,
       userId: user._id,
-      organizationId: organizationId,
+      organizationId: user.organizationId,
     });
 };

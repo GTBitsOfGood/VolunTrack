@@ -4,6 +4,9 @@ import dbConnect from "../../../../server/mongodb";
 import Waiver, {
   waiverInputServerValidator,
 } from "../../../../server/mongodb/models/Waiver";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+import { createHistoryEventWaiverEdited } from "../../../../server/actions/historyEvent";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -34,6 +37,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = waiverInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
 
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user)
+        return res
+          .status(400)
+          .json({ error: "User session not found to create event" });
+      const user = session.user;
+      await createHistoryEventWaiverEdited(user, result.data.type);
       const waiver = await Waiver.findOneAndUpdate(
         { organizationId: result.data.organizationId, type: result.data.type },
         result.data,
