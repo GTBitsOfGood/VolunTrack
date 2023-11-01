@@ -124,6 +124,7 @@ export const authOptions: AuthOptions = {
       if (organization?.invitedAdmins.includes(user.email)) {
         await user.updateOne({ role: "admin" });
         await organization.updateOne({ $pull: { invitedAdmins: user.email } });
+        user.role = "admin";
       }
       return {
         ...session,
