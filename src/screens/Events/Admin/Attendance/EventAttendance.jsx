@@ -13,6 +13,7 @@ import { getEvent, updateEvent } from "../../../../queries/events";
 import { getUsers } from "../../../../queries/users";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import AttendanceFunctionality from "./AttendanceFunctionality";
+import { Button, Modal } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -46,6 +47,8 @@ const EventAttendance = () => {
   const [waitingVolunteers, setWaitingVolunteers] = useState([]);
   const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
   const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
+
+  const [deleteIndex, setDeleteIndex] = useState(-1);
 
   useEffect(() => {
     (async () => {
@@ -158,6 +161,10 @@ const EventAttendance = () => {
     return hours.toString() + ":" + min + suffix;
   };
 
+  const deleteConfirmOnClick = () => {
+    setDeleteIndex(-1);
+  };
+
   return (
     <>
       <Styled.Container>
@@ -235,8 +242,25 @@ const EventAttendance = () => {
             checkIn={checkIn}
             checkOut={checkOut}
             isEnded={event?.isEnded}
+            deleteOnClick={(index) => setDeleteIndex(index)}
           />
         </div>
+
+        <Modal show={deleteIndex >= 0} onClose={() => setDeleteIndex(-1)}>
+          <Modal.Header>
+            Delete {waitingVolunteers[deleteIndex]?.firstName}{" "}
+            {waitingVolunteers[deleteIndex]?.lastName}'s Registration
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure you want to delete{" "}
+            {waitingVolunteers[deleteIndex]?.firstName}{" "}
+            {waitingVolunteers[deleteIndex]?.lastName}'s registration? This
+            cannot be undone.
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={deleteConfirmOnClick}>Delete</Button>
+          </Modal.Footer>
+        </Modal>
       </Styled.Container>
       {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>
