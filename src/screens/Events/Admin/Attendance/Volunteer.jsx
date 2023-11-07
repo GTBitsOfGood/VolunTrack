@@ -56,6 +56,7 @@ const Volunteer = ({
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone}</Table.Cell>
+          <Table.Cell>{minors?.length || 0}</Table.Cell>
           {/*<Table.Cell>*/}
           {/*  {" "}*/}
           {/*   {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
@@ -78,6 +79,7 @@ const Volunteer = ({
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone}</Table.Cell>
+          <Table.Cell>{minors?.length || 0}</Table.Cell>
           {/*<Table.Cell>*/}
           {/*  {" "}*/}
           {/*   {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}

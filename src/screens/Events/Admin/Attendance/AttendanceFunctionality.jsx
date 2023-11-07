@@ -34,6 +34,7 @@ const AttendanceFunctionality = ({
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
           <Table.HeadCell>Phone</Table.HeadCell>
+          <Table.HeadCell># Minors</Table.HeadCell>
           <Table.HeadCell>
             <span className="sr-only">Actions</span>
           </Table.HeadCell>
@@ -75,6 +76,7 @@ const AttendanceFunctionality = ({
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
           <Table.HeadCell>Phone</Table.HeadCell>
+          <Table.HeadCell># Minors</Table.HeadCell>
           {/*<Table.HeadCell>Status</Table.HeadCell>*/}
         </Table.Head>
         <Table.Body className="divide-y">

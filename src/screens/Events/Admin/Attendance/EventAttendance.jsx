@@ -14,6 +14,7 @@ import { getUsers } from "../../../../queries/users";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import { Button, Modal } from "flowbite-react";
+import { getRegistrations } from "../../../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -79,11 +80,19 @@ const EventAttendance = () => {
           "checkedOut"
         )
       ).data.users;
+      const registrations = (await getRegistrations({ eventId })).data
+        .registrations;
+
+      const minors = {};
+      registrations.forEach((registration) => {
+        minors[registration.userId] = registration.minors;
+      });
 
       setWaitingVolunteers(waitingUsers);
       console.log(waitingUsers);
       setCheckedInVolunteers(checkedInUsers);
       setCheckedOutVolunteers(checkedOutUsers);
+      setMinors(minors);
     })();
   }, []);
 
