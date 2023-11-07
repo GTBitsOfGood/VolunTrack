@@ -15,7 +15,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
     {
       email: user.email,
       data: {
-        header: `Your Registration is Confirmed for ${event.eventParent.title}`,
+        header: `Your Registration is confirmed for`,
         introLine: `Thanks for registering for ${event.eventParent.title}! Please review the event details below.`,
         eventTitle: event.eventParent.title,
         volunteerName: user.firstName,
@@ -80,7 +80,7 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
     {
       email: user.email,
       data: {
-        header: `${organization.name} edited ${eventParent.title}`,
+        header: `${organization.name} edited`,
         introLine: `It looks like an admin at ${organization.name} edited ${eventParent.title}! 
         Please review the event details below and ensure they still work with your schedule.`,
         eventTitle: eventParent.title,
