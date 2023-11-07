@@ -192,18 +192,16 @@ const EventRegister = () => {
   return (
     <Styled.Container fluid="md">
       <Text
-        className="ml-12"
         href={`/events`}
         onClick={() => goBackToDetails()}
         text="← Back to home"
       />
       {!isRegistered && (
-        <Styled.Row>
-          <Col xs="12" lg="6" className="mt-2">
-            <Styled.MainText>Complete Your Registration</Styled.MainText>
-          </Col>
-          <Col xs="12" lg={{ size: 4, offset: 2 }}></Col>
-        </Styled.Row>
+        <Text
+          className="my-3"
+          type="header"
+          text="Complete Your Registration"
+        ></Text>
       )}
       {isRegistered && !isLoading && (
         <React.Fragment>
