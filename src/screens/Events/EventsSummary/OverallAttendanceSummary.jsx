@@ -138,7 +138,7 @@ const OverallAttendanceSummary = () => {
 
       {/* TODO: do the aggregation of events and stats for this to work*/}
       {!loading && (
-        <div className="mt-2 mb-4">
+        <div className="mb-4 mt-2">
           <EventStatsTable stats={computedStats} isVolunteer={false} />
         </div>
       )}
