@@ -258,8 +258,8 @@ const EventRegister = () => {
             their own account."
           className="py-2"
         />
-        <div className="flex flex-row flex-wrap pt-2 pr-10">
-          <Styled.VolunteerContainer className="bg-grey mt-2">
+        <div className="flex flex-row flex-wrap pr-10 pt-2">
+          <Styled.VolunteerContainer className="mt-2 bg-grey">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
                 {user.firstName} {user.lastName}
@@ -269,35 +269,35 @@ const EventRegister = () => {
               <Styled.DetailText>{user.email}</Styled.DetailText>
             </Styled.VolunteerRow>
           </Styled.VolunteerContainer>
-            {minors &&
-              minors.map((minor) => (
-                <Styled.VolunteerContainer className="bg-grey mt-2" key={minor}>
-                  <Styled.VolunteerCol>
-                    <div>
-                      <Styled.VolunteerRow>
-                        <Styled.SectionHeaderText>
-                          {minor}
-                        </Styled.SectionHeaderText>
-                        <Styled.DetailText>
-                          Minor with {user.firstName} {user.lastName}
-                        </Styled.DetailText>
-                      </Styled.VolunteerRow>
-                    </div>
-                    {!isRegistered && (
-                      <Tooltip content="Delete" style="light">
-                        <button
-                          className="mx-1"
-                          onClick={() => {
-                            removeMinor(minor);
-                          }}
-                        >
-                          <TrashIcon className="h-8 text-primaryColor" />
-                        </button>
-                      </Tooltip>
-                    )}
-                  </Styled.VolunteerCol>
-                </Styled.VolunteerContainer>
-              ))}
+          {minors &&
+            minors.map((minor) => (
+              <Styled.VolunteerContainer className="mt-2 bg-grey" key={minor}>
+                <Styled.VolunteerCol>
+                  <div>
+                    <Styled.VolunteerRow>
+                      <Styled.SectionHeaderText>
+                        {minor}
+                      </Styled.SectionHeaderText>
+                      <Styled.DetailText>
+                        Minor with {user.firstName} {user.lastName}
+                      </Styled.DetailText>
+                    </Styled.VolunteerRow>
+                  </div>
+                  {!isRegistered && (
+                    <Tooltip content="Delete" style="light">
+                      <button
+                        className="mx-1"
+                        onClick={() => {
+                          removeMinor(minor);
+                        }}
+                      >
+                        <TrashIcon className="h-8 text-primaryColor" />
+                      </button>
+                    </Tooltip>
+                  )}
+                </Styled.VolunteerCol>
+              </Styled.VolunteerContainer>
+            ))}
           <div className="flex flex-col items-center justify-center">
             {!isRegistered && (
               <Link href={`/events/${eventId}/register`}>

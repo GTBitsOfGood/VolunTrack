@@ -72,20 +72,20 @@ const EventMinorModal = ({ open, toggle, event, addMinor }) => {
             <SForm.FormGroup>
               <div className="flex flex-col px-4 pt-4">
                 <div className="flex flex-row justify-center">
-                    <InputField
-                      className="w-5/12 mr-4"
-                      name="firstName"
-                      placeholder="First Name"
-                      label="First Name"
-                    />
-                    <InputField
-                      className="w-5/12"
-                      name="lastName"
-                      label="Last Name"
-                      placeholder="Last Name"
-                    />
+                  <InputField
+                    className="mr-4 w-5/12"
+                    name="firstName"
+                    placeholder="First Name"
+                    label="First Name"
+                  />
+                  <InputField
+                    className="w-5/12"
+                    name="lastName"
+                    label="Last Name"
+                    placeholder="Last Name"
+                  />
                 </div>
-                <div className="flex flex-row ml-12 pt-2">
+                <div className="ml-12 flex flex-row pt-2">
                   <FormGroup check className="pr-3">
                     <Input
                       type="checkbox"
@@ -95,7 +95,9 @@ const EventMinorModal = ({ open, toggle, event, addMinor }) => {
                       }}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>This volunteer is under the age of 13</Styled.Text>
+                  <Styled.Text>
+                    This volunteer is under the age of 13
+                  </Styled.Text>
                 </div>
               </div>
             </SForm.FormGroup>
