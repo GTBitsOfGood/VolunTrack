@@ -59,15 +59,10 @@ class Admins extends React.Component {
         });
       }
     });
-    getUsers().then((result) => {
+    getUsers(this.props.user.organizationId, "admin").then((result) => {
       if (result && result.data && result.data.users) {
         this.setState({
-          users: result.data.users.filter(
-            (user) =>
-              user.role === "admin" ||
-              user.role === "admin-assistant" ||
-              user.role === "staff"
-          ),
+          users: result.data.users,
           currentPage: 0,
           loadingMoreUsers: false,
         });

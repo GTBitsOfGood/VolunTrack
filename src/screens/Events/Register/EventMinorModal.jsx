@@ -22,12 +22,6 @@ const Styled = {
     font-weight: 900;
     margin-bottom: 0rem;
   `,
-  Col: styled(Col)`
-    margin-top: 0.5rem;
-  `,
-  Row: styled(Row)`
-    margin: 0.5rem 2rem 0.5rem 1rem;
-  `,
   Text: styled.p`
     color: ${variables["yiq-text-dark"]};
   `,
@@ -76,35 +70,36 @@ const EventMinorModal = ({ open, toggle, event, addMinor }) => {
               <Styled.MainText>Add Minor</Styled.MainText>
             </Styled.ModalHeader>
             <SForm.FormGroup>
-              <Styled.Row />
-              <Styled.Row>
-                <Styled.Col>
+              <div className="flex flex-col px-4 pt-4">
+                <div className="flex flex-row justify-center">
                   <InputField
+                    className="mr-4 w-5/12"
                     name="firstName"
                     placeholder="First Name"
                     label="First Name"
                   />
-                </Styled.Col>
-                <Styled.Col>
                   <InputField
+                    className="w-5/12"
                     name="lastName"
                     label="Last Name"
                     placeholder="Last Name"
                   />
-                </Styled.Col>
-              </Styled.Row>
-              <Styled.Row>
-                <FormGroup check>
-                  <Input
-                    type="checkbox"
-                    checked={checked}
-                    onClick={(e) => {
-                      toggleCheck(e);
-                    }}
-                  />{" "}
-                </FormGroup>
-                <Styled.Text>This volunteer is under the age of 13</Styled.Text>
-              </Styled.Row>
+                </div>
+                <div className="ml-12 flex flex-row pt-2">
+                  <FormGroup check className="pr-3">
+                    <Input
+                      type="checkbox"
+                      checked={checked}
+                      onClick={(e) => {
+                        toggleCheck(e);
+                      }}
+                    />{" "}
+                  </FormGroup>
+                  <Styled.Text>
+                    This volunteer is under the age of 13
+                  </Styled.Text>
+                </div>
+              </div>
             </SForm.FormGroup>
             <ModalFooter>
               <BoGButton text="Cancel" onClick={close} outline={true} />

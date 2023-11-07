@@ -125,6 +125,7 @@ const WaiverManager = () => {
           )}
           <div className="mb-4 bg-white">
             <ReactQuill
+              className="h-96"
               value={minorContent}
               onChange={(newValue) => {
                 setMinorContent(newValue);

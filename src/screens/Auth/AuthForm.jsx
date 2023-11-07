@@ -2,7 +2,6 @@ import { Formik } from "formik";
 import { signIn } from "next-auth/react";
 import PropTypes from "prop-types";
 import React from "react";
-import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
 import { createUserFromCredentials } from "../../queries/users";
 import { applyTheme } from "../../themes/themes";
@@ -32,20 +31,20 @@ class AuthForm extends React.Component {
 
   handleSubmit = async (values) => {
     if (this.props.createAccount) {
-      createUserFromCredentials(values)
-        .then(() => {
+      createUserFromCredentials(values).then((it) => {
+        if (it?.data?.user?.status !== 200) {
+          this.props.context.startLoading();
+          this.props.context.failed(
+            it.data.user?.message ?? "Error creating user"
+          );
+        } else {
           signIn("credentials", {
             email: values.email,
             password: values.password,
             callbackUrl: `${window.location.origin}/home`,
           });
-        })
-        .catch((error) => {
-          if (error.response.status !== 200) {
-            this.props.context.startLoading();
-            // this.props.context.failed(error.response.data);
-          }
-        });
+        }
+      });
     } else {
       signIn("credentials", {
         email: values.email,

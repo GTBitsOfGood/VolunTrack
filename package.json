@@ -20,7 +20,11 @@
     "lint:fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix",
     "format": "prettier \"**/*.{js,jsx,ts,tsx}\" --write",
     "format:check": "prettier \"**/*.{js,jsx,ts,tsx}\" -l",
-    "check": "npm run format; npm run lint:fix;"
+    "check": "npm run format; npm run lint:fix;",
+    "secrets:linux": "echo Enter Bitwarden Password: && read BW_PASSWORD && (bw logout || exit 0) && export BW_SESSION=`bw login gt.engineering@hack4impact.org $BW_PASSWORD --raw` && yarn secrets:get",
+    "secrets:windows": "set /p BW_PASSWORD=Enter Bitwarden Password:&& (bw logout || VER>NUL) && yarn secrets:login",
+    "secrets:login": "FOR /F %a IN ('bw login gt.engineering@hack4impact.org %BW_PASSWORD% --raw') DO SET BW_SESSION=%a && yarn secrets:get",
+    "secrets:get": "bw sync && bw get item 3134ef9e-d092-47a2-8ee8-b0a400245b5d | fx .notes > \".env.local\""
   },
   "husky": {
     "hooks": {
@@ -90,6 +94,7 @@
   "devDependencies": {
     "@babel/core": "^7.21.3",
     "@babel/eslint-parser": "^7.21.3",
+    "@bitwarden/cli": "^2023.9.1",
     "@types/bcrypt": "^5.0.0",
     "@types/node": "^18.14.2",
     "@types/react": "^18.0.28",
