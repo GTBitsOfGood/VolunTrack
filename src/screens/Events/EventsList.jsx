@@ -97,7 +97,7 @@ const EventsList = ({
                 <CheckCircleIcon className="h-5 w-5" />
               </div>
               <div className="pl-2 text-sm font-normal">{eventEdit}</div>
-              <Toast.Toggle onClick={() => setEventEdit(null)}/>
+              <Toast.Toggle onClick={() => setEventEdit(null)} />
             </Toast>
           </div>
         )}
@@ -164,16 +164,16 @@ const EventsList = ({
       return (
         <div className="w-full">
           {eventEdit !== null && (
-          <div className="pb-3">
-            <Toast>
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                <CheckCircleIcon className="h-5 w-5" />
-              </div>
-              <div className="pl-2 text-sm font-normal">{eventEdit}</div>
-              <Toast.Toggle onClick={() => setEventEdit(null)}/>
-            </Toast>
-          </div>
-        )}
+            <div className="pb-3">
+              <Toast>
+                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                  <CheckCircleIcon className="h-5 w-5" />
+                </div>
+                <div className="pl-2 text-sm font-normal">{eventEdit}</div>
+                <Toast.Toggle onClick={() => setEventEdit(null)} />
+              </Toast>
+            </div>
+          )}
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&

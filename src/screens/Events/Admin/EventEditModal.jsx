@@ -20,7 +20,14 @@ const Styled = {
   `,
 };
 
-const EventEditModal = ({ open, toggle, event, setEvent, regCount, setEventEdit }) => {
+const EventEditModal = ({
+  open,
+  toggle,
+  event,
+  setEvent,
+  regCount,
+  setEventEdit,
+}) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="xl">
       <Styled.ModalHeader toggle={toggle} />
