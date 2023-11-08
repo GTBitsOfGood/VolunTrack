@@ -47,6 +47,7 @@ const EventFormModal = ({
   isGroupEvent,
   setEvent,
   regCount,
+  setEventEdit,
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
@@ -100,6 +101,11 @@ const EventFormModal = ({
       event.date = values.date;
       event.eventParent = values.eventParent;
       setEvent(event);
+    }
+    if (setEventEdit && event?.eventParent?.title) {
+      setEventEdit(`Event '${event?.eventParent?.title}' successfully edited!`);
+    } else if (setEventEdit) {
+      setEventEdit("Event successfully edited!");
     }
     toggle();
   };
@@ -517,6 +523,7 @@ EventFormModal.propTypes = {
   toggle: PropTypes.func.isRequired,
   isGroupEvent: PropTypes.bool.isRequired,
   setEvent: PropTypes.func.isRequired,
+  setEventEdit: PropTypes.func,
 };
 
 export default EventFormModal;

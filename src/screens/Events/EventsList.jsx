@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
+import { useState } from "react";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { Toast } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -21,6 +24,8 @@ const EventsList = ({
   onCreateClicked,
   onEventDelete,
 }) => {
+  const [eventEdit, setEventEdit] = useState(null);
+
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -85,6 +90,17 @@ const EventsList = ({
   if (!isHomePage) {
     return (
       <Styled.Container>
+        {eventEdit !== null && (
+          <div className="pb-3">
+            <Toast>
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                <CheckCircleIcon className="h-5 w-5" />
+              </div>
+              <div className="pl-2 text-sm font-normal">{eventEdit}</div>
+              <Toast.Toggle onClick={() => setEventEdit(null)}/>
+            </Toast>
+          </div>
+        )}
         {events.map((event) => (
           <EventCard
             key={event._id}
@@ -92,6 +108,7 @@ const EventsList = ({
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
             onEventDelete={onEventDelete}
+            setEventEdit={setEventEdit}
           />
         ))}
         <div className="h-12" />
@@ -146,6 +163,17 @@ const EventsList = ({
     } else if (user.role === "admin") {
       return (
         <div className="w-full">
+          {eventEdit !== null && (
+          <div className="pb-3">
+            <Toast>
+              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+                <CheckCircleIcon className="h-5 w-5" />
+              </div>
+              <div className="pl-2 text-sm font-normal">{eventEdit}</div>
+              <Toast.Toggle onClick={() => setEventEdit(null)}/>
+            </Toast>
+          </div>
+        )}
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
@@ -155,6 +183,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
+                  setEventEdit={setEventEdit}
                 />
               ))}
             {todayEvents.length === 0 && (
@@ -177,6 +206,7 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
+                    setEventEdit={setEventEdit}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
