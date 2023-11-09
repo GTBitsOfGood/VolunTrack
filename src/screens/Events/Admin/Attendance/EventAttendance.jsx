@@ -14,7 +14,7 @@ import { getUsers } from "../../../../queries/users";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import AttendanceFunctionality from "./AttendanceFunctionality";
 import { Button, Modal } from "flowbite-react";
-import { getRegistrations } from "../../../../queries/registrations";
+import { deleteRegistration, getRegistrations } from "../../../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -42,6 +42,7 @@ const EventAttendance = () => {
 
   const [event, setEvent] = useState({});
   const [minors, setMinors] = useState({});
+  const [registrationIds, setRegistrationIds] = useState({});
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -84,8 +85,10 @@ const EventAttendance = () => {
         .registrations;
 
       const minors = {};
+      const registrationIds = {};
       registrations.forEach((registration) => {
         minors[registration.userId] = registration.minors;
+        registrationIds[registration.userId] = registration._id;
       });
 
       setWaitingVolunteers(waitingUsers);
@@ -93,6 +96,7 @@ const EventAttendance = () => {
       setCheckedInVolunteers(checkedInUsers);
       setCheckedOutVolunteers(checkedOutUsers);
       setMinors(minors);
+      setRegistrationIds(registrationIds);
     })();
   }, []);
 
@@ -171,6 +175,8 @@ const EventAttendance = () => {
   };
 
   const deleteConfirmOnClick = () => {
+    deleteRegistration(registrationIds[waitingVolunteers[deleteIndex]._id]);
+    setWaitingVolunteers(waitingVolunteers.filter((volunteer, index) => index !== deleteIndex));
     setDeleteIndex(-1);
   };
 

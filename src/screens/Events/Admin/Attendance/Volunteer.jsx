@@ -63,7 +63,7 @@ const Volunteer = ({
           {/*</Table.Cell>*/}
           {checkInStatus === "waiting" && (
             <Table.Cell>
-              <Tooltip content="Delete" style="light">
+              <Tooltip content="Delete Registration" style="light">
                 <button onClick={deleteOnClick}>
                   <TrashIcon className="h-8 text-primaryColor" />
                 </button>
@@ -86,7 +86,7 @@ const Volunteer = ({
           {/*</Table.Cell>*/}
           {checkInStatus === "waiting" && (
             <Table.Cell>
-              <Tooltip content="Delete" style="light">
+              <Tooltip content="Delete Registration" style="light">
                 <button onClick={deleteOnClick}>
                   <TrashIcon className="h-8 text-primaryColor" />
                 </button>
