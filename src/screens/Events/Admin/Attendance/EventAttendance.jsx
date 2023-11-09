@@ -13,8 +13,11 @@ import { getEvent, updateEvent } from "../../../../queries/events";
 import { getUsers } from "../../../../queries/users";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import AttendanceFunctionality from "./AttendanceFunctionality";
-import { Button, Modal } from "flowbite-react";
-import { deleteRegistration, getRegistrations } from "../../../../queries/registrations";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  deleteRegistration,
+  getRegistrations,
+} from "../../../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -51,6 +54,7 @@ const EventAttendance = () => {
   const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
 
   const [deleteIndex, setDeleteIndex] = useState(-1);
+  const [isDeleting, setDeleting] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -174,10 +178,20 @@ const EventAttendance = () => {
     return hours.toString() + ":" + min + suffix;
   };
 
-  const deleteConfirmOnClick = () => {
-    deleteRegistration(registrationIds[waitingVolunteers[deleteIndex]._id]);
-    setWaitingVolunteers(waitingVolunteers.filter((volunteer, index) => index !== deleteIndex));
+  const closeDeleteModal = () => {
     setDeleteIndex(-1);
+  };
+
+  const deleteConfirmOnClick = async () => {
+    setDeleting(true);
+    await deleteRegistration(
+      registrationIds[waitingVolunteers[deleteIndex]._id]
+    );
+    setDeleting(false);
+    setWaitingVolunteers(
+      waitingVolunteers.filter((volunteer, index) => index !== deleteIndex)
+    );
+    closeDeleteModal();
   };
 
   return (
@@ -261,20 +275,33 @@ const EventAttendance = () => {
           />
         </div>
 
-        <Modal show={deleteIndex >= 0} onClose={() => setDeleteIndex(-1)}>
-          <Modal.Header>
+        <Modal
+          isOpen={deleteIndex >= 0}
+          toggle={closeDeleteModal}
+          backdrop="static"
+        >
+          <ModalHeader toggle={closeDeleteModal}>
             Delete {waitingVolunteers[deleteIndex]?.firstName}{" "}
             {waitingVolunteers[deleteIndex]?.lastName}'s Registration
-          </Modal.Header>
-          <Modal.Body>
+          </ModalHeader>
+          <ModalBody>
             Are you sure you want to delete{" "}
             {waitingVolunteers[deleteIndex]?.firstName}{" "}
-            {waitingVolunteers[deleteIndex]?.lastName}'s registration? This
-            cannot be undone.
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={deleteConfirmOnClick}>Delete</Button>
-          </Modal.Footer>
+            {waitingVolunteers[deleteIndex]?.lastName}'s registration?{" "}
+            <span className="font-bold">This cannot be undone.</span>
+          </ModalBody>
+          <ModalFooter>
+            <BoGButton
+              text="Cancel"
+              onClick={closeDeleteModal}
+              outline={true}
+            />
+            <BoGButton
+              text="Delete"
+              onClick={deleteConfirmOnClick}
+              disabled={isDeleting}
+            />
+          </ModalFooter>
         </Modal>
       </Styled.Container>
       {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
