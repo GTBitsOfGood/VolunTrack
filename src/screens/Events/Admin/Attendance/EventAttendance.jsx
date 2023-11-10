@@ -182,6 +182,10 @@ const EventAttendance = () => {
     setDeleteIndex(-1);
   };
 
+  const deleteOnClick = (index) => {
+    setDeleteIndex(index);
+  };
+
   const deleteConfirmOnClick = async () => {
     setDeleting(true);
     await deleteRegistration(
@@ -271,7 +275,7 @@ const EventAttendance = () => {
             checkIn={checkIn}
             checkOut={checkOut}
             isEnded={event?.isEnded}
-            deleteOnClick={(index) => setDeleteIndex(index)}
+            deleteOnClick={deleteOnClick}
           />
         </div>
 
