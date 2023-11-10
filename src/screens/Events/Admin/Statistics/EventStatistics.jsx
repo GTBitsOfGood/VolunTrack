@@ -86,7 +86,6 @@ const EventStatistics = () => {
       setEvent(result.data.event);
     });
     getRegistrations({ eventId }).then((result) => {
-      //console.log(result.data.registrations)
       setRegistrations(result.data.registrations);
     });
   };
