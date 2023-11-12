@@ -93,10 +93,6 @@ const Styled = {
     margin-left: 1rem;
     margin-top: 2rem;
   `,
-  MinorRow: styled.div`
-    display: flex;
-    flex-direction: row;
-  `,
 };
 
 const EventRegister = () => {
@@ -196,18 +192,16 @@ const EventRegister = () => {
   return (
     <Styled.Container fluid="md">
       <Text
-        className="ml-12"
         href={`/events`}
         onClick={() => goBackToDetails()}
         text="← Back to home"
       />
       {!isRegistered && (
-        <Styled.Row>
-          <Col xs="12" lg="6" className="mt-2">
-            <Styled.MainText>Complete Your Registration</Styled.MainText>
-          </Col>
-          <Col xs="12" lg={{ size: 4, offset: 2 }}></Col>
-        </Styled.Row>
+        <Text
+          className="my-3"
+          type="header"
+          text="Complete Your Registration"
+        ></Text>
       )}
       {isRegistered && !isLoading && (
         <React.Fragment>
@@ -262,8 +256,8 @@ const EventRegister = () => {
             their own account."
           className="py-2"
         />
-        <Styled.Row>
-          <Styled.VolunteerContainer className="bg-grey">
+        <div className="flex flex-row flex-wrap pr-10 pt-2">
+          <Styled.VolunteerContainer className="mt-2 bg-grey">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
                 {user.firstName} {user.lastName}
@@ -273,45 +267,43 @@ const EventRegister = () => {
               <Styled.DetailText>{user.email}</Styled.DetailText>
             </Styled.VolunteerRow>
           </Styled.VolunteerContainer>
-          <Styled.MinorRow>
-            {minors &&
-              minors.map((minor) => (
-                <Styled.VolunteerContainer className="bg-grey" key={minor}>
-                  <Styled.VolunteerCol>
-                    <div>
-                      <Styled.VolunteerRow>
-                        <Styled.SectionHeaderText>
-                          {minor}
-                        </Styled.SectionHeaderText>
-                        <Styled.DetailText>
-                          Minor with {user.firstName} {user.lastName}
-                        </Styled.DetailText>
-                      </Styled.VolunteerRow>
-                    </div>
-                    {!isRegistered && (
-                      <Tooltip content="Delete" style="light">
-                        <button
-                          className="mx-1"
-                          onClick={() => {
-                            removeMinor(minor);
-                          }}
-                        >
-                          <TrashIcon className="h-8 text-primaryColor" />
-                        </button>
-                      </Tooltip>
-                    )}
-                  </Styled.VolunteerCol>
-                </Styled.VolunteerContainer>
-              ))}
-          </Styled.MinorRow>
-          <Col>
+          {minors &&
+            minors.map((minor) => (
+              <Styled.VolunteerContainer className="mt-2 bg-grey" key={minor}>
+                <Styled.VolunteerCol>
+                  <div>
+                    <Styled.VolunteerRow>
+                      <Styled.SectionHeaderText>
+                        {minor}
+                      </Styled.SectionHeaderText>
+                      <Styled.DetailText>
+                        Minor with {user.firstName} {user.lastName}
+                      </Styled.DetailText>
+                    </Styled.VolunteerRow>
+                  </div>
+                  {!isRegistered && (
+                    <Tooltip content="Delete" style="light">
+                      <button
+                        className="mx-1"
+                        onClick={() => {
+                          removeMinor(minor);
+                        }}
+                      >
+                        <TrashIcon className="h-8 text-primaryColor" />
+                      </button>
+                    </Tooltip>
+                  )}
+                </Styled.VolunteerCol>
+              </Styled.VolunteerContainer>
+            ))}
+          <div className="flex flex-col items-center justify-center">
             {!isRegistered && (
               <Link href={`/events/${eventId}/register`}>
                 <BoGButton text={"Add a Minor"} onClick={onAddMinorClicked} />
               </Link>
             )}
-          </Col>
-        </Styled.Row>
+          </div>
+        </div>
       </Styled.BottomContainer>
       {!isRegistered && (
         <Styled.ModalFooter>

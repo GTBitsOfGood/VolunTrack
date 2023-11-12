@@ -27,7 +27,7 @@ const OverallAttendanceSummary = () => {
 
   useEffect(() => {
     onRefresh();
-  }, [startDate, endDate]);
+  }, []);
 
   const onRefresh = async () => {
     // grab the events
@@ -40,8 +40,8 @@ const OverallAttendanceSummary = () => {
         }
       })
       .then(() => {
-        getAttendanceStatistics(user.organizationId, startDate, endDate)
-          .then((result) => {
+        getAttendanceStatistics(user.organizationId, startDate, endDate).then(
+          (result) => {
             let stats = result.data.statistics;
             let computedStats = [];
             setNumEvents(stats.length);
@@ -67,10 +67,11 @@ const OverallAttendanceSummary = () => {
             setAttend(volunteers);
             setHours(Math.round((mins / 60) * 100) / 100);
             setComputedStats(computedStats);
-          })
-          .finally(() => {
-            setLoading(false);
-          });
+          }
+        );
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -91,6 +92,7 @@ const OverallAttendanceSummary = () => {
       end.setMinutes(end.getMinutes() - offset);
       setEndDate(end);
     }
+    onRefresh();
   };
 
   return (
@@ -136,7 +138,7 @@ const OverallAttendanceSummary = () => {
 
       {/* TODO: do the aggregation of events and stats for this to work*/}
       {!loading && (
-        <div className="mt-2">
+        <div className="mb-4 mt-2">
           <EventStatsTable stats={computedStats} isVolunteer={false} />
         </div>
       )}

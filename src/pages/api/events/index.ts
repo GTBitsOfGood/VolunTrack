@@ -1,5 +1,7 @@
 import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
+import { getServerSession } from "next-auth/next";
+import { createHistoryEventCreateEvent } from "../../../../server/actions/historyEvent";
 import { getEvents } from "../../../../server/actions/events";
 import dbConnect from "../../../../server/mongodb";
 import Event, {
@@ -7,6 +9,7 @@ import Event, {
   eventPopulatedInputServerValidator,
 } from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -59,11 +62,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
+        const session = await getServerSession(req, res, authOptions);
+        if (!session?.user)
+          return res
+            .status(400)
+            .json({ error: "User session not found to create event" });
         const eventParent = await EventParent.create(result.data.eventParent);
+
         const event = await Event.create({
           date: result.data.date,
           eventParent: eventParent._id,
         });
+
+        const user = session.user;
+        await createHistoryEventCreateEvent(user, event, eventParent);
 
         // TODO: fix these things
         // await scheduler.scheduleNewEventJobs(

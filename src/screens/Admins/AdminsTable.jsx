@@ -241,7 +241,7 @@ class AdminsTable extends React.Component {
                 isPopUp={true}
                 isAdmin={this.props.sessionUser.role === "admin"} // Update to correctly pass permissions
                 closePopUp={this.cancel}
-                disableEdit={true}
+                disableEdit={!this.props.canEdit}
               />
             </ModalBody>
           </Container>
@@ -309,4 +309,5 @@ AdminsTable.propTypes = {
   editUserCallback: PropTypes.func.isRequired,
   deletePendingCallback: PropTypes.func.isRequired,
   deleteUserCallback: PropTypes.func.isRequired,
+  canEdit: PropTypes.bool.isRequired,
 };

@@ -102,21 +102,11 @@ const StatDisplay = ({ userId }) => {
             onSubmitValues(values, setSubmitting);
           }}
           render={({ handleSubmit }) => (
-            <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-8">
-              <InputField
-                className="pr-4"
-                label="From"
-                name="startDate"
-                type="datetime-local"
-              />
-              <InputField
-                className="pr-4"
-                label="To"
-                name="endDate"
-                type="datetime-local"
-              />
+            <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
+              <InputField label="From" name="startDate" type="datetime-local" />
+              <InputField label="To" name="endDate" type="datetime-local" />
               <BoGButton
-                className="my-3"
+                className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
                 text="Search"
                 onClick={() => {
                   handleSubmit();

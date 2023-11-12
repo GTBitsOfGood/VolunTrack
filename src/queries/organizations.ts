@@ -56,6 +56,12 @@ export const getInvitedAdmins = (organizationId: Types.ObjectId) => {
   );
 };
 
+export const getOrgAdmin = (organizationId: Types.ObjectId) => {
+  return axios.get<{ originalAdminEmail?: string; error?: ZodError | string }>(
+    `/api/organizations/${organizationId.toString()}/originalAdminEmail`
+  );
+};
+
 export const addInvitedAdmin = (
   organizationId: Types.ObjectId,
   email: string
