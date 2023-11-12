@@ -20,19 +20,19 @@ export const features = [
   {
     title: "Promote admin efficiency",
     description:
-      "Manage all your volunteers from within VolunTrack. Easily edit their profiles and view their participation activity. If you want to move the data to other platforms, you can also easily export all your volunteers to a CSV.",
+      "Manage all your volunteers (and admin assistants!) from within VolunTrack. Easily edit their profiles and view their participation activity. If you want to move the data to other platforms, you can also easily export all your volunteers to a CSV.",
     imageUrl: "/images/manage-volunteers-ss.png",
   },
   {
     title: "Simplify volunteer registration",
     description:
-      "Enable volunteers to easily register for your events through their own portal. Volunteers can view upcoming events, manage their registration, and update their profile.",
+      "Enable volunteers to easily register for your events through their own portal. Volunteers can view upcoming events, manage their registration, and update their profile. Volunteers also receive confirmation emails when registering and can reset their password, ensuring they stay connected to your organization",
     imageUrl: "/images/volunteer-registration-ss.png",
   },
   {
     title: "Track your impact",
     description:
-      "Track participation at a per volunteer, per event, and overall level. Volunteers can also track their individual progress and contribution through VolunTrack and as they volunteer more, they will unlock additional medals.",
+      "Track participation at a per volunteer, per event, and overall level. Volunteers can also track their individual progress and contribution through VolunTrack and as they volunteer more, they will unlock additional medals. Notice an attendance error? Admins can also edit attendance for each event in case a volunteer forgot to check in or out.",
     imageUrl: "/images/overall-attendance-ss.png",
   },
 ];

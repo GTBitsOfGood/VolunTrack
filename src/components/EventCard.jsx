@@ -203,7 +203,7 @@ EventCard.propTypes = {
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
-  setEventEdit: PropTypes.bool,
+  setEventEdit: PropTypes.func,
 };
 
 export default EventCard;

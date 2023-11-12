@@ -4,8 +4,8 @@ import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
 import { useState } from "react";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { Toast } from "flowbite-react";
+import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Alert, Toast } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -24,7 +24,8 @@ const EventsList = ({
   onCreateClicked,
   onEventDelete,
 }) => {
-  const [eventEdit, setEventEdit] = useState(null);
+  const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
+    useState(null);
 
   if (!user) {
     const { data: session } = useSession();
@@ -90,15 +91,14 @@ const EventsList = ({
   if (!isHomePage) {
     return (
       <Styled.Container>
-        {eventEdit !== null && (
+        {eventEditConfirmationMessage !== null && (
           <div className="pb-3">
-            <Toast>
-              <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                <CheckCircleIcon className="h-5 w-5" />
-              </div>
-              <div className="pl-2 text-sm font-normal">{eventEdit}</div>
-              <Toast.Toggle onClick={() => setEventEdit(null)} />
-            </Toast>
+            <Alert
+              color="success"
+              onDismiss={() => setEventEditConfirmationMessage(null)}
+            >
+              {eventEditConfirmationMessage}.
+            </Alert>
           </div>
         )}
         {events.map((event) => (
@@ -108,7 +108,7 @@ const EventsList = ({
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
             onEventDelete={onEventDelete}
-            setEventEdit={setEventEdit}
+            setEventEdit={setEventEditConfirmationMessage}
           />
         ))}
         <div className="h-12" />
@@ -163,15 +163,14 @@ const EventsList = ({
     } else if (user.role === "admin") {
       return (
         <div className="w-full">
-          {eventEdit !== null && (
+          {eventEditConfirmationMessage !== null && (
             <div className="pb-3">
-              <Toast>
-                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                  <CheckCircleIcon className="h-5 w-5" />
-                </div>
-                <div className="pl-2 text-sm font-normal">{eventEdit}</div>
-                <Toast.Toggle onClick={() => setEventEdit(null)} />
-              </Toast>
+              <Alert
+                color="success"
+                onDismiss={() => setEventEditConfirmationMessage(null)}
+              >
+                {eventEditConfirmationMessage}.
+              </Alert>
             </div>
           )}
           <div className="pb-6">
@@ -183,7 +182,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
-                  setEventEdit={setEventEdit}
+                  setEventEdit={setEventEditConfirmationMessage}
                 />
               ))}
             {todayEvents.length === 0 && (
@@ -206,7 +205,7 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
-                    setEventEdit={setEventEdit}
+                    setEventEdit={setEventEditConfirmationMessage}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
@@ -224,9 +223,9 @@ const EventsList = ({
       );
     } else {
       return (
-        <Styled.Container>
+        <div>
           <Text type="subheader" text="Nothing to Display." />
-        </Styled.Container>
+        </div>
       );
     }
   }

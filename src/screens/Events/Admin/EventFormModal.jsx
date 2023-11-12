@@ -102,11 +102,17 @@ const EventFormModal = ({
       event.eventParent = values.eventParent;
       setEvent(event);
     }
-    if (setEventEdit && event?.eventParent?.title) {
-      setEventEdit(`Event '${event?.eventParent?.title}' successfully edited!`);
-    } else if (setEventEdit) {
-      setEventEdit("Event successfully edited!");
+    if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
+      setEventEdit(
+        `Registered volunteers have been successfully notified about your edit to the ${event?.eventParent?.title} event!`
+      );
+    } else if (sendConfirmationEmail && setEventEdit) {
+      setEventEdit(
+        "Registered volunteers have been successfully notified about your event edit!"
+      );
     }
+    setSendConfirmationEmail(false);
+    // setEventEdit(null);
     toggle();
   };
 
