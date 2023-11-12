@@ -19,7 +19,7 @@ export const AppFooter = () => {
                 href="https://bitsofgood.org"
                 className="md:text-md pr-4 text-xs text-gray-800 hover:no-underline"
               >
-                © 2023 | Bits of Good
+                © {new Date().getFullYear()} | Bits of Good
               </a>
 
               <a

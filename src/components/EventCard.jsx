@@ -142,6 +142,7 @@ const EventCard = (props) => {
                 event={event}
                 setEvent={setEvent}
                 regCount={regCount}
+                setEventEdit={props?.setEventEdit}
               />
             </div>
           )}
@@ -202,6 +203,7 @@ EventCard.propTypes = {
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
+  setEventEdit: PropTypes.func,
 };
 
 export default EventCard;
