@@ -63,7 +63,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "DELETE": {
       await createHistoryEventAttendanceDeleted(user, attendance);
-      let deleted = await attendance.deleteOne();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const deleted = await attendance.deleteOne();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       return res.status(204).json({ deleted });
     }
   }
