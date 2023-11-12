@@ -3,6 +3,9 @@ import dbConnect from "../../../../server/mongodb";
 import Organization, {
   organizationInputServerValidator,
 } from "../../../../server/mongodb/models/Organization";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+import { createHistoryEventOrganizationSettingsUpdated } from "../../../../server/actions/historyEvent";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -25,6 +28,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!result.success) return res.status(400).json(result);
 
       await organization.updateOne(result.data);
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user)
+        return res
+          .status(400)
+          .json({ error: "User session not found to create event" });
+      const user = session.user;
+      await createHistoryEventOrganizationSettingsUpdated(user);
       return res.status(200).json({ organization });
     }
     case "DELETE": {

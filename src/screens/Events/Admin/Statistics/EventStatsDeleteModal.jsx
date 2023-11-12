@@ -4,12 +4,12 @@ import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import BoGButton from "../../../../components/BoGButton";
 import { deleteAttendance } from "../../../../queries/attendances";
 
-const EventStatsDeleteModal = ({ open, toggle, event }) => {
+const EventStatsDeleteModal = ({ open, toggle, attendance }) => {
   const [isDeleting, setDeleting] = useState(false);
 
   const handleSubmit = () => {
     setDeleting(true);
-    deleteAttendance(event.attendanceId[0]).then(() => {
+    deleteAttendance(attendance._id).then(() => {
       toggle();
       setDeleting(false);
     });
@@ -32,6 +32,6 @@ const EventStatsDeleteModal = ({ open, toggle, event }) => {
 EventStatsDeleteModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object,
+  attendance: PropTypes.object,
 };
 export default EventStatsDeleteModal;

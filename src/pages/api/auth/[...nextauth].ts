@@ -43,8 +43,6 @@ export const authOptions: AuthOptions = {
           credentials.password
         );
 
-        console.log(response);
-
         if (response.status === 200) {
           // this is the user object of the JWT
           return {
