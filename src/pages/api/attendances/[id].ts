@@ -63,8 +63,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "DELETE": {
       await createHistoryEventAttendanceDeleted(user, attendance);
-      await attendance.deleteOne();
-      return res.status(204);
+      let deleted = await attendance.deleteOne();
+      return res.status(204).json({ deleted });
     }
   }
 };

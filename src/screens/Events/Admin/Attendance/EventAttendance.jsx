@@ -78,7 +78,6 @@ const EventAttendance = () => {
       ).data.users;
 
       setWaitingVolunteers(waitingUsers);
-      console.log(waitingUsers);
       setCheckedInVolunteers(checkedInUsers);
       setCheckedOutVolunteers(checkedOutUsers);
     })();

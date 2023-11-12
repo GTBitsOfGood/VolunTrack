@@ -7,7 +7,6 @@ import HistoryEvent, {
   HistoryEventInputClient,
 } from "../mongodb/models/HistoryEvent";
 import { UserDocument } from "../mongodb/models/User";
-import { OrganizationDocument } from "../mongodb/models/Organization";
 import { AttendanceDocument } from "../mongodb/models/Attendance";
 
 export const getHistoryEvents = async (
@@ -124,7 +123,7 @@ export const createHistoryEventAttendanceEdited = (
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "EDITED",
-      description: `${user.firstName} ${user.lastName} edited attendance for ${attendance.userId} for event ${attendance.eventName}`,
+      description: `${user.firstName} ${user.lastName} edited ${attendance.volunteerName}'s attendance for event ${attendance.eventName}`,
       userId: user._id,
       organizationId: user.organizationId,
       eventId: attendance.eventId,
@@ -138,7 +137,7 @@ export const createHistoryEventAttendanceDeleted = (
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "DELETED",
-      description: `${user.firstName} ${user.lastName} deleted attendance for ${attendance.userId} for event ${attendance.eventName}`,
+      description: `${user.firstName} ${user.lastName} deleted ${attendance.volunteerName}'s attendance for event ${attendance.eventName}`,
       userId: user._id,
       organizationId: user.organizationId,
       eventId: attendance.eventId,
@@ -152,7 +151,7 @@ export const createHistoryEventWaiverEdited = (
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "EDITED",
-      description: `User with id ${user._id.toString()} edited ${
+      description: `${user.firstName} ${user.lastName} edited ${
         waiverType?.toLowerCase() ? waiverType : "adult"
       } waiver`,
       userId: user._id,
@@ -166,9 +165,7 @@ export const createHistoryEventOrganizationSettingsUpdated = (
   if (user.organizationId)
     return createHistoryEvent({
       keyword: "UPDATED",
-      description: `User with id ${user._id.toString()} ${user.firstName} ${
-        user.lastName
-      } updated organization settings`,
+      description: `${user.firstName} ${user.lastName} updated organization settings`,
       userId: user._id,
       organizationId: user.organizationId,
     });

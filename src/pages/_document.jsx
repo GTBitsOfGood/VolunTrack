@@ -35,7 +35,7 @@ class MyDocument extends Document {
           <link
             rel="shortcut icon"
             type="image/png"
-            href="/static/favicon.png"
+            href="/static/favicon.svg"
           />
         </Head>
         <body id="app">
