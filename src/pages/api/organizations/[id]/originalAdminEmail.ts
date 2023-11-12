@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
-import { z } from "zod";
 import dbConnect from "../../../../../server/mongodb";
 import Organization from "../../../../../server/mongodb/models/Organization";
 

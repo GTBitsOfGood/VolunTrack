@@ -77,7 +77,7 @@ class Admins extends React.Component {
     });
 
     getOrgAdmin(this.props.user.organizationId).then((result) => {
-      if(result && result.data) {
+      if (result && result.data) {
         if (result.data.originalAdminEmail === this.props.user.email) {
           this.setState({
             isOrgAdmin: true,
@@ -154,7 +154,6 @@ class Admins extends React.Component {
       a.lastName > b.lastName ? 1 : b.lastName > a.lastName ? -1 : 0
     );
   };
-
 
   render() {
     const { loadingMoreUsers } = this.state;
