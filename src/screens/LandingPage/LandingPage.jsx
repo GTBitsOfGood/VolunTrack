@@ -412,6 +412,7 @@ const LandingPage = () => {
       ))}
       <div className="flex flex-col justify-center bg-purple-100 px-4 py-8 text-center md:px-20 md:py-16">
         <h1 className="mb-4 text-2xl font-semibold text-purple-700">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
           Ready to elevate your nonprofit's event and volunteer management?
         </h1>
         <a href="#nonprofit-form" className="mx-auto max-w-max no-underline">
