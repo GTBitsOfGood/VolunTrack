@@ -20,6 +20,7 @@ import {
   getInvitedAdmins,
 } from "../../queries/organizations";
 import { deleteUser, getUsers } from "../../queries/users";
+import { getOrgAdmin } from "../../queries/organizations";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import * as Form from "../sharedStyles/formStyles";
 import AdminsTable from "./AdminsTable";
@@ -47,6 +48,7 @@ class Admins extends React.Component {
     showNewAdminModal: false,
     searchValue: "",
     valid: false,
+    isOrgAdmin: false,
   };
 
   componentDidMount = () => this.onRefresh();
@@ -68,7 +70,18 @@ class Admins extends React.Component {
         });
       }
     });
+
+    getOrgAdmin(this.props.user.organizationId).then((result) => {
+      if (result && result.data) {
+        if (result.data.originalAdminEmail === this.props.user.email) {
+          this.setState({
+            isOrgAdmin: true,
+          });
+        }
+      }
+    });
   };
+
   getUsersAtPage = () => {
     const { users, currentPage, invitedAdmins } = this.state;
     const modifiedInvitedAdmins = invitedAdmins.map((admin) => ({
@@ -169,6 +182,7 @@ class Admins extends React.Component {
               editUserCallback={this.onEditUser}
               deletePendingCallback={this.onDeletePending}
               deleteUserCallback={this.onDeleteUser}
+              canEdit={this.state.isOrgAdmin}
             />
           </div>
         </Styled.Row>
