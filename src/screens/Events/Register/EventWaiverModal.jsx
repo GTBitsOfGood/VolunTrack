@@ -193,9 +193,7 @@ const EventWaiverModal = ({
 
           {!isRegistered && adultContent === null && (
             <Styled.Row>
-              <p>
-                Click to confirm registration.
-              </p>
+              <p>Click to confirm registration.</p>
             </Styled.Row>
           )}
 
