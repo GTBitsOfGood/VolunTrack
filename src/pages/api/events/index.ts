@@ -73,25 +73,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           date: result.data.date,
           eventParent: eventParent._id,
         });
-        if (eventParent.isRecurring !== Array(7).fill(false) && eventParent.recurrenceEndDate) {
-          let currDate = event.date
-          const recurrence = eventParent.isRecurring
-          let recurringEvents = []
+        if (
+          !eventParent.isRecurring.includes(true) &&
+          eventParent.recurrenceEndDate
+        ) {
+          let currDate = event.date;
+          const recurrence = eventParent.isRecurring;
+          let recurringEvents = [];
           while (currDate < eventParent.recurrenceEndDate) {
-            for (let i=0; i < recurrence.length; i++) {
-              if(recurrence[i] === true) {
+            for (let i = 0; i < recurrence.length; i++) {
+              if (recurrence[i] === true) {
                 const recurringEvent = await Event.create({
                   date: result.data.date,
                   eventParent: eventParent._id,
                 });
-                recurringEvents.push(recurringEvent)
+                recurringEvents.push(recurringEvent);
               }
-              currDate.setDate(currDate.getDate() + 1)
+              currDate.setDate(currDate.getDate() + 1);
             }
           }
-          console.log(recurringEvents)
         }
-        
 
         const user = session.user;
         await createHistoryEventCreateEvent(user, event, eventParent);

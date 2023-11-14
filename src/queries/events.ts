@@ -52,13 +52,15 @@ export const createChildEvent = (eventInput: EventInputClient) =>
 export const updateEvent = (
   eventId: Types.ObjectId,
   eventPopulatedInput: Partial<EventPopulatedInputClient>,
+  allRecurrence: Boolean,
   sendConfirmationEmail = true
 ) =>
   axios.put<{
-    event?: EventPopulatedDocument;
+    event?: Omit<EventPopulatedDocument, "isRecurringString">;
     error?: ZodError | string;
   }>(`/api/events/${eventId.toString()}`, {
     eventPopulatedInput,
+    allRecurrence,
     sendConfirmationEmail,
   });
 
@@ -89,4 +91,9 @@ export const createUserFromCheckIn = (
 export const deleteEvent = (eventId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(
     `/api/events/${eventId.toString()}`
+  );
+
+export const deleteAllRecurringEvents = (eventId: Types.ObjectId) =>
+  axios.delete<{ error?: ZodError | string }>(
+    `/api/events/${eventId.toString()}/deleteAllRecurring`
   );

@@ -1,4 +1,4 @@
-import { Dropdown, Label, Select } from "flowbite-react";
+import { Dropdown, Label, Modal, Select } from "flowbite-react";
 import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
@@ -59,19 +59,32 @@ const EventFormModal = ({
     data: { user },
   } = useSession();
 
-  const recurringOptions = ["Never", "Daily", "Every Sunday", "Every Monday", "Every Tuesday", "Every Wednesday", "Every Thursday", "Every Friday", "Every Saturday"]
+  const recurringOptions = [
+    "Never",
+    "Daily",
+    "Every Sunday",
+    "Every Monday",
+    "Every Tuesday",
+    "Every Wednesday",
+    "Every Thursday",
+    "Every Friday",
+    "Every Saturday",
+  ];
   const recurrenceMapping = {
-    "Never":Array(7).fill(false),
-    "Daily":Array(7).fill(true),
-    "Every Sunday":[true].concat(Array(6).fill(false)),
-    "Every Monday":[false, true].concat(Array(5).fill(false)),
-    "Every Tuesday":[false, false, true].concat(Array(4).fill(false)),
-    "Every Wednesday":[false, false, false, true].concat(Array(3).fill(false)),
-    "Every Thursday":Array(4).fill(false).concat([true, false, false]),
-    "Every Friday":Array(5).fill(false).concat([true, false]),
-    "Every Saturday":Array(6).fill(false).concat([true]),
-  }
+    Never: Array(7).fill(false),
+    Daily: Array(7).fill(true),
+    "Every Sunday": [true].concat(Array(6).fill(false)),
+    "Every Monday": [false, true].concat(Array(5).fill(false)),
+    "Every Tuesday": [false, false, true].concat(Array(4).fill(false)),
+    "Every Wednesday": [false, false, false, true].concat(Array(3).fill(false)),
+    "Every Thursday": Array(4).fill(false).concat([true, false, false]),
+    "Every Friday": Array(5).fill(false).concat([true, false]),
+    "Every Saturday": Array(6).fill(false).concat([true]),
+  };
   const context = useContext(RequestContext);
+
+  const [showRecurrenceModal, setShowRecurrenceModal] = useState(false);
+  const [editAllRecurrences, setEditAllRecurrences] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -109,7 +122,7 @@ const EventFormModal = ({
       eventParent: values.eventParent,
     };
     setSubmitting(true);
-    updateEvent(event._id, editedEvent, sendConfirmationEmail);
+    updateEvent(event._id, editedEvent, editAllRecurrences, sendConfirmationEmail);
     if (setEvent) {
       event.date = values.date;
       event.eventParent = values.eventParent;
@@ -127,6 +140,10 @@ const EventFormModal = ({
     setSendConfirmationEmail(false);
     // setEventEdit(null);
     toggle();
+  };
+
+  const toggleRecurrenceModal = () => {
+    setShowRecurrenceModal(!showRecurrenceModal);
   };
 
   const containsExistingEvent = (event) => {
@@ -151,7 +168,14 @@ const EventFormModal = ({
 
   // eslint-disable-next-line no-unused-vars
   const [press, setPressed] = useState(false);
+  const today = new Date();
+  const month = today.getMonth() + 1; // Adding 1 to account for 0-indexed months
+  const day = today.getDate();
+  const year = today.getFullYear().toString().slice(-2); // Getting the last two digits of the year
 
+  // Formatting the date to mm/dd/yy
+  const formattedDate = `${year}-${month}-${day}`;
+  console.log(formattedDate)
   let ReactQuill;
   // patch for build failure
   if (typeof window !== "undefined") {
@@ -202,7 +226,9 @@ const EventFormModal = ({
           description: event?.eventParent?.description ?? "",
           isRecurring: event?.eventParent?.isRecurring ?? Array(7).fill(false),
           isRecurringString: event?.eventParent?.isRecurringString ?? "",
-          recurrenceEndDate: event?.eventParent?.recurrenceEndDate ? event.eventParent?.recurrenceEndDate.split("T")[0] : "",
+          recurrenceEndDate: event?.eventParent?.recurrenceEndDate
+            ? event.eventParent?.recurrenceEndDate.split("T")[0]
+            : formattedDate,
         },
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -265,23 +291,28 @@ const EventFormModal = ({
                             label="Date"
                             isRequired={true}
                             name="date"
+                            disabled={containsExistingEvent(event)}
                             type="date"
                           />
                         </Styled.Col>
                         <Styled.Col>
-                          <SelectField 
+                          <SelectField
                             label="Repeat"
                             name="isRecurringString"
                             options={recurringOptions}
                             isRequired={true}
+                            disabled={containsExistingEvent(event) && event?.eventParent?.isRecurring?.includes(true)}
                             onChange={(el) => {
-                              setFieldValue("eventParent.isRecurring", recurrenceMapping[el.target.value])
+                              setFieldValue(
+                                "eventParent.isRecurring",
+                                recurrenceMapping[el.target.value]
+                              );
                             }}
                           />
                           <InputField
                             label="Repeat Ends on"
                             isRequired={false}
-                            name="recurrenceEndDate"
+                            name="eventParent.recurrenceEndDate"
                             type="date"
                           />
                         </Styled.Col>
@@ -540,12 +571,51 @@ const EventFormModal = ({
                 </FormGroup>
               </Styled.Row>
             </Styled.ModalBody>
+            <Modal
+              popup
+              show={showRecurrenceModal}
+              onClose={() => toggleRecurrenceModal()}
+              className="fixed inset-0 z-[1060]"
+            >
+              <Modal.Header />
+              <Modal.Body>
+                Do you want to make these edits to affect this event and all
+                future recurrences of this event, or just this event?
+              </Modal.Body>
+              <Modal.Footer>
+                <BoGButton
+                  text="This Events and All Future Events"
+                  type="submit"
+                  onClick={()=> {
+                    setEditAllRecurrences(true);
+                    handleSubmit();
+                  }}
+                  outline={true}
+                />
+                <BoGButton
+                  text="Just This Event"
+                  type="submit"
+                  onClick={()=> {
+                    setEditAllRecurrences(false);
+                    handleSubmit();
+                  }}
+                />
+              </Modal.Footer>
+            </Modal>
             <ModalFooter>
               <BoGButton text="Cancel" onClick={toggle} outline={true} />
               <BoGButton
                 text={submitText}
+                type="submit"
                 onClick={() => {
-                  handleSubmit();
+                  if (
+                    containsExistingEvent(event) &&
+                    values.eventParent.isRecurring !== "Never"
+                  ) {
+                    toggleRecurrenceModal();
+                  } else {
+                    handleSubmit();
+                  }
                   setPressed(true);
                 }}
                 disabled={!isValid || isSubmitting}

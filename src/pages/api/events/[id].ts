@@ -49,9 +49,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .safeParse(req.body?.eventPopulatedInput);
         if (!result.success)
           return res.status(400).json({ error: result.error });
-        await eventParent.updateOne(result.data.eventParent);
-        delete result.data.eventParent;
-        await event.updateOne(result.data);
+        if (!req.body?.allRecurrence) {
+          const eventParent = await EventParent.create(result.data.eventParent);
+          await event.updateOne(
+            { _id: eventId },
+            { eventParent: eventParent._id }
+          );
+        } else {
+          await eventParent.updateOne(result.data.eventParent);
+          delete result.data.eventParent;
+          await event.updateOne(result.data);
+        }
       } else {
         const result = eventInputServerValidator.safeParse(req.body);
         if (!result.success) return res.status(400).json(result);
