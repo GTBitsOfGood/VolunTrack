@@ -122,7 +122,12 @@ const EventFormModal = ({
       eventParent: values.eventParent,
     };
     setSubmitting(true);
-    updateEvent(event._id, editedEvent, editAllRecurrences, sendConfirmationEmail);
+    updateEvent(
+      event._id,
+      editedEvent,
+      editAllRecurrences,
+      sendConfirmationEmail
+    );
     if (setEvent) {
       event.date = values.date;
       event.eventParent = values.eventParent;
@@ -175,7 +180,7 @@ const EventFormModal = ({
 
   // Formatting the date to mm/dd/yy
   const formattedDate = `${year}-${month}-${day}`;
-  console.log(formattedDate)
+  console.log(formattedDate);
   let ReactQuill;
   // patch for build failure
   if (typeof window !== "undefined") {
@@ -301,7 +306,10 @@ const EventFormModal = ({
                             name="isRecurringString"
                             options={recurringOptions}
                             isRequired={true}
-                            disabled={containsExistingEvent(event) && event?.eventParent?.isRecurring?.includes(true)}
+                            disabled={
+                              containsExistingEvent(event) &&
+                              event?.eventParent?.isRecurring?.includes(true)
+                            }
                             onChange={(el) => {
                               setFieldValue(
                                 "eventParent.isRecurring",
@@ -586,7 +594,7 @@ const EventFormModal = ({
                 <BoGButton
                   text="This Events and All Future Events"
                   type="submit"
-                  onClick={()=> {
+                  onClick={() => {
                     setEditAllRecurrences(true);
                     handleSubmit();
                   }}
@@ -595,7 +603,7 @@ const EventFormModal = ({
                 <BoGButton
                   text="Just This Event"
                   type="submit"
-                  onClick={()=> {
+                  onClick={() => {
                     setEditAllRecurrences(false);
                     handleSubmit();
                   }}

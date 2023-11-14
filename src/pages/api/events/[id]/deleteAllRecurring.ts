@@ -32,7 +32,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await Registration.deleteMany({ eventId: event._id });
 
   const eventParentId = event.eventParent;
-  
+
   await Event.deleteMany({ eventParent: eventParentId });
   await EventParent.findByIdAndDelete(eventParentId);
 

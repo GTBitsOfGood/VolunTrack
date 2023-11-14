@@ -10,7 +10,9 @@ const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
   const {
     data: { user },
   } = useSession();
-  const [hasRecurrence, setHasRecurrence] = useState(event.eventParent?.isRecurring?.includes(true) ?? false);
+  const [hasRecurrence, setHasRecurrence] = useState(
+    event.eventParent?.isRecurring?.includes(true) ?? false
+  );
   const handleSubmit = (deleteAllRecurrences) => {
     setDeleting(true);
     if (deleteAllRecurrences) {
@@ -33,7 +35,11 @@ const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
       <ModalBody>Are you sure you want to delete this event?</ModalBody>
       <ModalFooter>
         <BoGButton text="Cancel" onClick={toggle} outline={true} />
-        <BoGButton text="Delete" onClick={() => handleSubmit(false)} disabled={isDeleting} />
+        <BoGButton
+          text="Delete"
+          onClick={() => handleSubmit(false)}
+          disabled={isDeleting}
+        />
         {hasRecurrence && (
           <BoGButton
             text="Delete All Recurrences"
