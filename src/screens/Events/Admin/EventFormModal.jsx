@@ -41,7 +41,14 @@ const Styled = {
   `,
 };
 
-const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
+const EventFormModal = ({
+  toggle,
+  event,
+  isGroupEvent,
+  setEvent,
+  regCount,
+  setEventEdit,
+}) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
@@ -95,6 +102,17 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
       event.eventParent = values.eventParent;
       setEvent(event);
     }
+    if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
+      setEventEdit(
+        `Registered volunteers have been successfully notified about your edit to the ${event?.eventParent?.title} event!`
+      );
+    } else if (sendConfirmationEmail && setEventEdit) {
+      setEventEdit(
+        "Registered volunteers have been successfully notified about your event edit!"
+      );
+    }
+    setSendConfirmationEmail(false);
+    // setEventEdit(null);
     toggle();
   };
 
@@ -180,7 +198,13 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
         // isGroupEvent
         //   ? groupEventValidator
         //   :
-        toFormikValidationSchema(eventPopulatedInputClientValidator)
+        toFormikValidationSchema(
+          eventPopulatedInputClientValidator(
+            regCount === null || regCount === undefined
+              ? 0
+              : Math.max(0, regCount - 1)
+          )
+        )
       }
     >
       {({ values, handleSubmit, isValid, isSubmitting, setFieldValue }) => {
@@ -206,6 +230,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             label="Title"
                             isRequired={true}
                             name="eventParent.title"
+                            maxLength={80}
                           />
                         </Styled.Col>
                         <Styled.ThirdCol>
@@ -214,6 +239,7 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                             isRequired={true}
                             name="eventParent.maxVolunteers"
                             type="number"
+                            min={1}
                           />
                         </Styled.ThirdCol>
                       </Row>
@@ -323,9 +349,11 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                           style={{
                             marginLeft: "0.5rem",
                             padding: "5px",
+                            fontWeight: "bold",
+                            color: "gray",
                           }}
                         >
-                          <SForm.Label>Organization Information</SForm.Label>
+                          Organization Information
                         </Row>
                         <div
                           style={{
@@ -384,13 +412,12 @@ const EventFormModal = ({ toggle, event, isGroupEvent, setEvent }) => {
                           </Row>
                           <Row
                             style={{
-                              padding: "5px",
+                              marginLeft: "-0.7rem",
                               fontWeight: "bold",
                               color: "gray",
                             }}
                           >
-                            <Styled.Col>Point of Contact</Styled.Col>
-                            &nbsp;
+                            Point of Contact
                           </Row>
                           <Row>
                             <Styled.Col>
@@ -503,6 +530,7 @@ EventFormModal.propTypes = {
   toggle: PropTypes.func.isRequired,
   isGroupEvent: PropTypes.bool.isRequired,
   setEvent: PropTypes.func.isRequired,
+  setEventEdit: PropTypes.func,
 };
 
 export default EventFormModal;

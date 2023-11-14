@@ -3,6 +3,12 @@ import dbConnect from "../../../../server/mongodb";
 import Attendance, {
   attendanceInputServerValidator,
 } from "../../../../server/mongodb/models/Attendance";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+import {
+  createHistoryEventAttendanceEdited,
+  createHistoryEventAttendanceDeleted,
+} from "../../../../server/actions/historyEvent";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -15,6 +21,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       error: `Attendance with id ${attendanceId} not found`,
     });
   }
+
+  const session = await getServerSession(req, res, authOptions);
+  if (!session?.user)
+    return res.status(400).json({ error: "User session not found" });
+  const user = session.user;
 
   switch (req.method) {
     case "GET": {
@@ -38,6 +49,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const date2 = new Date(checkIn).getTime();
       const mins = (date1 - date2) / (60 * 1000);
 
+      await createHistoryEventAttendanceEdited(user, attendance);
       await attendance.updateOne({
         $set: {
           checkoutTime: result.data.checkoutTime,
@@ -50,8 +62,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ attendance });
     }
     case "DELETE": {
-      await attendance.deleteOne();
-      return res.status(204);
+      await createHistoryEventAttendanceDeleted(user, attendance);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const deleted = await attendance.deleteOne();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      return res.status(204).json({ deleted });
     }
   }
 };

@@ -3,6 +3,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
+import { useState } from "react";
+import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { Alert, Toast } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
@@ -21,6 +24,9 @@ const EventsList = ({
   onCreateClicked,
   onEventDelete,
 }) => {
+  const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
+    useState(null);
+
   if (!user) {
     const { data: session } = useSession();
     user = session.user;
@@ -85,6 +91,16 @@ const EventsList = ({
   if (!isHomePage) {
     return (
       <Styled.Container>
+        {eventEditConfirmationMessage !== null && (
+          <div className="pb-3">
+            <Alert
+              color="success"
+              onDismiss={() => setEventEditConfirmationMessage(null)}
+            >
+              {eventEditConfirmationMessage}.
+            </Alert>
+          </div>
+        )}
         {events.map((event) => (
           <EventCard
             key={event._id}
@@ -92,6 +108,7 @@ const EventsList = ({
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
             onEventDelete={onEventDelete}
+            setEventEdit={setEventEditConfirmationMessage}
           />
         ))}
         <div className="h-12" />
@@ -146,6 +163,16 @@ const EventsList = ({
     } else if (user.role === "admin") {
       return (
         <div className="w-full">
+          {eventEditConfirmationMessage !== null && (
+            <div className="pb-3">
+              <Alert
+                color="success"
+                onDismiss={() => setEventEditConfirmationMessage(null)}
+              >
+                {eventEditConfirmationMessage}.
+              </Alert>
+            </div>
+          )}
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
             {todayEvents.length > 0 &&
@@ -155,6 +182,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
+                  setEventEdit={setEventEditConfirmationMessage}
                 />
               ))}
             {todayEvents.length === 0 && (
@@ -177,6 +205,7 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
+                    setEventEdit={setEventEditConfirmationMessage}
                   />
                 ))}
                 <Text href={`/events`} text="View More" />
@@ -194,9 +223,9 @@ const EventsList = ({
       );
     } else {
       return (
-        <Styled.Container>
+        <div>
           <Text type="subheader" text="Nothing to Display." />
-        </Styled.Container>
+        </div>
       );
     }
   }

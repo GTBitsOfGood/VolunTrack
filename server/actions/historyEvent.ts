@@ -7,6 +7,7 @@ import HistoryEvent, {
   HistoryEventInputClient,
 } from "../mongodb/models/HistoryEvent";
 import { UserDocument } from "../mongodb/models/User";
+import { AttendanceDocument } from "../mongodb/models/Attendance";
 
 export const getHistoryEvents = async (
   userId: Types.ObjectId,
@@ -49,6 +50,7 @@ export const createHistoryEventCreateEvent = (
       eventId: event._id,
     });
 };
+
 export const createHistoryEventEditEvent = (
   user: UserDocument,
   event: EventDocument,
@@ -96,6 +98,74 @@ export const createHistoryEventDeleteProfile = (user: UserDocument) => {
     return createHistoryEvent({
       keyword: "DELETED",
       description: `Deleted profile of userId ${user._id.toString()}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
+
+export const createHistoryEventInviteAdmin = (
+  user: UserDocument,
+  invitedEmail: string
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "CREATED",
+      description: `${user.firstName} ${user.lastName} sent an admin invite to ${invitedEmail}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
+
+export const createHistoryEventAttendanceEdited = (
+  user: UserDocument,
+  attendance: AttendanceDocument
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "EDITED",
+      description: `${user.firstName} ${user.lastName} edited ${attendance.volunteerName}'s attendance for event ${attendance.eventName}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+      eventId: attendance.eventId,
+    });
+};
+
+export const createHistoryEventAttendanceDeleted = (
+  user: UserDocument,
+  attendance: AttendanceDocument
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "DELETED",
+      description: `${user.firstName} ${user.lastName} deleted ${attendance.volunteerName}'s attendance for event ${attendance.eventName}`,
+      userId: user._id,
+      organizationId: user.organizationId,
+      eventId: attendance.eventId,
+    });
+};
+
+export const createHistoryEventWaiverEdited = (
+  user: UserDocument,
+  waiverType: string | undefined
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "EDITED",
+      description: `${user.firstName} ${user.lastName} edited ${
+        waiverType?.toLowerCase() ? waiverType : "adult"
+      } waiver`,
+      userId: user._id,
+      organizationId: user.organizationId,
+    });
+};
+
+export const createHistoryEventOrganizationSettingsUpdated = (
+  user: UserDocument
+) => {
+  if (user.organizationId)
+    return createHistoryEvent({
+      keyword: "UPDATED",
+      description: `${user.firstName} ${user.lastName} updated organization settings`,
       userId: user._id,
       organizationId: user.organizationId,
     });

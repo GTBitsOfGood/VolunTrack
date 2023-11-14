@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from "next/types";
 import { z } from "zod";
 import dbConnect from "../../../../../server/mongodb";
 import Organization from "../../../../../server/mongodb/models/Organization";
+import { createHistoryEventInviteAdmin } from "../../../../../server/actions/historyEvent";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../auth/[...nextauth]";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -25,9 +28,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = z.string().email().safeParse(email);
 
       if (result.success) {
+        const session = await getServerSession(req, res, authOptions);
+        if (!session?.user)
+          return res
+            .status(400)
+            .json({ error: "User session not found to create event" });
+        const user = session.user;
         await organization.updateOne({
           $push: { invitedAdmins: email },
         });
+        await createHistoryEventInviteAdmin(user, email);
         return res
           .status(200)
           .json({ invitedAdmins: organization.invitedAdmins });

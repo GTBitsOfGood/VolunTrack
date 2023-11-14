@@ -116,7 +116,7 @@ const DayOfCheckin = () => {
               type="submit"
               onClick={handleSubmit}
               disabled={!isValid || isSubmitting || !didAgree}
-              className="bg-purple-600 align-middle hover:bg-purple-700"
+              className="bg-purple-700 align-middle hover:bg-purple-600"
               size="sm"
             >
               Check-In

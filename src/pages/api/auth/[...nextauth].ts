@@ -43,8 +43,6 @@ export const authOptions: AuthOptions = {
           credentials.password
         );
 
-        console.log(response);
-
         if (response.status === 200) {
           // this is the user object of the JWT
           return {
@@ -124,6 +122,7 @@ export const authOptions: AuthOptions = {
       if (organization?.invitedAdmins.includes(user.email)) {
         await user.updateOne({ role: "admin" });
         await organization.updateOne({ $pull: { invitedAdmins: user.email } });
+        user.role = "admin";
       }
       return {
         ...session,

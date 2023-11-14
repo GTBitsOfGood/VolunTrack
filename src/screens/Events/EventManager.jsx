@@ -67,7 +67,9 @@ const EventManager = ({ isHomePage }) => {
     getEvents(user.organizationId).then((result) => {
       if (result?.data?.events) {
         setEvents(result.data.events);
+        setFilteredEvents(result.data.events);
         setDates(result.data.events);
+        setDropdownVal("All Events");
       }
     });
 
@@ -123,6 +125,8 @@ const EventManager = ({ isHomePage }) => {
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
+          setFilteredEvents(result.data.events);
+          setDropdownVal("All Events");
         }
       })
       .finally(() => {
@@ -142,11 +146,15 @@ const EventManager = ({ isHomePage }) => {
   const setMarkDates = ({ date, view }, markDates) => {
     const fDate = formatJsDate(date, "-");
     let tileClassName = "";
-    let test = [];
+    let dates = [];
     for (let i = 0; i < markDates.length; i++) {
-      test.push(markDates[i].date.slice(0, 10));
+      if (user.role === "admin") {
+        dates.push(markDates[i].date.slice(0, 10));
+      } else if (!markDates[i].eventParent.isPrivate) {
+        dates.push(markDates[i].date.slice(0, 10));
+      }
     }
-    if (test.includes(fDate)) {
+    if (dates.includes(fDate)) {
       tileClassName = "marked";
     }
     return tileClassName !== "" ? tileClassName : null;
@@ -196,6 +204,7 @@ const EventManager = ({ isHomePage }) => {
 
   const onEventDelete = (id) => {
     setEvents(events.filter((event) => event._id !== id));
+    setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
   };
 
   return (
@@ -227,7 +236,7 @@ const EventManager = ({ isHomePage }) => {
         <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
           <div className="flex flex-col lg:w-5/6">
             {user.role === "admin" ? (
-              <div className="mb-4 flex w-full items-center justify-between">
+              <div className="mb-4 flex w-full items-center justify-between ">
                 <Dropdown
                   inline={true}
                   arrowIcon={false}
@@ -260,7 +269,7 @@ const EventManager = ({ isHomePage }) => {
             ) : (
               <div className="h-16" />
             )}
-            {events.length === 0 ? (
+            {filteredEvents.length === 0 ? (
               <div className="mt-8">
                 <Text
                   text={"No Events Scheduled on " + dateString}
@@ -307,15 +316,17 @@ const EventManager = ({ isHomePage }) => {
               <p className="mb-2 text-2xl font-bold">Accomplishments</p>
               <div className="mx-auto flex flex-wrap">
                 <ProgressDisplay
-                  type={"Events"}
+                  type="Events"
+                  className="mb-1 mr-1"
                   attendance={attendances}
-                  header={"Events Attended"}
+                  header="Events Attended"
                   medalDefaults={session.medalDefaults}
                 />
                 <ProgressDisplay
-                  type={"Hours"}
+                  className="mb-1 mr-1 sm:mr-0"
+                  type="Hours"
                   attendance={attendances}
-                  header={"Hours Earned"}
+                  header="Hours Earned"
                   medalDefaults={session.medalDefaults}
                 />
               </div>

@@ -2,11 +2,11 @@ import { Formik } from "formik";
 import { signIn } from "next-auth/react";
 import PropTypes from "prop-types";
 import React from "react";
-import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
 import { createUserFromCredentials } from "../../queries/users";
 import { applyTheme } from "../../themes/themes";
 import { createAccountValidator, loginValidator } from "./helpers";
+import { Button } from "flowbite-react";
 
 class AuthForm extends React.Component {
   constructor(props) {
@@ -31,20 +31,20 @@ class AuthForm extends React.Component {
 
   handleSubmit = async (values) => {
     if (this.props.createAccount) {
-      createUserFromCredentials(values)
-        .then(() => {
+      createUserFromCredentials(values).then((it) => {
+        if (it?.data?.user?.status !== 200) {
+          this.props.context.startLoading();
+          this.props.context.failed(
+            it.data.user?.message ?? "Error creating user"
+          );
+        } else {
           signIn("credentials", {
             email: values.email,
             password: values.password,
             callbackUrl: `${window.location.origin}/home`,
           });
-        })
-        .catch((error) => {
-          if (error.response.status !== 200) {
-            this.props.context.startLoading();
-            // this.props.context.failed(error.response.data);
-          }
-        });
+        }
+      });
     } else {
       signIn("credentials", {
         email: values.email,
@@ -119,15 +119,15 @@ class AuthForm extends React.Component {
                   placeholder="Your organization's code"
                 />
               )}
-              <BoGButton
+              <Button
+                className="mb-4 bg-purple-700 align-middle hover:bg-purple-600"
+                size="sm"
                 type="submit"
                 onClick={handleSubmit}
                 disabled={!isValid || isSubmitting}
-                text={
-                  this.props.createAccount ? "Create an account" : "Sign In"
-                }
-                className="mb-4 w-full bg-primaryColor hover:bg-hoverColor"
-              />
+              >
+                {this.props.createAccount ? "Create an account" : "Sign In"}
+              </Button>
             </form>
           )}
         </Formik>
