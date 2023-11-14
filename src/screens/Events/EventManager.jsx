@@ -314,17 +314,19 @@ const EventManager = ({ isHomePage }) => {
           <div className="flex-column flex">
             <div className="mb-4 justify-start">
               <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-              <div className="mx-auto flex flex-wrap space-y-1 md:space-x-1 md:space-y-0">
+              <div className="mx-auto flex flex-wrap">
                 <ProgressDisplay
-                  type={"Events"}
+                  type="Events"
+                  className="mb-1 mr-1"
                   attendance={attendances}
-                  header={"Events Attended"}
+                  header="Events Attended"
                   medalDefaults={session.medalDefaults}
                 />
                 <ProgressDisplay
-                  type={"Hours"}
+                  className="mb-1 mr-1 sm:mr-0"
+                  type="Hours"
                   attendance={attendances}
-                  header={"Hours Earned"}
+                  header="Hours Earned"
                   medalDefaults={session.medalDefaults}
                 />
               </div>

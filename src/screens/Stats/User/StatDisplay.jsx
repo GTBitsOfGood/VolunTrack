@@ -81,17 +81,17 @@ const StatDisplay = ({ userId }) => {
         />
         <div className="my-2 flex w-full flex-col justify-between md:w-auto md:flex-row">
           <ProgressDisplay
-            className={"md:ml-18 mb-8 md:mb-0 md:mr-8"}
-            type={"Events"}
+            className="md:ml-18 mb-8 md:mb-0 md:mr-8"
+            type="Events"
             attendance={attendance}
-            header={"Events Attended"}
+            header="Events Attended"
             medalDefaults={session.medalDefaults}
           />
           <ProgressDisplay
-            className={"md:ml-18 md:mr-8"}
-            type={"Hours"}
+            className="md:ml-18 md:mr-8"
+            type="Hours"
             attendance={attendance}
-            header={"Hours Earned"}
+            header="Hours Earned"
             medalDefaults={session.medalDefaults}
           />
         </div>

@@ -29,9 +29,6 @@ const Styled = {
     font-weight: 900;
     margin-bottom: 0rem;
   `,
-  HighlightText: styled.p`
-    color: ${variables["dark"]};
-  `,
   Col: styled(Col)``,
   Row: styled(Row)`
     margin: 0.5rem 2rem 0.5rem 1rem;
@@ -119,10 +116,10 @@ const EventWaiverModal = ({
         <>
           {!isRegistered && (
             <Styled.Row>
-              <Styled.HighlightText>
+              <p>
                 Before you can finish registration. Please review the following
                 waivers for yourself and your accompanying minors.
-              </Styled.HighlightText>
+              </p>
             </Styled.Row>
           )}
           <Tabs.Group
@@ -187,18 +184,18 @@ const EventWaiverModal = ({
         <>
           {!(isRegistered || adultContent === null) && (
             <Styled.Row>
-              <Styled.HighlightText>
+              <p>
                 Before you can finish registration. Please review the following
                 waiver.
-              </Styled.HighlightText>
+              </p>
             </Styled.Row>
           )}
 
           {!isRegistered && adultContent === null && (
             <Styled.Row>
-              <Styled.HighlightText>
+              <p>
                 Click to confirm registration.
-              </Styled.HighlightText>
+              </p>
             </Styled.Row>
           )}
 
