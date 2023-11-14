@@ -285,11 +285,13 @@ const EventAttendance = () => {
         >
           <ModalHeader toggle={closeDeleteModal}>
             Delete {waitingVolunteers[deleteIndex]?.firstName}{" "}
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
             {waitingVolunteers[deleteIndex]?.lastName}'s Registration
           </ModalHeader>
           <ModalBody>
             Are you sure you want to delete{" "}
             {waitingVolunteers[deleteIndex]?.firstName}{" "}
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
             {waitingVolunteers[deleteIndex]?.lastName}'s registration?{" "}
             <span className="font-bold">This cannot be undone.</span>
           </ModalBody>
