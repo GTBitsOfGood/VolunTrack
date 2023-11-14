@@ -32,21 +32,21 @@ const Styled = {
   `,
 };
 
-const EditEventStats = ({ open, toggle, event }) => {
+const EditEventStats = ({ open, toggle, attendance }) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="xl">
       <Styled.ModalHeader toggle={toggle} />
       <Styled.HeaderText>
         <p>Edit Entry</p>
       </Styled.HeaderText>
-      <EditEventStatsForm toggle={toggle} stat={event} />
+      <EditEventStatsForm toggle={toggle} stat={attendance} />
     </Modal>
   );
 };
 EditEventStats.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object,
+  attendance: PropTypes.object,
 };
 
 export default EditEventStats;

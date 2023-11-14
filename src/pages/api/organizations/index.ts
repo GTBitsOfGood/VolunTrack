@@ -19,7 +19,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       result.data.notificationEmail = result.data.originalAdminEmail;
       result.data.invitedAdmins = [result.data.originalAdminEmail];
-
       return res.status(201).json({
         organization: await Organization.create(result.data),
       });

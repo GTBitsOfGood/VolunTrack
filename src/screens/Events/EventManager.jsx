@@ -236,7 +236,7 @@ const EventManager = ({ isHomePage }) => {
         <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
           <div className="flex flex-col lg:w-5/6">
             {user.role === "admin" ? (
-              <div className="mb-4 flex w-full items-center justify-between">
+              <div className="mb-4 flex w-full items-center justify-between ">
                 <Dropdown
                   inline={true}
                   arrowIcon={false}

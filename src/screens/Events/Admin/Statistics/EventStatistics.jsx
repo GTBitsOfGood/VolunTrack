@@ -106,12 +106,12 @@ const EventStatistics = () => {
     ...new Set(attendances.map((attendance) => attendance.userId)),
   ];
   const [showEditModal, setShowEditModal] = useState(false);
-  const [currEvent, setCurrEvent] = useState(null);
+  const [currAttendance, setCurrAttendance] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const onEditClicked = (event) => {
     setShowEditModal(true);
-    setCurrEvent(event);
+    setCurrAttendance(event);
   };
   const toggleEditModal = () => {
     setShowEditModal((prev) => !prev);
@@ -119,10 +119,10 @@ const EventStatistics = () => {
   };
   const onDeleteClicked = (event) => {
     setShowDeleteModal(true);
-    setCurrEvent(event);
+    setCurrAttendance(event);
   };
   const toggleDeleteModal = () => {
-    setShowDeleteModal((prev) => !prev);
+    setShowDeleteModal(false);
     onRefresh();
   };
 
@@ -176,12 +176,12 @@ const EventStatistics = () => {
       <EditEventStats
         open={showEditModal}
         toggle={toggleEditModal}
-        event={currEvent}
+        attendance={currAttendance}
       />
       <EventStatsDeleteModal
         open={showDeleteModal}
         toggle={toggleDeleteModal}
-        event={currEvent}
+        attendance={currAttendance}
       />
     </Styled.Container>
   );

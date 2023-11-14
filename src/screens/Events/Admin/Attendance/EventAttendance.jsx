@@ -96,7 +96,6 @@ const EventAttendance = () => {
       });
 
       setWaitingVolunteers(waitingUsers);
-      console.log(waitingUsers);
       setCheckedInVolunteers(checkedInUsers);
       setCheckedOutVolunteers(checkedOutUsers);
       setMinors(minors);

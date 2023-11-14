@@ -59,9 +59,12 @@ const StatsTable = ({
               .map((attendance) => (
                 <Table.Row key={attendance._id}>
                   <Table.Cell>
-                    <Link href={`events/${attendance.eventId}`}>
+                    <a
+                      href={`events/${attendance.eventId}`}
+                      className="text-primaryColor"
+                    >
                       {attendance.eventName ?? "event"}
-                    </Link>
+                    </a>
                   </Table.Cell>
                   <Table.Cell>{attendance.checkinTime.slice(0, 10)}</Table.Cell>
                   <Table.Cell>

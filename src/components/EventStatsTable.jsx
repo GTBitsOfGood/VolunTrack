@@ -28,7 +28,9 @@ const EventStatsTable = ({ stats, isVolunteer }) => {
           stats.map((stat) => (
             <Table.Row key={stat._id}>
               <Table.Cell>
-                <Link href={`events/${stat._id}`}>{stat.title}</Link>
+                <a className="text-primaryColor" href={`events/${stat._id}`}>
+                  {stat.title}
+                </a>
               </Table.Cell>
               <Table.Cell>{stat.date.substring(0, 10)}</Table.Cell>
               <Table.Cell>

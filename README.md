@@ -1,30 +1,13 @@
-# Volunteer and Event Management Platform
-
-Refactor list:
-
-- route to correct eventmanager based on auth level
-- figure out a way to make helpers consistent
-- see if anything bled through when converting App.jsx to \_app.jsx
-  - make \_app.jsx handle less logic.
-- break up actions/queries.js into multple files
-- readd validation back into server actions using next-connect and express-validator
-- I think splash is a weird component to have, just have all of that logic be handled inside of the index page or promote splash to its own screens folder.
-- put auth back into this application, the files and api routes exist but nothing is filled in properly.
-- settings is wrong
-
-migration list:
-
-- make the api best practices because it seems pretty all over the place
-  - add some type of api documentation/swagger or whatever
-- use ssr in place of useeffect (use isomorphic unfetch in this case)
-- follow the lint conventions
-  - there are no prop types for anything
+![image info](./public/images/voluntrack.svg)
+### A Volunteer and Event Management Platform for Nonprofits
 
 ## Stack
 
 - React.js: Front-end
 - Next.js: API routes and server-side rendering
 - MongoDB: Permanently storing info
+- MailerSend: Transaction emails (forgot password, reg confirmation, etc.)
+- Netlify: Deployment and preview envs
 - eslint: Automatically identifying and fixing code errors
 - prettier: Setting a common code style and fixing any issues. If you would like to adjust any prettier settings like quote style or include semicolons, look in `.prettierrc`
 - yarn: Package management. If you do not have yarn, run `npm install -g yarn` to install yarn globally.
@@ -64,12 +47,12 @@ A running instance of MongoDB is required this project.
 - It's very helpful to install MongoDB Compass to see your database contents
 
 ### Node
+Make sure you use Node 16. You can check your node version by running `node -v`.
 
-1. Clone this project to your computer
-2. Navigate to this project in terminal and enter `yarn`
-3. Rename `example.env` to `.env` and fill it out with the dev config
+## Running
 
-## Run With Docker (Preferred)
+
+### Run With Docker (Preferred)
 
 1. Install [Docker](https://docs.docker.com/engine/install/)
 2. Start the application with Docker Compose: `docker compose up`
@@ -81,8 +64,6 @@ The Dockerized application will have live-reloading of changes made on the host 
 Note: On linux-based operating systems, if you come across an entrypoint permission error (i.e. `process: exec: "./entrypoint.sh": permission denied: unknown`), run `chmod +x ./entrypoint.sh` to make the shell file an executable.
 
 Windows Users: If you come across this error `exec ./entrypoint.sh: no such file or directory` when running the docker compose command, please follow this [Stackoverflow thread](https://stackoverflow.com/questions/40452508/docker-error-on-an-entrypoint-script-no-such-file-or-directory) to fix it.
-
-## Running
 
 ### Development
 
@@ -97,28 +78,10 @@ To understand this code better, read the [Code Tour](/CODETOUR.md).
 2. Run `yarn install`
 3. Run `yarn start`
 
-## Other Info
-
-Adding a success pop-up to any new actions
-
-1. Add imports\
-   `import { useContext } from "react";`\
-   `import { RequestContext } from "../../../providers/RequestProvider";` (adjust path accordingly)
-2. Define the context\
-   `const context = useContext(RequestContext);`
-3. Create a context success instance and display your message\
-    `context.startLoading();`\
-    `context.success("<Insert Success Message Here>");`\
-   NOTE: If doing this in a class component, define context as a prop and send this information in where you call the class. See [Profile](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/Profile.jsx) and [ProfileForm](https://github.com/GTBitsOfGood/helping-mamas/blob/dev/src/screens/Profile/ProfileTable.jsx) for examples.
-
 ### Styling
 
 - By default, this repository uses Next `^9.2.0` for styles, which includes native support for global CSS and CSS modules
 - However, this version only allows global css to be in `pages/_app.js`, which can cause issues with external packages
 - If you face this error, the solution is installing [`@zeit/next-css` and adding it to `next.config.js`](https://github.com/zeit/next-plugins/tree/master/packages/next-css), however you cannot use css modules and global css together with this package (and it defaults to global).
 
-### Deployment
-
-Follow this guide here: https://www.notion.so/gtbitsofgood/General-Deployment-Pointers-Vercel-763e769ef0074ff8b12c85c3d4809ba9
-
-
+![image info](./public/images/bog.svg)

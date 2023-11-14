@@ -20,7 +20,14 @@ const Styled = {
   `,
 };
 
-const EventEditModal = ({ open, toggle, event, setEvent, regCount }) => {
+const EventEditModal = ({
+  open,
+  toggle,
+  event,
+  setEvent,
+  regCount,
+  setEventEdit,
+}) => {
   return (
     <Modal isOpen={open} toggle={toggle} size="xl">
       <Styled.ModalHeader toggle={toggle} />
@@ -35,6 +42,7 @@ const EventEditModal = ({ open, toggle, event, setEvent, regCount }) => {
         isGroupEvent={event?.orgName !== "" && event?.orgName != null}
         setEvent={setEvent}
         regCount={regCount}
+        setEventEdit={setEventEdit}
       />
     </Modal>
   );
@@ -44,6 +52,7 @@ EventEditModal.propTypes = {
   toggle: PropTypes.func.isRequired,
   event: PropTypes.object.isRequired,
   setEvent: PropTypes.func,
+  setEventEdit: PropTypes.func,
 };
 
 export default EventEditModal;
