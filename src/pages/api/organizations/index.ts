@@ -3,6 +3,7 @@ import dbConnect from "../../../../server/mongodb";
 import Organization, {
   organizationInputCreationValidator,
 } from "../../../../server/mongodb/models/Organization";
+import { sendOrganizationApplicationAlert } from "../../../utils/mailersend-email";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -19,6 +20,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       result.data.notificationEmail = result.data.originalAdminEmail;
       result.data.invitedAdmins = [result.data.originalAdminEmail];
+      await sendOrganizationApplicationAlert(
+        result.data.name,
+        result.data.website
+      );
       return res.status(201).json({
         organization: await Organization.create(result.data),
       });

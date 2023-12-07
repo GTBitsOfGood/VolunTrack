@@ -98,14 +98,7 @@ const LandingPage = () => {
                 Contact
               </a>
             </div>
-            <div className="flex flex-col items-end md:mr-24 md:flex-row md:items-center">
-              <button
-                onClick={goToLogin}
-                className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
-                type="button"
-              >
-                Login
-              </button>
+            <div className="flex flex-col items-end md:mr-24 md:flex-row md:flex-row-reverse md:items-center">
               <Button
                 onClick={goToCreateAcc}
                 className="ml-1 mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600"
@@ -116,6 +109,13 @@ const LandingPage = () => {
                   Create Volunteer Account
                 </span>
               </Button>
+              <button
+                onClick={goToLogin}
+                className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
+                type="button"
+              >
+                Login
+              </button>
             </div>
           </div>
           <div className="flex h-5/6 flex-col items-stretch justify-around md:flex-row">

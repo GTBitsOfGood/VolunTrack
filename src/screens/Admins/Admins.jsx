@@ -155,14 +155,12 @@ class Admins extends React.Component {
     return (
       <div className="relative left-[10%] flex h-full w-full flex-col justify-center pt-4">
         <Styled.Row>
-          <div className="text-4xl font-bold not-italic text-black">
-            Employees
-          </div>
+          <div className="text-4xl font-bold not-italic text-black">Admins</div>
         </Styled.Row>
         <Styled.Row>
           <Styled.Col>
             <SearchBar
-              placeholder="Search by Employee Name or Email"
+              placeholder="Search by Admin Name or Email"
               value={this.state.searchValue}
               onChange={(e) => this.setState({ searchValue: e.target.value })}
             />
