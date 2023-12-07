@@ -59,10 +59,7 @@ export const deleteUser = (userId: Types.ObjectId) =>
 export const sendResetPasswordEmail = (
   emailParam: string,
   isCheckedIn: boolean
-) =>
-  axios.post(`/api/auth/resetPassword?${emailParam}`,
-  { isCheckedIn }
-);
+) => axios.post(`/api/auth/resetPassword?${emailParam}`, { isCheckedIn });
 
 export const deleteResetCode = (code: string, userId: string) =>
   axios.delete(`/api/auth/resetPassword?code=${code}&userId=${userId}`);

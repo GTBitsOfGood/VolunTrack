@@ -21,8 +21,7 @@ export default async function handler(req, res) {
 
     // we should probably send a different template for the day of check in users
     // they could sign in with Google for instance and don't necessarily need to create a password
-    if (!isCheckedIn)
-      await sendResetCodeEmail(existingUser, email, code, isCheckedIn);
+    await sendResetCodeEmail(existingUser, email, code, isCheckedIn);
 
     res.status(200).json({ message: "Email Sent" });
   } else if (req.method === "GET") {

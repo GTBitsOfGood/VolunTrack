@@ -30,7 +30,8 @@ const AuthPage = (props) => {
     const email = document.getElementById("email1").value;
 
     const response = await sendResetPasswordEmail(
-      stringify({ email: email }), false
+      stringify({ email: email }),
+      false
     ).catch((error) => {
       if (error.response.status !== 200) {
         alert(`Error sending email to ${email}.`);
