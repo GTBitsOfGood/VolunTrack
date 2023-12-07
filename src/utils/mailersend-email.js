@@ -46,9 +46,17 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
 };
 
 export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
-  const BoGRecipient = { firstName: "Bits of Good", lastName: "Administration", email:"hello@bitsofgood.org" }
-  const H4IRecipient = { firstName: "GT Hack 4 Impact", lastName: "Non-Profit Partnership", email:"gt.nonprofit_partnership@hack4impact.org" }
-  const volunTrackOrganization = { name: "VolunTrack" }
+  const BoGRecipient = {
+    firstName: "Bits of Good",
+    lastName: "Administration",
+    email: "hello@bitsofgood.org",
+  };
+  const H4IRecipient = {
+    firstName: "GT Hack 4 Impact",
+    lastName: "Non-Profit Partnership",
+    email: "gt.nonprofit_partnership@hack4impact.org",
+  };
+  const volunTrackOrganization = { name: "VolunTrack" };
   const personalization = [
     {
       email: BoGRecipient.email,
@@ -93,7 +101,7 @@ export const sendResetCodeEmail = async (user, email, code, checkedIn) => {
     organization,
     personalization,
     checkedIn ? `Complete VolunTrack Registration` : `Password Reset Request`,
-    "x2p03479p5pgzdrn",
+    "x2p03479p5pgzdrn"
   );
 };
 
@@ -138,21 +146,25 @@ const sendEmail = async (
   personalization,
   subject,
   template = "vywj2lpov8p47oqz",
-  notify = true,
+  notifyNonprofit = true
 ) => {
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
   const recipients = [];
   for (let user in users) {
-    recipients.push(new Recipient(user.email, `${user.firstName} ${user.lastName}`));
+    recipients.push(
+      new Recipient(user.email, `${user.firstName} ${user.lastName}`)
+    );
   }
   const emailParams = new EmailParams()
     .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
-    .setBcc(notify ? [new Recipient(organization.notificationEmail)] : [])
+    .setBcc(
+      notifyNonprofit ? [new Recipient(organization.notificationEmail)] : []
+    )
     .setTemplateId(template)
     .setPersonalization(personalization);
 
