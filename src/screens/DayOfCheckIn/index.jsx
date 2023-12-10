@@ -8,6 +8,7 @@ import { createUserFromCheckIn, getEvent } from "../../queries/events";
 import { Button, Label } from "flowbite-react";
 import Text from "../../components/Text";
 import { FormGroup, Input } from "reactstrap";
+import { sendResetPasswordEmail } from "../../queries/users";
 
 const DayOfCheckin = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const DayOfCheckin = () => {
     onRefresh();
   }, []);
 
-  const checkIn = (values) => {
+  const checkIn = async (values) => {
     const createUserVals = {
       firstName: values.firstName,
       lastName: values.lastName,
@@ -42,9 +43,14 @@ const DayOfCheckin = () => {
       organizationId: event.organizationId,
     };
 
-    createUserFromCheckIn(eventId, createUserVals, event.title).then(() => {
-      router.replace("/login");
-    });
+    createUserFromCheckIn(eventId, createUserVals, event.title).then(
+      async (result) => {
+        if (result.createdUser) {
+          await sendResetPasswordEmail(createUserVals.email, true);
+        }
+        router.replace("/login");
+      }
+    );
   };
 
   const changeAgreement = () => {

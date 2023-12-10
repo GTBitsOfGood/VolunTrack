@@ -21,6 +21,7 @@ const AttendanceFunctionality = ({
   checkIn,
   checkOut,
   isEnded,
+  deleteOnClick,
 }) => (
   <>
     <Styled.InfoText className="font-bold text-black">Check-In</Styled.InfoText>
@@ -33,11 +34,15 @@ const AttendanceFunctionality = ({
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
           <Table.HeadCell>Phone</Table.HeadCell>
+          <Table.HeadCell># Minors</Table.HeadCell>
+          <Table.HeadCell>
+            <span className="sr-only">Actions</span>
+          </Table.HeadCell>
           {/*<Table.HeadCell>Status</Table.HeadCell>*/}
         </Table.Head>
         <Table.Body className="divide-y">
           {waitingVolunteers?.length > 0 &&
-            waitingVolunteers.map((volunteer) => (
+            waitingVolunteers.map((volunteer, index) => (
               <Volunteer
                 key={volunteer._id}
                 volunteer={volunteer}
@@ -45,6 +50,7 @@ const AttendanceFunctionality = ({
                 onClick={checkIn}
                 checkInStatus={"waiting"}
                 isEnded={isEnded}
+                deleteOnClick={() => deleteOnClick(index)}
               />
             ))}
         </Table.Body>
@@ -70,6 +76,7 @@ const AttendanceFunctionality = ({
           <Table.HeadCell>Name</Table.HeadCell>
           <Table.HeadCell>Email</Table.HeadCell>
           <Table.HeadCell>Phone</Table.HeadCell>
+          <Table.HeadCell># Minors</Table.HeadCell>
           {/*<Table.HeadCell>Status</Table.HeadCell>*/}
         </Table.Head>
         <Table.Body className="divide-y">

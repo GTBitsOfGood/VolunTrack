@@ -13,6 +13,11 @@ import { getEvent, updateEvent } from "../../../../queries/events";
 import { getUsers } from "../../../../queries/users";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import AttendanceFunctionality from "./AttendanceFunctionality";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  deleteRegistration,
+  getRegistrations,
+} from "../../../../queries/registrations";
 
 const Styled = {
   Container: styled.div`
@@ -40,12 +45,16 @@ const EventAttendance = () => {
 
   const [event, setEvent] = useState({});
   const [minors, setMinors] = useState({});
+  const [registrationIds, setRegistrationIds] = useState({});
 
   const [searchValue, setSearchValue] = useState("");
 
   const [waitingVolunteers, setWaitingVolunteers] = useState([]);
   const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
   const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
+
+  const [deleteIndex, setDeleteIndex] = useState(-1);
+  const [isDeleting, setDeleting] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -76,11 +85,21 @@ const EventAttendance = () => {
           "checkedOut"
         )
       ).data.users;
+      const registrations = (await getRegistrations({ eventId })).data
+        .registrations;
+
+      const minors = {};
+      const registrationIds = {};
+      registrations.forEach((registration) => {
+        minors[registration.userId] = registration.minors;
+        registrationIds[registration.userId] = registration._id;
+      });
 
       setWaitingVolunteers(waitingUsers);
-      console.log(waitingUsers);
       setCheckedInVolunteers(checkedInUsers);
       setCheckedOutVolunteers(checkedOutUsers);
+      setMinors(minors);
+      setRegistrationIds(registrationIds);
     })();
   }, []);
 
@@ -156,6 +175,26 @@ const EventAttendance = () => {
     }
     hours = ((hours + 11) % 12) + 1;
     return hours.toString() + ":" + min + suffix;
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteIndex(-1);
+  };
+
+  const deleteOnClick = (index) => {
+    setDeleteIndex(index);
+  };
+
+  const deleteConfirmOnClick = async () => {
+    setDeleting(true);
+    await deleteRegistration(
+      registrationIds[waitingVolunteers[deleteIndex]._id]
+    );
+    setDeleting(false);
+    setWaitingVolunteers(
+      waitingVolunteers.filter((volunteer, index) => index !== deleteIndex)
+    );
+    closeDeleteModal();
   };
 
   return (
@@ -235,8 +274,40 @@ const EventAttendance = () => {
             checkIn={checkIn}
             checkOut={checkOut}
             isEnded={event?.isEnded}
+            deleteOnClick={deleteOnClick}
           />
         </div>
+
+        <Modal
+          isOpen={deleteIndex >= 0}
+          toggle={closeDeleteModal}
+          backdrop="static"
+        >
+          <ModalHeader toggle={closeDeleteModal}>
+            Delete {waitingVolunteers[deleteIndex]?.firstName}{" "}
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            {waitingVolunteers[deleteIndex]?.lastName}'s Registration
+          </ModalHeader>
+          <ModalBody>
+            Are you sure you want to delete{" "}
+            {waitingVolunteers[deleteIndex]?.firstName}{" "}
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            {waitingVolunteers[deleteIndex]?.lastName}'s registration?{" "}
+            <span className="font-bold">This cannot be undone.</span>
+          </ModalBody>
+          <ModalFooter>
+            <BoGButton
+              text="Cancel"
+              onClick={closeDeleteModal}
+              outline={true}
+            />
+            <BoGButton
+              text="Delete"
+              onClick={deleteConfirmOnClick}
+              disabled={isDeleting}
+            />
+          </ModalFooter>
+        </Modal>
       </Styled.Container>
       {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
     </>

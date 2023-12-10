@@ -45,8 +45,20 @@ const LandingPage = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="h-fit bg-cover bg-center bg-no-repeat md:bg-[url('/images/background-art.png')]">
-        <div className="flex h-fit flex-col justify-between md:min-h-screen">
+      <div className="relative h-fit">
+        <img
+          src="/images/right-purple.svg"
+          className="absolute right-2 top-2/3 scale-125"
+        />
+        <img
+          src="/images/left-purple.svg"
+          className="absolute left-0 top-1/3 -z-10 scale-150"
+        />
+        <img
+          src="/images/left-purple.svg"
+          className="absolute -top-44 right-28 -z-10 rotate-90 scale-50 md:scale-75"
+        />
+        <div className="flex h-fit flex-col md:min-h-screen">
           <div className="mb-8 ml-2 flex flex-row justify-between self-stretch pb-4 pt-6 md:pl-14">
             <div className="lg:ml-6">
               <a href="/" className="flex">
@@ -86,26 +98,31 @@ const LandingPage = () => {
                 Contact
               </a>
             </div>
-            <div className="flex flex-col items-end md:mr-24 md:flex-row md:items-center">
+            <div className="flex flex-col items-end md:mr-24 md:flex-row md:flex-row-reverse md:items-center">
+              <Button
+                onClick={goToCreateAcc}
+                className="ml-1 mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600"
+                size="sm"
+                type="button"
+              >
+                <span className="-mx-2 flex items-center md:mx-0">
+                  Create Volunteer Account
+                </span>
+              </Button>
               <button
                 onClick={goToLogin}
-                className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
+                className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
                 type="button"
               >
                 Login
               </button>
-              <Button
-                onClick={goToCreateAcc}
-                className="mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600"
-                size="sm"
-                type="button"
-              >
-                Create Volunteer Account
-              </Button>
             </div>
           </div>
           <div className="flex h-5/6 flex-col items-stretch justify-around md:flex-row">
-            <div className="flex w-full flex-col px-1 pt-4 md:w-5/12">
+            <div
+              className="flex w-full flex-col px-1 pt-4 md:w-5/12"
+              id="nonprofit-form"
+            >
               <p className="w-fit self-center border-b-4 border-purple-700 text-center text-4xl">
                 Simplify Volunteer Coordination
               </p>
@@ -364,7 +381,7 @@ const LandingPage = () => {
             <div className="flex h-full flex-col self-stretch p-4 md:w-[33rem] md:p-0">
               <img
                 src={"/images/admin-home-page.png"}
-                className="h-full rounded-md shadow-lg"
+                className="z-10 h-full rounded-md shadow-lg"
                 alt="admin home page"
               />
             </div>
@@ -376,23 +393,38 @@ const LandingPage = () => {
           id="product"
           key={index}
           className={
-            "flex flex-col items-center [text-align:center] md:min-h-screen " + // workaround to prevent bootstrap conflict
+            "flex flex-col items-center text-left " +
             (index % 2 === 1
-              ? "bg-white md:flex-row md:text-left"
-              : "bg-purple-100 md:flex-row-reverse md:text-right")
+              ? "bg-white md:flex-row lg:mx-16 xl:mx-24 2xl:mx-36"
+              : "bg-purple-100 md:flex-row-reverse")
           }
         >
-          <div className="mt-20 flex-1 px-20 py-16 md:mt-0">
-            <h1 className="mb-4 font-semibold text-purple-700">
+          <div className="flex-1 px-4 pb-2 pt-8 md:px-20 md:py-16">
+            <h1 className="mb-4 max-w-xl font-semibold text-purple-700">
               {feature.title}
             </h1>
-            <p>{feature.description}</p>
+            <p className="mb-0 max-w-xl">{feature.description}</p>
           </div>
-          <div className="m-16 flex flex-1 items-center justify-center">
+          <div className="m-2 flex flex-1 items-center justify-center">
             <img className="max-h-full max-w-full" src={feature.imageUrl} />
           </div>
         </section>
       ))}
+      <div className="flex flex-col justify-center bg-purple-100 px-4 py-8 text-center md:px-20 md:py-16">
+        <h1 className="mb-4 text-2xl font-semibold text-purple-700">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
+          Ready to elevate your nonprofit's event and volunteer management?
+        </h1>
+        <a href="#nonprofit-form" className="mx-auto max-w-max no-underline">
+          <Button
+            className="bg-purple-700 align-middle hover:bg-purple-600"
+            size="sm"
+            type="button"
+          >
+            Apply to VolunTrack!
+          </Button>
+        </a>
+      </div>
       <AppFooter />
     </div>
   );

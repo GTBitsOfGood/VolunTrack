@@ -21,6 +21,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = userInputServerValidator.partial().safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
 
+      if (result.data.password) {
+        result.data.passwordHash = await hash(
+          `${user.email}${result.data.password}`,
+          10
+        );
+      }
+
       await user.updateOne(result.data);
       return res.status(200).json({ user });
     }

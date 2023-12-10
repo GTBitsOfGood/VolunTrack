@@ -1,8 +1,7 @@
 import { Table, Tooltip } from "flowbite-react";
 import PropTypes from "prop-types";
 import React from "react";
-import { Button, Modal, ModalHeader } from "reactstrap";
-import styled from "styled-components";
+import { Modal, ModalHeader } from "reactstrap";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/PaginationComp";
 import EditUserForm from "../../components/Forms/EditUserForm";
@@ -12,7 +11,6 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import router from "next/router";
-// import { Icon } from "../../components/Icon";
 
 class VolunteerTable extends React.Component {
   constructor(props) {

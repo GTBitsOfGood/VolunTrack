@@ -1,6 +1,7 @@
 import "flowbite-react";
-import { Table } from "flowbite-react";
+import { Table, Tooltip } from "flowbite-react";
 import BoGButton from "../../../../components/BoGButton";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 // const Volunteer = ({
 //   volunteer,
@@ -22,6 +23,7 @@ const Volunteer = ({
   isCheckedIn,
   isEnded,
   checkInStatus,
+  deleteOnClick,
 }) => {
   const renderButton = () => {
     if (checkInStatus === "waiting")
@@ -54,10 +56,20 @@ const Volunteer = ({
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone}</Table.Cell>
+          <Table.Cell>{minors?.length || 0}</Table.Cell>
           {/*<Table.Cell>*/}
           {/*  {" "}*/}
           {/*   {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
           {/*</Table.Cell>*/}
+          {checkInStatus === "waiting" && (
+            <Table.Cell>
+              <Tooltip content="Delete Registration" style="light">
+                <button onClick={deleteOnClick}>
+                  <TrashIcon className="h-8 text-primaryColor" />
+                </button>
+              </Tooltip>
+            </Table.Cell>
+          )}
         </Table.Row>
       ) : (
         <Table.Row className="bg-white">
@@ -67,10 +79,20 @@ const Volunteer = ({
           </Table.Cell>
           <Table.Cell>{volunteer.email}</Table.Cell>
           <Table.Cell>{volunteer.phone}</Table.Cell>
+          <Table.Cell>{minors?.length || 0}</Table.Cell>
           {/*<Table.Cell>*/}
           {/*  {" "}*/}
           {/*   {isCheckedIn ? "Time Placement" : "Waiting to Check-In"} */}
           {/*</Table.Cell>*/}
+          {checkInStatus === "waiting" && (
+            <Table.Cell>
+              <Tooltip content="Delete Registration" style="light">
+                <button onClick={deleteOnClick}>
+                  <TrashIcon className="h-8 text-primaryColor" />
+                </button>
+              </Tooltip>
+            </Table.Cell>
+          )}
         </Table.Row>
       )}
     </>

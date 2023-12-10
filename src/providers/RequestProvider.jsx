@@ -25,7 +25,6 @@ const Container = styled.div`
     align-items: center;
     border-radius: 0.5rem;
     margin: auto;
-    max-width: 30rem;
     transition: max-width 0.2s;
 
     p {

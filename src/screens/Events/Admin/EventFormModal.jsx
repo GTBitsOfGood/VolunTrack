@@ -47,6 +47,7 @@ const EventFormModal = ({
   isGroupEvent,
   setEvent,
   regCount,
+  setEventEdit,
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
@@ -101,6 +102,17 @@ const EventFormModal = ({
       event.eventParent = values.eventParent;
       setEvent(event);
     }
+    if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
+      setEventEdit(
+        `Registered volunteers have been successfully notified about your edit to the ${event?.eventParent?.title} event!`
+      );
+    } else if (sendConfirmationEmail && setEventEdit) {
+      setEventEdit(
+        "Registered volunteers have been successfully notified about your event edit!"
+      );
+    }
+    setSendConfirmationEmail(false);
+    // setEventEdit(null);
     toggle();
   };
 
@@ -337,9 +349,11 @@ const EventFormModal = ({
                           style={{
                             marginLeft: "0.5rem",
                             padding: "5px",
+                            fontWeight: "bold",
+                            color: "gray",
                           }}
                         >
-                          <SForm.Label>Organization Information</SForm.Label>
+                          Organization Information
                         </Row>
                         <div
                           style={{
@@ -398,13 +412,12 @@ const EventFormModal = ({
                           </Row>
                           <Row
                             style={{
-                              padding: "5px",
+                              marginLeft: "-0.7rem",
                               fontWeight: "bold",
                               color: "gray",
                             }}
                           >
-                            <Styled.Col>Point of Contact</Styled.Col>
-                            &nbsp;
+                            Point of Contact
                           </Row>
                           <Row>
                             <Styled.Col>
@@ -517,6 +530,7 @@ EventFormModal.propTypes = {
   toggle: PropTypes.func.isRequired,
   isGroupEvent: PropTypes.bool.isRequired,
   setEvent: PropTypes.func.isRequired,
+  setEventEdit: PropTypes.func,
 };
 
 export default EventFormModal;

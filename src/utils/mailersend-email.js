@@ -15,7 +15,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
     {
       email: user.email,
       data: {
-        header: `Your Registration is Confirmed for ${event.eventParent.title}`,
+        header: `Your Registration is confirmed for`,
         introLine: `Thanks for registering for ${event.eventParent.title}! Please review the event details below.`,
         eventTitle: event.eventParent.title,
         volunteerName: user.firstName,
@@ -38,14 +38,46 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   ];
 
   sendEmail(
-    user,
+    [user],
     organization,
     personalization,
     `Registration Confirmed for ${event.eventParent.title}`
   );
 };
 
-export const sendResetCodeEmail = async (user, email, code) => {
+export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
+  const BoGRecipient = {
+    firstName: "Bits of Good",
+    lastName: "Administration",
+    email: "hello@bitsofgood.org",
+  };
+  const H4IRecipient = {
+    firstName: "GT Hack 4 Impact",
+    lastName: "Non-Profit Partnership",
+    email: "gt.nonprofit_partnership@hack4impact.org",
+  };
+  const volunTrackOrganization = { name: "VolunTrack" };
+  const personalization = [
+    {
+      email: BoGRecipient.email,
+      data: {
+        nonprofit: orgName,
+        website: orgWebsite,
+      },
+    },
+  ];
+
+  sendEmail(
+    [BoGRecipient, H4IRecipient],
+    volunTrackOrganization,
+    personalization,
+    `New NonProfit Application: ${orgName}`,
+    "jpzkmgqn2z1g059v",
+    false
+  );
+};
+
+export const sendResetCodeEmail = async (user, email, code, checkedIn) => {
   const organization = await Organization.findById(user.organizationId).lean();
 
   const personalization = [
@@ -65,10 +97,10 @@ export const sendResetCodeEmail = async (user, email, code) => {
   ];
 
   sendEmail(
-    user,
+    [user],
     organization,
     personalization,
-    `Password Reset Request`,
+    checkedIn ? `Complete VolunTrack Registration` : `Password Reset Request`,
     "x2p03479p5pgzdrn"
   );
 };
@@ -80,7 +112,7 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
     {
       email: user.email,
       data: {
-        header: `${organization.name} edited ${eventParent.title}`,
+        header: `${organization.name} edited`,
         introLine: `It looks like an admin at ${organization.name} edited ${eventParent.title}! 
         Please review the event details below and ensure they still work with your schedule.`,
         eventTitle: eventParent.title,
@@ -100,7 +132,7 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
     },
   ];
   sendEmail(
-    user,
+    [user],
     organization,
     personalization,
     `${eventParent.title} has been updated`
@@ -109,26 +141,30 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
 
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
 const sendEmail = async (
-  user,
+  users,
   organization,
   personalization,
   subject,
-  template = "vywj2lpov8p47oqz"
+  template = "vywj2lpov8p47oqz",
+  notifyNonprofit = true
 ) => {
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
-
-  const recipients = [
-    new Recipient(user.email, `${user.firstName} ${user.lastName}`),
-  ];
-
+  const recipients = [];
+  for (let user in users) {
+    recipients.push(
+      new Recipient(user.email, `${user.firstName} ${user.lastName}`)
+    );
+  }
   const emailParams = new EmailParams()
     .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change
     .setFromName(organization.name)
     .setRecipients(recipients)
     .setSubject(subject)
-    .setBcc([new Recipient(organization.notificationEmail)])
+    .setBcc(
+      notifyNonprofit ? [new Recipient(organization.notificationEmail)] : []
+    )
     .setTemplateId(template)
     .setPersonalization(personalization);
 
