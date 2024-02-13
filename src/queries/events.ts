@@ -52,7 +52,7 @@ export const createChildEvent = (eventInput: EventInputClient) =>
 export const updateEvent = (
   eventId: Types.ObjectId,
   eventPopulatedInput: Partial<EventPopulatedInputClient>,
-  allRecurrence: Boolean,
+  allRecurrence: boolean,
   sendConfirmationEmail = true
 ) =>
   axios.put<{

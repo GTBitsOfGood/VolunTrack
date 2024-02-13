@@ -68,7 +68,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             .status(400)
             .json({ error: "User session not found to create event" });
         const eventParent = await EventParent.create(result.data.eventParent);
-        
+
         // creates first event
         const event = await Event.create({
           date: result.data.date,
@@ -79,13 +79,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           eventParent.recurrenceEndDate
         ) {
           //since we already created this event for the day we can increment this.
-          let currDate = event.date;
+          const currDate = event.date;
           currDate.setDate(currDate.getDate() + 1);
           const recurrence = eventParent.isRecurring;
-          let recurringEvents = [];
+          const recurringEvents = [];
           while (currDate < eventParent.recurrenceEndDate) {
             for (let i = currDate.getDay(); i < recurrence.length; i++) {
-              if (recurrence[i] === true) {
+              if (recurrence[i]) {
                 const recurringEvent = await Event.create({
                   date: result.data.date,
                   eventParent: eventParent._id,
