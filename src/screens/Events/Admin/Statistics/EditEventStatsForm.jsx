@@ -46,10 +46,6 @@ const EditEventStatsForm = ({ toggle, stat }) => {
     const editedStat = {
       ...attendance,
     };
-    console.log(values);
-    console.log("________");
-    console.log(editedStat);
-    console.log("________");
     editedStat.checkinTime = new Date(
       new Date(
         new Date(editedStat.checkinTime) -
@@ -58,7 +54,9 @@ const EditEventStatsForm = ({ toggle, stat }) => {
         .toISOString()
         .slice(0, 11) + values.checkin
     ).toISOString();
-    const checkoutDate = editedStat.checkoutTime ? editedStat.checkoutTime : editedStat.checkinTime;
+    const checkoutDate = editedStat.checkoutTime
+      ? editedStat.checkoutTime
+      : editedStat.checkinTime;
     editedStat.checkoutTime = new Date(
       new Date(
         new Date(checkoutDate) -
@@ -68,7 +66,6 @@ const EditEventStatsForm = ({ toggle, stat }) => {
         .slice(0, 11) + values.checkout
     ).toISOString();
     setSubmitting(true);
-    console.log(editedStat);
     updateAttendance(stat._id, editedStat).then((response) => {
       setAttendance(response.data.attendance);
     });
