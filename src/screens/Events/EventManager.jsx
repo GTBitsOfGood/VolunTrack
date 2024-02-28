@@ -199,7 +199,11 @@ const EventManager = ({ isHomePage }) => {
       setFilteredEvents(events.filter((event) => event.eventParent.isPrivate));
     } else if (value === "All Events") {
       setFilterOn(true);
-      setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate || event.eventParent.isPrivate));
+      setFilteredEvents(
+        events.filter(
+          (event) => !event.eventParent.isPrivate || event.eventParent.isPrivate
+        )
+      );
     }
   };
 
@@ -270,15 +274,14 @@ const EventManager = ({ isHomePage }) => {
             ) : (
               <div className="h-16" />
             )}
-            {(loading === true) ? (
-               <div className="mt-8">
-               <Text
-                 text={"Loading..."}
-                 type="subheader"
-               />
-               </div>
-            ): (<div className="mt-8"/>) }
-            {(filteredEvents.length === 0 && loading === false) ? (
+            {loading === true ? (
+              <div className="mt-8">
+                <Text text={"Loading..."} type="subheader" />
+              </div>
+            ) : (
+              <div className="mt-8" />
+            )}
+            {filteredEvents.length === 0 && loading === false ? (
               <div className="mt-8">
                 <Text
                   text={"No Events Scheduled on " + dateString}
