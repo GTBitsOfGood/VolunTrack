@@ -54,11 +54,11 @@ const EditEventStatsForm = ({ toggle, stat }) => {
         .toISOString()
         .slice(0, 11) + values.checkin
     ).toISOString();
+    const checkoutDate = editedStat.checkoutTime
+      ? editedStat.checkoutTime
+      : editedStat.checkinTime;
     editedStat.checkoutTime = new Date(
-      new Date(
-        new Date(editedStat.checkoutTime) -
-          new Date().getTimezoneOffset() * 60_000
-      )
+      new Date(new Date(checkoutDate) - new Date().getTimezoneOffset() * 60_000)
         .toISOString()
         .slice(0, 11) + values.checkout
     ).toISOString();
