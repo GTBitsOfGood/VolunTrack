@@ -13,7 +13,7 @@ const Styled = {
     .org-event {
       color: ${variables["input-color"]};
       border-bottom: 2px solid #e9e9e9;
-      padding-right: 3.5rem;
+      padding-right: 5rem;
       padding-left: 3.5rem;
       display: inline;
     }
@@ -40,16 +40,15 @@ const EventCreateModal = ({ open, toggle }) => {
 
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
-      <Styled.ModalHeader toggle={toggle}> </Styled.ModalHeader>
-        <Tabs.Group aria-label="Default tabs" style="default">
-          <Tabs.Item active title="Public Event">
-            <EventFormModal toggle={toggle} event={null} isGroupEvent={false} />
-          </Tabs.Item>
-          <Tabs.Item title="Private Group Event">
-            <EventFormModal toggle={toggle} event={null} isGroupEvent={true} />
-          </Tabs.Item>
-        </Tabs.Group>
-     
+      <Styled.ModalHeader toggle={toggle}>Create an Event</Styled.ModalHeader>
+      <Tabs.Group aria-label="Default tabs" style="default">
+        <Tabs.Item active title="Public Event">
+          <EventFormModal toggle={toggle} event={null} isGroupEvent={false} />
+        </Tabs.Item>
+        <Tabs.Item title="Private Group Event">
+          <EventFormModal toggle={toggle} event={null} isGroupEvent={true} />
+        </Tabs.Item>
+      </Tabs.Group>
     </Modal>
   );
 };
