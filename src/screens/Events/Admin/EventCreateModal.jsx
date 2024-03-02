@@ -5,6 +5,7 @@ import { Modal, ModalHeader, Nav, NavItem, NavLink } from "reactstrap";
 import styled from "styled-components";
 import variables from "../../../design-tokens/_variables.module.scss";
 import EventFormModal from "./EventFormModal";
+import { Tabs } from "flowbite-react";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -39,47 +40,20 @@ const EventCreateModal = ({ open, toggle }) => {
 
   return (
     <Modal isOpen={open} toggle={toggle} backdrop="static" size="xl">
-      <Styled.ModalHeader toggle={toggle}></Styled.ModalHeader>
-      <Styled.Nav tabs>
-        <NavItem>
-          <NavLink
-            className={classnames({
-              active: currentActiveTab === "1",
-            })}
-            onClick={() => {
-              changeTab("1");
-            }}
-          >
-            {" "}
-            <Styled.HeaderText>
-              <p className="text-primaryColor">Public Event</p>
-            </Styled.HeaderText>
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            className={classnames({
-              active: currentActiveTab === "2",
-            })}
-            onClick={() => {
-              changeTab("2");
-            }}
-          >
-            {" "}
-            <Styled.HeaderText>
-              <p className="text-primaryColor">Private Group Event</p>
-            </Styled.HeaderText>
-          </NavLink>
-        </NavItem>
-      </Styled.Nav>
-      <EventFormModal
-        toggle={toggle}
-        event={null}
-        isGroupEvent={currentActiveTab === "2"}
-      />
+      <Styled.ModalHeader toggle={toggle}> </Styled.ModalHeader>
+        <Tabs.Group aria-label="Default tabs" style="default">
+          <Tabs.Item active title="Public Event">
+            <EventFormModal toggle={toggle} event={null} isGroupEvent={false} />
+          </Tabs.Item>
+          <Tabs.Item title="Private Group Event">
+            <EventFormModal toggle={toggle} event={null} isGroupEvent={true} />
+          </Tabs.Item>
+        </Tabs.Group>
+     
     </Modal>
   );
 };
+
 EventCreateModal.propTypes = {
   open: PropTypes.bool,
   toggle: PropTypes.func,
