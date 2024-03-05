@@ -79,16 +79,14 @@ const StatDisplay = ({ userId }) => {
           text={name + " Volunteer Statistics"}
           type="header"
         />
-        <div className="my-2 flex w-full flex-col justify-between md:w-auto md:flex-row">
+        <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
           <ProgressDisplay
-            className="md:ml-18 mb-8 md:mb-0 md:mr-8"
             type="Events"
             attendance={attendance}
             header="Events Attended"
             medalDefaults={session.medalDefaults}
           />
           <ProgressDisplay
-            className="md:ml-18 md:mr-8"
             type="Hours"
             attendance={attendance}
             header="Hours Earned"
