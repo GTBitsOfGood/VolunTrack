@@ -52,7 +52,7 @@ export const createChildEvent = (eventInput: EventInputClient) =>
 export const updateEvent = (
   eventId: Types.ObjectId,
   eventPopulatedInput: Partial<EventPopulatedInputClient>,
-  allRecurrence: boolean,
+  editAllRecurrences: boolean,
   sendConfirmationEmail = true
 ) =>
   axios.put<{
@@ -60,7 +60,7 @@ export const updateEvent = (
     error?: ZodError | string;
   }>(`/api/events/${eventId.toString()}`, {
     eventPopulatedInput,
-    allRecurrence,
+    editAllRecurrences,
     sendConfirmationEmail,
   });
 

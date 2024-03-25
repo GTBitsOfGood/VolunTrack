@@ -237,6 +237,7 @@ const EventFormModal = ({
             : null,
         },
       }}
+
       onSubmit={(values, { setSubmitting }) => {
         containsExistingEvent(event)
           ? onSubmitEditEvent(values, setSubmitting)
@@ -321,6 +322,9 @@ const EventFormModal = ({
                           <InputField
                             label="Repeat Ends on"
                             isRequired={event?.eventParent?.isRecurring?.includes(true) ? true : false}
+                            disabled={containsExistingEvent(event) &&
+                              event?.eventParent?.isRecurring?.includes(true)
+                            }
                             name="eventParent.recurrenceEndDate"
                             type="date"
                           /> 
@@ -617,9 +621,10 @@ const EventFormModal = ({
                 text={submitText}
                 type="submit"
                 onClick={() => {
+                  console.log(event?.eventParent?.isRecurringString)
                   if (
                     containsExistingEvent(event) &&
-                    values.eventParent.isRecurring !== "Never"
+                    event?.eventParent?.isRecurring?.includes(true)
                   ) {
                     toggleRecurrenceModal();
                   } else {
