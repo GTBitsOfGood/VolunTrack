@@ -57,7 +57,7 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
     description: z.string().optional(),
     isRecurring: z.array(z.boolean()).optional(),
     isRecurringString: z.string().optional(),
-    recurrenceEndDate: z.coerce.date(),
+    recurrenceEndDate: z.coerce.date().optional(),
   });
 
 export const eventParentInputServerValidator = z.object({

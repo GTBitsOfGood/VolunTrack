@@ -103,6 +103,7 @@ const EventFormModal = ({
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
+    if (event)
 
     createEvent(event)
       .then(() => toggle())
@@ -233,7 +234,7 @@ const EventFormModal = ({
           isRecurringString: event?.eventParent?.isRecurringString ?? "",
           recurrenceEndDate: event?.eventParent?.recurrenceEndDate
             ? event.eventParent?.recurrenceEndDate.split("T")[0]
-            : formattedDate,
+            : null,
         },
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -319,10 +320,10 @@ const EventFormModal = ({
                           />
                           <InputField
                             label="Repeat Ends on"
-                            isRequired={false}
+                            isRequired={event?.eventParent?.isRecurring?.includes(true) ? true : false}
                             name="eventParent.recurrenceEndDate"
                             type="date"
-                          />
+                          /> 
                         </Styled.Col>
                         <Styled.Col>
                           <InputField
