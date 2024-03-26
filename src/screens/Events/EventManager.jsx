@@ -208,8 +208,9 @@ const EventManager = ({ isHomePage }) => {
   };
 
   const onEventDelete = (id) => {
-    setEvents(events.filter((event) => event._id !== id));
-    setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
+    // setEvents(events.filter((event) => event._id !== id));
+    // setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
+    onRefresh();
   };
 
   return (

@@ -11,7 +11,6 @@ export const eventInputClientValidator = z.object({
   eventParentId: z.instanceof(Types.ObjectId),
   isEnded: z.boolean().optional(),
 });
-
 export const eventPopulatedInputClientValidator = (minMaxVolunteers?: number) =>
   z.object({
     date: z.coerce.date(),

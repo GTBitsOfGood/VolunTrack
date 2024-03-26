@@ -78,7 +78,6 @@ const EventCard = (props) => {
     hours = ((hours + 11) % 12) + 1;
     return hours.toString() + ":" + min + suffix;
   };
-
   return (
     <div
       className={`mx-18 mb-2 flex flex-col ${

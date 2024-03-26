@@ -55,6 +55,9 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
       //.regex(/^[0-9]{5}$/, "orgZip must be a five-digit number")
       .optional(),
     description: z.string().optional(),
+    isRecurring: z.array(z.boolean()).optional(),
+    isRecurringString: z.string().optional(),
+    recurrenceEndDate: z.coerce.date().optional(),
   });
 
 export const eventParentInputServerValidator = z.object({
@@ -105,6 +108,9 @@ export const eventParentInputServerValidator = z.object({
     //.regex(/^[0-9]{5}$/, "orgZip must be a five-digit number")
     .optional(),
   description: z.string().optional(),
+  isRecurring: z.array(z.boolean()).optional(),
+  isRecurringString: z.string(),
+  recurrenceEndDate: z.coerce.date().optional(),
 });
 
 export type EventParentInputClient = z.infer<
