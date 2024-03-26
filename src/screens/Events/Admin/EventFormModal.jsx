@@ -144,6 +144,9 @@ const EventFormModal = ({
         "Registered volunteers have been successfully notified about your event edit!"
       );
     }
+    if (editAllRecurrences) {
+      window.location.reload();
+    }
     setSendConfirmationEmail(false);
     // setEventEdit(null);
     toggle();
