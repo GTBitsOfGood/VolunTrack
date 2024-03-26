@@ -47,23 +47,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const result = eventPopulatedInputServerValidator
           .partial()
           .safeParse(req.body?.eventPopulatedInput);
-        console.log(result)
         if (!result.success)
           return res.status(400).json({ error: result.error });
         if (!req.body?.editAllRecurrences) {
           const eventParent = await EventParent.create(result.data.eventParent);
-          await event.updateOne(
+          console.log(eventParent._id);
+          await Event.updateOne(
             { _id: eventId },
             { eventParent: eventParent._id }
-          );
+          ).then((result) => {
+            console.log(result);
+          });
         } else {
-          await eventParent.updateOne(result.data.eventParent);
+          await eventParent
+            .updateOne(result.data.eventParent)
+            .then((result) => {
+              console.log(result);
+            });
         }
       } else {
         const result = eventInputServerValidator.safeParse(req.body);
         if (!result.success) return res.status(400).json(result);
 
-        await event.updateOne(result.data);
+        await Event.updateOne(result.data);
       }
 
       if (req.body?.sendConfirmationEmail) {
@@ -85,7 +91,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "DELETE": {
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });
-      await event.deleteOne();
+      await Event.deleteOne();
 
       const eventParentId = event.eventParent;
       if ((await Event.count({ eventParent: eventParentId })) === 0) {

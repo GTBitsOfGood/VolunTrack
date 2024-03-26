@@ -37,7 +37,7 @@ export const getEvents = (
 /** Creates a new event with it's own event parent */
 export const createEvent = (eventPopulatedInput: EventPopulatedInputClient) =>
   axios.post<{
-    event?: Omit<EventPopulatedDocument, "isRecurringString">;
+    event?: EventPopulatedDocument;
     error?: ZodError | string;
   }>("/api/events", eventPopulatedInput);
 

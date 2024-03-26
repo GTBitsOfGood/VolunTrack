@@ -109,6 +109,7 @@ export const eventParentInputServerValidator = z.object({
     .optional(),
   description: z.string().optional(),
   isRecurring: z.array(z.boolean()).optional(),
+  isRecurringString: z.string(),
   recurrenceEndDate: z.coerce.date().optional(),
 });
 

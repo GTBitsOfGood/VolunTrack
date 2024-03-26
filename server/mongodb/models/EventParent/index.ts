@@ -39,6 +39,7 @@ export const eventParentSchema = new Schema(
     orgZip: String,
     description: String,
     isRecurring: [{ type: Boolean, default: false }],
+    isRecurringString: { type: String, default: "Never" },
     recurrenceEndDate: { type: Date, default: false },
   },
   { timestamps: true }
