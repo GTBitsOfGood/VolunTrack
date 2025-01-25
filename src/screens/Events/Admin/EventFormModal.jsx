@@ -1,5 +1,5 @@
-import { Label } from "flowbite-react";
-import { Field, Form as FForm, Formik } from "formik";
+import { Label, Tooltip, TextInput } from "flowbite-react";
+import { Field, Form as FForm, Formik, ErrorMessage } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -16,15 +16,9 @@ import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
 import CustomRecurringModal from "./CustomRecurringModal";
-
-// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-
 import DropdownMenu from "../../../components/Dropdown";
-
-// import {
-//   DropdownMenu,
-//   DropdownMenuTrigger
-// } from "@/components/ui/dropdown-menu"
+import { Dropdown } from "flowbite-react";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -283,6 +277,49 @@ const EventFormModal = ({
 
   /* --- Recurring Event --- */
 
+  /* Add Task */
+
+  const [editingTask, setEditingTask] = useState(false);
+  const [taskName, setTaskName] = useState("");
+  const [lastTaskIndex, setLastTaskIndex] = useState(-1);
+  const [tasks, setTasks] = useState([]);
+
+  const addTask = () => {
+    setEditingTask(true);
+  };
+
+  const closeTask = () => {
+    setEditingTask(false);
+    setTaskName("");
+    setLastTaskIndex(-1);
+  };
+
+  const editTask = (index) => {
+    setTaskName(tasks[index]);
+    setLastTaskIndex(index);
+    addTask();
+  }
+
+  const saveTask = (values, setFieldValue) => {
+    if (lastTaskIndex === -1) {
+      setFieldValue("eventParent.tasks", [...values.eventParent.tasks, taskName]);
+      setTasks([...values.eventParent.tasks, taskName]);
+    } else {
+      setFieldValue("eventParent.tasks", [...(values.eventParent.tasks.slice(0, lastTaskIndex)), taskName, ...(values.eventParent.tasks.slice(lastTaskIndex + 1))]);
+      setTasks([...values.eventParent.tasks.slice(0, lastTaskIndex), taskName, ...values.eventParent.tasks.slice(lastTaskIndex + 1)]);
+    }
+    closeTask();
+  };
+
+  const readTasks = (values) => {
+    console.log(values);
+    if (values?.eventParent?.tasks) {
+      setTasks(values.eventParent.tasks);
+    }
+  }
+
+  /* -------- */
+
   return (
     <Formik
       enableReinitialize={true}
@@ -327,6 +364,7 @@ const EventFormModal = ({
           orgState: isGroupEvent ? event?.eventParent?.orgState ?? "" : "",
           orgZip: isGroupEvent ? event?.eventParent?.orgZip ?? "" : "",
           description: event?.eventParent?.description ?? "",
+          tasks: event?.eventParent?.tasks ?? [],
         },
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -689,6 +727,92 @@ const EventFormModal = ({
                     </div>
                   )}
                 </FormGroup>
+              </Styled.Row>
+              <div className="flex flex-row"
+              onLoad={() => readTasks(values)}>
+                <Label class="mb-1 h-6 font-medium text-slate-600">Tasks</Label>
+              </div>
+              <Styled.Row>
+                <div className="flex w-full flex-row items-center justify-between">
+                  <Dropdown
+                    inline={true}
+                    arrowIcon={false}
+                    label={
+                      <BoGButton
+                        text={
+                          taskName !== ""
+                            ? taskName
+                            : "Select Task"
+                        }
+                        dropdown={true}
+                      />
+                    }
+                  >
+                    {tasks.map((task, index) => (
+                      <Dropdown.Item
+                        id={task}
+                        onClick={() => {
+                          editTask(index);
+                        }}
+                      >
+                        {task}
+                      </Dropdown.Item>
+                    ))}
+                    <Dropdown.Item
+                      onClick={addTask}
+                    >
+                      + Add Events
+                    </Dropdown.Item>
+                  </Dropdown>
+                  {editingTask && (
+                    <div>
+                      <div className="mb-3 flex flex-col">
+                        <div className="flex flex-row">
+                          <Label
+                            className="mb-1 flex h-6 items-center font-medium text-slate-600"
+                            htmlFor="taskName"
+                          >
+                            Task Name
+                          </Label>
+                        </div>
+                        <Field name="taskName">
+                          {({ field }) => (
+                            <TextInput
+                              class="border-1 mt-0 h-10 w-full rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
+                              id="taskName"
+                              name="taskName"
+                              value={taskName}
+                              onChange={(e) => {
+                                setTaskName(e.target.value);
+                              }}
+                              type="text"
+                              placeholder="Your task name"
+                            />
+                          )}
+                        </Field>
+                        <ErrorMessage
+                          component="div"
+                          className="mt-1 inline-block pt-0 text-sm text-red-600"
+                          name="taskName"
+                        />{" "}
+                      </div>
+                      <div className="flex flex-row gap-2">
+                        <BoGButton
+                          text="Cancel"
+                          onClick={closeTask}
+                          outline={true}
+                        />
+                        <BoGButton
+                          text={"Add Task"}
+                          onClick={() => {
+                            saveTask(values, setFieldValue);
+                          }}
+                          disabled={taskName === ""}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </Styled.Row>
             </Styled.ModalBody>
             <ModalFooter>

@@ -40,6 +40,7 @@ export const eventParentSchema = new Schema(
     orgState: String,
     orgZip: String,
     description: String,
+    tasks: [{ type: String }],
   },
   { timestamps: true }
 );
