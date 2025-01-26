@@ -25,6 +25,7 @@ export const eventParentSchema = new Schema(
     isValidForCourtHours: { type: Boolean, default: false },
     isNotifyAdmin: { type: Boolean, default: false },
     sendReminderEmail: { type: Boolean, default: false },
+    requiresApproval: { type: Boolean, default: false },
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",

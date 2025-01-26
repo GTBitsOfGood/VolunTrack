@@ -19,6 +19,7 @@ import CustomRecurringModal from "./CustomRecurringModal";
 import DropdownMenu from "../../../components/Dropdown";
 import { Dropdown } from "flowbite-react";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { set } from "mongoose";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -65,6 +66,9 @@ const EventFormModal = ({
   const [sendReminderEmail, setSendReminderEmail] = useState(
     event?.eventParent?.sendReminderEmail ?? false
   );
+  const [requiresApproval, setRequiresApproval] = useState(
+    event?.eventParent?.requiresApproval ?? false
+  );
   const {
     data: { user },
   } = useSession();
@@ -92,6 +96,7 @@ const EventFormModal = ({
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
     if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
     if (sendReminderEmail) event.eventParent.sendReminderEmail = true;
+    if (requiresApproval) event.eventParent.requiresApproval = true;
 
     createEvent(event)
       .then((res) => toggle())
@@ -108,6 +113,7 @@ const EventFormModal = ({
     values.eventParent.isValidForCourtHours = isValidForCourtHours;
     values.eventParent.isNotifyAdmin = isNotifyAdmin;
     values.eventParent.sendReminderEmail = sendReminderEmail;
+    values.eventParent.requiresApproval = requiresApproval;
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,
@@ -158,6 +164,10 @@ const EventFormModal = ({
 
   const onSendReminderEmailbox = () => {
     setSendReminderEmail(!sendReminderEmail);
+  };
+
+  const onRequiresApprovalCheckbox = () => {
+    setRequiresApproval(!requiresApproval);
   };
 
   const getLocalTime = () => {
@@ -384,6 +394,8 @@ const EventFormModal = ({
             event?.eventParent?.isValidForCourtHours ?? false,
           isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
           sendReminderEmail: event?.eventParent?.sendReminderEmail ?? false,
+          requiresApproval:
+            event?.eventParent?.requiresApproval ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
           pocName: isGroupEvent ? event?.eventParent?.pocName ?? "" : "",
@@ -748,6 +760,12 @@ const EventFormModal = ({
                     onChange={onSendReminderEmailbox}
                   />
                   <Text text="Send reminder emails 48 hours before the event" />
+                  <Input
+                    defaultChecked={requiresApproval}
+                    type="checkbox"
+                    onChange={onRequiresApprovalCheckbox}
+                  />
+                  <Text text="Requires Approval" />
                   {containsExistingEvent(event) && (
                     <div>
                       <Input

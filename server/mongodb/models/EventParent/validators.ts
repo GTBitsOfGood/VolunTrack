@@ -33,6 +33,7 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
     isValidForCourtHours: z.boolean().optional(),
     isNotifyAdmin: z.boolean().optional(),
     sendReminderEmail: z.boolean().optional(),
+    requiresApproval: z.boolean().optional(),
     organizationId: z.string(),
     // refine() is not working for some reason
     // .refine(
@@ -88,6 +89,7 @@ export const eventParentInputServerValidator = z.object({
   isValidForCourtHours: z.boolean().optional(),
   isNotifyAdmin: z.boolean().optional(),
   sendReminderEmail: z.boolean().optional(),
+  requiresApproval: z.boolean().optional(),
   organizationId: z.string().refine(
     (id) => isValidObjectId(id),
     (id) => ({ message: `organizationId ${id} is not a valid ObjectId` })
