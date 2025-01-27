@@ -10,7 +10,8 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   const user = await User.findById(userId).lean();
   const event = await Event.findById(eventId).populate("eventParent").lean();
   const organization = await Organization.findById(user.organizationId).lean();
-
+  
+  /** Email Event Registrant if NotifyAdmin set to True */
   const personalization = [
     {
       email: user.email,
@@ -43,6 +44,51 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
     personalization,
     `Registration Confirmed for ${event.eventParent.title}`
   );
+
+  /** Email Event Contact(i.e. Admin) if NotifyAdmin set to True */
+  if (event.eventParent.isNotifyAdmin) {
+    const adminUser = {
+      email: event.eventParent.eventContactEmail,
+      firstName: event.eventParent.pocName,
+      lastName:"",
+    }
+
+    const adminPersonalization = [
+      {
+        email: adminUser.email,
+        data: {
+          header: `New event registration from`,
+          introLine: `New registration received for ${event.eventParent.title}! Please review the registration details below.`,
+          eventTitle: event.eventParent.title,
+          volunteerFirstName: user.firstName,
+          volunteerLastName: user.lastName,
+          volunteerStatus: user.status,
+          volunteerEmail: user.email,
+          eventDate: event.date?.toISOString().slice(0, 10),
+          eventStartTime: convertTime(event.eventParent.startTime),
+          eventEndTime: convertTime(event.eventParent.endTime),
+          eventLocale: event.eventParent.localTime,
+          eventAddress: event.eventParent.address,
+          eventCity: event.eventParent.city,
+          eventState: event.eventParent.state,
+          eventZipCode: event.eventParent.zip,
+          eventDescription: event.eventParent.description?.replace(
+            /<[^>]+>/g,
+            " "
+          ),
+          eventContactEmail: event.eventParent.eventContactEmail,
+          nonprofitName: organization.name,
+        },
+      },
+    ];
+    
+    sendEmail(
+      [adminUser],
+      organization,
+      adminPersonalization,
+      `New Registration Received for ${event.eventParent.title}`
+    );
+  }
 };
 
 export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
