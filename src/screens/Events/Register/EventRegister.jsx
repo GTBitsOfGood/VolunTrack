@@ -130,6 +130,7 @@ const EventRegister = () => {
     });
   };
 
+
   const onCompleteRegistrationClicked = () => {
     setShowWaiverModal(true);
   };
@@ -145,12 +146,12 @@ const EventRegister = () => {
   const onRegisterAfterWaiverClicked = () => {
     toggleWaiverModal();
     setIsLoading(true);
-
     registerForEvent({
       eventId: event._id,
       userId: user._id,
       organizationId: user.organizationId,
       minors,
+      approved: event.eventParent.requiresApproval ? "pending" : "approved",
     }).then(() => {
       setIsRegistered(true);
       setIsLoading(false);

@@ -19,7 +19,6 @@ import CustomRecurringModal from "./CustomRecurringModal";
 import DropdownMenu from "../../../components/Dropdown";
 import { Dropdown } from "flowbite-react";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
-import { set } from "mongoose";
 
 const Styled = {
   Form: styled(FForm)``,
