@@ -7,6 +7,7 @@ Instruction for Schema Update/Migration:
 0- Premises:
     No need to stop or re-start server;
     Ensure process.env.MONGO_DB is configured correctly;
+    Ensure the last line "runMigration();" is uncommented;
 
 1- Step 1: 
     Manually add "type: module" in package.json; --> This was not updated for good as some scripts are still using CommonJS syntax 
@@ -16,6 +17,10 @@ Instruction for Schema Update/Migration:
         run "node server/mongodb/migrations/EventParent-Add-isNotifyAdmin.js" 
     otherwise:
         modify file path in above run command accordingly, and run
+
+3- Step 3:
+    comment the last line "runMigration();" -> avoid running when server starts next time
+    
 */}
 
 
@@ -29,7 +34,7 @@ async function runMigration() {
     await connect(dbUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      dbName: process.env.DB_NAME,
+      dbName: process.env.DB_NAME || "test",
       maxPoolSize: 3,
     }).catch((e) => {
       throw e;
@@ -60,4 +65,4 @@ async function runMigration() {
     }
 }
 
-runMigration();
+// runMigration();

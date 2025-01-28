@@ -11,7 +11,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   const event = await Event.findById(eventId).populate("eventParent").lean();
   const organization = await Organization.findById(user.organizationId).lean();
   
-  /** Email Event Registrant if NotifyAdmin set to True */
+  /** Email Event Registrant */
   const personalization = [
     {
       email: user.email,
@@ -57,13 +57,10 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
       {
         email: adminUser.email,
         data: {
-          header: `New event registration from`,
+          header: `New event registration for`,
           introLine: `New registration received for ${event.eventParent.title}! Please review the registration details below.`,
           eventTitle: event.eventParent.title,
-          volunteerFirstName: user.firstName,
-          volunteerLastName: user.lastName,
-          volunteerStatus: user.status,
-          volunteerEmail: user.email,
+          volunteerName: user.firstName,
           eventDate: event.date?.toISOString().slice(0, 10),
           eventStartTime: convertTime(event.eventParent.startTime),
           eventEndTime: convertTime(event.eventParent.endTime),
