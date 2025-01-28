@@ -12,6 +12,7 @@ export default {
     profile: "/profile",
     register: "/register",
     home: "/home",
+    embed: "/embed",
   },
   api: {
     auth: {},

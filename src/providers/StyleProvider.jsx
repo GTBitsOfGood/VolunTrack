@@ -5,9 +5,14 @@ import { useSession } from "next-auth/react";
 
 const ThemeWrapper = ({ children }) => {
   const { data: session } = useSession();
+  console.log(session)
 
   useEffect(() => {
+    if (session) {
     applyTheme(session.theme);
+    } else {
+      applyTheme("purple")
+    }
   }, []);
 
   return <React.Fragment>{children}</React.Fragment>;
