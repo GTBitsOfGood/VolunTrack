@@ -10,7 +10,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   const user = await User.findById(userId).lean();
   const event = await Event.findById(eventId).populate("eventParent").lean();
   const organization = await Organization.findById(user.organizationId).lean();
-  
+
   /** Email Event Registrant */
   const personalization = [
     {
@@ -50,8 +50,8 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
     const adminUser = {
       email: event.eventParent.eventContactEmail,
       firstName: event.eventParent.pocName,
-      lastName:"",
-    }
+      lastName: "",
+    };
 
     const adminPersonalization = [
       {
@@ -78,7 +78,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
         },
       },
     ];
-    
+
     sendEmail(
       [adminUser],
       organization,
