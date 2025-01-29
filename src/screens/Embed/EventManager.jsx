@@ -1,11 +1,13 @@
 import "flowbite-react";
 import { useEffect, useState } from "react";
-import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
 import { getEvents } from "../../queries/events";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
+import dynamic from "next/dynamic";
+
+const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
 const Styled = {
   Container: styled.div`
@@ -37,9 +39,10 @@ const Styled = {
 
 const EventManager = ({organizationId}) => {
   console.log(organizationId)
-  const isHomePage = false
   const user = {
-    role: "visitor"
+    name: "visitor",
+    role: "visitor",
+    id: "visitor"
   }
 
   const [loading, setLoading] = useState(true);
@@ -54,6 +57,7 @@ const EventManager = ({organizationId}) => {
   const [registrations, setRegistrations] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
+  
 
   const onRefresh = () => {
     setLoading(true);
@@ -68,17 +72,11 @@ const EventManager = ({organizationId}) => {
     });
   };
 
-  const onCreateClicked = () => {
-    setShowCreateModal(false);
-    setShowCreateModal(true);
-  };
-
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
     onRefresh();
   };
   useEffect(() => {
-    console.log('test')
     onRefresh()
   }, []);
 
@@ -97,7 +95,7 @@ const EventManager = ({organizationId}) => {
     let selectDate = new Date(datestr).toISOString().split("T")[0];
 
     setLoading(true);
-    getEvents(user.organizationId, selectDate, selectDate)
+    getEvents(organizationId, selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
           setEvents(result.data.events);
@@ -124,7 +122,7 @@ const EventManager = ({organizationId}) => {
     let tileClassName = "";
     let dates = [];
     for (let i = 0; i < markDates.length; i++) {
-      if (user.role === "admin") {
+      if (user && user.role === "admin") {
         dates.push(markDates[i].date.slice(0, 10));
       } else if (!markDates[i].eventParent.isPrivate) {
         dates.push(markDates[i].date.slice(0, 10));
@@ -171,7 +169,6 @@ const EventManager = ({organizationId}) => {
 
   return (
     <Styled.Container>
-      {!isHomePage && (
         <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
           <div className="my-1 ml-2 flex flex-col items-start">
             <Text text="Events" type="header" />
@@ -184,6 +181,7 @@ const EventManager = ({organizationId}) => {
               tileClassName={({ date, view }) =>
                 setMarkDates({ date, view }, markDates)
               }
+              suppressHydrationWarning
             />
           </div>
           <Text text="How to read the calendar?" type="subheader" />
@@ -193,7 +191,6 @@ const EventManager = ({organizationId}) => {
             alt="legend"
           />
         </div>
-      )}
         <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
           <div className="flex flex-col lg:w-5/6">
               <div className="h-16" />
@@ -223,7 +220,7 @@ const EventManager = ({organizationId}) => {
               <EventsList
                 dateString={dateString}
                 events={
-                  user.role === "admin"
+                  user && user.role === "admin"
                     ? filterOn
                       ? filteredEvents
                       : events
@@ -231,7 +228,7 @@ const EventManager = ({organizationId}) => {
                 }
                 registrations={registrations}
                 user={user}
-                isHomePage={isHomePage}
+                isHomePage={false}
                 onEventDelete={onEventDelete}
               />
             )}

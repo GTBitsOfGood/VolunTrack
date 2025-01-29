@@ -18,7 +18,6 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
   const isPublicPage = router.pathname.startsWith("/embed");
   return (
-    <>
         <SessionProvider session={session}>
           <script
             type="text/javascript"
@@ -49,7 +48,6 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
           </RequestProvider>
       )}
         </SessionProvider>
-    </>
   );
 };
 

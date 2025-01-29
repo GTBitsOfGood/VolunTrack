@@ -96,7 +96,6 @@ const EventManager = ({ isHomePage }) => {
   };
   useEffect(() => {
     let query = { organizationId: user.organizationId };
-    console.log(query)
     if (user.role === "volunteer") query.userId = user._id;
 
     getAttendances(query).then((result) => {
