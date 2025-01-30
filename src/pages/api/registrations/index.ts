@@ -79,5 +79,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         registration: await Registration.findOneAndDelete(match),
       });
     }
+    case "PATCH": {
+      try {
+        const { registrationId, ...updateData } = req.body;
+    
+        if (!isValidObjectId(registrationId)) {
+          return res.status(400).json({ message: `Invalid registration ID: ${registrationId}` });
+        }
+    
+        const updatedRegistration = await Registration.findByIdAndUpdate(
+          registrationId,
+          updateData,
+          { new: true }
+        );
+    
+        if (!updatedRegistration) {
+          return res.status(404).json({ message: "Registration not found" });
+        }
+    
+        return res.status(200).json({ registration: updatedRegistration });
+      } catch (error) {
+        return res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
   }
 };

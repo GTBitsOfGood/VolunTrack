@@ -40,3 +40,19 @@ export const deleteRegistration = (registrationId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(
     `/api/registrations/${registrationId.toString()}`
   );
+
+export const editRegistration = async (
+  registrationId: Types.ObjectId,
+  updatedData: Partial<RegistrationDocument>
+) => {
+  try {
+    const response = await axios.patch<{ registration?: RegistrationDocument; error?: string }>(
+      "/api/registrations",
+      { registrationId, ...updatedData }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error updating registration:", error);
+    throw error;
+  }
+};

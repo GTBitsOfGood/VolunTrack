@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 import {
   CalendarIcon,
@@ -7,6 +8,7 @@ import {
 } from "@heroicons/react/24/solid";
 import PropTypes from "prop-types";
 import Text from "../../../components/Text";
+import { getRegistrations } from "../../../queries/registrations";
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -19,8 +21,25 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventRegisterInfoContainer = ({ event, user, eventId }) => {
+const EventRegisterInfoContainer = ({ event, user, eventId, refreshTrigger = 0 }) => {
   // const { email = "", phone_number = "" } = user?.bio ?? {};
+
+  const [approvalStatus, setApprovalStatus] = useState(null);
+
+  useEffect(() => {
+    if (eventId && user?._id) {
+      getRegistrations({ eventId: eventId, userId: user._id })
+        .then((response) => {
+          if (response?.data?.registrations?.length > 0) {
+            setApprovalStatus(response.data.registrations[0].approved);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching registration:", error);
+          setApprovalStatus("Unknown");
+        });
+    }
+  }, [eventId, user, refreshTrigger]);
 
   if (!event || !event.date) {
     return <div />;
@@ -86,6 +105,14 @@ const EventRegisterInfoContainer = ({ event, user, eventId }) => {
           />
         </div>
       </div>
+      {approvalStatus != null && (
+      <div className="flex justify-start">
+        <Text
+          text={`Approval Status: ${approvalStatus}`}
+          className="ml-2 font-semibold text-gray-700"
+        />
+      </div>
+    )}
     </div>
   );
 };

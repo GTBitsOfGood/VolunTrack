@@ -110,6 +110,7 @@ const EventRegister = () => {
   const [minors, setMinors] = useState([]);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     onLoadEvent();
@@ -155,6 +156,7 @@ const EventRegister = () => {
     }).then(() => {
       setIsRegistered(true);
       setIsLoading(false);
+      setRefreshTrigger(prev => prev + 1);
     });
   };
 
@@ -245,7 +247,7 @@ const EventRegister = () => {
         </React.Fragment>
       )}
       <div className="h-6" />
-      <EventRegisterInfoContainer event={event} user={user} eventId={eventId} />
+      <EventRegisterInfoContainer event={event} user={user} eventId={eventId} refreshTrigger={refreshTrigger} />
       <Styled.BottomContainer>
         <Text text="Your Group" type="subheader" className="py-2" />
         <Text
@@ -306,6 +308,12 @@ const EventRegister = () => {
           </div>
         </div>
       </Styled.BottomContainer>
+      {!isRegistered && event?.eventParent?.requiresApproval && (
+        <Text
+          text="This event requires approval to confirm your participation"
+          className="text-black-500 text-sm font-semibold mb-2 text-right"
+        />
+      )}
       {!isRegistered && (
         <Styled.ModalFooter>
           <BoGButton text="Register" onClick={onCompleteRegistrationClicked} />

@@ -17,6 +17,8 @@ import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
 import CustomRecurringModal from "./CustomRecurringModal";
 import DropdownMenu from "../../../components/Dropdown";
+import { getRegistrations } from "../../../queries/registrations";
+import { editRegistration } from "../../../queries/registrations";
 import { Dropdown } from "flowbite-react";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 
@@ -109,6 +111,7 @@ const EventFormModal = ({
   };
 
   const onSubmitEditEvent = (values, setSubmitting) => {
+    const previousRequiresApproval = event?.eventParent?.requiresApproval;
     values.eventParent.isValidForCourtHours = isValidForCourtHours;
     values.eventParent.isNotifyAdmin = isNotifyAdmin;
     values.eventParent.sendReminderEmail = sendReminderEmail;
@@ -124,7 +127,25 @@ const EventFormModal = ({
       editedEvent,
       sendConfirmationEmail,
       editRecurringEvent
-    );
+    )
+    .then(() => {
+      if (previousRequiresApproval === true && requiresApproval === false) {
+        getRegistrations({ eventId: event._id })
+          .then((response) => {
+            if (response?.data?.registrations?.length > 0) {
+              const updatePromises = response.data.registrations.map((registration) => 
+                editRegistration(registration._id, { approved: "approved" })
+              );
+
+              return Promise.all(updatePromises);
+            }
+          })
+          .catch((error) => console.error("Error fetching registrations:", error));
+      }
+    })
+    .catch((error) => console.error("Error updating event:", error))
+    .finally(() => setSubmitting(false));
+
     if (setEvent) {
       const eventParentId = event.eventParent._id;
       event.date = values.date;
