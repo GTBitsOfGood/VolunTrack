@@ -27,7 +27,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       //   return res.status(400).json({ message: "Invalid role" });
       // if (req.query.eventId && !isValidObjectId(req.query.eventId as string))
       //   return res.status(400).json({ message: "Invalid event id" });
-
       // const organizationId = req.query.organizationId
       //   ? new Types.ObjectId(req.query.organizationId as string)
       //   : undefined;
@@ -40,7 +39,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // const checkinStatus = req.query.checkinStatus
       //   ? (req.query.checkinStatus as "waiting" | "checkedIn" | "checkedOut")
       //   : undefined;
-
       //   const users = await getUsers(
       //     organizationId,
       //     role,

@@ -46,10 +46,10 @@ export const editRegistration = async (
   updatedData: Partial<RegistrationDocument>
 ) => {
   try {
-    const response = await axios.patch<{ registration?: RegistrationDocument; error?: string }>(
-      "/api/registrations",
-      { registrationId, ...updatedData }
-    );
+    const response = await axios.patch<{
+      registration?: RegistrationDocument;
+      error?: string;
+    }>("/api/registrations", { registrationId, ...updatedData });
     return response.data;
   } catch (error) {
     console.error("Error updating registration:", error);

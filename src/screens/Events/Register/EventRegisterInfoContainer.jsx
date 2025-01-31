@@ -21,7 +21,12 @@ const convertTime = (time) => {
   return hours.toString() + ":" + min + suffix;
 };
 
-const EventRegisterInfoContainer = ({ event, user, eventId, refreshTrigger = 0 }) => {
+const EventRegisterInfoContainer = ({
+  event,
+  user,
+  eventId,
+  refreshTrigger = 0,
+}) => {
   // const { email = "", phone_number = "" } = user?.bio ?? {};
 
   const [approvalStatus, setApprovalStatus] = useState(null);
@@ -106,13 +111,13 @@ const EventRegisterInfoContainer = ({ event, user, eventId, refreshTrigger = 0 }
         </div>
       </div>
       {approvalStatus != null && (
-      <div className="flex justify-start">
-        <Text
-          text={`Approval Status: ${approvalStatus}`}
-          className="ml-2 font-semibold text-gray-700"
-        />
-      </div>
-    )}
+        <div className="flex justify-start">
+          <Text
+            text={`Approval Status: ${approvalStatus}`}
+            className="ml-2 font-semibold text-gray-700"
+          />
+        </div>
+      )}
     </div>
   );
 };
