@@ -6,7 +6,6 @@ import { getEvents } from "../../queries/events";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
 import dynamic from "next/dynamic";
-import EventCreateModal from "./Admin/EventCreateModal";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
@@ -49,7 +48,6 @@ const EventManager = ({ organizationId }) => {
   const [loading, setLoading] = useState(true);
   const [filterOn, setFilterOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("All Events");
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
 
@@ -72,10 +70,6 @@ const EventManager = ({ organizationId }) => {
     });
   };
 
-  const toggleCreateModal = () => {
-    setShowCreateModal((prev) => !prev);
-    onRefresh();
-  };
   useEffect(() => {
     onRefresh();
   }, []);
@@ -226,12 +220,6 @@ const EventManager = ({ organizationId }) => {
               user={user}
               isHomePage={false}
               onEventDelete={onEventDelete}
-            />
-          )}
-          {showCreateModal && (
-            <EventCreateModal
-              open={showCreateModal}
-              toggle={toggleCreateModal}
             />
           )}
         </div>
