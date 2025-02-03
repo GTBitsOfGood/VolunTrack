@@ -6,6 +6,7 @@ import { getEvents } from "../../queries/events";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
 import dynamic from "next/dynamic";
+import EventCreateModal from "./Admin/EventCreateModal";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
@@ -37,13 +38,13 @@ const Styled = {
   `,
 };
 
-const EventManager = ({organizationId}) => {
-  console.log(organizationId)
+const EventManager = ({ organizationId }) => {
+  console.log(organizationId);
   const user = {
     name: "visitor",
     role: "visitor",
-    id: "visitor"
-  }
+    id: "visitor",
+  };
 
   const [loading, setLoading] = useState(true);
   const [filterOn, setFilterOn] = useState(false);
@@ -57,7 +58,6 @@ const EventManager = ({organizationId}) => {
   const [registrations, setRegistrations] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  
 
   const onRefresh = () => {
     setLoading(true);
@@ -68,7 +68,7 @@ const EventManager = ({organizationId}) => {
         setDates(result.data.events);
         setDropdownVal("All Events");
       }
-      setLoading(false)
+      setLoading(false);
     });
   };
 
@@ -77,7 +77,7 @@ const EventManager = ({organizationId}) => {
     onRefresh();
   };
   useEffect(() => {
-    onRefresh()
+    onRefresh();
   }, []);
 
   let splitDate = selectedDate.toDateString().split(" ");
@@ -169,77 +169,73 @@ const EventManager = ({organizationId}) => {
 
   return (
     <Styled.Container>
-        <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
-          <div className="my-1 ml-2 flex flex-col items-start">
-            <Text text="Events" type="header" />
-          </div>
-          <div className="m-2 w-fit rounded-md bg-gray-50 p-2">
-            <Calendar
-              className="bg-white"
-              onChange={onChange}
-              value={selectedDate}
-              tileClassName={({ date, view }) =>
-                setMarkDates({ date, view }, markDates)
-              }
-              suppressHydrationWarning
-            />
-          </div>
-          <Text text="How to read the calendar?" type="subheader" />
-          <img
-            className="h-48"
-            src="/images/Calendar Legend.svg"
-            alt="legend"
+      <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
+        <div className="my-1 ml-2 flex flex-col items-start">
+          <Text text="Events" type="header" />
+        </div>
+        <div className="m-2 w-fit rounded-md bg-gray-50 p-2">
+          <Calendar
+            className="bg-white"
+            onChange={onChange}
+            value={selectedDate}
+            tileClassName={({ date, view }) =>
+              setMarkDates({ date, view }, markDates)
+            }
+            suppressHydrationWarning
           />
         </div>
-        <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
-          <div className="flex flex-col lg:w-5/6">
-              <div className="h-16" />
-            {loading === true ? (
-              <div className="mt-8">
-                <Text text={"Loading..."} type="subheader" />
-              </div>
-            ) : (
-              <div className="mt-8" />
-            )}
-            {filteredEvents.length === 0 && loading === false ? (
-              <div className="mt-8">
-                <Text
-                  text={"No Events Scheduled on " + dateString}
-                  type="subheader"
-                />
-                {showBack && (
-                  <button
-                    className="text-primaryColor hover:underline"
-                    onClick={setDateBack}
-                  >
-                    Show Events for all Dates
-                  </button>
-                )}
-              </div>
-            ) : (
-              <EventsList
-                dateString={dateString}
-                events={
-                  user && user.role === "admin"
-                    ? filterOn
-                      ? filteredEvents
-                      : events
-                    : filterEventsForVolunteers(events, user)
-                }
-                registrations={registrations}
-                user={user}
-                isHomePage={false}
-                onEventDelete={onEventDelete}
+        <Text text="How to read the calendar?" type="subheader" />
+        <img className="h-48" src="/images/Calendar Legend.svg" alt="legend" />
+      </div>
+      <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
+        <div className="flex flex-col lg:w-5/6">
+          <div className="h-16" />
+          {loading === true ? (
+            <div className="mt-8">
+              <Text text={"Loading..."} type="subheader" />
+            </div>
+          ) : (
+            <div className="mt-8" />
+          )}
+          {filteredEvents.length === 0 && loading === false ? (
+            <div className="mt-8">
+              <Text
+                text={"No Events Scheduled on " + dateString}
+                type="subheader"
               />
-            )}
-            {showCreateModal && (
-              <EventCreateModal
-                open={showCreateModal}
-                toggle={toggleCreateModal}
-              />
-            )}
-          </div>
+              {showBack && (
+                <button
+                  className="text-primaryColor hover:underline"
+                  onClick={setDateBack}
+                >
+                  Show Events for all Dates
+                </button>
+              )}
+            </div>
+          ) : (
+            <EventsList
+              dateString={dateString}
+              events={
+                user && user.role === "admin"
+                  ? filterOn
+                    ? filteredEvents
+                    : events
+                  : filterEventsForVolunteers(events, user)
+              }
+              registrations={registrations}
+              user={user}
+              isHomePage={false}
+              onEventDelete={onEventDelete}
+            />
+          )}
+          {showCreateModal && (
+            <EventCreateModal
+              open={showCreateModal}
+              toggle={toggleCreateModal}
+            />
+          )}
         </div>
+      </div>
     </Styled.Container>
   );
 };

@@ -5,13 +5,13 @@ import { useSession } from "next-auth/react";
 
 const ThemeWrapper = ({ children }) => {
   const { data: session } = useSession();
-  console.log(session)
+  console.log(session);
 
   useEffect(() => {
     if (session) {
-    applyTheme(session.theme);
+      applyTheme(session.theme);
     } else {
-      applyTheme("purple")
+      applyTheme("purple");
     }
   }, []);
 

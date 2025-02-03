@@ -24,7 +24,7 @@ const EventsList = ({
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);
-console.log(user)
+  console.log(user);
   events.sort(function (a, b) {
     const c = new Date(a.date);
     const d = new Date(b.date);
@@ -82,31 +82,31 @@ console.log(user)
     registeredEvents = registeredEvents.slice(0, 2);
   }
 
-    return (
-      <Styled.Container>
-        {eventEditConfirmationMessage !== null && (
-          <div className="pb-3">
-            <Alert
-              color="success"
-              onDismiss={() => setEventEditConfirmationMessage(null)}
-            >
-              {eventEditConfirmationMessage}.
-            </Alert>
-          </div>
-        )}
-        {events.map((event) => (
-          <EventCard
-            key={event._id}
-            event={event}
-            user={user}
-            isRegistered={registeredEventIds.has(event._id)}
-            onEventDelete={onEventDelete}
-            setEventEdit={setEventEditConfirmationMessage}
-          />
-        ))}
-        <div className="h-12" />
-      </Styled.Container>
-    );
+  return (
+    <Styled.Container>
+      {eventEditConfirmationMessage !== null && (
+        <div className="pb-3">
+          <Alert
+            color="success"
+            onDismiss={() => setEventEditConfirmationMessage(null)}
+          >
+            {eventEditConfirmationMessage}.
+          </Alert>
+        </div>
+      )}
+      {events.map((event) => (
+        <EventCard
+          key={event._id}
+          event={event}
+          user={user}
+          isRegistered={registeredEventIds.has(event._id)}
+          onEventDelete={onEventDelete}
+          setEventEdit={setEventEditConfirmationMessage}
+        />
+      ))}
+      <div className="h-12" />
+    </Styled.Container>
+  );
 };
 EventsList.propTypes = {
   dateString: PropTypes.string,
