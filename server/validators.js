@@ -15,6 +15,7 @@ const CREATE_EVENT_VALIDATOR = [
   check("localTime").exists(),
   check("isPrivate").exists(),
   check("isValidForCourtHours").isBoolean(),
+  check("isNotifyAdmin").isBoolean(),
 
   check("address").isAscii().trim(),
   check("city").isAscii().trim(),

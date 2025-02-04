@@ -11,6 +11,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   const event = await Event.findById(eventId).populate("eventParent").lean();
   const organization = await Organization.findById(user.organizationId).lean();
 
+  /** Email Event Registrant */
   const personalization = [
     {
       email: user.email,
@@ -43,6 +44,48 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
     personalization,
     `Registration Confirmed for ${event.eventParent.title}`
   );
+
+  /** Email Event Contact(i.e. Admin) if NotifyAdmin set to True */
+  if (event.eventParent.isNotifyAdmin) {
+    const adminUser = {
+      email: event.eventParent.eventContactEmail,
+      firstName: event.eventParent.pocName,
+      lastName: "",
+    };
+
+    const adminPersonalization = [
+      {
+        email: adminUser.email,
+        data: {
+          header: `New event registration for`,
+          introLine: `New registration received for ${event.eventParent.title}! Please review the registration details below.`,
+          eventTitle: event.eventParent.title,
+          volunteerName: user.firstName,
+          eventDate: event.date?.toISOString().slice(0, 10),
+          eventStartTime: convertTime(event.eventParent.startTime),
+          eventEndTime: convertTime(event.eventParent.endTime),
+          eventLocale: event.eventParent.localTime,
+          eventAddress: event.eventParent.address,
+          eventCity: event.eventParent.city,
+          eventState: event.eventParent.state,
+          eventZipCode: event.eventParent.zip,
+          eventDescription: event.eventParent.description?.replace(
+            /<[^>]+>/g,
+            " "
+          ),
+          eventContactEmail: event.eventParent.eventContactEmail,
+          nonprofitName: organization.name,
+        },
+      },
+    ];
+
+    sendEmail(
+      [adminUser],
+      organization,
+      adminPersonalization,
+      `New Registration Received for ${event.eventParent.title}`
+    );
+  }
 };
 
 export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
@@ -152,7 +195,7 @@ const sendEmail = async (
     api_key: process.env.MAILERSEND_API_KEY,
   });
   const recipients = [];
-  for (let user in users) {
+  for (let user of users) {
     recipients.push(
       new Recipient(user.email, `${user.firstName} ${user.lastName}`)
     );
@@ -168,9 +211,14 @@ const sendEmail = async (
     .setTemplateId(template)
     .setPersonalization(personalization);
 
-  mailersend.send(emailParams).then((error) => {
-    console.log(error);
-  });
+  mailersend
+    .send(emailParams)
+    .then((response) => {
+      console.log("Full Response:", response);
+      return response.json();
+    })
+    .then((data) => console.log("Response Body:", data))
+    .catch((error) => console.error("Error:", error));
 };
 
 const convertTime = (time) => {

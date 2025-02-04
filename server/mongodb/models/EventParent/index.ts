@@ -23,6 +23,7 @@ export const eventParentSchema = new Schema(
     maxVolunteers: { type: Number, required: true },
     isPrivate: { type: Boolean, default: false },
     isValidForCourtHours: { type: Boolean, default: false },
+    isNotifyAdmin: { type: Boolean, default: false },
     organizationId: {
       type: Schema.Types.ObjectId,
       ref: "Organization",

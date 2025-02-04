@@ -54,6 +54,9 @@ const EventFormModal = ({
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.eventParent?.isValidForCourtHours ?? false
   );
+  const [isNotifyAdmin, setisNotifyAdmin] = useState(
+    event?.eventParent?.isNotifyAdmin ?? false
+  );
   const {
     data: { user },
   } = useSession();
@@ -77,6 +80,7 @@ const EventFormModal = ({
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
+    if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
 
     createEvent(event)
       .then(() => toggle())
@@ -91,6 +95,7 @@ const EventFormModal = ({
 
   const onSubmitEditEvent = (values, setSubmitting) => {
     values.eventParent.isValidForCourtHours = isValidForCourtHours;
+    values.eventParent.isNotifyAdmin = isNotifyAdmin;
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,
@@ -126,6 +131,10 @@ const EventFormModal = ({
 
   const onCourtRequiredHoursCheckbox = () => {
     setIsValidForCourtHours(!isValidForCourtHours);
+  };
+
+  const onNotifyAdminCheckbox = () => {
+    setisNotifyAdmin(!isNotifyAdmin);
   };
 
   const getLocalTime = () => {
@@ -176,6 +185,7 @@ const EventFormModal = ({
           isPrivate: event?.eventParent?.isPrivate ?? isGroupEvent,
           isValidForCourtHours:
             event?.eventParent?.isValidForCourtHours ?? false,
+          isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
           pocName: isGroupEvent ? event?.eventParent?.pocName ?? "" : "",
@@ -495,6 +505,12 @@ const EventFormModal = ({
                     text="This event can count towards volunteer's court required
                     hours"
                   />
+                  <Input
+                    defaultChecked={isNotifyAdmin}
+                    type="checkbox"
+                    onChange={onNotifyAdminCheckbox}
+                  />
+                  <Text text="Notify admins upon registration" />
                   {containsExistingEvent(event) && (
                     <div>
                       <Input
