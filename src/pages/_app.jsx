@@ -1,5 +1,6 @@
 import "focus-visible/dist/focus-visible.min.js";
 import { SessionProvider } from "next-auth/react";
+import { useRouter } from "next/router";
 import "normalize.css";
 import PropTypes from "prop-types";
 import "tailwindcss/tailwind.css";
@@ -12,6 +13,9 @@ import RequestProvider from "../providers/RequestProvider";
 import ThemeWrapper from "../providers/StyleProvider";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
+  const router = useRouter();
+  const isPublicPage = router.pathname.startsWith("/embed");
+  // const isPublicPage = false;
   return (
     <SessionProvider session={session}>
       <script
@@ -20,19 +24,29 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
         async
         crossOrigin={"true"}
       />
-
-      <RequestProvider>
-        <AuthProvider>
-          <ThemeWrapper>
-            <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
-              <Header />
-              <Component {...pageProps} />
-              <div className="grow" />
-              <Footer />
-            </div>
-          </ThemeWrapper>
-        </AuthProvider>
-      </RequestProvider>
+      {isPublicPage ? (
+        <ThemeWrapper>
+          <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
+            <Component {...pageProps} />
+            {/* <EmbedPage organizationId="63d6dcc4e1fb5fd6e69b1738" /> */}
+            <div className="grow" />
+            <Footer />
+          </div>
+        </ThemeWrapper>
+      ) : (
+        <RequestProvider>
+          <AuthProvider>
+            <ThemeWrapper>
+              <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
+                <Header />
+                <Component {...pageProps} />
+                <div className="grow" />
+                <Footer />
+              </div>
+            </ThemeWrapper>
+          </AuthProvider>
+        </RequestProvider>
+      )}
     </SessionProvider>
   );
 };
