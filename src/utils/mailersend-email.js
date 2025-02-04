@@ -195,7 +195,7 @@ const sendEmail = async (
     api_key: process.env.MAILERSEND_API_KEY,
   });
   const recipients = [];
-  for (let user in users) {
+  for (let user of users) {
     recipients.push(
       new Recipient(user.email, `${user.firstName} ${user.lastName}`)
     );
@@ -211,9 +211,12 @@ const sendEmail = async (
     .setTemplateId(template)
     .setPersonalization(personalization);
 
-  mailersend.send(emailParams).then((error) => {
-    console.log(error);
-  });
+  mailersend.send(emailParams).then((response) => {
+    console.log("Full Response:", response); // Log full response object
+    return response.json(); // Try converting to JSON
+  })
+  .then((data) => console.log("Response Body:", data)) // Log actual response data
+  .catch((error) => console.error("Error:", error)); // Log any errors
 };
 
 const convertTime = (time) => {

@@ -185,8 +185,7 @@ const EventFormModal = ({
           isPrivate: event?.eventParent?.isPrivate ?? isGroupEvent,
           isValidForCourtHours:
             event?.eventParent?.isValidForCourtHours ?? false,
-          isNotifyAdmin:
-            event?.eventParent?.isNotifyAdmin ?? false,
+          isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
           pocName: isGroupEvent ? event?.eventParent?.pocName ?? "" : "",
@@ -511,9 +510,7 @@ const EventFormModal = ({
                     type="checkbox"
                     onChange={onNotifyAdminCheckbox}
                   />
-                  <Text
-                    text="Notify admins upon registration"
-                  />
+                  <Text text="Notify admins upon registration" />
                   {containsExistingEvent(event) && (
                     <div>
                       <Input
