@@ -23,22 +23,3 @@ const ParentEmbedComponent = () => {
 };
 
 export default ParentEmbedComponent;
-
-// import { useRouter } from "next/router";
-// import Events from "../../../screens/Embed";
-// import EventManager from "../../../screens/Embed";
-
-// const ParentEmbedComponent = () => {
-//   const router = useRouter();
-//   const { organizationId } = router.query;
-
-//   console.log(organizationId)
-//   return (
-//     <>
-//       {router.isReady}
-//       <EventManager organizationId={organizationId} />
-//     </>
-//   )
-// };
-
-// export default ParentEmbedComponent;

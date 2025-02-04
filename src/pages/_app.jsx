@@ -11,7 +11,6 @@ import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
 import ThemeWrapper from "../providers/StyleProvider";
-import EmbedPage from "./embed";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
