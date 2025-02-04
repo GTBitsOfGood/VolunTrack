@@ -16,6 +16,7 @@ import EmbedPage from "./embed";
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
   const isPublicPage = router.pathname.startsWith("/embed");
+  // const isPublicPage = false;
   return (
     <SessionProvider session={session}>
       <script
@@ -27,7 +28,8 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
       {isPublicPage ? (
         <ThemeWrapper>
           <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
-            <EmbedPage organizationId="63d6dcc4e1fb5fd6e69b1738" />
+            <Component {...pageProps} />
+            {/* <EmbedPage organizationId="63d6dcc4e1fb5fd6e69b1738" /> */}
             <div className="grow" />
             <Footer />
           </div>

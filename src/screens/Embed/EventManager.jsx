@@ -38,7 +38,6 @@ const Styled = {
 };
 
 const EventManager = ({ organizationId }) => {
-  console.log(organizationId);
   const user = {
     name: "visitor",
     role: "visitor",

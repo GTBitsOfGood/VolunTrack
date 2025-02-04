@@ -26,7 +26,6 @@ const EventsList = ({
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);
-  console.log(user);
   if (!user) {
     const { data: session } = useSession();
     user = session.user;

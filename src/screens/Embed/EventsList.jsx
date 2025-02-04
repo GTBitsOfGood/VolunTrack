@@ -24,7 +24,6 @@ const EventsList = ({
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);
-  console.log(user);
   events.sort(function (a, b) {
     const c = new Date(a.date);
     const d = new Date(b.date);
