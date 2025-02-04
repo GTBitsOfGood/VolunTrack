@@ -211,12 +211,14 @@ const sendEmail = async (
     .setTemplateId(template)
     .setPersonalization(personalization);
 
-  mailersend.send(emailParams).then((response) => {
-    console.log("Full Response:", response); // Log full response object
-    return response.json(); // Try converting to JSON
-  })
-  .then((data) => console.log("Response Body:", data)) // Log actual response data
-  .catch((error) => console.error("Error:", error)); // Log any errors
+  mailersend
+    .send(emailParams)
+    .then((response) => {
+      console.log("Full Response:", response);
+      return response.json();
+    })
+    .then((data) => console.log("Response Body:", data))
+    .catch((error) => console.error("Error:", error));
 };
 
 const convertTime = (time) => {
