@@ -16,6 +16,15 @@ import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
 
+// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
+import DropdownMenu from "../../../components/Dropdown";
+
+// import {
+//   DropdownMenu,
+//   DropdownMenuTrigger
+// } from "@/components/ui/dropdown-menu"
+
 const Styled = {
   Form: styled(FForm)``,
   Col: styled(Col)`
@@ -155,6 +164,26 @@ const EventFormModal = ({
   }
   const quill = useRef(null);
 
+  /* --- Recurring Event --- */
+
+  const recurringEvents = [
+    "Does not repeat",
+    "Daily",
+    "Weekly",
+    "Monthly",
+    "Annually",
+    "Custom...",
+  ];
+
+  const handleRecurringEvent = (choice, values, setFieldValue) => {
+    // setEvent({
+    //   ...event,
+    //   recurringEvent: event.target.value,
+    // });
+  };
+
+  /* --- Recurring Event --- */
+
   return (
     <Formik
       enableReinitialize={true}
@@ -276,6 +305,22 @@ const EventFormModal = ({
                             isRequired={true}
                             name="eventParent.endTime"
                             type="time"
+                          />
+                        </Styled.Col>
+                        <Styled.Col>
+                          <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
+                            Tasks
+                          </Label>
+                          <DropdownMenu
+                            options={recurringEvents}
+                            callback={(choice) => {
+                              handleRecurringEvent(
+                                choice,
+                                values,
+                                setFieldValue
+                              );
+                            }}
+                            arrow
                           />
                         </Styled.Col>
                       </Row>
