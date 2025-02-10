@@ -31,7 +31,9 @@ const EventCard = (props) => {
       setRegistrations(res.data.registrations);
       let count = 0;
       res.data.registrations.map((reg) => {
-        count += 1 + reg.minors.length;
+        if (reg.approved == "approved") {
+          count += 1 + reg.minors.length;
+        }
       });
       setRegCount(count);
     });

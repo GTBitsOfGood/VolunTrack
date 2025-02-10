@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { MapPinIcon } from "@heroicons/react/20/solid";
 import {
-  CalendarIcon,
   ClockIcon,
+  CalendarIcon,
   EnvelopeIcon,
   PhoneIcon,
-} from "@heroicons/react/24/solid";
+} from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import Text from "../../../components/Text";
 import { getRegistrations } from "../../../queries/registrations";
+
+
 
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
@@ -51,16 +53,22 @@ const EventRegisterInfoContainer = ({
   }
 
   return (
-    <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-grey p-4">
-      <div className="mt-2 flex flex-row items-center justify-between">
+    <div className="flex w-11/12 flex-col space-y-2 rounded-md">
+      <div className="flex flex-row items-center justify-between">
         <Text
           text={event.eventParent.title}
-          className="text-primaryColor"
           type="header"
         />
-        <Text text="See Full Event Information" href={`/events/${eventId}`} />
       </div>
-      <div className="flex flex-col space-y-2 py-2">
+
+      {event.eventParent.description && (
+        <Text
+          text={event.eventParent.description}
+          type="helper"
+        ></Text>
+      )}
+
+      <div className="flex flex-col">
         {event.eventParent.isValidForCourtHours && (
           <Text
             text="This event can count toward court required hours"
@@ -69,55 +77,63 @@ const EventRegisterInfoContainer = ({
         )}
       </div>
       <div className="flex flex-wrap gap-2">
-        <div className="flex w-64 items-center rounded-md bg-white p-2">
-          <CalendarIcon class="h-6 w-6 text-primaryColor" />
-          <Text text={event.date.slice(0, 10)} className="ml-2 font-bold" />
-        </div>
-        <div className="flex w-64 items-center rounded-md bg-white p-2">
-          <ClockIcon class="h-6 w-6 text-primaryColor" />
-          <Text
-            text={
-              convertTime(event.eventParent.startTime) +
-              " - " +
-              convertTime(event.eventParent.endTime)
-            }
-            className="ml-2 font-bold"
+        <div className="flex w-64 items-center rounded-md bg-[#F8F8FA] p-2">
+          <CalendarIcon class="h-6 w-6"/>
+          <Text 
+            text={new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+            className="ml-2 font-bold text-primaryColor"
+            type="subheader"
           />
-          <Text text={event.eventParent.localTime} />
         </div>
-        <div className="flex w-64 items-center rounded-md bg-white p-2">
-          <MapPinIcon class="h-6 w-6 text-primaryColor" />
-          <Text
-            text={`${event.eventParent.address}, ${event.eventParent.city}, ${event.eventParent.state}, ${event.eventParent.zip}`}
-            className="ml-2 font-bold"
-          />
+        <div className="flex w-64 rounded-md items-center bg-[#F8F8FA] p-2">
+          <ClockIcon class="h-6 w-6 text-black" />
+          <div className="flex flex-col items-start ml-2">
+            <Text
+              text={
+                convertTime(event.eventParent.startTime) +
+                " - " +
+                convertTime(event.eventParent.endTime)
+              }
+              className="font-bold text-primaryColor"
+              type="subheader"
+            />
+            <Text text={event.eventParent.localTime} type="helper" />
+          </div>
+        </div>
+        <div className="flex w-64 items-center rounded-md bg-[#F8F8FA] p-2 min-w-max">
+          <MapPinIcon class="h-6 w-6" />
+          <div className="flex flex-col item-center">
+            <Text
+              text={event.eventParent.address}
+              className="ml-2 font-bold text-primaryColor"
+              type="subheader"
+            />
+            <Text 
+              text={`${event.eventParent.city}, ${event.eventParent.state}, ${event.eventParent.zip}`}
+              className="ml-2 font-bold"
+              type="helper"
+            />
+
+          </div>
         </div>
       </div>
-      <Text text="Contact Event Host" type="subheader" className="mt-4" />
-      <div className="flex flex-wrap gap-2 pb-4">
+      <Text text="Contact Us" type="subheader" className="mt-4" />
+      <div className="flex flex-wrap gap-2">
         <div className="flex w-64 items-center rounded-md bg-white p-2">
           <EnvelopeIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={event.eventParent.eventContactEmail}
-            className="ml-2 font-bold"
+            className="ml-2 font-bold text-primaryColor"
           />
         </div>
         <div className="flex w-64 items-center rounded-md bg-white p-2">
           <PhoneIcon class="h-6 w-6 text-primaryColor" />
           <Text
             text={event.eventParent.eventContactPhone}
-            className="ml-2 font-bold"
+            className="ml-2 font-bold text-primaryColor"
           />
         </div>
       </div>
-      {approvalStatus != null && (
-        <div className="flex justify-start">
-          <Text
-            text={`Approval Status: ${approvalStatus}`}
-            className="ml-2 font-semibold text-gray-700"
-          />
-        </div>
-      )}
     </div>
   );
 };
