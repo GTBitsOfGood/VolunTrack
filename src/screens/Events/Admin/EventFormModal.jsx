@@ -85,14 +85,14 @@ const EventFormModal = ({
     const event = {
       date: values.date,
       eventParent: values.eventParent,
+      recurringEvent: values.recurringEvent,
     };
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
     if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
-
     createEvent(event)
-      .then(() => toggle())
+      .then((res) => toggle())
       .catch((error) => {
         if (error.response.status !== 200) {
           context.startLoading();
@@ -166,6 +166,8 @@ const EventFormModal = ({
 
   /* --- Recurring Event --- */
 
+  const [recurringEvent, setRecurringEvent] = useState("Does not repeat");
+
   const recurringEvents = [
     "Does not repeat",
     "Daily",
@@ -175,11 +177,18 @@ const EventFormModal = ({
     "Custom...",
   ];
 
-  const handleRecurringEvent = (choice, values, setFieldValue) => {
-    // setEvent({
-    //   ...event,
-    //   recurringEvent: event.target.value,
-    // });
+  const recurringEventsMapping = {
+    "Does not repeat": "dnr",
+    "Daily": "daily",
+    "Weekly": "weekly",
+    "Monthly": "monthly",
+    "Annually": "annually",
+    "Custom...": "custom",
+  };
+
+  const handleRecurringEvent = (choice, setFieldValue) => {
+    setRecurringEvent(recurringEventsMapping[choice]);
+    setFieldValue("recurringEvent", recurringEventsMapping[choice]);
   };
 
   /* --- Recurring Event --- */
@@ -189,6 +198,7 @@ const EventFormModal = ({
       enableReinitialize={true}
       initialValues={{
         date: event?.date ? event.date.split("T")[0] : "",
+        recurringEvent: event?.eventParent?.recurringEvent ?? "dnr",
         eventParent: {
           title: event?.eventParent?.title ?? "",
           startTime: event?.eventParent?.startTime ?? "",
@@ -316,7 +326,6 @@ const EventFormModal = ({
                             callback={(choice) => {
                               handleRecurringEvent(
                                 choice,
-                                values,
                                 setFieldValue
                               );
                             }}

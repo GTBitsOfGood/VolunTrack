@@ -9,7 +9,7 @@ const DropdownMenu = (props) => {
   return (
     <div className="relative w-full">
       <div
-        className="flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-md border-[1px] border-gray-300 bg-white p-2"
+        className={"flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " + (isOpen ? "" : "rounded-b-md")}
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{props.value ? props.value : choice}</span>
@@ -21,7 +21,7 @@ const DropdownMenu = (props) => {
           ))}
       </div>
       {isOpen && (
-        <div className="absolute z-10 w-full rounded-md border-[1px] border-gray-300 bg-white pb-2 pt-2">
+        <div className="absolute z-10 w-full rounded-b-md border-[1px] border-gray-300 bg-white pb-2 pt-2">
           {props.options.map((option) => (
             <div
               key={option}

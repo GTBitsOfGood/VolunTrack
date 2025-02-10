@@ -86,6 +86,7 @@
     "react-quill": "^2.0.0",
     "react-search-box": "^2.2.1",
     "reactstrap": "^6.4.0",
+    "rrule": "^2.8.1",
     "styled-components": "^5.3.3",
     "tailwindcss": "^3.2.7",
     "yup": "^0.32.11",

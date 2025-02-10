@@ -88,5 +88,10 @@ export const createUserFromCheckIn = (
 
 export const deleteEvent = (eventId: Types.ObjectId) =>
   axios.delete<{ error?: ZodError | string }>(
-    `/api/events/${eventId.toString()}`
+    `/api/events/${eventId.toString()}`,
+    {
+      data: {
+        "deleteFutureEvents": true
+      }
+    }
   );
