@@ -57,6 +57,7 @@ const EventFormModal = ({
   setEvent,
   regCount,
   setEventEdit,
+  editRecurringEvent=false
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
@@ -110,7 +111,7 @@ const EventFormModal = ({
       eventParent: values.eventParent,
     };
     setSubmitting(true);
-    updateEvent(event._id, editedEvent, sendConfirmationEmail);
+    updateEvent(event._id, editedEvent, sendConfirmationEmail, editRecurringEvent);
     if (setEvent) {
       event.date = values.date;
       event.eventParent = values.eventParent;
@@ -601,6 +602,7 @@ EventFormModal.propTypes = {
   isGroupEvent: PropTypes.bool.isRequired,
   setEvent: PropTypes.func.isRequired,
   setEventEdit: PropTypes.func,
+  editRecurringEvent: PropTypes.bool,
 };
 
 export default EventFormModal;

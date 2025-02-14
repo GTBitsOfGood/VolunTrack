@@ -79,7 +79,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "DELETE": {
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });
-      if (req.body?.deleteFutureEvents) {
+      if (req.body?.recurringEvent) {
         await Event.deleteMany({ 
           eventParent: event.eventParent,
           date: { $gte: event.date } 

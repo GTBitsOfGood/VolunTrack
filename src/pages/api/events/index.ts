@@ -71,8 +71,6 @@ const generateRRule = (result: any) => {
   else return null;
 }
 
-/* Recurring Events */
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 

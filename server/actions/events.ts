@@ -11,10 +11,11 @@ export const getEvents = async (
   await dbConnect();
 
   if (!startDate && !endDate) {
-    return Event.aggregate([
+    const test = await Event.aggregate([
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
+    return test;
   } else if (!startDate) {
     return Event.aggregate([
       { $match: { $expr: { $lte: ["$date", endDate] } } },
@@ -28,7 +29,7 @@ export const getEvents = async (
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
   } else {
-    return Event.aggregate([
+    const test = Event.aggregate([
       {
         $match: {
           $expr: {
@@ -42,5 +43,6 @@ export const getEvents = async (
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
+    return test;
   }
 };
