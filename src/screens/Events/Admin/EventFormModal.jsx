@@ -57,6 +57,9 @@ const EventFormModal = ({
   const [isNotifyAdmin, setisNotifyAdmin] = useState(
     event?.eventParent?.isNotifyAdmin ?? false
   );
+  const [sendReminderEmail, setSendReminderEmail] = useState(
+    event?.eventParent?.sendReminderEmail ?? false
+  );
   const {
     data: { user },
   } = useSession();
@@ -81,6 +84,7 @@ const EventFormModal = ({
     if (isGroupEvent) event.eventParent.isPrivate = true;
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
     if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
+    if (sendReminderEmail) event.eventParent.sendReminderEmail = true;
 
     createEvent(event)
       .then(() => toggle())
@@ -96,6 +100,7 @@ const EventFormModal = ({
   const onSubmitEditEvent = (values, setSubmitting) => {
     values.eventParent.isValidForCourtHours = isValidForCourtHours;
     values.eventParent.isNotifyAdmin = isNotifyAdmin;
+    values.eventParent.sendReminderEmail = sendReminderEmail;
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,
@@ -135,6 +140,10 @@ const EventFormModal = ({
 
   const onNotifyAdminCheckbox = () => {
     setisNotifyAdmin(!isNotifyAdmin);
+  };
+
+  const onSendReminderEmailbox = () => {
+    setSendReminderEmail(!sendReminderEmail);
   };
 
   const getLocalTime = () => {
@@ -186,6 +195,7 @@ const EventFormModal = ({
           isValidForCourtHours:
             event?.eventParent?.isValidForCourtHours ?? false,
           isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
+          sendReminderEmail: event?.eventParent?.sendReminderEmail ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
           pocName: isGroupEvent ? event?.eventParent?.pocName ?? "" : "",
@@ -511,6 +521,12 @@ const EventFormModal = ({
                     onChange={onNotifyAdminCheckbox}
                   />
                   <Text text="Notify admins upon registration" />
+                  <Input
+                    defaultChecked={sendReminderEmail}
+                    type="checkbox"
+                    onChange={onSendReminderEmailbox}
+                  />
+                  <Text text="Send reminder emails 48 hours before the event" />                  
                   {containsExistingEvent(event) && (
                     <div>
                       <Input
