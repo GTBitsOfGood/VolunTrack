@@ -218,6 +218,21 @@ const EventManager = ({ isHomePage }) => {
     }
   };
 
+  const onEventEdit = (id, eventParentId, recurringEvent) => {
+    if (recurringEvent) {
+      console.log("Rec");
+      const eventDate = events.find((event) => event._id === id).date;
+      setEvents(events.map((event) => {
+        console.log(event);
+        if (event.eventParent._id === eventParentId && event.date >= eventDate) {
+          console.log("This");
+          event.eventParent = events.find((event) => event._id === id).eventParent;
+        }
+        return event;
+      }))
+    }
+  }
+
   return (
     <Styled.Container>
       {!isHomePage && (
@@ -316,6 +331,7 @@ const EventManager = ({ isHomePage }) => {
                 user={user}
                 isHomePage={isHomePage}
                 onEventDelete={onEventDelete}
+                onEventEdit={onEventEdit}
               />
             )}
             {showCreateModal && (
@@ -387,6 +403,7 @@ const EventManager = ({ isHomePage }) => {
             registrations={registrations}
             onCreateClicked={onCreateClicked}
             onEventDelete={onEventDelete}
+            onEventEdit={onEventEdit}
           />
         </Styled.HomePage>
       )}

@@ -41,8 +41,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "User session not found" });
   const user = session.user;
 
-  console.log(req.method);
-
   switch (req.method) {
     case "PUT": {
       if ("recurringEvent" in req.body) {

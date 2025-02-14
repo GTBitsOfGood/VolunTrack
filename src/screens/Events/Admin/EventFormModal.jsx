@@ -118,10 +118,10 @@ const EventFormModal = ({
       editRecurringEvent
     );
     if (setEvent) {
-      console.log("Edit");
+      const eventParentId = event.eventParent._id;
       event.date = values.date;
       event.eventParent = values.eventParent;
-      setEvent(event);
+      setEvent(event, event._id, eventParentId, editRecurringEvent);
     }
     if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
       setEventEdit(
@@ -245,7 +245,10 @@ const EventFormModal = ({
       (event) => event === choice
     );
     setRecurringEventIndex(recurringEventIndex);
-    setFieldValue("recurringEvent", recurringEventsMapping[recurringEventIndex]);
+    setFieldValue(
+      "recurringEvent",
+      recurringEventsMapping[recurringEventIndex]
+    );
   };
 
   /* --- Recurring Event --- */
