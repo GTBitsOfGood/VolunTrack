@@ -182,9 +182,7 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
   );
 };
 
-
 export const sendEventReminderEmail = async (user, event, organization) => {
-
   const personalization = [
     {
       email: user.email,
@@ -218,10 +216,6 @@ export const sendEventReminderEmail = async (user, event, organization) => {
   );
 };
 
-
-
-
-
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
 const sendEmail = async (
   users,
@@ -240,7 +234,6 @@ const sendEmail = async (
       new Recipient(user.email, `${user.firstName} ${user.lastName}`)
     );
   }
-
 
   const emailParams = new EmailParams()
     .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change

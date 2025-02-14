@@ -526,7 +526,7 @@ const EventFormModal = ({
                     type="checkbox"
                     onChange={onSendReminderEmailbox}
                   />
-                  <Text text="Send reminder emails 48 hours before the event" />                  
+                  <Text text="Send reminder emails 48 hours before the event" />
                   {containsExistingEvent(event) && (
                     <div>
                       <Input
