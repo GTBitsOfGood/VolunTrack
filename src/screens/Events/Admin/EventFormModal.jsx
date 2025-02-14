@@ -15,6 +15,7 @@ import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
+import CustomRecurringModal from "./CustomRecurringModal";
 
 // import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
@@ -249,6 +250,17 @@ const EventFormModal = ({
       "recurringEvent",
       recurringEventsMapping[recurringEventIndex]
     );
+
+    if (recurringEventsMapping[recurringEventIndex] == "custom") {
+      console.log("Toggle!");
+      toggleCustomModal();
+    }
+  };
+
+  const [showCustomModal, setShowCustomModal] = useState(false);
+
+  const toggleCustomModal = () => {
+    setShowCustomModal((prev) => !prev);
   };
 
   /* --- Recurring Event --- */
@@ -389,6 +401,22 @@ const EventFormModal = ({
                               handleRecurringEvent(choice, setFieldValue);
                             }}
                             arrow
+                          />
+                          <CustomRecurringModal
+                            open={showCustomModal}
+                            toggle={toggleCustomModal}
+                            // event={event}
+                            // setEvent={(
+                            //   e,
+                            //   id,
+                            //   eventParentId,
+                            //   recurringEvent
+                            // ) => {
+                            //   setEvent(e);
+                            //   onEventEdit(id, eventParentId, recurringEvent);
+                            // }}
+                            // regCount={regCount}
+                            // setEventEdit={props?.setEventEdit}
                           />
                         </Styled.Col>
                       </Row>

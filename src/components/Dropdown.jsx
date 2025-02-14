@@ -12,11 +12,11 @@ const DropdownMenu = (props) => {
   }, [props.value]);
 
   return (
-    <div className={"relative w-full " + props.className}>
+    <div className={"relative w-full"}>
       <div
-        className={
-          "flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " +
-          (isOpen ? "" : "rounded-b-md")
+        className={ !props.className ?
+          ("flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " +
+          (isOpen ? "" : "rounded-b-md")) : props.className
         }
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -54,6 +54,7 @@ DropdownMenu.propTypes = {
   callback: PropTypes.func.isRequired,
   arrow: PropTypes.bool,
   value: PropTypes.string,
+  className: PropTypes.string,
 };
 
 export default DropdownMenu;
