@@ -57,7 +57,7 @@ const EventFormModal = ({
   setEvent,
   regCount,
   setEventEdit,
-  editRecurringEvent=false
+  editRecurringEvent = false,
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
@@ -111,7 +111,12 @@ const EventFormModal = ({
       eventParent: values.eventParent,
     };
     setSubmitting(true);
-    updateEvent(event._id, editedEvent, sendConfirmationEmail, editRecurringEvent);
+    updateEvent(
+      event._id,
+      editedEvent,
+      sendConfirmationEmail,
+      editRecurringEvent
+    );
     if (setEvent) {
       event.date = values.date;
       event.eventParent = values.eventParent;
@@ -169,21 +174,47 @@ const EventFormModal = ({
 
   const [recurringEvent, setRecurringEvent] = useState("Does not repeat");
 
-  const recurringEvents = [
+  const [recurringEvents, setRecurringEvents] = useState([
     "Does not repeat",
     "Daily",
     "Weekly",
     "Monthly",
     "Annually",
     "Custom...",
-  ];
+  ]);
+
+  const dayMapping = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const monthMapping = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  const toOrdinal = (number) => {
+    const suffixes = ['th', 'st', 'nd', 'rd'];
+    const v = number % 100;
+    return number + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+  }
+
+  const updateRecurringEvents = (values) => {
+    const dateValues = values.target.value.split('-');
+    const date = new Date(dateValues[0], dateValues[1], dateValues[2]);
+    console.log("-------");
+    console.log(values.target.value);
+    console.log(date);
+    console.log(date.getMonth());
+    setRecurringEvents([
+      "Does not repeat",
+      "Daily",
+      `Weekly on ${dayMapping[date.getDay()]}`,
+      `Monthly on ${toOrdinal(Math.floor((dateValues[2] - 1) / 7) + 1)} ${dayMapping[date.getDay()]}`,
+      `Annually on ${monthMapping[date.getMonth() - 1]} ${toOrdinal(date.getDate())}`,
+      "Custom...",
+    ]);
+  };
 
   const recurringEventsMapping = {
     "Does not repeat": "dnr",
-    "Daily": "daily",
-    "Weekly": "weekly",
-    "Monthly": "monthly",
-    "Annually": "annually",
+    Daily: "daily",
+    Weekly: "weekly",
+    Monthly: "monthly",
+    Annually: "annually",
     "Custom...": "custom",
   };
 
@@ -300,6 +331,9 @@ const EventFormModal = ({
                             isRequired={true}
                             name="date"
                             type="date"
+                            onChangeCapture={(e) =>
+                              updateRecurringEvents(e)
+                            }
                           />
                         </Styled.Col>
                         <Styled.Col>
@@ -325,10 +359,7 @@ const EventFormModal = ({
                           <DropdownMenu
                             options={recurringEvents}
                             callback={(choice) => {
-                              handleRecurringEvent(
-                                choice,
-                                setFieldValue
-                              );
+                              handleRecurringEvent(choice, setFieldValue);
                             }}
                             arrow
                           />

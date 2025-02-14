@@ -2,6 +2,7 @@ import { Label, TextInput, Tooltip } from "flowbite-react";
 import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { on } from "events";
 
 const InputField = (props) => (
   <div className={props.className + " mb-3"}>
@@ -49,6 +50,7 @@ const InputField = (props) => (
           maxLength={props.maxLength}
           min={props.min}
           max={props.max}
+          onChangeCapture={props.onChangeCapture}
         />
       )}
     </Field>
@@ -72,6 +74,7 @@ InputField.propTypes = {
   maxLength: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
+  onChangeCapture: PropTypes.func,
 };
 
 export default InputField;
