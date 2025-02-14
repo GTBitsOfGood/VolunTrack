@@ -6,10 +6,18 @@ import { set } from "mongoose";
 const DropdownMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [choice, setChoice] = useState(props.options[0]);
+
+  useEffect(() => {
+    setChoice(props.value);
+  }, [props.value]);
+
   return (
-    <div className="relative w-full">
+    <div className={"relative w-full " + props.className}>
       <div
-        className={"flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " + (isOpen ? "" : "rounded-b-md")}
+        className={
+          "flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " +
+          (isOpen ? "" : "rounded-b-md")
+        }
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{props.value ? props.value : choice}</span>

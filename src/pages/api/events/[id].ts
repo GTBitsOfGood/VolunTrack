@@ -41,22 +41,44 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: "User session not found" });
   const user = session.user;
 
+  console.log(req.method);
+
   switch (req.method) {
     case "PUT": {
-      if ("eventPopulatedInput" in req.body) {
+      if ("recurringEvent" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
           .safeParse(req.body?.eventPopulatedInput);
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
+        const eventParent = await EventParent.create(result.data.eventParent);
+
+        const eventParentId = event.eventParent;
+
+        await Event.updateMany(
+          {
+              eventParent: event.eventParent,
+              date: { $gte: event.date },
+          },
+          [{ $set: { eventParent: eventParent._id } }]
+        );
+
+        if ((await Event.count({ eventParent: eventParentId })) === 0) {
+          await EventParent.findByIdAndDelete(eventParentId);
+        }
+      } else if ("eventPopulatedInput" in req.body) {
+        const result = eventPopulatedInputServerValidator
+          .partial()
+          .safeParse(req.body?.eventPopulatedInput);
+        if (!result.success)
+          return res.status(400).json({ error: result.error });
         await eventParent.updateOne(result.data.eventParent);
         delete result.data.eventParent;
         await event.updateOne(result.data);
       } else {
         const result = eventInputServerValidator.safeParse(req.body);
         if (!result.success) return res.status(400).json(result);
-
         await event.updateOne(result.data);
       }
 
@@ -80,9 +102,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });
       if (req.body?.recurringEvent) {
-        await Event.deleteMany({ 
+        await Event.deleteMany({
           eventParent: event.eventParent,
-          date: { $gte: event.date } 
+          date: { $gte: event.date },
         });
       } else {
         await event.deleteOne();

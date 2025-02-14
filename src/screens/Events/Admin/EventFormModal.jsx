@@ -118,6 +118,7 @@ const EventFormModal = ({
       editRecurringEvent
     );
     if (setEvent) {
+      console.log("Edit");
       event.date = values.date;
       event.eventParent = values.eventParent;
       setEvent(event);
@@ -172,8 +173,7 @@ const EventFormModal = ({
 
   /* --- Recurring Event --- */
 
-  const [recurringEvent, setRecurringEvent] = useState("Does not repeat");
-
+  const [recurringEventIndex, setRecurringEventIndex] = useState(0);
   const [recurringEvents, setRecurringEvents] = useState([
     "Does not repeat",
     "Daily",
@@ -182,45 +182,70 @@ const EventFormModal = ({
     "Annually",
     "Custom...",
   ]);
-
-  const dayMapping = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  const monthMapping = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const dayMapping = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const monthMapping = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const toOrdinal = (number) => {
-    const suffixes = ['th', 'st', 'nd', 'rd'];
+    const suffixes = ["th", "st", "nd", "rd"];
     const v = number % 100;
     return number + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
-  }
+  };
 
   const updateRecurringEvents = (values) => {
-    const dateValues = values.target.value.split('-');
+    const dateValues = values.target.value.split("-");
     const date = new Date(dateValues[0], dateValues[1], dateValues[2]);
-    console.log("-------");
-    console.log(values.target.value);
-    console.log(date);
-    console.log(date.getMonth());
-    setRecurringEvents([
+    const newRecurringEvents = [
       "Does not repeat",
       "Daily",
       `Weekly on ${dayMapping[date.getDay()]}`,
-      `Monthly on ${toOrdinal(Math.floor((dateValues[2] - 1) / 7) + 1)} ${dayMapping[date.getDay()]}`,
-      `Annually on ${monthMapping[date.getMonth() - 1]} ${toOrdinal(date.getDate())}`,
+      `Monthly on ${toOrdinal(Math.floor((dateValues[2] - 1) / 7) + 1)} ${
+        dayMapping[date.getDay()]
+      }`,
+      `Annually on ${monthMapping[date.getMonth() - 1]} ${toOrdinal(
+        date.getDate()
+      )}`,
       "Custom...",
-    ]);
+    ];
+    setRecurringEvents(newRecurringEvents);
+    setRecurringEventIndex(recurringEventIndex);
   };
 
-  const recurringEventsMapping = {
-    "Does not repeat": "dnr",
-    Daily: "daily",
-    Weekly: "weekly",
-    Monthly: "monthly",
-    Annually: "annually",
-    "Custom...": "custom",
-  };
+  const recurringEventsMapping = [
+    "dnr",
+    "daily",
+    "weekly",
+    "monthly",
+    "annually",
+    "custom",
+  ];
 
   const handleRecurringEvent = (choice, setFieldValue) => {
-    setRecurringEvent(recurringEventsMapping[choice]);
-    setFieldValue("recurringEvent", recurringEventsMapping[choice]);
+    const recurringEventIndex = recurringEvents.findIndex(
+      (event) => event === choice
+    );
+    setRecurringEventIndex(recurringEventIndex);
+    setFieldValue("recurringEvent", recurringEventsMapping[recurringEventIndex]);
   };
 
   /* --- Recurring Event --- */
@@ -331,9 +356,7 @@ const EventFormModal = ({
                             isRequired={true}
                             name="date"
                             type="date"
-                            onChangeCapture={(e) =>
-                              updateRecurringEvents(e)
-                            }
+                            onChangeCapture={(e) => updateRecurringEvents(e)}
                           />
                         </Styled.Col>
                         <Styled.Col>
@@ -357,6 +380,7 @@ const EventFormModal = ({
                             Tasks
                           </Label>
                           <DropdownMenu
+                            value={recurringEvents[recurringEventIndex]}
                             options={recurringEvents}
                             callback={(choice) => {
                               handleRecurringEvent(choice, setFieldValue);
