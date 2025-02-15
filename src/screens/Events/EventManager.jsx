@@ -220,12 +220,9 @@ const EventManager = ({ isHomePage }) => {
 
   const onEventEdit = (id, eventParentId, recurringEvent) => {
     if (recurringEvent) {
-      console.log("Rec");
       const eventDate = events.find((event) => event._id === id).date;
       setEvents(events.map((event) => {
-        console.log(event);
         if (event.eventParent._id === eventParentId && event.date >= eventDate) {
-          console.log("This");
           event.eventParent = events.find((event) => event._id === id).eventParent;
         }
         return event;

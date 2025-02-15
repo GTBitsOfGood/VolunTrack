@@ -88,6 +88,7 @@ const EventFormModal = ({
       date: values.date,
       eventParent: values.eventParent,
       recurringEvent: values.recurringEvent,
+      customRecurrenceSettings: customRecurrenceSettings,
     };
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
@@ -110,6 +111,7 @@ const EventFormModal = ({
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,
+      customRecurrenceSettings: customRecurrenceSettings,
     };
     setSubmitting(true);
     updateEvent(
@@ -252,7 +254,6 @@ const EventFormModal = ({
     );
 
     if (recurringEventsMapping[recurringEventIndex] == "custom") {
-      console.log("Toggle!");
       toggleCustomModal();
     }
   };
@@ -262,6 +263,12 @@ const EventFormModal = ({
   const toggleCustomModal = () => {
     setShowCustomModal((prev) => !prev);
   };
+
+  const [customRecurrenceSettings, setCustomRecurrenceSettings] = useState(null);
+
+  const handleCustomRecurrence = (recurrenceSettings) => {
+    setCustomRecurrenceSettings(recurrenceSettings);
+  }
 
   /* --- Recurring Event --- */
 
@@ -405,6 +412,8 @@ const EventFormModal = ({
                           <CustomRecurringModal
                             open={showCustomModal}
                             toggle={toggleCustomModal}
+                            setRecurrence={handleCustomRecurrence}
+                            recurrenceSettings={customRecurrenceSettings}
                             // event={event}
                             // setEvent={(
                             //   e,

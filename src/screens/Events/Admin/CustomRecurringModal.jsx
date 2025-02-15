@@ -22,7 +22,12 @@ const Styled = {
   `,
 };
 
-const CustomRecurringModal = ({ open, toggle }) => {
+const CustomRecurringModal = ({
+  open,
+  toggle,
+  setRecurrence,
+  recurrenceSettings,
+}) => {
   /* Recurrence Selection */
   const dateChars = ["M", "T", "W", "T", "F", "S", "S"];
   const dateName = [
@@ -34,7 +39,7 @@ const CustomRecurringModal = ({ open, toggle }) => {
     "saturday",
     "sunday",
   ];
-  const [date, setDate] = useState(dateName[0]);
+  const [date, setDate] = useState([]);
 
   const everyChoices = ["day", "week", "month", "year"];
   const everyChoicesP = ["days", "weeks", "months", "years"];
@@ -44,10 +49,7 @@ const CustomRecurringModal = ({ open, toggle }) => {
 
   useEffect(() => {
     var choice;
-    console.log(repeatNumber);
-    console.log(everyChoice);
     if (everyChoices.includes(everyChoice)) {
-      console.log("no P");
       choice = everyChoices.indexOf(everyChoice);
     } else choice = everyChoicesP.indexOf(everyChoice);
 
@@ -62,7 +64,14 @@ const CustomRecurringModal = ({ open, toggle }) => {
   const [dateSelection, setDateSelection] = useState(false);
 
   useEffect(() => {
-    setDateSelection(!(everyChoice === "day" || everyChoice === "days"));
+    setDateSelection(
+      !(
+        everyChoice === "day" ||
+        everyChoice === "days" ||
+        everyChoice === "year" ||
+        everyChoice === "years"
+      )
+    );
   }, [everyChoice]);
 
   /* Date Selection */
@@ -72,6 +81,21 @@ const CustomRecurringModal = ({ open, toggle }) => {
   const [endChoice, setEndChoice] = useState("Never");
 
   const endChoices = ["Never", "On", "After"];
+
+  const [onDate, setOnDate] = useState(null);
+
+  const [occurences, setOccurences] = useState(1);
+
+  useEffect(() => {
+    if (recurrenceSettings) {
+      setEveryChoice(recurrenceSettings.recurrenceChoice);
+      setRepeatNumber(recurrenceSettings.recurrenceNumber);
+      setDate(recurrenceSettings.recurrenceDays);
+      setEndChoice(recurrenceSettings.recurrenceEndType);
+      setOnDate(recurrenceSettings.recurrenceEndDate);
+      setOccurences(recurrenceSettings.recurrenceEndOccurences);
+    }
+  }, [recurrenceSettings]);
 
   /* End Selection */
 
@@ -104,7 +128,6 @@ const CustomRecurringModal = ({ open, toggle }) => {
               options={repeatNumber > 1 ? everyChoicesP : everyChoices}
               callback={(option) => {
                 setEveryChoice(option);
-                console.log(option);
               }}
               className="flex h-[24px] items-center justify-between rounded-md border-0 bg-grey p-2"
               arrow
@@ -117,13 +140,19 @@ const CustomRecurringModal = ({ open, toggle }) => {
                 <div
                   className={
                     "flex h-[28px] w-[28px] cursor-pointer items-center justify-center rounded-full " +
-                    (date !== name
+                    (!date.includes(name)
                       ? "bg-grey text-black hover:bg-secondaryColor"
                       : "bg-primaryColor text-white") +
                     (!dateSelection ? " brightness-50" : "")
                   }
                   onClick={() => {
-                    if (dateSelection) setDate(name);
+                    if (dateSelection) {
+                      if (date.includes(name)) {
+                        setDate(date.filter((d) => d !== name));
+                      } else {
+                        setDate([...date, name]);
+                      }
+                    }
                   }}
                 >
                   {dateChars[index]}
@@ -149,11 +178,18 @@ const CustomRecurringModal = ({ open, toggle }) => {
                 {choice === "On" && (
                   <input
                     type="date"
+                    value={onDate ? onDate.toISOString().split("T")[0] : ""}
                     className={
                       "h-[24px] rounded-md border-0 bg-grey p-2 " +
                       (endChoice !== "On" ? " brightness-50" : "")
                     }
                     disabled={endChoice !== "On"}
+                    onChange={(e) => {
+                      const dateSplit = e.target.value.split("-");
+                      setOnDate(
+                        new Date(dateSplit[0], dateSplit[1] - 1, dateSplit[2])
+                      );
+                    }}
                   />
                 )}
                 {choice === "After" && (
@@ -167,13 +203,13 @@ const CustomRecurringModal = ({ open, toggle }) => {
                       type="number"
                       min="1"
                       max="999"
-                      // value={repeatNumber.toString()}
+                      value={occurences.toString()}
                       onChange={(e) => {
-                        // if (e.target.value === "") setRepeatNumber(0);
-                        // else
-                        //   setRepeatNumber(
-                        //     Math.abs(parseInt(e.target.value) * -1)
-                        //   );
+                        if (e.target.value === "") setOccurences(0);
+                        else
+                          setOccurences(
+                            Math.abs(parseInt(e.target.value) * -1)
+                          );
                       }}
                       pattern="\d*"
                       disabled={endChoice !== "After"}
@@ -197,7 +233,14 @@ const CustomRecurringModal = ({ open, toggle }) => {
               text="Confirm"
               onClick={() => {
                 toggle();
-                // setRecurringEventConfirm(true);
+                setRecurrence({
+                  recurrenceChoice: everyChoice,
+                  recurrenceNumber: repeatNumber,
+                  recurrenceDays: date,
+                  recurrenceEndType: endChoice,
+                  recurrenceEndDate: onDate,
+                  recurrenceEndOccurences: occurences,
+                });
               }}
             />
           </div>
@@ -209,9 +252,8 @@ const CustomRecurringModal = ({ open, toggle }) => {
 CustomRecurringModal.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  event: PropTypes.object.isRequired,
-  setEvent: PropTypes.func,
-  setEventEdit: PropTypes.func,
+  setRecurrence: PropTypes.func.isRequired,
+  recurrenceSettings: PropTypes.object,
 };
 
 export default CustomRecurringModal;

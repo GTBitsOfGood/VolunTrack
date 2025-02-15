@@ -17,17 +17,37 @@ import { start } from "repl";
 /* Recurring Events */
 
 const rruleTypeMapping: { [key: string]: number } = {
-  "daily": RRule.DAILY,
-  "weekly": RRule.WEEKLY,
-  "monthly": RRule.MONTHLY,
-  "annually": RRule.YEARLY,
-}
+  daily: RRule.DAILY,
+  weekly: RRule.WEEKLY,
+  monthly: RRule.MONTHLY,
+  annually: RRule.YEARLY,
+};
 
-const rruleDayMapping: Weekday[] = [ RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA, RRule.SU ]
+const rruleDayMapping: Weekday[] = [
+  RRule.MO,
+  RRule.TU,
+  RRule.WE,
+  RRule.TH,
+  RRule.FR,
+  RRule.SA,
+  RRule.SU,
+];
+
+const dayMapping: string[] = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
 
 const generateRRule = (result: any) => {
   const startDate = result.data.date;
-  const endDate = new Date(new Date(startDate).setFullYear(startDate.getFullYear() + 5));
+  const endDate = new Date(
+    new Date(startDate).setFullYear(startDate.getFullYear() + 5)
+  );
 
   if (result.data.recurringEvent === "daily") {
     const rule = new RRule({
@@ -45,7 +65,8 @@ const generateRRule = (result: any) => {
     });
     return rule;
   } else if (result.data.recurringEvent === "monthly") {
-    var day = startDate.getDate(), cnt = 0;
+    var day = startDate.getDate(),
+      cnt = 0;
     while (day > 0) {
       day -= 7;
       cnt++;
@@ -59,7 +80,17 @@ const generateRRule = (result: any) => {
     });
     return rule;
   } else if (result.data.recurringEvent === "annually") {
-    const date = (Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()) - Date.UTC(startDate.getFullYear(), 0, 0)) / 24 / 60 / 60 / 1000;
+    const date =
+      (Date.UTC(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate()
+      ) -
+        Date.UTC(startDate.getFullYear(), 0, 0)) /
+      24 /
+      60 /
+      60 /
+      1000;
     const rule = new RRule({
       freq: rruleTypeMapping[result.data.recurringEvent],
       byyearday: date,
@@ -67,9 +98,93 @@ const generateRRule = (result: any) => {
       until: endDate,
     });
     return rule;
+  } else return null;
+};
+
+const generateCustomRRule = (result: any) => {
+  const settings = result.data.customRecurrenceSettings;
+  const startDate = result.data.date;
+  var endCondition;
+  if (settings.recurrenceEndType === "On") {
+    endCondition = {
+      until: settings.recurrenceEndDate,
+    };
+  } else if (settings.recurrenceEndType === "After") {
+    endCondition = {
+      count: settings.recurrenceEndOccurences,
+    };
+  } else {
+    endCondition = {
+      until: new Date(
+        new Date(startDate).setFullYear(startDate.getFullYear() + 5)
+      ),
+    };
   }
-  else return null;
-}
+
+  const addConditions = {
+    interval: settings.recurrenceNumber,
+    dtstart: startDate,
+  };
+
+  var weekDayCondition = {};
+  if (settings.recurrenceDays.length > 0)
+    weekDayCondition = {
+      byweekday: settings.recurrenceDays.map(
+        (day: string) => rruleDayMapping[dayMapping.indexOf(day)]
+      ),
+    };
+
+  if (["day", "days"].includes(settings.recurrenceChoice)) {
+    const rule = new RRule({
+      freq: RRule.DAILY,
+      ...addConditions,
+      ...weekDayCondition,
+      ...endCondition,
+    });
+    return rule;
+  } else if (["week", "weeks"].includes(settings.recurrenceChoice)) {
+    const rule = new RRule({
+      freq: RRule.WEEKLY,
+      ...addConditions,
+      ...weekDayCondition,
+      ...endCondition,
+    });
+    return rule;
+  } else if (["month", "months"].includes(settings.recurrenceChoice)) {
+    const rule = new RRule({
+      freq: RRule.MONTHLY,
+      ...addConditions,
+      ...weekDayCondition,
+      ...endCondition,
+    });
+    return rule;
+  } else if (["year", "years"].includes(settings.recurrenceChoice)) {
+    const date =
+      (Date.UTC(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate()
+      ) -
+        Date.UTC(startDate.getFullYear(), 0, 0)) /
+      24 /
+      60 /
+      60 /
+      1000;
+    if (settings.recurrenceDays.length > 0) {
+      weekDayCondition = {
+        byyearday: date,
+      };
+    }
+    const rule = new RRule({
+      freq: RRule.YEARLY,
+      ...addConditions,
+      ...weekDayCondition,
+      ...endCondition,
+    });
+    return rule;
+  }
+  return null;
+};
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -142,13 +257,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
           return res.status(201).json({
             event: await event.populate("eventParent"),
-          })
+          });
         } else if (result.data.recurringEvent in rruleTypeMapping) {
           const rule = generateRRule(result);
           if (!rule)
             return res
-            .status(400)
-            .json({ error: "Invalid Recurring Event Type" });
+              .status(400)
+              .json({ error: "Invalid Recurring Event Type" });
 
           for (const date of rule.all()) {
             const event = await Event.create({
@@ -158,10 +273,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
             await createHistoryEventCreateEvent(user, event, eventParent);
 
-            await event.populate("eventParent")
+            await event.populate("eventParent");
           }
+          return res.status(201).json({});
         } else if (result.data.recurringEvent === "custom") {
-
+          const rule = generateCustomRRule(result);
+          if (!rule)
+            return res
+              .status(400)
+              .json({ error: "Invalid Recurring Event Type" });
+          for (const date of rule.all()) {
+            const event = await Event.create({
+              date: new Date(date),
+              eventParent: eventParent._id,
+            });
+            await createHistoryEventCreateEvent(user, event, eventParent);
+            await event.populate("eventParent");
+          }
+          return res.status(201).json({});
         } else {
           return res
             .status(400)
