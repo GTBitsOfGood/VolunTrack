@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useSession } from "next-auth/react";
-import axios from 'axios';
+import axios from "axios";
 
 function UploadFile() {
   const { data: session } = useSession();
@@ -51,21 +51,21 @@ function UploadFile() {
 
           const response = await axios.post("/api/azure/upload_file", {
             fileBuffer: base64File,
-            sasUrl: sasUrl, 
+            sasUrl: sasUrl,
           });
 
           console.log("Upload Response:", response.data);
         }
       };
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error("Error uploading file:", error);
     }
   };
 
   const fetchImageUrl = async () => {
     setLoading(true);
     setFetchError(null);
-  
+
     try {
       // Request to backend to get SAS URL for the image
       const response = await axios.get(
@@ -73,7 +73,7 @@ function UploadFile() {
       );
       const sasUrl = response.data.sasUrl;
       const blobExists = response.data.blobExists;
-  
+
       if (blobExists) {
         setImageUrl(sasUrl); // Blob exists, set the image URL
       } else {
@@ -97,13 +97,13 @@ function UploadFile() {
         </button>
         {uploadError && <p style={{ color: "red" }}>{uploadError}</p>}
       </div>
-      
+
       <div>
         <h2>Retrieve Image</h2>
         {fetchError && <p style={{ color: "red" }}>{fetchError}</p>}
         {imageUrl ? (
           <div>
-            <img src={imageUrl} alt="Uploaded Image"/>
+            <img src={imageUrl} alt="Uploaded Image" />
           </div>
         ) : (
           <p>No image available</p>

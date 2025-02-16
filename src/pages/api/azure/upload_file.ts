@@ -1,12 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { BlockBlobClient } from "@azure/storage-blob";
 
-interface UploadRequestBody {
+type UploadRequestBody = {
   fileBuffer: string;
   sasUrl: string;
-}
+};
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method === "POST") {
     try {
       const { fileBuffer, sasUrl }: UploadRequestBody = req.body;
