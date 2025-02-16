@@ -14,6 +14,9 @@ import { createOrganizationValidator } from "./helpers";
 import { organizationSettingsPages as pages } from "./pages";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import WaiverManager from "../Waivers/WaiverManager";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import VolunterHome from "../Home/VolunterHome";
+import Customization from "../Customization/Customization";
 
 const OrganizationSettings = () => {
   const [organizationData, setOrganizationData] = useState({});
@@ -30,6 +33,17 @@ const OrganizationSettings = () => {
     blue: "text-sky-800",
     purple: "text-purple-800",
     magenta: "text-pink-800",
+  };
+
+  const background = {
+    red: "bg-red-800",
+    orange: "bg-orange-600",
+    yellow: "bg-yellow-500",
+    green: "bg-lime-500",
+    sky: "bg-sky-500",
+    blue: "bg-sky-800",
+    purple: "bg-purple-800",
+    magenta: "bg-pink-800",
   };
 
   const handleWindowClose = (e) => {
@@ -139,7 +153,7 @@ const OrganizationSettings = () => {
                   {currentPage.key === "waiver" && (
                     <WaiverManager></WaiverManager>
                   )}
-                  {currentPage.key !== "waiver" && (
+                  {currentPage.key !== "waiver" && currentPage.key !== "styling" && (
                     <div className="w-full rounded-sm bg-grey p-4">
                       {currentPage.sections.map((section, i) => (
                         <div key={i} className="py-4">
@@ -198,6 +212,83 @@ const OrganizationSettings = () => {
                       ))}
                     </div>
                   )}
+                  {currentPage.key === "styling" && (
+                  <div style={{minWidth: "50rem"}} className="w-full rounded-sm bg-grey p-4">
+                  <div className="flex flex-row gap-8 items-start border-b border-gray-800 m-0">
+                    {currentPage.sections.map((section, i) => (
+                      <div key={i} className="flex flex-col gap-4 pr-0 md:flex-row">
+                          {section.fields.map((field, j) =>
+                            field.type === "dropdown" ? (
+                              <div key={i} className="py-4 flex flex-col">
+                                <h3 className="mb-2 text-lg font-bold">{section.title}</h3>
+                              <div key={j} className="">
+                                <Field name={field.name} key={j}>
+                                  {({ field }) => (
+                                    <Dropdown
+                                    arrowIcon={false}
+                                    style={{backgroundColor: "white"}}
+                                      label={
+                                        <div className="flex gap-2 items-center">
+                                        <span
+                                            className={`inline-block w-4 h-4 rounded-full ${background[field.value]}`}
+                                          ></span>
+                                          <span style={{color: "black"}} className="capitalize">{field.value}</span>
+                                          <ChevronDownIcon className="ml-2 h-5 w-5" style={{color: "black"}}/>
+                                          </div>
+                                      }
+                                      id={field.name}
+                                      name={field.name}
+                                      key={j}
+                                    >
+                                      {Object.keys(colors).map((color) => (
+                                        <Dropdown.Item
+                                          key={color}
+                                          onClick={() => {
+                                            setTheme(color);
+                                            setFieldValue("theme", color);
+                                          }}
+                                          className="flex items-center gap-2"
+                                        >
+                                          <span
+                                            className={`inline-block w-4 h-4 rounded-full ${background[color]}`}
+                                          ></span>
+                                          <span className="capitalize">{color}</span>
+                                        </Dropdown.Item>
+                                      ))}
+                                    </Dropdown>
+                                  )}
+                                </Field>
+                              </div>
+                              </div>
+                            ) : (
+                              <div key={j} className="py-4 flex flex-col">
+                                <div className="flex gap-4 items-center">
+                                  <h3 className="mb-2 text-lg font-bold">{section.title}</h3>
+                                  <p className="m-0 text-sm font-medium text-gray-900 dark:text-gray-300 mb-1 h-6 font-medium text-slate-600">
+                                    {field.label}
+                                  </p>
+                                </div>
+                                <div style={{width: "140%"}}>
+                                  <InputField
+                                    type={field.type}
+                                    key={field.name}
+                                    name={field.name}
+                                    placeholder={field.placeholder}
+                                    isRequired={field.isRequired}
+                                  />
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  <VolunterHome></VolunterHome>
+                  </div>
+                  )}
+                {currentPage.key === "customization" && (
+                  <Customization></Customization>
+                )}
                 </div>
               </div>
             </div>

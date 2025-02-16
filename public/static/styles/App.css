@@ -49,3 +49,12 @@ body,
   width: 100%;
   font-weight: bolder;
 }
+
+.ql-editor {
+  min-height: 300px;
+}
+
+.ql-toolbar{
+  display: flex;
+  justify-content: space-between;
+}
