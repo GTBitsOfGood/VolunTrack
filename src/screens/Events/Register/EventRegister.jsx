@@ -23,6 +23,7 @@ import EventWaiverModal from "./EventWaiverModal";
 
 
 
+
 const Styled = {
   Container: styled(Container)`
     overflow-y: scroll;
@@ -116,39 +117,48 @@ const EventRegister = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [registrations, setRegistrations] = useState([]);
   const [regCount, setRegCount] = useState(0);
+  
 
   useEffect(() => {
     onLoadEvent();
   }, [refreshTrigger]);
 
   const onLoadEvent = () => {
-    getEvent(eventId).then((result) => {
-      if (result?.data?.event) {
-        setEvent(result.data.event);
+    getEvent(eventId)
+    .then((eventResult) => {
+      if (eventResult?.data?.event) {
+        setEvent(eventResult.data.event);
       }
-    });
-    getRegistrations({ eventId, userId: user._id }).then((result) => {
-      if (result?.data?.registrations?.length > 0) {
+      // Fetch user registrations
+      return getRegistrations({ eventId, userId: user._id });
+    })
+    .then((registrationsResult) => {
+      if (registrationsResult?.data?.registrations?.length > 0) {
         setIsRegistered(true);
-        setMinors(result.data.registrations[0].minors);
-        if (result.data.registrations[0].minors.length > 0) setHasMinor(true);
-        setRegistrations(result.data.registrations);
-        
+        setMinors(registrationsResult.data.registrations[0].minors);
+        if (registrationsResult.data.registrations[0].minors.length > 0) setHasMinor(true);
+        setRegistrations(registrationsResult.data.registrations);
+
         let count = 0;
-        result.data.registrations.map((reg) => {
+        registrationsResult.data.registrations.forEach((reg) => {
           count += 1 + reg.minors.length;
         });
       }
-    });
-
-    getRegistrations({ eventId }).then((res) => {
-      let count = 0;
-      res.data.registrations.map((reg) => {
-        if (reg.approved == "approved") {
-          count += 1 + reg.minors.length;
+      // Fetch all registrations for the event
+      return getRegistrations({ eventId });
+    })
+    .then((allRegistrationsResult) => {
+      let approvedCount = 0;
+      allRegistrationsResult.data.registrations.forEach((reg) => {
+        if (reg.approved === "approved") {
+          approvedCount += 1 + reg.minors.length;
         }
       });
-      setRegCount(count);
+      // Avoid displaying negative slots left
+      setRegCount(Math.min(approvedCount, event.eventParent.maxVolunteers));
+    })
+    .catch((error) => {
+      console.error("Error loading event data:", error);
     });
   };
 
