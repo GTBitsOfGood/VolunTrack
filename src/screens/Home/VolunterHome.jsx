@@ -23,7 +23,13 @@ const VolunterHome = () => {
   } = useSession();
 
   const TOOLBAR_OPTIONS = [
-    [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],[],[],[],[],[],[],
+    [{ header: [1, 2, 3, 4, 5, 6, false] }, { font: [] }],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
     [
       { color: [] },
       "italic",
@@ -32,7 +38,7 @@ const VolunterHome = () => {
       { align: "center" },
       { align: "right" },
       "image",
-      'video'
+      "video",
     ],
   ];
 
@@ -73,7 +79,7 @@ const VolunterHome = () => {
   };
 
   return (
-    <div className="flex-column mx-1 my-2 flex rounded-sm p-4 gap-8">
+    <div className="flex-column mx-1 my-2 flex gap-8 rounded-sm p-4">
       <div>
         <div className="flex items-start gap-4">
           <h2 className="text-lg font-bold">Volunteer Home</h2>
@@ -85,14 +91,22 @@ const VolunterHome = () => {
           />
         </div>
         <div className="flex items-start justify-between">
-          <p className="m-0 text-sm font-medium text-gray-900 dark:text-gray-300 mb-1 h-6 font-medium text-slate-600">
+          <p className="m-0 mb-1 h-6 text-sm font-medium font-medium text-gray-900 text-slate-600 dark:text-gray-300">
             Design the Home page for volunteers
           </p>
-          { edit && (
-            <div className="flex items-start gap-4 cursor-pointer" onClick={handlePreviewClick}>
-            <EyeIcon style={{ color: "#0183A1" }} className="w-6 h-6 text-gray-500" />
-            <p style={{ color: "#0183A1" }} className="cursor-pointer">Preview</p>
-          </div>
+          {edit && (
+            <div
+              className="flex cursor-pointer items-start gap-4"
+              onClick={handlePreviewClick}
+            >
+              <EyeIcon
+                style={{ color: "#0183A1" }}
+                className="h-6 w-6 text-gray-500"
+              />
+              <p style={{ color: "#0183A1" }} className="cursor-pointer">
+                Preview
+              </p>
+            </div>
           )}
         </div>
       </div>
@@ -102,7 +116,9 @@ const VolunterHome = () => {
             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
               <CheckCircleIcon className="h-5 w-5" />
             </div>
-            <div className="pl-2 text-sm font-normal">Minor waiver saved successfully!</div>
+            <div className="pl-2 text-sm font-normal">
+              Minor waiver saved successfully!
+            </div>
             <Toast.Toggle />
           </Toast>
         </div>
@@ -111,7 +127,7 @@ const VolunterHome = () => {
         <>
           <div className="mb-4 bg-white">
             <ReactQuill
-              className="bg-white h-auto"
+              className="h-auto bg-white"
               value={pageContent}
               modules={{ toolbar: TOOLBAR_OPTIONS, resize: {} }}
               onChange={(newValue) => {
@@ -125,7 +141,10 @@ const VolunterHome = () => {
           </div>
         </>
       )}
-      {showPreview && <PreviewModel pageContent={pageContent} onClose={handleClosePreview} />} {/* Pass pageContent and onClose as props */}
+      {showPreview && (
+        <PreviewModel pageContent={pageContent} onClose={handleClosePreview} />
+      )}{" "}
+      {/* Pass pageContent and onClose as props */}
     </div>
   );
 };

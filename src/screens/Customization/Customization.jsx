@@ -63,7 +63,9 @@ const Customization = () => {
   };
 
   const handleRemoveQuestion = (questionId) => {
-    const updatedQuestions = questions.filter((question) => question.id !== questionId);
+    const updatedQuestions = questions.filter(
+      (question) => question.id !== questionId
+    );
     setQuestions(updatedQuestions);
     // Implement backend call to remove question here.
   };
@@ -80,7 +82,7 @@ const Customization = () => {
   };
 
   useEffect(() => {
-    console.log(questions)
+    console.log(questions);
     const handleResize = () => {
       setMinWidth(`${window.innerWidth * 0.4}px`);
     };
@@ -99,8 +101,8 @@ const Customization = () => {
 
   return (
     <div style={{ minWidth }} className="w-full rounded-sm bg-grey p-4">
-      <div className="flex flex-col border-b border-gray-800 m-0">
-        <div className="flex items-center justify-between w-full">
+      <div className="m-0 flex flex-col border-b border-gray-800">
+        <div className="flex w-full items-center justify-between">
           <div className="flex items-start gap-4">
             <h2 className="text-lg font-bold">Registration Form</h2>
             <ToggleSwitch
@@ -110,13 +112,16 @@ const Customization = () => {
               color={"primary"}
             />
           </div>
-          <div className="flex items-center gap-4 cursor-pointer" onClick={handleCollapseToggle}>
+          <div
+            className="flex cursor-pointer items-center gap-4"
+            onClick={handleCollapseToggle}
+          >
             {edit && (
               <>
                 {isCollapsed ? (
-                  <ChevronDownIcon className="w-6 h-6 text-primaryColor" />
+                  <ChevronDownIcon className="h-6 w-6 text-primaryColor" />
                 ) : (
-                  <ChevronUpIcon className="w-6 h-6 text-primaryColor" />
+                  <ChevronUpIcon className="h-6 w-6 text-primaryColor" />
                 )}
               </>
             )}
@@ -124,7 +129,7 @@ const Customization = () => {
         </div>
         {edit && (
           <div
-            className={`transition-max-height duration-500 ease-in-out overflow-hidden ${
+            className={`transition-max-height overflow-hidden duration-500 ease-in-out ${
               isCollapsed ? "max-h-0" : "max-h-screen"
             }`}
           >
@@ -134,23 +139,31 @@ const Customization = () => {
                   {(provided) => (
                     <div {...provided.droppableProps} ref={provided.innerRef}>
                       {questions.map((question, index) => (
-                        <Draggable key={question.id} draggableId={String(question.id)} index={index}>
+                        <Draggable
+                          key={question.id}
+                          draggableId={String(question.id)}
+                          index={index}
+                        >
                           {(provided, snapshot) => (
                             <div
                               style={{ cursor: "default !important" }}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
-                              className={`bg-white rounded-lg mb-4 ${
+                              className={`mb-4 rounded-lg bg-white ${
                                 snapshot.isDragging ? "opacity-50" : ""
                               }`}
                             >
                               <QuestionCard
                                 index={index}
                                 question={question}
-                                onChange={(updatedQuestion) => handleQuestionChange(index, updatedQuestion)}
+                                onChange={(updatedQuestion) =>
+                                  handleQuestionChange(index, updatedQuestion)
+                                }
                                 provided={provided}
                                 onAddItem={() => handleAddItem(question.id)} // Pass the handleAddItem function
-                                onRemove={() => handleRemoveQuestion(question.id)} // Pass the handleRemoveQuestion function
+                                onRemove={() =>
+                                  handleRemoveQuestion(question.id)
+                                } // Pass the handleRemoveQuestion function
                               />
                             </div>
                           )}
@@ -161,9 +174,20 @@ const Customization = () => {
                   )}
                 </Droppable>
               </DragDropContext>
-              <div className="flex items-start gap-4 cursor-pointer" onClick={handleAdd}>
-                <PlusIcon className="w-6 h-6 text-primaryColor" />
-                <p style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "20", fontWeight: "600" }}>
+              <div
+                className="flex cursor-pointer items-start gap-4"
+                onClick={handleAdd}
+              >
+                <PlusIcon className="h-6 w-6 text-primaryColor" />
+                <p
+                  style={{
+                    color: "#637381",
+                    fontFamily: "Open Sans",
+                    fontStyle: "normal",
+                    fontSize: "20",
+                    fontWeight: "600",
+                  }}
+                >
                   Add Question
                 </p>
               </div>

@@ -9,7 +9,13 @@ import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import { CiCircleChevDown } from "react-icons/ci";
 import { IoRadioButtonOn } from "react-icons/io5";
 
-const QuestionCard = ({ question, onChange, provided, onAddItem, onRemove }) => {
+const QuestionCard = ({
+  question,
+  onChange,
+  provided,
+  onAddItem,
+  onRemove,
+}) => {
   const [title, setTitle] = useState(question.title);
   const [type, setType] = useState(question.type);
   const [isHovered, setIsHovered] = useState(false);
@@ -53,220 +59,344 @@ const QuestionCard = ({ question, onChange, provided, onAddItem, onRemove }) => 
 
   return (
     <div
-      className="bg-white rounded-lg p-4 mb-4"
+      className="mb-4 rounded-lg bg-white p-4"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       ref={provided.innerRef}
       {...provided.draggableProps}
     >
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <TextInput
             type="text"
             value={title}
             onChange={handleTitleChange}
             placeholder="Question Title"
-            style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "600" }}
-            className="w-80 border-b border-gray-400 bg-gray-50 rounded-none focus:ring-0 focus:border-gray-600"
+            style={{
+              color: "#637381",
+              fontFamily: "Open Sans",
+              fontStyle: "normal",
+              fontSize: "12px !important",
+              fontWeight: "600",
+            }}
+            className="w-80 rounded-none border-b border-gray-400 bg-gray-50 focus:border-gray-600 focus:ring-0"
           />
         </div>
         <div className="flex items-center gap-4">
-        {isHovered && (
-          <div className="flex items-center gap-4">
-            <Dropdown
+          {isHovered && (
+            <div className="flex items-center gap-4">
+              <Dropdown
                 arrowIcon={false}
-                style={{backgroundColor: "white"}}
-                label= {
-                    <div className="flex gap-2 items-center">
-                      {question.type === "multiple" && (
-                        <>
-                      <IoRadioButtonOn className="ml-2 h-5 w-5" style={{color: "black"}}   /> 
-                      <span style={{color: "black"}} className="capitalize">Mutiple Choice</span>
+                style={{ backgroundColor: "white" }}
+                label={
+                  <div className="flex items-center gap-2">
+                    {question.type === "multiple" && (
+                      <>
+                        <IoRadioButtonOn
+                          className="ml-2 h-5 w-5"
+                          style={{ color: "black" }}
+                        />
+                        <span style={{ color: "black" }} className="capitalize">
+                          Mutiple Choice
+                        </span>
                       </>
-                      )}
-                      {question.type === "dropdown" && (
-                        <>
-                        <CiCircleChevDown className="ml-2 h-5 w-5" style={{color: "black"}} /> 
-                        <span style={{color: "black"}} className="capitalize">Dropdown</span>
+                    )}
+                    {question.type === "dropdown" && (
+                      <>
+                        <CiCircleChevDown
+                          className="ml-2 h-5 w-5"
+                          style={{ color: "black" }}
+                        />
+                        <span style={{ color: "black" }} className="capitalize">
+                          Dropdown
+                        </span>
                       </>
-                      )}
-                      {question.type === "response" && (
-                        <>
-                      <HiOutlineMenuAlt2 className="ml-2 h-5 w-5" style={{color: "black"}} /> 
-                      <span style={{color: "black"}} className="capitalize">Free Response</span>
+                    )}
+                    {question.type === "response" && (
+                      <>
+                        <HiOutlineMenuAlt2
+                          className="ml-2 h-5 w-5"
+                          style={{ color: "black" }}
+                        />
+                        <span style={{ color: "black" }} className="capitalize">
+                          Free Response
+                        </span>
                       </>
-                      )}
-                      {question.type === "checkboxes" && (
-                        <>
-                        <CiSquareCheck className="ml-2 h-5 w-5" style={{color: "black"}} /> 
-                      <span style={{color: "black"}} className="capitalize">checkboxes</span>
+                    )}
+                    {question.type === "checkboxes" && (
+                      <>
+                        <CiSquareCheck
+                          className="ml-2 h-5 w-5"
+                          style={{ color: "black" }}
+                        />
+                        <span style={{ color: "black" }} className="capitalize">
+                          checkboxes
+                        </span>
                       </>
-                      )}
-                      <ChevronDownIcon className="ml-2 h-5 w-5" style={{color: "black"}}/>
-                      </div>
+                    )}
+                    <ChevronDownIcon
+                      className="ml-2 h-5 w-5"
+                      style={{ color: "black" }}
+                    />
+                  </div>
                 }
-                >
+              >
                 <Dropdown.Item onClick={() => handleTypeChange("multiple")}>
-                <div className="flex gap-2 items-center">
-                <IoRadioButtonOn /> 
-                <span style={{color: "black"}} className="capitalize">Mutiple Choice</span>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <IoRadioButtonOn />
+                    <span style={{ color: "black" }} className="capitalize">
+                      Mutiple Choice
+                    </span>
+                  </div>
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleTypeChange("dropdown")}>
-                <div className="flex gap-2 items-center">
-                <CiCircleChevDown /> 
-                <span style={{color: "black"}} className="capitalize">Dropdown</span>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <CiCircleChevDown />
+                    <span style={{ color: "black" }} className="capitalize">
+                      Dropdown
+                    </span>
+                  </div>
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleTypeChange("response")}>
-                <div className="flex gap-2 items-center">
-                <HiOutlineMenuAlt2 /> 
-                <span style={{color: "black"}} className="capitalize">Free Response</span>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <HiOutlineMenuAlt2 />
+                    <span style={{ color: "black" }} className="capitalize">
+                      Free Response
+                    </span>
+                  </div>
                 </Dropdown.Item>
                 <Dropdown.Item onClick={() => handleTypeChange("checkboxes")}>
-                <div className="flex gap-2 items-center">
-                <CiSquareCheck /> 
-                <span style={{color: "black"}} className="capitalize">checkboxes</span>
-                </div>
+                  <div className="flex items-center gap-2">
+                    <CiSquareCheck />
+                    <span style={{ color: "black" }} className="capitalize">
+                      checkboxes
+                    </span>
+                  </div>
                 </Dropdown.Item>
-            </Dropdown>
-            <FaTrash className="cursor-pointer" onClick={onRemove} />
+              </Dropdown>
+              <FaTrash className="cursor-pointer" onClick={onRemove} />
+            </div>
+          )}
+          <div className="cursor-pointer" {...provided.dragHandleProps}>
+            {" "}
+            <FaGripVertical />
           </div>
-        )}
-        <div className="cursor-pointer" {...provided.dragHandleProps}> <FaGripVertical/></div>
         </div>
       </div>
       {question.type === "multiple" && (
         <>
-        {question.items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 h-12">
-                <RxCircle />
-                {isHovered ? (<>
-                <TextInput
-                type="text"
-                value={item.value}
-                onChange={(e) => handleChoiceChange(index, e.target.value)}
-                placeholder="Choice"
-                style={{ backgroundColor: "white", color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200" }}
-                className="w-80 border-b border-gray-400 bg-gray-50 rounded-none focus:ring-0 focus:border-gray-600"
-                />
-                <RxCross1 className="cursor-pointer" onClick={() => handleRemoveItem(index)} />
-                </>) : (
-                    <p style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200" }}
-                className="m-0">{item.value}</p>
-                )}
+          {question.items.map((item, index) => (
+            <div key={index} className="flex h-12 items-center gap-2">
+              <RxCircle />
+              {isHovered ? (
+                <>
+                  <TextInput
+                    type="text"
+                    value={item.value}
+                    onChange={(e) => handleChoiceChange(index, e.target.value)}
+                    placeholder="Choice"
+                    style={{
+                      backgroundColor: "white",
+                      color: "#637381",
+                      fontFamily: "Open Sans",
+                      fontStyle: "normal",
+                      fontSize: "12px !important",
+                      fontWeight: "200",
+                    }}
+                    className="w-80 rounded-none border-b border-gray-400 bg-gray-50 focus:border-gray-600 focus:ring-0"
+                  />
+                  <RxCross1
+                    className="cursor-pointer"
+                    onClick={() => handleRemoveItem(index)}
+                  />
+                </>
+              ) : (
+                <p
+                  style={{
+                    color: "#637381",
+                    fontFamily: "Open Sans",
+                    fontStyle: "normal",
+                    fontSize: "12px !important",
+                    fontWeight: "200",
+                  }}
+                  className="m-0"
+                >
+                  {item.value}
+                </p>
+              )}
             </div>
-            ))}
-            {isHovered ? (
-        <div className="flex items-center gap-2 h-12">
-          <RxCircle />
-          <a
-            style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200", cursor: "pointer" }}
-            onClick={onAddItem}
-          >
-            Add Choice
-          </a>
-        </div>
-        ) : null}
+          ))}
+          {isHovered ? (
+            <div className="flex h-12 items-center gap-2">
+              <RxCircle />
+              <a
+                style={{
+                  color: "#637381",
+                  fontFamily: "Open Sans",
+                  fontStyle: "normal",
+                  fontSize: "12px !important",
+                  fontWeight: "200",
+                  cursor: "pointer",
+                }}
+                onClick={onAddItem}
+              >
+                Add Choice
+              </a>
+            </div>
+          ) : null}
         </>
       )}
 
       {question.type === "dropdown" && (
         <>
-        {isHovered ? (<>
-        {question.items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 h-12">
-                <RxCircle />
-                <TextInput
-                type="text"
-                value={item.value}
-                onChange={(e) => handleChoiceChange(index, e.target.value)}
-                placeholder="Choice"
-                style={{ backgroundColor: "white", color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200" }}
-                className="w-80 border-b border-gray-400 bg-gray-50 rounded-none focus:ring-0 focus:border-gray-600"
-                />
-                <RxCross1 className="cursor-pointer" onClick={() => handleRemoveItem(index)} />
-                
-            </div>
-            ))}
-        </>) : null}
-        {!isHovered ? (<>
-        <Select
-        onChange={handleTypeChange}
-        className="w-80">
-        <option value="" disabled selected>choose</option>
-        {question.items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 h-12">
-                
+          {isHovered ? (
+            <>
+              {question.items.map((item, index) => (
+                <div key={index} className="flex h-12 items-center gap-2">
+                  <RxCircle />
+                  <TextInput
+                    type="text"
+                    value={item.value}
+                    onChange={(e) => handleChoiceChange(index, e.target.value)}
+                    placeholder="Choice"
+                    style={{
+                      backgroundColor: "white",
+                      color: "#637381",
+                      fontFamily: "Open Sans",
+                      fontStyle: "normal",
+                      fontSize: "12px !important",
+                      fontWeight: "200",
+                    }}
+                    className="w-80 rounded-none border-b border-gray-400 bg-gray-50 focus:border-gray-600 focus:ring-0"
+                  />
+                  <RxCross1
+                    className="cursor-pointer"
+                    onClick={() => handleRemoveItem(index)}
+                  />
+                </div>
+              ))}
+            </>
+          ) : null}
+          {!isHovered ? (
+            <>
+              <Select onChange={handleTypeChange} className="w-80">
+                <option value="" disabled selected>
+                  choose
+                </option>
+                {question.items.map((item, index) => (
+                  <div key={index} className="flex h-12 items-center gap-2">
                     <option value={index}>{item.value}</option>
-                
+                  </div>
+                ))}
+              </Select>
+            </>
+          ) : null}
+          {isHovered ? (
+            <div className="flex h-12 items-center gap-2">
+              <RxCircle />
+              <a
+                style={{
+                  color: "#637381",
+                  fontFamily: "Open Sans",
+                  fontStyle: "normal",
+                  fontSize: "12px !important",
+                  fontWeight: "200",
+                  cursor: "pointer",
+                }}
+                onClick={onAddItem}
+              >
+                Add Choice
+              </a>
             </div>
-            ))}
-        </Select>
-        </>) : null}
-        {isHovered ? (
-        <div className="flex items-center gap-2 h-12">
-          <RxCircle />
-          <a
-            style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200", cursor: "pointer" }}
-            onClick={onAddItem}
-          >
-            Add Choice
-          </a>
-        </div>
-        ) : null}
+          ) : null}
         </>
       )}
 
       {question.type === "response" && (
         <>
-                <TextInput
-                type="text"
-                value={question.text}
-                onChange={(e) => handleChoiceChange(index, e.target.value)}
-                placeholder="Text"
-                style={{ backgroundColor: "white", color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200", cursor: "pointer" }}
-                className="w-80  border-b border-gray-400 bg-gray-50 rounded-none focus:ring-0 focus:border-gray-600"
-                />
+          <TextInput
+            type="text"
+            value={question.text}
+            //eslint-disable-next-line
+            onChange={(e) => handleChoiceChange(index, e.target.value)}
+            placeholder="Text"
+            style={{
+              backgroundColor: "white",
+              color: "#637381",
+              fontFamily: "Open Sans",
+              fontStyle: "normal",
+              fontSize: "12px !important",
+              fontWeight: "200",
+              cursor: "pointer",
+            }}
+            className="w-80  rounded-none border-b border-gray-400 bg-gray-50 focus:border-gray-600 focus:ring-0"
+          />
         </>
       )}
 
-        {question.type === "checkkbox" && (
+      {question.type === "checkkbox" && (
         <>
-        {question.items.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 h-12">
-                <IoSquareOutline />
-                {isHovered ? (<>
-                <TextInput
-                type="text"
-                value={item.value}
-                onChange={(e) => handleChoiceChange(index, e.target.value)}
-                placeholder="Choice"
-                style={{ backgroundColor: "white", color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200" }}
-                className="w-80 border-b border-gray-400 bg-gray-50 rounded-none focus:ring-0 focus:border-gray-600"
-                />
-                <RxCross1 className="cursor-pointer" onClick={() => handleRemoveItem(index)} />
-                </>) : (
-                    <p style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200" }}
-                className="m-0">{item.value}</p>
-                )}
+          {question.items.map((item, index) => (
+            <div key={index} className="flex h-12 items-center gap-2">
+              <IoSquareOutline />
+              {isHovered ? (
+                <>
+                  <TextInput
+                    type="text"
+                    value={item.value}
+                    onChange={(e) => handleChoiceChange(index, e.target.value)}
+                    placeholder="Choice"
+                    style={{
+                      backgroundColor: "white",
+                      color: "#637381",
+                      fontFamily: "Open Sans",
+                      fontStyle: "normal",
+                      fontSize: "12px !important",
+                      fontWeight: "200",
+                    }}
+                    className="w-80 rounded-none border-b border-gray-400 bg-gray-50 focus:border-gray-600 focus:ring-0"
+                  />
+                  <RxCross1
+                    className="cursor-pointer"
+                    onClick={() => handleRemoveItem(index)}
+                  />
+                </>
+              ) : (
+                <p
+                  style={{
+                    color: "#637381",
+                    fontFamily: "Open Sans",
+                    fontStyle: "normal",
+                    fontSize: "12px !important",
+                    fontWeight: "200",
+                  }}
+                  className="m-0"
+                >
+                  {item.value}
+                </p>
+              )}
             </div>
-            ))}
-        {isHovered ? (
-        <div className="flex items-center gap-2 h-12">
-          <IoSquareOutline />
-          <a
-            style={{ color: "#637381", fontFamily: "Open Sans", fontStyle: "normal", fontSize: "12px !important", fontWeight: "200", cursor: "pointer" }}
-            onClick={onAddItem}
-          >
-            Add Choice
-          </a>
-        </div>
-        ) : null}
+          ))}
+          {isHovered ? (
+            <div className="flex h-12 items-center gap-2">
+              <IoSquareOutline />
+              <a
+                style={{
+                  color: "#637381",
+                  fontFamily: "Open Sans",
+                  fontStyle: "normal",
+                  fontSize: "12px !important",
+                  fontWeight: "200",
+                  cursor: "pointer",
+                }}
+                onClick={onAddItem}
+              >
+                Add Choice
+              </a>
+            </div>
+          ) : null}
         </>
       )}
-
     </div>
   );
 };
