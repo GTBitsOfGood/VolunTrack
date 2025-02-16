@@ -23,7 +23,7 @@ const EventsList = ({
   registrations,
   onCreateClicked,
   onEventDelete,
-  onEventEdit
+  onEventEdit,
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);

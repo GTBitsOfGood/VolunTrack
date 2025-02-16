@@ -44,8 +44,8 @@ const dayMapping: string[] = [
 ];
 
 const generateRRule = (result: any) => {
-  const startDate = result.data.date;
-  const endDate = new Date(
+  const startDate: Date = result.data.date;
+  const endDate: Date = new Date(
     new Date(startDate).setFullYear(startDate.getFullYear() + 5)
   );
 
@@ -65,7 +65,7 @@ const generateRRule = (result: any) => {
     });
     return rule;
   } else if (result.data.recurringEvent === "monthly") {
-    var day = startDate.getDate(),
+    let day = startDate.getDate(),
       cnt = 0;
     while (day > 0) {
       day -= 7;
@@ -102,9 +102,9 @@ const generateRRule = (result: any) => {
 };
 
 const generateCustomRRule = (result: any) => {
-  const settings = result.data.customRecurrenceSettings;
-  const startDate = result.data.date;
-  var endCondition;
+  const settings: { [key: string]: any } = result.data.customRecurrenceSettings;
+  const startDate: Date = result.data.date;
+  let endCondition;
   if (settings.recurrenceEndType === "On") {
     endCondition = {
       until: settings.recurrenceEndDate,
@@ -126,15 +126,15 @@ const generateCustomRRule = (result: any) => {
     dtstart: startDate,
   };
 
-  var weekDayCondition = {};
+  let weekDayCondition = {};
   if (settings.recurrenceDays.length > 0)
     weekDayCondition = {
-      byweekday: settings.recurrenceDays.map(
+      byweekday: (settings.recurrenceDays as string[]).map(
         (day: string) => rruleDayMapping[dayMapping.indexOf(day)]
       ),
     };
 
-  if (["day", "days"].includes(settings.recurrenceChoice)) {
+  if (["day", "days"].includes(settings.recurrenceChoice as string)) {
     const rule = new RRule({
       freq: RRule.DAILY,
       ...addConditions,
@@ -142,7 +142,7 @@ const generateCustomRRule = (result: any) => {
       ...endCondition,
     });
     return rule;
-  } else if (["week", "weeks"].includes(settings.recurrenceChoice)) {
+  } else if (["week", "weeks"].includes(settings.recurrenceChoice as string)) {
     const rule = new RRule({
       freq: RRule.WEEKLY,
       ...addConditions,
@@ -150,7 +150,9 @@ const generateCustomRRule = (result: any) => {
       ...endCondition,
     });
     return rule;
-  } else if (["month", "months"].includes(settings.recurrenceChoice)) {
+  } else if (
+    ["month", "months"].includes(settings.recurrenceChoice as string)
+  ) {
     const rule = new RRule({
       freq: RRule.MONTHLY,
       ...addConditions,
@@ -158,7 +160,7 @@ const generateCustomRRule = (result: any) => {
       ...endCondition,
     });
     return rule;
-  } else if (["year", "years"].includes(settings.recurrenceChoice)) {
+  } else if (["year", "years"].includes(settings.recurrenceChoice as string)) {
     const date =
       (Date.UTC(
         startDate.getFullYear(),

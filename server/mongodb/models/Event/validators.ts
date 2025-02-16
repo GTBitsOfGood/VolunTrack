@@ -18,14 +18,16 @@ export const eventPopulatedInputClientValidator = (minMaxVolunteers?: number) =>
     eventParent: eventParentInputClientValidator(minMaxVolunteers),
     isEnded: z.boolean().optional(),
     recurringEvent: z.string(),
-    customRecurrenceSettings: z.object({
-      recurrenceChoice: z.string(),
-      recurrenceNumber: z.number().int().positive(),
-      recurrenceDays: z.array(z.string()),
-      recurrenceEndType: z.string(),
-      recurrenceEndDate: z.coerce.date().optional(),
-      recurrenceEndOccurences: z.number().int().positive().optional(),
-    }).optional()
+    customRecurrenceSettings: z
+      .object({
+        recurrenceChoice: z.string(),
+        recurrenceNumber: z.number().int().positive(),
+        recurrenceDays: z.array(z.string()),
+        recurrenceEndType: z.string(),
+        recurrenceEndDate: z.coerce.date().optional(),
+        recurrenceEndOccurences: z.number().int().positive().optional(),
+      })
+      .optional(),
   });
 
 export const eventInputServerValidator = z.object({
@@ -42,14 +44,16 @@ export const eventPopulatedInputServerValidator = z.object({
   eventParent: eventParentInputServerValidator,
   isEnded: z.boolean().optional(),
   recurringEvent: z.string(),
-  customRecurrenceSettings: z.object({
-    recurrenceChoice: z.string(),
-    recurrenceNumber: z.number().int().positive(),
-    recurrenceDays: z.array(z.string()),
-    recurrenceEndType: z.string(),
-    recurrenceEndDate: z.coerce.date().optional(),
-    recurrenceEndOccurences: z.number().int().positive().optional(),
-  }).or(z.null())
+  customRecurrenceSettings: z
+    .object({
+      recurrenceChoice: z.string(),
+      recurrenceNumber: z.number().int().positive(),
+      recurrenceDays: z.array(z.string()),
+      recurrenceEndType: z.string(),
+      recurrenceEndDate: z.coerce.date().optional(),
+      recurrenceEndOccurences: z.number().int().positive().optional(),
+    })
+    .or(z.null()),
 });
 
 export type EventInputClient = z.infer<typeof eventInputClientValidator>;

@@ -51,8 +51,10 @@ const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
                   onClick={() => setRecurringEvent(false)}
                   className="flex items-center gap-4"
                 >
-                  <div className="flex items-center justify-center w-[22px] h-[22px] rounded-full border-primaryColor border-[1.5px] bg-white">
-                    {!recurringEvent && <div className="h-[10.5px] w-[10.5px] rounded-full bg-primaryColor"></div>}
+                  <div className="flex h-[22px] w-[22px] items-center justify-center rounded-full border-[1.5px] border-primaryColor bg-white">
+                    {!recurringEvent && (
+                      <div className="h-[10.5px] w-[10.5px] rounded-full bg-primaryColor"></div>
+                    )}
                   </div>
                   <span>This event</span>
                 </div>
@@ -60,8 +62,10 @@ const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
                   onClick={() => setRecurringEvent(true)}
                   className="flex items-center gap-4"
                 >
-                  <div className="flex items-center justify-center w-[22px] h-[22px] rounded-full border-primaryColor border-[1.5px] bg-white">
-                    {recurringEvent && <div className="h-[10.5px] w-[10.5px] rounded-full bg-primaryColor"></div>}
+                  <div className="flex h-[22px] w-[22px] items-center justify-center rounded-full border-[1.5px] border-primaryColor bg-white">
+                    {recurringEvent && (
+                      <div className="h-[10.5px] w-[10.5px] rounded-full bg-primaryColor"></div>
+                    )}
                   </div>
                   <span>This and future events</span>
                 </div>

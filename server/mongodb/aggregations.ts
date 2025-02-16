@@ -46,7 +46,7 @@ export const eventPopulator = [
   },
   {
     $unset: ["allEvents"],
-  }
+  },
 ];
 
 export const attendancePopulator = [

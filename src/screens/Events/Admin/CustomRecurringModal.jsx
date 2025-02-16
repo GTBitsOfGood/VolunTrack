@@ -138,6 +138,7 @@ const CustomRecurringModal = ({
             <div className="flex flex-row gap-2">
               {dateName.map((name, index) => (
                 <div
+                  key={index}
                   className={
                     "flex h-[28px] w-[28px] cursor-pointer items-center justify-center rounded-full " +
                     (!date.includes(name)
@@ -162,8 +163,8 @@ const CustomRecurringModal = ({
           </div>
           <div>Ends</div>
           <div className="flex flex-col gap-4 pl-2">
-            {endChoices.map((choice) => (
-              <div className="items- flex flex-row">
+            {endChoices.map((choice, index) => (
+              <div className="items- flex flex-row" key={index}>
                 <div
                   onClick={() => setEndChoice(choice)}
                   className="flex w-[98px] items-center gap-4"

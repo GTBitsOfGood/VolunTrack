@@ -56,8 +56,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         await Event.updateMany(
           {
-              eventParent: event.eventParent,
-              date: { $gte: event.date },
+            eventParent: event.eventParent,
+            date: { $gte: event.date },
           },
           [{ $set: { eventParent: eventParent._id } }]
         );

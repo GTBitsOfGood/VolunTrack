@@ -61,7 +61,7 @@ export const updateEvent = (
   }>(`/api/events/${eventId.toString()}`, {
     eventPopulatedInput,
     sendConfirmationEmail,
-    recurringEvent
+    recurringEvent,
   });
 
 /** Updates a single event, no event parent */
@@ -93,7 +93,7 @@ export const deleteEvent = (eventId: Types.ObjectId, recurringEvent: boolean) =>
     `/api/events/${eventId.toString()}`,
     {
       data: {
-        "recurringEvent": recurringEvent
-      }
+        recurringEvent: recurringEvent,
+      },
     }
   );

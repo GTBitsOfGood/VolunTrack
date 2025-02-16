@@ -209,9 +209,15 @@ const EventManager = ({ isHomePage }) => {
 
   const onEventDelete = (id, recurringEvent) => {
     if (recurringEvent) {
-      const eventParentId = events.find((event) => event._id === id).eventParent._id;
+      const eventParentId = events.find((event) => event._id === id).eventParent
+        ._id;
       const eventDate = events.find((event) => event._id === id).date;
-      setEvents(events.filter((event) => (event.eventParent._id !== eventParentId || event.date < eventDate)));
+      setEvents(
+        events.filter(
+          (event) =>
+            event.eventParent._id !== eventParentId || event.date < eventDate
+        )
+      );
     } else {
       setEvents(events.filter((event) => event._id !== id));
       setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
@@ -221,14 +227,21 @@ const EventManager = ({ isHomePage }) => {
   const onEventEdit = (id, eventParentId, recurringEvent) => {
     if (recurringEvent) {
       const eventDate = events.find((event) => event._id === id).date;
-      setEvents(events.map((event) => {
-        if (event.eventParent._id === eventParentId && event.date >= eventDate) {
-          event.eventParent = events.find((event) => event._id === id).eventParent;
-        }
-        return event;
-      }))
+      setEvents(
+        events.map((event) => {
+          if (
+            event.eventParent._id === eventParentId &&
+            event.date >= eventDate
+          ) {
+            event.eventParent = events.find(
+              (event) => event._id === id
+            ).eventParent;
+          }
+          return event;
+        })
+      );
     }
-  }
+  };
 
   return (
     <Styled.Container>

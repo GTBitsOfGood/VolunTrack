@@ -11,11 +11,10 @@ export const getEvents = async (
   await dbConnect();
 
   if (!startDate && !endDate) {
-    const test = await Event.aggregate([
+    return await Event.aggregate([
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
-    return test;
   } else if (!startDate) {
     return Event.aggregate([
       { $match: { $expr: { $lte: ["$date", endDate] } } },

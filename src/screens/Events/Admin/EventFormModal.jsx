@@ -264,11 +264,12 @@ const EventFormModal = ({
     setShowCustomModal((prev) => !prev);
   };
 
-  const [customRecurrenceSettings, setCustomRecurrenceSettings] = useState(null);
+  const [customRecurrenceSettings, setCustomRecurrenceSettings] =
+    useState(null);
 
   const handleCustomRecurrence = (recurrenceSettings) => {
     setCustomRecurrenceSettings(recurrenceSettings);
-  }
+  };
 
   /* --- Recurring Event --- */
 
