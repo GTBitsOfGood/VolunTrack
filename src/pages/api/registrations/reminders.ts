@@ -31,14 +31,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           .populate("eventParent")
           .lean();
 
-          const filteredEvents = events.filter((event) => {
-            if (!event.eventParent || typeof event.eventParent !== "object") {
-              console.error("EventParent is still an ObjectId for event:", event._id);
-              return false;
-            }
-          
-            return ((event.eventParent as unknown) as EventParentDocument).sendReminderEmail;
-          });
+        const filteredEvents = events.filter((event) => {
+          if (!event.eventParent || typeof event.eventParent !== "object") {
+            console.error(
+              "EventParent is still an ObjectId for event:",
+              event._id
+            );
+            return false;
+          }
+
+          return (event.eventParent as unknown as EventParentDocument)
+            .sendReminderEmail;
+        });
 
         if (filteredEvents.length === 0) {
           return res
