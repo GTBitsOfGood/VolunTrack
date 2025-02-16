@@ -59,6 +59,9 @@ const EventFormModal = ({
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
+  const [isNotifyAdmin, setisNotifyAdmin] = useState(
+    event?.eventParent?.isNotifyAdmin ?? false
+  );
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.eventParent?.isValidForCourtHours ?? false
   );
@@ -554,7 +557,11 @@ const EventFormModal = ({
                               dismissOnClick={false}
                               dropdown={true}
                               color="light"
-                              label={<>--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</>}
+                              label={
+                                <>
+                                  --&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                </>
+                              }
                               onClick={closeTask}
                               placement="bottom-start"
                             >

@@ -1,4 +1,4 @@
-import { isValidObjectId, Types } from "mongoose";
+import { isValidObjectId, Types, UpdateQuery } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Registration, {
@@ -81,17 +81,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "PATCH": {
       try {
-        const { registrationId, ...updateData } = req.body;
-
+        type RegistrationUpdateData = Partial<RegistrationInputClient>;
+        const {
+          registrationId,
+          ...updateData
+        }: { registrationId: string; updateData: RegistrationUpdateData } =
+          req.body;
         if (!isValidObjectId(registrationId)) {
-          return res
-            .status(400)
-            .json({ message: `Invalid registration ID: ${registrationId}` });
+          return res.status(400).json({
+            message: `Invalid registration ID: ${registrationId}`,
+          });
         }
 
         const updatedRegistration = await Registration.findByIdAndUpdate(
           registrationId,
-          updateData,
+          updateData as UpdateQuery<RegistrationUpdateData>,
           { new: true }
         );
 

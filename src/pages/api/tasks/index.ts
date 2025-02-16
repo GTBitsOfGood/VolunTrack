@@ -46,6 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       //     checkinStatus
       //   );
       //   return res.status(200).json({ users });
+      break;
     }
     case "POST": {
       const result = userInputServerValidator.safeParse(req.body);

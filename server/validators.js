@@ -18,6 +18,7 @@ const CREATE_EVENT_VALIDATOR = [
   check("isNotifyAdmin").isBoolean(),
   check("sendReminderEmail").isBoolean(),
   check("requiresApproval").isBoolean(),
+  check("isNotifyAdmin").isBoolean(),
 
   check("address").isAscii().trim(),
   check("city").isAscii().trim(),

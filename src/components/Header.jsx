@@ -47,11 +47,11 @@ const Header = () => {
 
   const onRegistrationsClicked = () => {
     router.push("/registrations");
-  }
+  };
 
   const onEventsClicked = () => {
     router.push("/events");
-  }
+  };
 
   const currPageMatches = (page) => router.pathname === page;
 
@@ -125,18 +125,17 @@ const Header = () => {
           </Navbar.Link>
         )}
 
-        
         {user.role != "admin" ? (
           <Navbar.Link
-          href="/events"
-          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/events") ? "text-primaryColor" : ""
-          }`}
-        >
-          Events
-        </Navbar.Link>
+            href="/events"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/events") ? "text-primaryColor" : ""
+            }`}
+          >
+            Events
+          </Navbar.Link>
         ) : (
-          <Navbar.Link 
+          <Navbar.Link
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/events") ? "text-primaryColor" : ""
             }`}
@@ -154,17 +153,12 @@ const Header = () => {
                 Approval Portal
               </Dropdown.Item>
 
-              <Dropdown.Item
-                href="/events"
-                onClick={onEventsClicked}
-              >
+              <Dropdown.Item href="/events" onClick={onEventsClicked}>
                 Event Calendar
               </Dropdown.Item>
             </Dropdown>
           </Navbar.Link>
         )}
-        
-
 
         {user.role === "volunteer" && (
           <Navbar.Link

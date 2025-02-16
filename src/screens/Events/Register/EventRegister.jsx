@@ -21,9 +21,6 @@ import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
 
-
-
-
 const Styled = {
   Container: styled(Container)`
     overflow-y: scroll;
@@ -117,7 +114,6 @@ const EventRegister = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [registrations, setRegistrations] = useState([]);
   const [regCount, setRegCount] = useState(0);
-  
 
   useEffect(() => {
     onLoadEvent();
@@ -125,41 +121,42 @@ const EventRegister = () => {
 
   const onLoadEvent = () => {
     getEvent(eventId)
-    .then((eventResult) => {
-      if (eventResult?.data?.event) {
-        setEvent(eventResult.data.event);
-      }
-      // Fetch user registrations
-      return getRegistrations({ eventId, userId: user._id });
-    })
-    .then((registrationsResult) => {
-      if (registrationsResult?.data?.registrations?.length > 0) {
-        setIsRegistered(true);
-        setMinors(registrationsResult.data.registrations[0].minors);
-        if (registrationsResult.data.registrations[0].minors.length > 0) setHasMinor(true);
-        setRegistrations(registrationsResult.data.registrations);
-
-        let count = 0;
-        registrationsResult.data.registrations.forEach((reg) => {
-          count += 1 + reg.minors.length;
-        });
-      }
-      // Fetch all registrations for the event
-      return getRegistrations({ eventId });
-    })
-    .then((allRegistrationsResult) => {
-      let approvedCount = 0;
-      allRegistrationsResult.data.registrations.forEach((reg) => {
-        if (reg.approved === "approved") {
-          approvedCount += 1 + reg.minors.length;
+      .then((eventResult) => {
+        if (eventResult?.data?.event) {
+          setEvent(eventResult.data.event);
         }
+        // Fetch user registrations
+        return getRegistrations({ eventId, userId: user._id });
+      })
+      .then((registrationsResult) => {
+        if (registrationsResult?.data?.registrations?.length > 0) {
+          setIsRegistered(true);
+          setMinors(registrationsResult.data.registrations[0].minors);
+          if (registrationsResult.data.registrations[0].minors.length > 0)
+            setHasMinor(true);
+          setRegistrations(registrationsResult.data.registrations);
+
+          let count = 0;
+          registrationsResult.data.registrations.forEach((reg) => {
+            count += 1 + reg.minors.length;
+          });
+        }
+        // Fetch all registrations for the event
+        return getRegistrations({ eventId });
+      })
+      .then((allRegistrationsResult) => {
+        let approvedCount = 0;
+        allRegistrationsResult.data.registrations.forEach((reg) => {
+          if (reg.approved === "approved") {
+            approvedCount += 1 + reg.minors.length;
+          }
+        });
+        // Avoid displaying negative slots left
+        setRegCount(Math.min(approvedCount, event.eventParent.maxVolunteers));
+      })
+      .catch((error) => {
+        console.error("Error loading event data:", error);
       });
-      // Avoid displaying negative slots left
-      setRegCount(Math.min(approvedCount, event.eventParent.maxVolunteers));
-    })
-    .catch((error) => {
-      console.error("Error loading event data:", error);
-    });
   };
 
   const onCompleteRegistrationClicked = () => {
@@ -168,10 +165,6 @@ const EventRegister = () => {
 
   const onAddMinorClicked = () => {
     setShowMinorModal(true);
-  };
-
-  const onReturnToHomeClicked = () => {
-    router.replace("/");
   };
 
   const onRegisterAfterWaiverClicked = () => {
@@ -224,30 +217,23 @@ const EventRegister = () => {
 
   return (
     <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
-      
-        <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between">
+        <Text type="header" text="Confirm Registration"></Text>
+        <div className="flex items-end">
           <Text
             type="header"
-            text="Confirm Registration" 
+            text={event?.eventParent?.maxVolunteers - regCount}
           ></Text>
-          <div className="flex items-end">
-            <Text
-              type="header"
-              text={event?.eventParent?.maxVolunteers - regCount}
-            ></Text>
-            <Text
-              className="min-w-max"
-              type="subheader"
-              text={`/${event?.eventParent?.maxVolunteers} Spots Remaining`}
-            ></Text>
-          </div>
+          <Text
+            className="min-w-max"
+            type="subheader"
+            text={`/${event?.eventParent?.maxVolunteers} Spots Remaining`}
+          ></Text>
         </div>
-      <div className="flex flex-row mt-8 items-center">
+      </div>
+      <div className="mt-8 flex flex-row items-center">
+        <Text text="Event Information" type="subheader" />
         <Text
-          text="Event Information"
-          type="subheader"
-        />
-        <Text 
           className="ml-3 font-bold"
           href={`/events`}
           onClick={() => goBackToDetails()}
@@ -275,18 +261,18 @@ const EventRegister = () => {
       />
       <Styled.BottomContainer>
         <div className="flex flex-row items-center">
-          <Text text={`Your Group (${minors.length + 1})`} type="subheader" />        
-          <div 
+          <Text text={`Your Group (${minors.length + 1})`} type="subheader" />
+          <div
             onClick={(e) => {
               e.preventDefault();
               onAddMinorClicked();
             }}
             className="cursor-pointer"
-          > 
-            <Text 
-              text="Add Minor (under 13 years old)" 
-              type="subheader" 
-              className="text-primaryColor ml-4"
+          >
+            <Text
+              text="Add Minor (under 13 years old)"
+              type="subheader"
+              className="ml-4 text-primaryColor"
             />
           </div>
         </div>
@@ -303,16 +289,17 @@ const EventRegister = () => {
           </Styled.VolunteerContainer>
           {minors &&
             minors.map((minor) => (
-              <Styled.VolunteerContainer className="mt-2 bg-transparent ring-2 ring-primaryColor" key={minor}>
+              <Styled.VolunteerContainer
+                className="mt-2 bg-transparent ring-2 ring-primaryColor"
+                key={minor}
+              >
                 <Styled.VolunteerCol>
                   <div>
                     <Styled.VolunteerRow>
                       <Styled.SectionHeaderText>
                         {minor}
                       </Styled.SectionHeaderText>
-                      <Styled.DetailText>
-                        Minor
-                      </Styled.DetailText>
+                      <Styled.DetailText>Minor</Styled.DetailText>
                     </Styled.VolunteerRow>
                   </div>
                   {!isRegistered && (
@@ -339,72 +326,65 @@ const EventRegister = () => {
           </div>
         </div>
       </Styled.BottomContainer>
-      
+
       {event?.eventParent?.requiresApproval && (
-        <div className="flex flex-row pl-3 mt-3">
-          <Text 
-          text="*"
-          className="text-primaryColor"
-          />
+        <div className="mt-3 flex flex-row pl-3">
+          <Text text="*" className="text-primaryColor" />
           <Text
             text="This event requires approval to confirm your participation"
             className="text-black-500 text-left text-sm font-semibold"
           />
         </div>
       )}
-      
-        
 
       {!isRegistered && (
         <div className="my-3">
-          <BoGButton 
-          text="Complete Registration" 
-          onClick={onCompleteRegistrationClicked}
-          className="w-full bg-primaryColor hover:bg-hoverColor font-semibold"
+          <BoGButton
+            text="Complete Registration"
+            onClick={onCompleteRegistrationClicked}
+            className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
           />
         </div>
       )}
 
       {isRegistered && registrations[0]?.approved == "approved" ? (
         <div className="my-3">
-          <BoGButton 
+          <BoGButton
             text={
               <>
-                <ClipboardDocumentCheckIcon className="h-5 w-5 inline mr-2" /> 
+                <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
                 Approved
               </>
             }
-            className="w-full bg-secondaryColor hover:bg-secondaryColor !text-black font-semibold"
+            className="w-full bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
       ) : isRegistered && registrations[0]?.approved == "pending" ? (
         <div className="my-3">
-          <BoGButton 
+          <BoGButton
             text={
               <>
-                <ClipboardDocumentCheckIcon className="h-5 w-5 inline mr-2" /> 
+                <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
                 Pending Approval
               </>
             }
-            className="w-full bg-secondaryColor hover:bg-secondaryColor font-semibold !text-black font-semibold"
+            className="w-full bg-secondaryColor font-semibold font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
       ) : isRegistered && registrations[0]?.approved == "denied" ? (
         <div className="my-3">
-          <BoGButton 
+          <BoGButton
             text={
               <>
-                <ClipboardDocumentCheckIcon className="h-5 w-5 inline mr-2" /> 
+                <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
                 Denied
               </>
             }
-            className="w-full bg-secondaryColor hover:bg-secondaryColor !text-black font-semibold"
+            className="w-full bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
       ) : null}
 
-      
-    
       <EventMinorModal
         open={showMinorModal}
         toggle={toggleMinorModal}

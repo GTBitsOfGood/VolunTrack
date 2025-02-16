@@ -10,8 +10,6 @@ import PropTypes from "prop-types";
 import Text from "../../../components/Text";
 import { getRegistrations } from "../../../queries/registrations";
 
-
-
 const convertTime = (time) => {
   let [hour, min] = time.split(":");
   let hours = parseInt(hour);
@@ -55,17 +53,11 @@ const EventRegisterInfoContainer = ({
   return (
     <div className="flex w-11/12 flex-col space-y-2 rounded-md">
       <div className="flex flex-row items-center justify-between">
-        <Text
-          text={event.eventParent.title}
-          type="header"
-        />
+        <Text text={event.eventParent.title} type="header" />
       </div>
 
       {event.eventParent.description && (
-        <Text
-          text={event.eventParent.description}
-          type="helper"
-        ></Text>
+        <Text text={event.eventParent.description} type="helper"></Text>
       )}
 
       <div className="flex flex-col">
@@ -78,16 +70,19 @@ const EventRegisterInfoContainer = ({
       </div>
       <div className="flex flex-wrap gap-2">
         <div className="flex w-64 items-center rounded-md bg-[#F8F8FA] p-2">
-          <CalendarIcon class="h-6 w-6"/>
-          <Text 
-            text={new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
+          <CalendarIcon class="h-6 w-6" />
+          <Text
+            text={new Date(event.date).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+            })}
             className="ml-2 font-bold text-primaryColor"
             type="subheader"
           />
         </div>
-        <div className="flex w-64 rounded-md items-center bg-[#F8F8FA] p-2">
+        <div className="flex w-64 items-center rounded-md bg-[#F8F8FA] p-2">
           <ClockIcon class="h-6 w-6 text-black" />
-          <div className="flex flex-col items-start ml-2">
+          <div className="ml-2 flex flex-col items-start">
             <Text
               text={
                 convertTime(event.eventParent.startTime) +
@@ -100,20 +95,19 @@ const EventRegisterInfoContainer = ({
             <Text text={event.eventParent.localTime} type="helper" />
           </div>
         </div>
-        <div className="flex w-64 items-center rounded-md bg-[#F8F8FA] p-2 min-w-max">
+        <div className="flex w-64 min-w-max items-center rounded-md bg-[#F8F8FA] p-2">
           <MapPinIcon class="h-6 w-6" />
-          <div className="flex flex-col item-center">
+          <div className="item-center flex flex-col">
             <Text
               text={event.eventParent.address}
               className="ml-2 font-bold text-primaryColor"
               type="subheader"
             />
-            <Text 
+            <Text
               text={`${event.eventParent.city}, ${event.eventParent.state}, ${event.eventParent.zip}`}
               className="ml-2 font-bold"
               type="helper"
             />
-
           </div>
         </div>
       </div>

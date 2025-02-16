@@ -10,31 +10,37 @@ const AdminApproval = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [pendingRegistrations, setPendingRegistrations] = useState([]);
   const [historyRegistrations, setHistoryRegistrations] = useState([]);
-	const [events, setEvents] = useState({});
-	const [regCounts, setRegCounts] = useState({});
+  const [events, setEvents] = useState({});
+  const [regCounts, setRegCounts] = useState({});
 
-	useEffect(() => {
+  useEffect(() => {
     const fetchRegistrations = async () => {
       setLoading(true);
-      const result = await getRegistrations({ organizationId: user.organizationId });
+      const result = await getRegistrations({
+        organizationId: user.organizationId,
+      });
       if (result) {
         const registrations = result.data.registrations;
         updateRegCounts(result.data.registrations);
 
-        const pending = registrations.filter((reg) => reg.approved === "pending");
-        const history = registrations.filter((reg) => reg.approved !== "pending");
+        const pending = registrations.filter(
+          (reg) => reg.approved === "pending"
+        );
+        const history = registrations.filter(
+          (reg) => reg.approved !== "pending"
+        );
         setPendingRegistrations(pending);
         setHistoryRegistrations(history);
 
         const eventData = {};
         for (const registration of registrations) {
-					try {
-						const event = await getEvent(registration.eventId);
-						eventData[registration.eventId] = event?.data?.event || null;
-					} catch (error) {
-						console.error("Error fetching event:", error);
-						eventData[registration.eventId] = null;
-					}
+          try {
+            const event = await getEvent(registration.eventId);
+            eventData[registration.eventId] = event?.data?.event || null;
+          } catch (error) {
+            console.error("Error fetching event:", error);
+            eventData[registration.eventId] = null;
+          }
         }
         setEvents(eventData);
       }
@@ -58,25 +64,28 @@ const AdminApproval = ({ user }) => {
     setRegCounts(counts);
   };
 
-	const moveToHistory = (registrationId, status) => {
+  const moveToHistory = (registrationId, status) => {
     setPendingRegistrations((prevPending) => {
-      const registration = prevPending.find((reg) => reg._id === registrationId);
+      const registration = prevPending.find(
+        (reg) => reg._id === registrationId
+      );
       if (registration) {
         const updatedRegistration = { ...registration, approved: status };
-  
-        const updatedPending = prevPending.filter((reg) => reg._id !== registrationId);
-  
-        setHistoryRegistrations((prevHistory) => [...prevHistory, updatedRegistration]);
-  
+
+        const updatedPending = prevPending.filter(
+          (reg) => reg._id !== registrationId
+        );
+
+        setHistoryRegistrations((prevHistory) => [
+          ...prevHistory,
+          updatedRegistration,
+        ]);
+
         return updatedPending;
       }
       return prevPending;
     });
   };
-
-  
-
-	
 
   return loading ? (
     <div className="mt-16 text-center">
@@ -84,9 +93,7 @@ const AdminApproval = ({ user }) => {
     </div>
   ) : (
     <div className="mx-auto my-2 w-3/4 space-y-8">
-      <h1 className="my-4 text-3xl font-semibold">
-        Event Approval Portal
-      </h1>
+      <h1 className="my-4 text-3xl font-semibold">Event Approval Portal</h1>
       <div className="space-y-5">
         <h2 className="text-2xl font-semibold">New Requests</h2>
         {pendingRegistrations?.length > 0 ? (
@@ -94,7 +101,7 @@ const AdminApproval = ({ user }) => {
             if (!events[registration.eventId]) {
               return null;
             }
-            
+
             return (
               <RegistrationCard
                 key={index}

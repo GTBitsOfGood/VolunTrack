@@ -34,6 +34,7 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
     isNotifyAdmin: z.boolean().optional(),
     sendReminderEmail: z.boolean().optional(),
     requiresApproval: z.boolean().optional(),
+    isNotifyAdmin: z.boolean().optional(),
     organizationId: z.string(),
     // refine() is not working for some reason
     // .refine(
