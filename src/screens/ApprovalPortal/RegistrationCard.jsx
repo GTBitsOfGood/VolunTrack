@@ -5,8 +5,15 @@ import { CalendarDaysIcon } from "@heroicons/react/24/solid";
 import BoGButton from "../../components/BoGButton";
 import { editRegistration } from "../../queries/registrations";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const RegistrationCard = (props) => {
+  const [regCount, setRegCount] = useState(0);
+
+  useEffect(() => {
+    setRegCount(props.regCount);
+  }, [props.regCount]);
+
   const handleApprove = async () => {
     try {
       await editRegistration(props.registration._id, { approved: "approved" });
@@ -117,11 +124,11 @@ const RegistrationCard = (props) => {
           </div>
           <div>
             <div className="font-semibold">Availability</div>
-            {props?.event?.eventParent?.maxVolunteers && props?.regCount ? (
+            {props?.event?.eventParent?.maxVolunteers ? (
               <div>
                 {Math.max(
                   0,
-                  props?.event?.eventParent?.maxVolunteers - props?.regCount
+                  props?.event?.eventParent?.maxVolunteers - regCount
                 )}{" "}
                 / {props?.event?.eventParent?.maxVolunteers}
               </div>

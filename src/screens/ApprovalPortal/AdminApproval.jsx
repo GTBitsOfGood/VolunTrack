@@ -72,16 +72,31 @@ const AdminApproval = ({ user }) => {
       if (registration) {
         const updatedRegistration = { ...registration, approved: status };
 
-        const updatedPending = prevPending.filter(
-          (reg) => reg._id !== registrationId
-        );
+        setRegCounts((prevRegCounts) => {
+          const eventId = registration.eventId;
+          const currentCount = prevRegCounts[eventId] || 0;
+
+          if (status === "approved") {
+            const newCount =
+              currentCount + 1 + (registration.minors?.length || 0);
+            return { ...prevRegCounts, [eventId]: newCount };
+          } else if (status === "denied") {
+            if (registration.approved === "approved") {
+              const newCount =
+                currentCount - 1 - (registration.minors?.length || 0);
+              return { ...prevRegCounts, [eventId]: newCount };
+            }
+          }
+
+          return prevRegCounts;
+        });
 
         setHistoryRegistrations((prevHistory) => [
           ...prevHistory,
           updatedRegistration,
         ]);
 
-        return updatedPending;
+        return prevPending.filter((reg) => reg._id !== registrationId);
       }
       return prevPending;
     });
