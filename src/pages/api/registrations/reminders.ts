@@ -5,6 +5,7 @@ import Registration from "../../../../server/mongodb/models/Registration";
 import { sendEventReminderEmail } from "../../../utils/mailersend-email";
 import User from "../../../../server/mongodb/models/User";
 import Organization from "../../../../server/mongodb/models/Organization";
+import { EventParentDocument } from "../../../../server/mongodb/models/EventParent";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -27,12 +28,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const events = await Event.find({
           date: { $gte: startTime, $lte: endTime },
         })
-          .populate("eventParent", "sendReminderEmail")
+          .populate("eventParent")
           .lean();
 
-        const filteredEvents = events.filter(
-          (event) => event.eventParent.sendReminderEmail
-        );
+          const filteredEvents = events.filter((event) => {
+            if (!event.eventParent || typeof event.eventParent !== "object") {
+              console.error("EventParent is still an ObjectId for event:", event._id);
+              return false;
+            }
+          
+            return ((event.eventParent as unknown) as EventParentDocument).sendReminderEmail;
+          });
 
         if (filteredEvents.length === 0) {
           return res
