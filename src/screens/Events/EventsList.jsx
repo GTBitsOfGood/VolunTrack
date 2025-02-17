@@ -23,6 +23,7 @@ const EventsList = ({
   registrations,
   onCreateClicked,
   onEventDelete,
+  onEventEdit,
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);
@@ -107,6 +108,7 @@ const EventsList = ({
             user={user}
             isRegistered={registeredEventIds.has(event._id)}
             onEventDelete={onEventDelete}
+            onEventEdit={onEventEdit}
             setEventEdit={setEventEditConfirmationMessage}
           />
         ))}
@@ -127,6 +129,7 @@ const EventsList = ({
                     event={event}
                     user={user}
                     isRegistered={true}
+                    onEventEdit={onEventEdit}
                   />
                 ))}
               </div>
@@ -147,6 +150,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   isRegistered={registeredEventIds.has(event._id)}
+                  onEventEdit={onEventEdit}
                 />
               ))}
             {upcomingEvents.length === 0 && (
@@ -181,6 +185,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
+                  onEventEdit={onEventEdit}
                   setEventEdit={setEventEditConfirmationMessage}
                 />
               ))}
@@ -204,6 +209,7 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
+                    onEventEdit={onEventEdit}
                     setEventEdit={setEventEditConfirmationMessage}
                   />
                 ))}

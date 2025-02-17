@@ -1,6 +1,14 @@
 export const eventPopulator = [
   {
     $lookup: {
+      from: "events",
+      localField: "eventParent",
+      foreignField: "eventParent",
+      as: "allEvents",
+    },
+  },
+  {
+    $lookup: {
       from: "eventparents",
       let: { eventParent: "$eventParent" },
       pipeline: [
@@ -16,6 +24,29 @@ export const eventPopulator = [
     },
   },
   { $unwind: "$eventParent" },
+  {
+    $addFields: {
+      recurringEvents: {
+        $size: {
+          $filter: {
+            input: "$allEvents",
+            as: "event",
+            cond: {
+              $let: {
+                vars: {
+                  rootDate: "$date", // Assign the root document's date to a variable
+                },
+                in: { $gt: ["$$event.date", "$$rootDate"] }, // Compare event date with rootDate
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  {
+    $unset: ["allEvents"],
+  },
 ];
 
 export const attendancePopulator = [

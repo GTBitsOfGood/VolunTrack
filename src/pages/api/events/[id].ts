@@ -12,7 +12,7 @@ import Event, {
 } from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
-import User, { UserDocument } from "../../../../server/mongodb/models/User";
+import User from "../../../../server/mongodb/models/User";
 import { sendEventEditedEmail } from "../../../utils/mailersend-email.js";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -43,20 +43,40 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "PUT": {
-      if ("eventPopulatedInput" in req.body) {
+      if ("recurringEvent" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
           .safeParse(req.body?.eventPopulatedInput);
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
+        const eventParent = await EventParent.create(result.data.eventParent);
+
+        const eventParentId = event.eventParent;
+
+        await Event.updateMany(
+          {
+            eventParent: event.eventParent,
+            date: { $gte: event.date },
+          },
+          [{ $set: { eventParent: eventParent._id } }]
+        );
+
+        if ((await Event.count({ eventParent: eventParentId })) === 0) {
+          await EventParent.findByIdAndDelete(eventParentId);
+        }
+      } else if ("eventPopulatedInput" in req.body) {
+        const result = eventPopulatedInputServerValidator
+          .partial()
+          .safeParse(req.body?.eventPopulatedInput);
+        if (!result.success)
+          return res.status(400).json({ error: result.error });
         await eventParent.updateOne(result.data.eventParent);
         delete result.data.eventParent;
         await event.updateOne(result.data);
       } else {
         const result = eventInputServerValidator.safeParse(req.body);
         if (!result.success) return res.status(400).json(result);
-
         await event.updateOne(result.data);
       }
 
@@ -79,7 +99,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "DELETE": {
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });
-      await event.deleteOne();
+      if (req.body?.recurringEvent) {
+        await Event.deleteMany({
+          eventParent: event.eventParent,
+          date: { $gte: event.date },
+        });
+      } else {
+        await event.deleteOne();
+      }
 
       const eventParentId = event.eventParent;
       if ((await Event.count({ eventParent: eventParentId })) === 0) {

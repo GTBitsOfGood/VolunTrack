@@ -17,6 +17,17 @@ export const eventPopulatedInputClientValidator = (minMaxVolunteers?: number) =>
     date: z.coerce.date(),
     eventParent: eventParentInputClientValidator(minMaxVolunteers),
     isEnded: z.boolean().optional(),
+    recurringEvent: z.string(),
+    customRecurrenceSettings: z
+      .object({
+        recurrenceChoice: z.string(),
+        recurrenceNumber: z.number().int().positive(),
+        recurrenceDays: z.array(z.string()),
+        recurrenceEndType: z.string(),
+        recurrenceEndDate: z.coerce.date().optional(),
+        recurrenceEndOccurences: z.number().int().positive().optional(),
+      })
+      .optional(),
   });
 
 export const eventInputServerValidator = z.object({
@@ -32,6 +43,17 @@ export const eventPopulatedInputServerValidator = z.object({
   date: z.coerce.date(),
   eventParent: eventParentInputServerValidator,
   isEnded: z.boolean().optional(),
+  recurringEvent: z.string(),
+  customRecurrenceSettings: z
+    .object({
+      recurrenceChoice: z.string(),
+      recurrenceNumber: z.number().int().positive(),
+      recurrenceDays: z.array(z.string()),
+      recurrenceEndType: z.string(),
+      recurrenceEndDate: z.coerce.date().optional(),
+      recurrenceEndOccurences: z.number().int().positive().optional(),
+    })
+    .or(z.null()),
 });
 
 export type EventInputClient = z.infer<typeof eventInputClientValidator>;

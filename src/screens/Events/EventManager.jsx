@@ -207,9 +207,40 @@ const EventManager = ({ isHomePage }) => {
     }
   };
 
-  const onEventDelete = (id) => {
-    setEvents(events.filter((event) => event._id !== id));
-    setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
+  const onEventDelete = (id, recurringEvent) => {
+    if (recurringEvent) {
+      const eventParentId = events.find((event) => event._id === id).eventParent
+        ._id;
+      const eventDate = events.find((event) => event._id === id).date;
+      setEvents(
+        events.filter(
+          (event) =>
+            event.eventParent._id !== eventParentId || event.date < eventDate
+        )
+      );
+    } else {
+      setEvents(events.filter((event) => event._id !== id));
+      setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
+    }
+  };
+
+  const onEventEdit = (id, eventParentId, recurringEvent) => {
+    if (recurringEvent) {
+      const eventDate = events.find((event) => event._id === id).date;
+      setEvents(
+        events.map((event) => {
+          if (
+            event.eventParent._id === eventParentId &&
+            event.date >= eventDate
+          ) {
+            event.eventParent = events.find(
+              (event) => event._id === id
+            ).eventParent;
+          }
+          return event;
+        })
+      );
+    }
   };
 
   return (
@@ -310,6 +341,7 @@ const EventManager = ({ isHomePage }) => {
                 user={user}
                 isHomePage={isHomePage}
                 onEventDelete={onEventDelete}
+                onEventEdit={onEventEdit}
               />
             )}
             {showCreateModal && (
@@ -381,6 +413,7 @@ const EventManager = ({ isHomePage }) => {
             registrations={registrations}
             onCreateClicked={onCreateClicked}
             onEventDelete={onEventDelete}
+            onEventEdit={onEventEdit}
           />
         </Styled.HomePage>
       )}

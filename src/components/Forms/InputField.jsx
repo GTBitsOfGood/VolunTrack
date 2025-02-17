@@ -49,6 +49,7 @@ const InputField = (props) => (
           maxLength={props.maxLength}
           min={props.min}
           max={props.max}
+          onChangeCapture={props.onChangeCapture}
         />
       )}
     </Field>
@@ -72,6 +73,7 @@ InputField.propTypes = {
   maxLength: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
+  onChangeCapture: PropTypes.func,
 };
 
 export default InputField;

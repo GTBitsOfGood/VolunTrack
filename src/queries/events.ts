@@ -52,7 +52,8 @@ export const createChildEvent = (eventInput: EventInputClient) =>
 export const updateEvent = (
   eventId: Types.ObjectId,
   eventPopulatedInput: Partial<EventPopulatedInputClient>,
-  sendConfirmationEmail = true
+  sendConfirmationEmail = true,
+  recurringEvent = false
 ) =>
   axios.put<{
     event?: EventPopulatedDocument;
@@ -60,6 +61,7 @@ export const updateEvent = (
   }>(`/api/events/${eventId.toString()}`, {
     eventPopulatedInput,
     sendConfirmationEmail,
+    recurringEvent,
   });
 
 /** Updates a single event, no event parent */
@@ -86,7 +88,12 @@ export const createUserFromCheckIn = (
     { userInput, eventName }
   );
 
-export const deleteEvent = (eventId: Types.ObjectId) =>
+export const deleteEvent = (eventId: Types.ObjectId, recurringEvent: boolean) =>
   axios.delete<{ error?: ZodError | string }>(
-    `/api/events/${eventId.toString()}`
+    `/api/events/${eventId.toString()}`,
+    {
+      data: {
+        recurringEvent: recurringEvent,
+      },
+    }
   );
