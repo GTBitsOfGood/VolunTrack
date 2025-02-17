@@ -5,16 +5,15 @@ import BoGButton from "../../components/BoGButton";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import ResizeModule from "@ssumo/quill-resize-module";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import PreviewModel from "./PreviewModel";
 
 const VolunterHome = () => {
+  // patch for build failure
   let ReactQuill;
   // patch for build failure
   if (typeof window !== "undefined") {
     ReactQuill = require("react-quill");
-    ReactQuill.Quill.register("modules/resize", ResizeModule);
   }
   const quill = useRef(null);
 

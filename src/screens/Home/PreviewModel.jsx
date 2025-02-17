@@ -1,11 +1,17 @@
 import { useEffect } from "react";
-import "react-quill/dist/quill.bubble.css";
-import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const PreviewModel = ({ pageContent, onClose }) => {
   useEffect(() => {
     console.log("Preview content:", pageContent);
   }, [pageContent]);
+
+  let ReactQuill;
+  // patch for build failure
+  if (typeof window !== "undefined") {
+    ReactQuill = require("react-quill");
+  }
+  const quill = useRef(null);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
