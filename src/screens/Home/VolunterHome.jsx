@@ -7,15 +7,35 @@ import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import PreviewModel from "./PreviewModel";
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const VolunterHome = () => {
-  // patch for build failure
-  let ReactQuill;
-  // patch for build failure
-  if (typeof window !== "undefined") {
-    ReactQuill = require("react-quill");
-  }
-  const quill = useRef(null);
+  const quillRef = useRef(null);
+  const [quill, setQuillModules] = useState({});
+
+  // Look into fix
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      Promise.all([
+        import("quill"),
+        import("@ssumo/quill-resize-module").catch(() => null), // Handle errors gracefully
+      ]).then(([QuillModule, ResizeModule]) => {
+        const Quill = QuillModule.default || QuillModule;
+
+        // Ensure ResizeModule is valid before registering
+        if (ResizeModule && ResizeModule.default) {
+          Quill.register("modules/resize", ResizeModule.default);
+        }
+
+        setQuillModules({
+          toolbar: [["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }]],
+          resize: {}, // Activate the resize module
+        });
+      });
+    }
+  }, [pageContent]);
 
   const {
     data: { user },
