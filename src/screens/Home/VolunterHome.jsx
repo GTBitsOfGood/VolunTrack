@@ -30,7 +30,10 @@ const VolunterHome = () => {
         }
 
         setQuillModules({
-          toolbar: [["bold", "italic", "underline"], [{ list: "ordered" }, { list: "bullet" }]],
+          toolbar: [
+            ["bold", "italic", "underline"],
+            [{ list: "ordered" }, { list: "bullet" }],
+          ],
           resize: {}, // Activate the resize module
         });
       });
