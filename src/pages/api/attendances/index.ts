@@ -4,10 +4,8 @@ import dbConnect from "../../../../server/mongodb";
 import Attendance, {
   AttendanceDocument,
   AttendanceInputClient,
-  attendanceInputClientValidator,
   attendanceInputServerValidator,
 } from "../../../../server/mongodb/models/Attendance";
-import { RegistrationInputClient } from "../../../../server/mongodb/models/Registration";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
