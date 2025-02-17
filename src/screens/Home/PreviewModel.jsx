@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "react-quill/dist/quill.snow.css";
 
 const PreviewModel = ({ pageContent, onClose }) => {
