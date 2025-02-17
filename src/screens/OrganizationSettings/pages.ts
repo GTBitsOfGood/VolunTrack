@@ -4,6 +4,7 @@ import {
   AdjustmentsHorizontalIcon,
   DocumentTextIcon,
   DocumentPlusIcon,
+  SquaresPlusIcon,
 } from "@heroicons/react/24/solid";
 import WaiverManager from "../Waivers/WaiverManager";
 
@@ -29,22 +30,22 @@ export const organizationSettingsPages: Page[] = [
     icon: AdjustmentsHorizontalIcon,
     sections: [
       {
-        title: "Nonprofit Logo",
-        fields: [
-          {
-            name: "imageUrl",
-            label: "Link to the Logo",
-            placeholder: "https://bitsofgood.org/favicon.png",
-          },
-        ],
-      },
-      {
         title: "Theme",
         fields: [
           {
             name: "theme",
             label: "Theme Selector",
             type: "dropdown",
+          },
+        ],
+      },
+      {
+        title: "Nonprofit Logo",
+        fields: [
+          {
+            name: "imageUrl",
+            label: "Link to the Logo",
+            placeholder: "https://bitsofgood.org/favicon.png",
           },
         ],
       },
@@ -82,6 +83,13 @@ export const organizationSettingsPages: Page[] = [
         ],
       },
     ],
+  },
+  {
+    title: "Customization",
+    key: "customization",
+    icon: SquaresPlusIcon,
+    helperText: "Set default values to create events faster",
+    sections: [],
   },
   {
     title: "Award Thresholds",
