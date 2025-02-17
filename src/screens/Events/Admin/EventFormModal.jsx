@@ -400,7 +400,7 @@ const EventFormModal = ({
                         </Styled.Col>
                         <Styled.Col>
                           <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
-                            Tasks
+                            Recurring
                           </Label>
                           <DropdownMenu
                             value={recurringEvents[recurringEventIndex]}

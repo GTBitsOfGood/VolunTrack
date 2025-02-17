@@ -54,7 +54,7 @@ const EventEditModal = ({
       {!recurringEventConfirm && event.recurringEvents > 0 && (
         <div>
           <div className="flex flex-col gap-8 px-3 py-2">
-            <span className="text-xl font-bold">Edit Repeating Event</span>
+            <span className="text-xl font-bold">Edit Recurring Event</span>
             <div className="flex flex-col gap-4 pl-2">
               <div
                 onClick={() => setRecurringEvent(false)}

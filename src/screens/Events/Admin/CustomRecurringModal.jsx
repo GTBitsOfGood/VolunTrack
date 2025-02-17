@@ -5,7 +5,6 @@ import variables from "../../../design-tokens/_variables.module.scss";
 import BoGButton from "../../../components/BoGButton";
 import { useEffect, useState } from "react";
 import DropdownMenu from "../../../components/Dropdown";
-import { TextInput, Datepicker } from "flowbite-react";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -82,7 +81,17 @@ const CustomRecurringModal = ({
 
   const endChoices = ["Never", "On", "After"];
 
-  const [onDate, setOnDate] = useState(null);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dateSplitTomorrow = tomorrow.toISOString().split("T")[0].split("-");
+
+  const [onDate, setOnDate] = useState(
+    new Date(
+      dateSplitTomorrow[0],
+      dateSplitTomorrow[1] - 1,
+      dateSplitTomorrow[2]
+    )
+  ); // Format as "YYYY-MM-DD"
 
   const [occurences, setOccurences] = useState(1);
 

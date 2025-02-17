@@ -45,7 +45,7 @@ const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
         <div>
           <ModalBody>
             <div className="flex flex-col gap-8 px-3 py-2">
-              <span className="text-xl font-bold">Delete Repeating Event</span>
+              <span className="text-xl font-bold">Delete Recurring Event</span>
               <div className="flex flex-col gap-4 pl-2">
                 <div
                   onClick={() => setRecurringEvent(false)}
