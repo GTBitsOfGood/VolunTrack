@@ -20,10 +20,10 @@ jobs:
           TIMERANGE_END: 48
           BASE_URL: https://dev.volunteer.bitsofgood.org/
         run: |
-          SECRET = ${INTERNAL_SECRET}
-          START = ${TIMERANGE_START}
-          END = ${TIMERANGE_END}
-          BASE_URL = ${BASE_URL}
+          SECRET=${INTERNAL_SECRET}
+          START=${TIMERANGE_START}
+          END=${TIMERANGE_END}
+          BASE_URL=${BASE_URL}
 
           if [[ -z "$INTERNAL_SECRET" || -z "$TIMERANGE_START" || -z "$TIMERANGE_END" || -z "$BASE_URL" ]]; then
               echo "Error: One or more environment variables are missing or empty."
