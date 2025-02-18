@@ -24,6 +24,7 @@ const EventCard = (props) => {
   const [regCount, setRegCount] = useState(0);
   const isRegistered = props.isRegistered;
   const onEventDelete = props.onEventDelete;
+  const onEventEdit = props.onEventEdit;
 
   useEffect(() => {
     getRegistrations({ eventId: event._id }).then((res) => {
@@ -140,7 +141,10 @@ const EventCard = (props) => {
                 open={showEditModal}
                 toggle={toggleEditModal}
                 event={event}
-                setEvent={setEvent}
+                setEvent={(e, id, eventParentId, recurringEvent) => {
+                  setEvent(e);
+                  onEventEdit(id, eventParentId, recurringEvent);
+                }}
                 regCount={regCount}
                 setEventEdit={props?.setEventEdit}
               />
@@ -204,6 +208,7 @@ EventCard.propTypes = {
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
   setEventEdit: PropTypes.func,
+  onEventEdit: PropTypes.func.isRequired,
 };
 
 export default EventCard;

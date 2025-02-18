@@ -15,6 +15,16 @@ import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
+import CustomRecurringModal from "./CustomRecurringModal";
+
+// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+
+import DropdownMenu from "../../../components/Dropdown";
+
+// import {
+//   DropdownMenu,
+//   DropdownMenuTrigger
+// } from "@/components/ui/dropdown-menu"
 
 const Styled = {
   Form: styled(FForm)``,
@@ -48,6 +58,7 @@ const EventFormModal = ({
   setEvent,
   regCount,
   setEventEdit,
+  editRecurringEvent = false,
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
@@ -79,6 +90,8 @@ const EventFormModal = ({
     const event = {
       date: values.date,
       eventParent: values.eventParent,
+      recurringEvent: values.recurringEvent,
+      customRecurrenceSettings: customRecurrenceSettings,
     };
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
@@ -87,7 +100,7 @@ const EventFormModal = ({
     if (sendReminderEmail) event.eventParent.sendReminderEmail = true;
 
     createEvent(event)
-      .then(() => toggle())
+      .then((res) => toggle())
       .catch((error) => {
         if (error.response.status !== 200) {
           context.startLoading();
@@ -104,13 +117,20 @@ const EventFormModal = ({
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,
+      customRecurrenceSettings: customRecurrenceSettings,
     };
     setSubmitting(true);
-    updateEvent(event._id, editedEvent, sendConfirmationEmail);
+    updateEvent(
+      event._id,
+      editedEvent,
+      sendConfirmationEmail,
+      editRecurringEvent
+    );
     if (setEvent) {
+      const eventParentId = event.eventParent._id;
       event.date = values.date;
       event.eventParent = values.eventParent;
-      setEvent(event);
+      setEvent(event, event._id, eventParentId, editRecurringEvent);
     }
     if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
       setEventEdit(
@@ -164,11 +184,111 @@ const EventFormModal = ({
   }
   const quill = useRef(null);
 
+  /* --- Recurring Event --- */
+
+  const [recurringEventIndex, setRecurringEventIndex] = useState(0);
+  const [recurringEvents, setRecurringEvents] = useState([
+    "Does not repeat",
+    "Daily",
+    "Weekly",
+    "Monthly",
+    "Annually",
+    "Custom...",
+  ]);
+  const dayMapping = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  const monthMapping = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const toOrdinal = (number) => {
+    const suffixes = ["th", "st", "nd", "rd"];
+    const v = number % 100;
+    return number + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+  };
+
+  const updateRecurringEvents = (values) => {
+    const dateValues = values.target.value.split("-");
+    const date = new Date(dateValues[0], dateValues[1], dateValues[2]);
+    const newRecurringEvents = [
+      "Does not repeat",
+      "Daily",
+      `Weekly on ${dayMapping[date.getDay()]}`,
+      `Monthly on ${toOrdinal(Math.floor((dateValues[2] - 1) / 7) + 1)} ${
+        dayMapping[date.getDay()]
+      }`,
+      `Annually on ${monthMapping[date.getMonth() - 1]} ${toOrdinal(
+        date.getDate()
+      )}`,
+      "Custom...",
+    ];
+    setRecurringEvents(newRecurringEvents);
+    setRecurringEventIndex(recurringEventIndex);
+  };
+
+  const recurringEventsMapping = [
+    "dnr",
+    "daily",
+    "weekly",
+    "monthly",
+    "annually",
+    "custom",
+  ];
+
+  const handleRecurringEvent = (choice, setFieldValue) => {
+    const recurringEventIndex = recurringEvents.findIndex(
+      (event) => event === choice
+    );
+    setRecurringEventIndex(recurringEventIndex);
+    setFieldValue(
+      "recurringEvent",
+      recurringEventsMapping[recurringEventIndex]
+    );
+
+    if (recurringEventsMapping[recurringEventIndex] == "custom") {
+      toggleCustomModal();
+    }
+  };
+
+  const [showCustomModal, setShowCustomModal] = useState(false);
+
+  const toggleCustomModal = () => {
+    setShowCustomModal((prev) => !prev);
+  };
+
+  const [customRecurrenceSettings, setCustomRecurrenceSettings] =
+    useState(null);
+
+  const handleCustomRecurrence = (recurrenceSettings) => {
+    setCustomRecurrenceSettings(recurrenceSettings);
+  };
+
+  /* --- Recurring Event --- */
+
   return (
     <Formik
       enableReinitialize={true}
       initialValues={{
         date: event?.date ? event.date.split("T")[0] : "",
+        recurringEvent: event?.eventParent?.recurringEvent ?? "dnr",
         eventParent: {
           title: event?.eventParent?.title ?? "",
           startTime: event?.eventParent?.startTime ?? "",
@@ -270,6 +390,7 @@ const EventFormModal = ({
                             isRequired={true}
                             name="date"
                             type="date"
+                            onChangeCapture={(e) => updateRecurringEvents(e)}
                           />
                         </Styled.Col>
                         <Styled.Col>
@@ -286,6 +407,37 @@ const EventFormModal = ({
                             isRequired={true}
                             name="eventParent.endTime"
                             type="time"
+                          />
+                        </Styled.Col>
+                        <Styled.Col>
+                          <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
+                            Recurring
+                          </Label>
+                          <DropdownMenu
+                            value={recurringEvents[recurringEventIndex]}
+                            options={recurringEvents}
+                            callback={(choice) => {
+                              handleRecurringEvent(choice, setFieldValue);
+                            }}
+                            arrow
+                          />
+                          <CustomRecurringModal
+                            open={showCustomModal}
+                            toggle={toggleCustomModal}
+                            setRecurrence={handleCustomRecurrence}
+                            recurrenceSettings={customRecurrenceSettings}
+                            // event={event}
+                            // setEvent={(
+                            //   e,
+                            //   id,
+                            //   eventParentId,
+                            //   recurringEvent
+                            // ) => {
+                            //   setEvent(e);
+                            //   onEventEdit(id, eventParentId, recurringEvent);
+                            // }}
+                            // regCount={regCount}
+                            // setEventEdit={props?.setEventEdit}
                           />
                         </Styled.Col>
                       </Row>
@@ -563,6 +715,7 @@ EventFormModal.propTypes = {
   isGroupEvent: PropTypes.bool.isRequired,
   setEvent: PropTypes.func.isRequired,
   setEventEdit: PropTypes.func,
+  editRecurringEvent: PropTypes.bool,
 };
 
 export default EventFormModal;

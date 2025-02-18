@@ -1,4 +1,4 @@
-import { string, object, ref } from "yup";
+import { string, object } from "yup";
 
 export const checkInValidator = object().shape({
   firstName: string().trim().required("First name is required"),

@@ -2,7 +2,6 @@ import React from "react";
 import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 import PropTypes from "prop-types";
 import styled from "styled-components";
-import variables from "../design-tokens/_variables.module.scss";
 
 // const PAGE_SIZE = 1;
 
