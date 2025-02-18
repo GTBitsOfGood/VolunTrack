@@ -125,11 +125,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           registrationCount: registrations.length,
         });
       } catch (error) {
-        return res
-          .status(500)
-          .json({
-            error: "An Internal Server Error Occurred: " + String(error),
-          });
+        return res.status(500).json({
+          error: "An Internal Server Error Occurred: " + String(error),
+        });
       }
     }
   }
