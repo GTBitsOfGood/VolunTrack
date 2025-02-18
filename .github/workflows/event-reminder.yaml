@@ -18,7 +18,7 @@ jobs:
           INTERNAL_SECRET: ${{ secrets.INTERNAL_SECRET }}
           TIMERANGE_START: 24
           TIMERANGE_END: 48
-          BASE_URL: 
+          BASE_URL: https://dev.volunteer.bitsofgood.org/
         run: |
           SECRET = ${INTERNAL_SECRET}
           START = ${TIMERANGE_START}
