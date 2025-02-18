@@ -127,7 +127,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } catch (error) {
         return res
           .status(500)
-          .json({ error: "An Internal Server Error Occurred: " + String(error) });
+          .json({
+            error: "An Internal Server Error Occurred: " + String(error),
+          });
       }
     }
   }
