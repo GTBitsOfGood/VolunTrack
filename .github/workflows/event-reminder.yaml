@@ -37,7 +37,7 @@ jobs:
 
           echo "Succeed: Set up env variables" 
 
-          JSON_DATA="{ \"timerange\": { \"start\": $START, \"end\": $END }, \"secret\": \"$SECRET\" }" 
+          JSON_DATA="{ \"timeRange\": { \"start\": $START, \"end\": $END }, \"secret\": \"$SECRET\" }" 
           echo "Succeed: Set up JSON_DATA as request body" 
 
           RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d "$JSON_DATA" "$BASE_URL/api/registrations/reminders")
