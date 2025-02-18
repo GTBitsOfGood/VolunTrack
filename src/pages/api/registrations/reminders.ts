@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import Event from "../../../../server/mongodb/models/Event";
+import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
 import { sendEventReminderEmail } from "../../../utils/mailersend-email";
 import User from "../../../../server/mongodb/models/User";
@@ -123,7 +124,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           registrationCount: registrations.length,
         });
       } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: "Internal Server Error: " + error});
       }
     }
   }

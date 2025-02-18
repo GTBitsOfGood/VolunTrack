@@ -31,6 +31,9 @@ export type EventPopulatedDocument = HydratedDocument<EventPopulatedData>;
 
 // Need to disable in order to check that "models" is defined
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-export default (models && "Event" in models
-  ? (models.Event as Model<EventData>)
-  : undefined) ?? model<EventData>("Event", eventSchema);
+const Event = models.Event || model<EventData>("Event", eventSchema);
+export default Event;
+
+// export default (models && "Event" in models
+//   ? (models.Event as Model<EventData>)
+//   : undefined) ?? model<EventData>("Event", eventSchema);
