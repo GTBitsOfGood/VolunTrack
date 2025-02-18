@@ -182,6 +182,40 @@ export const sendEventEditedEmail = async (user, event, eventParent) => {
   );
 };
 
+export const sendEventReminderEmail = async (user, event, organization) => {
+  const personalization = [
+    {
+      email: user.email,
+      data: {
+        header: `Event Reminder: ${event.eventParent.title} in 2 Days`,
+        introLine: `This is a reminder that you have an upcoming volunteer event ${event.eventParent.title} in 2 Days. If you are unable to attend, please cancel your registration in advance`,
+        eventTitle: event.eventParent.title,
+        volunteerName: user.firstName,
+        eventDate: event.date?.toISOString().slice(0, 10),
+        eventStartTime: convertTime(event.eventParent.startTime),
+        eventEndTime: convertTime(event.eventParent.endTime),
+        eventLocale: event.eventParent.localTime,
+        eventAddress: event.eventParent.address,
+        eventCity: event.eventParent.city,
+        eventState: event.eventParent.state,
+        eventZipCode: event.eventParent.zip,
+        eventDescription: event.eventParent.description?.replace(
+          /<[^>]+>/g,
+          " "
+        ),
+        eventContactEmail: event.eventParent.eventContactEmail,
+        nonprofitName: organization.name,
+      },
+    },
+  ];
+  sendEmail(
+    [user],
+    organization,
+    personalization,
+    `Event Reminder: ${event.eventParent.title}`
+  );
+};
+
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
 const sendEmail = async (
   users,
@@ -200,6 +234,7 @@ const sendEmail = async (
       new Recipient(user.email, `${user.firstName} ${user.lastName}`)
     );
   }
+
   const emailParams = new EmailParams()
     .setFrom("volunteer@bitsofgood.org") // IMPORTANT: this email can not change
     .setFromName(organization.name)

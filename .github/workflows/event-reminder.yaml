@@ -1,0 +1,51 @@
+name: Send Event Reminder
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "3 12 * * *" # Runs daily at 12:03 PM UTC (7:03 AM EST)
+
+jobs:
+  averageWeek:
+    name: Send Reminder Emails
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Post Request
+        env:
+          INTERNAL_SECRET: ${{ secrets.INTERNAL_SECRET }}
+          TIMERANGE_START: 24
+          TIMERANGE_END: 48
+          BASE_URL: https://dev.volunteer.bitsofgood.org/
+        run: |
+          SECRET = ${INTERNAL_SECRET}
+          START = ${TIMERANGE_START}
+          END = ${TIMERANGE_END}
+          BASE_URL = ${BASE_URL}
+
+          if [[ -z "$INTERNAL_SECRET" || -z "$TIMERANGE_START" || -z "$TIMERANGE_END" || -z "$BASE_URL" ]]; then
+              echo "Error: One or more environment variables are missing or empty."
+              echo "Debug Info:"
+              [[ -z "$INTERNAL_SECRET" ]] && echo " - INTERNAL_SECRET is missing or empty."
+              [[ -z "$TIMERANGE_START" ]] && echo " - TIMERANGE_START is missing or empty."
+              [[ -z "$TIMERANGE_END" ]] && echo " - TIMERANGE_END is missing or empty."
+              [[ -z "$BASE_URL" ]] && echo " - BASE_URL is missing or empty."
+              exit 1
+          fi
+
+          echo "Succeed: Set up env variables" 
+
+          JSON_DATA="{ \"timerange\": { \"start\": $START, \"end\": $END }, \"secret\": \"$SECRET\" }" 
+          echo "Succeed: Set up JSON_DATA as request body" 
+
+          RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d "$JSON_DATA" "$BASE_URL/api/registrations/reminders")
+          echo "API Response: $RESPONSE"
+
+          if [[ $RESPONSE == *"\"success\":true"* ]]; then
+           echo "POST request was successful."
+          else
+            echo "POST request failed."
+            exit 1 # Set a non-zero exit code to indicate failure
+          fi
