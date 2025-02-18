@@ -49,9 +49,6 @@ export type EventParentDocument = HydratedDocument<EventParentData>;
 
 // Need to disable in order to check that "models" is defined
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-const EventParent = models.EventParent || model<EventParentData>("EventParent", eventParentSchema);
-
-export default EventParent;
-// export default (models && "EventParent" in models
-//   ? (models.EventParent as Model<EventParentData>)
-//   : undefined) ?? model<EventParentData>("EventParent", eventParentSchema);
+export default (models && "EventParent" in models
+  ? (models.EventParent as Model<EventParentData>)
+  : undefined) ?? model<EventParentData>("EventParent", eventParentSchema);

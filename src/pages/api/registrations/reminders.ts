@@ -26,6 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const endTime = new Date(now.getTime() + timeRange.end * 60 * 60 * 1000);
 
       try {
+        EventParent;
         const events = await Event.find({
           date: { $gte: startTime, $lte: endTime },
         })
@@ -124,7 +125,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           registrationCount: registrations.length,
         });
       } catch (error) {
-        return res.status(500).json({ error: "Internal Server Error: " + error});
+        return res
+          .status(500)
+          .json({ error: "Internal Server Error: " + String(error) });
       }
     }
   }
