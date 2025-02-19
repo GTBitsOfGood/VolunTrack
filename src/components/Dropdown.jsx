@@ -6,13 +6,30 @@ import { set } from "mongoose";
 const DropdownMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [choice, setChoice] = useState(props.options[0]);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setChoice(props.value);
   }, [props.value]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    console.log("clicked");
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={"relative w-full"}>
+    <div className={"relative w-full max-w-[300px]"}>
       <div
         className={
           !props.className

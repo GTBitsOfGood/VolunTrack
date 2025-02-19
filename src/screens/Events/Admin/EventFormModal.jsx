@@ -1,5 +1,5 @@
-import { Label } from "flowbite-react";
-import { Field, Form as FForm, Formik } from "formik";
+import { Label, Tooltip, TextInput } from "flowbite-react";
+import { Field, Form as FForm, Formik, ErrorMessage } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -16,15 +16,12 @@ import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
 import { getOrganization } from "../../../queries/organizations";
 import CustomRecurringModal from "./CustomRecurringModal";
-
-// import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-
 import DropdownMenu from "../../../components/Dropdown";
-
-// import {
-//   DropdownMenu,
-//   DropdownMenuTrigger
-// } from "@/components/ui/dropdown-menu"
+import { getRegistrations } from "../../../queries/registrations";
+import { editRegistration } from "../../../queries/registrations";
+import { Dropdown } from "flowbite-react";
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -62,14 +59,17 @@ const EventFormModal = ({
 }) => {
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
-  const [isValidForCourtHours, setIsValidForCourtHours] = useState(
-    event?.eventParent?.isValidForCourtHours ?? false
-  );
   const [isNotifyAdmin, setisNotifyAdmin] = useState(
     event?.eventParent?.isNotifyAdmin ?? false
   );
+  const [isValidForCourtHours, setIsValidForCourtHours] = useState(
+    event?.eventParent?.isValidForCourtHours ?? false
+  );
   const [sendReminderEmail, setSendReminderEmail] = useState(
     event?.eventParent?.sendReminderEmail ?? false
+  );
+  const [requiresApproval, setRequiresApproval] = useState(
+    event?.eventParent?.requiresApproval ?? false
   );
   const {
     data: { user },
@@ -98,6 +98,7 @@ const EventFormModal = ({
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
     if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
     if (sendReminderEmail) event.eventParent.sendReminderEmail = true;
+    if (requiresApproval) event.eventParent.requiresApproval = true;
 
     createEvent(event)
       .then((res) => toggle())
@@ -111,9 +112,11 @@ const EventFormModal = ({
   };
 
   const onSubmitEditEvent = (values, setSubmitting) => {
+    const previousRequiresApproval = event?.eventParent?.requiresApproval;
     values.eventParent.isValidForCourtHours = isValidForCourtHours;
     values.eventParent.isNotifyAdmin = isNotifyAdmin;
     values.eventParent.sendReminderEmail = sendReminderEmail;
+    values.eventParent.requiresApproval = requiresApproval;
     const editedEvent = {
       date: values.date,
       eventParent: values.eventParent,
@@ -125,7 +128,28 @@ const EventFormModal = ({
       editedEvent,
       sendConfirmationEmail,
       editRecurringEvent
-    );
+    )
+      .then(() => {
+        if (previousRequiresApproval === true && requiresApproval === false) {
+          getRegistrations({ eventId: event._id })
+            .then((response) => {
+              if (response?.data?.registrations?.length > 0) {
+                const updatePromises = response.data.registrations.map(
+                  (registration) =>
+                    editRegistration(registration._id, { approved: "approved" })
+                );
+
+                return Promise.all(updatePromises);
+              }
+            })
+            .catch((error) =>
+              console.error("Error fetching registrations:", error)
+            );
+        }
+      })
+      .catch((error) => console.error("Error updating event:", error))
+      .finally(() => setSubmitting(false));
+
     if (setEvent) {
       const eventParentId = event.eventParent._id;
       event.date = values.date;
@@ -164,6 +188,10 @@ const EventFormModal = ({
 
   const onSendReminderEmailbox = () => {
     setSendReminderEmail(!sendReminderEmail);
+  };
+
+  const onRequiresApprovalCheckbox = () => {
+    setRequiresApproval(!requiresApproval);
   };
 
   const getLocalTime = () => {
@@ -283,6 +311,80 @@ const EventFormModal = ({
 
   /* --- Recurring Event --- */
 
+  /* Add Task */
+
+  const [editingTask, setEditingTask] = useState(false);
+  const [taskName, setTaskName] = useState("");
+  const [tasks, setTasks] = useState([]);
+  const [editIndex, setEditIndex] = useState(-1);
+
+  const addTask = () => {
+    setEditingTask(true);
+    setEditIndex(-1);
+    setTaskName("");
+  };
+
+  const closeTask = () => {
+    setEditingTask(false);
+    setTaskName("");
+    setEditIndex(-1);
+  };
+
+  const editTask = (index) => {
+    setTaskName(tasks[index]);
+    setEditIndex(index);
+    setEditingTask(true);
+  };
+
+  const saveTask = (values, setFieldValue) => {
+    if (taskName === "") {
+      closeTask();
+      return;
+    }
+    if (editIndex === -1) {
+      setFieldValue("eventParent.tasks", [
+        ...values.eventParent.tasks,
+        taskName,
+      ]);
+      setTasks([...values.eventParent.tasks, taskName]);
+    } else {
+      setFieldValue("eventParent.tasks", [
+        ...values.eventParent.tasks.slice(0, editIndex),
+        taskName,
+        ...values.eventParent.tasks.slice(editIndex + 1),
+      ]);
+      setTasks([
+        ...values.eventParent.tasks.slice(0, editIndex),
+        taskName,
+        ...values.eventParent.tasks.slice(editIndex + 1),
+      ]);
+    }
+    closeTask();
+  };
+
+  const deleteTask = (index, setFieldValue) => {
+    setFieldValue("eventParent.tasks", [
+      ...tasks.slice(0, index),
+      ...tasks.slice(index + 1),
+    ]);
+    setTasks([...tasks.slice(0, index), ...tasks.slice(index + 1)]);
+    closeTask();
+  };
+
+  const readTasks = (values) => {
+    if (values?.eventParent?.tasks) {
+      setTasks(values.eventParent.tasks);
+    }
+  };
+
+  useEffect(() => {
+    if (event?.eventParent?.tasks) {
+      setTasks(event.eventParent.tasks);
+    }
+  }, []);
+
+  /* -------- */
+
   return (
     <Formik
       enableReinitialize={true}
@@ -316,6 +418,7 @@ const EventFormModal = ({
             event?.eventParent?.isValidForCourtHours ?? false,
           isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
           sendReminderEmail: event?.eventParent?.sendReminderEmail ?? false,
+          requiresApproval: event?.eventParent?.requiresApproval ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
           pocName: isGroupEvent ? event?.eventParent?.pocName ?? "" : "",
@@ -327,6 +430,7 @@ const EventFormModal = ({
           orgState: isGroupEvent ? event?.eventParent?.orgState ?? "" : "",
           orgZip: isGroupEvent ? event?.eventParent?.orgZip ?? "" : "",
           description: event?.eventParent?.description ?? "",
+          tasks: event?.eventParent?.tasks ?? [],
         },
       }}
       onSubmit={(values, { setSubmitting }) => {
@@ -409,6 +513,157 @@ const EventFormModal = ({
                             type="time"
                           />
                         </Styled.Col>
+                        <Styled.Col>
+                          <div className="w-full">
+                            <Label className="mb-[3.5px] flex h-6 items-center font-medium text-slate-600">
+                              Tasks
+                            </Label>
+                            <Dropdown
+                              className="w-full"
+                              enableTypeAhead={false}
+                              dismissOnClick={false}
+                              dropdown={true}
+                              color="light"
+                              label="--"
+                              onClick={closeTask}
+                              placement="bottom-start"
+                            >
+                              {tasks.map((task, index) => (
+                                <>
+                                  {editIndex !== index && (
+                                    <Dropdown.Item id={task}>
+                                      <div className="flex w-48 flex-row justify-between">
+                                        <div
+                                          className="w-full"
+                                          onClick={() => {
+                                            editTask(index);
+                                          }}
+                                        >
+                                          {task}
+                                        </div>
+                                        <div
+                                          className="cursor-pointer border-l border-black pl-1 hover:text-red-500"
+                                          onClick={() =>
+                                            deleteTask(index, setFieldValue)
+                                          }
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            width={18}
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="size-6"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                            />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                    </Dropdown.Item>
+                                  )}
+                                  {editIndex === index && (
+                                    <div className="flex w-full flex-wrap justify-center gap-2">
+                                      <TextInput
+                                        class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
+                                        id="taskName"
+                                        name="taskName"
+                                        value={taskName}
+                                        autoFocus={true}
+                                        onChange={(e) => {
+                                          setTaskName(e.target.value);
+                                        }}
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            saveTask(values, setFieldValue);
+                                          }
+                                        }}
+                                        type="text"
+                                        placeholder="Your task name"
+                                      />
+                                      {/* Cancel Button */}
+                                      <button
+                                        onClick={() => {
+                                          saveTask(values, setFieldValue);
+                                        }}
+                                        className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
+                                      >
+                                        Cancel
+                                      </button>
+
+                                      {/* Update Button */}
+                                      <button
+                                        onClick={() => {
+                                          saveTask(values, setFieldValue);
+                                        }}
+                                        className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                      >
+                                        Update
+                                      </button>
+                                    </div>
+                                  )}
+                                </>
+                              ))}
+                              <Dropdown.Divider />
+                              <Dropdown.Header>
+                                {(!editingTask || editIndex !== -1) && (
+                                  <div
+                                    onClick={addTask}
+                                    className="cursor-pointer"
+                                  >
+                                    + Add Task
+                                  </div>
+                                )}
+                                {editingTask && editIndex === -1 && (
+                                  <div className="flex flex-wrap gap-2">
+                                    <TextInput
+                                      class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
+                                      id="taskName"
+                                      name="taskName"
+                                      value={taskName}
+                                      autoFocus={true}
+                                      onChange={(e) => {
+                                        setTaskName(e.target.value);
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                          saveTask(values, setFieldValue);
+                                        }
+                                      }}
+                                      type="text"
+                                      placeholder="Your task name"
+                                    />
+                                    {/* Cancel Button */}
+                                    <button
+                                      onClick={() => {
+                                        saveTask(values, setFieldValue);
+                                      }}
+                                      className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
+                                    >
+                                      Cancel
+                                    </button>
+
+                                    {/* Add Button */}
+                                    <button
+                                      onClick={() => {
+                                        saveTask(values, setFieldValue);
+                                      }}
+                                      className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
+                                )}
+                              </Dropdown.Header>
+                            </Dropdown>
+                          </div>
+                        </Styled.Col>
+                      </Row>
+                      <Row>
                         <Styled.Col>
                           <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
                             Recurring
@@ -679,6 +934,12 @@ const EventFormModal = ({
                     onChange={onSendReminderEmailbox}
                   />
                   <Text text="Send reminder emails 48 hours before the event" />
+                  <Input
+                    defaultChecked={requiresApproval}
+                    type="checkbox"
+                    onChange={onRequiresApprovalCheckbox}
+                  />
+                  <Text text="Requires Approval" />
                   {containsExistingEvent(event) && (
                     <div>
                       <Input

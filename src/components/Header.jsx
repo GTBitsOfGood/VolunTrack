@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React, { useEffect } from "react";
 import { getOrganization } from "../queries/organizations";
+import { on } from "events";
 
 const Header = () => {
   const router = useRouter();
@@ -42,6 +43,14 @@ const Header = () => {
 
   const goToOrganizationSettings = () => {
     router.push("/organization-settings");
+  };
+
+  const onRegistrationsClicked = () => {
+    router.push("/registrations");
+  };
+
+  const onEventsClicked = () => {
+    router.push("/events");
   };
 
   const currPageMatches = (page) => router.pathname === page;
@@ -115,14 +124,42 @@ const Header = () => {
             Volunteers
           </Navbar.Link>
         )}
-        <Navbar.Link
-          href="/events"
-          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/events") ? "text-primaryColor" : ""
-          }`}
-        >
-          Events
-        </Navbar.Link>
+
+        {user.role != "admin" ? (
+          <Navbar.Link
+            href="/events"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/events") ? "text-primaryColor" : ""
+            }`}
+          >
+            Events
+          </Navbar.Link>
+        ) : (
+          <Navbar.Link
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/events") ? "text-primaryColor" : ""
+            }`}
+          >
+            <Dropdown
+              arrowIcon={true}
+              inline={true}
+              label={<div>Events</div>}
+              className="font-medium"
+            >
+              <Dropdown.Item
+                href="/registrations"
+                onClick={onRegistrationsClicked}
+              >
+                Approval Portal
+              </Dropdown.Item>
+
+              <Dropdown.Item href="/events" onClick={onEventsClicked}>
+                Event Calendar
+              </Dropdown.Item>
+            </Dropdown>
+          </Navbar.Link>
+        )}
+
         {user.role === "volunteer" && (
           <Navbar.Link
             onClick={goToStats}

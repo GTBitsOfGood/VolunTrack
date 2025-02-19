@@ -31,8 +31,9 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
       .gt(minMaxVolunteers ?? 0),
     isPrivate: z.boolean().optional(),
     isValidForCourtHours: z.boolean().optional(),
-    isNotifyAdmin: z.boolean().optional(),
     sendReminderEmail: z.boolean().optional(),
+    requiresApproval: z.boolean().optional(),
+    isNotifyAdmin: z.boolean().optional(),
     organizationId: z.string(),
     // refine() is not working for some reason
     // .refine(
@@ -57,6 +58,7 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
       //.regex(/^[0-9]{5}$/, "orgZip must be a five-digit number")
       .optional(),
     description: z.string().optional(),
+    tasks: z.array(z.string().optional()),
   });
 
 export const eventParentInputServerValidator = z.object({
@@ -87,6 +89,7 @@ export const eventParentInputServerValidator = z.object({
   isValidForCourtHours: z.boolean().optional(),
   isNotifyAdmin: z.boolean().optional(),
   sendReminderEmail: z.boolean().optional(),
+  requiresApproval: z.boolean().optional(),
   organizationId: z.string().refine(
     (id) => isValidObjectId(id),
     (id) => ({ message: `organizationId ${id} is not a valid ObjectId` })
@@ -109,6 +112,7 @@ export const eventParentInputServerValidator = z.object({
     //.regex(/^[0-9]{5}$/, "orgZip must be a five-digit number")
     .optional(),
   description: z.string().optional(),
+  tasks: z.array(z.string().optional()),
 });
 
 export type EventParentInputClient = z.infer<
