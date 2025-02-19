@@ -65,9 +65,6 @@ const EventFormModal = ({
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.eventParent?.isValidForCourtHours ?? false
   );
-  const [isNotifyAdmin, setisNotifyAdmin] = useState(
-    event?.eventParent?.isNotifyAdmin ?? false
-  );
   const [sendReminderEmail, setSendReminderEmail] = useState(
     event?.eventParent?.sendReminderEmail ?? false
   );
@@ -132,14 +129,15 @@ const EventFormModal = ({
       sendConfirmationEmail,
       editRecurringEvent
     )
-    .then(() => {
-      if (previousRequiresApproval === true && requiresApproval === false) {
-        getRegistrations({ eventId: event._id })
-          .then((response) => {
-            if (response?.data?.registrations?.length > 0) {
-              const updatePromises = response.data.registrations.map((registration) => 
-                editRegistration(registration._id, { approved: "approved" })
-              );
+      .then(() => {
+        if (previousRequiresApproval === true && requiresApproval === false) {
+          getRegistrations({ eventId: event._id })
+            .then((response) => {
+              if (response?.data?.registrations?.length > 0) {
+                const updatePromises = response.data.registrations.map(
+                  (registration) =>
+                    editRegistration(registration._id, { approved: "approved" })
+                );
 
                 return Promise.all(updatePromises);
               }
@@ -516,6 +514,157 @@ const EventFormModal = ({
                           />
                         </Styled.Col>
                         <Styled.Col>
+                          <div className="w-full">
+                            <Label className="mb-[3.5px] flex h-6 items-center font-medium text-slate-600">
+                              Tasks
+                            </Label>
+                            <Dropdown
+                              className="w-full"
+                              enableTypeAhead={false}
+                              dismissOnClick={false}
+                              dropdown={true}
+                              color="light"
+                              label="--"
+                              onClick={closeTask}
+                              placement="bottom-start"
+                            >
+                              {tasks.map((task, index) => (
+                                <>
+                                  {editIndex !== index && (
+                                    <Dropdown.Item id={task}>
+                                      <div className="flex w-48 flex-row justify-between">
+                                        <div
+                                          className="w-full"
+                                          onClick={() => {
+                                            editTask(index);
+                                          }}
+                                        >
+                                          {task}
+                                        </div>
+                                        <div
+                                          className="cursor-pointer border-l border-black pl-1 hover:text-red-500"
+                                          onClick={() =>
+                                            deleteTask(index, setFieldValue)
+                                          }
+                                        >
+                                          <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            width={18}
+                                            viewBox="0 0 24 24"
+                                            strokeWidth={1.5}
+                                            stroke="currentColor"
+                                            className="size-6"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                                            />
+                                          </svg>
+                                        </div>
+                                      </div>
+                                    </Dropdown.Item>
+                                  )}
+                                  {editIndex === index && (
+                                    <div className="flex w-full flex-wrap justify-center gap-2">
+                                      <TextInput
+                                        class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
+                                        id="taskName"
+                                        name="taskName"
+                                        value={taskName}
+                                        autoFocus={true}
+                                        onChange={(e) => {
+                                          setTaskName(e.target.value);
+                                        }}
+                                        onKeyDown={(e) => {
+                                          if (e.key === "Enter") {
+                                            saveTask(values, setFieldValue);
+                                          }
+                                        }}
+                                        type="text"
+                                        placeholder="Your task name"
+                                      />
+                                      {/* Cancel Button */}
+                                      <button
+                                        onClick={() => {
+                                          saveTask(values, setFieldValue);
+                                        }}
+                                        className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
+                                      >
+                                        Cancel
+                                      </button>
+
+                                      {/* Update Button */}
+                                      <button
+                                        onClick={() => {
+                                          saveTask(values, setFieldValue);
+                                        }}
+                                        className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                      >
+                                        Update
+                                      </button>
+                                    </div>
+                                  )}
+                                </>
+                              ))}
+                              <Dropdown.Divider />
+                              <Dropdown.Header>
+                                {(!editingTask || editIndex !== -1) && (
+                                  <div
+                                    onClick={addTask}
+                                    className="cursor-pointer"
+                                  >
+                                    + Add Task
+                                  </div>
+                                )}
+                                {editingTask && editIndex === -1 && (
+                                  <div className="flex flex-wrap gap-2">
+                                    <TextInput
+                                      class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
+                                      id="taskName"
+                                      name="taskName"
+                                      value={taskName}
+                                      autoFocus={true}
+                                      onChange={(e) => {
+                                        setTaskName(e.target.value);
+                                      }}
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                          saveTask(values, setFieldValue);
+                                        }
+                                      }}
+                                      type="text"
+                                      placeholder="Your task name"
+                                    />
+                                    {/* Cancel Button */}
+                                    <button
+                                      onClick={() => {
+                                        saveTask(values, setFieldValue);
+                                      }}
+                                      className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
+                                    >
+                                      Cancel
+                                    </button>
+
+                                    {/* Add Button */}
+                                    <button
+                                      onClick={() => {
+                                        saveTask(values, setFieldValue);
+                                      }}
+                                      className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                    >
+                                      Add
+                                    </button>
+                                  </div>
+                                )}
+                              </Dropdown.Header>
+                            </Dropdown>
+                          </div>
+                        </Styled.Col>
+                      </Row>
+                      <Row>
+                        <Styled.Col>
                           <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
                             Recurring
                           </Label>
@@ -545,114 +694,6 @@ const EventFormModal = ({
                             // regCount={regCount}
                             // setEventEdit={props?.setEventEdit}
                           />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <div className="w-full">
-                            <Label className="mb-[3.5px] flex h-6 items-center font-medium text-slate-600">
-                              Tasks
-                            </Label>
-                            <Dropdown
-                              className="w-full"
-                              enableTypeAhead={false}
-                              dismissOnClick={false}
-                              dropdown={true}
-                              color="light"
-                              label={
-                                <>
-                                  --&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                </>
-                              }
-                              onClick={closeTask}
-                              placement="bottom-start"
-                            >
-                              {tasks.map((task, index) => (
-                                <>
-                                  {editIndex !== index && (
-                                    <Dropdown.Item id={task}>
-                                      <div className="flex w-48 flex-row justify-between">
-                                        <div
-                                          className="w-full"
-                                          onClick={() => {
-                                            editTask(index);
-                                          }}
-                                        >
-                                          {task}
-                                        </div>
-                                        <div
-                                          className="border-l border-black pl-1"
-                                          onClick={() =>
-                                            deleteTask(index, setFieldValue)
-                                          }
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            width={18}
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={1.5}
-                                            stroke="currentColor"
-                                            className="size-6"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                                            />
-                                          </svg>
-                                        </div>
-                                      </div>
-                                    </Dropdown.Item>
-                                  )}
-                                  {editIndex === index && (
-                                    <div className="flex w-full justify-center">
-                                      <TextInput
-                                        class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
-                                        id="taskName"
-                                        name="taskName"
-                                        value={taskName}
-                                        autoFocus={true}
-                                        onChange={(e) => {
-                                          setTaskName(e.target.value);
-                                        }}
-                                        onKeyDown={(e) => {
-                                          if (e.key === "Enter") {
-                                            saveTask(values, setFieldValue);
-                                          }
-                                        }}
-                                        type="text"
-                                        placeholder="Your task name"
-                                      />
-                                    </div>
-                                  )}
-                                </>
-                              ))}
-                              <Dropdown.Divider />
-                              <Dropdown.Header>
-                                {(!editingTask || editIndex !== -1) && (
-                                  <div onClick={addTask}>+ Add Events</div>
-                                )}
-                                {editingTask && editIndex === -1 && (
-                                  <TextInput
-                                    class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
-                                    id="taskName"
-                                    name="taskName"
-                                    value={taskName}
-                                    autoFocus={true}
-                                    onChange={(e) => {
-                                      setTaskName(e.target.value);
-                                    }}
-                                    onKeyDown={(e) => {
-                                      if (e.key === "Enter") {
-                                        saveTask(values, setFieldValue);
-                                      }
-                                    }}
-                                    type="text"
-                                    placeholder="Your task name"
-                                  />
-                                )}
-                              </Dropdown.Header>
-                            </Dropdown>
-                          </div>
                         </Styled.Col>
                       </Row>
                       <Row

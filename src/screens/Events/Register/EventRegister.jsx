@@ -348,19 +348,24 @@ const EventRegister = () => {
       )}
 
       {isRegistered && registrations[0]?.approved == "approved" ? (
-        <div className="my-3">
+        <div className="flex gap-2">
           <BoGButton
             text={
               <>
                 <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
-                Approved
+                Registered!
               </>
             }
-            className="w-full bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+            className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+          <BoGButton
+            text="Cancel Registration"
+            onClick={onUnregister}
+            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
       ) : isRegistered && registrations[0]?.approved == "pending" ? (
-        <div className="my-3">
+        <div className="flex gap-2">
           <BoGButton
             text={
               <>
@@ -368,7 +373,12 @@ const EventRegister = () => {
                 Pending Approval
               </>
             }
-            className="w-full bg-secondaryColor font-semibold font-semibold !text-black hover:bg-secondaryColor"
+            className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+          <BoGButton
+            text="Cancel Registration"
+            onClick={onUnregister}
+            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
       ) : isRegistered && registrations[0]?.approved == "denied" ? (

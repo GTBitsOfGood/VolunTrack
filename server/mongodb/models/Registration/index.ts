@@ -22,7 +22,7 @@ const registrationSchema = new Schema(
     approved: {
       type: String,
       enum: ["pending", "approved", "denied"],
-      default: "pending",
+      default: "approved",
     },
   },
   { timestamps: true }
