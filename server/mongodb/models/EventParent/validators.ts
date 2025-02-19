@@ -31,7 +31,6 @@ export const eventParentInputClientValidator = (minMaxVolunteers?: number) =>
       .gt(minMaxVolunteers ?? 0),
     isPrivate: z.boolean().optional(),
     isValidForCourtHours: z.boolean().optional(),
-    isNotifyAdmin: z.boolean().optional(),
     sendReminderEmail: z.boolean().optional(),
     requiresApproval: z.boolean().optional(),
     isNotifyAdmin: z.boolean().optional(),
