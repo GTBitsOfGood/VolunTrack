@@ -20,6 +20,7 @@ import {
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
+import EventTasksContainer from "./EventTasksContainer";
 
 const Styled = {
   Container: styled(Container)`
@@ -167,6 +168,8 @@ const EventRegister = () => {
     setShowMinorModal(true);
   };
 
+
+
   const onRegisterAfterWaiverClicked = () => {
     toggleWaiverModal();
     setIsLoading(true);
@@ -176,6 +179,7 @@ const EventRegister = () => {
       organizationId: user.organizationId,
       minors,
       approved: event.eventParent.requiresApproval ? "pending" : "approved",
+      tasks: tasks,
     }).then(() => {
       setIsRegistered(true);
       setIsLoading(false);
@@ -214,6 +218,8 @@ const EventRegister = () => {
   const goBackToDetails = () => {
     router.replace(`/events/${eventId}`);
   };
+
+  const [tasks, setTasks] = useState([]);
 
   return (
     <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
@@ -326,6 +332,13 @@ const EventRegister = () => {
           </div>
         </div>
       </Styled.BottomContainer>
+
+      <EventTasksContainer
+        event={event}
+        user={user}
+        eventId={eventId}
+        setTasks={setTasks}
+      />
 
       {event?.eventParent?.requiresApproval && (
         <div className="mt-3 flex flex-row pl-3">

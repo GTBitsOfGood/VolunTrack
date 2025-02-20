@@ -7,6 +7,7 @@ export const registrationInputClientValidator = z.object({
   userId: z.instanceof(Types.ObjectId),
   minors: z.array(z.string()).optional(),
   approved: z.enum(["pending", "approved", "denied"]).optional(),
+  tasks: z.array(z.string()).optional(),
 });
 
 export const registrationInputServerValidator = z.object({
@@ -30,6 +31,7 @@ export const registrationInputServerValidator = z.object({
   ),
   minors: z.array(z.string()).optional(),
   approved: z.enum(["pending", "approved", "denied"]).optional(),
+  tasks: z.array(z.string()).optional(),
 });
 
 export type RegistrationInputClient = z.infer<
