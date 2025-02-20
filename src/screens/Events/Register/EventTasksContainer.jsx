@@ -12,15 +12,7 @@ import { getRegistrations } from "../../../queries/registrations";
 import { CustomInput } from "reactstrap";
 import { CheckIcon } from "@heroicons/react/24/solid";
 
-const EventTasksContainer = (
-  {
-    event,
-    user,
-    eventId,
-    setTasks,
-  }
-) => {
-
+const EventTasksContainer = ({ event, user, eventId, setTasks }) => {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   const editTasks = (task) => {
@@ -48,7 +40,7 @@ const EventTasksContainer = (
       <div className="flex flex-row items-center justify-between">
         <Text text="Event Tasks" type="subheader" className="mt-4" />
       </div>
-      <div className="w-full flex flex-row gap-5">
+      <div className="flex w-full flex-row gap-5">
         {allTasks.map((task, index) => (
           <div
             key={index}

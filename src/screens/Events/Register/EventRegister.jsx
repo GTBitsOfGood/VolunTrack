@@ -168,8 +168,6 @@ const EventRegister = () => {
     setShowMinorModal(true);
   };
 
-
-
   const onRegisterAfterWaiverClicked = () => {
     toggleWaiverModal();
     setIsLoading(true);
