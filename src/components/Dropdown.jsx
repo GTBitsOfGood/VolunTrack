@@ -1,7 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
-import { set } from "mongoose";
 
 const DropdownMenu = (props) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,17 +18,17 @@ const DropdownMenu = (props) => {
       }
     };
 
-    console.log("clicked");
-
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, []);
 
   return (
-    <div className={"relative w-full max-w-[300px]"}>
+    <div className={"relative w-full max-w-[300px]"} ref={dropdownRef}>
       <div
         className={
           !props.className
