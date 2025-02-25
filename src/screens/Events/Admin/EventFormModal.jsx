@@ -71,9 +71,6 @@ const EventFormModal = ({
   const [requiresApproval, setRequiresApproval] = useState(
     event?.eventParent?.requiresApproval ?? false
   );
-  const [sendReminderEmail, setSendReminderEmail] = useState(
-    event?.eventParent?.sendReminderEmail ?? false
-  );
   const {
     data: { user },
   } = useSession();
