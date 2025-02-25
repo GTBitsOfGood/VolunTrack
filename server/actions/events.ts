@@ -11,7 +11,7 @@ export const getEvents = async (
   await dbConnect();
 
   if (!startDate && !endDate) {
-    return Event.aggregate([
+    return await Event.aggregate([
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
@@ -28,7 +28,7 @@ export const getEvents = async (
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
   } else {
-    return Event.aggregate([
+    const test = Event.aggregate([
       {
         $match: {
           $expr: {
@@ -42,5 +42,6 @@ export const getEvents = async (
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
     ]);
+    return test;
   }
 };

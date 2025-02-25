@@ -4,6 +4,8 @@ import {
   PlusCircleIcon,
   TrashIcon,
   UsersIcon,
+  ClockIcon,
+  ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
@@ -24,13 +26,16 @@ const EventCard = (props) => {
   const [regCount, setRegCount] = useState(0);
   const isRegistered = props.isRegistered;
   const onEventDelete = props.onEventDelete;
+  const onEventEdit = props.onEventEdit;
 
   useEffect(() => {
     getRegistrations({ eventId: event._id }).then((res) => {
       setRegistrations(res.data.registrations);
       let count = 0;
       res.data.registrations.map((reg) => {
-        count += 1 + reg.minors.length;
+        if (reg.approved == "approved") {
+          count += 1 + reg.minors.length;
+        }
       });
       setRegCount(count);
     });
@@ -140,19 +145,40 @@ const EventCard = (props) => {
                 open={showEditModal}
                 toggle={toggleEditModal}
                 event={event}
-                setEvent={setEvent}
+                setEvent={(e, id, eventParentId, recurringEvent) => {
+                  setEvent(e);
+                  onEventEdit(id, eventParentId, recurringEvent);
+                }}
                 regCount={regCount}
                 setEventEdit={props?.setEventEdit}
               />
             </div>
           )}
-          {props.user.role === "volunteer" && isRegistered && (
+          {props.user.role === "volunteer" && isRegistered === "approved" && (
             <button
               className="mx-1 flex items-center justify-end"
               onClick={registerOnClick}
             >
               <CheckCircleIcon className="h-8 text-primaryColor" />
               <span>Registered!</span>
+            </button>
+          )}
+          {props.user.role === "volunteer" && isRegistered === "pending" && (
+            <button
+              className="mx-1 flex items-center justify-end"
+              onClick={registerOnClick}
+            >
+              <ClockIcon className="h-8 text-primaryColor" />
+              <span>Pending</span>
+            </button>
+          )}
+          {props.user.role === "volunteer" && isRegistered === "denied" && (
+            <button
+              className="mx-1 flex items-center justify-end"
+              onClick={registerOnClick}
+            >
+              <ExclamationCircleIcon className="h-8 text-primaryColor" />
+              <span>Denied</span>
             </button>
           )}
           {props.user.role === "volunteer" &&
@@ -204,6 +230,7 @@ EventCard.propTypes = {
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
   setEventEdit: PropTypes.func,
+  onEventEdit: PropTypes.func.isRequired,
 };
 
 export default EventCard;

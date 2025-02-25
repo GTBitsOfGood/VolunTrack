@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import bcrypt, { compare, hash } from "bcrypt";
+import { hash } from "bcrypt";
 import User, {
   userInputServerValidator,
 } from "../../../../server/mongodb/models/User";

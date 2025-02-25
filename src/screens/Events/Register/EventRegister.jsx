@@ -1,4 +1,5 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
+import { ClipboardDocumentCheckIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -110,24 +111,52 @@ const EventRegister = () => {
   const [minors, setMinors] = useState([]);
   const [isRegistered, setIsRegistered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [registrations, setRegistrations] = useState([]);
+  const [regCount, setRegCount] = useState(0);
 
   useEffect(() => {
     onLoadEvent();
-  }, []);
+  }, [refreshTrigger]);
 
   const onLoadEvent = () => {
-    getEvent(eventId).then((result) => {
-      if (result?.data?.event) {
-        setEvent(result.data.event);
-      }
-    });
-    getRegistrations({ eventId, userId: user._id }).then((result) => {
-      if (result?.data?.registrations?.length > 0) {
-        setIsRegistered(true);
-        setMinors(result.data.registrations[0].minors);
-        if (result.data.registrations[0].minors.length > 0) setHasMinor(true);
-      }
-    });
+    getEvent(eventId)
+      .then((eventResult) => {
+        if (eventResult?.data?.event) {
+          setEvent(eventResult.data.event);
+        }
+        // Fetch user registrations
+        return getRegistrations({ eventId, userId: user._id });
+      })
+      .then((registrationsResult) => {
+        if (registrationsResult?.data?.registrations?.length > 0) {
+          setIsRegistered(true);
+          setMinors(registrationsResult.data.registrations[0].minors);
+          if (registrationsResult.data.registrations[0].minors.length > 0)
+            setHasMinor(true);
+          setRegistrations(registrationsResult.data.registrations);
+
+          let count = 0;
+          registrationsResult.data.registrations.forEach((reg) => {
+            count += 1 + reg.minors.length;
+          });
+        }
+        // Fetch all registrations for the event
+        return getRegistrations({ eventId });
+      })
+      .then((allRegistrationsResult) => {
+        let approvedCount = 0;
+        allRegistrationsResult.data.registrations.forEach((reg) => {
+          if (reg.approved === "approved") {
+            approvedCount += 1 + reg.minors.length;
+          }
+        });
+        // Avoid displaying negative slots left
+        setRegCount(Math.min(approvedCount, event.eventParent.maxVolunteers));
+      })
+      .catch((error) => {
+        console.error("Error loading event data:", error);
+      });
   };
 
   const onCompleteRegistrationClicked = () => {
@@ -138,22 +167,19 @@ const EventRegister = () => {
     setShowMinorModal(true);
   };
 
-  const onReturnToHomeClicked = () => {
-    router.replace("/");
-  };
-
   const onRegisterAfterWaiverClicked = () => {
     toggleWaiverModal();
     setIsLoading(true);
-
     registerForEvent({
       eventId: event._id,
       userId: user._id,
       organizationId: user.organizationId,
       minors,
+      approved: event.eventParent.requiresApproval ? "pending" : "approved",
     }).then(() => {
       setIsRegistered(true);
       setIsLoading(false);
+      setRefreshTrigger((prev) => prev + 1);
     });
   };
 
@@ -190,47 +216,30 @@ const EventRegister = () => {
   };
 
   return (
-    <Styled.Container fluid="md">
-      <Text
-        href={`/events`}
-        onClick={() => goBackToDetails()}
-        text="← Back to home"
-      />
-      {!isRegistered && (
+    <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
+      <div className="flex flex-row justify-between">
+        <Text type="header" text="Confirm Registration"></Text>
+        <div className="flex items-end">
+          <Text
+            type="header"
+            text={event?.eventParent?.maxVolunteers - regCount}
+          ></Text>
+          <Text
+            className="min-w-max"
+            type="subheader"
+            text={`/${event?.eventParent?.maxVolunteers} Spots Remaining`}
+          ></Text>
+        </div>
+      </div>
+      <div className="mt-8 flex flex-row items-center">
+        <Text text="Event Information" type="subheader" />
         <Text
-          className="my-3"
-          type="header"
-          text="Complete Your Registration"
-        ></Text>
-      )}
-      {isRegistered && !isLoading && (
-        <React.Fragment>
-          <Styled.Row>
-            <Col xs="12" lg="6">
-              {/* eslint-disable-next-line react/no-unescaped-entities */}
-              <Styled.MainText>You've registered successfully!</Styled.MainText>
-            </Col>
-            <Col xs="12" lg="2">
-              <Styled.CheckGif src="/images/check.gif" alt="check" loop="0" />
-            </Col>
-          </Styled.Row>
-
-          <div className="flex w-11/12 flex-col space-y-2 rounded-md bg-white p-4">
-            <Text
-              text="Please check your mailbox for a confirmation email"
-              type="subheader"
-              className="pl-2"
-            />
-            <div className="flex flex-wrap justify-start gap-2 p-2">
-              <BoGButton
-                text="View Waivers"
-                onClick={onCompleteRegistrationClicked}
-              />
-              <BoGButton text="Cancel Registration" onClick={onUnregister} />
-            </div>
-          </div>
-        </React.Fragment>
-      )}
+          className="ml-3 font-bold"
+          href={`/events`}
+          onClick={() => goBackToDetails()}
+          text="Visit Event Page"
+        />
+      </div>
       {isLoading && (
         <React.Fragment>
           <Styled.Row>
@@ -244,20 +253,31 @@ const EventRegister = () => {
         </React.Fragment>
       )}
       <div className="h-6" />
-      <EventRegisterInfoContainer event={event} user={user} eventId={eventId} />
+      <EventRegisterInfoContainer
+        event={event}
+        user={user}
+        eventId={eventId}
+        refreshTrigger={refreshTrigger}
+      />
       <Styled.BottomContainer>
-        <Text text="Your Group" type="subheader" className="py-2" />
-        <Text
-          text="If a minor below 13 years of age will volunteer with you, please add
-          their information below."
-        />
-        <Text
-          text="Note: Minors at or above 13 years of age need to register using
-            their own account."
-          className="py-2"
-        />
+        <div className="flex flex-row items-center">
+          <Text text={`Your Group (${minors.length + 1})`} type="subheader" />
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              onAddMinorClicked();
+            }}
+            className="cursor-pointer"
+          >
+            <Text
+              text="Add Minor (under 13 years old)"
+              type="subheader"
+              className="ml-4 text-primaryColor"
+            />
+          </div>
+        </div>
         <div className="flex flex-row flex-wrap pr-10 pt-2">
-          <Styled.VolunteerContainer className="mt-2 bg-grey">
+          <Styled.VolunteerContainer className="mt-2 bg-transparent ring-2 ring-primaryColor">
             <Styled.VolunteerRow>
               <Styled.SectionHeaderText>
                 {user.firstName} {user.lastName}
@@ -269,16 +289,17 @@ const EventRegister = () => {
           </Styled.VolunteerContainer>
           {minors &&
             minors.map((minor) => (
-              <Styled.VolunteerContainer className="mt-2 bg-grey" key={minor}>
+              <Styled.VolunteerContainer
+                className="mt-2 bg-transparent ring-2 ring-primaryColor"
+                key={minor}
+              >
                 <Styled.VolunteerCol>
                   <div>
                     <Styled.VolunteerRow>
                       <Styled.SectionHeaderText>
                         {minor}
                       </Styled.SectionHeaderText>
-                      <Styled.DetailText>
-                        Minor with {user.firstName} {user.lastName}
-                      </Styled.DetailText>
+                      <Styled.DetailText>Minor</Styled.DetailText>
                     </Styled.VolunteerRow>
                   </div>
                   {!isRegistered && (
@@ -305,11 +326,75 @@ const EventRegister = () => {
           </div>
         </div>
       </Styled.BottomContainer>
-      {!isRegistered && (
-        <Styled.ModalFooter>
-          <BoGButton text="Register" onClick={onCompleteRegistrationClicked} />
-        </Styled.ModalFooter>
+
+      {event?.eventParent?.requiresApproval && (
+        <div className="mt-3 flex flex-row pl-3">
+          <Text text="*" className="text-primaryColor" />
+          <Text
+            text="This event requires approval to confirm your participation"
+            className="text-black-500 text-left text-sm font-semibold"
+          />
+        </div>
       )}
+
+      {!isRegistered && (
+        <div className="my-3">
+          <BoGButton
+            text="Complete Registration"
+            onClick={onCompleteRegistrationClicked}
+            className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
+          />
+        </div>
+      )}
+
+      {isRegistered && registrations[0]?.approved == "approved" ? (
+        <div className="flex gap-2">
+          <BoGButton
+            text={
+              <>
+                <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
+                Registered!
+              </>
+            }
+            className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+          <BoGButton
+            text="Cancel Registration"
+            onClick={onUnregister}
+            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+        </div>
+      ) : isRegistered && registrations[0]?.approved == "pending" ? (
+        <div className="flex gap-2">
+          <BoGButton
+            text={
+              <>
+                <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
+                Pending Approval
+              </>
+            }
+            className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+          <BoGButton
+            text="Cancel Registration"
+            onClick={onUnregister}
+            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+        </div>
+      ) : isRegistered && registrations[0]?.approved == "denied" ? (
+        <div className="my-3">
+          <BoGButton
+            text={
+              <>
+                <ClipboardDocumentCheckIcon className="mr-2 inline h-5 w-5" />
+                Denied
+              </>
+            }
+            className="w-full bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+          />
+        </div>
+      ) : null}
+
       <EventMinorModal
         open={showMinorModal}
         toggle={toggleMinorModal}

@@ -19,6 +19,11 @@ const registrationSchema = new Schema(
     eventId: { type: Schema.Types.ObjectId, ref: "Event", required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     minors: { type: [String], default: [] },
+    approved: {
+      type: String,
+      enum: ["pending", "approved", "denied"],
+      default: "approved",
+    },
   },
   { timestamps: true }
 );

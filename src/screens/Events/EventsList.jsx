@@ -23,6 +23,7 @@ const EventsList = ({
   registrations,
   onCreateClicked,
   onEventDelete,
+  onEventEdit,
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);
@@ -66,8 +67,11 @@ const EventsList = ({
     );
   });
 
-  const registeredEventIds = new Set(
-    registrations.map((registration) => registration.eventId)
+  const registeredEventIds = new Map(
+    registrations.map((registration) => [
+      registration.eventId,
+      registration.approved ?? "approved",
+    ])
   );
 
   let registeredEvents = upcomingEvents.filter((event) => {
@@ -105,8 +109,13 @@ const EventsList = ({
             key={event._id}
             event={event}
             user={user}
-            isRegistered={registeredEventIds.has(event._id)}
+            isRegistered={
+              registeredEventIds.has(event._id)
+                ? registeredEventIds.get(event._id)
+                : false
+            }
             onEventDelete={onEventDelete}
+            onEventEdit={onEventEdit}
             setEventEdit={setEventEditConfirmationMessage}
           />
         ))}
@@ -126,7 +135,12 @@ const EventsList = ({
                     key={event._id}
                     event={event}
                     user={user}
-                    isRegistered={true}
+                    isRegistered={
+                      registeredEventIds.has(event._id)
+                        ? registeredEventIds.get(event._id)
+                        : false
+                    }
+                    onEventEdit={onEventEdit}
                   />
                 ))}
               </div>
@@ -146,7 +160,12 @@ const EventsList = ({
                   key={event._id}
                   event={event}
                   user={user}
-                  isRegistered={registeredEventIds.has(event._id)}
+                  isRegistered={
+                    registeredEventIds.has(event._id)
+                      ? registeredEventIds.get(event._id)
+                      : false
+                  }
+                  onEventEdit={onEventEdit}
                 />
               ))}
             {upcomingEvents.length === 0 && (
@@ -181,6 +200,7 @@ const EventsList = ({
                   event={event}
                   user={user}
                   onEventDelete={onEventDelete}
+                  onEventEdit={onEventEdit}
                   setEventEdit={setEventEditConfirmationMessage}
                 />
               ))}
@@ -204,6 +224,7 @@ const EventsList = ({
                     version={"Secondary"}
                     isRegistered={registeredEventIds.has(event._id)}
                     onEventDelete={onEventDelete}
+                    onEventEdit={onEventEdit}
                     setEventEdit={setEventEditConfirmationMessage}
                   />
                 ))}
