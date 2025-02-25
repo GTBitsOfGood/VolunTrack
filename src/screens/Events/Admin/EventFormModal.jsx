@@ -641,7 +641,7 @@ const EventFormModal = ({
                                     ))}
 
                                     <div className="border-t pt-2">
-                                      {editingTask ? (
+                                      {editingTask && editIndex === -1 ? (
                                         <div className="flex flex-col gap-2">
                                           <input
                                             autoFocus
