@@ -1,4 +1,6 @@
 import "flowbite-react";
+import { Formik } from "formik";
+import InputField from "../../components/Forms/InputField";
 import { Dropdown } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
@@ -9,9 +11,11 @@ import styled from "styled-components";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
+import StatsTable from "../../components/StatsTable";
 import { getAttendances } from "../../queries/attendances";
 import { getEvents } from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
+import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
@@ -62,6 +66,9 @@ const EventManager = ({ isHomePage }) => {
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [startDate, setStartDate] = useState("undefined");
+  const [endDate, setEndDate] = useState("undefined");
+
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
@@ -83,6 +90,24 @@ const EventManager = ({ isHomePage }) => {
           setRegistrations(result.data.registrations);
       })
       .finally(() => setLoading(false));
+
+    let query = { organizationId: user.organizationId };
+    if (user.role === "volunteer") query.userId = user._id;
+
+    getAttendances(query)
+      .then((result) => {
+        if (result?.data?.attendances) {
+          const filteredAttendance = filterAttendance(
+            result.data.attendances,
+            startDate,
+            endDate
+          );
+          setAttendances(filteredAttendance);
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const onCreateClicked = () => {
@@ -90,19 +115,31 @@ const EventManager = ({ isHomePage }) => {
     setShowCreateModal(true);
   };
 
+  const onSubmitValues = (values, setSubmitting) => {
+    let offset = new Date().getTimezoneOffset();
+
+    if (!values.startDate) {
+      setStartDate("undefined");
+    } else {
+      let start = new Date(values.startDate);
+      start.setMinutes(start.getMinutes() - offset);
+      setStartDate(start);
+    }
+
+    if (!values.endDate) {
+      setEndDate("undefined");
+    } else {
+      let end = new Date(values.endDate);
+      end.setMinutes(end.getMinutes() - offset);
+      setEndDate(end);
+    }
+  };
+
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
     onRefresh();
   };
   useEffect(() => {
-    let query = { organizationId: user.organizationId };
-    if (user.role === "volunteer") query.userId = user._id;
-
-    getAttendances(query).then((result) => {
-      if (result?.data?.attendances) {
-        setAttendances(result.data.attendances);
-      }
-    });
     onRefresh();
   }, []);
 
@@ -355,10 +392,10 @@ const EventManager = ({ isHomePage }) => {
       )}
       {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>
-          <div className="flex-column flex">
+          <h2 className="text-bold font-bold text-left w-full">My Volunteering</h2>
+          <div className="flex-row flex gap-8">
             <div className="mb-4 justify-start">
-              <p className="mb-2 text-2xl font-bold">Accomplishments</p>
-              <div className="mx-auto flex flex-wrap">
+              <div className="mx-auto flex flex-wrap gap-3">
                 <ProgressDisplay
                   type="Events"
                   className="mb-1 mr-1"
@@ -374,19 +411,47 @@ const EventManager = ({ isHomePage }) => {
                   medalDefaults={session.medalDefaults}
                 />
               </div>
+              <Formik
+                initialValues={{}}
+                onSubmit={(values, { setSubmitting }) => {
+                  onSubmitValues(values, setSubmitting);
+                }}
+                render={({ handleSubmit }) => (
+                  <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
+                    <InputField label="From" name="startDate" type="datetime-local" />
+                    <InputField label="To" name="endDate" type="datetime-local" />
+                    <BoGButton
+                      className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Search"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                    />
+                  </div>
+                )}
+              />
+              <div className="w-full">
+                <Text text="Volunteer History" type="subheader" />
+                <Text
+                  text={`${attendances.length} events`}
+                  className="my-2 text-primaryColor"
+                />
+                <StatsTable attendances={attendances} isIndividualStats={true} />
+              </div>
             </div>
-            <EventsList
-              dateString={dateString}
-              events={
-                user.role === "admin"
-                  ? filteredEvents
-                  : filterEventsForVolunteers(events, user)
-              }
-              user={user}
-              registrations={registrations}
-              isHomePage={isHomePage}
-              onEventDelete={onEventDelete}
-            />
+              <EventsList
+                dateString={dateString}
+                events={
+                  user.role === "admin"
+                    ? filteredEvents
+                    : filterEventsForVolunteers(events, user)
+                }
+                user={user}
+                registrations={registrations}
+                isHomePage={isHomePage}
+                onEventDelete={onEventDelete}
+                showNewEvents={false}
+              />
           </div>
         </Styled.HomePage>
       )}
