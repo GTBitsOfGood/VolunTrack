@@ -13,6 +13,7 @@ module.exports = {
         primaryColor: "var(--primary-color)",
         secondaryColor: "var(--secondary-color)",
         hoverColor: "var(--hover-color)",
+        darkGrey: "#8E8E8E"
       },
     },
   },

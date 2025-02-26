@@ -18,25 +18,40 @@ class DateDisplayComponent extends React.Component {
   };
 
   render() {
-    return this.props.version === "Primary" ? (
-      <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-primaryColor">
-        <p className="mb-0 mt-3 text-sm leading-none text-white">
-          {this.state.month.toUpperCase()}
-        </p>
-        <p className="mt-1 text-3xl font-bold leading-none text-white">
-          {this.state.day}
-        </p>
-      </div>
-    ) : (
-      <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
-        <p className="mb-0 mt-3 text-sm leading-none text-primaryColor">
-          {this.state.month.toUpperCase()}
-        </p>
-        <p className="mt-1 text-3xl font-bold leading-none text-primaryColor">
-          {this.state.day}
-        </p>
-      </div>
-    );
+    if (this.props.version === "Primary") {
+      return (
+        <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-primaryColor">
+          <p className="mb-0 mt-3 text-sm leading-none text-white">
+            {this.state.month.toUpperCase()}
+          </p>
+          <p className="mt-1 text-3xl font-bold leading-none text-white">
+            {this.state.day}
+          </p>
+        </div>
+      )
+    } else if (this.props.version === "Past") {
+      return (
+        <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-darkGrey">
+          <p className="mb-0 mt-3 text-sm leading-none text-white">
+            {this.state.month.toUpperCase()}
+          </p>
+          <p className="mt-1 text-3xl font-bold leading-none text-white">
+            {this.state.day}
+          </p>
+        </div>
+      )
+    } else {
+      return (
+        <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
+          <p className="mb-0 mt-3 text-sm leading-none text-primaryColor">
+            {this.state.month.toUpperCase()}
+          </p>
+          <p className="mt-1 text-3xl font-bold leading-none text-primaryColor">
+            {this.state.day}
+          </p>
+        </div>
+      )
+    };
   }
 }
 

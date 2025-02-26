@@ -5,8 +5,8 @@ import {
   TrashIcon,
   UsersIcon,
   ClockIcon,
-  ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
+import { ExclamationCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
 import PropTypes from "prop-types";
@@ -42,7 +42,7 @@ const EventCard = (props) => {
   }, []);
 
   const open = () => {
-    setCollapse(!collapse);
+    router.push(`/events/${event._id}`);
   };
 
   const registerOnClick = (e) => {
@@ -73,6 +73,15 @@ const EventCard = (props) => {
     setShowEditModal((prev) => !prev);
   };
 
+  const pastEvent = (event) => {
+    let currentDate = new Date(Date.now());
+    let eventDate = new Date(event.date);
+    const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
+    eventDate.setUTCHours(hours, minutes);
+
+    return eventDate < currentDate;
+  }
+
   const convertTime = (time) => {
     let [hour, min] = time.split(":");
     let hours = parseInt(hour);
@@ -86,10 +95,10 @@ const EventCard = (props) => {
 
   return (
     <div
-      className={`mx-18 mb-2 flex flex-col ${
+      className={`mx-18 mb-2 mr-2 flex flex-col cursor-pointer ${
         props.user.role === "admin" && "max-w-4xl"
       } ${
-        props.user.role === "volunteer" && "max-w-xl"
+        props.user.role === "volunteer" && "max-w-4xl"
       } rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
@@ -98,7 +107,7 @@ const EventCard = (props) => {
           <DateDisplayComponent
             key={event.date}
             date={event.date}
-            version={props.version ?? "Primary"}
+            version={pastEvent(event) ? "Past" : props.version ?? "Primary"}
           />
           <div className="flex-column flex flex-1 text-xl">
             <div className="mb-1 flex items-center">
@@ -112,12 +121,18 @@ const EventCard = (props) => {
                 </Badge>
               )}
             </div>
-            <Label>{`${convertTime(
+            <Label className="mb-0">{`${convertTime(
               event.eventParent.startTime
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
+            {pastEvent(event) ? 
+              <div className="flex items-center space-x-2">
+                <ExclamationCircleIcon className="w-6 h-6 text-red-500 mr-1" />
+                <Label className="text-red-500 m-0">Event has passed</Label>
+              </div> : <></> 
+            }
           </div>
         </div>
-        <div className="flex-column justify-end">
+        <div className="flex-column items-end">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
@@ -154,7 +169,7 @@ const EventCard = (props) => {
               />
             </div>
           )}
-          {props.user.role === "volunteer" && isRegistered === "approved" && (
+          {/* {props.user.role === "volunteer" && isRegistered === "approved" && (
             <button
               className="mx-1 flex items-center justify-end"
               onClick={registerOnClick}
@@ -180,22 +195,23 @@ const EventCard = (props) => {
               <ExclamationCircleIcon className="h-8 text-primaryColor" />
               <span>Denied</span>
             </button>
-          )}
-          {props.user.role === "volunteer" &&
-            !isRegistered &&
-            event.eventParent.maxVolunteers - regCount > 0 && (
-              <button
-                className="mx-1 flex items-center justify-end"
-                onClick={registerOnClick}
-              >
-                <PlusCircleIcon className="h-8 text-primaryColor" />
-                <span>Register</span>
-              </button>
-            )}
-          <Label className="text-end">
-            {event.eventParent.maxVolunteers - regCount}/
-            {event.eventParent.maxVolunteers} slots available
-          </Label>
+          )} */}
+          {props.user.role === "volunteer" ? (
+            <div className="flex flex-col justify-around h-full">
+              <div className="w-full flex justify-end">
+                <ChevronRightIcon className="w-5 h-5 text-primaryColor" />
+              </div>
+              <Label className="text-end">
+                {event.eventParent.maxVolunteers - regCount}/
+                {event.eventParent.maxVolunteers} slots available
+              </Label>
+            </div>
+          ) : 
+            <Label className="text-end text-darkGrey">
+              {event.eventParent.maxVolunteers - regCount}/
+              {event.eventParent.maxVolunteers} slots available
+            </Label>
+          }
         </div>
       </div>
       {collapse && (

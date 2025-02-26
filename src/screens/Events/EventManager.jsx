@@ -49,8 +49,8 @@ const EventManager = ({ isHomePage }) => {
   const user = session.user;
 
   const [loading, setLoading] = useState(true);
-  const [filterOn, setFilterOn] = useState(false);
-  const [dropdownVal, setDropdownVal] = useState("All Events");
+  // const [filterOn, setFilterOn] = useState(false);
+  const [dropdownVal, setDropdownVal] = useState("This Month");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
@@ -66,10 +66,15 @@ const EventManager = ({ isHomePage }) => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
       if (result?.data?.events) {
+        const fetchedEvents = result.data.events;
         setEvents(result.data.events);
-        setFilteredEvents(result.data.events);
+        setFilteredEvents(fetchedEvents.filter((event) => {
+          let eventDate = new Date(event.date);
+          let currentDate = new Date(Date.now())
+          return eventDate.getMonth() == currentDate.getMonth() && eventDate.getFullYear() == currentDate.getFullYear();
+        }));
         setDates(result.data.events);
-        setDropdownVal("All Events");
+        setDropdownVal("This Month");
       }
     });
 
@@ -77,10 +82,11 @@ const EventManager = ({ isHomePage }) => {
     if (user.role === "volunteer")
       filter = { organizationId: user.organizationId, userId: user._id };
 
-    getRegistrations(filter)
-      .then((result) => {
-        if (result.data.registrations)
-          setRegistrations(result.data.registrations);
+    getRegistrations(filter).then((result) => {
+        if (result?.data?.registrations) {
+          const registrations = result.data.registrations;
+          setRegistrations(registrations);
+        }
       })
       .finally(() => setLoading(false));
   };
@@ -124,9 +130,9 @@ const EventManager = ({ isHomePage }) => {
     getEvents(user.organizationId, selectDate, selectDate)
       .then((result) => {
         if (result && result.data && result.data.events) {
-          setEvents(result.data.events);
+          // setEvents(result.data.events);
           setFilteredEvents(result.data.events);
-          setDropdownVal("All Events");
+          // setDropdownVal("All Events");
         }
       })
       .finally(() => {
@@ -175,8 +181,8 @@ const EventManager = ({ isHomePage }) => {
     let arr = [];
     for (let i = 0; i < events.length; i++) {
       if (
-        // hide past events and private events they are not registered for
-        new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
+        // hide private events they are not registered for
+        // new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
         (!events[i].eventParent.isPrivate ||
           registrations.filter(
             (r) => r.eventId === events[i]._id && r.userId === user._id
@@ -192,18 +198,31 @@ const EventManager = ({ isHomePage }) => {
     setDropdownVal(label);
     const value = label;
     if (value === "Public Events") {
-      setFilterOn(true);
       setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate));
     } else if (value === "Private Group Events") {
-      setFilterOn(true);
       setFilteredEvents(events.filter((event) => event.eventParent.isPrivate));
     } else if (value === "All Events") {
-      setFilterOn(true);
       setFilteredEvents(
         events.filter(
           (event) => !event.eventParent.isPrivate || event.eventParent.isPrivate
         )
       );
+    } else if (value === "This Month") {
+      setFilteredEvents(events.filter((event) => {
+        let eventDate = new Date(event.date);
+        let currentDate = new Date(Date.now())
+        return eventDate.getMonth() == currentDate.getMonth() && eventDate.getFullYear() == currentDate.getFullYear();
+      }));
+      console.log(filteredEvents);
+    } else if (value === "Upcoming Events") {
+      setFilteredEvents(events.filter((event) => {
+        let currentDate = new Date(Date.now());
+        let eventDate = new Date(event.date);
+        const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
+        eventDate.setUTCHours(hours, minutes);
+
+        return eventDate >= currentDate;
+      }));
     }
   };
 
@@ -260,7 +279,6 @@ const EventManager = ({ isHomePage }) => {
               }
             />
           </div>
-          <Text text="How to read the calendar?" type="subheader" />
           <img
             className="h-48"
             src="/images/Calendar Legend.svg"
@@ -271,40 +289,50 @@ const EventManager = ({ isHomePage }) => {
       {!isHomePage && (
         <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
           <div className="flex flex-col lg:w-5/6">
-            {user.role === "admin" ? (
-              <div className="mb-4 flex w-full items-center justify-between ">
-                <Dropdown
-                  inline={true}
-                  arrowIcon={false}
-                  label={<BoGButton text={dropdownVal} dropdown={true} />}
+            <div className="flex w-full items-center justify-between ">
+              <Dropdown
+                inline={true}
+                arrowIcon={false}
+                label={<BoGButton text={dropdownVal} dropdown={true} />}
+              >
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("This Month");
+                  }}
                 >
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("All Events");
-                    }}
-                  >
-                    All Events
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("Public Events");
-                    }}
-                  >
-                    Public Events
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    onClick={() => {
-                      changeValue("Private Group Events");
-                    }}
-                  >
-                    Private Group Events
-                  </Dropdown.Item>
-                </Dropdown>
-                <BoGButton text="Create event" onClick={onCreateClicked} />
-              </div>
-            ) : (
-              <div className="h-16" />
-            )}
+                  This Month
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Upcoming Events");
+                  }}
+                >
+                  Upcoming Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("All Events");
+                  }}
+                >
+                  All Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Public Events");
+                  }}
+                >
+                  Public Events
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={() => {
+                    changeValue("Private Group Events");
+                  }}
+                >
+                  Private Group Events
+                </Dropdown.Item>
+              </Dropdown>
+              {user.role === "admin" && <BoGButton text="Create event" onClick={onCreateClicked} />}
+            </div>
             {loading === true ? (
               <div className="mt-8">
                 <Text text={"Loading..."} type="subheader" />
@@ -315,7 +343,7 @@ const EventManager = ({ isHomePage }) => {
             {filteredEvents.length === 0 && loading === false ? (
               <div className="mt-8">
                 <Text
-                  text={"No Events Scheduled on " + dateString}
+                  text={"No Events Scheduled for Filter"}
                   type="subheader"
                 />
                 {showBack && (
@@ -331,11 +359,7 @@ const EventManager = ({ isHomePage }) => {
               <EventsList
                 dateString={dateString}
                 events={
-                  user.role === "admin"
-                    ? filterOn
-                      ? filteredEvents
-                      : events
-                    : filterEventsForVolunteers(events, user)
+                  user.role === "admin" ? filteredEvents : filterEventsForVolunteers(filteredEvents, user)
                 }
                 registrations={registrations}
                 user={user}
@@ -378,9 +402,7 @@ const EventManager = ({ isHomePage }) => {
             <EventsList
               dateString={dateString}
               events={
-                user.role === "admin"
-                  ? filteredEvents
-                  : filterEventsForVolunteers(events, user)
+                user.role === "admin" ? filteredEvents : filterEventsForVolunteers(events, user)
               }
               user={user}
               registrations={registrations}
@@ -402,11 +424,7 @@ const EventManager = ({ isHomePage }) => {
           <EventsList
             dateString={dateString}
             events={
-              user.role === "admin"
-                ? filterOn
-                  ? filteredEvents
-                  : events
-                : filterEventsForVolunteers(events, user)
+              user.role === "admin" ? events : filterEventsForVolunteers(events, user)
             }
             user={user}
             isHomePage={isHomePage}
