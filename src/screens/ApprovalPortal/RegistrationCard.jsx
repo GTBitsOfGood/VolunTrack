@@ -32,6 +32,10 @@ const RegistrationCard = (props) => {
     }
   };
 
+  if (props.registration.approved === "pending") {
+    console.log(props.registration); 
+  }
+
   return (
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
       <div className="flex justify-center">
@@ -96,9 +100,10 @@ const RegistrationCard = (props) => {
           </div>
           <div>
             <div className="font-semibold">Task(s)</div>
+
             <div>
-              {props?.event?.eventParent.tasks.length > 0
-                ? props?.event?.eventParent.tasks.join(", ")
+              {props?.registration?.tasks?.length > 0
+                ? props?.registration?.tasks?.join(", ")
                 : "No Tasks Available"}
             </div>
           </div>

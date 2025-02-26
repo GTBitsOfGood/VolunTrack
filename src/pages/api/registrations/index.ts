@@ -45,10 +45,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!result.success) return res.status(400).json({ error: result.error });
       console.log(result.data);
 
-      // await sendRegistrationConfirmationEmail(
-      //   result.data.userId,
-      //   result.data.eventId
-      // );
+      await sendRegistrationConfirmationEmail(
+        result.data.userId,
+        result.data.eventId
+      );
       return res.status(201).json({
         registration: await Registration.create(result.data),
       });
