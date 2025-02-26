@@ -32,10 +32,6 @@ const RegistrationCard = (props) => {
     }
   };
 
-  if (props.registration.approved === "pending") {
-    console.log(props.registration); 
-  }
-
   return (
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
       <div className="flex justify-center">

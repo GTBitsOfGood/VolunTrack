@@ -19,7 +19,6 @@ const AdminApproval = ({ user }) => {
       const result = await getRegistrations({
         organizationId: user.organizationId,
       });
-      console.log(result);
       if (result) {
         const registrations = result.data.registrations;
         updateRegCounts(result.data.registrations);
@@ -27,9 +26,6 @@ const AdminApproval = ({ user }) => {
         const pending = registrations.filter(
           (reg) => reg.approved === "pending"
         );
-        console.log("Reg: ", registrations.filter(
-          (reg) => reg.approved === "pending"
-        ))
         const history = registrations.filter(
           (reg) => reg.approved !== "pending"
         );
