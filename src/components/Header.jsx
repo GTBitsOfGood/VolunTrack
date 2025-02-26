@@ -99,14 +99,13 @@ const Header = () => {
     <Navbar
       fluid={false}
       rounded={true}
-      className="my-custom-navbar py-0 md:mx-auto md:w-5/6 md:border-b justify-between items-center"
+      className="my-custom-navbar items-center justify-between py-0 md:mx-auto md:w-5/6 md:border-b"
     >
-
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      <Navbar.Collapse className="mt-2 items-center flex flex-row !md:space-x-4">
+      <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
         {user.role === "admin" ? (
           <Navbar.Link
             href="/home"

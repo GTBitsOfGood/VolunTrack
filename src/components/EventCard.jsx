@@ -6,7 +6,7 @@ import {
   UsersIcon,
   ClockIcon,
   ExclamationCircleIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
 } from "@heroicons/react/24/solid";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
@@ -87,15 +87,15 @@ const EventCard = (props) => {
 
   return (
     <div
-      className={`mx-18 mb-2 flex flex-col w-full ${
+      className={`mx-18 mb-2 flex w-full flex-col ${
         props.user.role === "admin" && "max-w-4xl"
       } ${
         props.user.role === "volunteer" && "max-w-xl"
       } rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
-      <div className="flex justify-between items-center w-full">
-        <div className="flex justify-start items-center">
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center justify-start">
           <DateDisplayComponent
             key={event.date}
             date={event.date}
@@ -118,7 +118,7 @@ const EventCard = (props) => {
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
           </div>
         </div>
-        <div className="flex-column justify-center items-center">
+        <div className="flex-column items-center justify-center">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
@@ -158,9 +158,12 @@ const EventCard = (props) => {
 
           {props.user.role === "volunteer" && (
             <div className="flex flex-row">
-                <button className="ml-8 flex items-center" onClick={registerOnClick}>
-                  <ChevronRightIcon className="h-5 text-gray-500 md:h-8" />
-                </button>
+              <button
+                className="ml-8 flex items-center"
+                onClick={registerOnClick}
+              >
+                <ChevronRightIcon className="h-5 text-gray-500 md:h-8" />
+              </button>
             </div>
           )}
         </div>

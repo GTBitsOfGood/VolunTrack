@@ -152,31 +152,31 @@ const EventsList = ({
               </p>
             )}
           </div>
-            { showNewEvents && (
-              <div className="column-flex">
-                <p className="font-weight-bold pb-3 text-2xl">New Events</p>
-                {upcomingEvents.length > 0 &&
-                  upcomingEvents.map((event) => (
-                    <EventCard
-                      key={event._id}
-                      event={event}
-                      user={user}
-                      isRegistered={
-                        registeredEventIds.has(event._id)
-                          ? registeredEventIds.get(event._id)
-                          : false
-                      }
-                      onEventEdit={onEventEdit}
-                    />
-                  ))}
-                {upcomingEvents.length === 0 && (
-                  <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
-                    No new events!
-                  </p>
-                )}
-                <Text text="View More" href="/events" />
-              </div>
-            )}
+          {showNewEvents && (
+            <div className="column-flex">
+              <p className="font-weight-bold pb-3 text-2xl">New Events</p>
+              {upcomingEvents.length > 0 &&
+                upcomingEvents.map((event) => (
+                  <EventCard
+                    key={event._id}
+                    event={event}
+                    user={user}
+                    isRegistered={
+                      registeredEventIds.has(event._id)
+                        ? registeredEventIds.get(event._id)
+                        : false
+                    }
+                    onEventEdit={onEventEdit}
+                  />
+                ))}
+              {upcomingEvents.length === 0 && (
+                <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+                  No new events!
+                </p>
+              )}
+              <Text text="View More" href="/events" />
+            </div>
+          )}
           <div className="h-12" />
         </Styled.Container>
       );

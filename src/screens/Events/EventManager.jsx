@@ -392,8 +392,10 @@ const EventManager = ({ isHomePage }) => {
       )}
       {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>
-          <h2 className="text-bold font-bold text-left w-full">My Volunteering</h2>
-          <div className="flex-row flex gap-8">
+          <h2 className="text-bold w-full text-left font-bold">
+            My Volunteering
+          </h2>
+          <div className="flex flex-row gap-8">
             <div className="mb-4 justify-start">
               <div className="mx-auto flex flex-wrap gap-3">
                 <ProgressDisplay
@@ -418,8 +420,16 @@ const EventManager = ({ isHomePage }) => {
                 }}
                 render={({ handleSubmit }) => (
                   <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
-                    <InputField label="From" name="startDate" type="datetime-local" />
-                    <InputField label="To" name="endDate" type="datetime-local" />
+                    <InputField
+                      label="From"
+                      name="startDate"
+                      type="datetime-local"
+                    />
+                    <InputField
+                      label="To"
+                      name="endDate"
+                      type="datetime-local"
+                    />
                     <BoGButton
                       className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
                       text="Search"
@@ -436,22 +446,25 @@ const EventManager = ({ isHomePage }) => {
                   text={`${attendances.length} events`}
                   className="my-2 text-primaryColor"
                 />
-                <StatsTable attendances={attendances} isIndividualStats={true} />
+                <StatsTable
+                  attendances={attendances}
+                  isIndividualStats={true}
+                />
               </div>
             </div>
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filteredEvents
-                    : filterEventsForVolunteers(events, user)
-                }
-                user={user}
-                registrations={registrations}
-                isHomePage={isHomePage}
-                onEventDelete={onEventDelete}
-                showNewEvents={false}
-              />
+            <EventsList
+              dateString={dateString}
+              events={
+                user.role === "admin"
+                  ? filteredEvents
+                  : filterEventsForVolunteers(events, user)
+              }
+              user={user}
+              registrations={registrations}
+              isHomePage={isHomePage}
+              onEventDelete={onEventDelete}
+              showNewEvents={false}
+            />
           </div>
         </Styled.HomePage>
       )}
