@@ -62,8 +62,9 @@ const EventsList = ({
           date.getMonth() > today.getMonth()) ||
         (date.getFullYear() === today.getFullYear() &&
           date.getMonth() === today.getMonth() &&
-          date.getDate() >= today.getDate())) &&
-      !todayEvents.includes(event)
+          date.getDate() >= today.getDate())) 
+          // we want to show today's events
+          // && !todayEvents.includes(event)
     );
   });
 
