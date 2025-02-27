@@ -114,6 +114,14 @@ const Header = () => {
         >
           Home
         </Navbar.Link>
+        <Navbar.Link
+          href="/custom-home"
+          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            currPageMatches("/custom-home") ? "text-primaryColor" : ""
+          }`}
+        >
+          Custom Home
+        </Navbar.Link>
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
