@@ -6,8 +6,10 @@ import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/outline";
+import { loadPage, submitPage } from "../../queries/organizations";
 import PreviewModel from "./PreviewModel";
 import dynamic from "next/dynamic";
+import DOMPurify from "dompurify";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -63,7 +65,7 @@ const VolunterHome = () => {
       "video",
     ],
   ];
-
+  
   const customTheme = {
     toggle: {
       checked: {
@@ -78,18 +80,117 @@ const VolunterHome = () => {
   const [Saved, setSaved] = useState(false);
   const [edit, setEdit] = useState(false);
   const [showPreview, setShowPreview] = useState(false); // State to control the preview modal
+  const { data: session } = useSession();
 
-  const loadPage = async () => {
-    // Implement backend call to fetch volunteer home page here.
-  };
+// const loadPage = async () => {
+//     if (!session || !session.user || !session.user.organizationId) {
+//       console.error("Error: Missing session data or organization ID.");
+//       return; 
+//     }
+
+//     const organizationId = session.user.organizationId.toString();
+//     const url = `/api/organizations/${organizationId}/customHomePage`;
+
+//     try {
+//         const response = await fetch(url, {
+//             method: "GET",
+//             headers: {
+//                 "Content-Type": "application/json",
+//             },
+//         });
+
+//         if (!response.ok) {
+//             throw new Error(`Failed to load page: ${response.status} ${response.statusText || "Unknown error"}`);
+//         }
+
+//         const data = await response.json(); 
+//         setPageContent(data.homePage); 
+
+//         console.log("Page content loaded successfully!");
+//     } catch (error) {
+//         console.error("Error loading page content:", error.message);
+//     }
+//   };
+
+// const submitPage = async (event) => {
+
+//   if (!session || !session.user || !session.user.organizationId) {
+//       console.error("Error: Missing session data or organization ID.");
+//       return; 
+//   }
+
+//   const organizationId = session.user.organizationId.toString();
+
+//   const sanitizedContent = DOMPurify.sanitize(pageContent);
+//   const url = `/api/organizations/${organizationId}/customHomePage`;
+
+//   try {
+//       const response = await fetch(url, {
+//           method: "POST",
+//           headers: {
+//               "Content-Type": "application/json",
+//           },
+//           body: JSON.stringify({
+//               organizationId: organizationId,
+//               homePage: sanitizedContent,
+//           }),
+//       });
+
+//       if (!response.ok) {
+//           throw new Error(`Failed to save: ${response.status} ${response.statusText || "Unknown error"}`);
+//       }
+
+//       setSaved(true);
+//       console.log("Page content saved successfully!");
+
+//   } catch (error) {
+//       console.error("Error saving page content:", String(error));
+//   }
+// };
+
+// useEffect(() => {
+//   loadPage();
+// }, []);
 
   useEffect(() => {
-    loadPage();
-  }, []);
+    if (session?.user?.organizationId){
+      loadPage(session.user.organizationId.toString())
+      .then((response) => {
+        if (response.data.homePage) {
+          const sanitizedHomePage = DOMPurify.sanitize(response.data.homePage);
+          setPageContent(sanitizedHomePage);
+          console.log("Page content loaded successfully!");
+        } else {
+          console.error("Error loading home page:", response.data.error);
+        }
+      })
+      .catch((error) => console.error("API request failed:", error));
+    }
 
-  const submitPage = () => {
-    console.log(pageContent);
-    // Implement backend call to save volunteer home page here.
+  }, [session]);
+
+  const handleSubmitPage = async () => {
+    if (!session?.user?.organizationId) {
+      console.error("Missing session data or organization ID.");
+      return;
+    }
+
+    try {
+      console.log("Sending API request...");
+      const response = await submitPage(
+        session.user.organizationId.toString(),
+        pageContent
+      );
+
+      if (response.data.message) {
+        console.log("Success:", response.data.message);
+        setSaved(true);
+      } else {
+        console.error("API Error:", response.data.error);
+      }
+    } catch (error) {
+      console.error("API Request Failed:", error);
+    }
   };
 
   const handlePreviewClick = () => {
@@ -159,7 +260,7 @@ const VolunterHome = () => {
             />
           </div>
           <div className="flex justify-end">
-            <BoGButton onClick={submitPage} text="Save" />
+            <BoGButton onClick={handleSubmitPage} text="Save" />
           </div>
         </>
       )}
