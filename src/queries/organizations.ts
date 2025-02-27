@@ -83,16 +83,16 @@ export const deleteInvitedAdmin = (
   );
 };
 
-
 export const loadPage = (organizationId: string) => {
   return axios.get<{ homePage?: string; error?: string }>(
     `/api/organizations/${organizationId}/customHomePage`
   );
 };
 
-
-export const submitPage = async (organizationId: string, pageContent: string) => {
-
+export const submitPage = async (
+  organizationId: string,
+  pageContent: string
+) => {
   const sanitizedHomePage = DOMPurify.sanitize(pageContent);
 
   return axios.post<{ message: string; error?: string }>(
