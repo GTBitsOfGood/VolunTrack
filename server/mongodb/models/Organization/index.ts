@@ -30,6 +30,7 @@ const organizationSchema = new Schema(
     eventGold: { type: Number, default: 8 },
     hoursSilver: { type: Number, default: 20 },
     hoursGold: { type: Number, default: 40 },
+    homePage: { type: String, required: false, default: "" },
   },
   { timestamps: true }
 );
