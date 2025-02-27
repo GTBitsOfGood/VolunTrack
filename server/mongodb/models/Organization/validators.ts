@@ -33,6 +33,7 @@ export const organizationInputClientValidator = z.object({
   eventGold: z.number().int().positive().optional(),
   hoursSilver: z.number().int().positive().optional(),
   hoursGold: z.number().int().positive().optional(),
+  homePage: z.string(),
 });
 
 export const organizationInputServerValidator = z.object({
@@ -68,6 +69,7 @@ export const organizationInputServerValidator = z.object({
   eventGold: z.number().int().positive().optional(),
   hoursSilver: z.number().int().positive().optional(),
   hoursGold: z.number().int().positive().optional(),
+  homePage: z.string(),
 });
 
 export const organizationInputCreationValidator = z.object({
