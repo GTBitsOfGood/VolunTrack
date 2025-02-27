@@ -65,7 +65,7 @@ const VolunterHome = () => {
       "video",
     ],
   ];
-  
+
   const customTheme = {
     toggle: {
       checked: {
@@ -82,91 +82,92 @@ const VolunterHome = () => {
   const [showPreview, setShowPreview] = useState(false); // State to control the preview modal
   const { data: session } = useSession();
 
-// const loadPage = async () => {
-//     if (!session || !session.user || !session.user.organizationId) {
-//       console.error("Error: Missing session data or organization ID.");
-//       return; 
-//     }
+  // const loadPage = async () => {
+  //     if (!session || !session.user || !session.user.organizationId) {
+  //       console.error("Error: Missing session data or organization ID.");
+  //       return;
+  //     }
 
-//     const organizationId = session.user.organizationId.toString();
-//     const url = `/api/organizations/${organizationId}/customHomePage`;
+  //     const organizationId = session.user.organizationId.toString();
+  //     const url = `/api/organizations/${organizationId}/customHomePage`;
 
-//     try {
-//         const response = await fetch(url, {
-//             method: "GET",
-//             headers: {
-//                 "Content-Type": "application/json",
-//             },
-//         });
+  //     try {
+  //         const response = await fetch(url, {
+  //             method: "GET",
+  //             headers: {
+  //                 "Content-Type": "application/json",
+  //             },
+  //         });
 
-//         if (!response.ok) {
-//             throw new Error(`Failed to load page: ${response.status} ${response.statusText || "Unknown error"}`);
-//         }
+  //         if (!response.ok) {
+  //             throw new Error(`Failed to load page: ${response.status} ${response.statusText || "Unknown error"}`);
+  //         }
 
-//         const data = await response.json(); 
-//         setPageContent(data.homePage); 
+  //         const data = await response.json();
+  //         setPageContent(data.homePage);
 
-//         console.log("Page content loaded successfully!");
-//     } catch (error) {
-//         console.error("Error loading page content:", error.message);
-//     }
-//   };
+  //         console.log("Page content loaded successfully!");
+  //     } catch (error) {
+  //         console.error("Error loading page content:", error.message);
+  //     }
+  //   };
 
-// const submitPage = async (event) => {
+  // const submitPage = async (event) => {
 
-//   if (!session || !session.user || !session.user.organizationId) {
-//       console.error("Error: Missing session data or organization ID.");
-//       return; 
-//   }
+  //   if (!session || !session.user || !session.user.organizationId) {
+  //       console.error("Error: Missing session data or organization ID.");
+  //       return;
+  //   }
 
-//   const organizationId = session.user.organizationId.toString();
+  //   const organizationId = session.user.organizationId.toString();
 
-//   const sanitizedContent = DOMPurify.sanitize(pageContent);
-//   const url = `/api/organizations/${organizationId}/customHomePage`;
+  //   const sanitizedContent = DOMPurify.sanitize(pageContent);
+  //   const url = `/api/organizations/${organizationId}/customHomePage`;
 
-//   try {
-//       const response = await fetch(url, {
-//           method: "POST",
-//           headers: {
-//               "Content-Type": "application/json",
-//           },
-//           body: JSON.stringify({
-//               organizationId: organizationId,
-//               homePage: sanitizedContent,
-//           }),
-//       });
+  //   try {
+  //       const response = await fetch(url, {
+  //           method: "POST",
+  //           headers: {
+  //               "Content-Type": "application/json",
+  //           },
+  //           body: JSON.stringify({
+  //               organizationId: organizationId,
+  //               homePage: sanitizedContent,
+  //           }),
+  //       });
 
-//       if (!response.ok) {
-//           throw new Error(`Failed to save: ${response.status} ${response.statusText || "Unknown error"}`);
-//       }
+  //       if (!response.ok) {
+  //           throw new Error(`Failed to save: ${response.status} ${response.statusText || "Unknown error"}`);
+  //       }
 
-//       setSaved(true);
-//       console.log("Page content saved successfully!");
+  //       setSaved(true);
+  //       console.log("Page content saved successfully!");
 
-//   } catch (error) {
-//       console.error("Error saving page content:", String(error));
-//   }
-// };
+  //   } catch (error) {
+  //       console.error("Error saving page content:", String(error));
+  //   }
+  // };
 
-// useEffect(() => {
-//   loadPage();
-// }, []);
+  // useEffect(() => {
+  //   loadPage();
+  // }, []);
 
   useEffect(() => {
-    if (session?.user?.organizationId){
+    if (session?.user?.organizationId) {
       loadPage(session.user.organizationId.toString())
-      .then((response) => {
-        if (response.data.homePage) {
-          const sanitizedHomePage = DOMPurify.sanitize(response.data.homePage);
-          setPageContent(sanitizedHomePage);
-          console.log("Page content loaded successfully!");
-        } else {
-          console.error("Error loading home page:", response.data.error);
-        }
-      })
-      .catch((error) => console.error("API request failed:", error));
+        .then((response) => {
+          if (response.data.homePage) {
+            const sanitizedHomePage = DOMPurify.sanitize(
+              response.data.homePage
+            );
+            setPageContent(sanitizedHomePage);
+            console.log("Page content loaded successfully!");
+          } else {
+            console.error("Error loading home page:", response.data.error);
+          }
+        })
+        .catch((error) => console.error("API request failed:", error));
     }
-
   }, [session]);
 
   const handleSubmitPage = async () => {
