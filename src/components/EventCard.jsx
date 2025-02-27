@@ -6,7 +6,10 @@ import {
   UsersIcon,
   ClockIcon,
 } from "@heroicons/react/24/solid";
-import { ExclamationCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationCircleIcon,
+  ChevronRightIcon,
+} from "@heroicons/react/24/outline";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
 import PropTypes from "prop-types";
@@ -80,7 +83,7 @@ const EventCard = (props) => {
     eventDate.setUTCHours(hours, minutes);
 
     return eventDate < currentDate;
-  }
+  };
 
   const convertTime = (time) => {
     let [hour, min] = time.split(":");
@@ -95,11 +98,7 @@ const EventCard = (props) => {
 
   return (
     <div
-      className={`mx-18 mb-2 mr-2 flex flex-col cursor-pointer ${
-        props.user.role === "admin" && "max-w-4xl"
-      } ${
-        props.user.role === "volunteer" && "max-w-4xl"
-      } rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
+      className={`mx-18 mb-2 mr-2 flex cursor-pointer flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
       <div className="flex justify-between">
@@ -124,12 +123,14 @@ const EventCard = (props) => {
             <Label className="mb-0">{`${convertTime(
               event.eventParent.startTime
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
-            {pastEvent(event) ? 
+            {pastEvent(event) ? (
               <div className="flex items-center space-x-2">
-                <ExclamationCircleIcon className="w-6 h-6 text-red-500 mr-1" />
-                <Label className="text-red-500 m-0">Event has passed</Label>
-              </div> : <></> 
-            }
+                <ExclamationCircleIcon className="mr-1 h-6 w-6 text-red-500" />
+                <Label className="m-0 text-red-500">Event has passed</Label>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
         <div className="flex-column items-end">
@@ -197,24 +198,24 @@ const EventCard = (props) => {
             </button>
           )} */}
           {props.user.role === "volunteer" ? (
-            <div className="flex flex-col justify-around h-full">
-              <div className="w-full flex justify-end">
-                <ChevronRightIcon className="w-5 h-5 text-primaryColor" />
+            <div className="flex h-full flex-col justify-around">
+              <div className="flex w-full justify-end">
+                <ChevronRightIcon className="h-5 w-5 text-primaryColor" />
               </div>
               <Label className="text-end">
                 {event.eventParent.maxVolunteers - regCount}/
                 {event.eventParent.maxVolunteers} slots available
               </Label>
             </div>
-          ) : 
+          ) : (
             <Label className="text-end text-darkGrey">
               {event.eventParent.maxVolunteers - regCount}/
               {event.eventParent.maxVolunteers} slots available
             </Label>
-          }
+          )}
         </div>
       </div>
-      {collapse && (
+      {/* {collapse && (
         <div className="ml-16 mt-2 space-y-2 pl-2">
           <div className="flex-column flex">
             <Label className="text-md mb-0 mr-1 font-bold">Address: </Label>
@@ -235,7 +236,7 @@ const EventCard = (props) => {
             text="More Information"
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

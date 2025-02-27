@@ -28,7 +28,7 @@ class DateDisplayComponent extends React.Component {
             {this.state.day}
           </p>
         </div>
-      )
+      );
     } else if (this.props.version === "Past") {
       return (
         <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-darkGrey">
@@ -39,7 +39,7 @@ class DateDisplayComponent extends React.Component {
             {this.state.day}
           </p>
         </div>
-      )
+      );
     } else {
       return (
         <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
@@ -50,8 +50,8 @@ class DateDisplayComponent extends React.Component {
             {this.state.day}
           </p>
         </div>
-      )
-    };
+      );
+    }
   }
 }
 

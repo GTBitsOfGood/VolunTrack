@@ -10,7 +10,6 @@ import { Alert, Toast } from "flowbite-react";
 const Styled = {
   Container: styled.div`
     max-height: 60vh;
-    // min-height: min-content;
     overflow-y: auto;
   `,
   HomeContainer: styled.div`
@@ -116,7 +115,7 @@ const EventsList = ({
             setEventEdit={setEventEditConfirmationMessage}
           />
         ))}
-        <div className="h-12" />
+        {/* <div className="h-12" /> */}
       </Styled.Container>
     );
   } else {
@@ -234,7 +233,7 @@ const EventsList = ({
                 <BoGButton text="Create new event" onClick={onCreateClicked} />
               )}
             </div> */}
-            <div className="h-48" />
+            <div className="h-24" />
           </div>
         </div>
       );

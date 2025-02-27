@@ -152,7 +152,7 @@ const EventRegister = () => {
           }
         });
 
-        // Ensure event is loaded before setting count to prevent displaying incorrect 
+        // Ensure event is loaded before setting count to prevent displaying incorrect
         // "Spots Remaining" due to undefined maxVolunteers.
         setEvent((prevEvent) => {
           if (!prevEvent || !prevEvent.eventParent) {
@@ -161,8 +161,10 @@ const EventRegister = () => {
           }
 
           // Avoid displaying negative slots left
-          setRegCount(Math.min(approvedCount, prevEvent.eventParent.maxVolunteers));
-          
+          setRegCount(
+            Math.min(approvedCount, prevEvent.eventParent.maxVolunteers)
+          );
+
           return prevEvent;
         });
       })
