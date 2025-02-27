@@ -82,76 +82,6 @@ const VolunterHome = () => {
   const [showPreview, setShowPreview] = useState(false); // State to control the preview modal
   const { data: session } = useSession();
 
-  // const loadPage = async () => {
-  //     if (!session || !session.user || !session.user.organizationId) {
-  //       console.error("Error: Missing session data or organization ID.");
-  //       return;
-  //     }
-
-  //     const organizationId = session.user.organizationId.toString();
-  //     const url = `/api/organizations/${organizationId}/customHomePage`;
-
-  //     try {
-  //         const response = await fetch(url, {
-  //             method: "GET",
-  //             headers: {
-  //                 "Content-Type": "application/json",
-  //             },
-  //         });
-
-  //         if (!response.ok) {
-  //             throw new Error(`Failed to load page: ${response.status} ${response.statusText || "Unknown error"}`);
-  //         }
-
-  //         const data = await response.json();
-  //         setPageContent(data.homePage);
-
-  //         console.log("Page content loaded successfully!");
-  //     } catch (error) {
-  //         console.error("Error loading page content:", error.message);
-  //     }
-  //   };
-
-  // const submitPage = async (event) => {
-
-  //   if (!session || !session.user || !session.user.organizationId) {
-  //       console.error("Error: Missing session data or organization ID.");
-  //       return;
-  //   }
-
-  //   const organizationId = session.user.organizationId.toString();
-
-  //   const sanitizedContent = DOMPurify.sanitize(pageContent);
-  //   const url = `/api/organizations/${organizationId}/customHomePage`;
-
-  //   try {
-  //       const response = await fetch(url, {
-  //           method: "POST",
-  //           headers: {
-  //               "Content-Type": "application/json",
-  //           },
-  //           body: JSON.stringify({
-  //               organizationId: organizationId,
-  //               homePage: sanitizedContent,
-  //           }),
-  //       });
-
-  //       if (!response.ok) {
-  //           throw new Error(`Failed to save: ${response.status} ${response.statusText || "Unknown error"}`);
-  //       }
-
-  //       setSaved(true);
-  //       console.log("Page content saved successfully!");
-
-  //   } catch (error) {
-  //       console.error("Error saving page content:", String(error));
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   loadPage();
-  // }, []);
-
   useEffect(() => {
     if (session?.user?.organizationId) {
       loadPage(session.user.organizationId.toString())
@@ -161,12 +91,12 @@ const VolunterHome = () => {
               response.data.homePage
             );
             setPageContent(sanitizedHomePage);
-            console.log("Page content loaded successfully!");
+            console.log("Successfully loaded page!");
           } else {
             console.error("Error loading home page:", response.data.error);
           }
         })
-        .catch((error) => console.error("API request failed:", error));
+        .catch((error) => console.error("API request error:", String(error)));
     }
   }, [session]);
 
@@ -177,20 +107,19 @@ const VolunterHome = () => {
     }
 
     try {
-      console.log("Sending API request...");
       const response = await submitPage(
         session.user.organizationId.toString(),
         pageContent
       );
 
       if (response.data.message) {
-        console.log("Success:", response.data.message);
+        console.log("Successfully updating page");
         setSaved(true);
       } else {
-        console.error("API Error:", response.data.error);
+        console.error("Error updating page:", String(response.data.error));
       }
     } catch (error) {
-      console.error("API Request Failed:", error);
+      console.error("API request error:", String(error));
     }
   };
 

@@ -17,12 +17,12 @@ const CustomHome = () => {
               response.data.homePage
             );
             setPageContent(sanitizedHomePage);
-            console.log("Page content loaded successfully!");
+            console.log("Successfully loaded page!");
           } else {
             console.error("Error loading home page:", response.data.error);
           }
         })
-        .catch((error) => console.error("API request failed:", error));
+        .catch((error) => console.error("API request error:", String(error)));
     }
   }, [session]);
 
