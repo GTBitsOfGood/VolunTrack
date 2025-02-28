@@ -19,6 +19,7 @@ import { authOptions } from "../auth/[...nextauth]";
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
   const eventId = req.query.id as string;
+  console.log("req.body", req.body);
 
   const event = await Event.findById(eventId);
   if (!event)
@@ -59,7 +60,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             eventParent: event.eventParent,
             date: { $gte: event.date },
           },
-          [{ $set: { eventParent: eventParent._id } }]
+          [{ $set: { eventParent: eventParent._id,
+            date: req.body.eventPopulatedInput.date,
+           } }]
         );
 
         if ((await Event.count({ eventParent: eventParentId })) === 0) {

@@ -189,6 +189,7 @@ const generateCustomRRule = (result: any) => {
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
+  console.log("req.body", req.body);
 
   switch (req.method) {
     case "GET": {
@@ -234,6 +235,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         return res.status(201).json({ event });
       } else if (req.body?.eventParent) {
+        console.log("req.body");
         const result = eventPopulatedInputServerValidator.safeParse(req.body);
         if (!result.success)
           return res.status(400).json({ error: result.error });
