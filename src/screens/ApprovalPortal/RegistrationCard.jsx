@@ -6,12 +6,20 @@ import BoGButton from "../../components/BoGButton";
 import { editRegistration } from "../../queries/registrations";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getUser } from "../../queries/users";
 import styles from "./RegistrationCard.module.css";
 
 const RegistrationCard = (props) => {
   const [regCount, setRegCount] = useState(0);
+  const [name, setName] = useState(null);
 
   useEffect(() => {
+    getUser(props.registration.userId).then((response) => {
+      if (response.data.user)
+        setName(
+          `${response.data.user.firstName} ${response.data.user.lastName}`
+        );
+    });
     setRegCount(props.regCount);
   }, [props.regCount]);
 
@@ -39,7 +47,7 @@ const RegistrationCard = (props) => {
         <div className="flex flex-row items-center">
           <div className="mr-2 font-semibold">Volunteer Name: </div>
           <div className={`mr-2 ${styles.title}`}>
-            {props?.event?.eventParent?.pocName || "No Name Available"}
+            {name || "No Name Available"}
           </div>
         </div>
 

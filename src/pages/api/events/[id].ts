@@ -54,6 +54,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const eventParentId = event.eventParent;
 
+        const newDate = new Date(req.body.eventPopulatedInput.date);
+
         await Event.updateMany(
           {
             eventParent: event.eventParent,
@@ -63,7 +65,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             {
               $set: {
                 eventParent: eventParent._id,
-                date: req.body.eventPopulatedInput.date,
+                date: newDate,
               },
             },
           ]

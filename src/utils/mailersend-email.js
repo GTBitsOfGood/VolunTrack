@@ -20,7 +20,7 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
         introLine: `Thanks for registering for ${event.eventParent.title}! Please review the event details below.`,
         eventTitle: event.eventParent.title,
         volunteerName: user.firstName,
-        eventDate: event.date,
+        eventDate: event.date.toISOString().slice(0, 10),
         eventStartTime: convertTime(event.eventParent.startTime),
         eventEndTime: convertTime(event.eventParent.endTime),
         eventLocale: event.eventParent.localTime,
