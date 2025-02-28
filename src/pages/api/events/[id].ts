@@ -54,7 +54,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const eventParentId = event.eventParent;
 
-        const newDate = new Date(req.body.eventPopulatedInput.date);
+        const newDate = new Date(req.body.eventPopulatedInput.date as string);
 
         await Event.updateMany(
           {
