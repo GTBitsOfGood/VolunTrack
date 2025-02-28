@@ -6,6 +6,7 @@ import BoGButton from "../../components/BoGButton";
 import { editRegistration } from "../../queries/registrations";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import styles from "./RegistrationCard.module.css";
 
 const RegistrationCard = (props) => {
   const [regCount, setRegCount] = useState(0);
@@ -36,16 +37,18 @@ const RegistrationCard = (props) => {
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
       <div className="flex justify-center">
         <div className="flex flex-row items-center">
-          <div className="mr-2 font-semibold">Contact Name: </div>
-          <div className="mr-2">
+          <div className="mr-2 font-semibold">Volunteer Name: </div>
+          <div className={`mr-2 ${styles.title}`}>
             {props?.event?.eventParent?.pocName || "No Name Available"}
           </div>
         </div>
 
         <div className="grow" />
         <div className="flex-rows flex items-center">
-          <div className="mr-2 font-semibold">Requested Date</div>
-          <div className="mr-2">
+          <div className="mr-2 font-semibold" style={{ fontSize: "14px" }}>
+            Requested Date
+          </div>
+          <div className={`mr-2 ${styles.date}`}>
             {new Date(props?.registration?.createdAt).toLocaleDateString(
               "en-US",
               {
@@ -58,14 +61,12 @@ const RegistrationCard = (props) => {
         </div>
       </div>
       <div className="flex flex-row items-center gap-4">
-        <Link href={`/volunteers`} className="flex flex-row items-center">
-          <div className="flex flex-row">
-            <UserCircleIcon className="h-6 w-6 cursor-pointer text-primaryColor" />
-            <span className="ml-2 flex cursor-pointer font-semibold text-primaryColor">
-              User Profile
-            </span>
+        <div className="flex flex-row items-center">
+          <div className="mr-2 font-semibold">Event: </div>
+          <div className={`mr-2 ${styles.title}`}>
+            {props?.event?.eventParent?.pocName || "Event Name"}
           </div>
-        </Link>
+        </div>
         <Link
           href={`/events/${props?.event?._id}/register`}
           className="flex flex-row items-center"
@@ -80,23 +81,17 @@ const RegistrationCard = (props) => {
       </div>
       <hr className="my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
       <div className="flex w-11/12 justify-between">
-        <div className="flex flex-col justify-between gap-6">
+        <div className="flex flex-col gap-6">
           <div>
             <div className="font-semibold">Email</div>
-            <div>
+            <div className={`${styles.content}`}>
               {props?.event?.eventParent?.eventContactEmail ||
                 "No Email Available"}
             </div>
           </div>
           <div>
-            <div className="font-semibold">Event</div>
-            <div>
-              {props?.event?.eventParent?.title || "No Title Available"}
-            </div>
-          </div>
-          <div>
             <div className="font-semibold">Task(s)</div>
-            <div>
+            <div className={`${styles.content}`}>
               {props?.event?.eventParent.tasks.length > 0
                 ? props?.event?.eventParent.tasks.join(", ")
                 : "No Tasks Available"}
@@ -104,37 +99,23 @@ const RegistrationCard = (props) => {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-6">
+        <div className="flex flex-col gap-6">
           <div>
             <div className="font-semibold">Phone</div>
-            <div>
+            <div className={`${styles.content}`}>
               {props?.event?.eventParent?.eventContactPhone ||
                 "No Phone Number Available"}
             </div>
           </div>
           <div>
             <div className="font-semibold">Date</div>
-            <div>
+            <div className={`${styles.content}`}>
               {new Date(props?.event?.date).toLocaleDateString("en-US", {
                 month: "2-digit",
                 day: "2-digit",
-                year: "2-digit",
+                year: "numeric",
               }) || "No Date Available"}
             </div>
-          </div>
-          <div>
-            <div className="font-semibold">Availability</div>
-            {props?.event?.eventParent?.maxVolunteers ? (
-              <div>
-                {Math.max(
-                  0,
-                  props?.event?.eventParent?.maxVolunteers - regCount
-                )}{" "}
-                / {props?.event?.eventParent?.maxVolunteers}
-              </div>
-            ) : (
-              "Not Available"
-            )}
           </div>
         </div>
 
@@ -142,37 +123,57 @@ const RegistrationCard = (props) => {
           <div className="flex h-full flex-col justify-between gap-6">
             <div>
               <div className="font-semibold">Minors</div>
-              <div>{props.registration.minors.length > 0 ? "Yes" : "No"}</div>
-            </div>
-
-            <div className="flex flex-row gap-10">
-              <div className="flex flex-col">
-                <div className="font-semibold">Start Time</div>
-                {props?.event?.eventParent?.startTime
-                  ? new Date(
-                      `1970-01-01T${props.event.eventParent.startTime}`
-                    ).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : "Not Available"}
-              </div>
-              <div className="flex flex-col">
-                <div className="font-semibold">End Time</div>
-                {props?.event?.eventParent?.endTime
-                  ? new Date(
-                      `1970-01-01T${props.event.eventParent.endTime}`
-                    ).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "2-digit",
-                      hour12: true,
-                    })
-                  : "Not Available"}
+              <div className={`${styles.content}`}>
+                {props.registration.minors.length > 0 ? "Yes" : "No"}
               </div>
             </div>
-
+            <div>
+              <div className="font-semibold">Availability</div>
+              {props?.event?.eventParent?.maxVolunteers ? (
+                <div className={`${styles.content}`}>
+                  {Math.max(
+                    0,
+                    props?.event?.eventParent?.maxVolunteers - regCount
+                  )}{" "}
+                  / {props?.event?.eventParent?.maxVolunteers} Spots Remaining
+                </div>
+              ) : (
+                "Not Available"
+              )}
+            </div>
             <div className="flex-grow"></div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col">
+            <div className="font-semibold">Start Time</div>
+            <div className={`${styles.content}`}>
+              {props?.event?.eventParent?.startTime
+                ? new Date(
+                    `1970-01-01T${props.event.eventParent.startTime}`
+                  ).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  })
+                : "Not Available"}
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col">
+            <div className="font-semibold">End Time</div>
+            <div className={`${styles.content}`}>
+              {props?.event?.eventParent?.endTime
+                ? new Date(
+                    `1970-01-01T${props.event.eventParent.endTime}`
+                  ).toLocaleTimeString("en-US", {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    hour12: true,
+                  })
+                : "Not Available"}
+            </div>
           </div>
         </div>
       </div>
@@ -193,8 +194,29 @@ const RegistrationCard = (props) => {
         ) : (
           <div className="flex flex-row gap-2">
             <BoGButton
-              text={props.registration.approved}
-              className="bg-secondaryColor font-semibold hover:bg-secondaryColor"
+              text={`${
+                props.registration.approved == "approved"
+                  ? "Approved"
+                  : "Approve"
+              }`}
+              avaliable={false}
+              className={`font-semibold hover:bg-secondaryColor ${
+                props.registration.approved !== "approved"
+                  ? "!border-none bg-transparent !text-gray-400"
+                  : "bg-secondaryColor !text-gray-800"
+              }`}
+            />
+            <BoGButton
+              text={`${
+                props.registration.approved == "denied" ? "Denied" : "Deny"
+              }`}
+              className={`!border-none bg-transparent font-semibold hover:bg-transparent hover:text-red-700
+                  ${
+                    props.registration.approved !== "denied"
+                      ? "bg-transparent !text-gray-400"
+                      : "bg-secondaryColor !text-red-800"
+                  }`}
+              onClick={handleDeny}
             />
           </div>
         )}

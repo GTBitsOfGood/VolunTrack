@@ -40,8 +40,8 @@ const CustomRecurringModal = ({
   ];
   const [date, setDate] = useState([]);
 
-  const everyChoices = ["day", "week", "month", "year"];
-  const everyChoicesP = ["days", "weeks", "months", "years"];
+  const everyChoices = ["week", "day", "month", "year"];
+  const everyChoicesP = ["week", "days", "months", "years"];
 
   const [everyChoice, setEveryChoice] = useState("day");
   const [repeatNumber, setRepeatNumber] = useState(1);
