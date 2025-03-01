@@ -58,3 +58,66 @@ body,
   display: flex;
   justify-content: space-between;
 }
+
+
+/*Tool Bar Hover Styling*/
+.ql-toolbar button {
+  position: relative;
+  
+}
+
+.ql-color::after,
+.ql-toolbar button::after {
+  position: absolute;
+  background-color: black;
+  color: white;
+  font-size: small;
+  text-align: center;
+  border-radius: 4px;
+  padding: 2px 10px;
+  opacity: 0;
+  bottom: -120%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.ql-color:hover::after,
+.ql-toolbar button:hover::after {
+  opacity: 100;
+}
+
+
+/*Tool Bar Hover Text*/
+.ql-formats .ql-color:hover::after {
+  content: "Text Color";
+}
+.ql-formats .ql-bold:hover::after { 
+  content: "Bold"; 
+}
+.ql-formats .ql-italic:hover::after {
+   content: "Italic"; 
+}
+.ql-align[value=""]:hover::after { 
+  content: "Left Align"; 
+}
+.ql-align[value="center"]:hover::after { 
+  content: "Center Align"; 
+}
+.ql-align[value="right"]:hover::after { 
+  content: "Right Align"; 
+}
+
+
+/* Quill Styling - made alignment format recognizable when rendering custom homepage */
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-left {
+  text-align: left;
+}

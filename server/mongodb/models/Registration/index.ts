@@ -24,6 +24,7 @@ const registrationSchema = new Schema(
       enum: ["pending", "approved", "denied"],
       default: "approved",
     },
+    tasks: { type: [String], default: [] },
   },
   { timestamps: true }
 );
