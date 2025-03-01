@@ -20,6 +20,7 @@ import {
 import EventMinorModal from "./EventMinorModal";
 import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
+import EventTasksContainer from "./EventTasksContainer";
 
 const Styled = {
   Container: styled(Container)`
@@ -140,6 +141,11 @@ const EventRegister = () => {
           registrationsResult.data.registrations.forEach((reg) => {
             count += 1 + reg.minors.length;
           });
+
+          // get registered tasks
+          const userTasks =
+            registrationsResult.data.registrations[0]?.tasks || [];
+          setTasks(userTasks);
         }
         // Fetch all registrations for the event
         return getRegistrations({ eventId });
@@ -176,6 +182,7 @@ const EventRegister = () => {
       organizationId: user.organizationId,
       minors,
       approved: event.eventParent.requiresApproval ? "pending" : "approved",
+      tasks: tasks,
     }).then(() => {
       setIsRegistered(true);
       setIsLoading(false);
@@ -214,6 +221,8 @@ const EventRegister = () => {
   const goBackToDetails = () => {
     router.replace(`/events/${eventId}`);
   };
+
+  const [tasks, setTasks] = useState([]);
 
   return (
     <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
@@ -326,6 +335,17 @@ const EventRegister = () => {
           </div>
         </div>
       </Styled.BottomContainer>
+
+      {isRegistered !== undefined && (
+        <EventTasksContainer
+          event={event}
+          user={user}
+          eventId={eventId}
+          setTasks={setTasks}
+          isRegistered={isRegistered}
+          tasks={tasks}
+        />
+      )}
 
       {event?.eventParent?.requiresApproval && (
         <div className="mt-3 flex flex-row pl-3">

@@ -96,9 +96,10 @@ const RegistrationCard = (props) => {
           </div>
           <div>
             <div className="font-semibold">Task(s)</div>
+
             <div>
-              {props?.event?.eventParent.tasks.length > 0
-                ? props?.event?.eventParent.tasks.join(", ")
+              {props?.registration?.tasks?.length > 0
+                ? props?.registration?.tasks?.join(", ")
                 : "No Tasks Available"}
             </div>
           </div>
