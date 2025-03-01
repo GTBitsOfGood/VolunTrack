@@ -125,7 +125,7 @@ const Header = () => {
             Volunteering
           </Navbar.Link>
         )}
-
+        
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
@@ -141,7 +141,7 @@ const Header = () => {
           <Navbar.Link
             href="/about"
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/about") ? "text-primaryColor" : ""
+              currPageMatches("/custom-home") ? "text-primaryColor" : ""
             }`}
           >
             About

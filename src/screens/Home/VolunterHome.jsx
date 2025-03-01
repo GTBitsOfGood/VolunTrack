@@ -6,8 +6,10 @@ import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/outline";
+import { loadPage, submitPage } from "../../queries/organizations";
 import PreviewModel from "./PreviewModel";
 import dynamic from "next/dynamic";
+import DOMPurify from "dompurify";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
@@ -78,18 +80,48 @@ const VolunterHome = () => {
   const [Saved, setSaved] = useState(false);
   const [edit, setEdit] = useState(false);
   const [showPreview, setShowPreview] = useState(false); // State to control the preview modal
-
-  const loadPage = async () => {
-    // Implement backend call to fetch volunteer home page here.
-  };
+  const { data: session } = useSession();
 
   useEffect(() => {
-    loadPage();
-  }, []);
+    if (session?.user?.organizationId) {
+      loadPage(session.user.organizationId.toString())
+        .then((response) => {
+          if (response.data.homePage) {
+            const sanitizedHomePage = DOMPurify.sanitize(
+              response.data.homePage
+            );
+            setEdit(true);
+            setPageContent(sanitizedHomePage);
+            console.log("Successfully loaded page!");
+          } else {
+            console.error("Error loading home page:", response.data.error);
+          }
+        })
+        .catch((error) => console.error("API request error:", String(error)));
+    }
+  }, [session]);
 
-  const submitPage = () => {
-    console.log(pageContent);
-    // Implement backend call to save volunteer home page here.
+  const handleSubmitPage = async () => {
+    if (!session?.user?.organizationId) {
+      console.error("Missing session data or organization ID.");
+      return;
+    }
+
+    try {
+      const response = await submitPage(
+        session.user.organizationId.toString(),
+        pageContent
+      );
+
+      if (response.data.message) {
+        console.log("Successfully updating page");
+        setSaved(true);
+      } else {
+        console.error("Error updating page:", String(response.data.error));
+      }
+    } catch (error) {
+      console.error("API request error:", String(error));
+    }
   };
 
   const handlePreviewClick = () => {
@@ -159,7 +191,7 @@ const VolunterHome = () => {
             />
           </div>
           <div className="flex justify-end">
-            <BoGButton onClick={submitPage} text="Save" />
+            <BoGButton onClick={handleSubmitPage} text="Save" />
           </div>
         </>
       )}
