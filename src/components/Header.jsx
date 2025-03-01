@@ -118,7 +118,7 @@ const Header = () => {
         ) : (
           <Navbar.Link
             href="/home"
-            className={`text-lg  hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/home") ? "text-primaryColor" : ""
             }`}
           >
@@ -140,7 +140,7 @@ const Header = () => {
         {user.role != "admin" && (
           <Navbar.Link
             href="/about"
-            className={`text-lg  hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/about") ? "text-primaryColor" : ""
             }`}
           >
@@ -151,7 +151,7 @@ const Header = () => {
         {user.role != "admin" ? (
           <Navbar.Link
             href="/events"
-            className={`text-lg  hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/events") ? "text-primaryColor" : ""
             }`}
           >
