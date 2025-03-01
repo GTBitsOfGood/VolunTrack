@@ -383,6 +383,24 @@ const EventFormModal = ({
     }
   }, []);
 
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null); // Click-outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, []);
+
   /* -------- */
 
   return (
@@ -518,148 +536,168 @@ const EventFormModal = ({
                             <Label className="mb-[3.5px] flex h-6 items-center font-medium text-slate-600">
                               Tasks
                             </Label>
-                            <Dropdown
-                              className="w-full"
-                              enableTypeAhead={false}
-                              dismissOnClick={false}
-                              dropdown={true}
-                              color="light"
-                              label="--"
-                              onClick={closeTask}
-                              placement="bottom-start"
-                            >
-                              {tasks.map((task, index) => (
-                                <>
-                                  {editIndex !== index && (
-                                    <Dropdown.Item id={task}>
-                                      <div className="flex w-48 flex-row justify-between">
-                                        <div
-                                          className="w-full"
-                                          onClick={() => {
-                                            editTask(index);
-                                          }}
-                                        >
-                                          {task}
-                                        </div>
-                                        <div
-                                          className="cursor-pointer border-l border-black pl-1 hover:text-red-500"
-                                          onClick={() =>
-                                            deleteTask(index, setFieldValue)
-                                          }
-                                        >
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            fill="none"
-                                            width={18}
-                                            viewBox="0 0 24 24"
-                                            strokeWidth={1.5}
-                                            stroke="currentColor"
-                                            className="size-6"
-                                          >
-                                            <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                            <div className="relative w-full" ref={dropdownRef}>
+                              <div
+                                onClick={() => setIsOpen(!isOpen)}
+                                style={{ cursor: "pointer" }}
+                                className="flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              >
+                                <span>
+                                  {tasks.length > 0
+                                    ? `${tasks.length} tasks`
+                                    : "Select tasks"}
+                                </span>
+                                <ChevronDownIcon className="ml-2 h-4 w-4" />
+                              </div>
+
+                              {isOpen && (
+                                <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                                  <div className="max-h-60 overflow-y-auto p-2">
+                                    {tasks.map((task, index) => (
+                                      <div
+                                        key={index}
+                                        className="group flex items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                                      >
+                                        {editIndex === index ? (
+                                          <div className="flex w-full flex-col gap-2">
+                                            <input
+                                              autoFocus
+                                              value={taskName}
+                                              onChange={(e) =>
+                                                setTaskName(e.target.value)
+                                              }
+                                              onKeyDown={(e) =>
+                                                e.key === "Enter" &&
+                                                saveTask(values, setFieldValue)
+                                              }
+                                              className="w-full rounded-md border px-2 py-1 text-sm"
+                                              placeholder="Edit task name"
                                             />
-                                          </svg>
-                                        </div>
+                                            <div className="flex gap-2">
+                                              <button
+                                                onClick={() =>
+                                                  saveTask(
+                                                    values,
+                                                    setFieldValue
+                                                  )
+                                                }
+                                                className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                                              >
+                                                Update
+                                              </button>
+                                              <button
+                                                onClick={() =>
+                                                  deleteTask(
+                                                    index,
+                                                    setFieldValue
+                                                  )
+                                                }
+                                                className="rounded-md bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+                                              >
+                                                Delete
+                                              </button>
+                                            </div>
+                                          </div>
+                                        ) : (
+                                          <>
+                                            <span className="flex-1 text-sm">
+                                              {task}
+                                            </span>
+                                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100">
+                                              <button
+                                                onClick={() => editTask(index)}
+                                                className="text-blue-600 hover:text-blue-800"
+                                              >
+                                                Edit
+                                              </button>
+                                              <button
+                                                onClick={() =>
+                                                  deleteTask(
+                                                    index,
+                                                    setFieldValue
+                                                  )
+                                                }
+                                                className="text-red-600 hover:text-red-800"
+                                              >
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  fill="none"
+                                                  viewBox="0 0 24 24"
+                                                  strokeWidth="1.5"
+                                                  stroke="currentColor"
+                                                  className="h-4 w-4"
+                                                >
+                                                  <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    d="M6 18L18 6M6 6l12 12"
+                                                  />
+                                                </svg>
+                                              </button>
+                                            </div>
+                                          </>
+                                        )}
                                       </div>
-                                    </Dropdown.Item>
-                                  )}
-                                  {editIndex === index && (
-                                    <div className="flex w-full flex-wrap justify-center gap-2">
-                                      <TextInput
-                                        class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
-                                        id="taskName"
-                                        name="taskName"
-                                        value={taskName}
-                                        autoFocus={true}
-                                        onChange={(e) => {
-                                          setTaskName(e.target.value);
-                                        }}
-                                        onKeyDown={(e) => {
-                                          if (e.key === "Enter") {
-                                            saveTask(values, setFieldValue);
-                                          }
-                                        }}
-                                        type="text"
-                                        placeholder="Your task name"
-                                      />
-                                      {/* Cancel Button */}
-                                      <button
-                                        onClick={() => {
-                                          saveTask(values, setFieldValue);
-                                        }}
-                                        className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
-                                      >
-                                        Cancel
-                                      </button>
+                                    ))}
 
-                                      {/* Update Button */}
-                                      <button
-                                        onClick={() => {
-                                          saveTask(values, setFieldValue);
-                                        }}
-                                        className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
-                                      >
-                                        Update
-                                      </button>
+                                    <div className="border-t pt-2">
+                                      {editingTask && editIndex === -1 ? (
+                                        <div className="flex flex-col gap-2">
+                                          <input
+                                            autoFocus
+                                            value={taskName}
+                                            onChange={(e) =>
+                                              setTaskName(e.target.value)
+                                            }
+                                            onKeyDown={(e) =>
+                                              e.key === "Enter" &&
+                                              saveTask(values, setFieldValue)
+                                            }
+                                            className="w-full rounded-md border px-2 py-1 text-sm"
+                                            placeholder="New task name"
+                                          />
+                                          <div className="flex gap-2">
+                                            <button
+                                              onClick={() => {
+                                                saveTask(values, setFieldValue);
+                                              }}
+                                              className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
+                                            >
+                                              Cancel
+                                            </button>
+
+                                            {/* Add Button */}
+                                            <button
+                                              onClick={() => {
+                                                saveTask(values, setFieldValue);
+                                              }}
+                                              className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                            >
+                                              Add
+                                            </button>
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        <button
+                                          onClick={addTask}
+                                          className="flex w-full items-center gap-2 rounded-md p-2 text-sm text-gray-600 hover:bg-gray-100"
+                                        >
+                                          + Add new task
+                                        </button>
+                                      )}
                                     </div>
-                                  )}
-                                </>
-                              ))}
-                              <Dropdown.Divider />
-                              <Dropdown.Header>
-                                {(!editingTask || editIndex !== -1) && (
-                                  <div
-                                    onClick={addTask}
-                                    className="cursor-pointer"
-                                  >
-                                    + Add Task
                                   </div>
-                                )}
-                                {editingTask && editIndex === -1 && (
-                                  <div className="flex flex-wrap gap-2">
-                                    <TextInput
-                                      class="mt-0 rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
-                                      id="taskName"
-                                      name="taskName"
-                                      value={taskName}
-                                      autoFocus={true}
-                                      onChange={(e) => {
-                                        setTaskName(e.target.value);
-                                      }}
-                                      onKeyDown={(e) => {
-                                        if (e.key === "Enter") {
-                                          saveTask(values, setFieldValue);
-                                        }
-                                      }}
-                                      type="text"
-                                      placeholder="Your task name"
-                                    />
-                                    {/* Cancel Button */}
-                                    <button
-                                      onClick={() => {
-                                        saveTask(values, setFieldValue);
-                                      }}
-                                      className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
-                                    >
-                                      Cancel
-                                    </button>
+                                </div>
+                              )}
 
-                                    {/* Add Button */}
-                                    <button
-                                      onClick={() => {
-                                        saveTask(values, setFieldValue);
-                                      }}
-                                      className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
-                                    >
-                                      Add
-                                    </button>
-                                  </div>
-                                )}
-                              </Dropdown.Header>
-                            </Dropdown>
+                              {/* Click-outside handler */}
+                              {isOpen && (
+                                <div
+                                  className="fixed inset-0 z-0 bg-transparent"
+                                  onClick={() => setIsOpen(false)}
+                                />
+                              )}
+                            </div>
                           </div>
                         </Styled.Col>
                       </Row>

@@ -92,7 +92,10 @@ const Header = () => {
       const response = await getOrganization(user.organizationId);
       if (response.data.organization)
         setImageURL(response.data.organization.imageUrl);
-        setCustomHome(response.data.organization?.homePage && response.data.organization.homePage !== "");
+      setCustomHome(
+        response.data.organization?.homePage &&
+          response.data.organization.homePage !== ""
+      );
     }
     fetchData();
   }, []);
@@ -127,7 +130,7 @@ const Header = () => {
             Volunteering
           </Navbar.Link>
         )}
-        
+
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
