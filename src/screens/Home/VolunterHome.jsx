@@ -171,7 +171,7 @@ const VolunterHome = () => {
               <CheckCircleIcon className="h-5 w-5" />
             </div>
             <div className="pl-2 text-sm font-normal">
-              Minor waiver saved successfully!
+              Home Page Saved Successfully!
             </div>
             <Toast.Toggle />
           </Toast>

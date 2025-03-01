@@ -3,12 +3,13 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getOrganization } from "../queries/organizations";
 import { on } from "events";
 
 const Header = () => {
   const router = useRouter();
+  const [customHome, setCustomHome] = useState(false);
   const {
     data: { user },
   } = useSession();
@@ -91,6 +92,7 @@ const Header = () => {
       const response = await getOrganization(user.organizationId);
       if (response.data.organization)
         setImageURL(response.data.organization.imageUrl);
+        setCustomHome(response.data.organization?.homePage && response.data.organization.homePage !== "");
     }
     fetchData();
   }, []);
@@ -137,9 +139,9 @@ const Header = () => {
           </Navbar.Link>
         )}
 
-        {user.role != "admin" && (
+        {user.role != "admin" && customHome && (
           <Navbar.Link
-            href="/about"
+            href="/custom-home"
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/custom-home") ? "text-primaryColor" : ""
             }`}
