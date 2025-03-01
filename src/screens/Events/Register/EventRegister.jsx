@@ -331,12 +331,15 @@ const EventRegister = () => {
         </div>
       </Styled.BottomContainer>
 
-      <EventTasksContainer
-        event={event}
-        user={user}
-        eventId={eventId}
-        setTasks={setTasks}
-      />
+      {isRegistered !== undefined && (
+        <EventTasksContainer
+          event={event}
+          user={user}
+          eventId={eventId}
+          setTasks={setTasks}
+          isRegistered={isRegistered}
+        />
+      )}
 
       {event?.eventParent?.requiresApproval && (
         <div className="mt-3 flex flex-row pl-3">

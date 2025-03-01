@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { MapPinIcon } from "@heroicons/react/20/solid";
-import {
-  ClockIcon,
-  CalendarIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-} from "@heroicons/react/24/outline";
 import PropTypes from "prop-types";
 import Text from "../../../components/Text";
 import { getRegistrations } from "../../../queries/registrations";
 import { CustomInput } from "reactstrap";
 import { CheckIcon } from "@heroicons/react/24/solid";
 
-const EventTasksContainer = ({ event, user, eventId, setTasks }) => {
+const EventTasksContainer = ({
+  event,
+  user,
+  eventId,
+  setTasks,
+  isRegistered,
+}) => {
   const [selectedTasks, setSelectedTasks] = useState([]);
 
   const editTasks = (task) => {
@@ -30,7 +29,6 @@ const EventTasksContainer = ({ event, user, eventId, setTasks }) => {
       setAllTasks(event?.eventParent?.tasks);
     }
   }, [event]);
-
   useEffect(() => {
     setTasks(selectedTasks);
   }, [selectedTasks]);
@@ -38,14 +36,22 @@ const EventTasksContainer = ({ event, user, eventId, setTasks }) => {
   return (
     <div className="flex w-11/12 flex-col space-y-2 rounded-md">
       <div className="flex flex-row items-center justify-between">
-        <Text text="Event Tasks" type="subheader" className="mt-4" />
+        <Text
+          text={isRegistered ? "Chosen Tasks" : "Event Tasks"}
+          type="subheader"
+          className="mt-4"
+        />
       </div>
       <div className="flex w-full flex-row gap-5">
         {allTasks.map((task, index) => (
           <div
             key={index}
             className="flex flex-row items-center space-x-2"
-            onClick={() => editTasks(task)}
+            onClick={() => {
+              if (!isRegistered) {
+                editTasks(task);
+              }
+            }}
           >
             <div className="h-[18px] w-[18px] rounded-[2px] border-[1px] border-black">
               {selectedTasks.includes(task) && (
