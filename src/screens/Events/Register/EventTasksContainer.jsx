@@ -11,8 +11,13 @@ const EventTasksContainer = ({
   eventId,
   setTasks,
   isRegistered,
+  tasks,
 }) => {
-  const [selectedTasks, setSelectedTasks] = useState([]);
+  const [selectedTasks, setSelectedTasks] = useState(tasks);
+
+  useEffect(() => {
+    setSelectedTasks(tasks); // Sync selectedTasks with tasks
+  }, [tasks]); // Only update when tasks change
 
   const editTasks = (task) => {
     if (selectedTasks.includes(task)) {

@@ -141,6 +141,11 @@ const EventRegister = () => {
           registrationsResult.data.registrations.forEach((reg) => {
             count += 1 + reg.minors.length;
           });
+
+          // get registered tasks
+          const userTasks =
+            registrationsResult.data.registrations[0]?.tasks || [];
+          setTasks(userTasks);
         }
         // Fetch all registrations for the event
         return getRegistrations({ eventId });
@@ -338,6 +343,7 @@ const EventRegister = () => {
           eventId={eventId}
           setTasks={setTasks}
           isRegistered={isRegistered}
+          tasks={tasks}
         />
       )}
 
