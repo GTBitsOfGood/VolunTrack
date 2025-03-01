@@ -6,6 +6,7 @@ import {
   UsersIcon,
   ClockIcon,
   ExclamationCircleIcon,
+  ChevronRightIcon,
 } from "@heroicons/react/24/solid";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
@@ -86,15 +87,15 @@ const EventCard = (props) => {
 
   return (
     <div
-      className={`mx-18 mb-2 flex flex-col ${
+      className={`mx-18 mb-2 flex w-full flex-col ${
         props.user.role === "admin" && "max-w-4xl"
       } ${
         props.user.role === "volunteer" && "max-w-xl"
       } rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
-      <div className="flex justify-between">
-        <div className="flex justify-start">
+      <div className="flex w-full items-center justify-between">
+        <div className="flex items-center justify-start">
           <DateDisplayComponent
             key={event.date}
             date={event.date}
@@ -117,7 +118,7 @@ const EventCard = (props) => {
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
           </div>
         </div>
-        <div className="flex-column justify-end">
+        <div className="flex-column items-center justify-center">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
@@ -154,48 +155,17 @@ const EventCard = (props) => {
               />
             </div>
           )}
-          {props.user.role === "volunteer" && isRegistered === "approved" && (
-            <button
-              className="mx-1 flex items-center justify-end"
-              onClick={registerOnClick}
-            >
-              <CheckCircleIcon className="h-8 text-primaryColor" />
-              <span>Registered!</span>
-            </button>
-          )}
-          {props.user.role === "volunteer" && isRegistered === "pending" && (
-            <button
-              className="mx-1 flex items-center justify-end"
-              onClick={registerOnClick}
-            >
-              <ClockIcon className="h-8 text-primaryColor" />
-              <span>Pending</span>
-            </button>
-          )}
-          {props.user.role === "volunteer" && isRegistered === "denied" && (
-            <button
-              className="mx-1 flex items-center justify-end"
-              onClick={registerOnClick}
-            >
-              <ExclamationCircleIcon className="h-8 text-primaryColor" />
-              <span>Denied</span>
-            </button>
-          )}
-          {props.user.role === "volunteer" &&
-            !isRegistered &&
-            event.eventParent.maxVolunteers - regCount > 0 && (
+
+          {props.user.role === "volunteer" && (
+            <div className="flex flex-row">
               <button
-                className="mx-1 flex items-center justify-end"
+                className="ml-8 flex items-center"
                 onClick={registerOnClick}
               >
-                <PlusCircleIcon className="h-8 text-primaryColor" />
-                <span>Register</span>
+                <ChevronRightIcon className="h-5 text-gray-500 md:h-8" />
               </button>
-            )}
-          <Label className="text-end">
-            {event.eventParent.maxVolunteers - regCount}/
-            {event.eventParent.maxVolunteers} slots available
-          </Label>
+            </div>
+          )}
         </div>
       </div>
       {collapse && (
