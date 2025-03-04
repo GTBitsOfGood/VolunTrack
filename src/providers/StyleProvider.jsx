@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 
 const ThemeWrapper = ({ children }) => {
   const { data: session } = useSession();
-  // console.log(session);
 
   useEffect(() => {
     if (session) {

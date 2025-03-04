@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Types } from "mongoose";
 import { ZodError } from "zod";
+import DOMPurify from "dompurify";
 import {
   OrganizationDocument,
   OrganizationInputClient,
@@ -79,5 +80,23 @@ export const deleteInvitedAdmin = (
   return axios.delete<{ invitedAdmins?: string[]; error?: ZodError | string }>(
     `/api/organizations/${organizationId.toString()}/invitedAdmins`,
     { data: email }
+  );
+};
+
+export const loadPage = (organizationId: string) => {
+  return axios.get<{ homePage?: string; error?: string }>(
+    `/api/organizations/${organizationId}/customHomePage`
+  );
+};
+
+export const submitPage = async (
+  organizationId: string,
+  pageContent: string
+) => {
+  const sanitizedHomePage = DOMPurify.sanitize(pageContent);
+
+  return axios.post<{ message: string; error?: string }>(
+    `/api/organizations/${organizationId}/customHomePage`,
+    { organizationId, homePage: sanitizedHomePage }
   );
 };

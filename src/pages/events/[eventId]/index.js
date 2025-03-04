@@ -309,7 +309,7 @@ const EventInfo = () => {
                     </p>
                   </div>
                 </div>
-                {user.role === "volunteer" && (
+                {user.role === "admin" && (
                   <div className="flex flex-col bg-white pb-6 md:w-64">
                     <BoGButton
                       text="Share Private Event Link"

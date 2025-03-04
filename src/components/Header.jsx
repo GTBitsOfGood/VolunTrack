@@ -3,12 +3,13 @@ import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getOrganization } from "../queries/organizations";
 import { on } from "events";
 
 const Header = () => {
   const router = useRouter();
+  const [customHome, setCustomHome] = useState(false);
   const {
     data: { user },
   } = useSession();
@@ -91,6 +92,10 @@ const Header = () => {
       const response = await getOrganization(user.organizationId);
       if (response.data.organization)
         setImageURL(response.data.organization.imageUrl);
+      setCustomHome(
+        response.data.organization?.homePage &&
+          response.data.organization.homePage !== ""
+      );
     }
     fetchData();
   }, []);
@@ -99,21 +104,33 @@ const Header = () => {
     <Navbar
       fluid={false}
       rounded={true}
-      className="py-0 md:mx-auto md:w-5/6 md:border-b"
+      className="my-custom-navbar items-center justify-between py-0 md:mx-auto md:w-5/6 md:border-b"
     >
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      <Navbar.Collapse className="mt-2 items-center">
-        <Navbar.Link
-          href="/home"
-          className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-            currPageMatches("/home") ? "text-primaryColor" : ""
-          }`}
-        >
-          Home
-        </Navbar.Link>
+      <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
+        {user.role === "admin" ? (
+          <Navbar.Link
+            href="/home"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/home") ? "text-primaryColor" : ""
+            }`}
+          >
+            Home
+          </Navbar.Link>
+        ) : (
+          <Navbar.Link
+            href="/home"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/home") ? "text-primaryColor" : ""
+            }`}
+          >
+            Volunteering
+          </Navbar.Link>
+        )}
+
         {user.role === "admin" && (
           <Navbar.Link
             href="/volunteers"
@@ -122,6 +139,17 @@ const Header = () => {
             }`}
           >
             Volunteers
+          </Navbar.Link>
+        )}
+
+        {user.role != "admin" && customHome && (
+          <Navbar.Link
+            href="/custom-home"
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/custom-home") ? "text-primaryColor" : ""
+            }`}
+          >
+            About
           </Navbar.Link>
         )}
 
@@ -160,27 +188,16 @@ const Header = () => {
           </Navbar.Link>
         )}
 
-        {user.role === "volunteer" && (
+        {user.role === "admin" && (
           <Navbar.Link
-            onClick={goToStats}
-            href="/stats"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/stats") ? "text-primaryColor" : ""
+            className={`text-lg font-bold md:hover:text-primaryColor  ${
+              currPageMatches("/admins") ||
+              currPageMatches("/manage-waivers") ||
+              currPageMatches("/organization-settings")
+                ? "text-primaryColor"
+                : ""
             }`}
           >
-            Participation History
-          </Navbar.Link>
-        )}
-        <Navbar.Link
-          className={`text-lg font-bold md:hover:text-primaryColor  ${
-            currPageMatches("/admins") ||
-            currPageMatches("/manage-waivers") ||
-            currPageMatches("/organization-settings")
-              ? "text-primaryColor"
-              : ""
-          }`}
-        >
-          {user.role === "admin" && (
             <Dropdown
               arrowIcon={true}
               inline={true}
@@ -197,8 +214,8 @@ const Header = () => {
                 Organization Settings
               </Dropdown.Item>
             </Dropdown>
-          )}
-        </Navbar.Link>
+          </Navbar.Link>
+        )}
         <div className="flex hidden md:order-2 md:block">
           <Dropdown
             arrowIcon={true}
