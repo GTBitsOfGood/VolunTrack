@@ -9,6 +9,10 @@ import { Alert, Toast } from "flowbite-react";
 
 const Styled = {
   Container: styled.div`
+    max-height: 60vh;
+    overflow-y: auto;
+  `,
+  HomeContainer: styled.div`
     max-height: 100vh;
     min-height: min-content;
     overflow-y: auto;
@@ -52,20 +56,12 @@ const EventsList = ({
   });
 
   let upcomingEvents = events.filter(function (event) {
-    let date = new Date(event.date);
-    date = new Date(
-      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-    );
-    let today = new Date();
-    return (
-      (date.getFullYear() > today.getFullYear() ||
-        (date.getFullYear() === today.getFullYear() &&
-          date.getMonth() > today.getMonth()) ||
-        (date.getFullYear() === today.getFullYear() &&
-          date.getMonth() === today.getMonth() &&
-          date.getDate() >= today.getDate())) &&
-      !todayEvents.includes(event)
-    );
+    let currentDate = new Date(Date.now());
+    let eventDate = new Date(event.date);
+    const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
+    eventDate.setUTCHours(hours, minutes);
+
+    return eventDate >= currentDate;
   });
 
   const registeredEventIds = new Map(
@@ -120,13 +116,13 @@ const EventsList = ({
             setEventEdit={setEventEditConfirmationMessage}
           />
         ))}
-        <div className="h-12" />
+        {/* <div className="h-12" /> */}
       </Styled.Container>
     );
   } else {
     if (user.role === "volunteer") {
       return (
-        <Styled.Container>
+        <Styled.HomeContainer>
           <div className="column-flex">
             <p className="font-weight-bold pb-3 text-2xl">Registered Events</p>
             {registeredEvents.length > 0 && (
@@ -178,7 +174,7 @@ const EventsList = ({
             </div>
           )}
           <div className="h-12" />
-        </Styled.Container>
+        </Styled.HomeContainer>
       );
     } else if (user.role === "admin") {
       return (
@@ -239,7 +235,7 @@ const EventsList = ({
                 <BoGButton text="Create new event" onClick={onCreateClicked} />
               )}
             </div> */}
-            <div className="h-48" />
+            <div className="h-24" />
           </div>
         </div>
       );

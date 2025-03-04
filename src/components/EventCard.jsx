@@ -8,6 +8,10 @@ import {
   ExclamationCircleIcon,
   ChevronRightIcon,
 } from "@heroicons/react/24/solid";
+import {
+  ExclamationCircleIcon as OutlineExclamationCircleIcon,
+  ChevronRightIcon as OutlineChevronRightIcon,
+} from "@heroicons/react/24/outline";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
 import PropTypes from "prop-types";
@@ -43,7 +47,7 @@ const EventCard = (props) => {
   }, []);
 
   const open = () => {
-    setCollapse(!collapse);
+    router.push(`/events/${event._id}`);
   };
 
   const registerOnClick = (e) => {
@@ -74,6 +78,15 @@ const EventCard = (props) => {
     setShowEditModal((prev) => !prev);
   };
 
+  const pastEvent = (event) => {
+    let currentDate = new Date(Date.now());
+    let eventDate = new Date(event.date);
+    const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
+    eventDate.setUTCHours(hours, minutes);
+
+    return eventDate < currentDate;
+  };
+
   const convertTime = (time) => {
     let [hour, min] = time.split(":");
     let hours = parseInt(hour);
@@ -87,11 +100,7 @@ const EventCard = (props) => {
 
   return (
     <div
-      className={`mx-18 mb-2 flex w-full flex-col ${
-        props.user.role === "admin" && "max-w-4xl"
-      } ${
-        props.user.role === "volunteer" && "max-w-xl"
-      } rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
+      className={`mx-18 mb-2 mr-2 flex cursor-pointer flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
       <div className="flex w-full items-center justify-between">
@@ -99,7 +108,7 @@ const EventCard = (props) => {
           <DateDisplayComponent
             key={event.date}
             date={event.date}
-            version={props.version ?? "Primary"}
+            version={pastEvent(event) ? "Past" : props.version ?? "Primary"}
           />
           <div className="flex-column flex flex-1 text-xl">
             <div className="mb-1 flex items-center">
@@ -113,12 +122,20 @@ const EventCard = (props) => {
                 </Badge>
               )}
             </div>
-            <Label>{`${convertTime(
+            <Label className="mb-0">{`${convertTime(
               event.eventParent.startTime
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
+            {pastEvent(event) ? (
+              <div className="flex items-center space-x-2">
+                <OutlineExclamationCircleIcon className="mr-1 h-6 w-6 text-red-500" />
+                <Label className="m-0 text-red-500">Event has passed</Label>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
-        <div className="flex-column items-center justify-center">
+        <div className="flex-column items-end justify-center">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
@@ -155,20 +172,52 @@ const EventCard = (props) => {
               />
             </div>
           )}
-
-          {props.user.role === "volunteer" && (
-            <div className="flex flex-row">
-              <button
-                className="ml-8 flex items-center"
-                onClick={registerOnClick}
-              >
-                <ChevronRightIcon className="h-5 text-gray-500 md:h-8" />
-              </button>
+          {/* {props.user.role === "volunteer" && isRegistered === "approved" && (
+            <button
+              className="mx-1 flex items-center justify-end"
+              onClick={registerOnClick}
+            >
+              <CheckCircleIcon className="h-8 text-primaryColor" />
+              <span>Registered!</span>
+            </button>
+          )}
+          {props.user.role === "volunteer" && isRegistered === "pending" && (
+            <button
+              className="mx-1 flex items-center justify-end"
+              onClick={registerOnClick}
+            >
+              <ClockIcon className="h-8 text-primaryColor" />
+              <span>Pending</span>
+            </button>
+          )}
+          {props.user.role === "volunteer" && isRegistered === "denied" && (
+            <button
+              className="mx-1 flex items-center justify-end"
+              onClick={registerOnClick}
+            >
+              <ExclamationCircleIcon className="h-8 text-primaryColor" />
+              <span>Denied</span>
+            </button>
+          )} */}
+          {props.user.role === "volunteer" ? (
+            <div className="flex h-full flex-col justify-around">
+              <div className="flex w-full justify-end">
+                <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor" />
+              </div>
+              <Label className="text-end">
+                {event.eventParent.maxVolunteers - regCount}/
+                {event.eventParent.maxVolunteers} slots available
+              </Label>
             </div>
+          ) : (
+            <Label className="text-end text-darkGrey">
+              {event.eventParent.maxVolunteers - regCount}/
+              {event.eventParent.maxVolunteers} slots available
+            </Label>
           )}
         </div>
       </div>
-      {collapse && (
+      {/* {collapse && (
         <div className="ml-16 mt-2 space-y-2 pl-2">
           <div className="flex-column flex">
             <Label className="text-md mb-0 mr-1 font-bold">Address: </Label>
@@ -189,7 +238,7 @@ const EventCard = (props) => {
             text="More Information"
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 };

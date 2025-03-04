@@ -26,7 +26,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
       />
       {isPublicPage ? (
         <ThemeWrapper>
-          <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
+          <div className="flex-column flex min-h-screen w-screen overflow-x-hidden">
             <Component {...pageProps} />
             {/* <EmbedPage organizationId="63d6dcc4e1fb5fd6e69b1738" /> */}
             <div className="grow" />
@@ -37,7 +37,7 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
         <RequestProvider>
           <AuthProvider>
             <ThemeWrapper>
-              <div className="flex-column flex min-h-screen w-screen overflow-x-hidden overflow-y-scroll">
+              <div className="flex-column flex min-h-screen w-screen overflow-x-hidden">
                 <Header />
                 <Component {...pageProps} />
                 <div className="grow" />
