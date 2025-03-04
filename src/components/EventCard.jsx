@@ -9,8 +9,8 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/24/solid";
 import {
-  ExclamationCircleIcon,
-  ChevronRightIcon,
+  ExclamationCircleIcon as OutlineExclamationCircleIcon,
+  ChevronRightIcon as OutlineChevronRightIcon,
 } from "@heroicons/react/24/outline";
 import { Label, Tooltip, Badge } from "flowbite-react";
 import router from "next/router";
@@ -127,7 +127,7 @@ const EventCard = (props) => {
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
             {pastEvent(event) ? (
               <div className="flex items-center space-x-2">
-                <ExclamationCircleIcon className="mr-1 h-6 w-6 text-red-500" />
+                <OutlineExclamationCircleIcon className="mr-1 h-6 w-6 text-red-500" />
                 <Label className="m-0 text-red-500">Event has passed</Label>
               </div>
             ) : (
@@ -202,7 +202,7 @@ const EventCard = (props) => {
           {props.user.role === "volunteer" ? (
             <div className="flex h-full flex-col justify-around">
               <div className="flex w-full justify-end">
-                <ChevronRightIcon className="h-5 w-5 text-primaryColor" />
+                <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor" />
               </div>
               <Label className="text-end">
                 {event.eventParent.maxVolunteers - regCount}/
