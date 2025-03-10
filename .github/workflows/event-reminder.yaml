@@ -43,7 +43,7 @@ jobs:
           RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d "$JSON_DATA" "$BASE_URL/api/registrations/reminders")
           echo "API Response: $RESPONSE"
 
-          if [[ $RESPONSE == *"\"message\":\"successfully sent reminders\""* ]]; then
+          if [[ $RESPONSE == *'"success":true'* ]]; then
            echo "POST request was successful."
           else
             echo "POST request failed."

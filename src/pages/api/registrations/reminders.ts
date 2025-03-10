@@ -47,9 +47,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         if (filteredEvents.length === 0) {
-          return res
-            .status(200)
-            .json({ message: "No events requiring reminders", count: 0 });
+          return res.status(200).json({
+            success: true,
+            message: "No events requiring reminders",
+            count: 0,
+          });
         }
 
         const filteredEventIds = filteredEvents.map((event) => event._id);
@@ -120,6 +122,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         );
 
         return res.status(200).json({
+          success: true,
           message: "successfully sent reminders",
           eventCount: filteredEvents.length,
           registrationCount: registrations.length,

@@ -35,13 +35,14 @@ const EventCard = (props) => {
 
   useEffect(() => {
     getRegistrations({ eventId: event._id }).then((res) => {
-      setRegistrations(res.data.registrations);
+      console.log(res);
       let count = 0;
       res.data.registrations.map((reg) => {
         if (reg.approved == "approved") {
           count += 1 + reg.minors.length;
         }
       });
+      console.log(count);
       setRegCount(count);
     });
   }, []);
@@ -205,13 +206,13 @@ const EventCard = (props) => {
                 <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor" />
               </div>
               <Label className="text-end">
-                {event.eventParent.maxVolunteers - regCount}/
+                {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
                 {event.eventParent.maxVolunteers} slots available
               </Label>
             </div>
           ) : (
             <Label className="text-end text-darkGrey">
-              {event.eventParent.maxVolunteers - regCount}/
+              {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
               {event.eventParent.maxVolunteers} slots available
             </Label>
           )}

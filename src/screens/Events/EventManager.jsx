@@ -54,7 +54,7 @@ const EventManager = ({ isHomePage }) => {
 
   const [loading, setLoading] = useState(true);
   // const [filterOn, setFilterOn] = useState(false);
-  const [dropdownVal, setDropdownVal] = useState("This Month");
+  const [dropdownVal, setDropdownVal] = useState("Upcoming Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
@@ -77,16 +77,18 @@ const EventManager = ({ isHomePage }) => {
         setEvents(result.data.events);
         setFilteredEvents(
           fetchedEvents.filter((event) => {
-            let eventDate = new Date(event.date);
             let currentDate = new Date(Date.now());
-            return (
-              eventDate.getMonth() == currentDate.getMonth() &&
-              eventDate.getFullYear() == currentDate.getFullYear()
-            );
+            let eventDate = new Date(event.date);
+            const [hours, minutes] = event.eventParent.endTime
+              .split(":")
+              .map(Number);
+            eventDate.setUTCHours(hours, minutes);
+
+            return eventDate >= currentDate;
           })
         );
         setDates(result.data.events);
-        setDropdownVal("This Month");
+        setDropdownVal("Upcoming Events");
       }
     });
 
@@ -367,20 +369,24 @@ const EventManager = ({ isHomePage }) => {
                 >
                   All Events
                 </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Public Events");
-                  }}
-                >
-                  Public Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Private Group Events");
-                  }}
-                >
-                  Private Group Events
-                </Dropdown.Item>
+                {user.role === "admin" && (
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Public Events");
+                    }}
+                  >
+                    Public Events
+                  </Dropdown.Item>
+                )}
+                {user.role === "admin" && (
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("Private Group Events");
+                    }}
+                  >
+                    Private Group Events
+                  </Dropdown.Item>
+                )}
               </Dropdown>
               {user.role === "admin" && (
                 <BoGButton text="Create event" onClick={onCreateClicked} />
