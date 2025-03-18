@@ -40,14 +40,13 @@ const EventTasksContainer = ({
 
   return (
     <div className="flex w-11/12 flex-col space-y-2 rounded-md">
-      <div className="flex flex-row items-center justify-between">
-        <Text
-          text={isRegistered ? "Chosen Tasks" : "Event Tasks"}
-          type="subheader"
-          className="mt-4"
-        />
+      <div className="flex flex-row items-center">
+        <h3 className={"mb-0 mt-4 text-xl font-bold"}>
+          {isRegistered ? "Chosen Tasks" : "Event Tasks"}
+          {allTasks.length > 0 && <span className="text-red-600">*</span>}
+        </h3>
       </div>
-      <div className="flex w-full flex-row gap-5">
+      <div className="flex w-full flex-row flex-wrap gap-7">
         {allTasks.map((task, index) => (
           <div
             key={index}
@@ -58,7 +57,7 @@ const EventTasksContainer = ({
               }
             }}
           >
-            <div className="h-[18px] w-[18px] rounded-[2px] border-[1px] border-black">
+            <div className=" h-[18px] w-[18px] rounded-[2px] border-[1px] border-black">
               {selectedTasks.includes(task) && (
                 <div className="flex h-full w-full items-center justify-center bg-primaryColor">
                   <CheckIcon

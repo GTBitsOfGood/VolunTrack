@@ -28,7 +28,7 @@ const DropdownMenu = (props) => {
   }, []);
 
   return (
-    <div className={"relative w-full max-w-[300px]"} ref={dropdownRef}>
+    <div className={"relative w-full"} ref={dropdownRef}>
       <div
         className={
           !props.className
@@ -40,11 +40,12 @@ const DropdownMenu = (props) => {
       >
         <span>{props.value ? props.value : choice}</span>
         {props.arrow &&
-          (isOpen ? (
+          // (isOpen ? (
             <ChevronDownIcon className="ml-2 h-5 w-5" />
-          ) : (
-            <ChevronUpIcon className="ml-2 h-5 w-5" />
-          ))}
+          // ) : (
+          //   <ChevronUpIcon className="ml-2 h-5 w-5" />
+          // ))
+        }
       </div>
       {isOpen && (
         <div className="absolute z-10 w-full rounded-b-md border-[1px] border-gray-300 bg-white pb-2 pt-2">
