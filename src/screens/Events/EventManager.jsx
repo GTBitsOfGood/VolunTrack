@@ -68,6 +68,7 @@ const EventManager = ({ isHomePage }) => {
 
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
+  const [isEmptyDates, setIsEmptyDates] = useState(false);
 
   const onRefresh = () => {
     setLoading(true);
@@ -132,6 +133,10 @@ const EventManager = ({ isHomePage }) => {
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
 
+    if (!values.startDate && !values.endDate) {
+      setIsEmptyDates(true);
+    }
+    
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
@@ -468,15 +473,18 @@ const EventManager = ({ isHomePage }) => {
                 }}
                 render={({ handleSubmit }) => (
                   <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
+            
                     <InputField
                       label="From"
                       name="startDate"
                       type="datetime-local"
+                      isEmpty = {isEmptyDates}
                     />
                     <InputField
                       label="To"
                       name="endDate"
                       type="datetime-local"
+                      isEmpty = {isEmptyDates}
                     />
                     <BoGButton
                       className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
