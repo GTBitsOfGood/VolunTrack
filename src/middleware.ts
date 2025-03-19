@@ -4,12 +4,16 @@ import { NextResponse } from "next/server";
 export async function middleware(req) {
   const secret = process.env.SECRET;
   const token = await getToken({ req, secret });
+  const pathname = req.nextUrl.pathname;
 
-  if (token && (req.nextUrl.pathname == "/login" || req.nextUrl.pathname == "/signin" || req.nextUrl.pathname == "/signup")) {
+  // If token exists and the user is trying to access auth pages, redirect to home.
+  if (token && ["/login", "/signin", "/signup"].includes(pathname)) {
     return NextResponse.redirect(new URL("/", req.url));
   }
-  // If no token is present and not already on /login, redirect to /login.
-  if (!token && (req.nextUrl.pathname !== "/login" || req.nextUrl.pathname !== "/signin" || req.nextUrl.pathname !== "/signup")) {
+
+  const allowedPathsForUnauthenticated = ["/", "/login", "/signin", "/signup", "/create-account"];
+  // If no token exists and the user is not on an auth page, redirect them to /login.
+  if (!token && !allowedPathsForUnauthenticated.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -17,6 +21,6 @@ export async function middleware(req) {
 }
 
 export const config = {
-  // routes that middleware applies to, exclude api, static, raw files, etc.
+  // Apply middleware to all routes except for api, static files, and others.
   matcher: "/((?!api|static|.*\\..*|_next|.*\\/raw).*)",
 };
