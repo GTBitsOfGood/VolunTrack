@@ -92,10 +92,10 @@ const AdminApproval = ({ user }) => {
           return prevRegCounts;
         });
 
-        setHistoryRegistrations((prevHistory) => [
-          ...prevHistory,
-          updatedRegistration,
-        ]);
+        setHistoryRegistrations((prevHistory) => {
+          const updatedHistory = [...prevHistory, updatedRegistration];
+          return updatedHistory.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); 
+        });
 
         return prevPending.filter((reg) => reg._id !== registrationId);
       }
