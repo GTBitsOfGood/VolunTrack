@@ -131,7 +131,7 @@ const AdminApproval = ({ user }) => {
               );
             })
           ) : (
-            <div className="my-8 text-center">No Pending Registrations</div>
+            <div className="text-left font-inter">No new event approval requests</div>
           )}
         </div>
         <div className="flex flex-col gap-10">
@@ -152,7 +152,7 @@ const AdminApproval = ({ user }) => {
               );
             })
           ) : (
-            <div className="my-8 text-center">No Registration History</div>
+            <div className="text-left font-iter">No registration history</div>
           )}
         </div>
       </div>
