@@ -136,7 +136,7 @@ const EventManager = ({ isHomePage }) => {
     if (!values.startDate && !values.endDate) {
       setIsEmptyDates(true);
     }
-    
+
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
@@ -473,18 +473,17 @@ const EventManager = ({ isHomePage }) => {
                 }}
                 render={({ handleSubmit }) => (
                   <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
-            
                     <InputField
                       label="From"
                       name="startDate"
                       type="datetime-local"
-                      isEmpty = {isEmptyDates}
+                      isEmpty={isEmptyDates}
                     />
                     <InputField
                       label="To"
                       name="endDate"
                       type="datetime-local"
-                      isEmpty = {isEmptyDates}
+                      isEmpty={isEmptyDates}
                     />
                     <BoGButton
                       className="my-3 w-full bg-primaryColor hover:bg-hoverColor"

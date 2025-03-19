@@ -20,9 +20,7 @@ const RegistrationCard = (props) => {
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}`
         );
-        setEmail(
-          `${response.data.user.email}`
-        );
+        setEmail(`${response.data.user.email}`);
       }
     });
     setRegCount(props.regCount);
@@ -98,8 +96,7 @@ const RegistrationCard = (props) => {
           <div>
             <div className="font-semibold">Email</div>
             <div className={`${styles.content}`}>
-              {email ||
-                "No Email Available"}
+              {email || "No Email Available"}
             </div>
           </div>
           <div>
@@ -215,8 +212,8 @@ const RegistrationCard = (props) => {
               avaliable={false}
               className={`font-semibold hover:bg-secondaryColor ${
                 props.registration.approved !== "approved"
-                  ? "!border-none bg-transparent !text-gray-400 cursor-default"
-                  : "bg-secondaryColor !text-gray-800 cursor-default"
+                  ? "cursor-default !border-none bg-transparent !text-gray-400"
+                  : "cursor-default bg-secondaryColor !text-gray-800"
               }`}
             />
             <BoGButton
@@ -227,8 +224,8 @@ const RegistrationCard = (props) => {
               className={`!border-none bg-transparent font-semibold hover:bg-transparent hover:text-red-700
                   ${
                     props.registration.approved !== "denied"
-                      ? "bg-transparent !text-gray-400 cursor-default"
-                      : "bg-secondaryColor !text-red-800 cursor-default"
+                      ? "cursor-default bg-transparent !text-gray-400"
+                      : "cursor-default bg-secondaryColor !text-red-800"
                   }`}
             />
           </div>

@@ -27,9 +27,9 @@ const AdminApproval = ({ user }) => {
           (reg) => reg.approved === "pending"
         );
         const history = registrations
-        .filter((reg) => reg.approved !== "pending")
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        
+          .filter((reg) => reg.approved !== "pending")
+          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
         setPendingRegistrations(pending);
         setHistoryRegistrations(history);
 
@@ -94,7 +94,9 @@ const AdminApproval = ({ user }) => {
 
         setHistoryRegistrations((prevHistory) => {
           const updatedHistory = [...prevHistory, updatedRegistration];
-          return updatedHistory.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); 
+          return updatedHistory.sort(
+            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+          );
         });
 
         return prevPending.filter((reg) => reg._id !== registrationId);
@@ -109,10 +111,12 @@ const AdminApproval = ({ user }) => {
     </div>
   ) : (
     <div className="mx-auto my-2 w-3/4 space-y-8">
-      <h1 className="top-34 left-20 my-4 text-3xl font-semibold">Event Approval Portal</h1>
+      <h1 className="top-34 left-20 my-4 text-3xl font-semibold">
+        Event Approval Portal
+      </h1>
       <div className="top-54 left-20 mx-auto flex flex-col gap-[100px]">
         <div className="flex flex-col gap-10">
-          <div className="text-2xl font-inter">New Requests</div>
+          <div className="font-inter text-2xl">New Requests</div>
           {pendingRegistrations?.length > 0 ? (
             pendingRegistrations.map((registration, index) => {
               if (!events[registration.eventId]) {
@@ -131,11 +135,13 @@ const AdminApproval = ({ user }) => {
               );
             })
           ) : (
-            <div className="text-left font-inter">No new event approval requests</div>
+            <div className="font-inter text-left">
+              No new event approval requests
+            </div>
           )}
         </div>
         <div className="flex flex-col gap-10">
-          <div className="text-2xl font-inter">Registration History</div>
+          <div className="font-inter text-2xl">Registration History</div>
           {historyRegistrations.length > 0 ? (
             historyRegistrations.map((registration, index) => {
               if (!events[registration.eventId]) {
@@ -152,7 +158,7 @@ const AdminApproval = ({ user }) => {
               );
             })
           ) : (
-            <div className="text-left font-iter">No registration history</div>
+            <div className="font-iter text-left">No registration history</div>
           )}
         </div>
       </div>
