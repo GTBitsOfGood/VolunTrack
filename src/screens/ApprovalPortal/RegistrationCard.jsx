@@ -12,13 +12,18 @@ import styles from "./RegistrationCard.module.css";
 const RegistrationCard = (props) => {
   const [regCount, setRegCount] = useState(0);
   const [name, setName] = useState(null);
+  const [email, setEmail] = useState(null);
 
   useEffect(() => {
     getUser(props.registration.userId).then((response) => {
-      if (response.data.user)
+      if (response.data.user) {
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}`
         );
+        setEmail(
+          `${response.data.user.email}`
+        );
+      }
     });
     setRegCount(props.regCount);
   }, [props.regCount]);
@@ -93,7 +98,7 @@ const RegistrationCard = (props) => {
           <div>
             <div className="font-semibold">Email</div>
             <div className={`${styles.content}`}>
-              {props?.event?.eventParent?.eventContactEmail ||
+              {email ||
                 "No Email Available"}
             </div>
           </div>
@@ -210,21 +215,21 @@ const RegistrationCard = (props) => {
               avaliable={false}
               className={`font-semibold hover:bg-secondaryColor ${
                 props.registration.approved !== "approved"
-                  ? "!border-none bg-transparent !text-gray-400"
-                  : "bg-secondaryColor !text-gray-800"
+                  ? "!border-none bg-transparent !text-gray-400 cursor-default"
+                  : "bg-secondaryColor !text-gray-800 cursor-default"
               }`}
             />
             <BoGButton
               text={`${
                 props.registration.approved == "denied" ? "Denied" : "Deny"
               }`}
+              avaliable={false}
               className={`!border-none bg-transparent font-semibold hover:bg-transparent hover:text-red-700
                   ${
                     props.registration.approved !== "denied"
-                      ? "bg-transparent !text-gray-400"
-                      : "bg-secondaryColor !text-red-800"
+                      ? "bg-transparent !text-gray-400 cursor-default"
+                      : "bg-secondaryColor !text-red-800 cursor-default"
                   }`}
-              onClick={handleDeny}
             />
           </div>
         )}

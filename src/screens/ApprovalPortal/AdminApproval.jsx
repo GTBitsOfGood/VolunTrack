@@ -26,9 +26,10 @@ const AdminApproval = ({ user }) => {
         const pending = registrations.filter(
           (reg) => reg.approved === "pending"
         );
-        const history = registrations.filter(
-          (reg) => reg.approved !== "pending"
-        );
+        const history = registrations
+        .filter((reg) => reg.approved !== "pending")
+        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+        
         setPendingRegistrations(pending);
         setHistoryRegistrations(history);
 
@@ -108,50 +109,52 @@ const AdminApproval = ({ user }) => {
     </div>
   ) : (
     <div className="mx-auto my-2 w-3/4 space-y-8">
-      <h1 className="my-4 text-3xl font-semibold">Event Approval Portal</h1>
-      <div className="space-y-5">
-        <h2 className="text-2xl font-semibold">New Requests</h2>
-        {pendingRegistrations?.length > 0 ? (
-          pendingRegistrations.map((registration, index) => {
-            if (!events[registration.eventId]) {
-              return null;
-            }
+      <h1 className="top-34 left-20 my-4 text-3xl font-semibold">Event Approval Portal</h1>
+      <div className="top-54 left-20 mx-auto flex flex-col gap-[100px]">
+        <div className="flex flex-col gap-10">
+          <div className="text-2xl font-inter">New Requests</div>
+          {pendingRegistrations?.length > 0 ? (
+            pendingRegistrations.map((registration, index) => {
+              if (!events[registration.eventId]) {
+                return null;
+              }
 
-            return (
-              <RegistrationCard
-                key={index}
-                registration={registration}
-                event={events[registration.eventId]}
-                regCount={regCounts[registration.eventId] || 0}
-                onApprove={() => moveToHistory(registration._id, "approved")}
-                onDeny={() => moveToHistory(registration._id, "denied")}
-              />
-            );
-          })
-        ) : (
-          <div className="my-8 text-center">No Pending Registrations</div>
-        )}
-      </div>
-      <div className="space-y-4">
-        <h2 className="text-2xl font-semibold">Registration History</h2>
-        {historyRegistrations.length > 0 ? (
-          historyRegistrations.map((registration, index) => {
-            if (!events[registration.eventId]) {
-              return null;
-            }
+              return (
+                <RegistrationCard
+                  key={index}
+                  registration={registration}
+                  event={events[registration.eventId]}
+                  regCount={regCounts[registration.eventId] || 0}
+                  onApprove={() => moveToHistory(registration._id, "approved")}
+                  onDeny={() => moveToHistory(registration._id, "denied")}
+                />
+              );
+            })
+          ) : (
+            <div className="my-8 text-center">No Pending Registrations</div>
+          )}
+        </div>
+        <div className="flex flex-col gap-10">
+          <div className="text-2xl font-inter">Registration History</div>
+          {historyRegistrations.length > 0 ? (
+            historyRegistrations.map((registration, index) => {
+              if (!events[registration.eventId]) {
+                return null;
+              }
 
-            return (
-              <RegistrationCard
-                key={index}
-                registration={registration}
-                event={events[registration.eventId]}
-                regCount={regCounts[registration.eventId] || 0}
-              />
-            );
-          })
-        ) : (
-          <div className="my-8 text-center">No Registration History</div>
-        )}
+              return (
+                <RegistrationCard
+                  key={index}
+                  registration={registration}
+                  event={events[registration.eventId]}
+                  regCount={regCounts[registration.eventId] || 0}
+                />
+              );
+            })
+          ) : (
+            <div className="my-8 text-center">No Registration History</div>
+          )}
+        </div>
       </div>
     </div>
   );
