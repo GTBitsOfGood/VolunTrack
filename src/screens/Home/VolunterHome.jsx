@@ -54,6 +54,28 @@ const VolunterHome = () => {
     [],
     [],
     [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
     [
       { color: [] },
       "italic",
@@ -90,7 +112,6 @@ const VolunterHome = () => {
             const sanitizedHomePage = DOMPurify.sanitize(
               response.data.homePage
             );
-            setEdit(true);
             setPageContent(sanitizedHomePage);
             console.log("Successfully loaded page!");
           } else {
