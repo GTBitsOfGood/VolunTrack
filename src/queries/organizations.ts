@@ -107,7 +107,10 @@ export const getAboutPageToggle = (organizationId: string) => {
   );
 };
 
-export const setAboutPageToggle = (organizationId: string, aboutPageToggle: boolean) => {
+export const setAboutPageToggle = (
+  organizationId: string,
+  aboutPageToggle: boolean
+) => {
   return axios.post<{ message: string; error?: string }>(
     `/api/organizations/${organizationId}/aboutPageToggle`,
     { aboutPageToggle }

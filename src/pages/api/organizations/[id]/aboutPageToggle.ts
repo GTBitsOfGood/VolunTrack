@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
-  
+
   let { id } = req.query;
 
   if (Array.isArray(id)) {
@@ -26,7 +26,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     switch (req.method) {
       case "GET": {
-        return res.status(200).json({ aboutPageToggle: organization.aboutPageToggle });
+        return res
+          .status(200)
+          .json({ aboutPageToggle: organization.aboutPageToggle });
       }
 
       case "POST": {
@@ -34,9 +36,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const { aboutPageToggle } = req.body;
 
         if (typeof aboutPageToggle !== "boolean") {
-          return res
-            .status(400)
-            .json({ error: "Invalid field: aboutPageToggle must be a boolean" });
+          return res.status(400).json({
+            error: "Invalid field: aboutPageToggle must be a boolean",
+          });
         }
 
         await Organization.updateOne(
@@ -44,12 +46,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           { $set: { aboutPageToggle: aboutPageToggle } }
         );
 
-        return res.status(200).json({ message: "Successfully updated aboutPageToggle" });
+        return res
+          .status(200)
+          .json({ message: "Successfully updated aboutPageToggle" });
       }
 
       default:
         res.setHeader("Allow", ["GET", "POST"]);
-        return res.status(405).json({ message: `Method ${req.method} not allowed` });
+        return res
+          .status(405)
+          .json({ message: `Method ${req.method ?? "undefined"} not allowed` });
     }
   } catch (error) {
     return res.status(500).json({

@@ -6,7 +6,12 @@ import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/outline";
-import { loadPage, submitPage, getAboutPageToggle, setAboutPageToggle } from "../../queries/organizations";
+import {
+  loadPage,
+  submitPage,
+  getAboutPageToggle,
+  setAboutPageToggle,
+} from "../../queries/organizations";
 import PreviewModel from "./PreviewModel";
 import dynamic from "next/dynamic";
 import DOMPurify from "dompurify";
@@ -124,12 +129,13 @@ const VolunterHome = () => {
           if (response.data.aboutPageToggle !== undefined) {
             setEdit(response.data.aboutPageToggle);
           } else {
-            console.error("Error loading aboutPageToggle:", response.data.error);
+            console.error(
+              "Error loading aboutPageToggle:",
+              response.data.error
+            );
           }
         })
-        .catch((error) =>
-          console.error("API request error:", String(error))
-        );
+        .catch((error) => console.error("API request error:", String(error)));
     }
   }, [session]);
 
@@ -197,19 +203,15 @@ const VolunterHome = () => {
         </div>
         <div className="flex items-start justify-between">
           <p className="m-0 mb-1 h-6 text-sm font-medium font-medium text-gray-900 text-slate-600 dark:text-gray-300">
-          Design an About page for your volunteers
+            Design an About page for your volunteers
           </p>
           {edit && (
             <div
               className="flex cursor-pointer items-start gap-4"
               onClick={handlePreviewClick}
             >
-              <EyeIcon
-                className="h-6 w-6 text-gray-500 text-primaryColor"
-              />
-              <p className="cursor-pointer text-primaryColor">
-                Preview
-              </p>
+              <EyeIcon className="h-6 w-6 text-gray-500 text-primaryColor" />
+              <p className="cursor-pointer text-primaryColor">Preview</p>
             </div>
           )}
         </div>

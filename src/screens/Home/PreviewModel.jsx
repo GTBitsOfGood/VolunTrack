@@ -15,7 +15,7 @@ const PreviewModel = ({ pageContent, onClose }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="w-full max-w-2xl max-h-[80vh] overflow-y-auto rounded-lg bg-white p-4 shadow-lg">
+      <div className="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-4 shadow-lg">
         <h2 className="mb-4 text-lg font-bold">Preview</h2>
         <ReactQuill value={pageContent} readOnly={true} theme="bubble" />
         <button
