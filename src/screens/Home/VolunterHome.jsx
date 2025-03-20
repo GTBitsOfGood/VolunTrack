@@ -136,7 +136,7 @@ const VolunterHome = () => {
     <div className="flex-column mx-1 my-2 flex gap-8 rounded-sm p-4">
       <div>
         <div className="flex items-start gap-4">
-          <h2 className="text-lg font-bold">Volunteer Home</h2>
+          <h2 className="text-lg font-bold">About Page</h2>
           <ToggleSwitch
             onChange={() => setEdit(!edit)}
             checked={edit}
@@ -146,7 +146,7 @@ const VolunterHome = () => {
         </div>
         <div className="flex items-start justify-between">
           <p className="m-0 mb-1 h-6 text-sm font-medium font-medium text-gray-900 text-slate-600 dark:text-gray-300">
-            Design the Home page for volunteers
+          Design an About page for your volunteers
           </p>
           {edit && (
             <div
@@ -154,10 +154,9 @@ const VolunterHome = () => {
               onClick={handlePreviewClick}
             >
               <EyeIcon
-                style={{ color: "#0183A1" }}
-                className="h-6 w-6 text-gray-500"
+                className="h-6 w-6 text-gray-500 text-primaryColor"
               />
-              <p style={{ color: "#0183A1" }} className="cursor-pointer">
+              <p className="cursor-pointer text-primaryColor">
                 Preview
               </p>
             </div>
