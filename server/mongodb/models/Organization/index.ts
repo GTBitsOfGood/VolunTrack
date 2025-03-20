@@ -31,6 +31,7 @@ const organizationSchema = new Schema(
     hoursSilver: { type: Number, default: 20 },
     hoursGold: { type: Number, default: 40 },
     homePage: { type: String, required: false, default: "" },
+    aboutPageToggle: { type: Boolean, required: false, default: false },
   },
   { timestamps: true }
 );

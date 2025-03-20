@@ -6,7 +6,7 @@ import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/outline";
-import { loadPage, submitPage } from "../../queries/organizations";
+import { loadPage, submitPage, getAboutPageToggle, setAboutPageToggle } from "../../queries/organizations";
 import PreviewModel from "./PreviewModel";
 import dynamic from "next/dynamic";
 import DOMPurify from "dompurify";
@@ -119,6 +119,17 @@ const VolunterHome = () => {
           }
         })
         .catch((error) => console.error("API request error:", String(error)));
+      getAboutPageToggle(session.user.organizationId.toString())
+        .then((response) => {
+          if (response.data.aboutPageToggle !== undefined) {
+            setEdit(response.data.aboutPageToggle);
+          } else {
+            console.error("Error loading aboutPageToggle:", response.data.error);
+          }
+        })
+        .catch((error) =>
+          console.error("API request error:", String(error))
+        );
     }
   }, [session]);
 
@@ -145,6 +156,25 @@ const VolunterHome = () => {
     }
   };
 
+  const handleToggleChange = async () => {
+    if (session?.user?.organizationId) {
+      try {
+        const response = await setAboutPageToggle(
+          session.user.organizationId.toString(),
+          !edit
+        );
+        if (response.data.message) {
+          console.log("Successfully updated aboutPageToggle");
+        } else {
+          console.error("Error updating aboutPageToggle:", response.data.error);
+        }
+      } catch (error) {
+        console.error("API request error:", String(error));
+      }
+    }
+    setEdit(!edit);
+  };
+
   const handlePreviewClick = () => {
     setShowPreview(true); // Show the preview modal
   };
@@ -159,7 +189,7 @@ const VolunterHome = () => {
         <div className="flex items-start gap-4">
           <h2 className="text-lg font-bold">About Page</h2>
           <ToggleSwitch
-            onChange={() => setEdit(!edit)}
+            onChange={handleToggleChange}
             checked={edit}
             theme={customTheme}
             color={"primary"}

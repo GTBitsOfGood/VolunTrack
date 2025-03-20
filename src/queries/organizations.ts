@@ -100,3 +100,16 @@ export const submitPage = async (
     { organizationId, homePage: sanitizedHomePage }
   );
 };
+
+export const getAboutPageToggle = (organizationId: string) => {
+  return axios.get<{ aboutPageToggle?: boolean; error?: string }>(
+    `/api/organizations/${organizationId}/aboutPageToggle`
+  );
+};
+
+export const setAboutPageToggle = (organizationId: string, aboutPageToggle: boolean) => {
+  return axios.post<{ message: string; error?: string }>(
+    `/api/organizations/${organizationId}/aboutPageToggle`,
+    { aboutPageToggle }
+  );
+};
