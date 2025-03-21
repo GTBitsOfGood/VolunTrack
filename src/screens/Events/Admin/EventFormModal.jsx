@@ -525,15 +525,15 @@ const EventFormModal = ({
                               Requires Approval
                             </Label>
                             <div>
-                              <label class="inline-flex cursor-pointer items-center">
+                              <label className="inline-flex cursor-pointer items-center">
                                 <input
                                   type="checkbox"
                                   value={requiresApproval}
                                   checked={requiresApproval}
-                                  class="peer sr-only"
+                                  className="peer sr-only"
                                   onChange={onRequiresApprovalCheckbox}
                                 />
-                                <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                                <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
                               </label>
                             </div>
                           </div>
@@ -1036,15 +1036,15 @@ const EventFormModal = ({
                       <span className="text-red-600">*</span>
                     </Label>
                     <div>
-                      <label class="inline-flex cursor-pointer items-center">
+                      <label className="inline-flex cursor-pointer items-center">
                         <input
                           type="checkbox"
                           value={isNotifyAdmin}
                           checked={isNotifyAdmin}
-                          class="peer sr-only"
+                          className="peer sr-only"
                           onChange={onNotifyAdminCheckbox}
                         />
-                        <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
                       </label>
                     </div>
                   </div>
@@ -1054,33 +1054,33 @@ const EventFormModal = ({
                       <span className="text-red-600">*</span>
                     </Label>
                     <div>
-                      <label class="inline-flex cursor-pointer items-center">
+                      <label className="inline-flex cursor-pointer items-center">
                         <input
                           type="checkbox"
                           value={sendReminderEmail}
                           checked={sendReminderEmail}
-                          class="peer sr-only"
+                          className="peer sr-only"
                           onChange={onSendReminderEmailbox}
                         />
-                        <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
                       </label>
                     </div>
                   </div>
                   <div>
                     <Label>
-                      Event can count towards volunteer's court required hours{" "}
-                      <span className="text-red-600">*</span>
+                      Event can count towards volunteer&apos;s court required
+                      hours <span className="text-red-600">*</span>
                     </Label>
                     <div>
-                      <label class="inline-flex cursor-pointer items-center">
+                      <label className="inline-flex cursor-pointer items-center">
                         <input
                           type="checkbox"
                           value={isValidForCourtHours}
                           checked={isValidForCourtHours}
-                          class="peer sr-only"
+                          className="peer sr-only"
                           onChange={onCourtRequiredHoursCheckbox}
                         />
-                        <div class="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
                       </label>
                     </div>
                   </div>

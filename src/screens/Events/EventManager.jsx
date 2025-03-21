@@ -319,11 +319,11 @@ const EventManager = ({ isHomePage }) => {
     <Styled.Container>
       <div className="flex max-md:flex-wrap">
         {!isHomePage && (
-          <div className="m-4 md:w-2/6 max-md:w-[80vw] flex-col md:flex lg:pl-16">
+          <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
             <div className="my-1 ml-2 flex flex-col items-start">
               <Text text="Events" type="header" />
             </div>
-            <div className="m-2 md:w-fit max-md:w-[85vw] rounded-md bg-gray-50 p-2">
+            <div className="rounded-md bg-gray-50 p-2 max-md:w-[85vw] md:w-fit">
               <Calendar
                 className="bg-white"
                 onChange={onChange}
@@ -341,7 +341,7 @@ const EventManager = ({ isHomePage }) => {
           </div>
         )}
         {!isHomePage && (
-          <div className="m-4 flex md:w-fit max-md:w-[90vw] flex-col overflow-hidden md:w-4/6 md:px-16">
+          <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-fit md:px-16">
             <div className="flex flex-col lg:w-5/6">
               <div className="flex w-full items-center justify-between ">
                 <Dropdown

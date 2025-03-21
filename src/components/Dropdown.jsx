@@ -39,9 +39,11 @@ const DropdownMenu = (props) => {
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{props.value ? props.value : choice}</span>
-        {props.arrow &&
-          // (isOpen ? (
+        {
+          props.arrow && (
+            // (isOpen ? (
             <ChevronDownIcon className="ml-2 h-5 w-5" />
+          )
           // ) : (
           //   <ChevronUpIcon className="ml-2 h-5 w-5" />
           // ))
