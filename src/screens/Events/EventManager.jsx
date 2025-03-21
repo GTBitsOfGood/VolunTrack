@@ -32,7 +32,6 @@ const Styled = {
   `,
   HomePage: styled.div`
     height: 100%;
-
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -44,6 +43,119 @@ const Styled = {
       width: 100%;
       margin-left: 1rem;
       margin-right: 1rem;
+    }
+  `,
+  Calendar: styled(Calendar)`
+    max-width: 22vw;
+    border: none;
+    .react-calendar__navigation {
+      border-bottom: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .react-calendar__navigation__label {
+      order: 2;
+    }
+    .react-calendar__navigation__prev-button {
+      order: 1;
+    }
+    .react-calendar__navigation__next-button {
+      order: 3;
+    }
+    .react-calendar__navigation__prev2-button,
+    .react-calendar__navigation__next2-button {
+      display: none;
+    }
+    .react-calendar__navigation__prev-button,
+    .react-calendar__navigation__next-button {
+      font-size: 2em;
+    }
+    .react-calendar__month-view__weekdays__weekday {
+      font-weight: normal;
+      text-decoration: none;
+      color: darkgrey;
+    }
+    .react-calendar__month-view__weekdays__weekday abbr {
+      text-decoration: none;
+    }
+    &.bg-white {
+      border: none;
+      .react-calendar__month-view__days__day--neighboringMonth {
+        color: #757575 !important;
+      }
+      .react-calendar__month-view__days__day--weekend:not(
+          .react-calendar__month-view__days__day--neighboringMonth
+        ) {
+        color: black !important;
+      }
+      .react-calendar__tile {
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        font-size: 1em;
+      }
+
+      .react-calendar__tile--now,
+      .react-calendar__tile--active,
+      .react-calendar__tile:hover {
+        background: var(--primary-color) !important;
+        color: white !important;
+        border-radius: 50%;
+        padding: 5% !important;
+        box-sizing: border-box;
+        &.marked::after {
+          background: white;
+        }
+      }
+      .react-calendar__tile--now {
+        background: var(--primary-color) !important;
+      }
+      .react-calendar__tile--active {
+        background: var(--secondary-color) !important;
+      }
+      .react-calendar__tile:hover {
+        background: var(--hover-color) !important;
+      }
+      .marked {
+        position: relative;
+      }
+      .marked::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 5px;
+        height: 5px;
+        background: var(--primary-color);
+        border-radius: 50%;
+      }
+    }
+    .react-calendar__year-view__months__month.react-calendar__tile--hasActive {
+      background: var(--secondary-color) !important;
+      color: white !important;
+      border-radius: 50%;
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5% !important;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+      &.bg-white .react-calendar__tile {
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      &.bg-white .react-calendar__tile {
+        font-size: 0.8em;
+      }
     }
   `,
 };
@@ -208,6 +320,13 @@ const EventManager = ({ isHomePage }) => {
     if (dates.includes(fDate)) {
       tileClassName = "marked";
     }
+    // Check if the date is a weekend (Saturday = 6, Sunday = 0)
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    if (isWeekend) {
+      tileClassName = tileClassName
+        ? `${tileClassName} weekend-no-red`
+        : "weekend-no-red";
+    }
     return tileClassName !== "" ? tileClassName : null;
   };
 
@@ -322,14 +441,20 @@ const EventManager = ({ isHomePage }) => {
           <div className="my-1 ml-2 flex flex-col items-start">
             <Text text="Events" type="header" />
           </div>
-          <div className="m-2 w-fit rounded-md bg-gray-50 p-2">
-            <Calendar
+          <div className="m-2 w-fit rounded-md p-2">
+            <Styled.Calendar
               className="bg-white"
               onChange={onChange}
               value={selectedDate}
               tileClassName={({ date, view }) =>
                 setMarkDates({ date, view }, markDates)
               }
+              navigationLabel={({ date }) => {
+                return new Intl.DateTimeFormat("en-US", {
+                  month: "long",
+                }).format(date);
+              }}
+              locale="en-US"
             />
           </div>
           <img

@@ -155,13 +155,6 @@ const EventInfo = () => {
               {user.role === "volunteer" && (
                 // It should only ever display one of the following buttons
                 <div className="mb-4 w-full md:mb-4 md:w-auto">
-                  {isRegistered && futureorTodaysDate && (
-                    <BoGButton
-                      className="w-full bg-primaryColor hover:bg-hoverColor"
-                      text="Unregister"
-                      onClick={() => onUnregisterClicked(event)}
-                    />
-                  )}
                   {event.eventParent.maxVolunteers - regCount > 0 &&
                     !isRegistered &&
                     futureorTodaysDate && (
