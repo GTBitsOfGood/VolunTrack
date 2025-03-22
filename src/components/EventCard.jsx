@@ -48,7 +48,7 @@ const EventCard = (props) => {
   }, []);
 
   const open = () => {
-    router.push(`/events/${event._id}`);
+    router.push(`/events/${event._id}/register`);
   };
 
   const registerOnClick = (e) => {
