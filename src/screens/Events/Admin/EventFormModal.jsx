@@ -522,7 +522,7 @@ const EventFormModal = ({
                         <Styled.Col>
                           <div className="h-100 flex flex-col justify-center">
                             <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
-                              Requires Approval
+                              Requires Approval <span className="text-red-600">*</span>
                             </Label>
                             <div>
                               <label className="inline-flex cursor-pointer items-center">
@@ -579,7 +579,7 @@ const EventFormModal = ({
                                   Recurring Event
                                   <span className="text-red-600">*</span>
                                 </Label>
-                                <DropdownMenu
+                                <DropdownMenu //asdasdasd
                                   value={recurringEvents[recurringEventIndex]}
                                   options={recurringEvents}
                                   callback={(choice) => {
@@ -605,7 +605,7 @@ const EventFormModal = ({
                                   <div
                                     onClick={() => setIsOpen(!isOpen)}
                                     style={{ cursor: "pointer" }}
-                                    className="flex h-[40px] w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                    className="flex h-[40px] w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-black hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                                   >
                                     <span>
                                       {tasks.length > 0
@@ -1010,7 +1010,7 @@ const EventFormModal = ({
                             }}
                             ref={quill}
                             placeholder="Write your description here."
-                            className="flex flex-col-reverse"
+                            className="flex flex-col-reverse border-[#ccc] border-t-[1px] "
                           />
                         )}
                       </Field>

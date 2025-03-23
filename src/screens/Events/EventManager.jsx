@@ -317,13 +317,13 @@ const EventManager = ({ isHomePage }) => {
 
   return (
     <Styled.Container>
-      <div className="flex max-md:flex-wrap">
-        {!isHomePage && (
+      {!isHomePage && (
+        <div className="flex w-full max-md:flex-wrap">
           <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
             <div className="my-1 ml-2 flex flex-col items-start">
               <Text text="Events" type="header" />
             </div>
-            <div className="rounded-md bg-gray-50 p-2 max-md:w-[85vw] md:w-fit">
+            <div className="flex justify-center rounded-md bg-gray-50 p-2 max-md:w-[85vw] md:w-fit">
               <Calendar
                 className="bg-white"
                 onChange={onChange}
@@ -334,14 +334,12 @@ const EventManager = ({ isHomePage }) => {
               />
             </div>
             <img
-              className="h-48"
+              className="h-48 max-h-[128px]"
               src="/images/Calendar Legend.svg"
               alt="legend"
             />
           </div>
-        )}
-        {!isHomePage && (
-          <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-fit md:px-16">
+          <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
             <div className="flex flex-col lg:w-5/6">
               <div className="flex w-full items-center justify-between ">
                 <Dropdown
@@ -438,111 +436,111 @@ const EventManager = ({ isHomePage }) => {
               )}
             </div>
           </div>
-        )}
-        {isHomePage && user.role === "volunteer" && (
-          <Styled.HomePage>
-            <h2 className="text-bold w-full text-left font-bold">
-              My Volunteering
-            </h2>
-            <div className="flex flex-row gap-8">
-              <div className="mb-4 justify-start">
-                <div className="mx-auto flex flex-wrap gap-3">
-                  <ProgressDisplay
-                    type="Events"
-                    className="mb-1 mr-1"
-                    attendance={attendances}
-                    header="Events Attended"
-                    medalDefaults={session.medalDefaults}
-                  />
-                  <ProgressDisplay
-                    className="mb-1 mr-1 sm:mr-0"
-                    type="Hours"
-                    attendance={attendances}
-                    header="Hours Earned"
-                    medalDefaults={session.medalDefaults}
-                  />
-                </div>
-                <Formik
-                  initialValues={{}}
-                  onSubmit={(values, { setSubmitting }) => {
-                    onSubmitValues(values, setSubmitting);
-                  }}
-                  render={({ handleSubmit }) => (
-                    <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
-                      <InputField
-                        label="From"
-                        name="startDate"
-                        type="datetime-local"
-                      />
-                      <InputField
-                        label="To"
-                        name="endDate"
-                        type="datetime-local"
-                      />
-                      <BoGButton
-                        className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
-                        text="Search"
-                        onClick={() => {
-                          handleSubmit();
-                        }}
-                      />
-                    </div>
-                  )}
+        </div>
+      )}
+      {isHomePage && user.role === "volunteer" && (
+        <Styled.HomePage>
+          <h2 className="text-bold w-full text-left font-bold">
+            My Volunteering
+          </h2>
+          <div className="flex flex-row gap-8">
+            <div className="mb-4 justify-start">
+              <div className="mx-auto flex flex-wrap gap-3">
+                <ProgressDisplay
+                  type="Events"
+                  className="mb-1 mr-1"
+                  attendance={attendances}
+                  header="Events Attended"
+                  medalDefaults={session.medalDefaults}
                 />
-                <div className="w-full">
-                  <Text text="Volunteer History" type="subheader" />
-                  <Text
-                    text={`${attendances.length} events`}
-                    className="my-2 text-primaryColor"
-                  />
-                  <StatsTable
-                    attendances={attendances}
-                    isIndividualStats={true}
-                  />
-                </div>
+                <ProgressDisplay
+                  className="mb-1 mr-1 sm:mr-0"
+                  type="Hours"
+                  attendance={attendances}
+                  header="Hours Earned"
+                  medalDefaults={session.medalDefaults}
+                />
               </div>
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filteredEvents
-                    : filterEventsForVolunteers(events, user)
-                }
-                user={user}
-                registrations={registrations}
-                isHomePage={isHomePage}
-                onEventDelete={onEventDelete}
-                showNewEvents={false}
+              <Formik
+                initialValues={{}}
+                onSubmit={(values, { setSubmitting }) => {
+                  onSubmitValues(values, setSubmitting);
+                }}
+                render={({ handleSubmit }) => (
+                  <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
+                    <InputField
+                      label="From"
+                      name="startDate"
+                      type="datetime-local"
+                    />
+                    <InputField
+                      label="To"
+                      name="endDate"
+                      type="datetime-local"
+                    />
+                    <BoGButton
+                      className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
+                      text="Search"
+                      onClick={() => {
+                        handleSubmit();
+                      }}
+                    />
+                  </div>
+                )}
               />
+              <div className="w-full">
+                <Text text="Volunteer History" type="subheader" />
+                <Text
+                  text={`${attendances.length} events`}
+                  className="my-2 text-primaryColor"
+                />
+                <StatsTable
+                  attendances={attendances}
+                  isIndividualStats={true}
+                />
+              </div>
             </div>
-          </Styled.HomePage>
-        )}
-
-        {isHomePage && user.role !== "volunteer" && (
-          <Styled.HomePage>
-            <AdminHomeHeader
-              events={events}
-              attendances={attendances}
-              registrations={registrations}
-              dateString={dateString}
-            />
             <EventsList
               dateString={dateString}
               events={
                 user.role === "admin"
-                  ? events
+                  ? filteredEvents
                   : filterEventsForVolunteers(events, user)
               }
               user={user}
-              isHomePage={isHomePage}
               registrations={registrations}
-              onCreateClicked={onCreateClicked}
+              isHomePage={isHomePage}
               onEventDelete={onEventDelete}
-              onEventEdit={onEventEdit}
+              showNewEvents={false}
             />
-          </Styled.HomePage>
-        )}
-      </div>
+          </div>
+        </Styled.HomePage>
+      )}
+
+      {isHomePage && user.role !== "volunteer" && (
+        <Styled.HomePage>
+          <AdminHomeHeader
+            events={events}
+            attendances={attendances}
+            registrations={registrations}
+            dateString={dateString}
+          />
+          <EventsList
+            dateString={dateString}
+            events={
+              user.role === "admin"
+                ? events
+                : filterEventsForVolunteers(events, user)
+            }
+            user={user}
+            isHomePage={isHomePage}
+            registrations={registrations}
+            onCreateClicked={onCreateClicked}
+            onEventDelete={onEventDelete}
+            onEventEdit={onEventEdit}
+          />
+        </Styled.HomePage>
+      )}
     </Styled.Container>
   );
 };

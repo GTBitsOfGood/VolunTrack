@@ -41,7 +41,7 @@ const InputField = (props) => (
         <TextInput
           class={
             "border-1 mt-0 h-10 w-full rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300 " +
-            (props.invalid ? "border-2 border-[#A10101]" : "")
+            (props.invalid ? "border-2 border-[#a10101]" : "")
           }
           id={props.name}
           name={props.name}

@@ -32,7 +32,7 @@ const DropdownMenu = (props) => {
       <div
         className={
           !props.className
-            ? "flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " +
+            ? "flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 text-sm " +
               (isOpen ? "" : "rounded-b-md")
             : props.className
         }
