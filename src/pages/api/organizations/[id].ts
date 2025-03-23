@@ -6,6 +6,7 @@ import Organization, {
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { createHistoryEventOrganizationSettingsUpdated } from "../../../../server/actions/historyEvent";
+import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -22,6 +23,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ organization });
     }
     case "PUT": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can modify organization settings" });
+      }
+      
       const result = organizationInputServerValidator
         .partial()
         .safeParse(req.body);

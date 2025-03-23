@@ -7,6 +7,7 @@ import Waiver, {
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { createHistoryEventWaiverEdited } from "../../../../server/actions/historyEvent";
+import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -42,6 +43,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res
           .status(400)
           .json({ error: "User session not found to create event" });
+      
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+          .status(403)
+          .json({ error: "Only Admins can create/modify waivers" });
+      }
+
       const user = session.user;
       await createHistoryEventWaiverEdited(user, result.data.type);
       const waiver = await Waiver.findOneAndUpdate(

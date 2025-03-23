@@ -9,6 +9,7 @@ import {
   createHistoryEventAttendanceEdited,
   createHistoryEventAttendanceDeleted,
 } from "../../../../server/actions/historyEvent";
+import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -32,6 +33,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ attendance });
     }
     case "PUT": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can modify organization settings" });
+      }
       const result = attendanceInputServerValidator
         .partial()
         .safeParse(req.body);
@@ -62,6 +69,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ attendance });
     }
     case "DELETE": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can modify organization settings" });
+      }
       await createHistoryEventAttendanceDeleted(user, attendance);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const deleted = await attendance.deleteOne();

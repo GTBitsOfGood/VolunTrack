@@ -15,6 +15,7 @@ import Registration from "../../../../server/mongodb/models/Registration";
 import User from "../../../../server/mongodb/models/User";
 import { sendEventEditedEmail } from "../../../utils/mailersend-email.js";
 import { authOptions } from "../auth/[...nextauth]";
+import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -43,6 +44,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "PUT": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can modify events" });
+      }
       if ("recurringEvent" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
@@ -106,6 +113,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         .json({ event: await event.populate("eventParent") });
     }
     case "DELETE": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can delete events" });
+      }
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });
       if (req.body?.recurringEvent) {

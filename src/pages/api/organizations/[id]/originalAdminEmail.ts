@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../../server/mongodb";
 import Organization from "../../../../../server/mongodb/models/Organization";
+import { isAdmin } from "../../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -15,6 +16,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can access the organization's original admin" });
+      }
       return res
         .status(200)
         .json({ originalAdminEmail: organization.originalAdminEmail });

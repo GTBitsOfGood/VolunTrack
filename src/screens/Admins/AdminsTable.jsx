@@ -31,6 +31,8 @@ class AdminsTable extends React.Component {
     };
   }
 
+  
+
   onDisplayDeletePending = (pending) => {
     this.setState({
       pendingSelectedForDelete: pending,
@@ -188,6 +190,7 @@ class AdminsTable extends React.Component {
                               <PencilIcon className="h-7 text-primaryColor" />
                             </button>
                           </Tooltip>
+                          {this.props.canEdit && 
                           <Tooltip content="Delete" style="light">
                             <button
                               className="mx-1"
@@ -197,7 +200,7 @@ class AdminsTable extends React.Component {
                             >
                               <TrashIcon className="h-7 text-primaryColor" />
                             </button>
-                          </Tooltip>
+                          </Tooltip>}
                         </div>
                       </Table.Cell>
                     ) : (

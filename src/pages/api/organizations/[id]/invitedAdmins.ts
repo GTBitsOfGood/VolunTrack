@@ -5,6 +5,7 @@ import Organization from "../../../../../server/mongodb/models/Organization";
 import { createHistoryEventInviteAdmin } from "../../../../../server/actions/historyEvent";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/[...nextauth]";
+import { isAdmin } from "../../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -19,11 +20,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "GET": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can see invited admins" });
+      }
       return res
         .status(200)
         .json({ invitedAdmins: organization.invitedAdmins });
     }
     case "POST": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can see add other admins" });
+      }
       const { data: email } = req.body as { data: string };
       const result = z.string().email().safeParse(email);
 
@@ -45,6 +58,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Invalid email" });
     }
     case "DELETE": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+        .status(403)
+        .json({ error: "Only Admins can delete admins" });
+      }
       const email = req.body as string;
 
       if (z.string().email().safeParse(email).success) {
