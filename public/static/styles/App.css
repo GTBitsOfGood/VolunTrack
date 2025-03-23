@@ -108,7 +108,7 @@ body,
   content: "Right Align"; 
 }
 .ql-image:hover::after {
-  content: "Add Video";
+  content: "Add Image";
 }
 .ql-video:hover::after {
   content: "Add Video";
