@@ -521,7 +521,7 @@ const EventFormModal = ({
                         </Styled.FifthCol>
                         <Styled.Col>
                           <div className="h-100 flex flex-col justify-center">
-                            <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
+                            <Label className="mb-1 flex h-6 items-center font-black">
                               Requires Approval <span className="text-red-600">*</span>
                             </Label>
                             <div>
@@ -575,7 +575,7 @@ const EventFormModal = ({
                             </div>
                             <div className="flex w-full flex-row justify-between gap-2">
                               <div className="w-full max-w-[50%]">
-                                <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
+                                <Label className="mb-1 flex h-6 items-center font-black">
                                   Recurring Event
                                   <span className="text-red-600">*</span>
                                 </Label>
@@ -595,7 +595,7 @@ const EventFormModal = ({
                                 />
                               </div>
                               <div className="w-full max-w-[50%]">
-                                <Label className="mb-[3.5px] flex h-6 items-center font-medium text-slate-600">
+                                <Label className="mb-[3.5px] flex h-6 items-center font-black">
                                   Tasks
                                 </Label>
                                 <div
