@@ -45,9 +45,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       case "POST": {
         const isadmin = await isAdmin(req, res);
         if (!isadmin) {
-          return res
-          .status(403)
-          .json({ error: "Only Admins can modify an organization Home Page" });
+          return res.status(403).json({
+            error: "Only Admins can modify an organization Home Page",
+          });
         }
 
         const homePage = req.body.homePage;

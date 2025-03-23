@@ -43,7 +43,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res
           .status(400)
           .json({ error: "User session not found to create event" });
-      
+
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
         return res

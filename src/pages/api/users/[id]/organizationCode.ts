@@ -20,10 +20,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // this is only used when creating a new organization in Voluntrack
       if (!isadmin) {
         return res
-        .status(403)
-        .json({ error: "Only Admins can modify organization code" });
+          .status(403)
+          .json({ error: "Only Admins can modify organization code" });
       }
-      
+
       const result = await updateUserOrganizationId(id, orgCode);
 
       return res.status(result.status).json({

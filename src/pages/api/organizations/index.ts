@@ -16,8 +16,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isbogadmin = await isBoGAdmin(req, res);
       if (!isbogadmin) {
         return res
-        .status(403)
-        .json({ error: "Only BoG Admins can view organizations" });
+          .status(403)
+          .json({ error: "Only BoG Admins can view organizations" });
       }
       return res.status(200).json({ organizations: await Organization.find() });
     }
@@ -25,8 +25,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isbogadmin = await isBoGAdmin(req, res);
       if (!isbogadmin) {
         return res
-        .status(403)
-        .json({ error: "Only BoG Admins can create organizations" });
+          .status(403)
+          .json({ error: "Only BoG Admins can create organizations" });
       }
       const result = organizationInputCreationValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);

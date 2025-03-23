@@ -23,8 +23,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
         return res
-        .status(403)
-        .json({ error: "Only Admins can see invited admins" });
+          .status(403)
+          .json({ error: "Only Admins can see invited admins" });
       }
       return res
         .status(200)
@@ -34,8 +34,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
         return res
-        .status(403)
-        .json({ error: "Only Admins can see add other admins" });
+          .status(403)
+          .json({ error: "Only Admins can see add other admins" });
       }
       const { data: email } = req.body as { data: string };
       const result = z.string().email().safeParse(email);
@@ -60,9 +60,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "DELETE": {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
-        return res
-        .status(403)
-        .json({ error: "Only Admins can delete admins" });
+        return res.status(403).json({ error: "Only Admins can delete admins" });
       }
       const email = req.body as string;
 

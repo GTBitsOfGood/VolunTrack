@@ -216,9 +216,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST": {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
-        return res
-        .status(403)
-        .json({ error: "Only admins can create events" });
+        return res.status(403).json({ error: "Only admins can create events" });
       }
       if (req.body?.eventParentId) {
         const result = eventInputServerValidator.safeParse(req.body);

@@ -36,8 +36,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
         return res
-        .status(403)
-        .json({ error: "Only Admins can modify organization settings" });
+          .status(403)
+          .json({ error: "Only Admins can modify organization settings" });
       }
       const result = attendanceInputServerValidator
         .partial()
@@ -72,8 +72,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
         return res
-        .status(403)
-        .json({ error: "Only Admins can modify organization settings" });
+          .status(403)
+          .json({ error: "Only Admins can modify organization settings" });
       }
       await createHistoryEventAttendanceDeleted(user, attendance);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment

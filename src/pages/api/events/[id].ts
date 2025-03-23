@@ -46,9 +46,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "PUT": {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
-        return res
-        .status(403)
-        .json({ error: "Only Admins can modify events" });
+        return res.status(403).json({ error: "Only Admins can modify events" });
       }
       if ("recurringEvent" in req.body) {
         const result = eventPopulatedInputServerValidator
@@ -115,9 +113,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "DELETE": {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
-        return res
-        .status(403)
-        .json({ error: "Only Admins can delete events" });
+        return res.status(403).json({ error: "Only Admins can delete events" });
       }
       await Attendance.deleteMany({ eventId: event._id });
       await Registration.deleteMany({ eventId: event._id });

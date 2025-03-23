@@ -3,7 +3,6 @@ import dbConnect from "../../../../../server/mongodb";
 import Organization from "../../../../../server/mongodb/models/Organization";
 import { isBoGAdmin } from "../../../../utils/routeProtection";
 
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
@@ -19,9 +18,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST": {
       const isbogadmin = await isBoGAdmin(req, res);
       if (!isbogadmin) {
-        return res
-        .status(403)
-        .json({ error: "Only the BoG admins can toggle organization active status" });
+        return res.status(403).json({
+          error: "Only the BoG admins can toggle organization active status",
+        });
       }
       await organization.updateOne({ $set: { active: !organization.active } });
       return res.status(200).json({ organization });

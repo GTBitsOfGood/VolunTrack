@@ -14,8 +14,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
         return res
-        .status(403)
-        .json({ error: "Only Admins can view attendance statistics" });
+          .status(403)
+          .json({ error: "Only Admins can view attendance statistics" });
       }
       const organizationId = req.query.organizationId
         ? new Types.ObjectId(req.query.organizationId as string)

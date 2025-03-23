@@ -18,9 +18,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "GET": {
       const isadmin = await isAdmin(req, res);
       if (!isadmin) {
-        return res
-        .status(403)
-        .json({ error: "Only Admins can access the organization's original admin" });
+        return res.status(403).json({
+          error: "Only Admins can access the organization's original admin",
+        });
       }
       return res
         .status(200)

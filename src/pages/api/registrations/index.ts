@@ -45,8 +45,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isownuser = await isOwnUser(req, res);
       if (!isownuser) {
         return res
-        .status(403)
-        .json({ error: "Users can only register themselves for an event" });
+          .status(403)
+          .json({ error: "Users can only register themselves for an event" });
       }
 
       const result = registrationInputServerValidator.safeParse(req.body);
@@ -64,8 +64,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isownuser = await isOwnUser(req, res);
       if (!isownuser) {
         return res
-        .status(403)
-        .json({ error: "Users can only unregister themselves for an event" });
+          .status(403)
+          .json({ error: "Users can only unregister themselves for an event" });
       }
 
       if (req.query.eventId && !isValidObjectId(req.query.eventId))
