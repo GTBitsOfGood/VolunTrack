@@ -20,8 +20,7 @@ export async function isOwnUser(req, res) {
         return false;
     } else {
         const user = session.user;
-
-        return req.body._id === user._id.toString();
+        return (req.body.userId === user._id.toString()) || (req.query.userId === user._id.toString());
     }
 }
 
@@ -49,6 +48,7 @@ export async function isOriginalOrgAdmin(req, res) {
         if (!userOrganization) {
             return false;
         }
+
         return userOrganization.originalAdminEmail === user.email;
     }
 }

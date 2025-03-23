@@ -61,12 +61,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "DELETE": {
-      const isadmin = await isAdmin(req, res);
       const isownuser = await isOwnUser(req, res);
-      if (!isadmin && !isownuser) {
+      if (!isownuser) {
         return res
         .status(403)
-        .json({ error: "Only Admins can delete other registrations, and volunteers can only delete their own registrations" });
+        .json({ error: "Users can only unregister themselves for an event" });
       }
 
       if (req.query.eventId && !isValidObjectId(req.query.eventId))
