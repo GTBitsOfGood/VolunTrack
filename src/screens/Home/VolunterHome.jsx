@@ -207,7 +207,7 @@ const VolunterHome = () => {
           </p>
           {edit && (
             <div
-              className="flex cursor-pointer items-start gap-4"
+              className="flex cursor-pointer items-start gap-2"
               onClick={handlePreviewClick}
             >
               <EyeIcon className="h-6 w-6 text-gray-500 text-primaryColor" />

@@ -109,9 +109,11 @@ body,
 }
 .ql-image:hover::after {
   content: "Add Image";
+  left: 0px;
 }
 .ql-video:hover::after {
   content: "Add Video";
+  left: -20px;
 }
 
 /* Quill Styling - made alignment format recognizable when rendering custom homepage */
