@@ -457,7 +457,6 @@ const EventManager = ({ isHomePage }) => {
               locale="en-US"
             />
           </div>
-          
         </div>
       )}
       {!isHomePage && (
