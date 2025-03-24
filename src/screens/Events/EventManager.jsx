@@ -457,11 +457,7 @@ const EventManager = ({ isHomePage }) => {
               locale="en-US"
             />
           </div>
-          <img
-            className="h-48"
-            src="/images/Calendar Legend.svg"
-            alt="legend"
-          />
+          
         </div>
       )}
       {!isHomePage && (
