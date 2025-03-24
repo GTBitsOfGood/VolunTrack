@@ -522,7 +522,8 @@ const EventFormModal = ({
                         <Styled.Col>
                           <div className="h-100 flex flex-col justify-center">
                             <Label className="mb-1 flex h-6 items-center font-black">
-                              Requires Approval <span className="text-red-600">*</span>
+                              Requires Approval
+                              <span className="text-red-600">*</span>
                             </Label>
                             <div>
                               <label className="inline-flex cursor-pointer items-center">
@@ -1010,7 +1011,7 @@ const EventFormModal = ({
                             }}
                             ref={quill}
                             placeholder="Write your description here."
-                            className="flex flex-col-reverse border-[#ccc] border-t-[1px] "
+                            className="flex flex-col-reverse border-t-[1px] border-[#ccc] "
                           />
                         )}
                       </Field>

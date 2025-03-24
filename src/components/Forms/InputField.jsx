@@ -25,10 +25,7 @@ const InputField = (props) => (
         )}
         {!props.tooltip && (
           <>
-            <Label
-              className="mb-1 h-6 font-black"
-              htmlFor={props.name}
-            >
+            <Label className="mb-1 h-6 font-black" htmlFor={props.name}>
               {props.label}
             </Label>
             {props.isRequired && <p className="mb-0 text-red-600">*</p>}
