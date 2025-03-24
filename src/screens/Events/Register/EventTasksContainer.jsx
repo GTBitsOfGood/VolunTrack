@@ -50,14 +50,14 @@ const EventTasksContainer = ({
         {allTasks.map((task, index) => (
           <div
             key={index}
-            className="flex flex-row items-center space-x-2"
+            className="flex flex-row items-center"
             onClick={() => {
               if (!isRegistered) {
                 editTasks(task);
               }
             }}
           >
-            <div className=" h-[18px] w-[18px] rounded-[2px] border-[1px] border-black">
+            <div className="mr-2 h-[18px] w-[18px] rounded-[2px] border-[1px] border-black">
               {selectedTasks.includes(task) && (
                 <div className="flex h-full w-full items-center justify-center bg-primaryColor">
                   <CheckIcon
