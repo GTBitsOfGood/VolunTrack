@@ -166,7 +166,7 @@ const EventManager = ({ isHomePage }) => {
         setIsInvalidRange(false);
       }
     } else {
-      setIsInvalidRange(false); 
+      setIsInvalidRange(false);
     }
   };
 
