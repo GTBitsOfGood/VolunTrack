@@ -75,6 +75,7 @@ const EventRegisterInfoContainer = ({
             text={new Date(event.date).toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
+              timeZone: "UTC",
             })}
             className="ml-2 font-bold text-primaryColor"
             type="subheader"
