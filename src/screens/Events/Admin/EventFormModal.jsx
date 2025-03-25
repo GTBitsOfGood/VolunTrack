@@ -1,4 +1,4 @@
-import { Label, Tooltip, TextInput } from "flowbite-react";
+import { Label, Tooltip, TextInput, ToggleSwitch } from "flowbite-react";
 import { Field, Form as FForm, Formik, ErrorMessage } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
@@ -22,6 +22,8 @@ import { editRegistration } from "../../../queries/registrations";
 import { Dropdown } from "flowbite-react";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+
+import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF
 
 const Styled = {
   Form: styled(FForm)``,
@@ -403,6 +405,17 @@ const EventFormModal = ({
 
   /* -------- */
 
+  const timeCheck = (event) => {
+    if (event?.eventParent?.startTime >= event?.eventParent?.endTime) {
+      setInvalidTime(true);
+      return false;
+    }
+    setInvalidTime(false);
+    return true;
+  };
+
+  const [invalidTime, setInvalidTime] = useState(false);
+
   return (
     <Formik
       enableReinitialize={true}
@@ -481,264 +494,301 @@ const EventFormModal = ({
                         style={{
                           padding: "5px",
                           fontWeight: "bold",
-                          color: "gray",
+                          color: "black",
                         }}
                       >
                         Event Information
                       </Row>
                       <Row>
-                        <Styled.Col>
+                        <Styled.ThirdCol>
                           <InputField
                             label="Title"
                             isRequired={true}
                             name="eventParent.title"
                             maxLength={80}
+                            placeholder="Title of the Event"
                           />
-                        </Styled.Col>
-                        <Styled.ThirdCol>
+                        </Styled.ThirdCol>
+                        <Styled.FifthCol>
                           <InputField
                             label="Max Volunteers"
                             isRequired={true}
                             name="eventParent.maxVolunteers"
                             type="number"
                             min={1}
+                            placeholder="Max Number"
                           />
-                        </Styled.ThirdCol>
-                      </Row>
-                      <Row>
+                        </Styled.FifthCol>
                         <Styled.Col>
-                          <InputField
-                            label="Date"
-                            isRequired={true}
-                            name="date"
-                            type="date"
-                            onChangeCapture={(e) => updateRecurringEvents(e)}
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <InputField
-                            label="Start Time"
-                            isRequired={true}
-                            name="eventParent.startTime"
-                            type="time"
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <InputField
-                            label="End Time"
-                            isRequired={true}
-                            name="eventParent.endTime"
-                            type="time"
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <div className="w-full">
-                            <Label className="mb-[3.5px] flex h-6 items-center font-medium text-slate-600">
-                              Tasks
+                          <div className="h-100 flex flex-col justify-center">
+                            <Label className="mb-1 flex h-6 items-center font-black">
+                              Requires Approval
+                              <span className="text-red-600">*</span>
                             </Label>
-                            <div className="relative w-full" ref={dropdownRef}>
-                              <div
-                                onClick={() => setIsOpen(!isOpen)}
-                                style={{ cursor: "pointer" }}
-                                className="flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                              >
-                                <span>
-                                  {tasks.length > 0
-                                    ? `${tasks.length} tasks`
-                                    : "Select tasks"}
-                                </span>
-                                <ChevronDownIcon className="ml-2 h-4 w-4" />
-                              </div>
-
-                              {isOpen && (
-                                <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
-                                  <div className="max-h-60 overflow-y-auto p-2">
-                                    {tasks.map((task, index) => (
-                                      <div
-                                        key={index}
-                                        className="group flex items-center justify-between rounded-md p-2 hover:bg-gray-100"
-                                      >
-                                        {editIndex === index ? (
-                                          <div className="flex w-full flex-col gap-2">
-                                            <input
-                                              autoFocus
-                                              value={taskName}
-                                              onChange={(e) =>
-                                                setTaskName(e.target.value)
-                                              }
-                                              onKeyDown={(e) =>
-                                                e.key === "Enter" &&
-                                                saveTask(values, setFieldValue)
-                                              }
-                                              className="w-full rounded-md border px-2 py-1 text-sm"
-                                              placeholder="Edit task name"
-                                            />
-                                            <div className="flex gap-2">
-                                              <button
-                                                onClick={() =>
-                                                  saveTask(
-                                                    values,
-                                                    setFieldValue
-                                                  )
-                                                }
-                                                className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
-                                              >
-                                                Update
-                                              </button>
-                                              <button
-                                                onClick={() =>
-                                                  deleteTask(
-                                                    index,
-                                                    setFieldValue
-                                                  )
-                                                }
-                                                className="rounded-md bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
-                                              >
-                                                Delete
-                                              </button>
-                                            </div>
-                                          </div>
-                                        ) : (
-                                          <>
-                                            <span className="flex-1 text-sm">
-                                              {task}
-                                            </span>
-                                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100">
-                                              <button
-                                                onClick={() => editTask(index)}
-                                                className="text-blue-600 hover:text-blue-800"
-                                              >
-                                                Edit
-                                              </button>
-                                              <button
-                                                onClick={() =>
-                                                  deleteTask(
-                                                    index,
-                                                    setFieldValue
-                                                  )
-                                                }
-                                                className="text-red-600 hover:text-red-800"
-                                              >
-                                                <svg
-                                                  xmlns="http://www.w3.org/2000/svg"
-                                                  fill="none"
-                                                  viewBox="0 0 24 24"
-                                                  strokeWidth="1.5"
-                                                  stroke="currentColor"
-                                                  className="h-4 w-4"
-                                                >
-                                                  <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    d="M6 18L18 6M6 6l12 12"
-                                                  />
-                                                </svg>
-                                              </button>
-                                            </div>
-                                          </>
-                                        )}
-                                      </div>
-                                    ))}
-
-                                    <div className="border-t pt-2">
-                                      {editingTask && editIndex === -1 ? (
-                                        <div className="flex flex-col gap-2">
-                                          <input
-                                            autoFocus
-                                            value={taskName}
-                                            onChange={(e) =>
-                                              setTaskName(e.target.value)
-                                            }
-                                            onKeyDown={(e) =>
-                                              e.key === "Enter" &&
-                                              saveTask(values, setFieldValue)
-                                            }
-                                            className="w-full rounded-md border px-2 py-1 text-sm"
-                                            placeholder="New task name"
-                                          />
-                                          <div className="flex gap-2">
-                                            <button
-                                              onClick={() => {
-                                                saveTask(values, setFieldValue);
-                                              }}
-                                              className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
-                                            >
-                                              Cancel
-                                            </button>
-
-                                            {/* Add Button */}
-                                            <button
-                                              onClick={() => {
-                                                saveTask(values, setFieldValue);
-                                              }}
-                                              className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
-                                            >
-                                              Add
-                                            </button>
-                                          </div>
-                                        </div>
-                                      ) : (
-                                        <button
-                                          onClick={addTask}
-                                          className="flex w-full items-center gap-2 rounded-md p-2 text-sm text-gray-600 hover:bg-gray-100"
-                                        >
-                                          + Add new task
-                                        </button>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Click-outside handler */}
-                              {isOpen && (
-                                <div
-                                  className="fixed inset-0 z-0 bg-transparent"
-                                  onClick={() => setIsOpen(false)}
+                            <div>
+                              <label className="inline-flex cursor-pointer items-center">
+                                <input
+                                  type="checkbox"
+                                  value={requiresApproval}
+                                  checked={requiresApproval}
+                                  className="peer sr-only"
+                                  onChange={onRequiresApprovalCheckbox}
                                 />
-                              )}
+                                <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                              </label>
                             </div>
                           </div>
                         </Styled.Col>
                       </Row>
                       <Row>
                         <Styled.Col>
-                          <Label className="mb-1 flex h-6 items-center font-medium text-slate-600">
-                            Recurring
-                          </Label>
-                          <DropdownMenu
-                            value={recurringEvents[recurringEventIndex]}
-                            options={recurringEvents}
-                            callback={(choice) => {
-                              handleRecurringEvent(choice, setFieldValue);
-                            }}
-                            arrow
-                          />
-                          <CustomRecurringModal
-                            open={showCustomModal}
-                            toggle={toggleCustomModal}
-                            setRecurrence={handleCustomRecurrence}
-                            recurrenceSettings={customRecurrenceSettings}
-                            // event={event}
-                            // setEvent={(
-                            //   e,
-                            //   id,
-                            //   eventParentId,
-                            //   recurringEvent
-                            // ) => {
-                            //   setEvent(e);
-                            //   onEventEdit(id, eventParentId, recurringEvent);
-                            // }}
-                            // regCount={regCount}
-                            // setEventEdit={props?.setEventEdit}
-                          />
+                          <div className="flex flex-row justify-between gap-2 max-lg:flex-wrap">
+                            <div className="flex w-full max-w-full flex-row justify-between gap-2">
+                              <div className="w-full max-w-[33%]">
+                                <InputField
+                                  label="Date"
+                                  isRequired={true}
+                                  name="date"
+                                  type="date"
+                                  onChangeCapture={(e) =>
+                                    updateRecurringEvents(e)
+                                  }
+                                />
+                              </div>
+                              <div className="w-full max-w-[33%]">
+                                <InputField
+                                  label="Start Time"
+                                  isRequired={true}
+                                  name="eventParent.startTime"
+                                  type="time"
+                                  invalid={invalidTime}
+                                />
+                              </div>
+                              <div className="w-full max-w-[33%]">
+                                <InputField
+                                  label="End Time"
+                                  isRequired={true}
+                                  name="eventParent.endTime"
+                                  type="time"
+                                  invalid={invalidTime}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex w-full flex-row justify-between gap-2">
+                              <div className="w-full max-w-[50%]">
+                                <Label className="mb-1 flex h-6 items-center font-black">
+                                  Recurring Event
+                                  <span className="text-red-600">*</span>
+                                </Label>
+                                <DropdownMenu //asdasdasd
+                                  value={recurringEvents[recurringEventIndex]}
+                                  options={recurringEvents}
+                                  callback={(choice) => {
+                                    handleRecurringEvent(choice, setFieldValue);
+                                  }}
+                                  arrow
+                                />
+                                <CustomRecurringModal
+                                  open={showCustomModal}
+                                  toggle={toggleCustomModal}
+                                  setRecurrence={handleCustomRecurrence}
+                                  recurrenceSettings={customRecurrenceSettings}
+                                />
+                              </div>
+                              <div className="w-full max-w-[50%]">
+                                <Label className="mb-[3.5px] flex h-6 items-center font-black">
+                                  Tasks
+                                </Label>
+                                <div
+                                  className="relative w-full"
+                                  ref={dropdownRef}
+                                >
+                                  <div
+                                    onClick={() => setIsOpen(!isOpen)}
+                                    style={{ cursor: "pointer" }}
+                                    className="flex h-[40px] w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-black hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                  >
+                                    <span>
+                                      {tasks.length > 0
+                                        ? `${tasks.length} tasks`
+                                        : "Select tasks"}
+                                    </span>
+                                    <ChevronDownIcon className="ml-2 h-4 w-4" />
+                                  </div>
+
+                                  {isOpen && (
+                                    <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+                                      <div className="max-h-60 overflow-y-auto p-2">
+                                        {tasks.map((task, index) => (
+                                          <div
+                                            key={index}
+                                            className="group flex items-center justify-between rounded-md p-2 hover:bg-gray-100"
+                                          >
+                                            {editIndex === index ? (
+                                              <div className="flex w-full flex-col gap-2">
+                                                <input
+                                                  autoFocus
+                                                  value={taskName}
+                                                  onChange={(e) =>
+                                                    setTaskName(e.target.value)
+                                                  }
+                                                  onKeyDown={(e) =>
+                                                    e.key === "Enter" &&
+                                                    saveTask(
+                                                      values,
+                                                      setFieldValue
+                                                    )
+                                                  }
+                                                  className="w-full rounded-md border px-2 py-1 text-sm"
+                                                  placeholder="Edit task name"
+                                                />
+                                                <div className="flex gap-2">
+                                                  <button
+                                                    onClick={() =>
+                                                      saveTask(
+                                                        values,
+                                                        setFieldValue
+                                                      )
+                                                    }
+                                                    className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700"
+                                                  >
+                                                    Update
+                                                  </button>
+                                                  <button
+                                                    onClick={() =>
+                                                      deleteTask(
+                                                        index,
+                                                        setFieldValue
+                                                      )
+                                                    }
+                                                    className="rounded-md bg-red-600 px-3 py-1 text-sm text-white hover:bg-red-700"
+                                                  >
+                                                    Delete
+                                                  </button>
+                                                </div>
+                                              </div>
+                                            ) : (
+                                              <>
+                                                <span className="flex-1 text-sm">
+                                                  {task}
+                                                </span>
+                                                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100">
+                                                  <button
+                                                    onClick={() =>
+                                                      editTask(index)
+                                                    }
+                                                    className="text-blue-600 hover:text-blue-800"
+                                                  >
+                                                    Edit
+                                                  </button>
+                                                  <button
+                                                    onClick={() =>
+                                                      deleteTask(
+                                                        index,
+                                                        setFieldValue
+                                                      )
+                                                    }
+                                                    className="text-red-600 hover:text-red-800"
+                                                  >
+                                                    <svg
+                                                      xmlns="http://www.w3.org/2000/svg"
+                                                      fill="none"
+                                                      viewBox="0 0 24 24"
+                                                      strokeWidth="1.5"
+                                                      stroke="currentColor"
+                                                      className="h-4 w-4"
+                                                    >
+                                                      <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                      />
+                                                    </svg>
+                                                  </button>
+                                                </div>
+                                              </>
+                                            )}
+                                          </div>
+                                        ))}
+
+                                        <div className="border-t pt-2">
+                                          {editingTask && editIndex === -1 ? (
+                                            <div className="flex flex-col gap-2">
+                                              <input
+                                                autoFocus
+                                                value={taskName}
+                                                onChange={(e) =>
+                                                  setTaskName(e.target.value)
+                                                }
+                                                onKeyDown={(e) =>
+                                                  e.key === "Enter" &&
+                                                  saveTask(
+                                                    values,
+                                                    setFieldValue
+                                                  )
+                                                }
+                                                className="w-full rounded-md border px-2 py-1 text-sm"
+                                                placeholder="New task name"
+                                              />
+                                              <div className="flex gap-2">
+                                                <button
+                                                  onClick={() => {
+                                                    saveTask(
+                                                      values,
+                                                      setFieldValue
+                                                    );
+                                                  }}
+                                                  className="rounded-md bg-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-400 focus:outline-none"
+                                                >
+                                                  Cancel
+                                                </button>
+
+                                                {/* Add Button */}
+                                                <button
+                                                  onClick={() => {
+                                                    saveTask(
+                                                      values,
+                                                      setFieldValue
+                                                    );
+                                                  }}
+                                                  className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 focus:outline-none"
+                                                >
+                                                  Add
+                                                </button>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <button
+                                              onClick={addTask}
+                                              className="flex w-full items-center gap-2 rounded-md p-2 text-sm text-gray-600 hover:bg-gray-100"
+                                            >
+                                              + Add new task
+                                            </button>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Click-outside handler */}
+                                  {isOpen && (
+                                    <div
+                                      className="fixed inset-0 z-0 bg-transparent"
+                                      onClick={() => setIsOpen(false)}
+                                    />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </Styled.Col>
                       </Row>
                       <Row
                         style={{
                           padding: "5px",
                           fontWeight: "bold",
-                          color: "gray",
+                          color: "black",
+                          marginTop: "1rem",
                         }}
                       >
                         Event Location
@@ -750,41 +800,43 @@ const EventFormModal = ({
                             isRequired={true}
                             name="eventParent.address"
                             type="text"
+                            placeholder="Detailed Address"
                           />
                         </Styled.Col>
-                      </Row>
-                      <Row>
-                        <Styled.Col>
+                        <Styled.FifthCol>
                           <InputField
                             label="City"
                             isRequired={true}
                             name="eventParent.city"
                             type="text"
+                            placeholder="City"
                           />
-                        </Styled.Col>
+                        </Styled.FifthCol>
                         <Styled.FifthCol>
                           <InputField
                             label="State"
                             isRequired={true}
                             name="eventParent.state"
                             type="text"
+                            placeholder="State"
                           />
                         </Styled.FifthCol>
-                        <Styled.ThirdCol>
+                        <Styled.FifthCol>
                           <InputField
                             label="Zip Code"
                             isRequired={true}
                             name="eventParent.zip"
                             type="text"
+                            placeholder="00000"
                           />
-                        </Styled.ThirdCol>
+                        </Styled.FifthCol>
                       </Row>
                       <Row
                         style={{
-                          // paddingLeft: "5.2rem",
                           padding: "5px",
                           fontWeight: "bold",
-                          color: "gray",
+                          color: "black",
+                          marginTop: "1rem",
                         }}
                       >
                         Event Contact
@@ -792,18 +844,20 @@ const EventFormModal = ({
                       <Row>
                         <Styled.Col>
                           <InputField
-                            label="Phone Number"
-                            isRequired={true}
-                            name="eventParent.eventContactPhone"
-                            type="tel"
-                          />
-                        </Styled.Col>
-                        <Styled.Col>
-                          <InputField
                             label="Email Address"
                             isRequired={true}
                             name="eventParent.eventContactEmail"
                             type="email"
+                            placeholder="example@email.com"
+                          />
+                        </Styled.Col>
+                        <Styled.Col>
+                          <InputField
+                            label="Phone Number"
+                            isRequired={true}
+                            name="eventParent.eventContactPhone"
+                            type="tel"
+                            placeholder="xxx-xxx-xxxx"
                           />
                         </Styled.Col>
                       </Row>
@@ -872,6 +926,7 @@ const EventFormModal = ({
                                 isRequired={true}
                                 name="eventParent.orgZip"
                                 type="text"
+                                placeholder="00000"
                               />
                             </Styled.ThirdCol>
                           </Row>
@@ -918,17 +973,20 @@ const EventFormModal = ({
                   </Row>
                   <Row
                     style={{
+                      padding: "5px",
+                      fontWeight: "bold",
+                      color: "black",
+                    }}
+                  >
+                    Description
+                  </Row>
+                  <Row
+                    style={{
                       marginRight: "-2rem",
                     }}
                   >
                     <Styled.Col>
-                      <div className="flex flex-row">
-                        <Label class="mb-1 h-6 font-medium text-slate-600">
-                          Description
-                        </Label>
-                      </div>
-
-                      <Field name="eventParent.description">
+                      <Field name="eventParent.description" className="h-48">
                         {() => (
                           <ReactQuill
                             value={values.eventParent.description}
@@ -938,7 +996,22 @@ const EventFormModal = ({
                                 newValue
                               );
                             }}
+                            modules={{
+                              toolbar: [
+                                "bold",
+                                "italic",
+                                "underline",
+                                {},
+                                { align: [] },
+                                {},
+                                "link",
+                                "image",
+                                "clean",
+                              ],
+                            }}
                             ref={quill}
+                            placeholder="Write your description here."
+                            className="flex flex-col-reverse border-t-[1px] border-[#ccc] "
                           />
                         )}
                       </Field>
@@ -946,38 +1019,72 @@ const EventFormModal = ({
                   </Row>
                 </SForm.FormGroup>
               </Styled.Form>
-              <div className="flex flex-row">
-                <Label class="mb-1 h-6 font-medium text-slate-600">Other</Label>
-              </div>
+              <Row
+                style={{
+                  padding: "5px",
+                  fontWeight: "bold",
+                  color: "black",
+                  marginTop: "1rem",
+                }}
+              >
+                Other
+              </Row>
               <Styled.Row>
-                <FormGroup>
-                  <Input
-                    defaultChecked={isValidForCourtHours}
-                    type="checkbox"
-                    onChange={onCourtRequiredHoursCheckbox}
-                  />
-                  <Text
-                    text="This event can count towards volunteer's court required
-                    hours"
-                  />
-                  <Input
-                    defaultChecked={isNotifyAdmin}
-                    type="checkbox"
-                    onChange={onNotifyAdminCheckbox}
-                  />
-                  <Text text="Notify admins upon registration" />
-                  <Input
-                    defaultChecked={sendReminderEmail}
-                    type="checkbox"
-                    onChange={onSendReminderEmailbox}
-                  />
-                  <Text text="Send reminder emails 48 hours before the event" />
-                  <Input
-                    defaultChecked={requiresApproval}
-                    type="checkbox"
-                    onChange={onRequiresApprovalCheckbox}
-                  />
-                  <Text text="Requires Approval" />
+                <div className="flex w-full flex-wrap gap-6">
+                  <div>
+                    <Label>
+                      Notify admins upon registration{" "}
+                      <span className="text-red-600">*</span>
+                    </Label>
+                    <div>
+                      <label className="inline-flex cursor-pointer items-center">
+                        <input
+                          type="checkbox"
+                          value={isNotifyAdmin}
+                          checked={isNotifyAdmin}
+                          className="peer sr-only"
+                          onChange={onNotifyAdminCheckbox}
+                        />
+                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <Label>
+                      Send reminder emails 48 hours before the event{" "}
+                      <span className="text-red-600">*</span>
+                    </Label>
+                    <div>
+                      <label className="inline-flex cursor-pointer items-center">
+                        <input
+                          type="checkbox"
+                          value={sendReminderEmail}
+                          checked={sendReminderEmail}
+                          className="peer sr-only"
+                          onChange={onSendReminderEmailbox}
+                        />
+                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <Label>
+                      Event can count towards volunteer&apos;s court required
+                      hours <span className="text-red-600">*</span>
+                    </Label>
+                    <div>
+                      <label className="inline-flex cursor-pointer items-center">
+                        <input
+                          type="checkbox"
+                          value={isValidForCourtHours}
+                          checked={isValidForCourtHours}
+                          className="peer sr-only"
+                          onChange={onCourtRequiredHoursCheckbox}
+                        />
+                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                      </label>
+                    </div>
+                  </div>
                   {containsExistingEvent(event) && (
                     <div>
                       <Input
@@ -987,20 +1094,31 @@ const EventFormModal = ({
                       <Text text="I would like to send an email to volunteers with updated information" />
                     </div>
                   )}
-                </FormGroup>
+                </div>
               </Styled.Row>
+              <Row>
+                <div>
+                  <div className="w-full text-left">
+                    {invalidTime && (
+                      <strong>Start time must be before end time.</strong>
+                    )}
+                  </div>
+                  <div className="justify-begin flex w-full flex-row gap-2">
+                    <BoGButton
+                      text={submitText}
+                      onClick={() => {
+                        if (!timeCheck(values)) return;
+                        console.log("Submitted");
+                        handleSubmit();
+                        setPressed(true);
+                      }}
+                      disabled={!isValid || isSubmitting}
+                    />
+                    <BoGButton text="Cancel" onClick={toggle} outline={true} />
+                  </div>
+                </div>
+              </Row>
             </Styled.ModalBody>
-            <ModalFooter>
-              <BoGButton text="Cancel" onClick={toggle} outline={true} />
-              <BoGButton
-                text={submitText}
-                onClick={() => {
-                  handleSubmit();
-                  setPressed(true);
-                }}
-                disabled={!isValid || isSubmitting}
-              />
-            </ModalFooter>
           </>
         );
       }}

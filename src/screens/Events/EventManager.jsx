@@ -180,6 +180,8 @@ const EventManager = ({ isHomePage }) => {
 
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
+  const [isEmptyDates, setIsEmptyDates] = useState(false);
+  const [isInvalidRange, setIsInvalidRange] = useState(false);
 
   const onRefresh = () => {
     setLoading(true);
@@ -244,10 +246,19 @@ const EventManager = ({ isHomePage }) => {
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
 
+    if (!values.startDate && !values.endDate) {
+      setIsEmptyDates(true);
+    } else {
+      setIsEmptyDates(false);
+    }
+
+    let start = null;
+    let end = null;
+
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      let start = new Date(values.startDate);
+      start = new Date(values.startDate);
       start.setMinutes(start.getMinutes() - offset);
       setStartDate(start);
     }
@@ -255,9 +266,19 @@ const EventManager = ({ isHomePage }) => {
     if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      let end = new Date(values.endDate);
+      end = new Date(values.endDate);
       end.setMinutes(end.getMinutes() - offset);
       setEndDate(end);
+    }
+
+    if (start && end) {
+      if (end < start) {
+        setIsInvalidRange(true);
+      } else {
+        setIsInvalidRange(false);
+      }
+    } else {
+      setIsInvalidRange(false);
     }
   };
 
@@ -472,89 +493,125 @@ const EventManager = ({ isHomePage }) => {
                   onClick={() => {
                     changeValue("This Month");
                   }}
+// =======
+//         <div className="flex w-full max-md:flex-wrap">
+//           <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
+//             <div className="my-1 ml-2 flex flex-col items-start">
+//               <Text text="Events" type="header" />
+//             </div>
+//             <div className="flex justify-center rounded-md bg-gray-50 p-2 max-md:w-[85vw] md:w-fit">
+//               <Calendar
+//                 className="bg-white"
+//                 onChange={onChange}
+//                 value={selectedDate}
+//                 tileClassName={({ date, view }) =>
+//                   setMarkDates({ date, view }, markDates)
+//                 }
+//               />
+//             </div>
+//             <img
+//               className="h-48 max-h-[128px]"
+//               src="/images/Calendar Legend.svg"
+//               alt="legend"
+//             />
+//           </div>
+//           <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
+//             <div className="flex flex-col lg:w-5/6">
+//               <div className="flex w-full items-center justify-between ">
+//                 <Dropdown
+//                   inline={true}
+//                   arrowIcon={false}
+//                   label={<BoGButton text={dropdownVal} dropdown={true} />}
+// >>>>>>> dev
                 >
-                  This Month
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Upcoming Events");
-                  }}
-                >
-                  Upcoming Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("All Events");
-                  }}
-                >
-                  All Events
-                </Dropdown.Item>
-                {user.role === "admin" && (
                   <Dropdown.Item
                     onClick={() => {
-                      changeValue("Public Events");
+                      changeValue("This Month");
                     }}
                   >
-                    Public Events
+                    This Month
                   </Dropdown.Item>
-                )}
-                {user.role === "admin" && (
                   <Dropdown.Item
                     onClick={() => {
-                      changeValue("Private Group Events");
+                      changeValue("Upcoming Events");
                     }}
                   >
-                    Private Group Events
+                    Upcoming Events
                   </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("All Events");
+                    }}
+                  >
+                    All Events
+                  </Dropdown.Item>
+                  {user.role === "admin" && (
+                    <Dropdown.Item
+                      onClick={() => {
+                        changeValue("Public Events");
+                      }}
+                    >
+                      Public Events
+                    </Dropdown.Item>
+                  )}
+                  {user.role === "admin" && (
+                    <Dropdown.Item
+                      onClick={() => {
+                        changeValue("Private Group Events");
+                      }}
+                    >
+                      Private Group Events
+                    </Dropdown.Item>
+                  )}
+                </Dropdown>
+                {user.role === "admin" && (
+                  <BoGButton text="Create event" onClick={onCreateClicked} />
                 )}
-              </Dropdown>
-              {user.role === "admin" && (
-                <BoGButton text="Create event" onClick={onCreateClicked} />
+              </div>
+              {loading === true ? (
+                <div className="mt-8">
+                  <Text text={"Loading..."} type="subheader" />
+                </div>
+              ) : (
+                <div className="mt-8" />
+              )}
+              {filteredEvents.length === 0 && loading === false ? (
+                <div className="mt-8">
+                  <Text
+                    text={"No Events Scheduled for Filter"}
+                    type="subheader"
+                  />
+                  {showBack && (
+                    <button
+                      className="text-primaryColor hover:underline"
+                      onClick={setDateBack}
+                    >
+                      Show Events for all Dates
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <EventsList
+                  dateString={dateString}
+                  events={
+                    user.role === "admin"
+                      ? filteredEvents
+                      : filterEventsForVolunteers(filteredEvents, user)
+                  }
+                  registrations={registrations}
+                  user={user}
+                  isHomePage={isHomePage}
+                  onEventDelete={onEventDelete}
+                  onEventEdit={onEventEdit}
+                />
+              )}
+              {showCreateModal && (
+                <EventCreateModal
+                  open={showCreateModal}
+                  toggle={toggleCreateModal}
+                />
               )}
             </div>
-            {loading === true ? (
-              <div className="mt-8">
-                <Text text={"Loading..."} type="subheader" />
-              </div>
-            ) : (
-              <div className="mt-8" />
-            )}
-            {filteredEvents.length === 0 && loading === false ? (
-              <div className="mt-8">
-                <Text
-                  text={"No Events Scheduled for Filter"}
-                  type="subheader"
-                />
-                {showBack && (
-                  <button
-                    className="text-primaryColor hover:underline"
-                    onClick={setDateBack}
-                  >
-                    Show Events for all Dates
-                  </button>
-                )}
-              </div>
-            ) : (
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filteredEvents
-                    : filterEventsForVolunteers(filteredEvents, user)
-                }
-                registrations={registrations}
-                user={user}
-                isHomePage={isHomePage}
-                onEventDelete={onEventDelete}
-                onEventEdit={onEventEdit}
-              />
-            )}
-            {showCreateModal && (
-              <EventCreateModal
-                open={showCreateModal}
-                toggle={toggleCreateModal}
-              />
-            )}
           </div>
         </div>
       )}
@@ -592,11 +649,13 @@ const EventManager = ({ isHomePage }) => {
                       label="From"
                       name="startDate"
                       type="datetime-local"
+                      isEmptyOrInvalid={isEmptyDates || isInvalidRange}
                     />
                     <InputField
                       label="To"
                       name="endDate"
                       type="datetime-local"
+                      isEmptyOrInvalid={isEmptyDates || isInvalidRange}
                     />
                     <BoGButton
                       className="my-3 w-full bg-primaryColor hover:bg-hoverColor"

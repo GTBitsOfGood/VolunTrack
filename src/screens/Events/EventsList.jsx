@@ -143,8 +143,8 @@ const EventsList = ({
               </div>
             )}
             {registeredEvents.length === 0 && (
-              <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
-                Please register for an event!
+              <p className="text-5 mb-4 flex items-center justify-center font-normal leading-[100%] tracking-[0%] text-primaryColor">
+                You haven&apos;t registered for an event yet!
               </p>
             )}
           </div>

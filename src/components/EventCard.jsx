@@ -35,14 +35,12 @@ const EventCard = (props) => {
 
   useEffect(() => {
     getRegistrations({ eventId: event._id }).then((res) => {
-      console.log(res);
       let count = 0;
       res.data.registrations.map((reg) => {
         if (reg.approved == "approved") {
           count += 1 + reg.minors.length;
         }
       });
-      console.log(count);
       setRegCount(count);
     });
   }, []);
