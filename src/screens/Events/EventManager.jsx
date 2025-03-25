@@ -23,6 +23,7 @@ import Text from "../../components/Text";
 const Styled = {
   Container: styled.div`
     width: 100%;
+
     height: 100%;
     padding-y: 2rem;
     display: flex;
