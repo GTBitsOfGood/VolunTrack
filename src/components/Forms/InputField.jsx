@@ -40,7 +40,7 @@ const InputField = (props) => (
       {({ field }) => (
         <TextInput
           class={`border-1 mt-0 h-10 w-full rounded-md bg-white disabled:border-gray-500 disabled:bg-gray-300 ${
-            props.isEmpty ? "border-red-800" : "border-gray-300"
+            props.isEmptyOrInvalid ? "border-red-800" : "border-gray-300"
           }`}
           id={props.name}
           name={props.name}
@@ -74,7 +74,7 @@ InputField.propTypes = {
   maxLength: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
-  isEmpty: PropTypes.bool,
+  isEmptyOrInvalid: PropTypes.bool,
 };
 
 export default InputField;
