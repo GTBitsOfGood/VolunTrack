@@ -68,6 +68,8 @@ const EventManager = ({ isHomePage }) => {
 
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
+  const [isEmptyDates, setIsEmptyDates] = useState(false);
+  const [isInvalidRange, setIsInvalidRange] = useState(false);
 
   const onRefresh = () => {
     setLoading(true);
@@ -132,10 +134,19 @@ const EventManager = ({ isHomePage }) => {
   const onSubmitValues = (values, setSubmitting) => {
     let offset = new Date().getTimezoneOffset();
 
+    if (!values.startDate && !values.endDate) {
+      setIsEmptyDates(true);
+    } else {
+      setIsEmptyDates(false);
+    }
+
+    let start = null;
+    let end = null;
+
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      let start = new Date(values.startDate);
+      start = new Date(values.startDate);
       start.setMinutes(start.getMinutes() - offset);
       setStartDate(start);
     }
@@ -143,9 +154,19 @@ const EventManager = ({ isHomePage }) => {
     if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      let end = new Date(values.endDate);
+      end = new Date(values.endDate);
       end.setMinutes(end.getMinutes() - offset);
       setEndDate(end);
+    }
+
+    if (start && end) {
+      if (end < start) {
+        setIsInvalidRange(true);
+      } else {
+        setIsInvalidRange(false);
+      }
+    } else {
+      setIsInvalidRange(false);
     }
   };
 
@@ -472,11 +493,13 @@ const EventManager = ({ isHomePage }) => {
                       label="From"
                       name="startDate"
                       type="datetime-local"
+                      isEmptyOrInvalid={isEmptyDates || isInvalidRange}
                     />
                     <InputField
                       label="To"
                       name="endDate"
                       type="datetime-local"
+                      isEmptyOrInvalid={isEmptyDates || isInvalidRange}
                     />
                     <BoGButton
                       className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
