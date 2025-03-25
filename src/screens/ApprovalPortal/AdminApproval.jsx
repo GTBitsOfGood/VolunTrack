@@ -135,8 +135,8 @@ const AdminApproval = ({ user }) => {
               );
             })
           ) : (
-            <div className="font-inter text-left">
-              No new event approval requests
+            <div className="font-inter text-left text-[#0183A1]">
+              No new event approval requests!
             </div>
           )}
         </div>
