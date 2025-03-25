@@ -97,7 +97,6 @@ const Styled = {
         padding: 0 !important;
         font-size: 1em;
       }
-
       .react-calendar__tile--now,
       .react-calendar__tile--active,
       .react-calendar__tile:hover {
@@ -145,13 +144,11 @@ const Styled = {
       padding: 5% !important;
       box-sizing: border-box;
     }
-
     @media (max-width: 768px) {
       &.bg-white .react-calendar__tile {
         font-size: 0.9em;
       }
     }
-
     @media (max-width: 480px) {
       &.bg-white .react-calendar__tile {
         font-size: 0.8em;
@@ -458,71 +455,35 @@ const EventManager = ({ isHomePage }) => {
   return (
     <Styled.Container>
       {!isHomePage && (
-        <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
-          <div className="my-1 ml-2 flex flex-col items-start">
-            <Text text="Events" type="header" />
+        <div className="flex w-full max-md:flex-wrap">
+          <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
+            <div className="my-1 ml-2 flex flex-col items-start">
+              <Text text="Events" type="header" />
+            </div>
+            <div className="flex justify-center rounded-md p-2 max-md:w-[85vw] md:w-fit">
+              <Styled.Calendar
+                className="bg-white"
+                onChange={onChange}
+                value={selectedDate}
+                tileClassName={({ date, view }) =>
+                  setMarkDates({ date, view }, markDates)
+                }
+                navigationLabel={({ date }) => {
+                  return new Intl.DateTimeFormat("en-US", {
+                    month: "long",
+                  }).format(date);
+                }}
+                locale="en-US"
+              />
+            </div>
           </div>
-          <div className="m-2 w-fit rounded-md p-2">
-            <Styled.Calendar
-              className="bg-white"
-              onChange={onChange}
-              value={selectedDate}
-              tileClassName={({ date, view }) =>
-                setMarkDates({ date, view }, markDates)
-              }
-              navigationLabel={({ date }) => {
-                return new Intl.DateTimeFormat("en-US", {
-                  month: "long",
-                }).format(date);
-              }}
-              locale="en-US"
-            />
-          </div>
-        </div>
-      )}
-      {!isHomePage && (
-        <div className="m-4 flex w-full flex-col overflow-hidden md:w-4/6 md:px-16">
-          <div className="flex flex-col lg:w-5/6">
-            <div className="flex w-full items-center justify-between ">
-              <Dropdown
-                inline={true}
-                arrowIcon={false}
-                label={<BoGButton text={dropdownVal} dropdown={true} />}
-              >
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("This Month");
-                  }}
-// =======
-//         <div className="flex w-full max-md:flex-wrap">
-//           <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
-//             <div className="my-1 ml-2 flex flex-col items-start">
-//               <Text text="Events" type="header" />
-//             </div>
-//             <div className="flex justify-center rounded-md bg-gray-50 p-2 max-md:w-[85vw] md:w-fit">
-//               <Calendar
-//                 className="bg-white"
-//                 onChange={onChange}
-//                 value={selectedDate}
-//                 tileClassName={({ date, view }) =>
-//                   setMarkDates({ date, view }, markDates)
-//                 }
-//               />
-//             </div>
-//             <img
-//               className="h-48 max-h-[128px]"
-//               src="/images/Calendar Legend.svg"
-//               alt="legend"
-//             />
-//           </div>
-//           <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
-//             <div className="flex flex-col lg:w-5/6">
-//               <div className="flex w-full items-center justify-between ">
-//                 <Dropdown
-//                   inline={true}
-//                   arrowIcon={false}
-//                   label={<BoGButton text={dropdownVal} dropdown={true} />}
-// >>>>>>> dev
+          <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
+            <div className="flex flex-col lg:w-5/6">
+              <div className="flex w-full items-center justify-between ">
+                <Dropdown
+                  inline={true}
+                  arrowIcon={false}
+                  label={<BoGButton text={dropdownVal} dropdown={true} />}
                 >
                   <Dropdown.Item
                     onClick={() => {
