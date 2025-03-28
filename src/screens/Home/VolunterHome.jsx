@@ -6,7 +6,12 @@ import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast, ToggleSwitch } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { EyeIcon } from "@heroicons/react/24/outline";
-import { loadPage, submitPage } from "../../queries/organizations";
+import {
+  loadPage,
+  submitPage,
+  getAboutPageToggle,
+  setAboutPageToggle,
+} from "../../queries/organizations";
 import PreviewModel from "./PreviewModel";
 import dynamic from "next/dynamic";
 import DOMPurify from "dompurify";
@@ -54,6 +59,28 @@ const VolunterHome = () => {
     [],
     [],
     [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
     [
       { color: [] },
       "italic",
@@ -90,11 +117,22 @@ const VolunterHome = () => {
             const sanitizedHomePage = DOMPurify.sanitize(
               response.data.homePage
             );
-            setEdit(true);
             setPageContent(sanitizedHomePage);
             console.log("Successfully loaded page!");
           } else {
             console.error("Error loading home page:", response.data.error);
+          }
+        })
+        .catch((error) => console.error("API request error:", String(error)));
+      getAboutPageToggle(session.user.organizationId.toString())
+        .then((response) => {
+          if (response.data.aboutPageToggle !== undefined) {
+            setEdit(response.data.aboutPageToggle);
+          } else {
+            console.error(
+              "Error loading aboutPageToggle:",
+              response.data.error
+            );
           }
         })
         .catch((error) => console.error("API request error:", String(error)));
@@ -124,6 +162,25 @@ const VolunterHome = () => {
     }
   };
 
+  const handleToggleChange = async () => {
+    if (session?.user?.organizationId) {
+      try {
+        const response = await setAboutPageToggle(
+          session.user.organizationId.toString(),
+          !edit
+        );
+        if (response.data.message) {
+          console.log("Successfully updated aboutPageToggle");
+        } else {
+          console.error("Error updating aboutPageToggle:", response.data.error);
+        }
+      } catch (error) {
+        console.error("API request error:", String(error));
+      }
+    }
+    setEdit(!edit);
+  };
+
   const handlePreviewClick = () => {
     setShowPreview(true); // Show the preview modal
   };
@@ -136,9 +193,9 @@ const VolunterHome = () => {
     <div className="flex-column mx-1 my-2 flex gap-8 rounded-sm p-4">
       <div>
         <div className="flex items-start gap-4">
-          <h2 className="text-lg font-bold">Volunteer Home</h2>
+          <h2 className="text-lg font-bold">About Page</h2>
           <ToggleSwitch
-            onChange={() => setEdit(!edit)}
+            onChange={handleToggleChange}
             checked={edit}
             theme={customTheme}
             color={"primary"}
@@ -146,20 +203,15 @@ const VolunterHome = () => {
         </div>
         <div className="flex items-start justify-between">
           <p className="m-0 mb-1 h-6 text-sm font-medium font-medium text-gray-900 text-slate-600 dark:text-gray-300">
-            Design the Home page for volunteers
+            Design an About page for your volunteers
           </p>
           {edit && (
             <div
-              className="flex cursor-pointer items-start gap-4"
+              className="flex cursor-pointer items-start gap-2"
               onClick={handlePreviewClick}
             >
-              <EyeIcon
-                style={{ color: "#0183A1" }}
-                className="h-6 w-6 text-gray-500"
-              />
-              <p style={{ color: "#0183A1" }} className="cursor-pointer">
-                Preview
-              </p>
+              <EyeIcon className="h-6 w-6 text-gray-500 text-primaryColor" />
+              <p className="cursor-pointer text-primaryColor">Preview</p>
             </div>
           )}
         </div>
