@@ -34,6 +34,7 @@ export const organizationInputClientValidator = z.object({
   hoursSilver: z.number().int().positive().optional(),
   hoursGold: z.number().int().positive().optional(),
   homePage: z.string(),
+  aboutPageToggle: z.boolean().optional(),
 });
 
 export const organizationInputServerValidator = z.object({
@@ -70,6 +71,7 @@ export const organizationInputServerValidator = z.object({
   hoursSilver: z.number().int().positive().optional(),
   hoursGold: z.number().int().positive().optional(),
   homePage: z.string(),
+  aboutPageToggle: z.boolean().optional(),
 });
 
 export const organizationInputCreationValidator = z.object({

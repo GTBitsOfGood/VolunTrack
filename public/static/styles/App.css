@@ -107,7 +107,14 @@ body,
 .ql-align[value="right"]:hover::after { 
   content: "Right Align"; 
 }
-
+.ql-image:hover::after {
+  content: "Add Image";
+  left: 0px;
+}
+.ql-video:hover::after {
+  content: "Add Video";
+  left: -20px;
+}
 
 /* Quill Styling - made alignment format recognizable when rendering custom homepage */
 .ql-align-center {
@@ -120,4 +127,25 @@ body,
 
 .ql-align-left {
   text-align: left;
+}
+
+
+.ql-video-tooltip {
+
+left: auto !important;
+
+right: 0;
+
+}
+
+.ql-tooltip[data-mode="video"] {
+  left: auto !important;
+  right: 0 !important;
+  transform: none !important;
+  top: 0px !important; /* Adjust based on your toolbar height */
+}
+
+.ql-formats {
+  min-width: 14px !important;
+  margin-right: 0 !important;
 }

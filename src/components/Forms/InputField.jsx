@@ -10,7 +10,7 @@ const InputField = (props) => (
         {props.tooltip && (
           <div className="flex flex-row">
             <Label
-              className="mb-1 flex h-6 items-center font-medium text-slate-600"
+              className="mb-1 flex h-6 items-center font-black text-slate-600"
               htmlFor={props.name}
             >
               {props.label}
@@ -25,10 +25,7 @@ const InputField = (props) => (
         )}
         {!props.tooltip && (
           <>
-            <Label
-              className="mb-1 h-6 font-medium text-slate-600"
-              htmlFor={props.name}
-            >
+            <Label className="mb-1 h-6 font-black" htmlFor={props.name}>
               {props.label}
             </Label>
             {props.isRequired && <p className="mb-0 text-red-600">*</p>}
@@ -39,7 +36,9 @@ const InputField = (props) => (
     <Field name={props.name}>
       {({ field }) => (
         <TextInput
-          class="border-1 mt-0 h-10 w-full rounded-md border-gray-300 bg-white disabled:border-gray-500 disabled:bg-gray-300"
+          class={`border-1 mt-0 h-10 w-full rounded-md bg-white disabled:border-gray-500 disabled:bg-gray-300 ${
+            props.isEmptyOrInvalid ? "border-red-800" : "border-gray-300"
+          }`}
           id={props.name}
           name={props.name}
           {...field}
@@ -72,6 +71,7 @@ InputField.propTypes = {
   maxLength: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
+  isEmptyOrInvalid: PropTypes.bool,
 };
 
 export default InputField;
