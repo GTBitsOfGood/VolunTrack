@@ -6,6 +6,7 @@ import Registration, {
   registrationInputServerValidator,
 } from "../../../../server/mongodb/models/Registration";
 import { sendRegistrationConfirmationEmail } from "../../../utils/mailersend-email.js";
+import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -41,6 +42,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "POST": {
+      const isownuser = await isOwnUser(req, res);
+      if (!isownuser) {
+        return res
+          .status(403)
+          .json({ error: "Users can only register themselves for an event" });
+      }
+
       const result = registrationInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
 
@@ -53,6 +61,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "DELETE": {
+      const isownuser = await isOwnUser(req, res);
+      if (!isownuser) {
+        return res
+          .status(403)
+          .json({ error: "Users can only unregister themselves for an event" });
+      }
+
       if (req.query.eventId && !isValidObjectId(req.query.eventId))
         return res.status(400).json({
           message: `Invalid event id: ${req.query.eventId as string}`,
@@ -80,6 +95,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "PATCH": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+          .status(403)
+          .json({ error: "Only Admins can edit registrations (approve/deny)" });
+      }
+
       try {
         type RegistrationUpdateData = Partial<RegistrationInputClient>;
         const {

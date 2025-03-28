@@ -12,6 +12,7 @@ import EventParent from "../../../../server/mongodb/models/EventParent";
 import { authOptions } from "../auth/[...nextauth]";
 
 import { RRule, Weekday } from "rrule";
+import { isAdmin } from "../../../utils/routeProtection";
 
 /* Recurring Events */
 
@@ -213,6 +214,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       });
     }
     case "POST": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res.status(403).json({ error: "Only admins can create events" });
+      }
       if (req.body?.eventParentId) {
         const result = eventInputServerValidator.safeParse(req.body);
         if (!result.success) return res.status(400).json(result);
