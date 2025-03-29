@@ -6,7 +6,6 @@ import { getEvents } from "../../queries/events";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
 import dynamic from "next/dynamic";
-import { error } from "console";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
