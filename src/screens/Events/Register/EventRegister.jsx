@@ -22,6 +22,8 @@ import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
 import EventTasksContainer from "./EventTasksContainer";
 
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
+
 const Styled = {
   Container: styled(Container)`
     overflow-y: scroll;
