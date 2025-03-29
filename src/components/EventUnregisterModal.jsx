@@ -4,7 +4,13 @@ import { unregisterForEvent } from "../queries/registrations";
 import { updateEvent } from "../screens/Events/eventHelpers";
 import BoGButton from "./BoGButton";
 
-const EventUnregisterModal = ({ open, toggle, eventData, userId, callback }) => {
+const EventUnregisterModal = ({
+  open,
+  toggle,
+  eventData,
+  userId,
+  callback,
+}) => {
   const handleSubmit = () => {
     unregisterForEvent(eventData._id, userId);
     toggle();
