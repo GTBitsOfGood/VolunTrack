@@ -53,6 +53,7 @@ const Styled = {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 2.5em;
     }
     .react-calendar__navigation__label {
       order: 2;
@@ -70,6 +71,11 @@ const Styled = {
     .react-calendar__navigation__prev-button,
     .react-calendar__navigation__next-button {
       font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding-bottom: 0.2em;
     }
     .react-calendar__month-view__weekdays__weekday {
       font-weight: normal;
