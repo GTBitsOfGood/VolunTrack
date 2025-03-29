@@ -55,30 +55,58 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
-        const eventParent = await EventParent.create(result.data.eventParent);
+        // console.log("recurring Event: ", req.body.recurringEvent);
+        // console.log("event.eventParent: ", eventParent);
+        // console.log("result.data.eventParent: ", result.data.eventParent);
+        // console.log(result.data); 
 
-        const eventParentId = event.eventParent;
+        const eventParentNew = await EventParent.create(result.data.eventParent);
 
-        const newDate = new Date(req.body.eventPopulatedInput.date as string);
+        const eventParentOldId = event.eventParent;
 
-        await Event.updateMany(
-          {
-            eventParent: event.eventParent,
-            date: { $gte: event.date },
-          },
-          [
+        // console.log("old id: ", eventParentOldId);
+
+        // const newDate = new Date(req.body.eventPopulatedInput.date as string);
+
+        if (req.body.recurringEvent) {
+          await Event.updateMany(
             {
-              $set: {
-                eventParent: eventParent._id,
-                date: newDate,
-              },
+              eventParent: event.eventParent,
+              date: { $gte: event.date },
             },
-          ]
-        );
-
-        if ((await Event.count({ eventParent: eventParentId })) === 0) {
-          await EventParent.findByIdAndDelete(eventParentId);
+            [
+              {
+                $set: {
+                  eventParent: eventParentNew._id,
+                },
+              },
+            ]
+          );
+        } else {
+          await Event.updateOne(
+            {
+              eventParent: event.eventParent,
+              date: event.date,
+            },
+            [
+              {
+                $set: {
+                  eventParent: eventParentNew._id,
+                },
+              },
+            ]
+          );
         }
+
+        if ((await Event.count({ eventParent: eventParentNew._id })) === 0) {
+          console.log("new event parent is deleted");
+          await EventParent.findByIdAndDelete(eventParentNew._id);
+        }
+        if ((await Event.count({ eventParent: eventParent._id })) === 0) {
+          console.log("old event parent is deleted");
+          await EventParent.findByIdAndDelete(eventParent._id);
+        }
+
       } else if ("eventPopulatedInput" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
