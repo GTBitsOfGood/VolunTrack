@@ -84,19 +84,22 @@ class VolunteerTable extends React.Component {
                 <Table.Cell>
                   {user.firstName} {user.lastName}
                 </Table.Cell>
-                <div className="flex items-center">
-                  {user.email}
-                  <Tooltip content="Copy" style="light">
-                    <button
-                      className="mx-1"
-                      onClick={() => {
-                        navigator.clipboard.writeText(user.email);
-                      }}
-                    >
-                      <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
-                    </button>
-                  </Tooltip>
-                </div>
+                <Table.Cell>
+                  <div className="flex items-center">
+                    {user.email}
+                    <Tooltip content="Copy" style="light">
+                      <button
+                        className="mx-1"
+                        onClick={() => {
+                          navigator.clipboard.writeText(user.email);
+                        }}
+                      >
+                        <DocumentDuplicateIcon className="ml-2 h-7 text-primaryColor" />
+                      </button>
+                    </Tooltip>
+                  </div>
+                </Table.Cell>
+                
                 <Table.Cell>
                   {user.phone
                     ? user.phone.substr(0, 3) +
