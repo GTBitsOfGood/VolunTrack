@@ -75,7 +75,7 @@ export const getAttendance = async (attendanceId: Types.ObjectId) => {
         error: error.response?.data?.error || error.message,
       };
     }
-    return { error: "Error checking in volunteer." };
+    return { error: "Error fetching attendance." };
   }
 };
 
@@ -108,7 +108,7 @@ export const getAttendances = async (
         error: error.response?.data?.error || error.message,
       };
     }
-    return { error: "Error checking in volunteer." };
+    return { error: "Error fetching attendances." };
   }
 };
 
@@ -147,7 +147,7 @@ export const updateAttendance = async (
         error: error.response?.data?.error || error.message,
       };
     }
-    return { error: "Error creating attendance." };
+    return { error: "Error updating attendance." };
   }
 };
 
@@ -163,7 +163,7 @@ export const deleteAttendance = async (attendanceId: Types.ObjectId) => {
         error: error.response?.data?.error || error.message,
       };
     }
-    return { error: "Error creating attendance." };
+    return { error: "Error deleting attendance." };
   }
 };
 
@@ -192,6 +192,6 @@ export const getAttendanceStatistics = async (
         error: error.response?.data?.error || error.message,
       };
     }
-    return { error: "Error creating attendance." };
+    return { error: "Error getting attendance statistics." };
   }
 };

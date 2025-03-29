@@ -7,112 +7,251 @@ import {
   OrganizationInputClient,
 } from "../../server/mongodb/models/Organization";
 
-export const getOrganization = (organizationId: Types.ObjectId) => {
-  return axios.get<{
-    organization?: OrganizationDocument;
-    error?: ZodError | string;
-  }>(`/api/organizations/${organizationId.toString()}`);
+export const getOrganization = async (organizationId: Types.ObjectId) => {
+  try {
+    const response = await axios.get<{
+      organization?: OrganizationDocument;
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting organization." };
+  }
 };
 
-export const getOrganizations = (
+export const getOrganizations = async (
   organizationInput?: Partial<OrganizationInputClient>
 ) => {
-  return axios.get<{
-    organizations?: OrganizationDocument[];
-    error?: ZodError | string;
-  }>("/api/organizations", {
-    params: organizationInput,
-  });
+  try {
+    const response = await axios.get<{
+      organizations?: OrganizationDocument[];
+      error?: ZodError | string;
+    }>("/api/organizations", {
+      params: organizationInput,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting organizations." };
+  }
 };
 
-export const createOrganization = (
+export const createOrganization = async (
   organizationInput: OrganizationInputClient
 ) => {
-  return axios.post<{
-    organization?: OrganizationDocument;
-    error?: ZodError | string;
-  }>("/api/organizations", organizationInput);
+  try {
+    const response = axios.post<{
+      organization?: OrganizationDocument;
+      error?: ZodError | string;
+    }>("/api/organizations", organizationInput);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error creating organization." };
+  }
 };
 
-export const updateOrganization = (
+export const updateOrganization = async (
   organizationId: Types.ObjectId,
   organizationInput: Partial<OrganizationInputClient>
 ) => {
-  return axios.put<{
-    organization?: OrganizationDocument;
-    error?: ZodError | string;
-  }>(`/api/organizations/${organizationId.toString()}`, organizationInput);
+  try {
+    const response = await axios.put<{
+      organization?: OrganizationDocument;
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}`, organizationInput);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error updating organization." };
+  }
 };
 
-export const toggleOrganizationActive = (organizationId: Types.ObjectId) => {
-  return axios.post<{
-    organization?: OrganizationDocument;
-    error?: ZodError | string;
-  }>(`/api/organizations/${organizationId.toString()}/toggleActive`);
+export const toggleOrganizationActive = async (
+  organizationId: Types.ObjectId
+) => {
+  try {
+    const response = await axios.post<{
+      organization?: OrganizationDocument;
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}/toggleActive`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error toggling organization active." };
+  }
 };
 
-export const getInvitedAdmins = (organizationId: Types.ObjectId) => {
-  return axios.get<{ invitedAdmins?: string[]; error?: ZodError | string }>(
-    `/api/organizations/${organizationId.toString()}/invitedAdmins`
-  );
+export const getInvitedAdmins = async (organizationId: Types.ObjectId) => {
+  try {
+    const response = await axios.get<{
+      invitedAdmins?: string[];
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}/invitedAdmins`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting invited admins." };
+  }
 };
 
-export const getOrgAdmin = (organizationId: Types.ObjectId) => {
-  return axios.get<{ originalAdminEmail?: string; error?: ZodError | string }>(
-    `/api/organizations/${organizationId.toString()}/originalAdminEmail`
-  );
+export const getOrgAdmin = async (organizationId: Types.ObjectId) => {
+  try {
+    const response = await axios.get<{
+      originalAdminEmail?: string;
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}/originalAdminEmail`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting organization admins." };
+  }
 };
 
-export const addInvitedAdmin = (
+export const addInvitedAdmin = async (
   organizationId: Types.ObjectId,
   email: string
 ) => {
-  return axios.post<{ invitedAdmins?: string[]; error?: ZodError | string }>(
-    `/api/organizations/${organizationId.toString()}/invitedAdmins`,
-    { data: email }
-  );
+  try {
+    const response = await axios.post<{
+      invitedAdmins?: string[];
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}/invitedAdmins`, {
+      data: email,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error adding invited admin." };
+  }
 };
 
-export const deleteInvitedAdmin = (
+export const deleteInvitedAdmin = async (
   organizationId: Types.ObjectId,
   email: string
 ) => {
-  return axios.delete<{ invitedAdmins?: string[]; error?: ZodError | string }>(
-    `/api/organizations/${organizationId.toString()}/invitedAdmins`,
-    { data: email }
-  );
+  try {
+    const response = await axios.delete<{
+      invitedAdmins?: string[];
+      error?: ZodError | string;
+    }>(`/api/organizations/${organizationId.toString()}/invitedAdmins`, {
+      data: email,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error deleting invited admin." };
+  }
 };
 
-export const loadPage = (organizationId: string) => {
-  return axios.get<{ homePage?: string; error?: string }>(
-    `/api/organizations/${organizationId}/customHomePage`
-  );
+export const loadPage = async (organizationId: string) => {
+  try {
+    const response = await axios.get<{ homePage?: string; error?: string }>(
+      `/api/organizations/${organizationId}/customHomePage`
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error loading organization page." };
+  }
 };
 
 export const submitPage = async (
   organizationId: string,
   pageContent: string
 ) => {
-  const sanitizedHomePage = DOMPurify.sanitize(pageContent);
+  try {
+    const sanitizedHomePage = DOMPurify.sanitize(pageContent);
 
-  return axios.post<{ message: string; error?: string }>(
-    `/api/organizations/${organizationId}/customHomePage`,
-    { organizationId, homePage: sanitizedHomePage }
-  );
+    const response = await axios.post<{ message: string; error?: string }>(
+      `/api/organizations/${organizationId}/customHomePage`,
+      { organizationId, homePage: sanitizedHomePage }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error submitting organization page." };
+  }
 };
 
-export const getAboutPageToggle = (organizationId: string) => {
-  return axios.get<{ aboutPageToggle?: boolean; error?: string }>(
-    `/api/organizations/${organizationId}/aboutPageToggle`
-  );
+export const getAboutPageToggle = async (organizationId: string) => {
+  try {
+    const response = await axios.get<{
+      aboutPageToggle?: boolean;
+      error?: string;
+    }>(`/api/organizations/${organizationId}/aboutPageToggle`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting about page toggle." };
+  }
 };
 
-export const setAboutPageToggle = (
+export const setAboutPageToggle = async (
   organizationId: string,
   aboutPageToggle: boolean
 ) => {
-  return axios.post<{ message: string; error?: string }>(
-    `/api/organizations/${organizationId}/aboutPageToggle`,
-    { aboutPageToggle }
-  );
+  try {
+    const response = await axios.post<{ message: string; error?: string }>(
+      `/api/organizations/${organizationId}/aboutPageToggle`,
+      { aboutPageToggle }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error setting about page toggle." };
+  }
 };
