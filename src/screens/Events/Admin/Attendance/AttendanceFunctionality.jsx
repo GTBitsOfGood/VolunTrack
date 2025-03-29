@@ -56,7 +56,7 @@ const AttendanceFunctionality = ({
         </Table.Body>
       </Table>
     )}
-    {waitingVolunteers?.length === 0 && (
+    {waitingVolunteers?.length === 0 && (checkedInVolunteers?.length !== 0 || checkedOutVolunteers?.length !== 0) && (
       <Text
         text="Congratulations! All volunteers were checked in!"
         className="flex justify-center text-primaryColor"
@@ -106,7 +106,7 @@ const AttendanceFunctionality = ({
       </Table>
     )}
     {checkedInVolunteers?.length === 0 &&
-      checkedOutVolunteers?.length === 0 && (
+      checkedOutVolunteers?.length === 0 && waitingVolunteers?.length !== 0 && (
         <Text
           text="No one has been checked out yet."
           className="flex justify-center text-primaryColor"
