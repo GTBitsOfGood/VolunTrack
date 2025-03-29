@@ -533,7 +533,7 @@ const EventManager = ({ isHomePage }) => {
               {loading === true ? (
                 <div className="mt-8">
                   <div className="mt-8 flex justify-center">
-                  <LoadingModal isOpen={loading} />
+                    <LoadingModal isOpen={loading} />
                   </div>
                 </div>
               ) : (
