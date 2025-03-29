@@ -4,10 +4,11 @@ import { unregisterForEvent } from "../queries/registrations";
 import { updateEvent } from "../screens/Events/eventHelpers";
 import BoGButton from "./BoGButton";
 
-const EventUnregisterModal = ({ open, toggle, eventData, userId }) => {
+const EventUnregisterModal = ({ open, toggle, eventData, userId, callback }) => {
   const handleSubmit = () => {
     unregisterForEvent(eventData._id, userId);
     toggle();
+    if (callback) callback();
   };
 
   const onUnregisterClicked = async (event) => {
@@ -38,5 +39,6 @@ EventUnregisterModal.propTypes = {
   toggle: PropTypes.func.isRequired,
   eventData: PropTypes.object.isRequired,
   userId: PropTypes.object.isRequired,
+  callback: PropTypes.func,
 };
 export default EventUnregisterModal;
