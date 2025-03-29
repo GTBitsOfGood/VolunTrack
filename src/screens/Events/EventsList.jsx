@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
 import Text from "../../components/Text";
-import { useState } from "react";
-import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { Alert, Toast } from "flowbite-react";
+import { useState, useEffect } from "react";
+import { Alert } from "flowbite-react";
+import LoadingModal from "./LoadingModal";
 
 const Styled = {
   Container: styled.div`
@@ -32,60 +32,84 @@ const EventsList = ({
 }) => {
   const [eventEditConfirmationMessage, setEventEditConfirmationMessage] =
     useState(null);
-  if (!user) {
-    const { data: session } = useSession();
-    user = session.user;
-  }
-  events.sort(function (a, b) {
-    const c = new Date(a.date);
-    const d = new Date(b.date);
-    return c - d;
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [registeredEventIds, setRegisteredEventIds] = useState(new Map());
+  const [todayEventsState, setTodayEventsState] = useState([]);
+  const [upcomingEventsState, setUpcomingEventsState] = useState([]);
+  const [registeredEventsState, setRegisteredEventsState] = useState([]);
 
-  const todayEvents = events.filter(function (event) {
-    let date = new Date(event.date);
-    date = new Date(
-      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-    );
-    let today = new Date();
+  useEffect(() => {
+    if (events) {
+      const idsMap = new Map(
+        registrations.map((registration) => [
+          registration.eventId,
+          registration.approved ?? "approved",
+        ])
+      );
+      setRegisteredEventIds(idsMap);
+
+      const sortedEvents = [...events].sort(function (a, b) {
+        const c = new Date(a.date);
+        const d = new Date(b.date);
+        return c - d;
+      });
+
+      const todayEvents = sortedEvents.filter(function (event) {
+        let date = new Date(event.date);
+        date = new Date(
+          date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+        );
+        let today = new Date();
+        return (
+          date.getFullYear() === today.getFullYear() &&
+          date.getMonth() === today.getMonth() &&
+          date.getDate() === today.getDate()
+        );
+      });
+
+      let upcomingEvents = sortedEvents.filter(function (event) {
+        let currentDate = new Date(Date.now());
+        let eventDate = new Date(event.date);
+        const [hours, minutes] = event.eventParent.endTime
+          .split(":")
+          .map(Number);
+        eventDate.setUTCHours(hours, minutes);
+        return eventDate >= currentDate;
+      });
+
+      let registeredEvents = upcomingEvents.filter((event) => {
+        return idsMap.has(event._id);
+      });
+
+      if (user.role === "volunteer")
+        upcomingEvents = upcomingEvents.filter(
+          (event) => !idsMap.has(event._id)
+        );
+
+      if (upcomingEvents.length > 5) {
+        upcomingEvents = upcomingEvents.slice(0, 5);
+      }
+
+      if (registeredEvents.length > 2) {
+        registeredEvents = registeredEvents.slice(0, 2);
+      }
+
+      setTodayEventsState(todayEvents);
+      setUpcomingEventsState(upcomingEvents);
+      setRegisteredEventsState(registeredEvents);
+
+      setIsLoading(false);
+    } else {
+      setIsLoading(false);
+    }
+  }, [events, registrations, user.role]);
+
+  if (isLoading) {
     return (
-      date.getFullYear() === today.getFullYear() &&
-      date.getMonth() === today.getMonth() &&
-      date.getDate() === today.getDate()
+      <div className="mt-8 flex justify-center">
+        <LoadingModal isOpen={true} />
+      </div>
     );
-  });
-
-  let upcomingEvents = events.filter(function (event) {
-    let currentDate = new Date(Date.now());
-    let eventDate = new Date(event.date);
-    const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
-    eventDate.setUTCHours(hours, minutes);
-
-    return eventDate >= currentDate;
-  });
-
-  const registeredEventIds = new Map(
-    registrations.map((registration) => [
-      registration.eventId,
-      registration.approved ?? "approved",
-    ])
-  );
-
-  let registeredEvents = upcomingEvents.filter((event) => {
-    return registeredEventIds.has(event._id);
-  });
-
-  if (user.role === "volunteer")
-    upcomingEvents = upcomingEvents.filter(
-      (event) => !registeredEventIds.has(event._id)
-    );
-
-  if (upcomingEvents.length > 5) {
-    upcomingEvents = upcomingEvents.slice(0, 5);
-  }
-
-  if (registeredEvents.length > 2) {
-    registeredEvents = registeredEvents.slice(0, 2);
   }
 
   if (!isHomePage) {
@@ -101,22 +125,28 @@ const EventsList = ({
             </Alert>
           </div>
         )}
-        {events.map((event) => (
-          <EventCard
-            key={event._id}
-            event={event}
-            user={user}
-            isRegistered={
-              registeredEventIds.has(event._id)
-                ? registeredEventIds.get(event._id)
-                : false
-            }
-            onEventDelete={onEventDelete}
-            onEventEdit={onEventEdit}
-            setEventEdit={setEventEditConfirmationMessage}
-          />
-        ))}
-        {/* <div className="h-12" /> */}
+        {events && events.length === 0 ? (
+          <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
+            No events scheduled for filter.
+          </p>
+        ) : (
+          events &&
+          events.map((event) => (
+            <EventCard
+              key={event._id}
+              event={event}
+              user={user}
+              isRegistered={
+                registeredEventIds.has(event._id)
+                  ? registeredEventIds.get(event._id)
+                  : false
+              }
+              onEventDelete={onEventDelete}
+              onEventEdit={onEventEdit}
+              setEventEdit={setEventEditConfirmationMessage}
+            />
+          ))
+        )}
       </Styled.Container>
     );
   } else {
@@ -125,9 +155,9 @@ const EventsList = ({
         <Styled.HomeContainer>
           <div className="column-flex">
             <p className="font-weight-bold pb-3 text-2xl">Registered Events</p>
-            {registeredEvents.length > 0 && (
+            {registeredEventsState.length > 0 && (
               <div>
-                {registeredEvents.map((event) => (
+                {registeredEventsState.map((event) => (
                   <EventCard
                     key={event._id}
                     event={event}
@@ -142,7 +172,7 @@ const EventsList = ({
                 ))}
               </div>
             )}
-            {registeredEvents.length === 0 && (
+            {registeredEventsState.length === 0 && (
               <p className="text-5 mb-4 flex items-center justify-center font-normal leading-[100%] tracking-[0%] text-primaryColor">
                 You haven&apos;t registered for an event yet!
               </p>
@@ -151,8 +181,8 @@ const EventsList = ({
           {showNewEvents && (
             <div className="column-flex">
               <p className="font-weight-bold pb-3 text-2xl">New Events</p>
-              {upcomingEvents.length > 0 &&
-                upcomingEvents.map((event) => (
+              {upcomingEventsState.length > 0 &&
+                upcomingEventsState.map((event) => (
                   <EventCard
                     key={event._id}
                     event={event}
@@ -165,7 +195,7 @@ const EventsList = ({
                     onEventEdit={onEventEdit}
                   />
                 ))}
-              {upcomingEvents.length === 0 && (
+              {upcomingEventsState.length === 0 && (
                 <p className="justify-content-center mb-4 flex text-lg font-bold text-primaryColor">
                   No new events!
                 </p>
@@ -191,8 +221,8 @@ const EventsList = ({
           )}
           <div className="pb-6">
             <p className="font-weight-bold pb-3 text-2xl">{"Today's Events"}</p>
-            {todayEvents.length > 0 &&
-              todayEvents.map((event) => (
+            {todayEventsState.length > 0 &&
+              todayEventsState.map((event) => (
                 <EventCard
                   key={event._id}
                   event={event}
@@ -202,7 +232,7 @@ const EventsList = ({
                   setEventEdit={setEventEditConfirmationMessage}
                 />
               ))}
-            {todayEvents.length === 0 && (
+            {todayEventsState.length === 0 && (
               <div className="justify-content-center flex pb-16">
                 <p className="font-weight-bold pb-3 text-lg text-primaryColor">
                   No events scheduled today
@@ -212,9 +242,9 @@ const EventsList = ({
           </div>
           <div>
             <p className="font-weight-bold pb-3 text-2xl">Upcoming Events</p>
-            {upcomingEvents.length > 0 && (
+            {upcomingEventsState.length > 0 && (
               <div>
-                {upcomingEvents.map((event) => (
+                {upcomingEventsState.map((event) => (
                   <EventCard
                     key={event._id}
                     event={event}
@@ -229,12 +259,13 @@ const EventsList = ({
                 <Text href={`/events`} text="View More" />
               </div>
             )}
-            {/* disabling for now, popup doesn't work */}
-            {/* <div className="justify-content-center flex">
-              {upcomingEvents.length === 0 && (
-                <BoGButton text="Create new event" onClick={onCreateClicked} />
-              )}
-            </div> */}
+            {upcomingEventsState.length === 0 && (
+              <div className="justify-content-center flex">
+                <p className="font-weight-bold pb-3 text-lg text-primaryColor">
+                  No upcoming events scheduled.
+                </p>
+              </div>
+            )}
             <div className="h-24" />
           </div>
         </div>
@@ -248,6 +279,7 @@ const EventsList = ({
     }
   }
 };
+
 EventsList.propTypes = {
   dateString: PropTypes.string,
   events: PropTypes.Array,

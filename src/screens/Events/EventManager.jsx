@@ -19,6 +19,7 @@ import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
+import LoadingModal from "./LoadingModal";
 
 const Styled = {
   Container: styled.div`
@@ -531,7 +532,9 @@ const EventManager = ({ isHomePage }) => {
               </div>
               {loading === true ? (
                 <div className="mt-8">
-                  <Text text={"Loading..."} type="subheader" />
+                  <div className="mt-8 flex justify-center">
+                  <LoadingModal isOpen={loading} />
+                  </div>
                 </div>
               ) : (
                 <div className="mt-8" />
