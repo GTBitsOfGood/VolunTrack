@@ -4,7 +4,7 @@ import InputField from "../../components/Forms/InputField";
 import { Dropdown } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
@@ -19,6 +19,7 @@ import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
+import PaginationComp from "./EventPagination";
 
 const Styled = {
   Container: styled.div`
@@ -180,6 +181,9 @@ const EventManager = ({ isHomePage }) => {
   const [isEmptyDates, setIsEmptyDates] = useState(false);
   const [isInvalidRange, setIsInvalidRange] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(0); // Current page for pagination
+  const pageSize = 3; // Number of events per page
+
   const onRefresh = () => {
     setLoading(true);
     getEvents(user.organizationId).then((result) => {
@@ -233,6 +237,7 @@ const EventManager = ({ isHomePage }) => {
       .finally(() => {
         setLoading(false);
       });
+    setCurrentPage(0); // Reset to the first page when events are fetched
   };
 
   const onCreateClicked = () => {
@@ -287,6 +292,12 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   }, []);
 
+  const paginatedEvents = useMemo(() => {
+    const startIndex = currentPage * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredEvents.slice(startIndex, endIndex);
+  }, [filteredEvents, currentPage, pageSize]);
+
   let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
@@ -313,6 +324,7 @@ const EventManager = ({ isHomePage }) => {
       .finally(() => {
         setLoading(false);
       });
+    setCurrentPage(0); // Reset to the first page when date changes
   };
 
   const formatJsDate = (jsDate, separator = "/") => {
@@ -414,6 +426,7 @@ const EventManager = ({ isHomePage }) => {
         })
       );
     }
+    setCurrentPage(0); // Reset to the first page when filter changes
   };
 
   const onEventDelete = (id, recurringEvent) => {
@@ -536,7 +549,7 @@ const EventManager = ({ isHomePage }) => {
               ) : (
                 <div className="mt-8" />
               )}
-              {filteredEvents.length === 0 && loading === false ? (
+              {paginatedEvents.length === 0 && loading === false ? (
                 <div className="mt-8">
                   <Text
                     text={"No Events Scheduled for Filter"}
@@ -556,8 +569,8 @@ const EventManager = ({ isHomePage }) => {
                   dateString={dateString}
                   events={
                     user.role === "admin"
-                      ? filteredEvents
-                      : filterEventsForVolunteers(filteredEvents, user)
+                      ? paginatedEvents
+                      : filterEventsForVolunteers(paginatedEvents, user)
                   }
                   registrations={registrations}
                   user={user}
@@ -566,6 +579,12 @@ const EventManager = ({ isHomePage }) => {
                   onEventEdit={onEventEdit}
                 />
               )}
+              <PaginationComp
+                items={filteredEvents}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                updatePageCallback={setCurrentPage}
+              />
               {showCreateModal && (
                 <EventCreateModal
                   open={showCreateModal}

@@ -1,10 +1,11 @@
 import { Spinner } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getRegistrations } from "../../queries/registrations";
 import { getEvent } from "../../queries/events";
 import RegistrationCard from "./RegistrationCard";
+import EventPagination from "../Events/EventPagination"; // Import the pagination component
 
 const AdminApproval = ({ user }) => {
   const [loading, setLoading] = useState(true);
@@ -12,6 +13,28 @@ const AdminApproval = ({ user }) => {
   const [historyRegistrations, setHistoryRegistrations] = useState([]);
   const [events, setEvents] = useState({});
   const [regCounts, setRegCounts] = useState({});
+  const [isShowAllRequests, setIsShowAllRequests] = useState(false);
+  const [historyCurrentPage, setHistoryCurrentPage] = useState(0);
+  const pageSize = 3; // Number of items per page
+
+  // Filter historyRegistrations when events are updated
+  useEffect(() => {
+    setPendingRegistrations((curr) =>
+      curr.filter((registration) => events[registration.eventId])
+    );
+    setHistoryRegistrations((prevHistory) =>
+      prevHistory.filter((registration) => events[registration.eventId])
+    );
+  }, [events]);
+
+  const currentHistoryItems = useMemo(() => {
+    const startIndex = historyCurrentPage * pageSize;
+    const endIndex = Math.min(
+      startIndex + pageSize,
+      historyRegistrations.length
+    );
+    return historyRegistrations.slice(startIndex, endIndex);
+  }, [historyRegistrations, historyCurrentPage, pageSize]);
 
   useEffect(() => {
     const fetchRegistrations = async () => {
@@ -118,47 +141,89 @@ const AdminApproval = ({ user }) => {
         <div className="flex flex-col gap-10">
           <div className="font-inter text-2xl">New Requests</div>
           {pendingRegistrations?.length > 0 ? (
-            pendingRegistrations.map((registration, index) => {
-              if (!events[registration.eventId]) {
-                return null;
-              }
+            pendingRegistrations
+              .slice(0, isShowAllRequests ? pendingRegistrations.length : 3)
+              .map((registration, index) => {
+                if (!events[registration.eventId]) {
+                  return null;
+                }
 
-              return (
-                <RegistrationCard
-                  key={index}
-                  registration={registration}
-                  event={events[registration.eventId]}
-                  regCount={regCounts[registration.eventId] || 0}
-                  onApprove={() => moveToHistory(registration._id, "approved")}
-                  onDeny={() => moveToHistory(registration._id, "denied")}
-                />
-              );
-            })
+                return (
+                  <RegistrationCard
+                    key={index}
+                    registration={registration}
+                    event={events[registration.eventId]}
+                    regCount={regCounts[registration.eventId] || 0}
+                    onApprove={() =>
+                      moveToHistory(registration._id, "approved")
+                    }
+                    onDeny={() => moveToHistory(registration._id, "denied")}
+                  />
+                );
+              })
           ) : (
             <div className="font-inter text-left text-[#0183A1]">
               No new event approval requests!
             </div>
           )}
         </div>
+        <div className="flex flex-row items-center justify-center">
+          {isShowAllRequests ? (
+            <u
+              onClick={() => setIsShowAllRequests(false)}
+              style={{
+                fontFamily: "Unter",
+                fontStyle: "normal",
+                fontSize: "20px",
+                fontWeight: "500",
+                cursor: "pointer",
+              }}
+            >
+              View Less Requests
+            </u>
+          ) : (
+            <u
+              onClick={() => setIsShowAllRequests(true)}
+              style={{
+                fontFamily: "Unter",
+                fontStyle: "normal",
+                fontSize: "20px",
+                fontWeight: "500",
+                cursor: "pointer",
+              }}
+            >
+              View All Requests
+            </u>
+          )}
+        </div>
+
         <div className="flex flex-col gap-10">
           <div className="font-inter text-2xl">Registration History</div>
           {historyRegistrations.length > 0 ? (
-            historyRegistrations.map((registration, index) => {
-              if (!events[registration.eventId]) {
-                return null;
-              }
+            <>
+              {currentHistoryItems.map((registration) => {
+                return (
+                  <RegistrationCard
+                    key={registration._id}
+                    registration={registration}
+                    event={events[registration.eventId]}
+                    regCount={regCounts[registration.eventId] || 0}
+                  />
+                );
+              })}
 
-              return (
-                <RegistrationCard
-                  key={index}
-                  registration={registration}
-                  event={events[registration.eventId]}
-                  regCount={regCounts[registration.eventId] || 0}
+              {/* Pagination Controls */}
+              {historyRegistrations.length > pageSize && (
+                <EventPagination
+                  items={historyRegistrations}
+                  pageSize={pageSize}
+                  currentPage={historyCurrentPage}
+                  updatePageCallback={setHistoryCurrentPage}
                 />
-              );
-            })
+              )}
+            </>
           ) : (
-            <div className="font-iter text-left">No registration history</div>
+            <div className="font-inter text-left">No registration history</div>
           )}
         </div>
       </div>
