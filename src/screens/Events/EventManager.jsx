@@ -449,6 +449,13 @@ const EventManager = ({ isHomePage }) => {
           return event;
         })
       );
+
+      // Update recurring event counts
+      let parentIdFilteredEvents = events.filter((event) => event.eventParent._id === eventParentId);
+      let recurringEventCount = 0;
+      // This works without updating the original events because the obejcts are passed by reference... :)
+      for (let i = parentIdFilteredEvents.length - 1; i >= 0; --i)
+        parentIdFilteredEvents[i].recurringEvents = recurringEventCount++;
     }
   };
 

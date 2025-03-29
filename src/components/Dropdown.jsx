@@ -32,21 +32,21 @@ const DropdownMenu = (props) => {
       <div
         className={
           !props.className
-            ? "flex h-[40px] w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-black hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 " +
-              (isOpen ? "" : "rounded-b-md")
+            ? "flex h-[40px] w-full items-center justify-between rounded-lg border-[1px] px-4 py-2 text-sm text-black focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 " +
+              (isOpen ? " " : "rounded-b-md ") +
+              (props.disabled ? "border-gray-500 bg-gray-300 " : "bg-white border-gray-300 hover:bg-gray-50 ")
             : props.className
         }
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          if (props.disabled) return;
+          setIsOpen(!isOpen)
+        }}
       >
         <span>{props.value ? props.value : choice}</span>
         {
-          props.arrow && (
-            // (isOpen ? (
+          props.arrow && !props.disabled && (
             <ChevronDownIcon className="ml-2 h-5 w-5" />
           )
-          // ) : (
-          //   <ChevronUpIcon className="ml-2 h-5 w-5" />
-          // ))
         }
       </div>
       {isOpen && (
@@ -76,6 +76,7 @@ DropdownMenu.propTypes = {
   arrow: PropTypes.bool,
   value: PropTypes.string,
   className: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default DropdownMenu;

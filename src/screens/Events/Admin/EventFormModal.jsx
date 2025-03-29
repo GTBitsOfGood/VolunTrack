@@ -418,10 +418,6 @@ const EventFormModal = ({
 
   const [invalidTime, setInvalidTime] = useState(false);
 
-  useEffect(() => {
-    console.log(editRecurringEvent);
-  }, []);
-
   return (
     <Formik
       enableReinitialize={true}
@@ -571,6 +567,7 @@ const EventFormModal = ({
                                   onChangeCapture={(e) =>
                                     updateRecurringEvents(e)
                                   }
+                                  disabled={editRecurringEvent}
                                 />
                               </div>
                               <div className="w-full max-w-[33%]">
@@ -598,13 +595,14 @@ const EventFormModal = ({
                                   Recurring Event
                                   <span className="text-red-600">*</span>
                                 </Label>
-                                <DropdownMenu //asdasdasd
+                                <DropdownMenu
                                   value={recurringEvents[recurringEventIndex]}
                                   options={recurringEvents}
                                   callback={(choice) => {
                                     handleRecurringEvent(choice, setFieldValue);
                                   }}
                                   arrow
+                                  disabled={editRecurringEvent}
                                 />
                                 <CustomRecurringModal
                                   open={showCustomModal}
