@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../../server/mongodb";
 import { updateUserOrganizationId } from "../../../../../server/actions/users_new";
+import { isAdmin } from "../../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -15,6 +16,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "PUT": {
+      const isadmin = await isAdmin(req, res);
+      // this is only used when creating a new organization in Voluntrack
+      if (!isadmin) {
+        return res
+          .status(403)
+          .json({ error: "Only Admins can modify organization code" });
+      }
+
       const result = await updateUserOrganizationId(id, orgCode);
 
       return res.status(result.status).json({

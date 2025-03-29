@@ -35,20 +35,18 @@ const EventCard = (props) => {
 
   useEffect(() => {
     getRegistrations({ eventId: event._id }).then((res) => {
-      console.log(res);
       let count = 0;
       res.data.registrations.map((reg) => {
         if (reg.approved == "approved") {
           count += 1 + reg.minors.length;
         }
       });
-      console.log(count);
       setRegCount(count);
     });
   }, []);
 
   const open = () => {
-    router.push(`/events/${event._id}`);
+    router.push(`/events/${event._id}/register`);
   };
 
   const registerOnClick = (e) => {
@@ -104,8 +102,8 @@ const EventCard = (props) => {
       className={`mx-18 mb-2 mr-2 flex cursor-pointer flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
-      <div className="flex w-full items-center justify-between">
-        <div className="flex items-center justify-start">
+      <div className="flex w-full items-end justify-between">
+        <div className="flex items-end items-end justify-start">
           <DateDisplayComponent
             key={event.date}
             date={event.date}

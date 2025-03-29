@@ -4,12 +4,19 @@ import dbConnect from "../../../../server/mongodb";
 import Attendance, {
   AttendanceInputClient,
 } from "../../../../server/mongodb/models/Attendance";
+import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
   switch (req.method) {
     case "GET": {
+      const isadmin = await isAdmin(req, res);
+      if (!isadmin) {
+        return res
+          .status(403)
+          .json({ error: "Only Admins can view attendance statistics" });
+      }
       const organizationId = req.query.organizationId
         ? new Types.ObjectId(req.query.organizationId as string)
         : undefined;

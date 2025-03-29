@@ -10,7 +10,7 @@ const InputField = (props) => (
         {props.tooltip && (
           <div className="flex flex-row">
             <Label
-              className="mb-1 flex h-6 items-center font-medium text-slate-600"
+              className="mb-1 flex h-6 items-center font-black text-slate-600"
               htmlFor={props.name}
             >
               {props.label}
@@ -25,10 +25,7 @@ const InputField = (props) => (
         )}
         {!props.tooltip && (
           <>
-            <Label
-              className="mb-1 h-6 font-medium text-slate-600"
-              htmlFor={props.name}
-            >
+            <Label className="mb-1 h-6 font-black" htmlFor={props.name}>
               {props.label}
             </Label>
             {props.isRequired && <p className="mb-0 text-red-600">*</p>}

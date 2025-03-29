@@ -28,23 +28,26 @@ const DropdownMenu = (props) => {
   }, []);
 
   return (
-    <div className={"relative w-full max-w-[300px]"} ref={dropdownRef}>
+    <div className={"relative w-full"} ref={dropdownRef}>
       <div
         className={
           !props.className
-            ? "flex h-[40px] cursor-pointer flex-row items-center justify-between rounded-t-md border-[1px] border-gray-300 bg-white p-2 " +
+            ? "flex h-[40px] w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm text-black hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 " +
               (isOpen ? "" : "rounded-b-md")
             : props.className
         }
         onClick={() => setIsOpen(!isOpen)}
       >
         <span>{props.value ? props.value : choice}</span>
-        {props.arrow &&
-          (isOpen ? (
+        {
+          props.arrow && (
+            // (isOpen ? (
             <ChevronDownIcon className="ml-2 h-5 w-5" />
-          ) : (
-            <ChevronUpIcon className="ml-2 h-5 w-5" />
-          ))}
+          )
+          // ) : (
+          //   <ChevronUpIcon className="ml-2 h-5 w-5" />
+          // ))
+        }
       </div>
       {isOpen && (
         <div className="absolute z-10 w-full rounded-b-md border-[1px] border-gray-300 bg-white pb-2 pt-2">

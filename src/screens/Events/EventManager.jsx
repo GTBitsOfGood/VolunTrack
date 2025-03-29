@@ -32,7 +32,6 @@ const Styled = {
   `,
   HomePage: styled.div`
     height: 100%;
-
     padding-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -44,6 +43,116 @@ const Styled = {
       width: 100%;
       margin-left: 1rem;
       margin-right: 1rem;
+    }
+  `,
+  Calendar: styled(Calendar)`
+    max-width: 22vw;
+    border: none;
+    .react-calendar__navigation {
+      border-bottom: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .react-calendar__navigation__label {
+      order: 2;
+    }
+    .react-calendar__navigation__prev-button {
+      order: 1;
+    }
+    .react-calendar__navigation__next-button {
+      order: 3;
+    }
+    .react-calendar__navigation__prev2-button,
+    .react-calendar__navigation__next2-button {
+      display: none;
+    }
+    .react-calendar__navigation__prev-button,
+    .react-calendar__navigation__next-button {
+      font-size: 2em;
+    }
+    .react-calendar__month-view__weekdays__weekday {
+      font-weight: normal;
+      text-decoration: none;
+      color: darkgrey;
+    }
+    .react-calendar__month-view__weekdays__weekday abbr {
+      text-decoration: none;
+    }
+    &.bg-white {
+      border: none;
+      .react-calendar__month-view__days__day--neighboringMonth {
+        color: #757575 !important;
+      }
+      .react-calendar__month-view__days__day--weekend:not(
+          .react-calendar__month-view__days__day--neighboringMonth
+        ) {
+        color: black !important;
+      }
+      .react-calendar__tile {
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        font-size: 1em;
+      }
+      .react-calendar__tile--now,
+      .react-calendar__tile--active,
+      .react-calendar__tile:hover {
+        background: var(--primary-color) !important;
+        color: white !important;
+        border-radius: 50%;
+        padding: 5% !important;
+        box-sizing: border-box;
+        &.marked::after {
+          background: white;
+        }
+      }
+      .react-calendar__tile--now {
+        background: var(--primary-color) !important;
+      }
+      .react-calendar__tile--active {
+        background: var(--secondary-color) !important;
+      }
+      .react-calendar__tile:hover {
+        background: var(--hover-color) !important;
+      }
+      .marked {
+        position: relative;
+      }
+      .marked::after {
+        content: "";
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 5px;
+        height: 5px;
+        background: var(--primary-color);
+        border-radius: 50%;
+      }
+    }
+    .react-calendar__year-view__months__month.react-calendar__tile--hasActive {
+      background: var(--secondary-color) !important;
+      color: white !important;
+      border-radius: 50%;
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5% !important;
+      box-sizing: border-box;
+    }
+    @media (max-width: 768px) {
+      &.bg-white .react-calendar__tile {
+        font-size: 0.9em;
+      }
+    }
+    @media (max-width: 480px) {
+      &.bg-white .react-calendar__tile {
+        font-size: 0.8em;
+      }
     }
   `,
 };
@@ -229,6 +338,13 @@ const EventManager = ({ isHomePage }) => {
     if (dates.includes(fDate)) {
       tileClassName = "marked";
     }
+    // Check if the date is a weekend (Saturday = 6, Sunday = 0)
+    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+    if (isWeekend) {
+      tileClassName = tileClassName
+        ? `${tileClassName} weekend-no-red`
+        : "weekend-no-red";
+    }
     return tileClassName !== "" ? tileClassName : null;
   };
 
@@ -339,123 +455,124 @@ const EventManager = ({ isHomePage }) => {
   return (
     <Styled.Container>
       {!isHomePage && (
-        <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
-          <div className="my-1 ml-2 flex flex-col items-start">
-            <Text text="Events" type="header" />
+        <div className="flex w-full max-md:flex-wrap">
+          <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
+            <div className="my-1 ml-2 flex flex-col items-start">
+              <Text text="Events" type="header" />
+            </div>
+            <div className="flex justify-center rounded-md p-2 max-md:w-[85vw] md:w-fit">
+              <Styled.Calendar
+                className="bg-white"
+                onChange={onChange}
+                value={selectedDate}
+                tileClassName={({ date, view }) =>
+                  setMarkDates({ date, view }, markDates)
+                }
+                navigationLabel={({ date }) => {
+                  return new Intl.DateTimeFormat("en-US", {
+                    month: "long",
+                  }).format(date);
+                }}
+                locale="en-US"
+              />
+            </div>
           </div>
-          <div className="m-2 w-fit rounded-md bg-gray-50 p-2">
-            <Calendar
-              className="bg-white"
-              onChange={onChange}
-              value={selectedDate}
-              tileClassName={({ date, view }) =>
-                setMarkDates({ date, view }, markDates)
-              }
-            />
-          </div>
-          <img
-            className="h-48"
-            src="/images/Calendar Legend.svg"
-            alt="legend"
-          />
-        </div>
-      )}
-      {!isHomePage && (
-        <div className="m-4 flex w-full flex-col overflow-hidden md:w-4/6 md:px-16">
-          <div className="flex flex-col lg:w-5/6">
-            <div className="flex w-full items-center justify-between ">
-              <Dropdown
-                inline={true}
-                arrowIcon={false}
-                label={<BoGButton text={dropdownVal} dropdown={true} />}
-              >
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("This Month");
-                  }}
+          <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
+            <div className="flex flex-col lg:w-5/6">
+              <div className="flex w-full items-center justify-between ">
+                <Dropdown
+                  inline={true}
+                  arrowIcon={false}
+                  label={<BoGButton text={dropdownVal} dropdown={true} />}
                 >
-                  This Month
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("Upcoming Events");
-                  }}
-                >
-                  Upcoming Events
-                </Dropdown.Item>
-                <Dropdown.Item
-                  onClick={() => {
-                    changeValue("All Events");
-                  }}
-                >
-                  All Events
-                </Dropdown.Item>
-                {user.role === "admin" && (
                   <Dropdown.Item
                     onClick={() => {
-                      changeValue("Public Events");
+                      changeValue("This Month");
                     }}
                   >
-                    Public Events
+                    This Month
                   </Dropdown.Item>
-                )}
-                {user.role === "admin" && (
                   <Dropdown.Item
                     onClick={() => {
-                      changeValue("Private Group Events");
+                      changeValue("Upcoming Events");
                     }}
                   >
-                    Private Group Events
+                    Upcoming Events
                   </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => {
+                      changeValue("All Events");
+                    }}
+                  >
+                    All Events
+                  </Dropdown.Item>
+                  {user.role === "admin" && (
+                    <Dropdown.Item
+                      onClick={() => {
+                        changeValue("Public Events");
+                      }}
+                    >
+                      Public Events
+                    </Dropdown.Item>
+                  )}
+                  {user.role === "admin" && (
+                    <Dropdown.Item
+                      onClick={() => {
+                        changeValue("Private Group Events");
+                      }}
+                    >
+                      Private Group Events
+                    </Dropdown.Item>
+                  )}
+                </Dropdown>
+                {user.role === "admin" && (
+                  <BoGButton text="Create event" onClick={onCreateClicked} />
                 )}
-              </Dropdown>
-              {user.role === "admin" && (
-                <BoGButton text="Create event" onClick={onCreateClicked} />
+              </div>
+              {loading === true ? (
+                <div className="mt-8">
+                  <Text text={"Loading..."} type="subheader" />
+                </div>
+              ) : (
+                <div className="mt-8" />
+              )}
+              {filteredEvents.length === 0 && loading === false ? (
+                <div className="mt-8">
+                  <Text
+                    text={"No Events Scheduled for Filter"}
+                    type="subheader"
+                  />
+                  {showBack && (
+                    <button
+                      className="text-primaryColor hover:underline"
+                      onClick={setDateBack}
+                    >
+                      Show Events for all Dates
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <EventsList
+                  dateString={dateString}
+                  events={
+                    user.role === "admin"
+                      ? filteredEvents
+                      : filterEventsForVolunteers(filteredEvents, user)
+                  }
+                  registrations={registrations}
+                  user={user}
+                  isHomePage={isHomePage}
+                  onEventDelete={onEventDelete}
+                  onEventEdit={onEventEdit}
+                />
+              )}
+              {showCreateModal && (
+                <EventCreateModal
+                  open={showCreateModal}
+                  toggle={toggleCreateModal}
+                />
               )}
             </div>
-            {loading === true ? (
-              <div className="mt-8">
-                <Text text={"Loading..."} type="subheader" />
-              </div>
-            ) : (
-              <div className="mt-8" />
-            )}
-            {filteredEvents.length === 0 && loading === false ? (
-              <div className="mt-8">
-                <Text
-                  text={"No Events Scheduled for Filter"}
-                  type="subheader"
-                />
-                {showBack && (
-                  <button
-                    className="text-primaryColor hover:underline"
-                    onClick={setDateBack}
-                  >
-                    Show Events for all Dates
-                  </button>
-                )}
-              </div>
-            ) : (
-              <EventsList
-                dateString={dateString}
-                events={
-                  user.role === "admin"
-                    ? filteredEvents
-                    : filterEventsForVolunteers(filteredEvents, user)
-                }
-                registrations={registrations}
-                user={user}
-                isHomePage={isHomePage}
-                onEventDelete={onEventDelete}
-                onEventEdit={onEventEdit}
-              />
-            )}
-            {showCreateModal && (
-              <EventCreateModal
-                open={showCreateModal}
-                toggle={toggleCreateModal}
-              />
-            )}
           </div>
         </div>
       )}
