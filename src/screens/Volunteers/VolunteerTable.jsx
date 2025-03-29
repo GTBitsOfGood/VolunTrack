@@ -99,7 +99,7 @@ class VolunteerTable extends React.Component {
                     </Tooltip>
                   </div>
                 </Table.Cell>
-                
+
                 <Table.Cell>
                   {user.phone
                     ? user.phone.substr(0, 3) +

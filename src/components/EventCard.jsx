@@ -134,7 +134,7 @@ const EventCard = (props) => {
             )}
           </div>
         </div>
-        <div className="flex flex-col items-end justify-center h-full">
+        <div className="flex h-full flex-col items-end justify-center">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
@@ -204,18 +204,18 @@ const EventCard = (props) => {
             </button>
           )} */}
           {props.user.role === "volunteer" ? (
-            <div className="flex h-16 flex-col flex-grow justify-around">
+            <div className="flex h-16 flex-grow flex-col justify-around">
               <div className="flex w-full justify-end">
                 <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor" />
               </div>
-              <Label className="text-end mb-0">
+              <Label className="mb-0 text-end">
                 {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
                 {event.eventParent.maxVolunteers} slots available
               </Label>
             </div>
           ) : (
             <div className="flex h-full flex-col justify-center">
-              <Label className="text-end text-darkGrey mb-0">
+              <Label className="mb-0 text-end text-darkGrey">
                 {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
                 {event.eventParent.maxVolunteers} slots available
               </Label>
