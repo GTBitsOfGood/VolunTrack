@@ -12,88 +12,184 @@ import {
   UserInputClient,
 } from "../../server/mongodb/models/User";
 
-export const getEvent = (eventId: Types.ObjectId) =>
-  axios.get<{ event?: EventPopulatedDocument; error?: ZodError | string }>(
-    `/api/events/${eventId.toString()}`
-  );
+export const getEvent = async (eventId: Types.ObjectId) => {
+  try {
+    const response = await axios.get<{
+      event?: EventPopulatedDocument;
+      error?: ZodError | string;
+    }>(`/api/events/${eventId.toString()}`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error fetching event." };
+  }
+};
 
-export const getEvents = (
+export const getEvents = async (
   organizationId: Types.ObjectId,
   startDateString?: string,
   endDateString?: string
 ) => {
-  return axios.get<{
-    events?: EventPopulatedDocument[];
-    error?: ZodError | string;
-  }>("/api/events", {
-    params: {
-      organizationId,
-      startDateString,
-      endDateString,
-    },
-  });
+  try {
+    const response = await axios.get<{
+      events?: EventPopulatedDocument[];
+      error?: ZodError | string;
+    }>("/api/events", {
+      params: {
+        organizationId,
+        startDateString,
+        endDateString,
+      },
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error fetching events." };
+  }
 };
 
 /** Creates a new event with it's own event parent */
-export const createEvent = (eventPopulatedInput: EventPopulatedInputClient) =>
-  axios.post<{
-    event?: EventPopulatedDocument;
-    error?: ZodError | string;
-  }>("/api/events", eventPopulatedInput);
+export const createEvent = async (
+  eventPopulatedInput: EventPopulatedInputClient
+) => {
+  try {
+    const response = await axios.post<{
+      event?: EventPopulatedDocument;
+      error?: ZodError | string;
+    }>("/api/events", eventPopulatedInput);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error creating event." };
+  }
+};
 
 /** Creates a new event under an existing event parent */
-export const createChildEvent = (eventInput: EventInputClient) =>
-  axios.post<{
-    event?: EventDocument;
-    error?: ZodError | string;
-  }>("/api/events", eventInput);
+export const createChildEvent = async (eventInput: EventInputClient) => {
+  try {
+    const response = await axios.post<{
+      event?: EventDocument;
+      error?: ZodError | string;
+    }>("/api/events", eventInput);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error creating child event." };
+  }
+};
 
 /** Updates an event and event parent */
-export const updateEvent = (
+export const updateEvent = async (
   eventId: Types.ObjectId,
   eventPopulatedInput: Partial<EventPopulatedInputClient>,
   sendConfirmationEmail = true,
   recurringEvent = false
-) =>
-  axios.put<{
-    event?: EventPopulatedDocument;
-    error?: ZodError | string;
-  }>(`/api/events/${eventId.toString()}`, {
-    eventPopulatedInput,
-    sendConfirmationEmail,
-    recurringEvent,
-  });
+) => {
+  try {
+    const response = await axios.put<{
+      event?: EventPopulatedDocument;
+      error?: ZodError | string;
+    }>(`/api/events/${eventId.toString()}`, {
+      eventPopulatedInput,
+      sendConfirmationEmail,
+      recurringEvent,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error updating event." };
+  }
+};
 
 /** Updates a single event, no event parent */
-export const updateChildEvent = (
+export const updateChildEvent = async (
   eventId: Types.ObjectId,
   eventInput: Partial<EventInputClient>,
   sendConfirmationEmail = true
-) =>
-  axios.put<{ event?: EventDocument; error?: ZodError | string }>(
-    `/api/events/${eventId.toString()}`,
-    {
+) => {
+  try {
+    const response = await axios.put<{
+      event?: EventDocument;
+      error?: ZodError | string;
+    }>(`/api/events/${eventId.toString()}`, {
       eventInput,
       sendConfirmationEmail,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
     }
-  );
+    return { error: "Error updating child event." };
+  }
+};
 
-export const createUserFromCheckIn = (
+export const createUserFromCheckIn = async (
   eventId: Types.ObjectId,
   userInput: UserInputClient,
   eventName: string
-) =>
-  axios.post<{ user?: UserDocument; error?: ZodError | string }>(
-    `/api/events/${eventId.toString()}/dayOfCheckIn`,
-    { userInput, eventName }
-  );
-
-export const deleteEvent = (eventId: Types.ObjectId, recurringEvent: boolean) =>
-  axios.delete<{ error?: ZodError | string }>(
-    `/api/events/${eventId.toString()}`,
-    {
-      data: {
-        recurringEvent: recurringEvent,
-      },
+) => {
+  try {
+    const response = await axios.post<{
+      user?: UserDocument;
+      error?: ZodError | string;
+    }>(`/api/events/${eventId.toString()}/dayOfCheckIn`, {
+      userInput,
+      eventName,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
     }
-  );
+    return { error: "Error creating user from check in." };
+  }
+};
+
+export const deleteEvent = async (
+  eventId: Types.ObjectId,
+  recurringEvent: boolean
+) => {
+  try {
+    const response = await axios.delete<{ error?: ZodError | string }>(
+      `/api/events/${eventId.toString()}`,
+      {
+        data: {
+          recurringEvent: recurringEvent,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error deleting event." };
+  }
+};
