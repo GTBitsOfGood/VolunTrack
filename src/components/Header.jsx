@@ -102,14 +102,15 @@ const Header = () => {
 
   return (
     <Navbar
-      fluid={false}
+      fluid={true}
       rounded={true}
-      className="my-custom-navbar items-center justify-between py-0 md:mx-auto md:w-5/6 md:border-b"
+      className="my-custom-navbar items-center justify-between py-0 mx-16"
     >
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
+      <div>
       <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
         {user.role === "admin" ? (
           <Navbar.Link
@@ -255,6 +256,8 @@ const Header = () => {
           </Dropdown>
         </Navbar.Link>
       </Navbar.Collapse>
+      </div>
+      
     </Navbar>
   );
 };
