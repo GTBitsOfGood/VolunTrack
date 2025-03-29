@@ -155,6 +155,7 @@ const EventFormModal = ({
       .finally(() => setSubmitting(false));
 
     if (setEvent) {
+      console.log("Setting event");
       const eventParentId = event.eventParent._id;
       event.date = values.date;
       event.eventParent = values.eventParent;

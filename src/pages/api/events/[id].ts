@@ -55,16 +55,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
-        // console.log("recurring Event: ", req.body.recurringEvent);
-        // console.log("event.eventParent: ", eventParent);
-        // console.log("result.data.eventParent: ", result.data.eventParent);
-        // console.log(result.data); 
-
         const eventParentNew = await EventParent.create(result.data.eventParent);
 
-        const eventParentOldId = event.eventParent;
-
-        // console.log("old id: ", eventParentOldId);
+        // const eventParentOldId = event.eventParent;
 
         // const newDate = new Date(req.body.eventPopulatedInput.date as string);
 
