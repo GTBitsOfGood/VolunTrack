@@ -34,20 +34,20 @@ const DropdownMenu = (props) => {
           !props.className
             ? "flex h-[40px] w-full items-center justify-between rounded-lg border-[1px] px-4 py-2 text-sm text-black focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 " +
               (isOpen ? " " : "rounded-b-md ") +
-              (props.disabled ? "border-gray-500 bg-gray-300 " : "bg-white border-gray-300 hover:bg-gray-50 ")
+              (props.disabled
+                ? "border-gray-500 bg-gray-300 "
+                : "border-gray-300 bg-white hover:bg-gray-50 ")
             : props.className
         }
         onClick={() => {
           if (props.disabled) return;
-          setIsOpen(!isOpen)
+          setIsOpen(!isOpen);
         }}
       >
         <span>{props.value ? props.value : choice}</span>
-        {
-          props.arrow && !props.disabled && (
-            <ChevronDownIcon className="ml-2 h-5 w-5" />
-          )
-        }
+        {props.arrow && !props.disabled && (
+          <ChevronDownIcon className="ml-2 h-5 w-5" />
+        )}
       </div>
       {isOpen && (
         <div className="absolute z-10 w-full rounded-b-md border-[1px] border-gray-300 bg-white pb-2 pt-2">

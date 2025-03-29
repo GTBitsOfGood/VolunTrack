@@ -126,7 +126,6 @@ const EventFormModal = ({
       customRecurrenceSettings: customRecurrenceSettings,
     };
     setSubmitting(true);
-    console.log('updating event');
     updateEvent(
       event._id,
       editedEvent,
@@ -155,7 +154,6 @@ const EventFormModal = ({
       .finally(() => setSubmitting(false));
 
     if (setEvent) {
-      console.log("Setting event");
       const eventParentId = event.eventParent._id;
       event.date = values.date;
       event.eventParent = values.eventParent;
@@ -1168,7 +1166,6 @@ const EventFormModal = ({
                       text={submitText}
                       onClick={() => {
                         if (!timeCheck(values)) return;
-                        console.log("Submitted");
                         handleSubmit();
                         setPressed(true);
                       }}

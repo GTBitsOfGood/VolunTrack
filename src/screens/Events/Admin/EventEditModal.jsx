@@ -34,10 +34,6 @@ const EventEditModal = ({
     event.recurringEvents > 0 ? false : true
   );
 
-  // useEffect(() => {
-  //   console.log(event);
-  // }, []);
-
   const [recurringEvent, setRecurringEvent] = useState(false);
 
   useEffect(() => {

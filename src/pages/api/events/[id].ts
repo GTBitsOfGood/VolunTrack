@@ -55,7 +55,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
-        const eventParentNew = await EventParent.create(result.data.eventParent);
+        const eventParentNew = await EventParent.create(
+          result.data.eventParent
+        );
 
         // const eventParentOldId = event.eventParent;
 
@@ -92,14 +94,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         if ((await Event.count({ eventParent: eventParentNew._id })) === 0) {
-          console.log("new event parent is deleted");
           await EventParent.findByIdAndDelete(eventParentNew._id);
         }
         if ((await Event.count({ eventParent: eventParent._id })) === 0) {
-          console.log("old event parent is deleted");
           await EventParent.findByIdAndDelete(eventParent._id);
         }
-
       } else if ("eventPopulatedInput" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
