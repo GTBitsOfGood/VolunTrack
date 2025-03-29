@@ -523,7 +523,6 @@ const EventFormModal = ({
                           <div className="h-100 flex flex-col justify-center">
                             <Label className="mb-1 flex h-6 items-center font-black">
                               Requires Approval
-                              <span className="text-red-600">*</span>
                             </Label>
                             <div>
                               <label className="inline-flex cursor-pointer items-center">
@@ -578,7 +577,6 @@ const EventFormModal = ({
                               <div className="w-full max-w-[50%]">
                                 <Label className="mb-1 flex h-6 items-center font-black">
                                   Recurring Event
-                                  <span className="text-red-600">*</span>
                                 </Label>
                                 <DropdownMenu //asdasdasd
                                   value={recurringEvents[recurringEventIndex]}
@@ -982,7 +980,7 @@ const EventFormModal = ({
                   </Row>
                   <Row
                     style={{
-                      marginRight: "-2rem",
+                      marginRight: "-0.86rem",
                     }}
                   >
                     <Styled.Col>
@@ -1012,6 +1010,10 @@ const EventFormModal = ({
                             ref={quill}
                             placeholder="Write your description here."
                             className="flex flex-col-reverse border-t-[1px] border-[#ccc] "
+                            style={{
+                              borderRadius: "0.5rem",
+                              overflow: "hidden",
+                            }}
                           />
                         )}
                       </Field>
@@ -1032,10 +1034,7 @@ const EventFormModal = ({
               <Styled.Row>
                 <div className="flex w-full flex-wrap gap-6">
                   <div>
-                    <Label>
-                      Notify admins upon registration{" "}
-                      <span className="text-red-600">*</span>
-                    </Label>
+                    <Label>Notify admins upon registration </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
                         <input
@@ -1052,7 +1051,6 @@ const EventFormModal = ({
                   <div>
                     <Label>
                       Send reminder emails 48 hours before the event{" "}
-                      <span className="text-red-600">*</span>
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
@@ -1070,7 +1068,7 @@ const EventFormModal = ({
                   <div>
                     <Label>
                       Event can count towards volunteer&apos;s court required
-                      hours <span className="text-red-600">*</span>
+                      hours
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
