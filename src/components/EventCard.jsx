@@ -102,8 +102,8 @@ const EventCard = (props) => {
       className={`mx-18 mb-2 mr-2 flex cursor-pointer flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
       onClick={open}
     >
-      <div className="flex w-full items-end justify-between">
-        <div className="flex items-end items-end justify-start">
+      <div className="flex w-full items-center justify-between gap-10">
+        <div className="flex items-center justify-start">
           <DateDisplayComponent
             key={event.date}
             date={event.date}
@@ -134,24 +134,29 @@ const EventCard = (props) => {
             )}
           </div>
         </div>
-        <div className="flex-column items-end justify-center">
+        <div className="flex flex-col items-end justify-center h-full">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
               <Tooltip content="Edit" style="light">
                 <button className="mx-1" onClick={editOnClick}>
-                  <PencilIcon className="h-5 text-primaryColor md:h-8" />
+                  <PencilIcon className="h-4 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <Tooltip content="Delete" style="light">
                 <button className="mx-1" onClick={deleteOnClick}>
-                  <TrashIcon className="h-5 text-primaryColor md:h-8" />
+                  <TrashIcon className="h-4 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <Tooltip content="Manage Attendance" style="light">
                 <button className="mx-1" onClick={manageAttendanceOnClick}>
-                  <UsersIcon className="h-5 text-primaryColor md:h-8" />
+                  <UsersIcon className="h-4 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
+              <div className="w-fits">
+                <button className="mx-1" onClick={open}>
+                  <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor md:h-8" />
+                </button>
+              </div>
               <EventDeleteModal
                 open={showDeleteModal}
                 toggle={toggleDeleteModal}
@@ -199,20 +204,22 @@ const EventCard = (props) => {
             </button>
           )} */}
           {props.user.role === "volunteer" ? (
-            <div className="flex h-full flex-col justify-around">
+            <div className="flex h-16 flex-col flex-grow justify-around">
               <div className="flex w-full justify-end">
                 <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor" />
               </div>
-              <Label className="text-end">
+              <Label className="text-end mb-0">
                 {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
                 {event.eventParent.maxVolunteers} slots available
               </Label>
             </div>
           ) : (
-            <Label className="text-end text-darkGrey">
-              {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
-              {event.eventParent.maxVolunteers} slots available
-            </Label>
+            <div className="flex h-full flex-col justify-center">
+              <Label className="text-end text-darkGrey mb-0">
+                {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
+                {event.eventParent.maxVolunteers} slots available
+              </Label>
+            </div>
           )}
         </div>
       </div>
