@@ -231,7 +231,6 @@ const EventManager = ({ isHomePage }) => {
 
     Promise.all([eventsPromise, registrationsPromise, attendancePromise])
       .then(() => {
-        console.log(events);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
