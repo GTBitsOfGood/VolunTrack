@@ -445,7 +445,6 @@ const EventManager = ({ isHomePage }) => {
 
   const onEventEdit = (id, eventParentId, recurringEvent) => {
     if (recurringEvent) {
-      console.log("onEventEdit recurring event");
       const eventDate = events.find((event) => event._id === id).date;
       setEvents(
         events.map((event) => {
