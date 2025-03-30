@@ -431,6 +431,12 @@ const EventManager = ({ isHomePage }) => {
             event.eventParent._id !== eventParentId || event.date < eventDate
         )
       );
+      setFilteredEvents(
+        filteredEvents.filter(
+          (event) =>
+            event.eventParent._id !== eventParentId || event.date < eventDate
+        )
+      );
     } else {
       setEvents(events.filter((event) => event._id !== id));
       setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
@@ -453,7 +459,18 @@ const EventManager = ({ isHomePage }) => {
           return event;
         })
       );
+    } else {
+      events.find((event) => event._id === id).recurringEvents = 0;
     }
+
+    // Update recurring event counts
+    let parentIdFilteredEvents = events.filter(
+      (event) => event.eventParent._id === eventParentId
+    );
+    let recurringEventCount = 0;
+    // This works without updating the original events because the obejcts are passed by reference... :)
+    for (let i = parentIdFilteredEvents.length - 1; i >= 0; --i)
+      parentIdFilteredEvents[i].recurringEvents = recurringEventCount++;
   };
 
   return (

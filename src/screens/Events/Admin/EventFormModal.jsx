@@ -24,6 +24,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF
+import { is } from "date-fns/locale";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -525,16 +526,28 @@ const EventFormModal = ({
                               Requires Approval
                             </Label>
                             <div>
-                              <label className="inline-flex cursor-pointer items-center">
-                                <input
-                                  type="checkbox"
-                                  value={requiresApproval}
-                                  checked={requiresApproval}
-                                  className="peer sr-only"
-                                  onChange={onRequiresApprovalCheckbox}
-                                />
-                                <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
-                              </label>
+                              <div className="inline-flex items-center">
+                                <div
+                                  className={
+                                    "relative h-6 w-11 cursor-pointer rounded-full bg-gray-200 " +
+                                    (requiresApproval ? "bg-primaryColor" : "")
+                                  }
+                                  onClick={() => {
+                                    onRequiresApprovalCheckbox(
+                                      !requiresApproval
+                                    );
+                                  }}
+                                >
+                                  <div
+                                    className={
+                                      "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                                      (requiresApproval
+                                        ? "translate-x-full border-white"
+                                        : "")
+                                    }
+                                  />
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </Styled.Col>
@@ -552,6 +565,7 @@ const EventFormModal = ({
                                   onChangeCapture={(e) =>
                                     updateRecurringEvents(e)
                                   }
+                                  disabled={editRecurringEvent}
                                 />
                               </div>
                               <div className="w-full max-w-[33%]">
@@ -578,13 +592,14 @@ const EventFormModal = ({
                                 <Label className="mb-1 flex h-6 items-center font-black">
                                   Recurring Event
                                 </Label>
-                                <DropdownMenu //asdasdasd
+                                <DropdownMenu
                                   value={recurringEvents[recurringEventIndex]}
                                   options={recurringEvents}
                                   callback={(choice) => {
                                     handleRecurringEvent(choice, setFieldValue);
                                   }}
                                   arrow
+                                  disabled={editRecurringEvent}
                                 />
                                 <CustomRecurringModal
                                   open={showCustomModal}
@@ -1032,16 +1047,24 @@ const EventFormModal = ({
                   <div>
                     <Label>Notify admins upon registration </Label>
                     <div>
-                      <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          value={isNotifyAdmin}
-                          checked={isNotifyAdmin}
-                          className="peer sr-only"
-                          onChange={onNotifyAdminCheckbox}
-                        />
-                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
-                      </label>
+                      <div className="inline-flex cursor-pointer items-center">
+                        <div
+                          className={
+                            "relative h-6 w-11 rounded-full bg-gray-200 " +
+                            (isNotifyAdmin ? "bg-primaryColor" : "")
+                          }
+                          onClick={() => onNotifyAdminCheckbox()}
+                        >
+                          <div
+                            className={
+                              "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                              (isNotifyAdmin
+                                ? "translate-x-full border-white"
+                                : "")
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -1050,14 +1073,22 @@ const EventFormModal = ({
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          value={sendReminderEmail}
-                          checked={sendReminderEmail}
-                          className="peer sr-only"
-                          onChange={onSendReminderEmailbox}
-                        />
-                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div
+                          className={
+                            "relative h-6 w-11 rounded-full bg-gray-200 " +
+                            (sendReminderEmail ? "bg-primaryColor" : "")
+                          }
+                          onClick={() => onSendReminderEmailbox()}
+                        >
+                          <div
+                            className={
+                              "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                              (sendReminderEmail
+                                ? "translate-x-full border-white"
+                                : "")
+                            }
+                          />
+                        </div>
                       </label>
                     </div>
                   </div>
@@ -1068,41 +1099,67 @@ const EventFormModal = ({
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          value={isValidForCourtHours}
-                          checked={isValidForCourtHours}
-                          className="peer sr-only"
-                          onChange={onCourtRequiredHoursCheckbox}
-                        />
-                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div
+                          className={
+                            "relative h-6 w-11 rounded-full bg-gray-200 " +
+                            (isValidForCourtHours ? "bg-primaryColor" : "")
+                          }
+                          onClick={() => onCourtRequiredHoursCheckbox()}
+                        >
+                          <div
+                            className={
+                              "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                              (isValidForCourtHours
+                                ? "translate-x-full border-white"
+                                : "")
+                            }
+                          />
+                        </div>
                       </label>
                     </div>
                   </div>
                   {containsExistingEvent(event) && (
                     <div>
-                      <Input
-                        type="checkbox"
-                        onChange={onSendConfirmationEmailCheckbox}
-                      />
-                      <Text text="I would like to send an email to volunteers with updated information" />
+                      <Label>
+                        I would like to send an email to volunteers with updated
+                        information
+                      </Label>
+                      <div>
+                        <label className="inline-flex cursor-pointer items-center">
+                          <div
+                            className={
+                              "relative h-6 w-11 rounded-full bg-gray-200 " +
+                              (sendConfirmationEmail ? "bg-primaryColor" : "")
+                            }
+                            onClick={() => onSendConfirmationEmailCheckbox()}
+                          >
+                            <div
+                              className={
+                                "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                                (sendConfirmationEmail
+                                  ? "translate-x-full border-white"
+                                  : "")
+                              }
+                            />
+                          </div>
+                        </label>
+                      </div>
                     </div>
                   )}
                 </div>
               </Styled.Row>
               <Row>
                 <div>
-                  <div className="w-full text-left">
-                    {invalidTime && (
+                  {invalidTime && (
+                    <div className="w-full text-left">
                       <strong>Start time must be before end time.</strong>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="justify-begin flex w-full flex-row gap-2">
                     <BoGButton
                       text={submitText}
                       onClick={() => {
                         if (!timeCheck(values)) return;
-                        console.log("Submitted");
                         handleSubmit();
                         setPressed(true);
                       }}
