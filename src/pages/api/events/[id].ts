@@ -87,6 +87,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               {
                 $set: {
                   eventParent: eventParentNew._id,
+                  date: req.body?.eventPopulatedInput.date,
                 },
               },
             ]
