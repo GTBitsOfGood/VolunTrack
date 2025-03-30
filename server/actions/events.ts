@@ -14,18 +14,21 @@ export const getEvents = async (
     return await Event.aggregate([
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
+      { $sort: { date: 1 } },
     ]);
   } else if (!startDate) {
     return Event.aggregate([
       { $match: { $expr: { $lte: ["$date", endDate] } } },
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
+      { $sort: { date: 1 } },
     ]);
   } else if (!endDate) {
     return Event.aggregate([
       { $match: { $expr: { $gte: ["$date", startDate] } } },
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
+      { $sort: { date: 1 } },
     ]);
   } else {
     const test = Event.aggregate([
@@ -41,6 +44,7 @@ export const getEvents = async (
       },
       ...eventPopulator,
       { $match: { "eventParent.organizationId": organizationId } },
+      { $sort: { date: 1 } },
     ]);
     return test;
   }

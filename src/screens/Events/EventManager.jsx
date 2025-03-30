@@ -183,7 +183,7 @@ const EventManager = ({ isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    getEvents(user.organizationId).then((result) => {
+    const eventsPromise = getEvents(user.organizationId).then((result) => {
       if (result?.data?.events) {
         const fetchedEvents = result.data.events;
         setEvents(result.data.events);
@@ -208,28 +208,33 @@ const EventManager = ({ isHomePage }) => {
     if (user.role === "volunteer")
       filter = { organizationId: user.organizationId, userId: user._id };
 
-    getRegistrations(filter)
-      .then((result) => {
-        if (result?.data?.registrations) {
-          const registrations = result.data.registrations;
-          setRegistrations(registrations);
-        }
-      })
-      .finally(() => setLoading(false));
+    const registrationsPromise = getRegistrations(filter).then((result) => {
+      if (result?.data?.registrations) {
+        const registrations = result.data.registrations;
+        setRegistrations(registrations);
+      }
+    });
 
     let query = { organizationId: user.organizationId };
     if (user.role === "volunteer") query.userId = user._id;
 
-    getAttendances(query)
-      .then((result) => {
-        if (result?.data?.attendances) {
-          const filteredAttendance = filterAttendance(
-            result.data.attendances,
-            startDate,
-            endDate
-          );
-          setAttendances(filteredAttendance);
-        }
+    const attendancePromise = getAttendances(query).then((result) => {
+      if (result?.data?.attendances) {
+        const filteredAttendance = filterAttendance(
+          result.data.attendances,
+          startDate,
+          endDate
+        );
+        setAttendances(filteredAttendance);
+      }
+    });
+
+    Promise.all([eventsPromise, registrationsPromise, attendancePromise])
+      .then(() => {
+        console.log(events);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -530,45 +535,44 @@ const EventManager = ({ isHomePage }) => {
                   <BoGButton text="Create event" onClick={onCreateClicked} />
                 )}
               </div>
-              {loading === true ? (
-                <div className="mt-8">
-                  <div className="mt-8 flex justify-center">
+              <div className="mt-8">
+                {loading && (
+                  <div className="flex justify-center">
                     <LoadingModal isOpen={loading} />
                   </div>
-                </div>
-              ) : (
-                <div className="mt-8" />
-              )}
-              {filteredEvents.length === 0 && loading === false ? (
-                <div className="mt-8">
-                  <Text
-                    text={"No Events Scheduled for Filter"}
-                    type="subheader"
+                )}
+                {!loading && filteredEvents.length === 0 && (
+                  <div>
+                    <Text
+                      text="No Events Scheduled for Filter"
+                      type="subheader"
+                    />
+                    {showBack && (
+                      <button
+                        className="text-primaryColor hover:underline"
+                        onClick={setDateBack}
+                      >
+                        Show Events for all Dates
+                      </button>
+                    )}
+                  </div>
+                )}
+                {!loading && filteredEvents.length > 0 && (
+                  <EventsList
+                    dateString={dateString}
+                    events={
+                      user.role === "admin"
+                        ? filteredEvents
+                        : filterEventsForVolunteers(filteredEvents, user)
+                    }
+                    registrations={registrations}
+                    user={user}
+                    isHomePage={isHomePage}
+                    onEventDelete={onEventDelete}
+                    onEventEdit={onEventEdit}
                   />
-                  {showBack && (
-                    <button
-                      className="text-primaryColor hover:underline"
-                      onClick={setDateBack}
-                    >
-                      Show Events for all Dates
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <EventsList
-                  dateString={dateString}
-                  events={
-                    user.role === "admin"
-                      ? filteredEvents
-                      : filterEventsForVolunteers(filteredEvents, user)
-                  }
-                  registrations={registrations}
-                  user={user}
-                  isHomePage={isHomePage}
-                  onEventDelete={onEventDelete}
-                  onEventEdit={onEventEdit}
-                />
-              )}
+                )}
+              </div>
               {showCreateModal && (
                 <EventCreateModal
                   open={showCreateModal}
