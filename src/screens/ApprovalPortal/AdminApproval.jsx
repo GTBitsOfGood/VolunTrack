@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getRegistrations } from "../../queries/registrations";
 import { getEvent } from "../../queries/events";
 import RegistrationCard from "./RegistrationCard";
+import LoadingModal from "../Events/LoadingModal";
 
 const AdminApproval = ({ user }) => {
   const [loading, setLoading] = useState(true);
@@ -106,8 +107,8 @@ const AdminApproval = ({ user }) => {
   };
 
   return loading ? (
-    <div className="mt-16 text-center">
-      <Spinner />
+    <div className="flex justify-center pt-8">
+      <LoadingModal isOpen={loading} />
     </div>
   ) : (
     <div className="mx-auto my-2 w-3/4 space-y-8">

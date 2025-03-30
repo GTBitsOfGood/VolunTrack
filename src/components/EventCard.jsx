@@ -137,16 +137,38 @@ const EventCard = (props) => {
         <div className="flex-column items-end justify-center">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
-              <Tooltip content="Edit" style="light">
-                <button className="mx-1" onClick={editOnClick}>
-                  <PencilIcon className="h-5 text-primaryColor md:h-8" />
-                </button>
-              </Tooltip>
-              <Tooltip content="Delete" style="light">
-                <button className="mx-1" onClick={deleteOnClick}>
-                  <TrashIcon className="h-5 text-primaryColor md:h-8" />
-                </button>
-              </Tooltip>
+              {pastEvent(event) ? (
+                <div>
+                  <button
+                    className="mx-1 cursor-not-allowed text-gray-400"
+                    disabled
+                  >
+                    <PencilIcon className="h-5 md:h-8" />
+                  </button>
+                </div>
+              ) : (
+                <Tooltip content="Edit" style="light">
+                  <button className="mx-1" onClick={editOnClick}>
+                    <PencilIcon className="h-5 text-primaryColor md:h-8" />
+                  </button>
+                </Tooltip>
+              )}
+              {pastEvent(event) ? (
+                <div>
+                  <button
+                    className="mx-1 cursor-not-allowed text-gray-400"
+                    disabled
+                  >
+                    <TrashIcon className="h-5 md:h-8" />
+                  </button>
+                </div>
+              ) : (
+                <Tooltip content="Delete" style="light">
+                  <button className="mx-1" onClick={deleteOnClick}>
+                    <TrashIcon className="h-5 text-primaryColor md:h-8" />
+                  </button>
+                </Tooltip>
+              )}
               <Tooltip content="Manage Attendance" style="light">
                 <button className="mx-1" onClick={manageAttendanceOnClick}>
                   <UsersIcon className="h-5 text-primaryColor md:h-8" />
