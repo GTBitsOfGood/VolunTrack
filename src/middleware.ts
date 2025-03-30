@@ -3,7 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const secret = process.env.SECRET;
-  const token = await getToken({ req, secret });
+  const token = await getToken({
+    req,
+    secret,
+    cookieName:
+      process.env.NODE_ENV === "production"
+        ? "__Secure-next-auth.session-token"
+        : "next-auth.session-token",
+  });
   const pathname = req.nextUrl.pathname;
 
   // If token exists and the user is trying to access auth pages, redirect to home.
@@ -24,8 +31,7 @@ export async function middleware(req: NextRequest) {
 
   // If no token exists and the user is not on an auth page, redirect them to /login.
   if (!token && !allowedPathsForUnauthenticated.includes(pathname)) {
-    console.log(token);
-    return NextResponse.redirect(new URL("/signin", req.url));
+    return NextResponse.redirect(new URL("/login", req.url));
   }
 
   return NextResponse.next();
