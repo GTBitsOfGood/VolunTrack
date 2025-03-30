@@ -1009,11 +1009,7 @@ const EventFormModal = ({
                             }}
                             ref={quill}
                             placeholder="Write your description here."
-                            className="flex flex-col-reverse border-t-[1px] border-[#ccc] "
-                            style={{
-                              borderRadius: "0.5rem",
-                              overflow: "hidden",
-                            }}
+                            className="flex flex-col-reverse overflow-hidden rounded-lg border !border-gray-300 !border-gray-300 [&_.ql-container]:border-0 [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-t"
                           />
                         )}
                       </Field>
