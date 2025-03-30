@@ -24,6 +24,7 @@ export async function middleware(req: NextRequest) {
 
   // If no token exists and the user is not on an auth page, redirect them to /login.
   if (!token && !allowedPathsForUnauthenticated.includes(pathname)) {
+    console.log("no token")
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
