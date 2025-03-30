@@ -1,6 +1,5 @@
 import { isValidObjectId, Types } from "mongoose";
 import { z } from "zod";
-import { getYesterday } from "../../../../utils/dates";
 import {
   eventParentInputClientValidator,
   eventParentInputServerValidator,

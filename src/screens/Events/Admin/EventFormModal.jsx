@@ -1,16 +1,15 @@
-import { Label, Tooltip, TextInput, ToggleSwitch } from "flowbite-react";
-import { Field, Form as FForm, Formik, ErrorMessage } from "formik";
+import { Label } from "flowbite-react";
+import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useContext, useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
+import { Col, ModalBody, Row } from "reactstrap";
 import styled from "styled-components";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { eventPopulatedInputClientValidator } from "../../../../server/mongodb/models/Event";
 import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
-import Text from "../../../components/Text";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
@@ -19,8 +18,6 @@ import CustomRecurringModal from "./CustomRecurringModal";
 import DropdownMenu from "../../../components/Dropdown";
 import { getRegistrations } from "../../../queries/registrations";
 import { editRegistration } from "../../../queries/registrations";
-import { Dropdown } from "flowbite-react";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF

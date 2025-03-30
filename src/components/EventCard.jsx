@@ -1,13 +1,4 @@
-import {
-  CheckCircleIcon,
-  PencilIcon,
-  PlusCircleIcon,
-  TrashIcon,
-  UsersIcon,
-  ClockIcon,
-  ExclamationCircleIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, UsersIcon } from "@heroicons/react/24/solid";
 import {
   ExclamationCircleIcon as OutlineExclamationCircleIcon,
   ChevronRightIcon as OutlineChevronRightIcon,

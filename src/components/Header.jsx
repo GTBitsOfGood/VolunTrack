@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getOrganization } from "../queries/organizations";
-import { on } from "events";
 
 const Header = () => {
   const router = useRouter();
