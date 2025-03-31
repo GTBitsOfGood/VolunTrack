@@ -48,6 +48,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!isadmin) {
         return res.status(403).json({ error: "Only Admins can modify events" });
       }
+
       if ("recurringEvent" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
@@ -87,7 +88,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               {
                 $set: {
                   eventParent: eventParentNew._id,
-                  date: req.body?.eventPopulatedInput.date,
+                  date: new Date(req.body?.eventPopulatedInput.date as string),
                 },
               },
             ]
