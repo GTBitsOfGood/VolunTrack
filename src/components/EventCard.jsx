@@ -1,13 +1,4 @@
-import {
-  CheckCircleIcon,
-  PencilIcon,
-  PlusCircleIcon,
-  TrashIcon,
-  UsersIcon,
-  ClockIcon,
-  ExclamationCircleIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/solid";
+import { PencilIcon, TrashIcon, UsersIcon } from "@heroicons/react/24/solid";
 import {
   ExclamationCircleIcon as OutlineExclamationCircleIcon,
   ChevronRightIcon as OutlineChevronRightIcon,
@@ -100,7 +91,9 @@ const EventCard = (props) => {
   return (
     <div
       className={`mx-18 mb-2 mr-2 flex cursor-pointer flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
-      onClick={open}
+      onClick={() => {
+        if (!showEditModal) open();
+      }}
     >
       <div className="flex w-full items-center justify-between gap-10">
         <div className="flex items-center justify-start">
@@ -137,16 +130,38 @@ const EventCard = (props) => {
         <div className="flex h-full flex-col items-end justify-center">
           {props.user.role === "admin" && (
             <div className="flex justify-end">
-              <Tooltip content="Edit" style="light">
-                <button className="mx-1" onClick={editOnClick}>
-                  <PencilIcon className="h-4 text-primaryColor md:h-8" />
-                </button>
-              </Tooltip>
-              <Tooltip content="Delete" style="light">
-                <button className="mx-1" onClick={deleteOnClick}>
-                  <TrashIcon className="h-4 text-primaryColor md:h-8" />
-                </button>
-              </Tooltip>
+              {pastEvent(event) ? (
+                <div>
+                  <button
+                    className="mx-1 cursor-not-allowed text-gray-400"
+                    disabled
+                  >
+                    <PencilIcon className="h-4 md:h-8" />
+                  </button>
+                </div>
+              ) : (
+                <Tooltip content="Edit" style="light">
+                  <button className="mx-1" onClick={editOnClick}>
+                    <PencilIcon className="h-4 text-primaryColor md:h-8" />
+                  </button>
+                </Tooltip>
+              )}
+              {pastEvent(event) ? (
+                <div>
+                  <button
+                    className="mx-1 cursor-not-allowed text-gray-400"
+                    disabled
+                  >
+                    <TrashIcon className="h-4 md:h-8" />
+                  </button>
+                </div>
+              ) : (
+                <Tooltip content="Delete" style="light">
+                  <button className="mx-1" onClick={deleteOnClick}>
+                    <TrashIcon className="h-4 text-primaryColor md:h-8" />
+                  </button>
+                </Tooltip>
+              )}
               <Tooltip content="Manage Attendance" style="light">
                 <button className="mx-1" onClick={manageAttendanceOnClick}>
                   <UsersIcon className="h-4 text-primaryColor md:h-8" />

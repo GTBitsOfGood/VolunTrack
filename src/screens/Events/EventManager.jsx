@@ -19,6 +19,7 @@ import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
+import LoadingModal from "./LoadingModal";
 
 const Styled = {
   Container: styled.div`
@@ -188,7 +189,7 @@ const EventManager = ({ isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    getEvents(user.organizationId).then((result) => {
+    const eventsPromise = getEvents(user.organizationId).then((result) => {
       if (result?.data?.events) {
         const fetchedEvents = result.data.events;
         setEvents(result.data.events);
@@ -213,28 +214,31 @@ const EventManager = ({ isHomePage }) => {
     if (user.role === "volunteer")
       filter = { organizationId: user.organizationId, userId: user._id };
 
-    getRegistrations(filter)
-      .then((result) => {
-        if (result?.data?.registrations) {
-          const registrations = result.data.registrations;
-          setRegistrations(registrations);
-        }
-      })
-      .finally(() => setLoading(false));
+    const registrationsPromise = getRegistrations(filter).then((result) => {
+      if (result?.data?.registrations) {
+        const registrations = result.data.registrations;
+        setRegistrations(registrations);
+      }
+    });
 
     let query = { organizationId: user.organizationId };
     if (user.role === "volunteer") query.userId = user._id;
 
-    getAttendances(query)
-      .then((result) => {
-        if (result?.data?.attendances) {
-          const filteredAttendance = filterAttendance(
-            result.data.attendances,
-            startDate,
-            endDate
-          );
-          setAttendances(filteredAttendance);
-        }
+    const attendancePromise = getAttendances(query).then((result) => {
+      if (result?.data?.attendances) {
+        const filteredAttendance = filterAttendance(
+          result.data.attendances,
+          startDate,
+          endDate
+        );
+        setAttendances(filteredAttendance);
+      }
+    });
+
+    Promise.all([eventsPromise, registrationsPromise, attendancePromise])
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       })
       .finally(() => {
         setLoading(false);
@@ -433,6 +437,12 @@ const EventManager = ({ isHomePage }) => {
             event.eventParent._id !== eventParentId || event.date < eventDate
         )
       );
+      setFilteredEvents(
+        filteredEvents.filter(
+          (event) =>
+            event.eventParent._id !== eventParentId || event.date < eventDate
+        )
+      );
     } else {
       setEvents(events.filter((event) => event._id !== id));
       setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
@@ -455,7 +465,18 @@ const EventManager = ({ isHomePage }) => {
           return event;
         })
       );
+    } else {
+      events.find((event) => event._id === id).recurringEvents = 0;
     }
+
+    // Update recurring event counts
+    let parentIdFilteredEvents = events.filter(
+      (event) => event.eventParent._id === eventParentId
+    );
+    let recurringEventCount = 0;
+    // This works without updating the original events because the obejcts are passed by reference... :)
+    for (let i = parentIdFilteredEvents.length - 1; i >= 0; --i)
+      parentIdFilteredEvents[i].recurringEvents = recurringEventCount++;
   };
 
   return (
@@ -535,43 +556,44 @@ const EventManager = ({ isHomePage }) => {
                   <BoGButton text="Create event" onClick={onCreateClicked} />
                 )}
               </div>
-              {loading === true ? (
-                <div className="mt-8">
-                  <Text text={"Loading..."} type="subheader" />
-                </div>
-              ) : (
-                <div className="mt-8" />
-              )}
-              {filteredEvents.length === 0 && loading === false ? (
-                <div className="mt-8">
-                  <Text
-                    text={"No Events Scheduled for Filter"}
-                    type="subheader"
+              <div className="mt-8">
+                {loading && (
+                  <div className="flex justify-center">
+                    <LoadingModal isOpen={loading} />
+                  </div>
+                )}
+                {!loading && filteredEvents.length === 0 && (
+                  <div>
+                    <Text
+                      text="No Events Scheduled for Filter"
+                      type="subheader"
+                    />
+                    {showBack && (
+                      <button
+                        className="text-primaryColor hover:underline"
+                        onClick={setDateBack}
+                      >
+                        Show Events for all Dates
+                      </button>
+                    )}
+                  </div>
+                )}
+                {!loading && filteredEvents.length > 0 && (
+                  <EventsList
+                    dateString={dateString}
+                    events={
+                      user.role === "admin"
+                        ? filteredEvents
+                        : filterEventsForVolunteers(filteredEvents, user)
+                    }
+                    registrations={registrations}
+                    user={user}
+                    isHomePage={isHomePage}
+                    onEventDelete={onEventDelete}
+                    onEventEdit={onEventEdit}
                   />
-                  {showBack && (
-                    <button
-                      className="text-primaryColor hover:underline"
-                      onClick={setDateBack}
-                    >
-                      Show Events for all Dates
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <EventsList
-                  dateString={dateString}
-                  events={
-                    user.role === "admin"
-                      ? filteredEvents
-                      : filterEventsForVolunteers(filteredEvents, user)
-                  }
-                  registrations={registrations}
-                  user={user}
-                  isHomePage={isHomePage}
-                  onEventDelete={onEventDelete}
-                  onEventEdit={onEventEdit}
-                />
-              )}
+                )}
+              </div>
               {showCreateModal && (
                 <EventCreateModal
                   open={showCreateModal}

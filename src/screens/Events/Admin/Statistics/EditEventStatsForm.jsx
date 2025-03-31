@@ -1,6 +1,6 @@
 import { Form as FForm, Formik } from "formik";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Col, ModalBody, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../../components/BoGButton";
