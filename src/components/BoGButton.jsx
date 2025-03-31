@@ -13,7 +13,8 @@ class BoGButton extends React.Component {
       <Button
         onClick={this.props.onClick ?? (() => {})}
         className={
-          this.props.className ?? "bg-primaryColor hover:bg-hoverColor"
+          this.props.className ??
+          "bg-primaryColor hover:bg-hoverColor focus:!outline-none focus:!ring-0"
         }
         size={this.props.size ?? "md"}
         disabled={this.props.disabled}

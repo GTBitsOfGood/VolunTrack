@@ -101,159 +101,161 @@ const Header = () => {
 
   return (
     <Navbar
-      fluid={false}
+      fluid={true}
       rounded={true}
-      className="my-custom-navbar items-center justify-between py-0 md:mx-auto md:w-5/6 md:border-b"
+      className="my-custom-navbar mx-16 items-center justify-between py-0"
     >
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Navbar.Brand>
       <Navbar.Toggle />
-      <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
-        {user.role === "admin" ? (
-          <Navbar.Link
-            href="/home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/home") ? "text-primaryColor" : ""
-            }`}
-          >
-            Home
-          </Navbar.Link>
-        ) : (
-          <Navbar.Link
-            href="/home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/home") ? "text-primaryColor" : ""
-            }`}
-          >
-            Volunteering
-          </Navbar.Link>
-        )}
+      <div>
+        <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
+          {user.role === "admin" ? (
+            <Navbar.Link
+              href="/home"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/home") ? "text-primaryColor" : ""
+              }`}
+            >
+              Home
+            </Navbar.Link>
+          ) : (
+            <Navbar.Link
+              href="/home"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/home") ? "text-primaryColor" : ""
+              }`}
+            >
+              Volunteering
+            </Navbar.Link>
+          )}
 
-        {user.role === "admin" && (
-          <Navbar.Link
-            href="/volunteers"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/volunteers") ? "text-primaryColor" : ""
-            }`}
-          >
-            Volunteers
-          </Navbar.Link>
-        )}
+          {user.role === "admin" && (
+            <Navbar.Link
+              href="/volunteers"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/volunteers") ? "text-primaryColor" : ""
+              }`}
+            >
+              Volunteers
+            </Navbar.Link>
+          )}
 
-        {user.role != "admin" && customHome && (
-          <Navbar.Link
-            href="/custom-home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/custom-home") ? "text-primaryColor" : ""
-            }`}
-          >
-            About
-          </Navbar.Link>
-        )}
+          {user.role != "admin" && customHome && (
+            <Navbar.Link
+              href="/custom-home"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/custom-home") ? "text-primaryColor" : ""
+              }`}
+            >
+              About
+            </Navbar.Link>
+          )}
 
-        {user.role != "admin" ? (
-          <Navbar.Link
-            href="/events"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/events") ? "text-primaryColor" : ""
-            }`}
-          >
-            Events
-          </Navbar.Link>
-        ) : (
-          <Navbar.Link
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/events") ? "text-primaryColor" : ""
-            }`}
-          >
+          {user.role != "admin" ? (
+            <Navbar.Link
+              href="/events"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/events") ? "text-primaryColor" : ""
+              }`}
+            >
+              Events
+            </Navbar.Link>
+          ) : (
+            <Navbar.Link
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/events") ? "text-primaryColor" : ""
+              }`}
+            >
+              <Dropdown
+                arrowIcon={true}
+                inline={true}
+                label={<div>Events</div>}
+                className="font-medium"
+              >
+                <Dropdown.Item
+                  href="/registrations"
+                  onClick={onRegistrationsClicked}
+                >
+                  Approval Portal
+                </Dropdown.Item>
+
+                <Dropdown.Item href="/events" onClick={onEventsClicked}>
+                  Event Calendar
+                </Dropdown.Item>
+              </Dropdown>
+            </Navbar.Link>
+          )}
+
+          {user.role === "admin" && (
+            <Navbar.Link
+              className={`text-lg font-bold md:hover:text-primaryColor  ${
+                currPageMatches("/admins") ||
+                currPageMatches("/manage-waivers") ||
+                currPageMatches("/organization-settings")
+                  ? "text-primaryColor"
+                  : ""
+              }`}
+            >
+              <Dropdown
+                arrowIcon={true}
+                inline={true}
+                label={<div>Settings</div>}
+                className="font-medium"
+              >
+                <Dropdown.Item onClick={goToManageAdmins} href="/admins">
+                  Manage Admins
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={goToOrganizationSettings}
+                  href="/organization-settings"
+                >
+                  Organization Settings
+                </Dropdown.Item>
+              </Dropdown>
+            </Navbar.Link>
+          )}
+          <div className="flex hidden md:order-2 md:block">
             <Dropdown
               arrowIcon={true}
               inline={true}
-              label={<div>Events</div>}
-              className="font-medium"
-            >
-              <Dropdown.Item
-                href="/registrations"
-                onClick={onRegistrationsClicked}
-              >
-                Approval Portal
-              </Dropdown.Item>
-
-              <Dropdown.Item href="/events" onClick={onEventsClicked}>
-                Event Calendar
-              </Dropdown.Item>
-            </Dropdown>
-          </Navbar.Link>
-        )}
-
-        {user.role === "admin" && (
-          <Navbar.Link
-            className={`text-lg font-bold md:hover:text-primaryColor  ${
-              currPageMatches("/admins") ||
-              currPageMatches("/manage-waivers") ||
-              currPageMatches("/organization-settings")
-                ? "text-primaryColor"
-                : ""
-            }`}
-          >
-            <Dropdown
-              arrowIcon={true}
-              inline={true}
-              label={<div>Settings</div>}
-              className="font-medium"
-            >
-              <Dropdown.Item onClick={goToManageAdmins} href="/admins">
-                Manage Admins
-              </Dropdown.Item>
-              <Dropdown.Item
-                onClick={goToOrganizationSettings}
-                href="/organization-settings"
-              >
-                Organization Settings
-              </Dropdown.Item>
-            </Dropdown>
-          </Navbar.Link>
-        )}
-        <div className="flex hidden md:order-2 md:block">
-          <Dropdown
-            arrowIcon={true}
-            inline={true}
-            label={
-              <div className="flex">
-                <Avatar
-                  img={user.imageUrl ?? "/images/gradient-avatar.png"}
-                  alt="icon"
-                  rounded={true}
-                />
-                <div className="ml-3 flex flex-col gap-0 text-left">
-                  <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
-                  <p className="mb-0 capitalize">{user.role}</p>
+              label={
+                <div className="flex">
+                  <Avatar
+                    img={user.imageUrl ?? "/images/gradient-avatar.png"}
+                    alt="icon"
+                    rounded={true}
+                  />
+                  <div className="ml-3 flex flex-col gap-0 text-left">
+                    <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
+                    <p className="mb-0 capitalize">{user.role}</p>
+                  </div>
                 </div>
-              </div>
-            }
-          >
-            {dropdownItems}
-          </Dropdown>
-        </div>
-        <Navbar.Link className="block md:hidden">
-          <Dropdown
-            arrowIcon={true}
-            inline={true}
-            label={
-              <div
-                className={`text-lg font-bold ${
-                  currPageMatches("/profile") ? "text-primaryColor" : ""
-                }`}
-              >
-                Profile Settings
-              </div>
-            }
-          >
-            {dropdownItems}
-          </Dropdown>
-        </Navbar.Link>
-      </Navbar.Collapse>
+              }
+            >
+              {dropdownItems}
+            </Dropdown>
+          </div>
+          <Navbar.Link className="block md:hidden">
+            <Dropdown
+              arrowIcon={true}
+              inline={true}
+              label={
+                <div
+                  className={`text-lg font-bold ${
+                    currPageMatches("/profile") ? "text-primaryColor" : ""
+                  }`}
+                >
+                  Profile Settings
+                </div>
+              }
+            >
+              {dropdownItems}
+            </Dropdown>
+          </Navbar.Link>
+        </Navbar.Collapse>
+      </div>
     </Navbar>
   );
 };
