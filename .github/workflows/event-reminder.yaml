@@ -46,6 +46,7 @@ jobs:
           if [[ $RESPONSE == *'"success":true'* ]]; then
            echo "POST request was successful."
           else
-            echo "POST request failed."
-            exit 1 # Set a non-zero exit code to indicate failure
+            ERROR_MESSAGE=$(echo $RESPONSE | jq -r '.error // "Unknown error"')
+            echo "POST request failed. Error: $ERROR_MESSAGE"
+            exit 1
           fi
