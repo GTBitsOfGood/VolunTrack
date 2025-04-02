@@ -4,7 +4,7 @@ import InputField from "../../components/Forms/InputField";
 import { Dropdown } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
@@ -19,6 +19,8 @@ import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
+import PaginationComp from "./EventPagination";
+import LoadingModal from "./LoadingModal";
 
 const Styled = {
   Container: styled.div`
@@ -53,6 +55,7 @@ const Styled = {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      height: 2.5em;
     }
     .react-calendar__navigation__label {
       order: 2;
@@ -70,6 +73,11 @@ const Styled = {
     .react-calendar__navigation__prev-button,
     .react-calendar__navigation__next-button {
       font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding-bottom: 0.2em;
     }
     .react-calendar__month-view__weekdays__weekday {
       font-weight: normal;
@@ -180,9 +188,12 @@ const EventManager = ({ isHomePage }) => {
   const [isEmptyDates, setIsEmptyDates] = useState(false);
   const [isInvalidRange, setIsInvalidRange] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(0); // Current page for pagination
+  const pageSize = 3; // Number of events per page
+
   const onRefresh = () => {
     setLoading(true);
-    getEvents(user.organizationId)
+    const eventsPromise = getEvents(user.organizationId)
       .then((result) => {
         if (result?.data?.events) {
           const fetchedEvents = result.data.events;
@@ -213,32 +224,36 @@ const EventManager = ({ isHomePage }) => {
     if (user.role === "volunteer")
       filter = { organizationId: user.organizationId, userId: user._id };
 
-    getRegistrations(filter)
-      .then((result) => {
-        if (result?.data?.registrations) {
-          const registrations = result.data.registrations;
-          setRegistrations(registrations);
-        }
-      })
-      .finally(() => setLoading(false));
+    const registrationsPromise = getRegistrations(filter).then((result) => {
+      if (result?.data?.registrations) {
+        const registrations = result.data.registrations;
+        setRegistrations(registrations);
+      }
+    });
 
     let query = { organizationId: user.organizationId };
     if (user.role === "volunteer") query.userId = user._id;
 
-    getAttendances(query)
-      .then((result) => {
-        if (result?.data?.attendances) {
-          const filteredAttendance = filterAttendance(
-            result.data.attendances,
-            startDate,
-            endDate
-          );
-          setAttendances(filteredAttendance);
-        }
+    const attendancePromise = getAttendances(query).then((result) => {
+      if (result?.data?.attendances) {
+        const filteredAttendance = filterAttendance(
+          result.data.attendances,
+          startDate,
+          endDate
+        );
+        setAttendances(filteredAttendance);
+      }
+    });
+
+    Promise.all([eventsPromise, registrationsPromise, attendancePromise])
+      .then(() => {})
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       })
       .finally(() => {
         setLoading(false);
       });
+    setCurrentPage(0); // Reset to the first page when events are fetched
   };
 
   const onCreateClicked = () => {
@@ -293,6 +308,12 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   }, []);
 
+  const paginatedEvents = useMemo(() => {
+    const startIndex = currentPage * pageSize;
+    const endIndex = startIndex + pageSize;
+    return filteredEvents.slice(startIndex, endIndex);
+  }, [filteredEvents, currentPage, pageSize]);
+
   let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
@@ -324,6 +345,7 @@ const EventManager = ({ isHomePage }) => {
       .finally(() => {
         setLoading(false);
       });
+    setCurrentPage(0); // Reset to the first page when date changes
   };
 
   const formatJsDate = (jsDate, separator = "/") => {
@@ -425,6 +447,7 @@ const EventManager = ({ isHomePage }) => {
         })
       );
     }
+    setCurrentPage(0); // Reset to the first page when filter changes
   };
 
   const onEventDelete = (id, recurringEvent) => {
@@ -434,6 +457,12 @@ const EventManager = ({ isHomePage }) => {
       const eventDate = events.find((event) => event._id === id).date;
       setEvents(
         events.filter(
+          (event) =>
+            event.eventParent._id !== eventParentId || event.date < eventDate
+        )
+      );
+      setFilteredEvents(
+        filteredEvents.filter(
           (event) =>
             event.eventParent._id !== eventParentId || event.date < eventDate
         )
@@ -460,7 +489,18 @@ const EventManager = ({ isHomePage }) => {
           return event;
         })
       );
+    } else {
+      events.find((event) => event._id === id).recurringEvents = 0;
     }
+
+    // Update recurring event counts
+    let parentIdFilteredEvents = events.filter(
+      (event) => event.eventParent._id === eventParentId
+    );
+    let recurringEventCount = 0;
+    // This works without updating the original events because the obejcts are passed by reference... :)
+    for (let i = parentIdFilteredEvents.length - 1; i >= 0; --i)
+      parentIdFilteredEvents[i].recurringEvents = recurringEventCount++;
   };
 
   return (
@@ -540,43 +580,50 @@ const EventManager = ({ isHomePage }) => {
                   <BoGButton text="Create event" onClick={onCreateClicked} />
                 )}
               </div>
-              {loading === true ? (
-                <div className="mt-8">
-                  <Text text={"Loading..."} type="subheader" />
-                </div>
-              ) : (
-                <div className="mt-8" />
-              )}
-              {filteredEvents.length === 0 && loading === false ? (
-                <div className="mt-8">
-                  <Text
-                    text={"No Events Scheduled for Filter"}
-                    type="subheader"
+              <div className="mt-8">
+                {loading && (
+                  <div className="flex justify-center">
+                    <LoadingModal isOpen={loading} />
+                  </div>
+                )}
+                {!loading && paginatedEvents.length === 0 && (
+                  <div>
+                    <Text
+                      text="No Events Scheduled for Filter"
+                      type="subheader"
+                    />
+                    {showBack && (
+                      <button
+                        className="text-primaryColor hover:underline"
+                        onClick={setDateBack}
+                      >
+                        Show Events for all Dates
+                      </button>
+                    )}
+                  </div>
+                )}
+                {!loading && paginatedEvents.length > 0 && (
+                  <EventsList
+                    dateString={dateString}
+                    events={
+                      user.role === "admin"
+                        ? paginatedEvents
+                        : filterEventsForVolunteers(paginatedEvents, user)
+                    }
+                    registrations={registrations}
+                    user={user}
+                    isHomePage={isHomePage}
+                    onEventDelete={onEventDelete}
+                    onEventEdit={onEventEdit}
                   />
-                  {showBack && (
-                    <button
-                      className="text-primaryColor hover:underline"
-                      onClick={setDateBack}
-                    >
-                      Show Events for all Dates
-                    </button>
-                  )}
-                </div>
-              ) : (
-                <EventsList
-                  dateString={dateString}
-                  events={
-                    user.role === "admin"
-                      ? filteredEvents
-                      : filterEventsForVolunteers(filteredEvents, user)
-                  }
-                  registrations={registrations}
-                  user={user}
-                  isHomePage={isHomePage}
-                  onEventDelete={onEventDelete}
-                  onEventEdit={onEventEdit}
+                )}
+                <PaginationComp
+                  items={filteredEvents}
+                  pageSize={pageSize}
+                  currentPage={currentPage}
+                  updatePageCallback={setCurrentPage}
                 />
-              )}
+              </div>
               {showCreateModal && (
                 <EventCreateModal
                   open={showCreateModal}

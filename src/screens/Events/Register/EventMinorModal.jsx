@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Modal, ModalHeader, ModalFooter, Input, FormGroup } from "reactstrap";
 import BoGButton from "../../../components/BoGButton";
 import PropTypes from "prop-types";
-import { Col, Row } from "reactstrap";
 import { Formik } from "formik";
 import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";

@@ -168,9 +168,21 @@ const EventManager = ({ organizationId }) => {
     return arr;
   };
 
-  const onEventDelete = (id) => {
-    setEvents(events.filter((event) => event._id !== id));
-    setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
+  const onEventDelete = (id, recurringEvent) => {
+    if (recurringEvent) {
+      const eventParentId = events.find((event) => event._id === id).eventParent
+        ._id;
+      const eventDate = events.find((event) => event._id === id).date;
+      setEvents(
+        events.filter(
+          (event) =>
+            event.eventParent._id !== eventParentId || event.date < eventDate
+        )
+      );
+    } else {
+      setEvents(events.filter((event) => event._id !== id));
+      setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
+    }
   };
 
   return (

@@ -32,7 +32,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       case "POST": {
-        console.log(req.body);
         const { aboutPageToggle } = req.body;
 
         if (typeof aboutPageToggle !== "boolean") {

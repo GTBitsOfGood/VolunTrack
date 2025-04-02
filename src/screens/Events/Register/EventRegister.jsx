@@ -22,6 +22,8 @@ import EventRegisterInfoContainer from "./EventRegisterInfoContainer";
 import EventWaiverModal from "./EventWaiverModal";
 import EventTasksContainer from "./EventTasksContainer";
 
+import EventUnregisterModal from "../../../components/EventUnregisterModal";
+
 const Styled = {
   Container: styled(Container)`
     overflow-y: scroll;
@@ -115,6 +117,7 @@ const EventRegister = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [registrations, setRegistrations] = useState([]);
   const [regCount, setRegCount] = useState(0);
+  const [showUnregisterModal, setShowUnregisterModal] = useState(false);
 
   useEffect(() => {
     onLoadEvent();
@@ -225,10 +228,7 @@ const EventRegister = () => {
   };
 
   const onUnregister = () => {
-    unregisterForEvent(event._id, user._id);
-    setIsRegistered(false);
-    setMinors([]);
-    setHasMinor(false);
+    // Unregister Functionality is handled in the UnregisterModal
     router.push("/events");
   };
 
@@ -394,7 +394,9 @@ const EventRegister = () => {
           />
           <BoGButton
             text="Cancel Registration"
-            onClick={onUnregister}
+            onClick={() => {
+              setShowUnregisterModal(true);
+            }}
             className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
@@ -411,7 +413,9 @@ const EventRegister = () => {
           />
           <BoGButton
             text="Cancel Registration"
-            onClick={onUnregister}
+            onClick={() => {
+              setShowUnregisterModal(true);
+            }}
             className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
         </div>
@@ -442,6 +446,17 @@ const EventRegister = () => {
         onRegisterAfterWaiverClicked={onRegisterAfterWaiverClicked}
         eventId={eventId}
         isRegistered={isRegistered}
+      />
+      <EventUnregisterModal
+        open={showUnregisterModal}
+        toggle={() => {
+          setShowUnregisterModal(!showUnregisterModal);
+        }}
+        eventData={event}
+        userId={user._id}
+        callback={() => {
+          onUnregister();
+        }}
       />
     </Styled.Container>
   );

@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 import EventCard from "../../components/EventCard";
