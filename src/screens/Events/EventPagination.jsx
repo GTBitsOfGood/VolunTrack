@@ -146,7 +146,7 @@ class EventPagination extends React.Component {
                 <PaginationLink
                   className={`${
                     page === this.state.currentPage
-                      ? "text-secondaryColor, bg-primaryColor"
+                      ? "!border-primaryColor bg-primaryColor text-white"
                       : "text-gray-800, hover:text-secondaryColor"
                   }`}
                   onClick={(e) => this.updateCurrentPage(e, page)}

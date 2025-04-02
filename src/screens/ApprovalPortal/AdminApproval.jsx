@@ -172,9 +172,6 @@ const AdminApproval = ({ user }) => {
             <u
               onClick={() => setIsShowAllRequests(false)}
               style={{
-                fontFamily: "Unter",
-                fontStyle: "normal",
-                fontSize: "20px",
                 fontWeight: "500",
                 cursor: "pointer",
               }}
@@ -185,9 +182,6 @@ const AdminApproval = ({ user }) => {
             <u
               onClick={() => setIsShowAllRequests(true)}
               style={{
-                fontFamily: "Unter",
-                fontStyle: "normal",
-                fontSize: "20px",
                 fontWeight: "500",
                 cursor: "pointer",
               }}
