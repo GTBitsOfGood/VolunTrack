@@ -18,7 +18,7 @@ jobs:
           INTERNAL_SECRET: ${{ secrets.INTERNAL_SECRET }}
           TIMERANGE_START: 24
           TIMERANGE_END: 48
-          BASE_URL: https://dev.volunteer.bitsofgood.org/
+          BASE_URL: https://dev.volunteer.bitsofgood.org
         run: |
           SECRET=${INTERNAL_SECRET}
           START=${TIMERANGE_START}
@@ -40,8 +40,16 @@ jobs:
           JSON_DATA="{ \"timeRange\": { \"start\": $START, \"end\": $END }, \"secret\": \"$SECRET\" }" 
           echo "Succeed: Set up JSON_DATA as request body" 
 
-          RESPONSE=$(curl -X POST -H "Content-Type: application/json" -d "$JSON_DATA" "$BASE_URL/api/registrations/reminders")
-          echo "API Response: $RESPONSE"
+          RESPONSE=$(curl -s -i -X POST -H "Content-Type: application/json" -d "$JSON_DATA" "$BASE_URL/api/registrations/reminders" -w "\nHTTP_STATUS:%{http_code}")
+
+          # Extract HTTP status code
+          HTTP_STATUS=$(echo "$RESPONSE" | grep -oP 'HTTP_STATUS:\K\d+')
+
+          # Remove status code from response
+          # RESPONSE=$(echo "$RESPONSE" | sed 's/HTTP_STATUS:[0-9]*//g')
+
+          echo "Cleaned API Response: $RESPONSE"
+          echo "HTTP Status Code: $HTTP_STATUS"
 
           if [[ $RESPONSE == *'"success":true'* ]]; then
            echo "POST request was successful."

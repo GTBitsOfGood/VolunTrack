@@ -6,7 +6,6 @@ import {
   DocumentPlusIcon,
   SquaresPlusIcon,
 } from "@heroicons/react/24/solid";
-import WaiverManager from "../Waivers/WaiverManager";
 
 export const organizationSettingsPages: Page[] = [
   {

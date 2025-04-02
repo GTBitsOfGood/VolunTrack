@@ -2,6 +2,12 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname;
+
+  if (pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
   const secret = process.env.SECRET;
   const token = await getToken({
     req,
@@ -11,7 +17,6 @@ export async function middleware(req: NextRequest) {
         ? "__Secure-next-auth.session-token"
         : "next-auth.session-token",
   });
-  const pathname = req.nextUrl.pathname;
 
   // If token exists and the user is trying to access auth pages, redirect to home.
   if (
@@ -39,5 +44,5 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   // Apply middleware to all routes except for api, static files, and others.
-  matcher: "/((?!api|static|.*\\..*|_next|.*\\/raw).*)",
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
