@@ -58,15 +58,23 @@ const EventManager = ({ organizationId }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    getEvents(organizationId).then((result) => {
-      if (result?.data?.events) {
-        setEvents(result.data.events);
-        setFilteredEvents(result.data.events);
-        setDates(result.data.events);
-        setDropdownVal("All Events");
-      }
-      setLoading(false);
-    });
+    getEvents(organizationId)
+      .then((result) => {
+        if (result?.data?.events) {
+          setEvents(result.data.events);
+          setFilteredEvents(result.data.events);
+          setDates(result.data.events);
+          setDropdownVal("All Events");
+        } else if (result?.error) {
+          console.error("Error getting events:", result.error);
+        }
+      })
+      .catch((error) => {
+        console.error("An interval server error occured", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -94,7 +102,12 @@ const EventManager = ({ organizationId }) => {
           setEvents(result.data.events);
           setFilteredEvents(result.data.events);
           setDropdownVal("All Events");
+        } else if (result?.error) {
+          console.error("Error getting events:", result.error);
         }
+      })
+      .catch((error) => {
+        console.error("An interval server error occured", error);
       })
       .finally(() => {
         setLoading(false);

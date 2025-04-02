@@ -5,12 +5,23 @@ import {
   HistoryEventInputClient,
 } from "../../server/mongodb/models/HistoryEvent";
 
-export const getHistoryEvents = (
+export const getHistoryEvents = async (
   historyEventInput?: Partial<HistoryEventInputClient>
-) =>
-  axios.get<{
-    historyEvents?: HistoryEventDocument[];
-    error: ZodError | string;
-  }>("/api/historyEvents", {
-    params: historyEventInput,
-  });
+) => {
+  try {
+    const response = await axios.get<{
+      historyEvents?: HistoryEventDocument[];
+      error: ZodError | string;
+    }>("/api/historyEvents", {
+      params: historyEventInput,
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting history events." };
+  }
+};

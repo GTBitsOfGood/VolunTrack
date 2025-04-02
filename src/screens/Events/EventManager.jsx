@@ -193,26 +193,32 @@ const EventManager = ({ isHomePage }) => {
 
   const onRefresh = () => {
     setLoading(true);
-    const eventsPromise = getEvents(user.organizationId).then((result) => {
-      if (result?.data?.events) {
-        const fetchedEvents = result.data.events;
-        setEvents(result.data.events);
-        setFilteredEvents(
-          fetchedEvents.filter((event) => {
-            let currentDate = new Date(Date.now());
-            let eventDate = new Date(event.date);
-            const [hours, minutes] = event.eventParent.endTime
-              .split(":")
-              .map(Number);
-            eventDate.setUTCHours(hours, minutes);
+    const eventsPromise = getEvents(user.organizationId)
+      .then((result) => {
+        if (result?.data?.events) {
+          const fetchedEvents = result.data.events;
+          setEvents(result.data.events);
+          setFilteredEvents(
+            fetchedEvents.filter((event) => {
+              let currentDate = new Date(Date.now());
+              let eventDate = new Date(event.date);
+              const [hours, minutes] = event.eventParent.endTime
+                .split(":")
+                .map(Number);
+              eventDate.setUTCHours(hours, minutes);
 
-            return eventDate >= currentDate;
-          })
-        );
-        setDates(result.data.events);
-        setDropdownVal("Upcoming Events");
-      }
-    });
+              return eventDate >= currentDate;
+            })
+          );
+          setDates(result.data.events);
+          setDropdownVal("Upcoming Events");
+        } else if (result?.error) {
+          console.error("Error getting events:", result.error);
+        }
+      })
+      .catch((error) => {
+        console.error("An interval server error occured", error);
+      });
 
     let filter = { organizationId: user.organizationId };
     if (user.role === "volunteer")
@@ -329,7 +335,12 @@ const EventManager = ({ isHomePage }) => {
           // setEvents(result.data.events);
           setFilteredEvents(result.data.events);
           // setDropdownVal("All Events");
+        } else if (result?.error) {
+          console.error("Error getting events:", result.error);
         }
+      })
+      .catch((error) => {
+        console.error("An interval server error occured", error);
       })
       .finally(() => {
         setLoading(false);
