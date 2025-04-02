@@ -1,4 +1,3 @@
-import { Spinner } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import Error from "next/error";
 import { useEffect, useState, useMemo } from "react";
@@ -6,6 +5,7 @@ import { getRegistrations } from "../../queries/registrations";
 import { getEvent } from "../../queries/events";
 import RegistrationCard from "./RegistrationCard";
 import EventPagination from "../Events/EventPagination"; // Import the pagination component
+import LoadingModal from "../Events/LoadingModal";
 
 const AdminApproval = ({ user }) => {
   const [loading, setLoading] = useState(true);
@@ -129,8 +129,8 @@ const AdminApproval = ({ user }) => {
   };
 
   return loading ? (
-    <div className="mt-16 text-center">
-      <Spinner />
+    <div className="flex justify-center pt-8">
+      <LoadingModal isOpen={loading} />
     </div>
   ) : (
     <div className="mx-auto my-2 w-3/4 space-y-8">

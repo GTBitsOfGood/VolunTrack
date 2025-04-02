@@ -20,7 +20,7 @@ class DateDisplayComponent extends React.Component {
   render() {
     if (this.props.version === "Primary") {
       return (
-        <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-primaryColor">
+        <div className="mr-3 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-primaryColor">
           <p className="mb-0 mt-3 text-sm leading-none text-white">
             {this.state.month.toUpperCase()}
           </p>
@@ -31,7 +31,7 @@ class DateDisplayComponent extends React.Component {
       );
     } else if (this.props.version === "Past") {
       return (
-        <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-darkGrey">
+        <div className="mr-3 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-darkGrey">
           <p className="mb-0 mt-3 text-sm leading-none text-white">
             {this.state.month.toUpperCase()}
           </p>
@@ -42,7 +42,7 @@ class DateDisplayComponent extends React.Component {
       );
     } else {
       return (
-        <div className="mr-2 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
+        <div className="mr-3 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
           <p className="mb-0 mt-3 text-sm leading-none text-primaryColor">
             {this.state.month.toUpperCase()}
           </p>

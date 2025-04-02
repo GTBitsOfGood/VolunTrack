@@ -3,7 +3,7 @@ import "react-quill/dist/quill.snow.css";
 
 const PreviewModel = ({ pageContent, onClose }) => {
   useEffect(() => {
-    console.log("Preview content:", pageContent);
+    // console.log("Preview content:", pageContent);
   }, [pageContent]);
 
   let ReactQuill;

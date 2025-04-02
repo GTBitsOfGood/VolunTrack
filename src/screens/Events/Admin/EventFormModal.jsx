@@ -1,16 +1,15 @@
-import { Label, Tooltip, TextInput, ToggleSwitch } from "flowbite-react";
-import { Field, Form as FForm, Formik, ErrorMessage } from "formik";
+import { Label } from "flowbite-react";
+import { Field, Form as FForm, Formik } from "formik";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
 import { useContext, useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
-import { Col, FormGroup, Input, ModalBody, ModalFooter, Row } from "reactstrap";
+import { Col, ModalBody, Row } from "reactstrap";
 import styled from "styled-components";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { eventPopulatedInputClientValidator } from "../../../../server/mongodb/models/Event";
 import BoGButton from "../../../components/BoGButton";
 import InputField from "../../../components/Forms/InputField";
-import Text from "../../../components/Text";
 import { RequestContext } from "../../../providers/RequestProvider";
 import { createEvent, updateEvent } from "../../../queries/events";
 import * as SForm from "../../sharedStyles/formStyles";
@@ -19,11 +18,10 @@ import CustomRecurringModal from "./CustomRecurringModal";
 import DropdownMenu from "../../../components/Dropdown";
 import { getRegistrations } from "../../../queries/registrations";
 import { editRegistration } from "../../../queries/registrations";
-import { Dropdown } from "flowbite-react";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF
+import { is } from "date-fns/locale";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -523,19 +521,30 @@ const EventFormModal = ({
                           <div className="h-100 flex flex-col justify-center">
                             <Label className="mb-1 flex h-6 items-center font-black">
                               Requires Approval
-                              <span className="text-red-600">*</span>
                             </Label>
                             <div>
-                              <label className="inline-flex cursor-pointer items-center">
-                                <input
-                                  type="checkbox"
-                                  value={requiresApproval}
-                                  checked={requiresApproval}
-                                  className="peer sr-only"
-                                  onChange={onRequiresApprovalCheckbox}
-                                />
-                                <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
-                              </label>
+                              <div className="inline-flex items-center">
+                                <div
+                                  className={
+                                    "relative h-6 w-11 cursor-pointer rounded-full bg-gray-200 " +
+                                    (requiresApproval ? "bg-primaryColor" : "")
+                                  }
+                                  onClick={() => {
+                                    onRequiresApprovalCheckbox(
+                                      !requiresApproval
+                                    );
+                                  }}
+                                >
+                                  <div
+                                    className={
+                                      "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                                      (requiresApproval
+                                        ? "translate-x-full border-white"
+                                        : "")
+                                    }
+                                  />
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </Styled.Col>
@@ -553,6 +562,7 @@ const EventFormModal = ({
                                   onChangeCapture={(e) =>
                                     updateRecurringEvents(e)
                                   }
+                                  disabled={editRecurringEvent}
                                 />
                               </div>
                               <div className="w-full max-w-[33%]">
@@ -578,15 +588,15 @@ const EventFormModal = ({
                               <div className="w-full max-w-[50%]">
                                 <Label className="mb-1 flex h-6 items-center font-black">
                                   Recurring Event
-                                  <span className="text-red-600">*</span>
                                 </Label>
-                                <DropdownMenu //asdasdasd
+                                <DropdownMenu
                                   value={recurringEvents[recurringEventIndex]}
                                   options={recurringEvents}
                                   callback={(choice) => {
                                     handleRecurringEvent(choice, setFieldValue);
                                   }}
                                   arrow
+                                  disabled={editRecurringEvent}
                                 />
                                 <CustomRecurringModal
                                   open={showCustomModal}
@@ -982,7 +992,7 @@ const EventFormModal = ({
                   </Row>
                   <Row
                     style={{
-                      marginRight: "-2rem",
+                      marginRight: "-0.86rem",
                     }}
                   >
                     <Styled.Col>
@@ -1011,7 +1021,7 @@ const EventFormModal = ({
                             }}
                             ref={quill}
                             placeholder="Write your description here."
-                            className="flex flex-col-reverse border-t-[1px] border-[#ccc] "
+                            className="flex flex-col-reverse overflow-hidden rounded-lg border !border-gray-300 !border-gray-300 [&_.ql-container]:border-0 [&_.ql-toolbar]:border-0 [&_.ql-toolbar]:border-t"
                           />
                         )}
                       </Field>
@@ -1032,83 +1042,121 @@ const EventFormModal = ({
               <Styled.Row>
                 <div className="flex w-full flex-wrap gap-6">
                   <div>
-                    <Label>
-                      Notify admins upon registration{" "}
-                      <span className="text-red-600">*</span>
-                    </Label>
+                    <Label>Notify admins upon registration </Label>
                     <div>
-                      <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          value={isNotifyAdmin}
-                          checked={isNotifyAdmin}
-                          className="peer sr-only"
-                          onChange={onNotifyAdminCheckbox}
-                        />
-                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
-                      </label>
+                      <div className="inline-flex cursor-pointer items-center">
+                        <div
+                          className={
+                            "relative h-6 w-11 rounded-full bg-gray-200 " +
+                            (isNotifyAdmin ? "bg-primaryColor" : "")
+                          }
+                          onClick={() => onNotifyAdminCheckbox()}
+                        >
+                          <div
+                            className={
+                              "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                              (isNotifyAdmin
+                                ? "translate-x-full border-white"
+                                : "")
+                            }
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div>
                     <Label>
                       Send reminder emails 48 hours before the event{" "}
-                      <span className="text-red-600">*</span>
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          value={sendReminderEmail}
-                          checked={sendReminderEmail}
-                          className="peer sr-only"
-                          onChange={onSendReminderEmailbox}
-                        />
-                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div
+                          className={
+                            "relative h-6 w-11 rounded-full bg-gray-200 " +
+                            (sendReminderEmail ? "bg-primaryColor" : "")
+                          }
+                          onClick={() => onSendReminderEmailbox()}
+                        >
+                          <div
+                            className={
+                              "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                              (sendReminderEmail
+                                ? "translate-x-full border-white"
+                                : "")
+                            }
+                          />
+                        </div>
                       </label>
                     </div>
                   </div>
                   <div>
                     <Label>
                       Event can count towards volunteer&apos;s court required
-                      hours <span className="text-red-600">*</span>
+                      hours
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
-                        <input
-                          type="checkbox"
-                          value={isValidForCourtHours}
-                          checked={isValidForCourtHours}
-                          className="peer sr-only"
-                          onChange={onCourtRequiredHoursCheckbox}
-                        />
-                        <div className="peer relative h-6 w-11 rounded-full bg-gray-200 after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all after:content-[''] peer-checked:bg-primaryColor peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none rtl:peer-checked:after:-translate-x-full"></div>
+                        <div
+                          className={
+                            "relative h-6 w-11 rounded-full bg-gray-200 " +
+                            (isValidForCourtHours ? "bg-primaryColor" : "")
+                          }
+                          onClick={() => onCourtRequiredHoursCheckbox()}
+                        >
+                          <div
+                            className={
+                              "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                              (isValidForCourtHours
+                                ? "translate-x-full border-white"
+                                : "")
+                            }
+                          />
+                        </div>
                       </label>
                     </div>
                   </div>
                   {containsExistingEvent(event) && (
                     <div>
-                      <Input
-                        type="checkbox"
-                        onChange={onSendConfirmationEmailCheckbox}
-                      />
-                      <Text text="I would like to send an email to volunteers with updated information" />
+                      <Label>
+                        I would like to send an email to volunteers with updated
+                        information
+                      </Label>
+                      <div>
+                        <label className="inline-flex cursor-pointer items-center">
+                          <div
+                            className={
+                              "relative h-6 w-11 rounded-full bg-gray-200 " +
+                              (sendConfirmationEmail ? "bg-primaryColor" : "")
+                            }
+                            onClick={() => onSendConfirmationEmailCheckbox()}
+                          >
+                            <div
+                              className={
+                                "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
+                                (sendConfirmationEmail
+                                  ? "translate-x-full border-white"
+                                  : "")
+                              }
+                            />
+                          </div>
+                        </label>
+                      </div>
                     </div>
                   )}
                 </div>
               </Styled.Row>
               <Row>
                 <div>
-                  <div className="w-full text-left">
-                    {invalidTime && (
+                  {invalidTime && (
+                    <div className="w-full text-left">
                       <strong>Start time must be before end time.</strong>
-                    )}
-                  </div>
+                    </div>
+                  )}
                   <div className="justify-begin flex w-full flex-row gap-2">
                     <BoGButton
                       text={submitText}
                       onClick={() => {
                         if (!timeCheck(values)) return;
-                        console.log("Submitted");
                         handleSubmit();
                         setPressed(true);
                       }}

@@ -48,6 +48,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!isadmin) {
         return res.status(403).json({ error: "Only Admins can modify events" });
       }
+
       if ("recurringEvent" in req.body) {
         const result = eventPopulatedInputServerValidator
           .partial()
@@ -55,29 +56,50 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!result.success)
           return res.status(400).json({ error: result.error });
 
-        const eventParent = await EventParent.create(result.data.eventParent);
-
-        const eventParentId = event.eventParent;
-
-        const newDate = new Date(req.body.eventPopulatedInput.date as string);
-
-        await Event.updateMany(
-          {
-            eventParent: event.eventParent,
-            date: { $gte: event.date },
-          },
-          [
-            {
-              $set: {
-                eventParent: eventParent._id,
-                date: newDate,
-              },
-            },
-          ]
+        const eventParentNew = await EventParent.create(
+          result.data.eventParent
         );
 
-        if ((await Event.count({ eventParent: eventParentId })) === 0) {
-          await EventParent.findByIdAndDelete(eventParentId);
+        // const eventParentOldId = event.eventParent;
+
+        // const newDate = new Date(req.body.eventPopulatedInput.date as string);
+
+        if (req.body.recurringEvent) {
+          await Event.updateMany(
+            {
+              eventParent: event.eventParent,
+              date: { $gte: event.date },
+            },
+            [
+              {
+                $set: {
+                  eventParent: eventParentNew._id,
+                },
+              },
+            ]
+          );
+        } else {
+          await Event.updateOne(
+            {
+              eventParent: event.eventParent,
+              date: event.date,
+            },
+            [
+              {
+                $set: {
+                  eventParent: eventParentNew._id,
+                  date: new Date(req.body?.eventPopulatedInput.date as string),
+                },
+              },
+            ]
+          );
+        }
+
+        if ((await Event.count({ eventParent: eventParentNew._id })) === 0) {
+          await EventParent.findByIdAndDelete(eventParentNew._id);
+        }
+        if ((await Event.count({ eventParent: eventParent._id })) === 0) {
+          await EventParent.findByIdAndDelete(eventParent._id);
         }
       } else if ("eventPopulatedInput" in req.body) {
         const result = eventPopulatedInputServerValidator

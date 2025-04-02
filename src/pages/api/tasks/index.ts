@@ -1,4 +1,3 @@
-import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 // import {
 //   createUserFromCredentials,

@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Text from "../../../components/Text";
-import { getRegistrations } from "../../../queries/registrations";
-import { CustomInput } from "reactstrap";
 import { CheckIcon } from "@heroicons/react/24/solid";
 
 const EventTasksContainer = ({
