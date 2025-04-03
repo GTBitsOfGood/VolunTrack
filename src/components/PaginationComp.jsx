@@ -116,14 +116,14 @@ class PaginationComp extends React.Component {
                     active={page === this.state.currentPage}
                     key={page}
                     className={
-                      page === this.state.currentPage ? "bg-primaryColor" : ""
+                      page === this.state.currentPage ? "bg-gray-400" : ""
                     }
                   >
                     <Styled.PaginationLink
                       className={`${
                         page === this.state.currentPage
-                          ? "text-secondaryColor"
-                          : "text-gray-400"
+                          ? "!border-primaryColor bg-primaryColor text-white"
+                          : "text-gray-800 hover:text-secondaryColor"
                       } hover:text-primaryColor`}
                       onClick={(e) => this.updateCurrentPage(e, page)}
                     >
