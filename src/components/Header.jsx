@@ -92,7 +92,7 @@ const Header = () => {
       if (response.data.organization)
         setImageURL(response.data.organization.imageUrl);
       setCustomHome(
-        response.data.organization?.homePage &&
+        response.data.organization?.aboutPageToggle &&
           response.data.organization.homePage !== ""
       );
     }

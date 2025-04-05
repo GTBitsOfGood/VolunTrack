@@ -40,7 +40,7 @@ const CustomHome = () => {
 
   return (
     <>
-      {!pageToggle ? (
+      {pageToggle ? (
         <div className="flex items-center justify-center">
           <div
             className="w-[80vw]"
