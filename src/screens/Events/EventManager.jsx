@@ -200,14 +200,19 @@ const EventManager = ({ isHomePage }) => {
           setEvents(result.data.events);
           setFilteredEvents(
             fetchedEvents.filter((event) => {
-              let currentDate = new Date(Date.now());
+              let currentDate = new Date();
+              let utcNow = new Date(Date.UTC(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                currentDate.getDate(),
+                currentDate.getHours(),
+                currentDate.getMinutes()
+              ));
               let eventDate = new Date(event.date);
-              const [hours, minutes] = event.eventParent.endTime
-                .split(":")
-                .map(Number);
+              const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
               eventDate.setUTCHours(hours, minutes);
 
-              return eventDate >= currentDate;
+              return eventDate >= utcNow;
             })
           );
           setDates(result.data.events);
@@ -436,14 +441,19 @@ const EventManager = ({ isHomePage }) => {
     } else if (value === "Upcoming Events") {
       setFilteredEvents(
         events.filter((event) => {
-          let currentDate = new Date(Date.now());
+          let currentDate = new Date();
+          let utcNow = new Date(Date.UTC(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate(),
+            currentDate.getHours(),
+            currentDate.getMinutes()
+          ));
           let eventDate = new Date(event.date);
-          const [hours, minutes] = event.eventParent.endTime
-            .split(":")
-            .map(Number);
+          const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
           eventDate.setUTCHours(hours, minutes);
 
-          return eventDate >= currentDate;
+          return eventDate >= utcNow;
         })
       );
     }
