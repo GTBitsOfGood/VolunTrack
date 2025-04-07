@@ -5,7 +5,7 @@ import Registration, {
   RegistrationInputClient,
   registrationInputServerValidator,
 } from "../../../../server/mongodb/models/Registration";
-import { sendRegistrationConfirmationEmail } from "../../../utils/mailersend-email.js";
+import { sendRegistrationConfirmationEmail, sendRegistrationDeleteEmail } from "../../../utils/mailersend-email.js";
 import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -89,6 +89,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       else return res.status(500);
       if (userId) match.userId = userId;
       else return res.status(500);
+
+      await sendRegistrationDeleteEmail(
+        req.query.userId,
+        req.query.eventId
+      );
 
       return res.status(200).json({
         registration: await Registration.findOneAndDelete(match),

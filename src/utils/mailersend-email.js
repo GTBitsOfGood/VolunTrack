@@ -88,6 +88,51 @@ export const sendRegistrationConfirmationEmail = async (userId, eventId) => {
   }
 };
 
+export const sendRegistrationDeleteEmail = async (userId, eventId) => {
+  const user = await User.findById(userId).lean();
+  const event = await Event.findById(eventId).populate("eventParent").lean();
+  const organization = await Organization.findById(user.organizationId).lean();
+  const adminUser = {
+    email: event.eventParent.eventContactEmail,
+    firstName: event.eventParent.pocName,
+    lastName: "",
+  };
+
+  const adminPersonalization = [
+    {
+      email: adminUser.email,
+      data: {
+        header: `Event Cancellation Notification`,
+        introLine: `Event Cancellation from ${user.name} for ${event.eventParent.title}. View Event Details below.`,
+        eventTitle: event.eventParent.title,
+        volunteerName: user.firstName,
+        eventDate: event.date?.toISOString().slice(0, 10),
+        eventStartTime: convertTime(event.eventParent.startTime),
+        eventEndTime: convertTime(event.eventParent.endTime),
+        eventLocale: event.eventParent.localTime,
+        eventAddress: event.eventParent.address,
+        eventCity: event.eventParent.city,
+        eventState: event.eventParent.state,
+        eventZipCode: event.eventParent.zip,
+        eventDescription: event.eventParent.description?.replace(
+          /<[^>]+>/g,
+          " "
+        ),
+        eventContactEmail: event.eventParent.eventContactEmail,
+        nonprofitName: organization.name,
+      },
+    },
+  ];
+
+  sendEmail(
+    [adminUser],
+    organization,
+    adminPersonalization,
+    `Registration Cancelled for ${event.eventParent.title}`
+  );
+
+};
+
 export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
   const BoGRecipient = {
     firstName: "Bits of Good",
