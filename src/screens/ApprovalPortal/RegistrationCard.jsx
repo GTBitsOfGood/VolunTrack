@@ -75,7 +75,7 @@ const RegistrationCard = (props) => {
         <div className="flex flex-row items-center">
           <div className="mr-2 font-semibold">Event: </div>
           <div className={`mr-2 ${styles.title}`}>
-            {props?.event?.eventParent?.pocName || "Event Name"}
+            {props?.event?.eventParent?.title || "Event Name"}
           </div>
         </div>
         <Link
