@@ -130,7 +130,6 @@ export const sendRegistrationDeleteEmail = async (userId, eventId) => {
     adminPersonalization,
     `Registration Cancelled for ${event.eventParent.title}`
   );
-
 };
 
 export const sendOrganizationApplicationAlert = async (orgName, orgWebsite) => {
