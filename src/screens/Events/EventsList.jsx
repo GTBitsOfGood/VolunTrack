@@ -69,15 +69,19 @@ const EventsList = ({
 
       let upcomingEvents = sortedEvents.filter(function (event) {
         let currentDate = new Date();
-        let utcNow = new Date(Date.UTC(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate(),
-          currentDate.getHours(),
-          currentDate.getMinutes()
-        ));
+        let utcNow = new Date(
+          Date.UTC(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            currentDate.getDate(),
+            currentDate.getHours(),
+            currentDate.getMinutes()
+          )
+        );
         let eventDate = new Date(event.date);
-        const [hours, minutes] = event.eventParent.endTime.split(":").map(Number);
+        const [hours, minutes] = event.eventParent.endTime
+          .split(":")
+          .map(Number);
         eventDate.setUTCHours(hours, minutes);
 
         return eventDate >= utcNow;
