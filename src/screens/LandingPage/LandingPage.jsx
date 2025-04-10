@@ -25,7 +25,7 @@ const LandingPage = () => {
 
   const goNextPage = () => {
     setPages(pages + 1);
-    if (pages + 1 === 3) setReachedSubmit(true);
+    if (pages + 1 === 4) setReachedSubmit(true);
   };
 
   const goBackPage = () => {
