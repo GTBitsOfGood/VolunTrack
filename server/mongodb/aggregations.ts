@@ -10,20 +10,17 @@ export const eventPopulator = [
   {
     $lookup: {
       from: "eventparents",
-      let: { eventParent: "$eventParent" },
-      pipeline: [
-        {
-          $match: {
-            $expr: {
-              $eq: ["$_id", "$$eventParent"],
-            },
-          },
-        },
-      ],
+      localField: "eventParent",
+      foreignField: "_id",
       as: "eventParent",
     },
   },
-  { $unwind: "$eventParent" },
+  {
+    $unwind: {
+      path: "$eventParent",
+      preserveNullAndEmptyArrays: true,
+    },
+  },
   {
     $addFields: {
       recurringEvents: {
