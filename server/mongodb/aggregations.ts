@@ -31,14 +31,7 @@ export const eventPopulator = [
           $filter: {
             input: "$allEvents",
             as: "event",
-            cond: {
-              $let: {
-                vars: {
-                  rootDate: "$date", // Assign the root document's date to a variable
-                },
-                in: { $gt: ["$$event.date", "$$rootDate"] }, // Compare event date with rootDate
-              },
-            },
+            cond: { $gt: ["$$event.date", "$date"] },
           },
         },
       },
