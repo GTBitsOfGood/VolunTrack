@@ -201,17 +201,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const endDate = endDateString ? new Date(endDateString) : undefined;
 
       // TODO: validate date strings
+      try {
+        if (!isValidObjectId(organizationId))
+          return res.status(400).json({ error: "Invalid organizationId" });
 
-      if (!isValidObjectId(organizationId))
-        return res.status(400).json({ error: "Invalid organizationId" });
-
-      return res.status(200).json({
-        events: await getEvents(
-          new Types.ObjectId(organizationId),
-          startDate,
-          endDate
-        ),
-      });
+        const events = await getEvents(new Types.ObjectId(organizationId));
+        return res.status(200).json({
+          events: await getEvents(
+            new Types.ObjectId(organizationId),
+            startDate,
+            endDate
+          ),
+        });
+      } catch (error: any) {
+        console.error("Error fetching events:", error);
+        return res.status(500).json({
+          error: error.message || "Internal Server Error",
+        });
+      }
     }
     case "POST": {
       const isadmin = await isAdmin(req, res);
