@@ -58,7 +58,7 @@ const EventRegisterInfoContainer = ({
 
       {event.eventParent.description && (
         <div
-          className="w-[80vw]"
+          className="w-[75vw]"
           dangerouslySetInnerHTML={{ __html: event.eventParent.description }}
         />
         // <Text text={event.eventParent.description} type="helper"></Text>
