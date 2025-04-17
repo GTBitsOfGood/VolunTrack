@@ -19,6 +19,7 @@ import DropdownMenu from "../../../components/Dropdown";
 import { getRegistrations } from "../../../queries/registrations";
 import { editRegistration } from "../../../queries/registrations";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import DOMPurify from "dompurify";
 
 import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF
 import { is } from "date-fns/locale";
@@ -1003,7 +1004,7 @@ const EventFormModal = ({
                             onChange={(newValue) => {
                               setFieldValue(
                                 "eventParent.description",
-                                newValue
+                                DOMPurify.sanitize(newValue)
                               );
                             }}
                             modules={{

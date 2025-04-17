@@ -293,7 +293,7 @@ const EventRegister = () => {
             className="cursor-pointer"
           >
             <Text
-              text="Add Minor (under 13 years old)"
+              text="Add Minor (under 16 years old)"
               type="subheader"
               className="ml-4 text-primaryColor"
             />

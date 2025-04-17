@@ -57,7 +57,11 @@ const EventRegisterInfoContainer = ({
       </div>
 
       {event.eventParent.description && (
-        <Text text={event.eventParent.description} type="helper"></Text>
+        <div
+          className="w-[80vw]"
+          dangerouslySetInnerHTML={{ __html: event.eventParent.description }}
+        />
+        // <Text text={event.eventParent.description} type="helper"></Text>
       )}
 
       <div className="flex flex-col">
