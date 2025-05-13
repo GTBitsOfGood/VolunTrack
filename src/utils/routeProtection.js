@@ -22,7 +22,8 @@ export async function isOwnUser(req, res) {
     const user = session.user;
     return (
       req.body.userId === user._id.toString() ||
-      req.query.userId === user._id.toString()
+      req.query.userId === user._id.toString() ||
+      req.body._id === user._id.toString()
     );
   }
 }
