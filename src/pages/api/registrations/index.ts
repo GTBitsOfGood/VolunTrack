@@ -8,6 +8,7 @@ import Registration, {
 import {
   sendRegistrationConfirmationEmail,
   sendRegistrationDeleteEmail,
+  sendPendingRegistrationNotification,
 } from "../../../utils/mailersend-email.js";
 import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
 
@@ -55,12 +56,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = registrationInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
 
-      await sendRegistrationConfirmationEmail(
-        result.data.userId,
-        result.data.eventId
-      );
+      const registration = await Registration.create(result.data);
+      
+      try {
+        await sendPendingRegistrationNotification(
+          result.data.userId,
+          result.data.eventId
+        );
+      } catch (emailError) {
+        console.error("Failed to send pending notification email:", emailError);
+      }
+      
       return res.status(201).json({
-        registration: await Registration.create(result.data),
+        registration,
       });
     }
     case "DELETE": {

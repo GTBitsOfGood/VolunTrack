@@ -260,6 +260,122 @@ export const sendEventReminderEmail = async (user, event, organization) => {
   );
 };
 
+export const sendEventApprovalEmail = async (user, event, organization) => {
+  const personalization = [
+    {
+      email: user.email,
+      data: {
+        header: `Event Approval: ${event.eventParent.title}`,
+        introLine: `Congratulations, you have been approved for ${event.eventParent.title}! Please review the event details below.`,
+        eventTitle: event.eventParent.title,
+        volunteerName: user.firstName,
+        eventDate: event.date?.toISOString().slice(0, 10),
+        eventStartTime: convertTime(event.eventParent.startTime),
+        eventEndTime: convertTime(event.eventParent.endTime),
+        eventLocale: event.eventParent.localTime,
+        eventAddress: event.eventParent.address,
+        eventCity: event.eventParent.city,
+        eventState: event.eventParent.state,
+        eventZipCode: event.eventParent.zip,
+        eventDescription: event.eventParent.description?.replace(
+          /<[^>]+>/g,
+          " "
+        ),
+        eventContactEmail: event.eventParent.eventContactEmail,
+        nonprofitName: organization.name,
+      },
+    },
+  ];
+  sendEmail(
+    [user],
+    organization,
+    personalization,
+    `Event Approval: ${event.eventParent.title}`
+  );
+};
+
+export const sendEventDenialEmail = async (user, event, organization) => {
+  const personalization = [
+    {
+      email: user.email,
+      data: {
+        header: `Event Denial: ${event.eventParent.title}`,
+        introLine: `Unfortunately, you have been denied for ${event.eventParent.title}! Please review the event details below.`,
+        eventTitle: event.eventParent.title,
+        volunteerName: user.firstName,
+        eventDate: event.date?.toISOString().slice(0, 10),
+        eventStartTime: convertTime(event.eventParent.startTime),
+        eventEndTime: convertTime(event.eventParent.endTime),
+        eventLocale: event.eventParent.localTime,
+        eventAddress: event.eventParent.address,
+        eventCity: event.eventParent.city,
+        eventState: event.eventParent.state,
+        eventZipCode: event.eventParent.zip,
+        eventDescription: event.eventParent.description?.replace(
+          /<[^>]+>/g,
+          " "
+        ),
+        eventContactEmail: event.eventParent.eventContactEmail,
+        nonprofitName: organization.name,
+      },
+    },  
+  ];
+  sendEmail(
+    [user],
+    organization,
+    personalization,
+    `Event Denial: ${event.eventParent.title}`
+  );
+};
+
+export const sendPendingRegistrationNotification = async (userId, eventId) => {
+  const user = await User.findById(userId).lean();
+  const event = await Event.findById(eventId).populate("eventParent").lean();
+  const organization = await Organization.findById(user.organizationId).lean();
+
+  const adminUser = {
+    email: event.eventParent.eventContactEmail,
+    firstName: event.eventParent.pocName,
+    lastName: "",
+  };
+
+  const adminPersonalization = [
+    {
+      email: adminUser.email,
+      data: {
+        header: `New Pending Event Registration`,
+        introLine: `A volunteer has registered for ${event.eventParent.title} and is awaiting your approval. Please review and approve or deny this registration.`,
+        eventTitle: event.eventParent.title,
+        volunteerName: user.firstName + " " + user.lastName,
+        volunteerEmail: user.email,
+        eventDate: event.date?.toISOString().slice(0, 10),
+        eventStartTime: convertTime(event.eventParent.startTime),
+        eventEndTime: convertTime(event.eventParent.endTime),
+        eventLocale: event.eventParent.localTime,
+        eventAddress: event.eventParent.address,
+        eventCity: event.eventParent.city,
+        eventState: event.eventParent.state,
+        eventZipCode: event.eventParent.zip,
+        eventDescription: event.eventParent.description?.replace(
+          /<[^>]+>/g,
+          " "
+        ),
+        eventContactEmail: event.eventParent.eventContactEmail,
+        nonprofitName: organization.name,
+      },
+    },
+  ];
+
+  sendEmail(
+    [adminUser],
+    organization,
+    adminPersonalization,
+    `Pending Registration: ${event.eventParent.title}`
+  );
+};
+
+
+
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
 const sendEmail = async (
   users,

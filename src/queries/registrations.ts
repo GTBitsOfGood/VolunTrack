@@ -105,3 +105,65 @@ export const editRegistration = async (
     throw error;
   }
 };
+
+export const getPendingRegistrations = async (organizationId: Types.ObjectId) => {
+  try {
+    const response = await axios.get<{
+      pendingRegistrations?: RegistrationDocument[];
+      error?: string;
+    }>("/api/registrations/pending", {
+      params: {
+        organizationId: organizationId.toString(),
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting pending registrations." };
+  }
+};
+
+export const approveRegistration = async (registrationId: Types.ObjectId) => {
+  try {
+    const response = await axios.patch<{
+      message?: string;
+      registration?: RegistrationDocument;
+      error?: string;
+    }>(`/api/registrations/${registrationId.toString()}/approve`, {
+      action: "approve"
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error approving registration." };
+  }
+};
+
+export const denyRegistration = async (registrationId: Types.ObjectId, reason?: string) => {
+  try {
+    const response = await axios.patch<{
+      message?: string;
+      registration?: RegistrationDocument;
+      error?: string;
+    }>(`/api/registrations/${registrationId.toString()}/approve`, {
+      action: "deny",
+      reason: reason
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error denying registration." };
+  }
+};
