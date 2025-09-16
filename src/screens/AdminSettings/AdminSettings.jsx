@@ -1,163 +1,239 @@
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { Dropdown, Sidebar, Toast } from "flowbite-react";
-import { Field, Formik } from "formik";
+import { Dropdown, Sidebar, Toast, ToggleSwitch } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { Field, Formik } from "formik";
 import BoGButton from "../../components/BoGButton";
 import InputField from "../../components/Forms/InputField";
-import {
-  getOrganization,
-  updateOrganization,
-} from "../../queries/organizations";
-import { applyTheme } from "../../themes/themes";
-import { createOrganizationValidator } from "./helpers";
-import { organizationSettingsPages as pages } from "./pages";
+import { adminSettingsPages as pages } from "./pages";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
-import WaiverManager from "../Waivers/WaiverManager";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import VolunterHome from "../Home/VolunterHome";
-import Customization from "../Customization/Customization";
 
-const OrganizationSettings = () => {
-  const [organizationData, setOrganizationData] = useState({});
+const AdminSettings = () => {
+  const [adminData, setAdminData] = useState({
+    // Notification preferences
+    emailAlerts: true,
+    emailEventRegistrations: true,
+    emailEventCancellations: true,
+    dashboardAlerts: true,
+    dashboardEventReminders: true,
+    smsAlerts: false,
+    smsUrgentAlerts: false,
+
+    // Volunteer approval
+    enableWorkflow: false,
+    autoApproveVolunteers: true,
+    requireBackgroundCheck: false,
+    defaultMessage: "Thank you for your interest in volunteering!",
+    rejectionMessage: "Thank you for your interest, but we cannot approve your application at this time.",
+
+    // Default values
+    defaultCap: 20,
+    defaultShift: 4,
+    defaultEventDuration: 8,
+    requireWaiver: true,
+    autoSendReminders: true,
+
+    // User management
+    allowAdminSelfRemoval: false,
+    requireAdminApproval: true,
+    passwordExpirationDays: 90,
+    requireStrongPasswords: true,
+    logUserActivity: true,
+    logRetentionDays: 365,
+
+    // System config
+    timezone: "America/New_York",
+    language: "en",
+    dateFormat: "MM/DD/YYYY",
+    customLogo: "",
+    primaryColor: "#6b21a8",
+    customFavicon: "",
+  });
+
   const [currentPage, setCurrentPage] = useState(pages[0]);
   const [saved, setSaved] = useState(false);
-  const user = useSession().data.user;
+  const { data: session } = useSession();
+  const user = session?.user;
 
-  const colors = {
-    red: "text-red-800",
-    orange: "text-orange-600",
-    yellow: "text-yellow-500",
-    green: "text-lime-500",
-    sky: "text-sky-500",
-    blue: "text-sky-800",
-    purple: "text-purple-800",
-    magenta: "text-pink-800",
-  };
+  // Debug logging
+  console.log("AdminSettings - User:", user);
+  console.log("AdminSettings - Pages:", pages);
+  console.log("AdminSettings - Current Page:", currentPage);
 
-  const background = {
-    red: "bg-red-800",
-    orange: "bg-orange-600",
-    yellow: "bg-yellow-500",
-    green: "bg-lime-500",
-    sky: "bg-sky-500",
-    blue: "bg-sky-800",
-    purple: "bg-purple-800",
-    magenta: "bg-pink-800",
-  };
+  const handleSave = async (values) => {
+    try {
+      // TODO: Implement API call to save admin settings
+      console.log("Saving admin settings:", values);
 
-  const handleWindowClose = (e) => {
-    e.preventDefault();
-    e.returnValue = "";
-    return "Are you sure? You may have unsaved changes.";
-  };
-
-  const setTheme = (theme) => {
-    applyTheme(theme);
-  };
-
-  useEffect(() => {
-    async function fetchData() {
-      const response = await getOrganization(user.organizationId);
-      if (response.data.organization) {
-        setOrganizationData(response.data.organization);
-      }
-
-      //window.addEventListener("beforeunload", handleWindowClose);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 3000);
+    } catch (error) {
+      console.error("Error saving admin settings:", error);
     }
-    fetchData();
-  }, []);
-
-  const handleSubmit = async (values) => {
-    await updateOrganization(user.organizationId, values);
   };
+
+  const renderField = (field, sectionTitle) => {
+    if (field.type === "toggle") {
+      return (
+        <div key={field.name} className="flex items-center justify-between py-2">
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-900">
+              {field.label}
+            </label>
+            {field.description && (
+              <p className="text-xs text-gray-500">{field.description}</p>
+            )}
+          </div>
+          <Field name={field.name}>
+            {({ field: formikField, form }) => (
+              <ToggleSwitch
+                checked={formikField.value}
+                onChange={(checked) => form.setFieldValue(field.name, checked)}
+                color="primary"
+              />
+            )}
+          </Field>
+        </div>
+      );
+    }
+
+    if (field.type === "dropdown") {
+      return (
+        <div key={field.name} className="py-2">
+          <label className="text-sm font-medium text-gray-900">
+            {field.label}
+          </label>
+          <Field name={field.name}>
+            {({ field: formikField, form }) => (
+              <Dropdown
+                arrowIcon={false}
+                style={{ backgroundColor: "white" }}
+                label={
+                  <div className="flex items-center gap-2">
+                    <span style={{ color: "black" }}>
+                      {formikField.value || "Select option"}
+                    </span>
+                  </div>
+                }
+              >
+                <Dropdown.Item onClick={() => form.setFieldValue(field.name, "enabled")}>
+                  Enabled
+                </Dropdown.Item>
+                <Dropdown.Item onClick={() => form.setFieldValue(field.name, "disabled")}>
+                  Disabled
+                </Dropdown.Item>
+              </Dropdown>
+            )}
+          </Field>
+        </div>
+      );
+    }
+
+    // Default to InputField for other types
+    return (
+      <InputField
+        key={field.name}
+        type={field.type || "text"}
+        name={field.name}
+        label={field.label}
+        placeholder={field.placeholder}
+        isRequired={field.isRequired}
+      />
+    );
+  };
+
+  // Safety check
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  if (!pages || pages.length === 0) {
+    return <div>No settings pages found</div>;
+  }
+
+  if (!currentPage) {
+    return <div>No current page selected</div>;
+  }
 
   return (
-    <div>
-      <Formik
-        initialValues={{
-          name: organizationData.name,
-          website: organizationData.website,
-          notificationEmail: organizationData.notificationEmail,
-          imageUrl: organizationData.imageUrl,
-          theme: organizationData.theme,
+    <div className="flex h-screen">
+      {/* Sidebar */}
+      <Sidebar className="w-64">
+        <Sidebar.Items>
+          <Sidebar.ItemGroup>
+            {pages.map((page) => (
+              <Sidebar.Item
+                key={page.key}
+                icon={page.icon}
+                active={currentPage.key === page.key}
+                onClick={() => setCurrentPage(page)}
+                className="cursor-pointer"
+              >
+                {page.title}
+              </Sidebar.Item>
+            ))}
+          </Sidebar.ItemGroup>
+        </Sidebar.Items>
+      </Sidebar>
 
-          defaultEventAddress: organizationData.defaultEventAddress,
-          defaultEventCity: organizationData.defaultEventCity,
-          defaultEventState: organizationData.defaultEventState,
-          defaultEventZip: organizationData.defaultEventZip,
-          defaultContactName: organizationData.defaultContactName,
-          defaultContactEmail: organizationData.defaultContactEmail,
-          defaultContactPhone: organizationData.defaultContactPhone,
+      {/* Main Content */}
+      <div className="flex-1 p-6">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold">{currentPage.title}</h1>
+          {currentPage.helperText && (
+            <p className="text-gray-600">{currentPage.helperText}</p>
+          )}
+        </div>
 
-          eventSilver: organizationData.eventSilver,
-          eventGold: organizationData.eventGold,
-          hoursSilver: organizationData.hoursSilver,
-          hoursGold: organizationData.hoursGold,
-        }}
-        enableReinitialize={true}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(true);
-          handleSubmit(values);
-          setSaved(true);
-          setSubmitting(false);
-        }}
-        validationSchema={createOrganizationValidator}
-      >
-        {({ handleSubmit, setFieldValue }) => (
-          <div className="flex flex-col">
-            <div className="container my-10 flex flex-wrap items-center justify-between">
-              <div className="flex w-1/2 flex-col justify-center px-3 pt-2.5">
-                <h3 className="text-4xl font-bold">Settings</h3>
-              </div>
-              <div className="flex w-1/2 flex-col items-end justify-center px-3">
-                <BoGButton text="Save" onClick={handleSubmit} type="submit" />
-              </div>
-            </div>
-            <div className="container flex flex-col flex-wrap items-center justify-between md:flex-row">
-              <div className="flex flex-row justify-start">
-                <Sidebar className="h-full">
-                  <Sidebar.Items>
-                    <Sidebar.ItemGroup className="!mt-0 !pt-0">
-                      {pages.map((page, i) => (
-                        <Sidebar.Item
-                          className={
-                            currentPage.key === page.key ? "bg-gray-200" : ""
-                          }
-                          icon={page.icon}
-                          key={i}
-                          onClick={() => setCurrentPage(page)}
-                        >
-                          {page.title}
-                        </Sidebar.Item>
-                      ))}
-                    </Sidebar.ItemGroup>
-                  </Sidebar.Items>
-                </Sidebar>
-
-                <div className="flex-column flex min-w-[90%] p-4">
-                  {saved && (
-                    <div className="pb-3">
-                      <Toast>
-                        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                          <CheckCircleIcon className="h-5 w-5" />
-                        </div>
-                        <div className="ml-3 text-sm font-normal">
-                          Settings saved successfully!
-                        </div>
-                        <Toast.Toggle />
-                      </Toast>
+        <Formik
+          initialValues={adminData}
+          onSubmit={handleSave}
+          enableReinitialize
+        >
+          {({ values, handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-6">
+                {currentPage.sections && currentPage.sections.map((section, sectionIndex) => (
+                  <div
+                    key={sectionIndex}
+                    className="rounded-lg bg-white p-6 shadow-sm border"
+                  >
+                    <h3 className="mb-4 text-lg font-semibold">
+                      {section.title}
+                    </h3>
+                    <div className="space-y-4">
+                      {section.fields && section.fields.map((field) =>
+                        renderField(field, section.title)
+                      )}
                     </div>
-                  )}
-                  <h3 className="text-2xl font-bold">{currentPage.title}</h3>
-                </div>
+                  </div>
+                ))}
               </div>
+
+              <div className="mt-8 flex justify-end">
+                <BoGButton
+                  type="submit"
+                  className="bg-primaryColor hover:bg-hoverColor"
+                >
+                  Save Changes
+                </BoGButton>
+              </div>
+            </form>
+          )}
+        </Formik>
+
+        {/* Success Toast */}
+        {saved && (
+          <Toast className="fixed bottom-4 right-4">
+            <CheckCircleIcon className="h-5 w-5 text-green-500" />
+            <div className="ml-3 text-sm font-normal">
+              Settings saved successfully!
             </div>
-          </div>
+          </Toast>
         )}
-      </Formik>
+      </div>
     </div>
   );
 };
 
-export default AdminAuthWrapper(OrganizationSettings);
+export default AdminAuthWrapper(AdminSettings);
