@@ -45,6 +45,10 @@ const Header = () => {
     router.push("/organization-settings");
   };
 
+  const goToAdminSettings = () => {
+    router.push("/admin-settings");
+  };
+
   const onRegistrationsClicked = () => {
     router.push("/registrations");
   };
@@ -212,6 +216,12 @@ const Header = () => {
                   href="/organization-settings"
                 >
                   Organization Settings
+                </Dropdown.Item>
+                <Dropdown.Item
+                  onClick={goToAdminSettings}
+                  href="/admin-settings"
+                >
+                  Admin Settings
                 </Dropdown.Item>
               </Dropdown>
             </Navbar.Link>
