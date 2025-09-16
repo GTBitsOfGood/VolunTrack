@@ -75,25 +75,25 @@ const LandingPage = () => {
             <div className="hidden w-[40%] justify-evenly md:flex">
               <a
                 href="/"
-                className="flex self-center align-middle text-lg text-black"
+                className="flex self-center align-middle text-lg font-bold hover:no-underline text-purple-700 ease-in-out duration-300"
               >
                 Home
               </a>
               <a
                 href="#product"
-                className="flex self-center align-middle text-lg text-black"
+                className="flex self-center align-middle text-lg font-bold text-black hover:no-underline hover:text-purple-700 ease-in-out duration-300"
               >
                 Product
               </a>
               <a
                 href="https://bitsofgood.org/about"
-                className="flex self-center align-middle text-lg text-black"
+                className="flex self-center align-middle text-lg font-bold text-black hover:no-underline hover:text-purple-700 ease-in-out duration-300"
               >
                 About
               </a>
               <a
                 href="https://bitsofgood.org/contact"
-                className="flex self-center align-middle text-lg text-black"
+                className="flex self-center align-middle text-lg font-bold text-black hover:no-underline hover:text-purple-700 ease-in-out duration-300"
               >
                 Contact
               </a>
@@ -101,7 +101,7 @@ const LandingPage = () => {
             <div className="flex flex-col items-end md:mr-24 md:flex-row md:flex-row-reverse md:items-center">
               <Button
                 onClick={goToCreateAcc}
-                className="ml-1 mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600"
+                className="ml-1 mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600 ease-in-out duration-300"
                 size="sm"
                 type="button"
               >
@@ -111,7 +111,7 @@ const LandingPage = () => {
               </Button>
               <button
                 onClick={goToLogin}
-                className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
+                className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline ease-in-out duration-300"
                 type="button"
               >
                 Login
@@ -232,7 +232,7 @@ const LandingPage = () => {
                               <div className="flex items-center justify-end">
                                 <Button
                                   onClick={goNextPage}
-                                  className="bg-purple-700 align-middle hover:bg-purple-600"
+                                  className="bg-purple-700 align-middle hover:bg-purple-600 ease-in-out duration-300"
                                   size="sm"
                                   type="button"
                                 >
@@ -268,14 +268,14 @@ const LandingPage = () => {
                               <div className="flex items-center justify-end">
                                 <button
                                   onClick={goBackPage}
-                                  className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
+                                  className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline ease-in-out duration-300"
                                   type="button"
                                 >
                                   ← Back
                                 </button>
                                 <Button
                                   onClick={goNextPage}
-                                  className="bg-purple-700 align-middle hover:bg-purple-600"
+                                  className="bg-purple-700 align-middle hover:bg-purple-600 ease-in-out duration-300"
                                   size="sm"
                                   type="button"
                                 >
@@ -347,14 +347,14 @@ const LandingPage = () => {
                               <div className="mt-3 flex items-center justify-end">
                                 <button
                                   onClick={goBackPage}
-                                  className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline"
+                                  className="mr-4 items-center text-purple-700 hover:text-purple-600 hover:underline ease-in-out duration-300"
                                   type="button"
                                 >
                                   ← Back
                                 </button>
                                 <Button
                                   onClick={handleSubmit}
-                                  className="self-stretch bg-purple-700 align-middle hover:bg-purple-600"
+                                  className="self-stretch bg-purple-700 align-middle hover:bg-purple-600 ease-in-out duration-300"
                                   size="sm"
                                   type="button"
                                   text="Submit"
@@ -417,7 +417,7 @@ const LandingPage = () => {
         </h1>
         <a href="#nonprofit-form" className="mx-auto max-w-max no-underline">
           <Button
-            className="bg-purple-700 align-middle hover:bg-purple-600"
+            className="bg-purple-700 align-middle hover:bg-purple-600 ease-in-out duration-300"
             size="sm"
             type="button"
           >
