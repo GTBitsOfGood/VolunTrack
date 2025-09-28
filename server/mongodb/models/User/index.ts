@@ -42,6 +42,7 @@ const userSchema = new Schema(
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
+      required: true
     },
     appliedAt: {
       type: Date,
