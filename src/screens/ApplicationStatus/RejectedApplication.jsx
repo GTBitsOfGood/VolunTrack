@@ -20,7 +20,7 @@ const RejectedApplication = () => {
           <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-100">
             <XCircleIcon className="h-10 w-10 text-red-600" />
           </div>
-          <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h1 className="mt-6 text-3xl font-bold text-gray-900">
             Application Not Approved
           </h1>
           <p className="mt-2 text-lg text-gray-600">
@@ -84,11 +84,11 @@ const RejectedApplication = () => {
               <div className="space-y-3">
                 <div className="flex items-center text-gray-600">
                   <EnvelopeIcon className="h-5 w-5 mr-3" />
-                  <span>Email: support@voluntrack.org</span>
+                  <span>Email: {session?.contactEmail ? session.contactEmail : "support@voluntrack.org"}</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <PhoneIcon className="h-5 w-5 mr-3" />
-                  <span>Phone: (555) 123-4567</span>
+                  <span>Phone: {session?.contactPhone ? session.contactPhone : "555-123-4567"}</span>
                 </div>
               </div>
             </div>

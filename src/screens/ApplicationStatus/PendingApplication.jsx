@@ -18,7 +18,7 @@ const PendingApplication = () => {
       } else if (diffInHours > 0) {
         setTimeElapsed(`${diffInHours} hour${diffInHours > 1 ? 's' : ''}`);
       } else {
-        setTimeElapsed("Just now");
+        setTimeElapsed("Just Now");
       }
     }
   }, [session]);
@@ -30,7 +30,7 @@ const PendingApplication = () => {
           <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-yellow-100">
             <ClockIcon className="h-10 w-10 text-yellow-600" />
           </div>
-          <h1 className="mt-6 text-3xl font-extrabold text-gray-900">
+          <h1 className="mt-6 text-3xl font-bold text-gray-900">
             Application Pending Review
           </h1>
           <p className="mt-2 text-lg text-gray-600">
@@ -49,7 +49,7 @@ const PendingApplication = () => {
                   Status: Under Review
                 </p>
                 <p className="text-sm text-gray-500">
-                  Applied {timeElapsed} ago
+                  Applied {timeElapsed} {timeElapsed !== "Just Now" ? "ago" : ""}
                 </p>
               </div>
             </div>
@@ -81,11 +81,11 @@ const PendingApplication = () => {
               <div className="space-y-3">
                 <div className="flex items-center text-gray-600">
                   <EnvelopeIcon className="h-5 w-5 mr-3" />
-                  <span>Email: support@voluntrack.org</span>
+                  <span>Email: {session?.contactEmail ? session.contactEmail : "support@voluntrack.org"}</span>
                 </div>
                 <div className="flex items-center text-gray-600">
                   <PhoneIcon className="h-5 w-5 mr-3" />
-                  <span>Phone: (555) 123-4567</span>
+                  <span>Phone: {session?.contactPhone ? session.contactPhone : "555-123-4567"}</span>
                 </div>
               </div>
             </div>
