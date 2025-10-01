@@ -26,7 +26,7 @@ const Profile = () => {
     <div className="flex w-full justify-center pt-4">
       <div className="w-3/4 rounded-md bg-grey p-3 md:w-1/2">
         <p className="text-2xl font-semibold text-primaryColor">{`${user.firstName} ${user.lastName}`}</p>
-        <p className="mb-2 capitalize">{user.role}</p>
+        <p className="mb-2 capitalize">{user.role === "volunteer" ? "member" : user.role}</p>
         <EditUserForm
           userSelectedForEdit={profileValues}
           isAdmin={user.role === "admin"}

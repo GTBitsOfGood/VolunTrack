@@ -106,7 +106,7 @@ const LandingPage = () => {
                 type="button"
               >
                 <span className="-mx-2 flex items-center md:mx-0">
-                  Create Volunteer Account
+                  Create Member Account
                 </span>
               </Button>
               <button
@@ -124,7 +124,7 @@ const LandingPage = () => {
               id="nonprofit-form"
             >
               <p className="w-fit self-center border-b-4 border-purple-700 text-center text-4xl">
-                Simplify Volunteer Coordination
+                Simplify Member Coordination
               </p>
               <p className="self-center border-purple-700 text-center text-xl">
                 Interesting in joining as a nonprofit? Apply below!
@@ -298,7 +298,7 @@ const LandingPage = () => {
                                 name="originalAdminEmail"
                                 label="Primary Admin Account"
                                 placeholder="example@email.com"
-                                tooltip="This will be the main volunteer administrator email and cannot be changed"
+                                tooltip="This will be the main member administrator email and cannot be changed"
                               />
                               <InputField
                                 name="confirm_admin_email"
@@ -413,7 +413,7 @@ const LandingPage = () => {
       <div className="flex flex-col justify-center bg-purple-100 px-4 py-8 text-center md:px-20 md:py-16">
         <h1 className="mb-4 text-2xl font-semibold text-purple-700">
           {/* eslint-disable-next-line react/no-unescaped-entities */}
-          Ready to elevate your nonprofit's event and volunteer management?
+          Ready to elevate your nonprofit's event and member management?
         </h1>
         <a href="#nonprofit-form" className="mx-auto max-w-max no-underline">
           <Button

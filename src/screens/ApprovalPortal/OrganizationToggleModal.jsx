@@ -21,7 +21,7 @@ const OrganizationToggleModal = (props) => {
           {props.status ? "Deactivate " : "Activate "} the organization
         </h3>
         <p>
-          By clicking the confirm button, this volunteer management platform
+          By clicking the confirm button, this member management platform
           will become{props.status ? " inactive " : " active "}immediately. Are
           you sure you want to confirm?
         </p>
