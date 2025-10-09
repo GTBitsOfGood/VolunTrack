@@ -120,11 +120,14 @@ const RegistrationCard = (props) => {
           <div>
             <div className="font-semibold">Date</div>
             <div className={`${styles.content}`}>
-              {new Date(props?.event?.date).toLocaleDateString("en-US", {
-                month: "2-digit",
-                day: "2-digit",
-                year: "numeric",
-              }) || "No Date Available"}
+              {props?.event?.date
+                ? new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    timeZone: "UTC",
+                  }).format(new Date(props.event.date))
+                : "No Date Available"}
             </div>
           </div>
         </div>
