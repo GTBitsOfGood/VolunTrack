@@ -55,10 +55,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = registrationInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
 
-      await sendRegistrationConfirmationEmail(
-        result.data.userId,
-        result.data.eventId
-      );
+      if (result.data.approved === "approved") {
+        await sendRegistrationConfirmationEmail(
+          result.data.userId,
+          result.data.eventId
+        );
+      }
+
       return res.status(201).json({
         registration: await Registration.create(result.data),
       });

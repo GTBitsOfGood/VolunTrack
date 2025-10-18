@@ -176,6 +176,7 @@ const EventRegister = () => {
 
           return prevEvent;
         });
+        console.log(event.eventParent.requiresApproval);
       })
       .catch((error) => {
         console.error("Error loading event data:", error);
@@ -193,6 +194,7 @@ const EventRegister = () => {
   const onRegisterAfterWaiverClicked = () => {
     toggleWaiverModal();
     setIsLoading(true);
+    console.log("HELLO");
     registerForEvent({
       eventId: event._id,
       userId: user._id,
@@ -377,6 +379,7 @@ const EventRegister = () => {
             text="Complete Registration"
             onClick={onCompleteRegistrationClicked}
             className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
+            disabled={event?.eventParent?.maxVolunteers === regCount}
           />
         </div>
       )}
