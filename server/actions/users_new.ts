@@ -11,7 +11,7 @@ export const getUsers = async (
   organizationId?: Types.ObjectId,
   role?: "admin" | "volunteer" | "manager",
   eventId?: Types.ObjectId,
-  checkinStatus?: "waiting" | "checkedIn" | "checkedOut",
+  checkinStatus?: "waiting" | "checkedIn" | "checkedOut"
 ): Promise<UserDocument[]> => {
   await dbConnect();
 

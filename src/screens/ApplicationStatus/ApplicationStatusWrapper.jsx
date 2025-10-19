@@ -10,9 +10,9 @@ const ApplicationStatusWrapper = ({ children }) => {
   // Show loading while session is being fetched
   if (status === "loading") {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primaryColor mx-auto"></div>
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primaryColor"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -28,9 +28,9 @@ const ApplicationStatusWrapper = ({ children }) => {
   // If session exists but no user data, show loading
   if (!session?.user) {
     return (
-      <div className="flex-1 flex items-center justify-center">
+      <div className="flex flex-1 items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primaryColor mx-auto"></div>
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primaryColor"></div>
           <p className="mt-4 text-gray-600">Loading user data...</p>
         </div>
       </div>

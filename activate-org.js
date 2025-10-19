@@ -1,29 +1,28 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient } = require("mongodb");
 
 async function activateOrganization() {
-  const client = new MongoClient('mongodb://localhost:27017');
+  const client = new MongoClient("mongodb://localhost:27017");
 
   try {
     await client.connect();
-    console.log('Connected to MongoDB');
+    console.log("Connected to MongoDB");
 
-    const db = client.db('test');
-    const result = await db.collection('organizations').updateOne(
-      { slug: 'testorg' },
-      { $set: { active: true } }
-    );
+    const db = client.db("test");
+    const result = await db
+      .collection("organizations")
+      .updateOne({ slug: "testorg" }, { $set: { active: true } });
 
     if (result.matchedCount > 0) {
-      console.log('✅ Organization activated successfully!');
-      console.log('Modified count:', result.modifiedCount);
+      console.log("✅ Organization activated successfully!");
+      console.log("Modified count:", result.modifiedCount);
     } else {
-      console.log('❌ Organization not found. Make sure you created it first.');
+      console.log("❌ Organization not found. Make sure you created it first.");
     }
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
   } finally {
     await client.close();
-    console.log('Disconnected from MongoDB');
+    console.log("Disconnected from MongoDB");
   }
 }
 

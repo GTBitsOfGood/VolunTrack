@@ -24,7 +24,8 @@ const AdminSettings = () => {
     autoApproveVolunteers: true,
     requireBackgroundCheck: false,
     defaultMessage: "Thank you for your interest in volunteering!",
-    rejectionMessage: "Thank you for your interest, but we cannot approve your application at this time.",
+    rejectionMessage:
+      "Thank you for your interest, but we cannot approve your application at this time.",
 
     // Default values
     defaultCap: 20,
@@ -75,7 +76,10 @@ const AdminSettings = () => {
   const renderField = (field, sectionTitle) => {
     if (field.type === "toggle") {
       return (
-        <div key={field.name} className="flex items-center justify-between py-2">
+        <div
+          key={field.name}
+          className="flex items-center justify-between py-2"
+        >
           <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-900">
               {field.label}
@@ -116,10 +120,14 @@ const AdminSettings = () => {
                   </div>
                 }
               >
-                <Dropdown.Item onClick={() => form.setFieldValue(field.name, "enabled")}>
+                <Dropdown.Item
+                  onClick={() => form.setFieldValue(field.name, "enabled")}
+                >
                   Enabled
                 </Dropdown.Item>
-                <Dropdown.Item onClick={() => form.setFieldValue(field.name, "disabled")}>
+                <Dropdown.Item
+                  onClick={() => form.setFieldValue(field.name, "disabled")}
+                >
                   Disabled
                 </Dropdown.Item>
               </Dropdown>
@@ -193,21 +201,23 @@ const AdminSettings = () => {
           {({ values, handleSubmit }) => (
             <form onSubmit={handleSubmit}>
               <div className="space-y-6">
-                {currentPage.sections && currentPage.sections.map((section, sectionIndex) => (
-                  <div
-                    key={sectionIndex}
-                    className="rounded-lg bg-white p-6 shadow-sm border"
-                  >
-                    <h3 className="mb-4 text-lg font-semibold">
-                      {section.title}
-                    </h3>
-                    <div className="space-y-4">
-                      {section.fields && section.fields.map((field) =>
-                        renderField(field, section.title)
-                      )}
+                {currentPage.sections &&
+                  currentPage.sections.map((section, sectionIndex) => (
+                    <div
+                      key={sectionIndex}
+                      className="rounded-lg border bg-white p-6 shadow-sm"
+                    >
+                      <h3 className="mb-4 text-lg font-semibold">
+                        {section.title}
+                      </h3>
+                      <div className="space-y-4">
+                        {section.fields &&
+                          section.fields.map((field) =>
+                            renderField(field, section.title)
+                          )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               <div className="mt-8 flex justify-end">

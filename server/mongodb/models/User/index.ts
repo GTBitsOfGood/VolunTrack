@@ -42,7 +42,7 @@ const userSchema = new Schema(
       type: String,
       enum: ["pending", "approved", "rejected"],
       default: "pending",
-      required: true
+      required: true,
     },
     appliedAt: {
       type: Date,
@@ -50,21 +50,21 @@ const userSchema = new Schema(
     },
     approvedAt: {
       type: Date,
-      sparse: true
+      sparse: true,
     },
     approvedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      sparse: true
+      sparse: true,
     },
     rejectionReason: {
       type: String,
-      maxlength: 500
+      maxlength: 500,
     },
     rejectedAt: {
       type: Date,
-      sparse: true
-    }
+      sparse: true,
+    },
   },
   {
     timestamps: true,
