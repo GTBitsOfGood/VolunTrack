@@ -45,7 +45,7 @@ const AuthPage = (props) => {
   };
 
   return (
-    <div className="flex-column flex w-full min-h-screen items-center justify-center">
+    <div className="flex-column flex min-h-screen w-full items-center justify-center">
       <div
         className={
           "flex-column mx-auto my-8 flex w-5/6 items-center justify-center rounded-xl border p-8 shadow-xl sm:w-[28rem]"

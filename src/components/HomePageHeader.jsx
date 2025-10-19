@@ -55,7 +55,7 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
     </div>
   ) : (
     <div>
-      <div className="mx-6 my-4 flex flex-row justify-between self-stretch px-[6%] py-4 items-center">
+      <div className="mx-6 my-4 flex flex-row items-center justify-between self-stretch px-[6%] py-4">
         <div className="">
           <a href="/" className="flex">
             <img
@@ -98,10 +98,16 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
           <a href="#product" className="py-2 text-purple-600">
             Product
           </a>
-          <a href="https://bitsofgood.org/about" className="py-2 text-purple-600">
+          <a
+            href="https://bitsofgood.org/about"
+            className="py-2 text-purple-600"
+          >
             About
           </a>
-          <a href="https://bitsofgood.org/contact" className="py-2 text-purple-600">
+          <a
+            href="https://bitsofgood.org/contact"
+            className="py-2 text-purple-600"
+          >
             Contact
           </a>
           <hr className="my-2" />
