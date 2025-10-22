@@ -127,18 +127,18 @@ const Header = () => {
                 currPageMatches("/home") ? "text-primaryColor" : ""
               }`}
             >
-              Volunteering
+              Membership
             </Navbar.Link>
           )}
 
           {user.role === "admin" && (
             <Navbar.Link
-              href="/volunteers"
+              href="/members"
               className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-                currPageMatches("/volunteers") ? "text-primaryColor" : ""
+                currPageMatches("/members") ? "text-primaryColor" : ""
               }`}
             >
-              Volunteers
+              Members
             </Navbar.Link>
           )}
 
@@ -229,7 +229,9 @@ const Header = () => {
                   />
                   <div className="ml-3 flex flex-col gap-0 text-left">
                     <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
-                    <p className="mb-0 capitalize">{user.role}</p>
+                    <p className="mb-0 capitalize">
+                      {user.role === "volunteer" ? "member" : user.role}
+                    </p>
                   </div>
                 </div>
               }
