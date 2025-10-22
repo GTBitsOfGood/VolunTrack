@@ -1092,8 +1092,7 @@ const EventFormModal = ({
                   </div>
                   <div>
                     <Label>
-                      Event can count towards member&apos;s court required
-                      hours
+                      Event can count towards member&apos;s court required hours
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">

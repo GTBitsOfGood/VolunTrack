@@ -63,7 +63,9 @@ class MemberTable extends React.Component {
       <div>
         <Table striped={true}>
           <Table.Head className="dark:border-red-700">
-            <Table.HeadCell className="text-primaryColor">Member Name</Table.HeadCell>
+            <Table.HeadCell className="text-primaryColor">
+              Member Name
+            </Table.HeadCell>
             <Table.HeadCell className="text-primaryColor">
               Email Address
             </Table.HeadCell>

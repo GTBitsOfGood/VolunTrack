@@ -84,7 +84,9 @@ class Members extends React.Component {
     return (
       <div className="relative left-[10%] flex h-full w-full flex-col pt-[1rem]">
         <div className="flex w-[80%] flex-row justify-between">
-          <div className="text-normal text-bold text-4xl">Members ({this.state.users.length} total)</div>
+          <div className="text-normal text-bold text-4xl">
+            Members ({this.state.users.length} total)
+          </div>
         </div>
         <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
           <SearchBar
