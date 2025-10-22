@@ -655,7 +655,7 @@ const EventManager = ({ isHomePage }) => {
       {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>
           <h2 className="text-bold w-full text-left font-bold">
-            My Volunteering
+            My Membership
           </h2>
           <div className="flex flex-row gap-8">
             <div className="mb-4 justify-start">
@@ -705,7 +705,7 @@ const EventManager = ({ isHomePage }) => {
                 )}
               />
               <div className="w-full">
-                <Text text="Volunteer History" type="subheader" />
+                <Text text="Member History" type="subheader" />
                 <Text
                   text={`${attendances.length} events`}
                   className="my-2 text-primaryColor"

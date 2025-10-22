@@ -43,7 +43,7 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
           className="ml-1 mr-2 flex border-0 bg-purple-700 hover:bg-purple-600"
           size="sm"
         >
-          Create Volunteer Account
+          Create Member Account
         </Button>
         <button
           onClick={goToLogin}
@@ -122,7 +122,7 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
             className="mt-2 w-full bg-purple-700 hover:bg-purple-600"
             size="sm"
           >
-            Create Volunteer Account
+            Create Member Account
           </Button>
         </nav>
       </div>

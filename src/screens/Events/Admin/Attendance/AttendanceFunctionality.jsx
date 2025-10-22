@@ -1,7 +1,7 @@
 import "flowbite-react";
 import { Table } from "flowbite-react";
 import styled from "styled-components";
-import Volunteer from "./Volunteer";
+import Member from "./Member";
 import Text from "../../../../components/Text";
 
 const Styled = {
@@ -60,7 +60,7 @@ const AttendanceFunctionality = ({
       (checkedInVolunteers?.length !== 0 ||
         checkedOutVolunteers?.length !== 0) && (
         <Text
-          text="Congratulations! All volunteers were checked in!"
+          text="Congratulations! All members were checked in!"
           className="flex justify-center text-primaryColor"
           type="subheader"
         />
