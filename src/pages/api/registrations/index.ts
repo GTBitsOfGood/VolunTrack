@@ -62,7 +62,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             result.data.eventId
           );
         } catch (error) {
-          console.error("Failed to send registration confirmation email:", error);
+          console.error(
+            "Failed to send registration confirmation email:",
+            error
+          );
           // Continue with registration creation even if email fails
         }
       }
