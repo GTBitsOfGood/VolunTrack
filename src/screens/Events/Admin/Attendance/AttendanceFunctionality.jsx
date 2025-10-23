@@ -1,7 +1,7 @@
 import "flowbite-react";
 import { Table } from "flowbite-react";
 import styled from "styled-components";
-import Member from "./Member";
+import Volunteer from "./Volunteer";
 import Text from "../../../../components/Text";
 
 const Styled = {

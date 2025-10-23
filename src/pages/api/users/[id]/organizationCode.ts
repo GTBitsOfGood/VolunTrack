@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next/types";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../auth/[...nextauth]";
 import dbConnect from "../../../../../server/mongodb";
 import { updateUserOrganizationId } from "../../../../../server/actions/users_new";
 import { isAdmin } from "../../../../utils/routeProtection";
@@ -16,12 +18,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   switch (req.method) {
     case "PUT": {
+      const session = await getServerSession(req, res, authOptions);
       const isadmin = await isAdmin(req, res);
-      // this is only used when creating a new organization in Voluntrack
-      if (!isadmin) {
+
+      // Allow if:
+      // 1. User is an admin (can update any user's org code)
+      // 2. User is updating their own account AND doesn't have an org yet
+      const isOwnAccount = session?.user?._id?.toString() === id;
+      const hasNoOrg = !session?.user?.organizationId;
+
+      if (!isadmin && !(isOwnAccount && hasNoOrg)) {
         return res
           .status(403)
-          .json({ error: "Only Admins can modify organization code" });
+          .json({ error: "Not authorized to modify organization code" });
       }
 
       const result = await updateUserOrganizationId(id, orgCode);
