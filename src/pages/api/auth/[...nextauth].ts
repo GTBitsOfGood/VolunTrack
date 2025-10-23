@@ -18,6 +18,7 @@ import User from "../../../../server/mongodb/models/User";
 
 // Extend global type for MongoDB client promise
 declare global {
+  // eslint-disable-next-line no-var
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
