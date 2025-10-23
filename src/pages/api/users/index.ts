@@ -53,14 +53,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = userInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json(result);
 
-      const user = await createUserFromCredentials(
+      const response = await createUserFromCredentials(
         req.body as Omit<UserInputClient, "password"> & { password: string } & {
           orgCode: string;
         }
       );
-      if (!user) return res.status(400).json({ error: "User already exists" });
 
-      return res.status(200).json({ user });
+      // The server action returns { status, message?, user? }
+      if (response.status !== 200) {
+        return res.status(response.status).json({
+          message: response.message,
+          error: response.message,
+        });
+      }
+
+      return res.status(200).json({ user: response.user });
     }
   }
 };

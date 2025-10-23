@@ -53,16 +53,32 @@ export const createUserFromCredentials = async (
   try {
     const response = await axios.post<{
       user?: UserDocument;
+      message?: string;
       error?: ZodError | string;
     }>("/api/users", userInput);
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
+      // Extract the error message from the API response
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message;
+
       return {
-        error: error.response?.data?.error || error.message,
+        status: error.response?.status || 500,
+        data: {
+          message: errorMessage,
+          error: errorMessage,
+        },
+        error: errorMessage,
       };
     }
-    return { error: "Error creating user from credentials." };
+    return {
+      status: 500,
+      error: "Error creating user from credentials.",
+      data: { error: "Error creating user from credentials." }
+    };
   }
 };
 
@@ -93,16 +109,32 @@ export const updateUserOrganizationId = async (
   try {
     const response = await axios.put<{
       user?: UserDocument;
+      message?: string;
       error?: ZodError | string;
     }>(`/api/users/${userId.toString()}/organizationCode`, { orgCode });
     return response;
   } catch (error) {
     if (axios.isAxiosError(error)) {
+      // Extract the error message from the API response
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message;
+
       return {
-        error: error.response?.data?.error || error.message,
+        status: error.response?.status || 500,
+        data: {
+          message: errorMessage,
+          error: errorMessage,
+        },
+        error: errorMessage,
       };
     }
-    return { error: "Error updating user organization." };
+    return {
+      status: 500,
+      error: "Error updating user organization.",
+      data: { error: "Error updating user organization." }
+    };
   }
 };
 

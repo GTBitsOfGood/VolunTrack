@@ -31,20 +31,29 @@ class AuthForm extends React.Component {
 
   handleSubmit = async (values) => {
     if (this.props.createAccount) {
-      createUserFromCredentials(values).then((it) => {
-        if (it?.data?.user?.status !== 200) {
-          this.props.context.startLoading();
-          this.props.context.failed(
-            it.data.user?.message ?? "Error creating user"
-          );
-        } else {
-          signIn("credentials", {
-            email: values.email,
-            password: values.password,
-            callbackUrl: `${window.location.origin}/home`,
-          });
-        }
-      });
+      const response = await createUserFromCredentials(values);
+
+      // Check if the response indicates an error
+      if (response.status !== 200 || response.error || response.data?.error) {
+        this.props.context.startLoading();
+
+        // Extract the error message from various possible locations
+        const errorMessage =
+          response.data?.user?.message ||  // Message from server action
+          response.data?.message ||         // Direct message
+          response.error ||                 // Error from catch block
+          response.data?.error ||          // Error field in response
+          "Error creating account. Please check your information and try again.";
+
+        this.props.context.failed(errorMessage);
+      } else {
+        // Success - sign in the user
+        signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          callbackUrl: `${window.location.origin}/home`,
+        });
+      }
     } else {
       signIn("credentials", {
         email: values.email,

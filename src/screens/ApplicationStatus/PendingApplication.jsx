@@ -42,13 +42,13 @@ const PendingApplication = () => {
           </p>
         </div>
 
-        <div className="rounded-lg bg-white p-6 shadow">
+        <div className="rounded-lg bg-white p-6">
           <div className="space-y-6">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <div className="h-3 w-3 animate-pulse rounded-full bg-yellow-400"></div>
               </div>
-              <div className="ml-4">
+              <div className="ml-4 [&>*]:mb-0">
                 <p className="text-lg font-medium text-gray-900">
                   Status: Under Review
                 </p>

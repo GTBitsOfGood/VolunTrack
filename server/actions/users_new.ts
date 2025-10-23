@@ -198,7 +198,7 @@ export const updateUserOrganizationId = async (
     return {
       status: 400,
       message:
-        "The entered organization code does not exist. Please try to enter a different org code",
+        "The entered organization code does not exist. Please try to enter a different org code.",
     };
   }
 
