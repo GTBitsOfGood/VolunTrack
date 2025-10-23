@@ -56,10 +56,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (!result.success) return res.status(400).json({ error: result.error });
 
       if (result.data.approved === "approved") {
-        await sendRegistrationConfirmationEmail(
-          result.data.userId,
-          result.data.eventId
-        );
+        try {
+          await sendRegistrationConfirmationEmail(
+            result.data.userId,
+            result.data.eventId
+          );
+        } catch (error) {
+          console.error("Failed to send registration confirmation email:", error);
+          // Continue with registration creation even if email fails
+        }
       }
 
       return res.status(201).json({
