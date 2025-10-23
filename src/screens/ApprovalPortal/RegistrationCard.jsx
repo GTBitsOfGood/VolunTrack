@@ -48,7 +48,7 @@ const RegistrationCard = (props) => {
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
       <div className="flex justify-center">
         <div className="flex flex-row items-center">
-          <div className="mr-2 font-semibold">Volunteer Name: </div>
+          <div className="mr-2 font-semibold">Member Name: </div>
           <div className={`mr-2 ${styles.title}`}>
             {name || "No Name Available"}
           </div>

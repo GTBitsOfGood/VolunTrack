@@ -203,7 +203,7 @@ const VolunterHome = () => {
         </div>
         <div className="flex items-start justify-between">
           <p className="m-0 mb-1 h-6 text-sm font-medium font-medium text-gray-900 text-slate-600 dark:text-gray-300">
-            Design an About page for your volunteers
+            Design an About page for your Members
           </p>
           {edit && (
             <div

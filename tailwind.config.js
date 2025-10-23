@@ -15,6 +15,15 @@ module.exports = {
         hoverColor: "var(--hover-color)",
         darkGrey: "#8E8E8E",
       },
+      keyframes: {
+        fadeIn: {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 0.3s ease-in-out",
+      },
     },
   },
   plugins: [require("flowbite/plugin")],
