@@ -16,6 +16,11 @@ import dbConnect from "../../../../server/mongodb/index";
 import Organization from "../../../../server/mongodb/models/Organization";
 import User from "../../../../server/mongodb/models/User";
 
+// Extend global type for MongoDB client promise
+declare global {
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
 const uri = process.env.MONGO_DB ?? "mongodb://localhost:27017";
 const options = {
   useUnifiedTopology: true,
@@ -23,8 +28,22 @@ const options = {
   dbName: process.env.DB_NAME ?? "test",
 };
 
-const client = new MongoClient(uri, options);
-const clientPromise = client.connect();
+// Use singleton pattern to prevent connection pool exhaustion in development
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
+
+if (process.env.NODE_ENV === "development") {
+  // In development, use a global variable to preserve the client across hot reloads
+  if (!global._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    global._mongoClientPromise = client.connect();
+  }
+  clientPromise = global._mongoClientPromise;
+} else {
+  // In production, create a new client
+  client = new MongoClient(uri, options);
+  clientPromise = client.connect();
+}
 
 export const authOptions: AuthOptions = {
   session: {

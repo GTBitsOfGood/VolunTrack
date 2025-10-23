@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { createOrganizationValidator } from "./helpers";
 import AppFooter from "../../components/Footer";
 import { features } from "./features";
+import HomePageHeader from "../../components/HomePageHeader";
 
 const goToLogin = () => {
   router.push("/login");
@@ -59,72 +60,14 @@ const LandingPage = () => {
           className="absolute -top-44 right-28 -z-10 rotate-90 scale-50 md:scale-75"
         />
         <div className="flex h-fit flex-col md:min-h-screen">
-          <div className="mb-8 ml-2 flex flex-row justify-between self-stretch pb-4 pt-6 md:pl-14">
-            <div className="lg:ml-6">
-              <a href="/" className="flex">
-                <img
-                  src={"/images/voluntrack.svg"}
-                  alt="org logo"
-                  className="h-10"
-                />
-              </a>
-              <a href="https://bitsofgood.org/" className="flex">
-                <img src={"/images/bog.svg"} alt="org logo" className="h-6" />
-              </a>
-            </div>
-            <div className="hidden w-[40%] justify-evenly md:flex">
-              <a
-                href="/"
-                className="flex self-center align-middle text-lg text-black"
-              >
-                Home
-              </a>
-              <a
-                href="#product"
-                className="flex self-center align-middle text-lg text-black"
-              >
-                Product
-              </a>
-              <a
-                href="https://bitsofgood.org/about"
-                className="flex self-center align-middle text-lg text-black"
-              >
-                About
-              </a>
-              <a
-                href="https://bitsofgood.org/contact"
-                className="flex self-center align-middle text-lg text-black"
-              >
-                Contact
-              </a>
-            </div>
-            <div className="flex flex-col items-end md:mr-24 md:flex-row md:flex-row-reverse md:items-center">
-              <Button
-                onClick={goToCreateAcc}
-                className="ml-1 mr-2 flex border-0 bg-purple-700 align-middle hover:bg-purple-600"
-                size="sm"
-                type="button"
-              >
-                <span className="-mx-2 flex items-center md:mx-0">
-                  Create Member Account
-                </span>
-              </Button>
-              <button
-                onClick={goToLogin}
-                className="mr-4 items-center text-purple-600 hover:text-purple-700 hover:underline"
-                type="button"
-              >
-                Login
-              </button>
-            </div>
-          </div>
+          <HomePageHeader goToCreateAcc={goToCreateAcc} goToLogin={goToLogin} />
           <div className="flex h-5/6 flex-col items-stretch justify-around md:flex-row">
             <div
               className="flex w-full flex-col px-1 pt-4 md:w-5/12"
               id="nonprofit-form"
             >
               <p className="w-fit self-center border-b-4 border-purple-700 text-center text-4xl">
-                Simplify Member Coordination
+                Simplify Volunteer Coordination
               </p>
               <p className="self-center border-purple-700 text-center text-xl">
                 Interesting in joining as a nonprofit? Apply below!
@@ -227,7 +170,7 @@ const LandingPage = () => {
                               <InputField
                                 name="website"
                                 label="Nonprofit Website"
-                                placeholder="www.example.com"
+                                placeholder="https://www.example.com"
                               />
                               <div className="flex items-center justify-end">
                                 <Button
@@ -298,7 +241,7 @@ const LandingPage = () => {
                                 name="originalAdminEmail"
                                 label="Primary Admin Account"
                                 placeholder="example@email.com"
-                                tooltip="This will be the main member administrator email and cannot be changed"
+                                tooltip="This will be the main volunteer administrator email and cannot be changed"
                               />
                               <InputField
                                 name="confirm_admin_email"
@@ -413,7 +356,7 @@ const LandingPage = () => {
       <div className="flex flex-col justify-center bg-purple-100 px-4 py-8 text-center md:px-20 md:py-16">
         <h1 className="mb-4 text-2xl font-semibold text-purple-700">
           {/* eslint-disable-next-line react/no-unescaped-entities */}
-          Ready to elevate your nonprofit's event and member management?
+          Ready to elevate your nonprofit's event and volunteer management?
         </h1>
         <a href="#nonprofit-form" className="mx-auto max-w-max no-underline">
           <Button

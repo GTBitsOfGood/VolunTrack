@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import EventManager from "../../../screens/Embed";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 const ParentEmbedComponent = () => {
   const router = useRouter();
@@ -16,7 +17,7 @@ const ParentEmbedComponent = () => {
   }, [router.isReady, router.query]);
 
   if (!organizationId) {
-    return <div>Loading...</div>;
+    return <LoadingScreen size="lg" fullScreen={true} />;
   }
 
   return <EventManager organizationId={organizationId} />;
