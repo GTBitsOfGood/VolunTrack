@@ -23,6 +23,11 @@ import DOMPurify from "dompurify";
 
 import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF
 import { is } from "date-fns/locale";
+import {
+  getVolunteerTerm,
+  getVolunteerTermPlural,
+  getVolunteerTermPluralCapitalized,
+} from "../../../utils/volunteerTerm";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -159,11 +164,13 @@ const EventFormModal = ({
     }
     if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
       setEventEdit(
-        `Registered members have been successfully notified about your edit to the ${event?.eventParent?.title} event!`
+        `Registered ${getVolunteerTermPlural()} have been successfully notified about your edit to the ${
+          event?.eventParent?.title
+        } event!`
       );
     } else if (sendConfirmationEmail && setEventEdit) {
       setEventEdit(
-        "Registered members have been successfully notified about your event edit!"
+        `Registered ${getVolunteerTermPlural()} have been successfully notified about your event edit!`
       );
     }
     setSendConfirmationEmail(false);
@@ -510,7 +517,7 @@ const EventFormModal = ({
                         </Styled.ThirdCol>
                         <Styled.FifthCol>
                           <InputField
-                            label="Max Members"
+                            label={`Max ${getVolunteerTermPluralCapitalized()}`}
                             isRequired={true}
                             name="eventParent.maxVolunteers"
                             type="number"
@@ -1092,7 +1099,8 @@ const EventFormModal = ({
                   </div>
                   <div>
                     <Label>
-                      Event can count towards member&apos;s court required hours
+                      Event can count towards {getVolunteerTerm()}&apos;s court
+                      required hours
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
@@ -1118,8 +1126,8 @@ const EventFormModal = ({
                   {containsExistingEvent(event) && (
                     <div>
                       <Label>
-                        I would like to send an email to members with updated
-                        information
+                        I would like to send an email to{" "}
+                        {getVolunteerTermPlural()} with updated information
                       </Label>
                       <div>
                         <label className="inline-flex cursor-pointer items-center">

@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getOrganization } from "../queries/organizations";
+import {
+  getVolunteerTerm,
+  getVolunteerTermPluralCapitalized,
+} from "../utils/volunteerTerm";
 
 const Header = () => {
   const router = useRouter();
@@ -69,14 +73,14 @@ const Header = () => {
             Change History
           </Dropdown.Item>
           <Dropdown.Item onClick={gotToSummary} href="/events-summary">
-            Event Summary
+            Attendance Summary
           </Dropdown.Item>
         </div>
       )}
       {user.isBitsOfGoodAdmin === true && (
         <div>
           <Dropdown.Item onClick={goToBogApprovalPortal} href="/bog-portal">
-            BOG Approval Portal
+            NP Approval Portal (Bits of Good)
           </Dropdown.Item>
         </div>
       )}
@@ -108,9 +112,9 @@ const Header = () => {
       rounded={true}
       className="my-custom-navbar !mx-6 items-center justify-between !px-0 !py-4 md:!mx-16"
     >
-      <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
+      <Link href="/home" className="flex items-center">
         <img src={imageURL} alt="org logo" className="h-10" />
-      </Navbar.Brand>
+      </Link>
       <Navbar.Toggle />
       <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
         {user.role === "admin" ? (
@@ -130,7 +134,7 @@ const Header = () => {
                 currPageMatches("/home") ? "text-primaryColor" : ""
               }`}
             >
-              Membership
+              {getVolunteerTermPluralCapitalized()}
             </Navbar.Link>
           )
         )}
@@ -142,7 +146,7 @@ const Header = () => {
               currPageMatches("/members") ? "text-primaryColor" : ""
             }`}
           >
-            Members
+            {getVolunteerTermPluralCapitalized()}
           </Navbar.Link>
         )}
 
@@ -242,7 +246,7 @@ const Header = () => {
                 <div className="ml-3 flex flex-col gap-0 text-left">
                   <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
                   <p className="mb-0 capitalize">
-                    {user.role === "volunteer" ? "member" : user.role}
+                    {user.role === "volunteer" ? getVolunteerTerm() : user.role}
                   </p>
                 </div>
               </div>

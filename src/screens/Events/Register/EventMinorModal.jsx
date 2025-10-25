@@ -8,6 +8,7 @@ import * as SForm from "../../sharedStyles/formStyles";
 import variables from "../../../design-tokens/_variables.module.scss";
 import InputField from "../../../components/Forms/InputField";
 import { minorNameValidator } from "../eventHelpers";
+import { getVolunteerTerm } from "../../../utils/volunteerTerm";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -94,7 +95,9 @@ const EventMinorModal = ({ open, toggle, event, addMinor }) => {
                       }}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>This member is under the age of 16</Styled.Text>
+                  <Styled.Text>
+                    This {getVolunteerTerm()} is under the age of 16
+                  </Styled.Text>
                 </div>
               </div>
             </SForm.FormGroup>
