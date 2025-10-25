@@ -160,6 +160,7 @@ class Admins extends React.Component {
         <Styled.Row>
           <Styled.Col className="px-0">
             <SearchBar
+              name="adminSearch"
               placeholder="Search by Admin Name or Email"
               value={this.state.searchValue}
               onChange={(e) => this.setState({ searchValue: e.target.value })}

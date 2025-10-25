@@ -292,10 +292,14 @@ const EventsList = ({
 
 EventsList.propTypes = {
   dateString: PropTypes.string,
-  events: PropTypes.Array,
+  events: PropTypes.array,
   user: PropTypes.object,
   isHomePage: PropTypes.bool,
+  registrations: PropTypes.array,
   onCreateClicked: PropTypes.func,
+  onEventDelete: PropTypes.func,
+  onEventEdit: PropTypes.func,
+  showNewEvents: PropTypes.bool,
 };
 
 export default EventsList;
