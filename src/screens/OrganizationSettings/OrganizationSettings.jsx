@@ -76,24 +76,24 @@ const OrganizationSettings = () => {
     <div>
       <Formik
         initialValues={{
-          name: organizationData.name || '',
-          website: organizationData.website || '',
-          notificationEmail: organizationData.notificationEmail || '',
-          imageUrl: organizationData.imageUrl || '',
-          theme: organizationData.theme || '',
+          name: organizationData.name || "",
+          website: organizationData.website || "",
+          notificationEmail: organizationData.notificationEmail || "",
+          imageUrl: organizationData.imageUrl || "",
+          theme: organizationData.theme || "",
 
-          defaultEventAddress: organizationData.defaultEventAddress || '',
-          defaultEventCity: organizationData.defaultEventCity || '',
-          defaultEventState: organizationData.defaultEventState || '',
-          defaultEventZip: organizationData.defaultEventZip || '',
-          defaultContactName: organizationData.defaultContactName || '',
-          defaultContactEmail: organizationData.defaultContactEmail || '',
-          defaultContactPhone: organizationData.defaultContactPhone || '',
+          defaultEventAddress: organizationData.defaultEventAddress || "",
+          defaultEventCity: organizationData.defaultEventCity || "",
+          defaultEventState: organizationData.defaultEventState || "",
+          defaultEventZip: organizationData.defaultEventZip || "",
+          defaultContactName: organizationData.defaultContactName || "",
+          defaultContactEmail: organizationData.defaultContactEmail || "",
+          defaultContactPhone: organizationData.defaultContactPhone || "",
 
-          eventSilver: organizationData.eventSilver || '',
-          eventGold: organizationData.eventGold || '',
-          hoursSilver: organizationData.hoursSilver || '',
-          hoursGold: organizationData.hoursGold || '',
+          eventSilver: organizationData.eventSilver || "",
+          eventGold: organizationData.eventGold || "",
+          hoursSilver: organizationData.hoursSilver || "",
+          hoursGold: organizationData.hoursGold || "",
         }}
         enableReinitialize={true}
         onSubmit={(values, { setSubmitting }) => {

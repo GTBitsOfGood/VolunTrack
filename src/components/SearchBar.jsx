@@ -5,7 +5,10 @@ const SearchBar = (props) => (
   <div className={props.className + " mb-3"}>
     {props.label && (
       <div className="flex flex-row">
-        <Label className="mb-1 h-6 font-medium text-slate-600" htmlFor={props.name}>
+        <Label
+          className="mb-1 h-6 font-medium text-slate-600"
+          htmlFor={props.name}
+        >
           {props.label}
         </Label>
       </div>
