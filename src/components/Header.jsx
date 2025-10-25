@@ -66,14 +66,14 @@ const Header = () => {
             Change History
           </Dropdown.Item>
           <Dropdown.Item onClick={gotToSummary} href="/events-summary">
-            Event Summary
+            Attendance Summary
           </Dropdown.Item>
         </div>
       )}
       {user.isBitsOfGoodAdmin === true && (
         <div>
           <Dropdown.Item onClick={goToBogApprovalPortal} href="/bog-portal">
-            BOG Approval Portal
+            NP Approval Portal (Bits of Good)
           </Dropdown.Item>
         </div>
       )}
