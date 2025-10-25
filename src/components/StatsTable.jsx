@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { getHours } from "../screens/Stats/User/hourParsing";
 import Pagination from "./PaginationComp";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { getVolunteerTermCapitalized } from "../utils/volunteerTerm";
 
 const Styled = {
   Container: styled.div`
@@ -32,7 +33,9 @@ const StatsTable = ({
   onDeleteClicked,
   onEditClicked,
 }) => {
-  const eventName = isIndividualStats ? "Event Name" : "Volunteer Name";
+  const eventName = isIndividualStats
+    ? "Event Name"
+    : `${getVolunteerTermCapitalized()} Name`;
   const creation = isIndividualStats ? "Date" : "Email Address";
   const time = isIndividualStats ? "Time" : "Hours Participated";
   const textInfo = isIndividualStats ? "Hours Earned" : "";
@@ -89,7 +92,7 @@ const StatsTable = ({
               .map((attendance) => (
                 <Table.Row key={attendance._id}>
                   <Table.Cell>
-                    {attendance.volunteerName ?? "Volunteer"}
+                    {attendance.volunteerName ?? getVolunteerTermCapitalized()}
                   </Table.Cell>
                   <Table.Cell>
                     {attendance.volunteerEmail?.substring(0, 24) + "..."}

@@ -5,6 +5,10 @@ import Link from "next/link";
 import { useRouter, withRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getOrganization } from "../queries/organizations";
+import {
+  getVolunteerTerm,
+  getVolunteerTermPluralCapitalized,
+} from "../utils/volunteerTerm";
 
 const Header = () => {
   const router = useRouter();
@@ -122,7 +126,7 @@ const Header = () => {
               currPageMatches("/home") ? "text-primaryColor" : ""
             }`}
           >
-            Membership
+            {getVolunteerTermPluralCapitalized()}
           </Navbar.Link>
         )}
 
@@ -133,7 +137,7 @@ const Header = () => {
               currPageMatches("/members") ? "text-primaryColor" : ""
             }`}
           >
-            Members
+            {getVolunteerTermPluralCapitalized()}
           </Navbar.Link>
         )}
 
@@ -225,7 +229,7 @@ const Header = () => {
                 <div className="ml-3 flex flex-col gap-0 text-left">
                   <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
                   <p className="mb-0 capitalize">
-                    {user.role === "volunteer" ? "member" : user.role}
+                    {user.role === "volunteer" ? getVolunteerTerm() : user.role}
                   </p>
                 </div>
               </div>
