@@ -8,6 +8,27 @@ import {
 } from "mongoose";
 export * from "./validators";
 
+const questionItemSchema = new Schema(
+  {
+    id: { type: String, required: true },
+    value: { type: String, required: true },
+  }
+);
+
+const registrationQuestionSchema = new Schema(
+  {
+    id: { type: String, required: true },
+    title: { type: String, required: true, default: "Question" },
+    type: { type: String, required: true, enum: ["multiple", "dropdown", "response", "checkboxes"],
+        default: "multiple" },
+    items: { type: [questionItemSchema],
+      required: true,
+      default: [],
+    },
+    text: { type: String, required: false },
+  }
+);
+
 const organizationSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -32,6 +53,8 @@ const organizationSchema = new Schema(
     hoursGold: { type: Number, default: 40 },
     homePage: { type: String, required: false, default: "" },
     aboutPageToggle: { type: Boolean, required: false, default: false },
+    requireApprovalToggle: { type: Boolean, required: true, default: false },
+    userRegistrationForm: { type: [registrationQuestionSchema], required: false, default: []},
   },
   { timestamps: true }
 );
