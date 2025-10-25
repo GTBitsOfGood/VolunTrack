@@ -106,7 +106,12 @@ export const createUserFromCredentials = async (
     userData.role = "admin";
     userData.applicationStatus = "approved";
   } else {
-    userData.applicationStatus = "pending";
+    if (organization.requiresUserApproval == true) {
+      userData.applicationStatus = "pending";
+    } else {
+      userData.applicationStatus = "approved";
+    }
+
   }
 
   userData.organizationId = organization._id;

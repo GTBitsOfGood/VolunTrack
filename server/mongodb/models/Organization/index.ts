@@ -53,7 +53,7 @@ const organizationSchema = new Schema(
     hoursGold: { type: Number, default: 40 },
     homePage: { type: String, required: false, default: "" },
     aboutPageToggle: { type: Boolean, required: false, default: false },
-    requireApprovalToggle: { type: Boolean, required: true, default: false },
+    requiresUserApproval: { type: Boolean, required: true, default: false },
     userRegistrationForm: { type: [registrationQuestionSchema], required: false, default: []},
   },
   { timestamps: true }

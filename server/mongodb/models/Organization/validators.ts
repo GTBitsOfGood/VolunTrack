@@ -67,7 +67,7 @@ export const organizationInputClientValidator = z.object({
   hoursGold: z.number().int().positive().optional(),
   homePage: z.string(),
   aboutPageToggle: z.boolean().optional(),
-  requireApprovalToggle: z.boolean(),
+  requiresUserApproval: z.boolean(),
   userRegistrationForm: z
     .array(registrationQuestionClientValidator)
     .optional()
@@ -109,7 +109,7 @@ export const organizationInputServerValidator = z.object({
   hoursGold: z.number().int().positive().optional(),
   homePage: z.string(),
   aboutPageToggle: z.boolean().optional(),
-  requireApprovalToggle: z.boolean(),
+  requiresUserApproval: z.boolean(),
   userRegistrationForm: z
     .array(registrationQuestionClientValidator)
     .optional()
