@@ -105,9 +105,9 @@ const Header = () => {
       rounded={true}
       className="my-custom-navbar !mx-6 items-center justify-between !px-0 !py-4 md:!mx-16"
     >
-      <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
+      <Link href="/home" className="flex items-center">
         <img src={imageURL} alt="org logo" className="h-10" />
-      </Navbar.Brand>
+      </Link>
       <Navbar.Toggle />
       <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
         {user.role === "admin" ? (

@@ -95,6 +95,7 @@ class Members extends React.Component {
         </div>
         <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
           <SearchBar
+            name="memberSearch"
             placeholder="Search Name"
             value={searchValue}
             onChange={(evt) =>

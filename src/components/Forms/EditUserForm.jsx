@@ -125,10 +125,10 @@ class EditUserForm extends React.Component {
 }
 
 EditUserForm.propTypes = {
-  userSelectedForEdit: PropTypes.object.isRequired,
+  userSelectedForEdit: PropTypes.object,
   submitHandler: PropTypes.func.isRequired,
   isPopUp: PropTypes.bool.isRequired,
-  isAdmin: PropTypes.string.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
   closePopUp: PropTypes.func,
   disableEdit: PropTypes.bool.isRequired,
 };

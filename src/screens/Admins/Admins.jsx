@@ -158,7 +158,7 @@ class Admins extends React.Component {
           <div className="text-4xl font-bold not-italic text-black">Admins</div>
         </Styled.Row>
         <Styled.Row>
-          <Styled.Col>
+          <Styled.Col className="px-0">
             <SearchBar
               placeholder="Search by Admin Name or Email"
               value={this.state.searchValue}
