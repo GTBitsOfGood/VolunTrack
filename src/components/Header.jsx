@@ -223,10 +223,7 @@ const Header = () => {
               >
                 Organization Settings
               </Dropdown.Item>
-              <Dropdown.Item
-                onClick={goToAdminSettings}
-                href="/admin-settings"
-              >
+              <Dropdown.Item onClick={goToAdminSettings} href="/admin-settings">
                 Admin Settings
               </Dropdown.Item>
             </Dropdown>

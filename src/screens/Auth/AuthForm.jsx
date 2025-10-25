@@ -39,10 +39,10 @@ class AuthForm extends React.Component {
 
         // Extract the error message from various possible locations
         const errorMessage =
-          response.data?.user?.message ||  // Message from server action
-          response.data?.message ||         // Direct message
-          response.error ||                 // Error from catch block
-          response.data?.error ||          // Error field in response
+          response.data?.user?.message || // Message from server action
+          response.data?.message || // Direct message
+          response.error || // Error from catch block
+          response.data?.error || // Error field in response
           "Error creating account. Please check your information and try again.";
 
         this.props.context.failed(errorMessage);

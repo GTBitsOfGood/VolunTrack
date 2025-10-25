@@ -77,7 +77,7 @@ export const createUserFromCredentials = async (
     return {
       status: 500,
       error: "Error creating user from credentials.",
-      data: { error: "Error creating user from credentials." }
+      data: { error: "Error creating user from credentials." },
     };
   }
 };
@@ -133,7 +133,7 @@ export const updateUserOrganizationId = async (
     return {
       status: 500,
       error: "Error updating user organization.",
-      data: { error: "Error updating user organization." }
+      data: { error: "Error updating user organization." },
     };
   }
 };
