@@ -126,7 +126,7 @@ const OverallAttendanceSummary = () => {
             <Text text={numEvents} type="subheader" />
           </div>
           <div className="flex-column flex items-center">
-            <Text text="Total Volunteers:" type="subheader" />
+            <Text text="Total Members:" type="subheader" />
             <Text text={attend} type="subheader" />
           </div>
           <div className="flex-column flex items-center">

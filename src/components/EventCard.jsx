@@ -274,12 +274,13 @@ const EventCard = (props) => {
 };
 
 EventCard.propTypes = {
-  key: PropTypes.object.isRequired,
   event: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   version: PropTypes.string,
+  isRegistered: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   setEventEdit: PropTypes.func,
-  onEventEdit: PropTypes.func.isRequired,
+  onEventEdit: PropTypes.func,
+  onEventDelete: PropTypes.func,
 };
 
 export default EventCard;

@@ -76,7 +76,7 @@ const StatDisplay = ({ userId }) => {
       <div className="flex-column mx-auto mt-2 flex w-5/6 items-start gap-1 p-10">
         <Text
           className="pb-10"
-          text={name + " Volunteer Statistics"}
+          text={name + " Member Statistics"}
           type="header"
         />
         <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
@@ -114,7 +114,7 @@ const StatDisplay = ({ userId }) => {
           )}
         />
         <div className="w-full">
-          <Text text="Volunteer History" type="subheader" />
+          <Text text="Member History" type="subheader" />
           <Text
             text={`${attendance.length} events`}
             className="my-2 text-primaryColor"

@@ -6,6 +6,7 @@ import AuthPage from "../screens/Auth";
 import LandingPage from "../screens/LandingPage";
 import DayOfCheckin from "../screens/DayOfCheckIn";
 import AddOrganizationModal from "../components/AddOrganizationModal";
+import LoadingScreen from "../components/LoadingScreen";
 
 // AuthProvider wraps the entire application and makes sure only authenticated users can access the app
 const AuthProvider = ({ children }) => {
@@ -21,7 +22,7 @@ const AuthProvider = ({ children }) => {
         return <AddOrganizationModal data={data} />;
       }
     case "loading":
-      return <p>loading...</p>;
+      return <LoadingScreen fullScreen={true} size="lg" />;
     default:
       if (router.pathname === "/create-account")
         return <AuthPage createAccount={true} />;

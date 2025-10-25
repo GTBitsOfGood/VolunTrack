@@ -3,6 +3,7 @@ import { Table } from "flowbite-react";
 import styled from "styled-components";
 import Volunteer from "./Volunteer";
 import Text from "../../../../components/Text";
+import { getVolunteerTermPlural } from "../../../../utils/volunteerTerm";
 
 const Styled = {
   InfoText: styled.p`
@@ -60,7 +61,7 @@ const AttendanceFunctionality = ({
       (checkedInVolunteers?.length !== 0 ||
         checkedOutVolunteers?.length !== 0) && (
         <Text
-          text="Congratulations! All volunteers were checked in!"
+          text={`Congratulations! All ${getVolunteerTermPlural()} were checked in!`}
           className="flex justify-center text-primaryColor"
           type="subheader"
         />

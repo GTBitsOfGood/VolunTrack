@@ -257,7 +257,7 @@ const EventAttendance = () => {
 
         <div className="mx-18 my-8 flex flex-col rounded-xl bg-grey px-6 py-3">
           <SearchBar
-            placeholder="Search by Volunteer Name or Email"
+            placeholder="Search by Member Name or Email"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
           />
