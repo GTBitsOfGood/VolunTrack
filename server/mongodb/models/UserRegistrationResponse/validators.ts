@@ -8,6 +8,12 @@ export const questionResponseClientValidator = z.object({
 });
 
 export const userRegistrationInputClientValidator = z.object({
+    userId: z
+    .string()
+    .refine(
+      (id) => isValidObjectId(id),
+      (id) => ({ message: `userId ${id} is not a valid ObjectId` })
+    ),
     email: z.string(),
     organizationId: z
     .string()
@@ -19,6 +25,12 @@ export const userRegistrationInputClientValidator = z.object({
 });
 
 export const userRegistrationInputServerValidator = z.object({
+    userId: z
+    .string()
+    .refine(
+      (id) => isValidObjectId(id),
+      (id) => ({ message: `userId ${id} is not a valid ObjectId` })
+    ),
     email: z.string(),
     organizationId: z
     .string()

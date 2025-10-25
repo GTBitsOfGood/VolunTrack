@@ -1,6 +1,12 @@
 import { isValidObjectId, Types } from "mongoose";
 import { z } from "zod";
 
+const questionResponseValidator = z.object({
+  questionId: z.string(),
+  value: z.string(),
+  questionType: z.enum(["multiple", "dropdown", "response", "checkboxes"]),
+});
+
 export const userInputClientValidator = z.object({
   email: z.string().email(),
   organizationId: z.instanceof(Types.ObjectId),
@@ -27,6 +33,7 @@ export const userInputClientValidator = z.object({
   approvedBy: z.string().optional(),
   rejectionReason: z.string().optional(),
   rejectedAt: z.date().optional(),
+  registrationFormResponses: z.array(questionResponseValidator).optional(),
 });
 
 export const userInputServerValidator = z.object({
