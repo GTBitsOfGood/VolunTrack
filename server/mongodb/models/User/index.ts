@@ -37,11 +37,10 @@ const userSchema = new Schema(
     passwordHash: String,
     imageUrl: { type: String, default: "/images/gradient-avatar.png" },
     isBitsOfGoodAdmin: { type: Boolean, default: false },
-
     applicationStatus: {
       type: String,
       enum: ["pending", "approved", "rejected"],
-      default: "pending",
+      default: "approved",
       required: true,
     },
     appliedAt: {

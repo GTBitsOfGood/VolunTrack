@@ -6,12 +6,6 @@ export const userInputClientValidator = z.object({
   organizationId: z.instanceof(Types.ObjectId),
   role: z.enum(["admin", "volunteer", "manager"]),
   status: z.enum(["has_volunteered", "new"]),
-  applicationStatus: z.enum(["pending", "approved", "rejected"]),
-  appliedAt: z.date().optional(),
-  approvedAt: z.date().optional(),
-  approvedBy: z.string().optional(),
-  rejectionReason: z.string().optional(),
-  rejectedAt: z.date().optional(),
   firstName: z.string(),
   lastName: z.string(),
   phone: z.string().optional(),
@@ -27,6 +21,12 @@ export const userInputClientValidator = z.object({
   passwordHash: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
+  applicationStatus: z.enum(["pending", "approved", "rejected"]),
+  appliedAt: z.date().optional(),
+  approvedAt: z.date().optional(),
+  approvedBy: z.string().optional(),
+  rejectionReason: z.string().optional(),
+  rejectedAt: z.date().optional(),
 });
 
 export const userInputServerValidator = z.object({
@@ -59,6 +59,12 @@ export const userInputServerValidator = z.object({
   password: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
+  applicationStatus: z.enum(["pending", "approved", "rejected"]),
+  appliedAt: z.date().optional(),
+  approvedAt: z.date().optional(),
+  approvedBy: z.string().optional(),
+  rejectionReason: z.string().optional(),
+  rejectedAt: z.date().optional(),
 });
 
 export type UserInputClient = z.infer<typeof userInputClientValidator>;
