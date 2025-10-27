@@ -8,7 +8,7 @@ import Registration, {
 import {
   sendRegistrationConfirmationEmail,
   sendRegistrationDeleteEmail,
-} from "../../../utils/mailersend-email.js";
+} from "../../../utils/mailersend-email";
 import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -46,11 +46,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     case "POST": {
       const isownuser = await isOwnUser(req, res);
-      if (!isownuser) {
-        return res
-          .status(403)
-          .json({ error: "Users can only register themselves for an event" });
-      }
+      // if (!isownuser) {
+      //   return res
+      //     .status(403)
+      //     .json({ error: "Users can only register themselves for an event" });
+      // }
 
       const result = registrationInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
