@@ -1,10 +1,19 @@
 import { sendApplicationRejectionEmail } from '../../../utils/mailersend-email';
 import { getUserFromEmail } from '../../../../server/actions/passwordreset';
 import User from '../../../../server/mongodb/models/User';
+import { isAdmin } from '../../../utils/routeProtection';
+import dbConnect from '../../../../server/mongodb';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  await dbConnect();
+  
+  const isadmin = await isAdmin(req, res);
+  if (!isadmin) {
+    return res.status(403).json({ error: 'Unauthorized. Admin access required.' });
   }
 
   try {
