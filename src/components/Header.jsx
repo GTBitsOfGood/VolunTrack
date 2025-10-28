@@ -6,6 +6,9 @@ import { useRouter, withRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { getOrganization } from "../queries/organizations";
 
+//DUMMY VARIABLE FOR WHETHER APPROVAL IS ENABLED
+const MANUAL_APPROVAL = true;
+
 const Header = () => {
   const router = useRouter();
   const [customHome, setCustomHome] = useState(false);
@@ -49,7 +52,16 @@ const Header = () => {
     router.push("/events");
   };
 
+  const onMembersClicked = () => {
+    router.push("/members");
+  };
+
+  const onApplicationPortalClicked = () => {
+    router.push("/application-portal");
+  };
+
   const currPageMatches = (page) => router.pathname === page;
+  const currPageIncludes = (page) => router.pathname.includes(page);
 
   const dropdownItems = (
     <React.Fragment>
@@ -126,16 +138,45 @@ const Header = () => {
           </Navbar.Link>
         )}
 
-        {user.role === "admin" && (
-          <Navbar.Link
-            href="/members"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/members") ? "text-primaryColor" : ""
-            }`}
-          >
-            Members
-          </Navbar.Link>
-        )}
+        {user.role === "admin" &&
+          (MANUAL_APPROVAL ? (
+            <Navbar.Link
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/members") ||
+                currPageIncludes("/application-portal")
+                  ? "text-primaryColor"
+                  : ""
+              }`}
+            >
+              {/* Volunteers */}
+              <Dropdown
+                arrowIcon={true}
+                inline={true}
+                label={<div>Volunteers</div>}
+                className="font-medium"
+              >
+                <Dropdown.Item
+                  href="/application-portal"
+                  onClick={onApplicationPortalClicked}
+                >
+                  Application Portal
+                </Dropdown.Item>
+
+                <Dropdown.Item href="/members" onClick={onMembersClicked}>
+                  Volunteer Management
+                </Dropdown.Item>
+              </Dropdown>
+            </Navbar.Link>
+          ) : (
+            <Navbar.Link
+              href="/members"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/members") ? "text-primaryColor" : ""
+              }`}
+            >
+              Volunteers
+            </Navbar.Link>
+          ))}
 
         {user.role != "admin" && customHome && (
           <Navbar.Link
