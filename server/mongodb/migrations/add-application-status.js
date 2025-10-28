@@ -13,7 +13,7 @@ require("dotenv").config();
       .collection("users")
       .updateMany(
         { applicationStatus: { $exists: false } },
-        { $set: { applicationStatus: "approved" } }
+        { $set: { applicationStatus: "approved", approvedAt: new Date() } }
       );
     console.log("modifiedCount", res.modifiedCount);
   } catch (err) {

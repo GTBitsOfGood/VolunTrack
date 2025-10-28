@@ -271,9 +271,34 @@ export const updateUserOrganizationId = async (
     };
   }
 
-  await user.updateOne({
+  let updates: Partial<UserInputClient> = {
     organizationId: organization._id,
-  });
+    applicationStatus: "pending",
+    appliedAt: new Date()
+  };
+
+  if (user.email in organization.invitedAdmins) {
+    updates.role = "admin";
+    updates.applicationStatus = "approved";
+    updates.approvedAt = new Date();
+    updates.approvedBy = "system";
+  } else {
+    if (organization.requiresUserApproval === true) {
+      updates.applicationStatus = "pending";
+      // Create registration response document if needed
+      await UserRegistrationResponse.create({
+        userId: user._id,
+        email: user.email,
+        organizationId: organization._id,
+        responses: [], // empty until collected
+      });
+    } else {
+      updates.applicationStatus = "approved";
+      updates.approvedAt = new Date();
+    }
+  }
+
+  await user.updateOne({ $set: updates });
 
   return {
     status: 200,
