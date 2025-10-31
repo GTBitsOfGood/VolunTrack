@@ -8,7 +8,7 @@ import Registration, {
 import {
   sendRegistrationConfirmationEmail,
   sendRegistrationDeleteEmail,
-} from "../../../utils/mailersend-email.js";
+} from "../../../utils/mailersend-email";
 import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

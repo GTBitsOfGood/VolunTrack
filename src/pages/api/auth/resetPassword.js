@@ -19,9 +19,14 @@ export default async function handler(req, res) {
     const code = makeCode(6);
     await uploadResetCode(existingUser, email, code);
 
-    // we should probably send a different template for the day of check in users
-    // they could sign in with Google for instance and don't necessarily need to create a password
-    await sendResetCodeEmail(existingUser, email, code, isCheckedIn);
+    try {
+      // we should probably send a different template for the day of check in users
+      // they could sign in with Google for instance and don't necessarily need to create a password
+      await sendResetCodeEmail(existingUser, email, code, isCheckedIn);
+    } catch (error) {
+      console.error("Error sending reset code email:", error);
+      return res.status(500).json({ message: "Failed to send reset email" });
+    }
 
     res.status(200).json({ message: "Email Sent" });
   } else if (req.method === "GET") {
