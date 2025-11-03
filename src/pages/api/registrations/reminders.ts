@@ -3,7 +3,7 @@ import dbConnect from "../../../../server/mongodb";
 import Event from "../../../../server/mongodb/models/Event";
 import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
-import { sendEventReminderEmail, LeanEventPopulated } from "../../../utils/mailersend-email";
+import { sendEventReminderEmail } from "../../../utils/mailersend-email";
 import User from "../../../../server/mongodb/models/User";
 import Organization from "../../../../server/mongodb/models/Organization";
 import { EventParentDocument } from "../../../../server/mongodb/models/EventParent";
@@ -88,7 +88,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             async ({ eventId, organizationId, userIds }) => {
               const event = await Event.findById(eventId)
                 .populate("eventParent")
-                .lean() as LeanEventPopulated | null;
+                .lean();
               const organization = await Organization.findById(
                 organizationId
               ).lean();
