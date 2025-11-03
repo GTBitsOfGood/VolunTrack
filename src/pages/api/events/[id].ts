@@ -13,7 +13,7 @@ import Event, {
 import EventParent from "../../../../server/mongodb/models/EventParent";
 import Registration from "../../../../server/mongodb/models/Registration";
 import User from "../../../../server/mongodb/models/User";
-import { sendEventEditedEmail } from "../../../utils/mailersend-email.js";
+import { sendEventEditedEmail } from "../../../utils/mailersend-email";
 import { authOptions } from "../auth/[...nextauth]";
 import { isAdmin } from "../../../utils/routeProtection";
 

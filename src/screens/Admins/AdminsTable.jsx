@@ -148,7 +148,7 @@ class AdminsTable extends React.Component {
                   (this.state.currentPage + 1) * this.state.pageSize
                 )
                 .map((user, index) => (
-                  <Table.Row key={index} evenIndex={index % 2 === 0}>
+                  <Table.Row key={index}>
                     <Table.Cell>
                       {(user.firstName ?? "") + " " + (user.lastName ?? "")}
                     </Table.Cell>

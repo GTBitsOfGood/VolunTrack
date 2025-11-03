@@ -6,6 +6,10 @@ import MemberTable from "./MemberTable";
 import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import BoGButton from "../../components/BoGButton";
+import {
+  getVolunteerTermPlural,
+  getVolunteerTermPluralCapitalized,
+} from "../../utils/volunteerTerm";
 
 class Members extends React.Component {
   state = {
@@ -85,11 +89,13 @@ class Members extends React.Component {
       <div className="relative left-[10%] flex h-full w-full flex-col pt-[1rem]">
         <div className="flex w-[80%] flex-row justify-between">
           <div className="text-normal text-bold text-4xl">
-            Members ({this.state.users.length} total)
+            {getVolunteerTermPluralCapitalized()} ({this.state.users.length}{" "}
+            total)
           </div>
         </div>
         <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
           <SearchBar
+            name="memberSearch"
             placeholder="Search Name"
             value={searchValue}
             onChange={(evt) =>
@@ -112,7 +118,7 @@ class Members extends React.Component {
                 notes: user.notes,
               };
             })}
-            filename={"member-list.csv"}
+            filename={`${getVolunteerTermPlural()}-list.csv`}
             target="_blank"
             className="mb-3 no-underline"
           >

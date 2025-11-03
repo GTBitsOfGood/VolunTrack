@@ -6,6 +6,7 @@ import {
   DocumentPlusIcon,
   SquaresPlusIcon,
 } from "@heroicons/react/24/solid";
+import { getVolunteerTermPlural } from "../../utils/volunteerTerm";
 
 export const organizationSettingsPages: Page[] = [
   {
@@ -94,8 +95,7 @@ export const organizationSettingsPages: Page[] = [
     title: "Award Thresholds",
     key: "awards",
     icon: TrophyIcon,
-    helperText:
-      "Motivate and engage members by setting thresholds for different medals",
+    helperText: `Motivate and engage ${getVolunteerTermPlural()} by setting thresholds for different medals`,
     sections: [
       {
         title: "Event Medal Thresholds",
