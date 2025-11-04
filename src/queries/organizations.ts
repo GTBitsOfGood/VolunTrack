@@ -255,3 +255,78 @@ export const setAboutPageToggle = async (
     return { error: "Error setting about page toggle." };
   }
 };
+
+export const loadWelcomePage = async (organizationId: string) => {
+  try {
+    const response = await axios.get<{ welcomePage?: string; error?: string }>(
+      `/api/organizations/${organizationId}/customWelcomePage`
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error loading welcome page." };
+  }
+};
+
+export const submitWelcomePage = async (
+  organizationId: string,
+  pageContent: string
+) => {
+  try {
+    const sanitizedWelcomePage = DOMPurify.sanitize(pageContent);
+
+    const response = await axios.post<{ message: string; error?: string }>(
+      `/api/organizations/${organizationId}/customWelcomePage`,
+      { organizationId, welcomePage: sanitizedWelcomePage }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error submitting welcome page." };
+  }
+};
+
+export const getWelcomePageToggle = async (organizationId: string) => {
+  try {
+    const response = await axios.get<{
+      welcomePageToggle?: boolean;
+      error?: string;
+    }>(`/api/organizations/${organizationId}/welcomePageToggle`);
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting welcome page toggle." };
+  }
+};
+
+export const setWelcomePageToggle = async (
+  organizationId: string,
+  welcomePageToggle: boolean
+) => {
+  try {
+    const response = await axios.post<{ message: string; error?: string }>(
+      `/api/organizations/${organizationId}/welcomePageToggle`,
+      { welcomePageToggle }
+    );
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error setting welcome page toggle." };
+  }
+};

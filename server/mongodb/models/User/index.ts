@@ -25,6 +25,26 @@ const userSchema = new Schema(
       default: "new",
       enum: ["has_volunteered", "new"],
     },
+    applicationStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "approved", // Existing users default to approved
+    },
+    approvedAt: { type: Date },
+    rejectedAt: { type: Date },
+    rejectionReason: { type: String },
+    firstTimeLogin: { type: Boolean, default: false }, // Existing users won't see welcome page
+    applicationResponses: {
+      type: [
+        {
+          question: { type: String },
+          type: { type: String },
+          response: { type: Schema.Types.Mixed }, // Can be string, array, etc.
+          required: { type: Boolean },
+        },
+      ],
+      default: [],
+    },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     phone: String,

@@ -1,0 +1,51 @@
+name: Process Scheduled Notifications
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *" # Runs every 15 minutes
+
+jobs:
+  processNotifications:
+    name: Process Due Notifications
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Post Request
+        env:
+          INTERNAL_SECRET: ${{ secrets.INTERNAL_SECRET }}
+          BASE_URL: https://dev.volunteer.bitsofgood.org
+        run: |
+          SECRET=${INTERNAL_SECRET}
+          BASE_URL=${BASE_URL}
+
+          if [[ -z "$INTERNAL_SECRET" || -z "$BASE_URL" ]]; then
+              echo "Error: One or more environment variables are missing or empty."
+              echo "Debug Info:"
+              [[ -z "$INTERNAL_SECRET" ]] && echo " - INTERNAL_SECRET is missing or empty."
+              [[ -z "$BASE_URL" ]] && echo " - BASE_URL is missing or empty."
+              exit 1
+          fi
+
+          echo "Success: Set up env variables"
+
+          JSON_DATA="{ \"secret\": \"$SECRET\" }"
+          echo "Success: Set up JSON_DATA as request body"
+
+          RESPONSE=$(curl -s -i -X POST -H "Content-Type: application/json" -d "$JSON_DATA" "$BASE_URL/api/notifications/scheduler" -w "\nHTTP_STATUS:%{http_code}")
+
+          # Extract HTTP status code
+          HTTP_STATUS=$(echo "$RESPONSE" | grep -oP 'HTTP_STATUS:\K\d+')
+
+          echo "Cleaned API Response: $RESPONSE"
+          echo "HTTP Status Code: $HTTP_STATUS"
+
+          if [[ $RESPONSE == *'"success":true'* ]]; then
+           echo "POST request was successful."
+          else
+            ERROR_MESSAGE=$(echo $RESPONSE | jq -r '.error // "Unknown error"')
+            echo "POST request failed. Error: $ERROR_MESSAGE"
+            exit 1
+          fi

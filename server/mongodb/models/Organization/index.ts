@@ -32,6 +32,24 @@ const organizationSchema = new Schema(
     hoursGold: { type: Number, default: 40 },
     homePage: { type: String, required: false, default: "" },
     aboutPageToggle: { type: Boolean, required: false, default: false },
+    welcomePage: { type: String, required: false, default: "" },
+    welcomePageToggle: { type: Boolean, required: false, default: false },
+    applicationQuestions: {
+      type: [
+        {
+          question: { type: String, required: true },
+          type: {
+            type: String,
+            enum: ["radio", "dropdown", "short", "multi"],
+            required: true,
+          },
+          options: { type: [String], required: false }, // For radio, dropdown, multi
+          required: { type: Boolean, default: false },
+        },
+      ],
+      default: [],
+    },
+    birthdayNotificationsEnabled: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
