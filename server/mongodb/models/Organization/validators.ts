@@ -1,5 +1,42 @@
 import { z } from "zod";
 
+export const questionItemClientValidator = z.object({
+  id: z.string().uuid("Item ID must be a valid UUID"),
+  value: z.string().min(1, "Option value cannot be empty"),
+});
+
+export const registrationQuestionClientValidator = z
+  .object({
+    id: z.string().uuid("Question ID must be a valid UUID"),
+    title: z
+      .string()
+      .min(1, "Question title cannot be empty")
+      .default("Question"),
+    type: z.enum(["multiple", "dropdown", "response", "checkboxes"]),
+    items: z.array(questionItemClientValidator).default([]),
+    text: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      const requiresItems = ["multiple", "dropdown", "checkboxes"].includes(
+        data.type
+      );
+      if (requiresItems && data.items.length === 0) {
+        // Non-free response question types require items list
+        return false;
+      }
+      if (data.type === "response" && data.items.length > 0) {
+        // Free response shouldn't have items list
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Question structure is inconsistent with its type.",
+      path: ["items"],
+    }
+  );
+
 export const organizationInputClientValidator = z.object({
   name: z.string(),
   website: z.string().url("website must be a valid URL"),
@@ -35,6 +72,11 @@ export const organizationInputClientValidator = z.object({
   hoursGold: z.number().int().positive().optional(),
   homePage: z.string(),
   aboutPageToggle: z.boolean().optional(),
+  requiresUserApproval: z.boolean(),
+  userRegistrationForm: z
+    .array(registrationQuestionClientValidator)
+    .optional()
+    .default([]),
 });
 
 export const organizationInputServerValidator = z.object({
@@ -72,6 +114,11 @@ export const organizationInputServerValidator = z.object({
   hoursGold: z.number().int().positive().optional(),
   homePage: z.string(),
   aboutPageToggle: z.boolean().optional(),
+  requiresUserApproval: z.boolean(),
+  userRegistrationForm: z
+    .array(registrationQuestionClientValidator)
+    .optional()
+    .default([]),
 });
 
 export const organizationInputCreationValidator = z.object({

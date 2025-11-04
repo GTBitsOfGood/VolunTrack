@@ -154,6 +154,8 @@ export const authOptions: AuthOptions = {
           hoursSilver: organization.hoursSilver,
           hoursGold: organization.hoursGold,
         },
+        contactEmail: organization.defaultContactEmail,
+        contactPhone: organization.defaultContactPhone,
       };
     },
     redirect({ baseUrl }) {

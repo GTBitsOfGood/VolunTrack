@@ -1,6 +1,12 @@
 import { isValidObjectId, Types } from "mongoose";
 import { z } from "zod";
 
+const questionResponseValidator = z.object({
+  questionId: z.string(),
+  value: z.string(),
+  questionType: z.enum(["multiple", "dropdown", "response", "checkboxes"]),
+});
+
 export const userInputClientValidator = z.object({
   email: z.string().email(),
   organizationId: z.instanceof(Types.ObjectId),
@@ -21,6 +27,15 @@ export const userInputClientValidator = z.object({
   passwordHash: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
+  applicationStatus: z
+    .enum(["pending", "approved", "rejected"])
+    .default("approved"),
+  appliedAt: z.date().optional(),
+  approvedAt: z.date().optional(),
+  approvedBy: z.string().optional(),
+  rejectionReason: z.string().optional(),
+  rejectedAt: z.date().optional(),
+  registrationFormResponses: z.array(questionResponseValidator).optional(),
 });
 
 export const userInputServerValidator = z.object({
@@ -53,6 +68,14 @@ export const userInputServerValidator = z.object({
   password: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
+  applicationStatus: z
+    .enum(["pending", "approved", "rejected"])
+    .default("approved"),
+  appliedAt: z.date().optional(),
+  approvedAt: z.date().optional(),
+  approvedBy: z.string().optional(),
+  rejectionReason: z.string().optional(),
+  rejectedAt: z.date().optional(),
 });
 
 export type UserInputClient = z.infer<typeof userInputClientValidator>;

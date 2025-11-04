@@ -37,6 +37,33 @@ const userSchema = new Schema(
     passwordHash: String,
     imageUrl: { type: String, default: "/images/gradient-avatar.png" },
     isBitsOfGoodAdmin: { type: Boolean, default: false },
+    applicationStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "approved",
+      required: true,
+    },
+    appliedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    approvedAt: {
+      type: Date,
+      sparse: true,
+    },
+    approvedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      sparse: true,
+    },
+    rejectionReason: {
+      type: String,
+      maxlength: 500,
+    },
+    rejectedAt: {
+      type: Date,
+      sparse: true,
+    },
   },
   {
     timestamps: true,

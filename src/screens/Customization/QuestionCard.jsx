@@ -334,7 +334,7 @@ const QuestionCard = ({
         </>
       )}
 
-      {question.type === "checkkbox" && (
+      {question.type === "checkboxes" && (
         <>
           {question.items.map((item, index) => (
             <div key={index} className="flex h-12 items-center gap-2">

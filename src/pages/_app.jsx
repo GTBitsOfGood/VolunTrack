@@ -11,6 +11,7 @@ import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
 import ThemeWrapper from "../providers/StyleProvider";
+import ApplicationStatusWrapper from "../screens/ApplicationStatus";
 
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
@@ -39,7 +40,9 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
             <ThemeWrapper>
               <div className="flex-column flex min-h-screen w-screen overflow-x-hidden">
                 <Header />
-                <Component {...pageProps} />
+                <ApplicationStatusWrapper>
+                  <Component {...pageProps} />
+                </ApplicationStatusWrapper>
                 <div className="grow" />
                 <Footer />
               </div>

@@ -5,6 +5,7 @@ import Attendance from "../mongodb/models/Attendance";
 import Organization from "../mongodb/models/Organization";
 import Registration from "../mongodb/models/Registration";
 import User, { UserDocument, UserInputClient } from "../mongodb/models/User";
+import UserRegistrationResponse from "../mongodb/models/UserRegistrationResponse";
 import { createHistoryEventEditProfile } from "./historyEvent";
 
 export const getUsers = async (
@@ -68,6 +69,7 @@ export const getUsers = async (
   return users;
 };
 
+// ...existing code...
 export const createUserFromCredentials = async (
   userData: Partial<UserInputClient> &
     Required<Pick<UserInputClient, "email">> & { password: string } & {
@@ -75,6 +77,7 @@ export const createUserFromCredentials = async (
     }
 ): Promise<{
   user?: UserDocument | undefined;
+  registrationResponseId?: string;
   message?: string;
   status: number;
 }> => {
@@ -102,20 +105,83 @@ export const createUserFromCredentials = async (
       message: "The entered company code is currently marked as inactive.",
     };
   }
+
+  // invited admins are auto-approved
   if (userData.email in organization.invitedAdmins) {
     userData.role = "admin";
+    userData.applicationStatus = "approved";
+  } else {
+    // If org requires approval, ensure registrationFormResponses provided
+    if (organization.requiresUserApproval === true) {
+      if (
+        !userData.registrationFormResponses ||
+        !Array.isArray(userData.registrationFormResponses) ||
+        userData.registrationFormResponses.length === 0
+      ) {
+        return {
+          status: 400,
+          message:
+            "This organization requires approval. Please complete the registration form.",
+        };
+      }
+      userData.applicationStatus = "pending";
+    } else {
+      userData.applicationStatus = "approved";
+    }
   }
 
+  // ...existing code...
   userData.organizationId = organization._id;
   userData.passwordHash = await hash(
     `${userData.email}${userData.password}`,
     10
   );
 
+  // remove registrationFormResponses before creating the User document
+  let createdUser;
+  try {
+    // build a payload that excludes registrationFormResponses so it doesn't get persisted on User
+    const createPayload = { ...userData };
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (createPayload as any).registrationFormResponses;
+
+    createdUser = await User.create(createPayload);
+  } catch (err) {
+    return {
+      status: 500,
+      message: "Failed to create user",
+    };
+  }
+
+  // If organization requires approval, persist the registration response
+  if (organization.requiresUserApproval === true) {
+    try {
+      const reg = await UserRegistrationResponse.create({
+        userId: createdUser._id,
+        email: createdUser.email, // optional snapshot
+        organizationId: organization._id,
+        responses: userData.registrationFormResponses,
+      });
+      return {
+        status: 200,
+        user: createdUser,
+        registrationResponseId: reg._id.toString(),
+      };
+    } catch (err) {
+      // rollback user to avoid orphaned account
+      await User.deleteOne({ _id: createdUser._id }).catch(() => {
+        // Silently ignore errors during rollback
+      });
+      return {
+        status: 500,
+        message: "Failed to save registration responses. User not created.",
+      };
+    }
+  }
+
   return {
     status: 200,
-    // @ts-expect-error
-    user: User.create(userData),
+    user: createdUser,
   };
 };
 
@@ -149,7 +215,7 @@ export const verifyUserWithCredentials = async (
   if (match) {
     return {
       status: 200,
-      // @ts-expect-error
+      // @ts-expect-error - user object needs to be returned as message
       message: user,
     };
   } else
@@ -195,7 +261,7 @@ export const updateUserOrganizationId = async (
     return {
       status: 400,
       message:
-        "The entered organization code does not exist. Please try to enter a different org code",
+        "The entered organization code does not exist. Please try to enter a different org code.",
     };
   }
 
@@ -207,9 +273,34 @@ export const updateUserOrganizationId = async (
     };
   }
 
-  await user.updateOne({
+  const updates: Partial<UserInputClient> = {
     organizationId: organization._id,
-  });
+    applicationStatus: "pending",
+    appliedAt: new Date(),
+  };
+
+  if (user.email in organization.invitedAdmins) {
+    updates.role = "admin";
+    updates.applicationStatus = "approved";
+    updates.approvedAt = new Date();
+    updates.approvedBy = "system";
+  } else {
+    if (organization.requiresUserApproval === true) {
+      updates.applicationStatus = "pending";
+      // Create registration response document if needed
+      await UserRegistrationResponse.create({
+        userId: user._id,
+        email: user.email,
+        organizationId: organization._id,
+        responses: [], // empty until collected
+      });
+    } else {
+      updates.applicationStatus = "approved";
+      updates.approvedAt = new Date();
+    }
+  }
+
+  await user.updateOne({ $set: updates });
 
   return {
     status: 200,

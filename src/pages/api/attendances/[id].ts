@@ -46,13 +46,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       let checkIn = attendance.checkinTime;
       if (result.data.checkinTime) {
-        // @ts-expect-error
+        // @ts-expect-error - result.data.checkinTime type is not properly inferred
         checkIn = result.data.checkinTime;
       }
 
-      // @ts-expect-error
+      // @ts-expect-error - result.data.checkoutTime type is not properly inferred
       const date1 = new Date(result.data.checkoutTime).getTime();
-      // @ts-expect-error
+      // @ts-expect-error - checkIn type is not properly inferred
       const date2 = new Date(checkIn).getTime();
       const mins = (date1 - date2) / (60 * 1000);
 

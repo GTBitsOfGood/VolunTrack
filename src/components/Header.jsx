@@ -17,6 +17,9 @@ const Header = () => {
     data: { user },
   } = useSession();
 
+  // Check if user is approved
+  const isApproved = user?.applicationStatus === "approved";
+
   const logout = () => {
     signOut();
   };
@@ -43,6 +46,10 @@ const Header = () => {
 
   const goToOrganizationSettings = () => {
     router.push("/organization-settings");
+  };
+
+  const goToAdminSettings = () => {
+    router.push("/admin-settings");
   };
 
   const onRegistrationsClicked = () => {
@@ -120,14 +127,16 @@ const Header = () => {
             Home
           </Navbar.Link>
         ) : (
-          <Navbar.Link
-            href="/home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/home") ? "text-primaryColor" : ""
-            }`}
-          >
-            {getVolunteerTermPluralCapitalized()}
-          </Navbar.Link>
+          isApproved && (
+            <Navbar.Link
+              href="/home"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/home") ? "text-primaryColor" : ""
+              }`}
+            >
+              {getVolunteerTermPluralCapitalized()}
+            </Navbar.Link>
+          )
         )}
 
         {user.role === "admin" && (
@@ -153,14 +162,16 @@ const Header = () => {
         )}
 
         {user.role != "admin" ? (
-          <Navbar.Link
-            href="/events"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/events") ? "text-primaryColor" : ""
-            }`}
-          >
-            Events
-          </Navbar.Link>
+          isApproved && (
+            <Navbar.Link
+              href="/events"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/events") ? "text-primaryColor" : ""
+              }`}
+            >
+              Events
+            </Navbar.Link>
+          )
         ) : (
           <Navbar.Link
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
@@ -211,6 +222,9 @@ const Header = () => {
                 href="/organization-settings"
               >
                 Organization Settings
+              </Dropdown.Item>
+              <Dropdown.Item onClick={goToAdminSettings} href="/admin-settings">
+                Admin Settings
               </Dropdown.Item>
             </Dropdown>
           </Navbar.Link>
