@@ -1,6 +1,6 @@
 import {
   BellIcon,
-  UserCheckIcon,
+  CheckIcon,
   CalendarDaysIcon,
   UsersIcon,
   CogIcon,
@@ -75,7 +75,7 @@ export const adminSettingsPages: Page[] = [
   {
     title: "Volunteer Approval",
     key: "volApp",
-    icon: UserCheckIcon,
+    icon: CheckIcon,
     helperText: "Configure volunteer approval process and messaging",
     sections: [
       {
