@@ -132,6 +132,25 @@ const NotificationSettings = () => {
               {notification.body.replace(/<[^>]+>/g, ' ').substring(0, 200)}
               {notification.body.length > 200 ? '...' : ''}
             </p>
+
+            {/* Recipients display */}
+            {activeTab === 'history' && (
+              <div className="mt-2">
+                <span className="text-sm font-semibold text-gray-700">Sent to: </span>
+                <span className="text-sm text-gray-600">
+                  {notification.recipients === 'everyone'
+                    ? 'Everyone'
+                    : Array.isArray(notification.recipients)
+                    ? notification.recipients.length > 0
+                      ? notification.recipients
+                          .map((r) => `${r.firstName} ${r.lastName}`)
+                          .join(', ')
+                      : 'Specific users'
+                    : 'Everyone'}
+                </span>
+              </div>
+            )}
+
             <div className="mt-2 flex gap-2">
               {notification.type === 'recurring' && (
                 <span className="rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
@@ -146,6 +165,11 @@ const NotificationSettings = () => {
               {notification.sendInApp && (
                 <span className="rounded bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-800">
                   In-App
+                </span>
+              )}
+              {notification.isBirthdayNotification && (
+                <span className="rounded bg-pink-100 px-2 py-1 text-xs font-semibold text-pink-800">
+                  🎂 Birthday
                 </span>
               )}
             </div>
