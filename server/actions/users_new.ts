@@ -169,7 +169,9 @@ export const createUserFromCredentials = async (
       };
     } catch (err) {
       // rollback user to avoid orphaned account
-      await User.deleteOne({ _id: createdUser._id }).catch(() => {});
+      await User.deleteOne({ _id: createdUser._id }).catch(() => {
+        // Silently ignore errors during rollback
+      });
       return {
         status: 500,
         message: "Failed to save registration responses. User not created.",
@@ -213,7 +215,7 @@ export const verifyUserWithCredentials = async (
   if (match) {
     return {
       status: 200,
-      // @ts-expect-error
+      // @ts-expect-error - user object needs to be returned as message
       message: user,
     };
   } else
@@ -271,10 +273,10 @@ export const updateUserOrganizationId = async (
     };
   }
 
-  let updates: Partial<UserInputClient> = {
+  const updates: Partial<UserInputClient> = {
     organizationId: organization._id,
     applicationStatus: "pending",
-    appliedAt: new Date()
+    appliedAt: new Date(),
   };
 
   if (user.email in organization.invitedAdmins) {

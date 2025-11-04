@@ -27,7 +27,9 @@ export const userInputClientValidator = z.object({
   passwordHash: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
-  applicationStatus: z.enum(["pending", "approved", "rejected"]).default("approved"),
+  applicationStatus: z
+    .enum(["pending", "approved", "rejected"])
+    .default("approved"),
   appliedAt: z.date().optional(),
   approvedAt: z.date().optional(),
   approvedBy: z.string().optional(),
@@ -66,7 +68,9 @@ export const userInputServerValidator = z.object({
   password: z.string().optional(),
   imageUrl: z.string().optional(),
   isBitsOfGoodAdmin: z.boolean().optional(),
-  applicationStatus: z.enum(["pending", "approved", "rejected"]).default("approved"),
+  applicationStatus: z
+    .enum(["pending", "approved", "rejected"])
+    .default("approved"),
   appliedAt: z.date().optional(),
   approvedAt: z.date().optional(),
   approvedBy: z.string().optional(),

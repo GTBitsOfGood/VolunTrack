@@ -8,14 +8,19 @@ export const questionItemClientValidator = z.object({
 export const registrationQuestionClientValidator = z
   .object({
     id: z.string().uuid("Question ID must be a valid UUID"),
-    title: z.string().min(1, "Question title cannot be empty").default("Question"),
+    title: z
+      .string()
+      .min(1, "Question title cannot be empty")
+      .default("Question"),
     type: z.enum(["multiple", "dropdown", "response", "checkboxes"]),
     items: z.array(questionItemClientValidator).default([]),
     text: z.string().optional(),
   })
   .refine(
     (data) => {
-      const requiresItems = ["multiple", "dropdown", "checkboxes"].includes(data.type);
+      const requiresItems = ["multiple", "dropdown", "checkboxes"].includes(
+        data.type
+      );
       if (requiresItems && data.items.length === 0) {
         // Non-free response question types require items list
         return false;

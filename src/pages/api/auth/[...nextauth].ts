@@ -105,7 +105,6 @@ export const authOptions: AuthOptions = {
         lastName: message.user.name.split(" ")[1] ?? "last",
         phone: "",
         email: message.user.email,
-
       };
 
       const user = new User(user_data);

@@ -8,26 +8,23 @@ import {
 } from "mongoose";
 export * from "./validators";
 
-const questionItemSchema = new Schema(
-  {
-    id: { type: String, required: true },
-    value: { type: String, required: true },
-  }
-);
+const questionItemSchema = new Schema({
+  id: { type: String, required: true },
+  value: { type: String, required: true },
+});
 
-const registrationQuestionSchema = new Schema(
-  {
-    id: { type: String, required: true },
-    title: { type: String, required: true, default: "Question" },
-    type: { type: String, required: true, enum: ["multiple", "dropdown", "response", "checkboxes"],
-        default: "multiple" },
-    items: { type: [questionItemSchema],
-      required: true,
-      default: [],
-    },
-    text: { type: String, required: false },
-  }
-);
+const registrationQuestionSchema = new Schema({
+  id: { type: String, required: true },
+  title: { type: String, required: true, default: "Question" },
+  type: {
+    type: String,
+    required: true,
+    enum: ["multiple", "dropdown", "response", "checkboxes"],
+    default: "multiple",
+  },
+  items: { type: [questionItemSchema], required: true, default: [] },
+  text: { type: String, required: false },
+});
 
 const organizationSchema = new Schema(
   {
@@ -54,7 +51,11 @@ const organizationSchema = new Schema(
     homePage: { type: String, required: false, default: "" },
     aboutPageToggle: { type: Boolean, required: false, default: false },
     requiresUserApproval: { type: Boolean, required: true, default: false },
-    userRegistrationForm: { type: [registrationQuestionSchema], required: false, default: []},
+    userRegistrationForm: {
+      type: [registrationQuestionSchema],
+      required: false,
+      default: [],
+    },
   },
   { timestamps: true }
 );

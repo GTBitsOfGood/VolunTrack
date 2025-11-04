@@ -1,7 +1,15 @@
 import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
-import { Button, TextInput, Select, Checkbox, Radio, Label, Spinner } from "flowbite-react";
+import {
+  Button,
+  TextInput,
+  Select,
+  Checkbox,
+  Radio,
+  Label,
+  Spinner,
+} from "flowbite-react";
 import { signOut } from "next-auth/react";
 import BoGButton from "../../components/BoGButton";
 
@@ -80,7 +88,9 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
           response === undefined ||
           (Array.isArray(response) && response.length === 0)
         ) {
-          setError(`Please answer the required question: "${question.question}"`);
+          setError(
+            `Please answer the required question: "${question.question}"`
+          );
           return false;
         }
       }
@@ -123,13 +133,14 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
         };
       });
 
-      await axios.post(
-        `/api/users/${session.user._id}/applicationResponses`,
-        { applicationResponses: formattedResponses }
-      );
+      await axios.post(`/api/users/${session.user._id}/applicationResponses`, {
+        applicationResponses: formattedResponses,
+      });
 
       // Update session to reflect that responses have been submitted (optimistic)
-      await update({ user: { ...session.user, applicationResponses: formattedResponses } });
+      await update({
+        user: { ...session.user, applicationResponses: formattedResponses },
+      });
 
       if (onSubmitSuccess) {
         onSubmitSuccess();
@@ -145,7 +156,13 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
   // If no questions, skip the form after render completes
   // Only run once when questions are loaded and empty
   useEffect(() => {
-    if (questions.length === 0 && !loading && hasFetchedQuestions.current && onSubmitSuccess && !hasCalledOnSubmitSuccess.current) {
+    if (
+      questions.length === 0 &&
+      !loading &&
+      hasFetchedQuestions.current &&
+      onSubmitSuccess &&
+      !hasCalledOnSubmitSuccess.current
+    ) {
       hasCalledOnSubmitSuccess.current = true;
       // Use setTimeout to ensure this runs after render completes
       setTimeout(() => {
@@ -156,7 +173,7 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <Spinner size="xl" />
       </div>
     );
@@ -168,16 +185,16 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="max-w-3xl w-full bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-3xl font-bold mb-2">Volunteer Application</h1>
-        <p className="text-gray-600 mb-8">
-          Please complete this application form to continue. Required questions are
-          marked with an asterisk (*).
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-6">
+      <div className="w-full max-w-3xl rounded-lg bg-white p-8 shadow-lg">
+        <h1 className="mb-2 text-3xl font-bold">Volunteer Application</h1>
+        <p className="mb-8 text-gray-600">
+          Please complete this application form to continue. Required questions
+          are marked with an asterisk (*).
         </p>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
             {error}
           </div>
         )}
@@ -185,9 +202,11 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
         <form onSubmit={handleSubmit} className="space-y-8">
           {questions.map((question, index) => (
             <div key={index} className="border-b border-gray-200 pb-6">
-              <h2 className="text-lg font-semibold mb-4">
+              <h2 className="mb-4 text-lg font-semibold">
                 {question.question}
-                {question.required && <span className="text-red-500 ml-1">*</span>}
+                {question.required && (
+                  <span className="ml-1 text-red-500">*</span>
+                )}
               </h2>
 
               {question.type === "short" && (
@@ -253,7 +272,11 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
                         id={`question-${index}-option-${optIndex}`}
                         checked={(responses[index] || []).includes(option)}
                         onChange={(e) =>
-                          handleMultiSelectChange(index, option, e.target.checked)
+                          handleMultiSelectChange(
+                            index,
+                            option,
+                            e.target.checked
+                          )
                         }
                       />
                       <Label
@@ -274,7 +297,7 @@ const ApplicationFormUser = ({ onSubmitSuccess }) => {
               type="submit"
               color="blue"
               disabled={submitting}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-600 text-white hover:bg-blue-700"
             >
               {submitting ? "Submitting..." : "Submit Application"}
             </Button>

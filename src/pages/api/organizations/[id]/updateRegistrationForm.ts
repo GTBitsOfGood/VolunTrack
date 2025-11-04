@@ -68,7 +68,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             });
           }
 
-          if (!question.type || !["multiple", "dropdown", "response", "checkboxes"].includes(question.type)) {
+          if (
+            !question.type ||
+            !["multiple", "dropdown", "response", "checkboxes"].includes(
+              question.type
+            )
+          ) {
             return res.status(400).json({
               error: `Invalid question at index ${i}: type must be one of: multiple, dropdown, response, checkboxes`,
             });
@@ -94,7 +99,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             }
           }
 
-          if (question.text !== undefined && typeof question.text !== "string") {
+          if (
+            question.text !== undefined &&
+            typeof question.text !== "string"
+          ) {
             return res.status(400).json({
               error: `Invalid question at index ${i}: text must be a string if provided`,
             });
