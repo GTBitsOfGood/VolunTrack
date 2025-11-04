@@ -13,13 +13,6 @@ module.exports = withImages({
     MONGO_DB: process.env.MONGO_DB,
     JWT_SECRET: process.env.JWT_SECRET,
   },
-  build: {
-    env: {
-      BASE_URL: process.env.BASE_URL,
-      MONGO_DB: process.env.MONGO_DB,
-      JWT_SECRET: process.env.JWT_SECRET,
-    },
-  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.

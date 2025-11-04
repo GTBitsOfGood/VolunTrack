@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Table } from "flowbite-react";
 import styled from "styled-components";
 import Volunteer from "./Volunteer";

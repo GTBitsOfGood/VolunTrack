@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { Label, Progress } from "flowbite-react";
-import "flowbite-react";
 import { getHours } from "../screens/Stats/User/hourParsing";
 
 const ProgressDisplay = ({

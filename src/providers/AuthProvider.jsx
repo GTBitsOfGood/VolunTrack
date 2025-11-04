@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import router from "next/router";
+import { useEffect } from "react";
 import PropTypes from "prop-types";
 import ResetPage from "../pages/passwordreset/[resetCode]";
 import AuthPage from "../screens/Auth";
@@ -12,11 +13,21 @@ import LoadingScreen from "../components/LoadingScreen";
 const AuthProvider = ({ children }) => {
   const { status, data, update } = useSession();
 
+  // If already authenticated but still on public auth pages, redirect to home
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (router.pathname === "/login" || router.pathname === "/create-account") {
+        router.replace("/home");
+      }
+    }
+  }, [status]);
+
   switch (status) {
     case "authenticated":
       if (data?.user == null) {
         return <AuthPage />;
       } else if (data?.user?.organizationId) {
+        // If we are on login/create-account the effect above will redirect
         return <>{children}</>;
       } else {
         return <AddOrganizationModal data={data} />;

@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Footer } from "flowbite-react";
 
 export const AppFooter = () => {

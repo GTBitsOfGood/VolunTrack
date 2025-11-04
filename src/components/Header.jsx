@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -16,6 +15,7 @@ const MANUAL_APPROVAL = true;
 const Header = () => {
   const router = useRouter();
   const [customHome, setCustomHome] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const {
     data: { user },
   } = useSession();
@@ -120,8 +120,17 @@ const Header = () => {
       <Link href="/home" className="flex items-center">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Link>
-      <Navbar.Toggle />
-      <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
+      <button
+        type="button"
+        aria-label="Toggle menu"
+        className="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden"
+        onClick={() => setMenuOpen((v) => !v)}
+      >
+        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <div className={`!md:space-x-4 mt-2 items-center md:flex ${menuOpen ? "flex flex-col" : "hidden"}`}>
         {user.role === "admin" ? (
           <Navbar.Link
             href="/home"
@@ -296,7 +305,7 @@ const Header = () => {
             {dropdownItems}
           </Dropdown>
         </Navbar.Link>
-      </Navbar.Collapse>
+      </div>
     </Navbar>
   );
 };

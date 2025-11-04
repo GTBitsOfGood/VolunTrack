@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { useEffect, useState } from "react";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
