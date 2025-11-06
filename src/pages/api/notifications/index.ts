@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Notification from '../../../../server/mongodb/models/Notification';
+import User from '../../../../server/mongodb/models/User';
 import { isAdmin } from '../../../utils/routeProtection';
 import dbConnect from '../../../../server/mongodb';
 import { getServerSession } from 'next-auth/next';
@@ -68,18 +69,37 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         .skip(skip)
         .limit(limitNum)
         .populate('createdBy', 'firstName lastName email')
-        .populate({
-          path: 'recipients',
-          select: 'firstName lastName email',
-          match: { _id: { $exists: true } }, // Only populate if recipients is an array of IDs
-        })
         .lean(),
       Notification.countDocuments(filter),
     ]);
 
+    // Manually populate recipients since recipients is Schema.Types.Mixed
+    // and can't be automatically populated by Mongoose
+    const processedNotifications = await Promise.all(
+      notifications.map(async (notification) => {
+        if (Array.isArray(notification.recipients) && notification.recipients.length > 0) {
+          // Recipients is an array of ObjectIds, manually populate them
+          const recipientIds = notification.recipients.map((r: any) => {
+            // Handle both ObjectId and string formats
+            return typeof r === 'string' ? r : r._id || r;
+          });
+          
+          const users = await User.find({
+            _id: { $in: recipientIds },
+          })
+            .select('_id firstName lastName email')
+            .lean();
+          
+          notification.recipients = users;
+        }
+        // If recipients is 'everyone', leave it as is
+        return notification;
+      })
+    );
+
     res.status(200).json({
       success: true,
-      notifications,
+      notifications: processedNotifications,
       pagination: {
         total,
         page: pageNum,

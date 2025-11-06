@@ -143,8 +143,9 @@ const NotificationSettings = () => {
                     : Array.isArray(notification.recipients)
                     ? notification.recipients.length > 0
                       ? notification.recipients
+                          .filter((r) => r && r.firstName && r.lastName)
                           .map((r) => `${r.firstName} ${r.lastName}`)
-                          .join(', ')
+                          .join(', ') || 'Unable to load recipients'
                       : 'Specific users'
                     : 'Everyone'}
                 </span>

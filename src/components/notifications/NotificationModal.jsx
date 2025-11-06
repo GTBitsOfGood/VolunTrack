@@ -402,7 +402,6 @@ const NotificationModal = ({ isOpen, onClose, organizationId }) => {
 
   return (
     <Modal show={isOpen} onClose={handleCancel} size="4xl">
-      <Modal.Header>Create Notification</Modal.Header>
       <Modal.Body>
         <Tabs.Group
           aria-label="Notification type tabs"

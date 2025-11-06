@@ -149,3 +149,10 @@ right: 0;
   min-width: 14px !important;
   margin-right: 0 !important;
 }
+
+/* Target the specific div that contains the li elements */
+.my-custom-navbar > div > div[class*="space-x"] > li,
+.my-custom-navbar > div > div[class*="items-center"] > li {
+  list-style: none !important;
+  list-style-type: none !important;
+}

@@ -130,7 +130,7 @@ const Header = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
       </button>
-      <div className={`!md:space-x-4 mt-2 items-center md:flex ${menuOpen ? "flex flex-col" : "hidden"}`}>
+      <div className={`!md:space-x-4 mt-2 items-center md:flex ${menuOpen ? "flex flex-col" : "hidden"} [&>li]:list-none [&>li]:list-style-none`}>
         {user.role === "admin" ? (
           <Navbar.Link
             href="/home"

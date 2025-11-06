@@ -202,11 +202,17 @@ const EventAttendance = () => {
         <Text className="mb-4" href={`/events`} text="← Back to home" />
         <Styled.HeaderRow>
           <Styled.Header>Attendance Management</Styled.Header>
-          {event.isEnded ? (
-            <BoGButton text="Reopen Event" onClick={reopenEvent} />
-          ) : (
-            <BoGButton text="End Event" onClick={endEvent} />
-          )}
+          <div className="flex gap-2">
+            <BoGButton
+              text="Register for Event"
+              onClick={() => router.push(`/events/${eventId}/register`)}e
+            />
+            {event.isEnded ? (
+              <BoGButton text="Reopen Event" onClick={reopenEvent} />
+            ) : (
+              <BoGButton text="End Event" onClick={endEvent} />
+            )}
+          </div>
         </Styled.HeaderRow>
 
         <div className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3">
