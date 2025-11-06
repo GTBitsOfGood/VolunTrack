@@ -20,9 +20,18 @@ export async function isOwnUser(req, res) {
     return false;
   } else {
     const user = session.user;
+    // Accept user identity from body.userId, query.userId, or dynamic route param query.id
+    const bodyUserId = req.body?.userId;
+    const queryUserId = req.query?.userId;
+    let routeId = req.query?.id;
+    if (Array.isArray(routeId)) routeId = routeId[0];
+
+    const currentUserId = user._id?.toString();
+
     return (
-      req.body.userId === user._id.toString() ||
-      req.query.userId === user._id.toString()
+      (typeof bodyUserId === "string" && bodyUserId === currentUserId) ||
+      (typeof queryUserId === "string" && queryUserId === currentUserId) ||
+      (typeof routeId === "string" && routeId === currentUserId)
     );
   }
 }

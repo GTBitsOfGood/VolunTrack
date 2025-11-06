@@ -9,14 +9,8 @@ export async function middleware(req: NextRequest) {
   }
 
   const secret = process.env.SECRET;
-  const token = await getToken({
-    req,
-    secret,
-    cookieName:
-      process.env.NODE_ENV === "production"
-        ? "__Secure-next-auth.session-token"
-        : "next-auth.session-token",
-  });
+  // Let next-auth detect the correct cookie name automatically across envs
+  const token = await getToken({ req, secret });
 
   // If token exists and the user is trying to access auth pages, redirect to home.
   if (

@@ -16,7 +16,10 @@ import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import WaiverManager from "../Waivers/WaiverManager";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import VolunterHome from "../Home/VolunterHome";
+import WelcomePageEditor from "../Home/WelcomePageEditor";
 import Customization from "../Customization/Customization";
+import ApplicationQuestionsEditor from "../ApplicationPortal/ApplicationQuestionsEditor";
+import NotificationSettings from "../NotificationSettings/NotificationSettings";
 
 const OrganizationSettings = () => {
   const [organizationData, setOrganizationData] = useState({});
@@ -310,7 +313,14 @@ const OrganizationSettings = () => {
                     </div>
                   )}
                   {currentPage.key === "customization" && (
-                    <Customization></Customization>
+                    <>
+                      <Customization></Customization>
+                      <WelcomePageEditor></WelcomePageEditor>
+                      <ApplicationQuestionsEditor></ApplicationQuestionsEditor>
+                    </>
+                  )}
+                  {currentPage.key === "notifications" && (
+                    <NotificationSettings />
                   )}
                 </div>
               </div>

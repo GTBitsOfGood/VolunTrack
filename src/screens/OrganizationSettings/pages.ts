@@ -5,6 +5,7 @@ import {
   DocumentTextIcon,
   DocumentPlusIcon,
   SquaresPlusIcon,
+  BellIcon,
 } from "@heroicons/react/24/solid";
 import { getVolunteerTermPlural } from "../../utils/volunteerTerm";
 
@@ -117,6 +118,12 @@ export const organizationSettingsPages: Page[] = [
     title: "Waiver Management",
     key: "waiver",
     icon: DocumentPlusIcon,
+    sections: [],
+  },
+  {
+    title: "Notifications",
+    key: "notifications",
+    icon: BellIcon,
     sections: [],
   },
 ];

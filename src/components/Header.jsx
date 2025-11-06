@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -10,9 +9,13 @@ import {
   getVolunteerTermPluralCapitalized,
 } from "../utils/volunteerTerm";
 
+//DUMMY VARIABLE FOR WHETHER APPROVAL IS ENABLED
+const MANUAL_APPROVAL = true;
+
 const Header = () => {
   const router = useRouter();
   const [customHome, setCustomHome] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const {
     data: { user },
   } = useSession();
@@ -53,7 +56,16 @@ const Header = () => {
     router.push("/events");
   };
 
+  const onMembersClicked = () => {
+    router.push("/members");
+  };
+
+  const onApplicationPortalClicked = () => {
+    router.push("/application-portal");
+  };
+
   const currPageMatches = (page) => router.pathname === page;
+  const currPageIncludes = (page) => router.pathname.includes(page);
 
   const dropdownItems = (
     <React.Fragment>
@@ -108,8 +120,17 @@ const Header = () => {
       <Link href="/home" className="flex items-center">
         <img src={imageURL} alt="org logo" className="h-10" />
       </Link>
-      <Navbar.Toggle />
-      <Navbar.Collapse className="!md:space-x-4 mt-2 flex flex-row items-center">
+      <button
+        type="button"
+        aria-label="Toggle menu"
+        className="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden"
+        onClick={() => setMenuOpen((v) => !v)}
+      >
+        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <div className={`!md:space-x-4 mt-2 items-center md:flex ${menuOpen ? "flex flex-col" : "hidden"} [&>li]:list-none [&>li]:list-style-none`}>
         {user.role === "admin" ? (
           <Navbar.Link
             href="/home"
@@ -126,20 +147,49 @@ const Header = () => {
               currPageMatches("/home") ? "text-primaryColor" : ""
             }`}
           >
-            {getVolunteerTermPluralCapitalized()}
+            Membership
           </Navbar.Link>
         )}
 
-        {user.role === "admin" && (
-          <Navbar.Link
-            href="/members"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/members") ? "text-primaryColor" : ""
-            }`}
-          >
-            {getVolunteerTermPluralCapitalized()}
-          </Navbar.Link>
-        )}
+        {user.role === "admin" &&
+          (MANUAL_APPROVAL ? (
+            <Navbar.Link
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/members") ||
+                currPageIncludes("/application-portal")
+                  ? "text-primaryColor"
+                  : ""
+              }`}
+            >
+              {/* Volunteers */}
+              <Dropdown
+                arrowIcon={true}
+                inline={true}
+                label={<div>Volunteers</div>}
+                className="font-medium"
+              >
+                <Dropdown.Item
+                  href="/application-portal"
+                  onClick={onApplicationPortalClicked}
+                >
+                  Application Portal
+                </Dropdown.Item>
+
+                <Dropdown.Item href="/members" onClick={onMembersClicked}>
+                  Volunteer Management
+                </Dropdown.Item>
+              </Dropdown>
+            </Navbar.Link>
+          ) : (
+            <Navbar.Link
+              href="/members"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/members") ? "text-primaryColor" : ""
+              }`}
+            >
+              Volunteers
+            </Navbar.Link>
+          ))}
 
         {user.role != "admin" && customHome && (
           <Navbar.Link
@@ -255,7 +305,7 @@ const Header = () => {
             {dropdownItems}
           </Dropdown>
         </Navbar.Link>
-      </Navbar.Collapse>
+      </div>
     </Navbar>
   );
 };
