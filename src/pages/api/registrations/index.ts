@@ -1,6 +1,7 @@
 import { isValidObjectId, Types, UpdateQuery } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
+import { checkEventCapacity } from "../../../../server/actions/registrationCapacity";
 import Registration, {
   RegistrationInputClient,
   registrationInputServerValidator,
@@ -54,6 +55,27 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       const result = registrationInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
+
+      const requestedSpots = 1 + (result.data.minors?.length ?? 0);
+      const capacityResult = await checkEventCapacity(
+        result.data.eventId,
+        requestedSpots
+      );
+
+      if (capacityResult.status === "not_found") {
+        return res.status(404).json({ error: "Event not found." });
+      }
+
+      if (capacityResult.status === "full") {
+        return res.status(400).json({
+          error:
+            capacityResult.remainingSpots <= 0
+              ? "This event has reached capacity."
+              : `Only ${capacityResult.remainingSpots} spot${
+                  capacityResult.remainingSpots === 1 ? "" : "s"
+                } remain for this event. Please adjust your group size.`,
+        });
+      }
 
       if (result.data.approved === "approved") {
         try {
