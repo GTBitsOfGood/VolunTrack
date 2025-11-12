@@ -49,6 +49,7 @@ const userSchema = new Schema(
     lastName: { type: String, required: true },
     phone: String,
     dob: String,
+    nextBirthday: { type: String },
     zip: String,
     address: String,
     city: String,
