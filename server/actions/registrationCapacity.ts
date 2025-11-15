@@ -22,7 +22,7 @@ const normalizeEventId = (eventId: string | Types.ObjectId) =>
 
 const countRegistrationSpots = (registrations: RegistrationDocument[]) =>
   registrations.reduce(
-    (total, registration) => total + 1 + registration.minors.length,
+    (total, registration) => total + 1 + (registration.minors?.length ?? 0),
     0
   );
 
@@ -31,9 +31,11 @@ export const checkEventCapacity = async (
   requestedSpots: number
 ): Promise<CapacityCheckResult> => {
   const normalizedEventId = normalizeEventId(eventId);
-  const event = await Event.findById(normalizedEventId).populate("eventParent");
+  const event = await Event.findById(normalizedEventId)
+    .populate("eventParent")
+    .lean<EventPopulatedDocument | null>();
 
-  if (!event?.eventParent) {
+  if (!event?.eventParent?.maxVolunteers) {
     return { status: "not_found" };
   }
 
@@ -51,14 +53,14 @@ export const checkEventCapacity = async (
   if (remainingSpotsBeforeRequest < requestedSpots) {
     return {
       status: "full",
-      event: event as EventPopulatedDocument,
+      event,
       remainingSpots: remainingSpotsBeforeRequest,
     };
   }
 
   return {
     status: "ok",
-    event: event as EventPopulatedDocument,
+    event,
     remainingSpots: remainingSpotsBeforeRequest,
   };
 };
