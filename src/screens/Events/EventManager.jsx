@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Formik } from "formik";
 import InputField from "../../components/Forms/InputField";
 import { Dropdown } from "flowbite-react";

@@ -4,6 +4,9 @@
   "description": "A multi-tenant platform for nonprofits to manage volunteer and events.",
   "author": "Bits of Good <hello@bitsofgood.org>",
   "license": "MIT",
+  "sideEffects": [
+    "node_modules/flowbite-react/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/GTBitsOfGood/helping-mamas.git"
@@ -13,9 +16,10 @@
   },
   "homepage": "https://github.com/GTBitsOfGood/helping-mamas#readme",
   "scripts": {
-    "dev": "next -p 3000",
+    "clean": "rm -rf .next node_modules/.cache",
+    "dev": "yarn clean && next -p 3000",
     "build": "next build",
-    "start": "next build && next start",
+    "start": "yarn clean && next build && next start",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix",
     "format": "prettier \"**/*.{js,jsx,ts,tsx}\" --write",

@@ -34,6 +34,7 @@ export const userInputServerValidator = z.object({
     .optional(),
   role: z.enum(["admin", "volunteer", "manager"]).optional(),
   status: z.enum(["has_volunteered", "new"]).optional(),
+  firstTimeLogin: z.boolean().optional(),
   firstName: z.string(),
   lastName: z.string(),
   phone: z.string().optional(),

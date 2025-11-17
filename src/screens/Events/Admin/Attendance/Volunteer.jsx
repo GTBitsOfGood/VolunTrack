@@ -1,4 +1,3 @@
-import "flowbite-react";
 import { Table, Tooltip } from "flowbite-react";
 import BoGButton from "../../../../components/BoGButton";
 import { TrashIcon } from "@heroicons/react/24/solid";

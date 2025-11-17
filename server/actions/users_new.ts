@@ -112,10 +112,18 @@ export const createUserFromCredentials = async (
     10
   );
 
+  // Set new users to pending application status and first time login
+  // Admins are auto-approved
+  const newUserData = {
+    ...userData,
+    applicationStatus: userData.role === "admin" ? "approved" : "pending",
+    firstTimeLogin: true,
+  };
+
   return {
     status: 200,
     // @ts-expect-error
-    user: User.create(userData),
+    user: User.create(newUserData),
   };
 };
 

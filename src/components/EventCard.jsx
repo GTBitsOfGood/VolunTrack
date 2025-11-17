@@ -37,7 +37,13 @@ const EventCard = (props) => {
   }, []);
 
   const open = () => {
-    router.push(`/events/${event._id}/register`);
+    // For admins, route to attendance page (registrants list) by default
+    // For volunteers, route to registration page
+    if (props.user.role === "admin") {
+      router.push(`/events/${event._id}/attendance`);
+    } else {
+      router.push(`/events/${event._id}/register`);
+    }
   };
 
   const registerOnClick = (e) => {
