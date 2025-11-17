@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/GTBitsOfGood/helping-mamas#readme",
   "scripts": {
-    "clean": "rm -rf .next node_modules/.cache",
+    "clean": "rimraf .next node_modules/.cache",
     "dev": "yarn clean && next -p 3000",
     "build": "next build",
     "start": "yarn clean && next build && next start",
@@ -130,6 +130,7 @@
     "prettier": "^2.8.4",
     "prettier-eslint": "^12.0.0",
     "prettier-plugin-tailwindcss": "^0.2.3",
+    "rimraf": "^6.1.0",
     "sass": "^1.54.8",
     "typescript": "^5.0.2",
     "vercel": "^23.1.2"
