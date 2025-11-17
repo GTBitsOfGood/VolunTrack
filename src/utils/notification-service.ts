@@ -323,12 +323,23 @@ function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | nul
 export async function processDueNotifications(): Promise<void> {
   const now = new Date();
 
-  // Find notifications that are scheduled and due to be sent
+  // Find notifications that are scheduled and due to be sent.
+  // Logic: If nextScheduledFor exists (non-null), use it to determine due-ness.
+  // Otherwise, fall back to the original scheduledFor.
+  // This prevents recurring notifications from being picked up repeatedly
+  // simply because their original scheduledFor is in the past. 
   const dueNotifications = await Notification.find({
     status: 'scheduled',
     $or: [
-      { scheduledFor: { $lte: now } },
-      { nextScheduledFor: { $lte: now } },
+      // Case 1: nextScheduledFor exists and is due
+      { nextScheduledFor: { $exists: true, $ne: null, $lte: now } },
+      // Case 2: no nextScheduledFor set, rely on scheduledFor
+      {
+        $and: [
+          { $or: [ { nextScheduledFor: { $exists: false } }, { nextScheduledFor: null } ] },
+          { scheduledFor: { $lte: now } },
+        ],
+      },
     ],
   }).lean();
 
