@@ -69,10 +69,13 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
 
   // For recurring notifications, calculate and set the next scheduled time
   if (notification.type === 'recurring' && notification.recurrence) {
-    const nextOccurrence = calculateNextOccurrence(notification.scheduledFor, notification.recurrence);
+    const currentScheduledDate = notification.nextScheduledFor || notification.scheduledFor;
+    const nextOccurrence = calculateNextOccurrence(new Date(currentScheduledDate), notification.recurrence);
     if (nextOccurrence) {
       updateData.nextScheduledFor = nextOccurrence;
       updateData.status = 'scheduled'; // Keep it scheduled for the next occurrence
+    } else {
+      updateData.status = 'sent';
     }
   }
 
@@ -250,7 +253,7 @@ async function sendNotificationEmail(
 /**
  * Calculate the next occurrence of a recurring notification
  */
-function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | null {
+export function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | null {
   const { frequency, interval, daysOfWeek, dayOfMonth, monthOfYear, endDate } = recurrence;
 
   if (!frequency) return null;
@@ -299,7 +302,44 @@ function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | nul
       break;
 
     case 'custom':
-      if (interval) {
+      if (recurrence.customRecurrence) {
+        const { repeatEvery, repeatUnit, repeatOn } = recurrence.customRecurrence;
+        const interval = repeatEvery || 1;
+        
+        if (repeatUnit === 'day') {
+          next.setDate(next.getDate() + interval);
+        } else if (repeatUnit === 'week') {
+          if (repeatOn && repeatOn.length > 0) {
+            const dayMap: { [key: string]: number } = {
+              'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3,
+              'thursday': 4, 'friday': 5, 'saturday': 6
+            };
+            const dayNumbers = repeatOn.map((day: string) => dayMap[day.toLowerCase()]).filter((d: number) => d !== undefined).sort((a: number, b: number) => a - b);
+            
+            if (dayNumbers.length > 0) {
+              const currentDay = next.getDay();
+              let nextDay = dayNumbers.find((d: number) => d > currentDay);
+              
+              if (nextDay === undefined) {
+                nextDay = dayNumbers[0];
+                next.setDate(next.getDate() + (7 - currentDay + nextDay) + (interval - 1) * 7);
+              } else {
+                next.setDate(next.getDate() + (nextDay - currentDay));
+              }
+            } else {
+              next.setDate(next.getDate() + interval * 7);
+            }
+          } else {
+            next.setDate(next.getDate() + interval * 7);
+          }
+        } else if (repeatUnit === 'month') {
+          next.setMonth(next.getMonth() + interval);
+        } else if (repeatUnit === 'year') {
+          next.setFullYear(next.getFullYear() + interval);
+        } else {
+          next.setDate(next.getDate() + interval);
+        }
+      } else if (interval) {
         next.setDate(next.getDate() + interval);
       } else {
         next.setDate(next.getDate() + 1);
@@ -309,8 +349,8 @@ function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | nul
     default:
       return null;
   }
-
-  if (endDate && next > new Date(endDate)) {
+  const effectiveEndDate = recurrence.customRecurrence?.endDate || endDate;
+  if (effectiveEndDate && next > new Date(effectiveEndDate)) {
     return null;
   }
 

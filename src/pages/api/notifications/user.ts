@@ -34,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       sendInApp: true,
       $or: [
         { recipients: 'everyone' },
-        { recipients: userId },
+        { recipients: { $in: [userId] } },
       ],
     };
 
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       readBy: { $ne: userId },
       $or: [
         { recipients: 'everyone' },
-        { recipients: userId },
+        { recipients: { $in: [userId] } },
       ],
     });
 
