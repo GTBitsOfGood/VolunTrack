@@ -207,14 +207,25 @@ const Header = () => {
         )}
 
         {user.role != "admin" ? (
-          <Navbar.Link
-            href="/events"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/events") ? "text-primaryColor" : ""
-            }`}
-          >
-            Events
-          </Navbar.Link>
+          <>
+            <Navbar.Link
+              href="/volunteers"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/volunteers") ? "text-primaryColor" : ""
+              }`}
+            >
+              Volunteers
+            </Navbar.Link>
+
+            <Navbar.Link
+              href="/events"
+              className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+                currPageMatches("/events") ? "text-primaryColor" : ""
+              }`}
+            >
+              Events
+            </Navbar.Link>
+          </>
         ) : (
           <Navbar.Link
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${

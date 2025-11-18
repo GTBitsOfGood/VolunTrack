@@ -138,6 +138,9 @@ const AdminSettings = () => {
         label={field.label}
         placeholder={field.placeholder}
         isRequired={field.isRequired}
+        className={`px-3 py-1 rounded-full border ${
+                selectedLocation === loc ? "bg-primaryColor text-white" : "bg-white text-gray-900"
+              }`}
       />
     );
   };

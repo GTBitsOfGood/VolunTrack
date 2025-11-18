@@ -127,10 +127,10 @@ class VolunteersTable extends React.Component {
           {locationKeys.map((loc) => (
             <button
               key={loc}
-              className={`px-3 py-1 rounded-full border ${
-                selectedLocation === loc ? "bg-primaryColor text-white" : "bg-white"
-              }`}
               onClick={() => this.selectLocation(loc)}
+              className={`px-3 py-1 rounded-full border ${
+                selectedLocation === loc ? "bg-primaryColor text-white" : "bg-white text-gray-900"
+              }`}
             >
               {loc} {loc !== "All" ? <span className="ml-1 text-sm">({locationCounts[loc]})</span> : <span className="ml-1 text-sm">({orgScopedUsers.length})</span>}
             </button>
