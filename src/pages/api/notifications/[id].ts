@@ -4,6 +4,7 @@ import { isAdmin } from '../../../utils/routeProtection';
 import dbConnect from '../../../../server/mongodb';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
+import { calculateNextOccurrence } from '../../../utils/notification-service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
@@ -50,7 +51,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, id: string) 
       notification,
     });
   } catch (error: any) {
-    console.error('Error fetching notification:', error);
     res.status(500).json({
       error: 'Failed to fetch notification',
       details: error.message,
@@ -106,7 +106,6 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, id: string) 
       notification,
     });
   } catch (error: any) {
-    console.error('Error updating notification:', error);
     res.status(500).json({
       error: 'Failed to update notification',
       details: error.message,
@@ -127,78 +126,9 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, id: strin
       message: 'Notification deleted successfully',
     });
   } catch (error: any) {
-    console.error('Error deleting notification:', error);
     res.status(500).json({
       error: 'Failed to delete notification',
       details: error.message,
     });
   }
-}
-
-// Helper function to calculate next occurrence of a recurring notification
-function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | null {
-  const { frequency, interval, daysOfWeek, dayOfMonth, monthOfYear, endDate } = recurrence;
-
-  if (!frequency) return null;
-
-  const next = new Date(currentDate);
-
-  switch (frequency) {
-    case 'daily':
-      next.setDate(next.getDate() + 1);
-      break;
-
-    case 'weekly':
-      if (daysOfWeek && daysOfWeek.length > 0) {
-        const currentDay = next.getDay();
-        const sortedDays = [...daysOfWeek].sort((a, b) => a - b);
-        let nextDay = sortedDays.find((d) => d > currentDay);
-
-        if (nextDay === undefined) {
-          nextDay = sortedDays[0];
-          next.setDate(next.getDate() + (7 - currentDay + nextDay));
-        } else {
-          next.setDate(next.getDate() + (nextDay - currentDay));
-        }
-      } else {
-        next.setDate(next.getDate() + 7);
-      }
-      break;
-
-    case 'monthly':
-      if (dayOfMonth) {
-        next.setMonth(next.getMonth() + 1);
-        next.setDate(Math.min(dayOfMonth, new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate()));
-      } else {
-        next.setMonth(next.getMonth() + 1);
-      }
-      break;
-
-    case 'annually':
-      next.setFullYear(next.getFullYear() + 1);
-      if (monthOfYear) {
-        next.setMonth(monthOfYear - 1);
-      }
-      if (dayOfMonth) {
-        next.setDate(dayOfMonth);
-      }
-      break;
-
-    case 'custom':
-      if (interval) {
-        next.setDate(next.getDate() + interval);
-      } else {
-        next.setDate(next.getDate() + 1);
-      }
-      break;
-
-    default:
-      return null;
-  }
-
-  if (endDate && next > new Date(endDate)) {
-    return null;
-  }
-
-  return next;
 }
