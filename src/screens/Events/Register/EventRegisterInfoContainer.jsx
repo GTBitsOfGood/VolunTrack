@@ -74,7 +74,7 @@ const EventRegisterInfoContainer = ({
       </div>
       <div className="flex flex-wrap gap-2">
         <div className="flex w-64 items-center rounded-md bg-[#F8F8FA] p-2">
-          <CalendarIcon class="h-6 w-6" />
+          <CalendarIcon className="h-6 w-6" />
           <Text
             text={new Date(event.date).toLocaleDateString("en-US", {
               month: "long",

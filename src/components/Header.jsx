@@ -8,6 +8,7 @@ import {
   getVolunteerTerm,
   getVolunteerTermPluralCapitalized,
 } from "../utils/volunteerTerm";
+import Bell from "./Bell";
 
 //DUMMY VARIABLE FOR WHETHER APPROVAL IS ENABLED
 const MANUAL_APPROVAL = true;
@@ -126,11 +127,26 @@ const Header = () => {
         className="inline-flex items-center rounded-lg p-2 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 md:hidden"
         onClick={() => setMenuOpen((v) => !v)}
       >
-        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        <svg
+          className="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M4 6h16M4 12h16M4 18h16"
+          ></path>
         </svg>
       </button>
-      <div className={`!md:space-x-4 mt-2 items-center md:flex ${menuOpen ? "flex flex-col" : "hidden"} [&>li]:list-none [&>li]:list-style-none`}>
+      <div
+        className={`!md:space-x-4 mt-2 items-center md:flex ${
+          menuOpen ? "flex flex-col" : "hidden"
+        } [&>li]:list-style-none [&>li]:list-none`}
+      >
         {user.role === "admin" ? (
           <Navbar.Link
             href="/home"
@@ -143,11 +159,17 @@ const Header = () => {
         ) : (
           <Navbar.Link
             href="/home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold text-black hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/home") ? "text-primaryColor" : ""
             }`}
           >
-            Membership
+            <div
+              className={`h-full w-auto font-inter font-medium md:border-b-[.2em] md:border-b-transparent md:hover:border-b-primaryColor ${
+                currPageMatches("/home") ? "md:border-b-primaryColor" : ""
+              }`}
+            >
+              Membership
+            </div>
           </Navbar.Link>
         )}
 
@@ -205,11 +227,17 @@ const Header = () => {
         {user.role != "admin" ? (
           <Navbar.Link
             href="/events"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold  text-black hover:no-underline md:hover:text-primaryColor ${
               currPageMatches("/events") ? "text-primaryColor" : ""
             }`}
           >
-            Events
+            <div
+              className={`h-full w-auto font-inter font-medium md:border-b-[.2em] md:border-b-transparent md:hover:border-b-primaryColor ${
+                currPageMatches("/events") ? "md:border-b-primaryColor" : ""
+              }`}
+            >
+              Events
+            </div>
           </Navbar.Link>
         ) : (
           <Navbar.Link
@@ -236,6 +264,8 @@ const Header = () => {
             </Dropdown>
           </Navbar.Link>
         )}
+
+        {user.role != "admin" && <Bell className="mx-2" />}
 
         {user.role === "admin" && (
           <Navbar.Link
@@ -277,8 +307,8 @@ const Header = () => {
                   rounded={true}
                 />
                 <div className="ml-3 flex flex-col gap-0 text-left">
-                  <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
-                  <p className="mb-0 capitalize">
+                  <p className="mb-0 font-inter">{`${user.firstName} ${user.lastName}`}</p>
+                  <p className="mb-0 font-inter text-sm capitalize">
                     {user.role === "volunteer" ? getVolunteerTerm() : user.role}
                   </p>
                 </div>
