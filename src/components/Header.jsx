@@ -49,6 +49,10 @@ const Header = () => {
     router.push("/organization-settings");
   };
 
+  const goToAdminSettings = () => {
+    router.push("/admin-settings");
+  };
+
   const onRegistrationsClicked = () => {
     router.push("/registrations");
   };
