@@ -105,7 +105,7 @@ const EventCard = (props) => {
 
   return (
     <div
-      className={`mx-18 mb-2 mr-2 flex cursor-pointer flex-col rounded-xl bg-grey px-[0.75rem] py-3 md:px-6`}
+      className={`mx-18 mb-2 mr-2 flex min-w-[500px] cursor-pointer flex-col rounded-xl bg-[#F5F5F5] px-[0.75rem] py-3 md:px-6`}
       onClick={() => {
         if (!showEditModal) open();
       }}
@@ -119,7 +119,7 @@ const EventCard = (props) => {
           />
           <div className="flex-column flex flex-1 text-xl">
             <div className="mb-1 flex items-center">
-              <Label class="mb-0 line-clamp-1 text-xl font-bold">
+              <Label class="mb-0 line-clamp-1 font-open-sans text-xl font-bold">
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (
@@ -129,7 +129,7 @@ const EventCard = (props) => {
                 </Badge>
               )}
             </div>
-            <Label className="mb-0">{`${convertTime(
+            <Label className="mb-0 font-open-sans">{`${convertTime(
               event.eventParent.startTime
             )} - ${convertTime(event.eventParent.endTime)} EST`}</Label>
             {pastEvent(event) ? (
@@ -238,17 +238,17 @@ const EventCard = (props) => {
               <div className="flex w-full justify-end">
                 <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor" />
               </div>
-              <Label className="mb-0 text-end">
+              {/* <Label className="mb-0 text-end">
                 {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
                 {event.eventParent.maxVolunteers} slots available
-              </Label>
+              </Label> */}
             </div>
           ) : (
             <div className="flex h-full flex-col justify-center">
-              <Label className="mb-0 text-end text-darkGrey">
+              {/* <Label className="mb-0 text-end text-darkGrey">
                 {Math.max(event.eventParent.maxVolunteers - regCount, 0)}/
                 {event.eventParent.maxVolunteers} slots available
-              </Label>
+              </Label> */}
             </div>
           )}
         </div>

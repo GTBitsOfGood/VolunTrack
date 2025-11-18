@@ -668,8 +668,8 @@ const EventManager = ({ isHomePage }) => {
       )}
       {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>
-          <h2 className="text-bold w-full text-left font-bold">
-            My Membership
+          <h2 className="text-bold w-full text-left font-open-sans font-bold text-black">
+            My Volunteering
           </h2>
           <div className="flex flex-row gap-8">
             <div className="mb-4 justify-start">
@@ -701,15 +701,17 @@ const EventManager = ({ isHomePage }) => {
                       name="startDate"
                       type="datetime-local"
                       isEmptyOrInvalid={isEmptyDates || isInvalidRange}
+                      className="font-open-sans text-darkGrey [&_label]:font-open-sans [&_label]:text-darkGrey"
                     />
                     <InputField
                       label="To"
                       name="endDate"
                       type="datetime-local"
                       isEmptyOrInvalid={isEmptyDates || isInvalidRange}
+                      className="font-open-sans text-darkGrey [&_label]:font-open-sans [&_label]:text-darkGrey"
                     />
                     <BoGButton
-                      className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
+                      className="my-3 w-full bg-primaryColor px-1.5 text-white hover:bg-hoverColor [&>span]:font-inter [&>span]:text-[.7em] [&>span]:font-semibold"
                       text="Search"
                       onClick={() => {
                         handleSubmit();
@@ -719,11 +721,15 @@ const EventManager = ({ isHomePage }) => {
                 )}
               />
               <div className="w-full">
-                <Text text="Member History" type="subheader" />
                 <Text
+                  text="Volunteer History"
+                  type="subheader"
+                  className="mb-3 font-open-sans text-black"
+                />
+                {/* <Text
                   text={`${attendances.length} events`}
                   className="my-2 text-primaryColor"
-                />
+                /> */}
                 <StatsTable
                   attendances={attendances}
                   isIndividualStats={true}
