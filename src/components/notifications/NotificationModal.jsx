@@ -307,8 +307,8 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
               onClick={() => setActiveTab(tab)}
               className={`flex-1 py-3 text-center text-sm font-medium ${
                 activeTab === tab
-                  ? "border-b-4 border-teal-600 text-teal-600"
-                  : "text-gray-500 hover:text-teal-600"
+                  ? "border-b-4 border-primaryColor text-primaryColor"
+                  : "text-gray-500 hover:text-primaryColor"
               }`}
             >
               {tab === "individual" ? "Individual Notification" : "Recurring Notification"}
@@ -330,7 +330,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               placeholder="Notification title"
-              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+              className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
             />
           </div>
 
@@ -357,7 +357,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
 
             <div className="relative">
               <div 
-                className="min-h-[42px] w-full rounded border border-gray-300 px-3 py-2 focus-within:border-teal-600 focus-within:ring-1 focus-within:ring-teal-600 cursor-text"
+                className="min-h-[42px] w-full rounded border border-gray-300 px-3 py-2 focus-within:border-primaryColor focus-within:ring-1 focus-within:ring-primaryColor cursor-text"
                 onClick={() => document.getElementById('recipient-search')?.focus()}
               >
                 <div className="flex flex-wrap gap-2 items-center">
@@ -468,7 +468,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                   type="date"
                   value={formData.scheduledDate}
                   onChange={(e) => handleInputChange("scheduledDate", e.target.value)}
-                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
                 />
               </div>
               <div>
@@ -479,7 +479,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                   type="time"
                   value={formData.scheduledTime}
                   onChange={(e) => handleInputChange("scheduledTime", e.target.value)}
-                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
                 />
               </div>
             </div>
@@ -513,7 +513,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                       }))
                     }
                     placeholder="--:--"
-                    className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+                    className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
                   />
                 </div>
               </div>
@@ -537,12 +537,12 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                       min="1"
                       value={customRecurrence.repeatEvery}
                       onChange={(e) => setCustomRecurrence(prev => ({ ...prev, repeatEvery: parseInt(e.target.value) || 1 }))}
-                      className="w-20 rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+                      className="w-20 rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
                     />
                     <select
                       value={customRecurrence.repeatUnit}
                       onChange={(e) => setCustomRecurrence(prev => ({ ...prev, repeatUnit: e.target.value }))}
-                      className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600"
+                      className="flex-1 rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
                     >
                       <option value="day">day</option>
                       <option value="week">week</option>
@@ -575,7 +575,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                             }}
                             className={`w-10 h-10 rounded-full text-sm font-medium ${
                               customRecurrence.repeatOn.includes(dayName)
-                                ? "bg-teal-600 text-white"
+                                ? "bg-primaryColor text-white"
                                 : "border border-gray-300 text-gray-700 hover:bg-gray-50"
                             }`}
                           >
@@ -599,7 +599,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                         value="never"
                         checked={customRecurrence.ends === "never"}
                         onChange={(e) => setCustomRecurrence(prev => ({ ...prev, ends: e.target.value }))}
-                        className="text-teal-600 focus:ring-teal-600"
+                        className="text-primaryColor focus:ring-primaryColor"
                       />
                       <span className="text-sm text-gray-700">Never</span>
                     </label>
@@ -610,7 +610,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                         value="on"
                         checked={customRecurrence.ends === "on"}
                         onChange={(e) => setCustomRecurrence(prev => ({ ...prev, ends: e.target.value }))}
-                        className="text-teal-600 focus:ring-teal-600"
+                        className="text-primaryColor focus:ring-primaryColor"
                       />
                       <span className="text-sm text-gray-700">On</span>
                       <input
@@ -618,7 +618,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                         value={customRecurrence.endDate}
                         onChange={(e) => setCustomRecurrence(prev => ({ ...prev, endDate: e.target.value }))}
                         disabled={customRecurrence.ends !== "on"}
-                        className="ml-2 rounded border border-gray-300 px-2 py-1 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 disabled:bg-gray-100 disabled:text-gray-400"
+                        className="ml-2 rounded border border-gray-300 px-2 py-1 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor disabled:bg-gray-100 disabled:text-gray-400"
                       />
                     </label>
                     <label className="flex items-center gap-2">
@@ -628,7 +628,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                         value="after"
                         checked={customRecurrence.ends === "after"}
                         onChange={(e) => setCustomRecurrence(prev => ({ ...prev, ends: e.target.value }))}
-                        className="text-teal-600 focus:ring-teal-600"
+                        className="text-primaryColor focus:ring-primaryColor"
                       />
                       <span className="text-sm text-gray-700">After</span>
                       <input
@@ -637,7 +637,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                         value={customRecurrence.occurrences}
                         onChange={(e) => setCustomRecurrence(prev => ({ ...prev, occurrences: parseInt(e.target.value) || 1 }))}
                         disabled={customRecurrence.ends !== "after"}
-                        className="ml-2 w-32 rounded border border-gray-300 px-2 py-1 text-sm focus:border-teal-600 focus:outline-none focus:ring-1 focus:ring-teal-600 disabled:bg-gray-100 disabled:text-gray-400"
+                        className="ml-2 w-32 rounded border border-gray-300 px-2 py-1 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor disabled:bg-gray-100 disabled:text-gray-400"
                       />
                       <span className="text-sm text-gray-500">occurrences</span>
                     </label>
@@ -648,7 +648,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                   <button
                     type="button"
                     onClick={() => setShowCustomRecurrence(false)}
-                    className="px-4 py-2 text-sm font-medium text-teal-600 hover:bg-gray-100 rounded"
+                    className="px-4 py-2 text-sm font-medium text-primaryColor hover:bg-gray-100 rounded"
                   >
                     Cancel
                   </button>
@@ -676,7 +676,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                       }));
                       setShowCustomRecurrence(false);
                     }}
-                    className="px-4 py-2 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 rounded"
+                    className="px-4 py-2 text-sm font-medium text-white bg-primaryColor hover:bg-hoverColor rounded"
                   >
                     Done
                   </button>
@@ -700,7 +700,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
                     type="checkbox"
                     checked={formData[field]}
                     onChange={(e) => handleInputChange(field, e.target.checked)}
-                    className="h-4 w-4 rounded border-gray-300 text-teal-600 focus:ring-teal-600"
+                    className="h-4 w-4 rounded border-gray-300 text-primaryColor focus:ring-primaryColor"
                   />
                   {label}
                 </label>
