@@ -30,7 +30,6 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
   }
 
   if (notification.status === 'sent') {
-    console.log('Notification already sent, skipping');
     return;
   }
 
@@ -44,7 +43,6 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
   const recipients = await getRecipients(notification);
 
   if (recipients.length === 0) {
-    console.log('No recipients found for notification');
     await Notification.findByIdAndUpdate(notificationId, {
       status: 'sent',
       sentAt: new Date(),
@@ -80,8 +78,6 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
   }
 
   await Notification.findByIdAndUpdate(notificationId, updateData);
-
-  console.log(`Notification ${notificationId} delivered to ${recipients.length} recipients`);
 }
 
 /**
@@ -217,7 +213,6 @@ async function sendNotificationEmail(
   organization: any
 ): Promise<void> {
   if (!process.env.MAILERSEND_API_KEY) {
-    console.warn('MailerSend API key not configured, skipping email delivery');
     return;
   }
 
@@ -242,9 +237,7 @@ async function sendNotificationEmail(
       if (response.status !== 202) {
         throw new Error(`Email send failed: ${response.statusText}`);
       }
-      console.log(`Email sent successfully to ${user.email}`);
     } catch (error: any) {
-      console.error(`Failed to send notification email to ${user.email}:`, error);
       // Continue with other recipients even if one fails
     }
   }
@@ -372,14 +365,11 @@ export async function processDueNotifications(): Promise<void> {
     ],
   }).lean();
 
-  console.log(`Found ${dueNotifications.length} due notifications to process`);
-
   // Process each notification
   for (const notification of dueNotifications) {
     try {
       await deliverNotification(notification._id);
     } catch (error: any) {
-      console.error(`Failed to deliver notification ${notification._id}:`, error);
       // Continue with other notifications even if one fails
     }
   }

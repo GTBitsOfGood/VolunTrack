@@ -113,7 +113,7 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
       const data = await res.json();
       if (data.users) setUsers(data.users);
     } catch (err) {
-      console.error("Error fetching users:", err);
+      // Error fetching users
     }
   };
 
@@ -234,8 +234,15 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
       
       if (activeTab === "individual") {
         if (formData.scheduledDate && formData.scheduledTime) {
-          const [year, month, day] = formData.scheduledDate.split("-");
-          const [hours, minutes] = formData.scheduledTime.split(":");
+          const dateParts = formData.scheduledDate.split("-");
+          const timeParts = formData.scheduledTime.split(":");
+          if (dateParts.length !== 3 || timeParts.length !== 2) {
+            alert("Invalid date or time format");
+            setLoading(false);
+            return;
+          }
+          const [year, month, day] = dateParts;
+          const [hours, minutes] = timeParts;
           scheduledFor = new Date(
             parseInt(year), 
             parseInt(month) - 1, 
@@ -247,6 +254,11 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
           scheduledFor = new Date().toISOString();
         }
       } else {
+        if (!formData.recurrence.time || !formData.recurrence.time.includes(":")) {
+          alert("Please select a valid time");
+          setLoading(false);
+          return;
+        }
         const today = new Date();
         const [hours, minutes] = formData.recurrence.time.split(":");
         scheduledFor = new Date(
@@ -285,10 +297,8 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
         onClose(true);
       } else {
         alert(data.error || "Failed to create notification");
-        console.error("Notification creation error:", data);
       }
     } catch (err) {
-      console.error("Error creating notification:", err);
       alert("Error creating notification: " + (err.message || "Unknown error"));
     } finally {
       setLoading(false);
@@ -459,28 +469,30 @@ export default function NotificationModal({ isOpen, onClose, organizationId }) {
           </div>
 
           {activeTab === "individual" && (
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <div>
-                <label className="block text-sm font-bold text-gray-800 mb-1">
-                  Schedule date
-                </label>
-                <input
-                  type="date"
-                  value={formData.scheduledDate}
-                  onChange={(e) => handleInputChange("scheduledDate", e.target.value)}
-                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-gray-800 mb-1">
-                  Schedule time
-                </label>
-                <input
-                  type="time"
-                  value={formData.scheduledTime}
-                  onChange={(e) => handleInputChange("scheduledTime", e.target.value)}
-                  className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
-                />
+            <div className="mb-6">
+              <div className="flex gap-4 mb-4" style={{ maxWidth: '50%' }}>
+                <div className="flex-1">
+                  <label className="block text-sm font-bold text-gray-800 mb-1">
+                    Schedule date
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.scheduledDate}
+                    onChange={(e) => handleInputChange("scheduledDate", e.target.value)}
+                    className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-bold text-gray-800 mb-1">
+                    Schedule time
+                  </label>
+                  <input
+                    type="time"
+                    value={formData.scheduledTime}
+                    onChange={(e) => handleInputChange("scheduledTime", e.target.value)}
+                    className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
+                  />
+                </div>
               </div>
             </div>
           )}

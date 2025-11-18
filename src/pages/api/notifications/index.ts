@@ -113,7 +113,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       },
     });
   } catch (error: any) {
-    console.error('Error fetching notifications:', error);
     res.status(500).json({
       error: 'Failed to fetch notifications',
       details: error.message,
@@ -198,9 +197,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
       const { deliverNotification } = await import('../../../utils/notification-service');
       try {
         await deliverNotification(notification._id);
-        console.log(`Notification ${notification._id} sent immediately`);
       } catch (error: any) {
-        console.error(`Failed to send notification immediately:`, error);
         // Don't fail the request, the cron job will pick it up
       }
     }
@@ -210,7 +207,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
       notification,
     });
   } catch (error: any) {
-    console.error('Error creating notification:', error);
     res.status(500).json({
       error: 'Failed to create notification',
       details: error.message,

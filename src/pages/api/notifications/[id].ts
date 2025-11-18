@@ -51,7 +51,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse, id: string) 
       notification,
     });
   } catch (error: any) {
-    console.error('Error fetching notification:', error);
     res.status(500).json({
       error: 'Failed to fetch notification',
       details: error.message,
@@ -107,7 +106,6 @@ async function handlePut(req: NextApiRequest, res: NextApiResponse, id: string) 
       notification,
     });
   } catch (error: any) {
-    console.error('Error updating notification:', error);
     res.status(500).json({
       error: 'Failed to update notification',
       details: error.message,
@@ -128,7 +126,6 @@ async function handleDelete(req: NextApiRequest, res: NextApiResponse, id: strin
       message: 'Notification deleted successfully',
     });
   } catch (error: any) {
-    console.error('Error deleting notification:', error);
     res.status(500).json({
       error: 'Failed to delete notification',
       details: error.message,
