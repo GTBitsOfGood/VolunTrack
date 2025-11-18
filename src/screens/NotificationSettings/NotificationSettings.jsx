@@ -1,25 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { Tabs, ToggleSwitch, Spinner } from 'flowbite-react';
+import "react-quill/dist/quill.snow.css";
 import BoGButton from '../../components/BoGButton';
 import NotificationModal from '../../components/notifications/NotificationModal';
-import { formatDistance } from 'date-fns';
-import {
-  getOrganization,
-  updateOrganization,
-} from '../../queries/organizations';
+import { getOrganization, updateOrganization } from '../../queries/organizations';
 
 const NotificationSettings = () => {
+  let ReactQuill;
+  if (typeof window !== "undefined") {
+    ReactQuill = require("react-quill");
+  }
+  const quill = useRef(null);
+  
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('scheduled');
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [birthdayNotificationsEnabled, setBirthdayNotificationsEnabled] =
-    useState(false);
+  const [birthdayNotificationsEnabled, setBirthdayNotificationsEnabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [birthdaySettings, setBirthdaySettings] = useState({
+    title: '',
+    body: '',
+    time: '09:00',
+    sendInApp: true,
+    sendEmail: false,
+    sendText: false,
+  });
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10,
+    limit: 4,
     total: 0,
     pages: 1,
   });
@@ -35,10 +45,19 @@ const NotificationSettings = () => {
   const fetchOrganizationSettings = async () => {
     try {
       const response = await getOrganization(session.user.organizationId);
-      if (response.data.organization) {
-        setBirthdayNotificationsEnabled(
-          response.data.organization.birthdayNotificationsEnabled || false
-        );
+      const org = response.data.organization;
+      if (org) {
+        setBirthdayNotificationsEnabled(org.birthdayNotificationsEnabled || false);
+        if (org.birthdayNotificationSettings) {
+          setBirthdaySettings({
+            title: org.birthdayNotificationSettings.title || '',
+            body: org.birthdayNotificationSettings.body || '',
+            time: org.birthdayNotificationSettings.time || '09:00',
+            sendInApp: org.birthdayNotificationSettings.sendInApp !== false,
+            sendEmail: org.birthdayNotificationSettings.sendEmail || false,
+            sendText: org.birthdayNotificationSettings.sendText || false,
+          });
+        }
       }
     } catch (error) {
       console.error('Error fetching organization settings:', error);
@@ -55,10 +74,7 @@ const NotificationSettings = () => {
 
       if (data.success) {
         setNotifications(data.notifications);
-        setPagination((prev) => ({
-          ...prev,
-          ...data.pagination,
-        }));
+        setPagination(prev => ({ ...prev, ...data.pagination }));
       }
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -75,6 +91,32 @@ const NotificationSettings = () => {
       setBirthdayNotificationsEnabled(enabled);
     } catch (error) {
       console.error('Error updating birthday notifications:', error);
+    }
+  };
+
+  const handleSaveBirthdaySettings = async () => {
+    // Validation
+    if (!birthdaySettings.title.trim()) {
+      alert('Please enter a title');
+      return;
+    }
+    if (!birthdaySettings.body.trim()) {
+      alert('Please enter a body');
+      return;
+    }
+    if (!birthdaySettings.sendInApp && !birthdaySettings.sendEmail && !birthdaySettings.sendText) {
+      alert('Please select at least one send through option');
+      return;
+    }
+
+    try {
+      await updateOrganization(session.user.organizationId, {
+        birthdayNotificationSettings: birthdaySettings,
+      });
+      alert('Birthday notification settings saved!');
+    } catch (error) {
+      console.error('Error saving birthday settings:', error);
+      alert('Failed to save birthday settings');
     }
   };
 
@@ -96,251 +138,276 @@ const NotificationSettings = () => {
     }
   };
 
-  const handleCreateNotification = () => {
-    setShowModal(true);
-  };
-
   const handleModalClose = (shouldRefresh) => {
     setShowModal(false);
-    if (shouldRefresh) {
-      fetchNotifications();
+    if (shouldRefresh) fetchNotifications();
+  };
+
+  const formatNotificationDate = (date) => {
+    const now = new Date();
+    const notificationDate = new Date(date);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const notificationDay = new Date(
+      notificationDate.getFullYear(), 
+      notificationDate.getMonth(), 
+      notificationDate.getDate()
+    );
+    
+    const timeString = notificationDate.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit',
+      hour12: true 
+    }).toLowerCase();
+    
+    if (notificationDay.getTime() === today.getTime()) {
+      return `Today, ${timeString}`;
+    } else if (notificationDay.getTime() === yesterday.getTime()) {
+      return `Yesterday, ${timeString}`;
+    } else {
+      const monthName = notificationDate.toLocaleDateString('en-US', { month: 'long' });
+      return `${monthName} ${notificationDate.getDate()}, ${timeString}`;
     }
   };
 
   const renderNotificationCard = (notification) => {
     const scheduledDate = new Date(notification.scheduledFor);
     const sentDate = notification.sentAt ? new Date(notification.sentAt) : null;
-    const timeAgo = sentDate
-      ? formatDistance(sentDate, new Date(), { addSuffix: true })
-      : formatDistance(scheduledDate, new Date(), { addSuffix: true });
+    const displayDate = activeTab === 'history' && sentDate 
+      ? formatNotificationDate(sentDate)
+      : formatNotificationDate(scheduledDate);
 
     return (
-      <div key={notification._id} className="mb-4 rounded-lg border border-gray-200 bg-white p-6 shadow">
+      <div key={notification._id} className="mb-3 rounded-lg bg-gray-100 p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h5 className="text-xl font-bold tracking-tight text-gray-900">
-              {notification.title}
+            <h5 className="text-base font-bold text-gray-900">
+              {notification.title} <span className="font-normal text-gray-600">{displayDate}</span>
             </h5>
-            <p className="text-sm text-gray-500">
-              {activeTab === 'scheduled'
-                ? scheduledDate.toLocaleString()
-                : sentDate
-                ? sentDate.toLocaleString()
-                : timeAgo}
-            </p>
-            <p className="mt-2 font-normal text-gray-700">
-              {notification.body.replace(/<[^>]+>/g, ' ').substring(0, 200)}
-              {notification.body.length > 200 ? '...' : ''}
-            </p>
-
-            {/* Recipients display */}
-            {activeTab === 'history' && (
-              <div className="mt-2">
-                <span className="text-sm font-semibold text-gray-700">Sent to: </span>
-                <span className="text-sm text-gray-600">
-                  {notification.recipients === 'everyone'
-                    ? 'Everyone'
-                    : Array.isArray(notification.recipients)
-                    ? notification.recipients.length > 0
-                      ? notification.recipients
-                          .filter((r) => r && r.firstName && r.lastName)
-                          .map((r) => `${r.firstName} ${r.lastName}`)
-                          .join(', ') || 'Unable to load recipients'
-                      : 'Specific users'
-                    : 'Everyone'}
-                </span>
-              </div>
-            )}
-
-            <div className="mt-2 flex gap-2">
-              {notification.type === 'recurring' && (
-                <span className="rounded bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
-                  Recurring
-                </span>
-              )}
-              {notification.sendEmail && (
-                <span className="rounded bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
-                  Email
-                </span>
-              )}
-              {notification.sendInApp && (
-                <span className="rounded bg-purple-100 px-2 py-1 text-xs font-semibold text-purple-800">
-                  In-App
-                </span>
-              )}
-              {notification.isBirthdayNotification && (
-                <span className="rounded bg-pink-100 px-2 py-1 text-xs font-semibold text-pink-800">
-                  🎂 Birthday
-                </span>
+            <div className="mt-2 text-sm text-gray-700 leading-relaxed">
+              {ReactQuill && (
+                <div className="notification-display-wrapper">
+                  <ReactQuill
+                    value={notification.body || ""}
+                    readOnly={true}
+                    theme="snow"
+                    modules={{ toolbar: false }}
+                    className="notification-display"
+                  />
+                </div>
               )}
             </div>
           </div>
           {activeTab === 'scheduled' && (
-            <div className="ml-4">
-              <button
-                onClick={() => handleDeleteNotification(notification._id)}
-                className="text-red-600 hover:text-red-800"
-              >
-                Delete
-              </button>
-            </div>
+            <button
+              onClick={() => handleDeleteNotification(notification._id)}
+              className="ml-4 text-red-600 hover:text-red-800 text-sm"
+            >
+              Delete
+            </button>
           )}
         </div>
       </div>
     );
   };
 
+  const PaginationButton = ({ onClick, active, disabled, children }) => {
+    const baseClass = "px-3 py-2 rounded border transition-colors";
+    const className = disabled 
+      ? `${baseClass} border-gray-300 bg-white text-gray-700 cursor-default`
+      : active 
+      ? `${baseClass} border-primaryColor bg-primaryColor text-white`
+      : `${baseClass} border-gray-300 bg-white text-gray-700 hover:bg-gray-50`;
+    
+    return (
+      <button onClick={onClick} disabled={disabled} className={className}>
+        {children}
+      </button>
+    );
+  };
+
   const renderPagination = () => {
     if (pagination.pages <= 1) return null;
 
-    const pages = [];
-    const showEllipsisStart = pagination.page > 3;
-    const showEllipsisEnd = pagination.page < pagination.pages - 2;
-
-    if (pagination.page > 1) {
-      pages.push(
-        <button
-          key="prev"
-          onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
-          className="px-3 py-2 text-gray-700 hover:bg-gray-100"
+    const { page: currentPage, pages: totalPages } = pagination;
+    const pageButtons = [];
+    
+    if (currentPage > 1) {
+      pageButtons.push(
+        <PaginationButton 
+          key="prev" 
+          onClick={() => setPagination(prev => ({ ...prev, page: currentPage - 1 }))}
         >
           &lt;
-        </button>
+        </PaginationButton>
       );
     }
 
-    pages.push(
-      <button
+    pageButtons.push(
+      <PaginationButton 
         key={1}
-        onClick={() => setPagination({ ...pagination, page: 1 })}
-        className={`px-3 py-2 ${
-          pagination.page === 1
-            ? 'bg-primary-600 text-white'
-            : 'text-gray-700 hover:bg-gray-100'
-        }`}
+        active={currentPage === 1}
+        onClick={() => setPagination(prev => ({ ...prev, page: 1 }))}
       >
         1
-      </button>
+      </PaginationButton>
     );
 
-    if (showEllipsisStart) {
-      pages.push(
-        <span key="ellipsis-start" className="px-3 py-2 text-gray-700">
-          ...
-        </span>
-      );
-    }
-
-    const startPage = Math.max(2, pagination.page - 1);
-    const endPage = Math.min(pagination.pages - 1, pagination.page + 1);
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(
-        <button
-          key={i}
-          onClick={() => setPagination({ ...pagination, page: i })}
-          className={`px-3 py-2 ${
-            pagination.page === i
-              ? 'bg-primary-600 text-white'
-              : 'text-gray-700 hover:bg-gray-100'
-          }`}
+    if (totalPages >= 2) {
+      pageButtons.push(
+        <PaginationButton 
+          key={2}
+          active={currentPage === 2}
+          onClick={() => setPagination(prev => ({ ...prev, page: 2 }))}
         >
-          {i}
-        </button>
+          2
+        </PaginationButton>
       );
     }
 
-    if (showEllipsisEnd) {
-      pages.push(
-        <span key="ellipsis-end" className="px-3 py-2 text-gray-700">
+    if (totalPages > 4) {
+      pageButtons.push(
+        <PaginationButton key="ellipsis" disabled>
           ...
-        </span>
+        </PaginationButton>
       );
     }
 
-    if (pagination.pages > 1) {
-      pages.push(
-        <button
-          key={pagination.pages}
-          onClick={() => setPagination({ ...pagination, page: pagination.pages })}
-          className={`px-3 py-2 ${
-            pagination.page === pagination.pages
-              ? 'bg-primary-600 text-white'
-              : 'text-gray-700 hover:bg-gray-100'
-          }`}
+    if (totalPages === 3 || totalPages === 4) {
+      pageButtons.push(
+        <PaginationButton 
+          key={3}
+          active={currentPage === 3}
+          onClick={() => setPagination(prev => ({ ...prev, page: 3 }))}
         >
-          {pagination.pages}
-        </button>
+          3
+        </PaginationButton>
       );
     }
 
-    if (pagination.page < pagination.pages) {
-      pages.push(
-        <button
+    if (totalPages > 4) {
+      pageButtons.push(
+        <PaginationButton 
+          key={totalPages - 1}
+          active={currentPage === totalPages - 1}
+          onClick={() => setPagination(prev => ({ ...prev, page: totalPages - 1 }))}
+        >
+          {totalPages - 1}
+        </PaginationButton>
+      );
+    }
+
+    if (totalPages >= 4) {
+      pageButtons.push(
+        <PaginationButton 
+          key={totalPages}
+          active={currentPage === totalPages}
+          onClick={() => setPagination(prev => ({ ...prev, page: totalPages }))}
+        >
+          {totalPages}
+        </PaginationButton>
+      );
+    }
+
+    if (currentPage < totalPages) {
+      pageButtons.push(
+        <PaginationButton 
           key="next"
-          onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
-          className="px-3 py-2 text-gray-700 hover:bg-gray-100"
+          onClick={() => setPagination(prev => ({ ...prev, page: currentPage + 1 }))}
         >
           &gt;
-        </button>
+        </PaginationButton>
       );
     }
 
     return (
       <div className="mt-6 flex items-center justify-center gap-1">
-        {pages}
+        {pageButtons}
+      </div>
+    );
+  };
+
+  const renderTabContent = () => {
+    if (loading) {
+      return (
+        <div className="flex justify-center py-8">
+          <Spinner size="xl" />
+        </div>
+      );
+    }
+
+    if (notifications.length > 0) {
+      return (
+        <>
+          {notifications.map(renderNotificationCard)}
+          {renderPagination()}
+        </>
+      );
+    }
+
+    const emptyMessages = {
+      scheduled: 'No scheduled notifications',
+      history: 'No notification history',
+      birthdays: 'No birthday notifications scheduled'
+    };
+
+    return (
+      <div className="py-8 text-center text-gray-500">
+        {emptyMessages[activeTab]}
       </div>
     );
   };
 
   return (
-    <div className="w-full">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Notifications</h2>
-        <BoGButton text="Create Notification" onClick={handleCreateNotification} />
+    <div>
+      <style jsx global>{`
+        .notification-display-wrapper .ql-container {
+          border: none;
+          font-size: inherit;
+          height: auto;
+          min-height: auto;
+        }
+        .notification-display-wrapper .ql-editor {
+          padding: 0;
+          font-size: inherit;
+          line-height: inherit;
+          min-height: auto;
+          height: auto;
+        }
+        .notification-display-wrapper .ql-editor.ql-blank::before {
+          display: none;
+        }
+        .notification-display-wrapper {
+          display: inline-block;
+          width: 100%;
+        }
+      `}</style>
+
+      <div className="mb-4 flex items-center justify-between -mt-4">
+        <h2 className="text-lg font-bold">Notification Settings</h2>
+        <BoGButton 
+          text="Create Notification" 
+          onClick={() => setShowModal(true)}
+        />
       </div>
 
       <Tabs.Group
         aria-label="Notification tabs"
         style="underline"
+        className="[&>button[aria-selected='true']]:text-primaryColor [&>button[aria-selected='true']]:border-primaryColor"
         onActiveTabChange={(tab) => {
           const tabKeys = ['scheduled', 'history', 'birthdays'];
           setActiveTab(tabKeys[tab]);
-          setPagination({ ...pagination, page: 1 });
+          setPagination(prev => ({ ...prev, page: 1 }));
         }}
       >
         <Tabs.Item title="Scheduled" active={activeTab === 'scheduled'}>
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Spinner size="xl" />
-            </div>
-          ) : notifications.length > 0 ? (
-            <>
-              {notifications.map(renderNotificationCard)}
-              {renderPagination()}
-            </>
-          ) : (
-            <div className="py-8 text-center text-gray-500">
-              No scheduled notifications
-            </div>
-          )}
+          {renderTabContent()}
         </Tabs.Item>
 
         <Tabs.Item title="History" active={activeTab === 'history'}>
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Spinner size="xl" />
-            </div>
-          ) : notifications.length > 0 ? (
-            <>
-              {notifications.map(renderNotificationCard)}
-              {renderPagination()}
-            </>
-          ) : (
-            <div className="py-8 text-center text-gray-500">
-              No notification history
-            </div>
-          )}
+          {renderTabContent()}
         </Tabs.Item>
 
         <Tabs.Item title="Birthdays" active={activeTab === 'birthdays'}>
@@ -354,25 +421,102 @@ const NotificationSettings = () => {
               </div>
               <ToggleSwitch
                 checked={birthdayNotificationsEnabled}
-                onChange={(checked) => handleBirthdayToggle(checked)}
+                onChange={handleBirthdayToggle}
+                theme={{
+                  toggle: {
+                    checked: {
+                      color: {
+                        primary: "bg-primaryColor",
+                      },
+                    },
+                  },
+                }}
+                color="primary"
               />
             </div>
+
+            {birthdayNotificationsEnabled && (
+              <div className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+                <h4 className="mb-4 text-lg font-semibold text-gray-800">
+                  Birthday Notification Settings
+                </h4>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-bold text-gray-800 mb-1">
+                    Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={birthdaySettings.title}
+                    onChange={(e) =>
+                      setBirthdaySettings(prev => ({
+                        ...prev,
+                        title: e.target.value,
+                      }))
+                    }
+                    placeholder="Birthday notification title"
+                    className="w-full rounded border border-gray-300 px-3 py-2 text-sm focus:border-primaryColor focus:outline-none focus:ring-1 focus:ring-primaryColor"
+                    required
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-bold text-gray-800 mb-1">
+                    Body <span className="text-red-500">*</span>
+                  </label>
+                  <div className="bg-white">
+                    {ReactQuill && (
+                      <ReactQuill
+                        className="h-96"
+                        value={birthdaySettings.body}
+                        onChange={(newValue) => setBirthdaySettings(prev => ({ 
+                          ...prev, 
+                          body: newValue 
+                        }))}
+                        ref={quill}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div className="mb-6 mt-20">
+                  <label className="block text-sm font-bold text-gray-800 mb-2">
+                    Send through <span className="text-red-500">*</span>
+                  </label>
+                  <div className="space-y-2">
+                    {[
+                      { id: "inApp", label: "VolunTrack", field: "sendInApp" },
+                      { id: "email", label: "Email", field: "sendEmail" },
+                      { id: "text", label: "Text", field: "sendText" },
+                    ].map(({ id, label, field }) => (
+                      <label key={id} className="flex items-center gap-2 text-sm">
+                        <input
+                          type="checkbox"
+                          checked={birthdaySettings[field]}
+                          onChange={(e) =>
+                            setBirthdaySettings(prev => ({
+                              ...prev,
+                              [field]: e.target.checked,
+                            }))
+                          }
+                          className="h-4 w-4 rounded border-gray-300 text-primaryColor focus:ring-primaryColor"
+                        />
+                        {label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex justify-end">
+                  <BoGButton text="Save" onClick={handleSaveBirthdaySettings} />
+                </div>
+              </div>
+            )}
           </div>
 
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Spinner size="xl" />
-            </div>
-          ) : notifications.length > 0 ? (
-            <>
-              <div className="mt-6">
-                {notifications.map(renderNotificationCard)}
-              </div>
-              {renderPagination()}
-            </>
-          ) : (
-            <div className="mt-6 py-8 text-center text-gray-500">
-              No birthday notifications scheduled
+          {activeTab === 'birthdays' && (
+            <div className="mt-6">
+              {renderTabContent()}
             </div>
           )}
         </Tabs.Item>

@@ -30,7 +30,6 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
   }
 
   if (notification.status === 'sent') {
-    console.log('Notification already sent, skipping');
     return;
   }
 
@@ -44,7 +43,6 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
   const recipients = await getRecipients(notification);
 
   if (recipients.length === 0) {
-    console.log('No recipients found for notification');
     await Notification.findByIdAndUpdate(notificationId, {
       status: 'sent',
       sentAt: new Date(),
@@ -69,16 +67,17 @@ export async function deliverNotification(notificationId: string | Types.ObjectI
 
   // For recurring notifications, calculate and set the next scheduled time
   if (notification.type === 'recurring' && notification.recurrence) {
-    const nextOccurrence = calculateNextOccurrence(notification.scheduledFor, notification.recurrence);
+    const currentScheduledDate = notification.nextScheduledFor || notification.scheduledFor;
+    const nextOccurrence = calculateNextOccurrence(new Date(currentScheduledDate), notification.recurrence);
     if (nextOccurrence) {
       updateData.nextScheduledFor = nextOccurrence;
       updateData.status = 'scheduled'; // Keep it scheduled for the next occurrence
+    } else {
+      updateData.status = 'sent';
     }
   }
 
   await Notification.findByIdAndUpdate(notificationId, updateData);
-
-  console.log(`Notification ${notificationId} delivered to ${recipients.length} recipients`);
 }
 
 /**
@@ -214,7 +213,6 @@ async function sendNotificationEmail(
   organization: any
 ): Promise<void> {
   if (!process.env.MAILERSEND_API_KEY) {
-    console.warn('MailerSend API key not configured, skipping email delivery');
     return;
   }
 
@@ -239,9 +237,7 @@ async function sendNotificationEmail(
       if (response.status !== 202) {
         throw new Error(`Email send failed: ${response.statusText}`);
       }
-      console.log(`Email sent successfully to ${user.email}`);
     } catch (error: any) {
-      console.error(`Failed to send notification email to ${user.email}:`, error);
       // Continue with other recipients even if one fails
     }
   }
@@ -250,7 +246,7 @@ async function sendNotificationEmail(
 /**
  * Calculate the next occurrence of a recurring notification
  */
-function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | null {
+export function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | null {
   const { frequency, interval, daysOfWeek, dayOfMonth, monthOfYear, endDate } = recurrence;
 
   if (!frequency) return null;
@@ -299,7 +295,44 @@ function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | nul
       break;
 
     case 'custom':
-      if (interval) {
+      if (recurrence.customRecurrence) {
+        const { repeatEvery, repeatUnit, repeatOn } = recurrence.customRecurrence;
+        const interval = repeatEvery || 1;
+        
+        if (repeatUnit === 'day') {
+          next.setDate(next.getDate() + interval);
+        } else if (repeatUnit === 'week') {
+          if (repeatOn && repeatOn.length > 0) {
+            const dayMap: { [key: string]: number } = {
+              'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3,
+              'thursday': 4, 'friday': 5, 'saturday': 6
+            };
+            const dayNumbers = repeatOn.map((day: string) => dayMap[day.toLowerCase()]).filter((d: number) => d !== undefined).sort((a: number, b: number) => a - b);
+            
+            if (dayNumbers.length > 0) {
+              const currentDay = next.getDay();
+              let nextDay = dayNumbers.find((d: number) => d > currentDay);
+              
+              if (nextDay === undefined) {
+                nextDay = dayNumbers[0];
+                next.setDate(next.getDate() + (7 - currentDay + nextDay) + (interval - 1) * 7);
+              } else {
+                next.setDate(next.getDate() + (nextDay - currentDay));
+              }
+            } else {
+              next.setDate(next.getDate() + interval * 7);
+            }
+          } else {
+            next.setDate(next.getDate() + interval * 7);
+          }
+        } else if (repeatUnit === 'month') {
+          next.setMonth(next.getMonth() + interval);
+        } else if (repeatUnit === 'year') {
+          next.setFullYear(next.getFullYear() + interval);
+        } else {
+          next.setDate(next.getDate() + interval);
+        }
+      } else if (interval) {
         next.setDate(next.getDate() + interval);
       } else {
         next.setDate(next.getDate() + 1);
@@ -309,8 +342,8 @@ function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | nul
     default:
       return null;
   }
-
-  if (endDate && next > new Date(endDate)) {
+  const effectiveEndDate = recurrence.customRecurrence?.endDate || endDate;
+  if (effectiveEndDate && next > new Date(effectiveEndDate)) {
     return null;
   }
 
@@ -323,23 +356,31 @@ function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | nul
 export async function processDueNotifications(): Promise<void> {
   const now = new Date();
 
-  // Find notifications that are scheduled and due to be sent
+  // Find notifications that are scheduled and due to be sent.
+  // Logic: If nextScheduledFor exists (non-null), use it to determine due-ness.
+  // Otherwise, fall back to the original scheduledFor.
+  // This prevents recurring notifications from being picked up repeatedly
+  // simply because their original scheduledFor is in the past. 
   const dueNotifications = await Notification.find({
     status: 'scheduled',
     $or: [
-      { scheduledFor: { $lte: now } },
-      { nextScheduledFor: { $lte: now } },
+      // Case 1: nextScheduledFor exists and is due
+      { nextScheduledFor: { $exists: true, $ne: null, $lte: now } },
+      // Case 2: no nextScheduledFor set, rely on scheduledFor
+      {
+        $and: [
+          { $or: [ { nextScheduledFor: { $exists: false } }, { nextScheduledFor: null } ] },
+          { scheduledFor: { $lte: now } },
+        ],
+      },
     ],
   }).lean();
-
-  console.log(`Found ${dueNotifications.length} due notifications to process`);
 
   // Process each notification
   for (const notification of dueNotifications) {
     try {
       await deliverNotification(notification._id);
     } catch (error: any) {
-      console.error(`Failed to deliver notification ${notification._id}:`, error);
       // Continue with other notifications even if one fails
     }
   }

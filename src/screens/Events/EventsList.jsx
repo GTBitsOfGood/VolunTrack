@@ -164,7 +164,7 @@ const EventsList = ({
       return (
         <Styled.HomeContainer>
           <div className="column-flex">
-            <p className="font-weight-bold pb-3 text-2xl">Registered Events</p>
+            <p className="font-weight-bold text-2xl">Registered Events</p>
             {registeredEventsState.length > 0 && (
               <div>
                 {registeredEventsState.map((event) => (

@@ -5,6 +5,7 @@ import { isAdmin } from '../../../utils/routeProtection';
 import dbConnect from '../../../../server/mongodb';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
+import { calculateNextOccurrence } from '../../../utils/notification-service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await dbConnect();
@@ -50,7 +51,11 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     // Tab-specific filters
     if (tab === 'scheduled') {
       filter.status = 'scheduled';
-      filter.scheduledFor = { $gte: new Date() };
+      // For recurring notifications, check both scheduledFor and nextScheduledFor
+      filter.$or = [
+        { scheduledFor: { $gte: new Date() } },
+        { nextScheduledFor: { $gte: new Date() } },
+      ];
     } else if (tab === 'history') {
       filter.status = 'sent';
     } else if (tab === 'birthdays') {
@@ -108,7 +113,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       },
     });
   } catch (error: any) {
-    console.error('Error fetching notifications:', error);
     res.status(500).json({
       error: 'Failed to fetch notifications',
       details: error.message,
@@ -131,9 +135,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
     } = req.body;
 
     // Validation
-    if (!title || !body || !scheduledFor) {
+    if (!title || !body) {
       return res.status(400).json({
-        error: 'Missing required fields: title, body, scheduledFor',
+        error: 'Missing required fields: title, body',
       });
     }
 
@@ -143,10 +147,27 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
       });
     }
 
+    // Default scheduledFor to now if not provided
+    const finalScheduledFor = scheduledFor || new Date().toISOString();
+
     // Calculate nextScheduledFor for recurring notifications
-    let nextScheduledFor = null;
+    let nextScheduledFor: Date | null = null;
     if (type === 'recurring' && recurrence) {
-      nextScheduledFor = calculateNextOccurrence(new Date(scheduledFor), recurrence);
+      nextScheduledFor = calculateNextOccurrence(new Date(finalScheduledFor), recurrence);
+    }
+
+    // Validate recipients
+    if (recipients === undefined || recipients === null) {
+      return res.status(400).json({
+        error: 'Recipients must be specified (either "everyone" or an array of user IDs)',
+      });
+    }
+
+    // Ensure recipients is either "everyone" or a non-empty array
+    if (recipients !== 'everyone' && (!Array.isArray(recipients) || recipients.length === 0)) {
+      return res.status(400).json({
+        error: 'If not "everyone", recipients must be a non-empty array of user IDs',
+      });
     }
 
     // Create notification
@@ -156,8 +177,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
       title,
       body,
       type: type || 'individual',
-      recipients: recipients || 'everyone',
-      scheduledFor: new Date(scheduledFor),
+      recipients: recipients,
+      scheduledFor: new Date(finalScheduledFor),
       recurrence,
       sendInApp: sendInApp !== undefined ? sendInApp : true,
       sendEmail: sendEmail !== undefined ? sendEmail : false,
@@ -167,7 +188,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
     });
 
     // If scheduled for now or in the past, send immediately
-    const scheduledDate = new Date(scheduledFor);
+    const scheduledDate = new Date(finalScheduledFor);
     const now = new Date();
     const fiveMinutesFromNow = new Date(now.getTime() + 5 * 60 * 1000);
 
@@ -176,9 +197,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
       const { deliverNotification } = await import('../../../utils/notification-service');
       try {
         await deliverNotification(notification._id);
-        console.log(`Notification ${notification._id} sent immediately`);
       } catch (error: any) {
-        console.error(`Failed to send notification immediately:`, error);
         // Don't fail the request, the cron job will pick it up
       }
     }
@@ -188,81 +207,9 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, session: an
       notification,
     });
   } catch (error: any) {
-    console.error('Error creating notification:', error);
     res.status(500).json({
       error: 'Failed to create notification',
       details: error.message,
     });
   }
-}
-
-// Helper function to calculate next occurrence of a recurring notification
-function calculateNextOccurrence(currentDate: Date, recurrence: any): Date | null {
-  const { frequency, interval, daysOfWeek, dayOfMonth, monthOfYear, endDate, endAfterOccurrences } = recurrence;
-
-  if (!frequency) return null;
-
-  const next = new Date(currentDate);
-
-  switch (frequency) {
-    case 'daily':
-      next.setDate(next.getDate() + 1);
-      break;
-
-    case 'weekly':
-      // If daysOfWeek is specified, find the next day
-      if (daysOfWeek && daysOfWeek.length > 0) {
-        const currentDay = next.getDay();
-        const sortedDays = [...daysOfWeek].sort((a, b) => a - b);
-        let nextDay = sortedDays.find((d) => d > currentDay);
-
-        if (nextDay === undefined) {
-          // Wrap to next week
-          nextDay = sortedDays[0];
-          next.setDate(next.getDate() + (7 - currentDay + nextDay));
-        } else {
-          next.setDate(next.getDate() + (nextDay - currentDay));
-        }
-      } else {
-        next.setDate(next.getDate() + 7);
-      }
-      break;
-
-    case 'monthly':
-      if (dayOfMonth) {
-        next.setMonth(next.getMonth() + 1);
-        next.setDate(Math.min(dayOfMonth, new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate()));
-      } else {
-        next.setMonth(next.getMonth() + 1);
-      }
-      break;
-
-    case 'annually':
-      next.setFullYear(next.getFullYear() + 1);
-      if (monthOfYear) {
-        next.setMonth(monthOfYear - 1);
-      }
-      if (dayOfMonth) {
-        next.setDate(dayOfMonth);
-      }
-      break;
-
-    case 'custom':
-      if (interval) {
-        next.setDate(next.getDate() + interval);
-      } else {
-        next.setDate(next.getDate() + 1);
-      }
-      break;
-
-    default:
-      return null;
-  }
-
-  // Check if we've exceeded the end date or occurrence limit
-  if (endDate && next > new Date(endDate)) {
-    return null;
-  }
-
-  return next;
 }

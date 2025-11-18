@@ -43,99 +43,116 @@ const StatsTable = ({
   const pageSize = 10;
   const updatePage = (pageNum) => {
     setCurrentPage(pageNum);
-  };
+  }; 
 
   return (
     <Styled.Container>
-      <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
-        <Table.Head>
-          <Table.HeadCell>{eventName}</Table.HeadCell>
-          <Table.HeadCell>{creation}</Table.HeadCell>
-          <Table.HeadCell>{time}</Table.HeadCell>
-          <Table.HeadCell>{textInfo}</Table.HeadCell>
-        </Table.Head>
-        <Table.Body>
-          {isIndividualStats &&
-            attendances
-              .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-              .map((attendance) => (
-                <Table.Row key={attendance._id}>
-                  <Table.Cell>
-                    <a
-                      href={`events/${attendance.eventId}`}
-                      className="text-primaryColor"
-                    >
-                      {attendance.eventName ?? "event"}
-                    </a>
-                  </Table.Cell>
-                  <Table.Cell>{attendance.checkinTime.slice(0, 10)}</Table.Cell>
-                  <Table.Cell>
-                    {convertTime(attendance.checkinTime.slice(11, 16))} -{" "}
-                    {attendance.checkoutTime == null
-                      ? "N/A"
-                      : convertTime(attendance.checkoutTime.slice(11, 16))}
-                  </Table.Cell>
-                  <Table.Cell>
-                    &emsp;
-                    {attendance.checkoutTime == null
-                      ? "0 hour(s)"
-                      : getHours(
-                          attendance.checkinTime.slice(11, 16),
-                          attendance.checkoutTime.slice(11, 16)
-                        ) + " hour(s)"}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-          {!isIndividualStats &&
-            attendances
-              .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-              .map((attendance) => (
-                <Table.Row key={attendance._id}>
-                  <Table.Cell>
-                    {attendance.volunteerName ?? getVolunteerTermCapitalized()}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {attendance.volunteerEmail?.substring(0, 24) + "..."}
-                  </Table.Cell>
-                  <Table.Cell>
-                    &emsp;
-                    {attendance.checkoutTime == null
-                      ? "0 hour(s)"
-                      : getHours(
-                          attendance.checkinTime.slice(11, 16),
-                          attendance.checkoutTime.slice(11, 16)
-                        ) + " hour(s)"}
-                  </Table.Cell>
-                  <Table.Cell>
-                    <div className="flex gap-1">
-                      <Tooltip content="Edit" style="light">
-                        <button
-                          className="mx-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onEditClicked(attendance);
-                          }}
-                        >
-                          <PencilIcon className="h-8 text-primaryColor" />
-                        </button>
-                      </Tooltip>
-                      <Tooltip content="Delete" style="light">
-                        <button
-                          className="mx-1"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onDeleteClicked(attendance);
-                          }}
-                        >
-                          <TrashIcon className="h-8 text-primaryColor" />
-                        </button>
-                      </Tooltip>
-                    </div>
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-        </Table.Body>
-      </Table>
+      <div className="[&_[data-testid='table-element']]:!shadow-none">
+        <Table
+          style={{ width: "100%", maxWidth: "none" }}
+          striped={true}
+          className="bg-form-grey [&_td]:normal-case [&_th]:normal-case"
+        >
+          <Table.Head>
+            <Table.HeadCell className="font-open-sans font-normal text-[black]">
+              {eventName}
+            </Table.HeadCell>
+            <Table.HeadCell className="font-open-sans font-normal text-[black]">
+              {creation}
+            </Table.HeadCell>
+            <Table.HeadCell className="font-open-sans font-normal text-[black]">
+              {time}
+            </Table.HeadCell>
+            <Table.HeadCell className="font-open-sans font-normal text-[black]">
+              {textInfo}
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body>
+            {isIndividualStats &&
+              attendances
+                .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+                .map((attendance) => (
+                  <Table.Row key={attendance._id}>
+                    <Table.Cell>
+                      <a
+                        href={`events/${attendance.eventId}`}
+                        className="text-primaryColor"
+                      >
+                        {attendance.eventName ?? "event"}
+                      </a>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {attendance.checkinTime.slice(0, 10)}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {convertTime(attendance.checkinTime.slice(11, 16))} -{" "}
+                      {attendance.checkoutTime == null
+                        ? "N/A"
+                        : convertTime(attendance.checkoutTime.slice(11, 16))}
+                    </Table.Cell>
+                    <Table.Cell>
+                      &emsp;
+                      {attendance.checkoutTime == null
+                        ? "0 hour(s)"
+                        : getHours(
+                            attendance.checkinTime.slice(11, 16),
+                            attendance.checkoutTime.slice(11, 16)
+                          ) + " hour(s)"}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+            {!isIndividualStats &&
+              attendances
+                .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
+                .map((attendance) => (
+                  <Table.Row key={attendance._id}>
+                    <Table.Cell>
+                      {attendance.volunteerName ??
+                        getVolunteerTermCapitalized()}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {attendance.volunteerEmail?.substring(0, 24) + "..."}
+                    </Table.Cell>
+                    <Table.Cell>
+                      &emsp;
+                      {attendance.checkoutTime == null
+                        ? "0 hour(s)"
+                        : getHours(
+                            attendance.checkinTime.slice(11, 16),
+                            attendance.checkoutTime.slice(11, 16)
+                          ) + " hour(s)"}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex gap-1">
+                        <Tooltip content="Edit" style="light">
+                          <button
+                            className="mx-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEditClicked(attendance);
+                            }}
+                          >
+                            <PencilIcon className="h-8 text-primaryColor" />
+                          </button>
+                        </Tooltip>
+                        <Tooltip content="Delete" style="light">
+                          <button
+                            className="mx-1"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDeleteClicked(attendance);
+                            }}
+                          >
+                            <TrashIcon className="h-8 text-primaryColor" />
+                          </button>
+                        </Tooltip>
+                      </div>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+          </Table.Body>
+        </Table>
+      </div>
       {attendances.length !== 0 && (
         <Pagination
           items={attendances}

@@ -7,6 +7,7 @@ import "tailwindcss/tailwind.css";
 import "../../public/static/styles/App.css";
 import "../../public/static/styles/bootstrap.min.css";
 import Footer from "../components/Footer";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import AuthProvider from "../providers/AuthProvider";
 import RequestProvider from "../providers/RequestProvider";
@@ -16,6 +17,15 @@ const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
   const isPublicPage = router.pathname.startsWith("/embed");
   // const isPublicPage = false;
+  // Fire-and-forget kickoff to process due and birthday notifications when the app opens
+  useEffect(() => {
+    // Avoid blocking render; ignore errors
+    fetch("/api/notifications/kickoff", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    }).catch(() => {});
+  }, []);
   return (
     <SessionProvider session={session}>
       <script

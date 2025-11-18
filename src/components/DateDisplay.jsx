@@ -21,10 +21,10 @@ class DateDisplayComponent extends React.Component {
     if (this.props.version === "Primary") {
       return (
         <div className="mr-3 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-primaryColor">
-          <p className="mb-0 mt-3 text-sm leading-none text-white">
+          <p className="mb-0 mt-3 font-inter text-xs font-normal leading-none text-white">
             {this.state.month.toUpperCase()}
           </p>
-          <p className="mt-1 text-3xl font-bold leading-none text-white">
+          <p className="mt-1 font-inter text-3xl font-bold leading-none text-white">
             {this.state.day}
           </p>
         </div>
@@ -32,10 +32,10 @@ class DateDisplayComponent extends React.Component {
     } else if (this.props.version === "Past") {
       return (
         <div className="mr-3 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-darkGrey">
-          <p className="mb-0 mt-3 text-sm leading-none text-white">
+          <p className="mb-0 mt-3 font-inter text-xs font-normal leading-none text-white">
             {this.state.month.toUpperCase()}
           </p>
-          <p className="mt-1 text-3xl font-bold leading-none text-white">
+          <p className="mt-1 font-inter text-3xl font-bold leading-none text-white">
             {this.state.day}
           </p>
         </div>
@@ -43,10 +43,10 @@ class DateDisplayComponent extends React.Component {
     } else {
       return (
         <div className="mr-3 flex h-16 w-16 flex-col items-center justify-center rounded-md bg-secondaryColor">
-          <p className="mb-0 mt-3 text-sm leading-none text-primaryColor">
+          <p className="mb-0 mt-3 font-inter text-xs font-normal leading-none text-primaryColor">
             {this.state.month.toUpperCase()}
           </p>
-          <p className="mt-1 text-3xl font-bold leading-none text-primaryColor">
+          <p className="mt-1 font-inter text-3xl font-bold leading-none text-primaryColor">
             {this.state.day}
           </p>
         </div>

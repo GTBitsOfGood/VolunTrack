@@ -320,7 +320,9 @@ const OrganizationSettings = () => {
                     </>
                   )}
                   {currentPage.key === "notifications" && (
-                    <NotificationSettings />
+                    <div style={{ minWidth: "50rem" }} className="w-full rounded-sm bg-grey px-4 pt-0 pb-4">
+                      <NotificationSettings />
+                    </div>
                   )}
                 </div>
               </div>

@@ -2,6 +2,7 @@ import { Label, TextInput, Tooltip } from "flowbite-react";
 import { ErrorMessage, Field } from "formik";
 import PropTypes from "prop-types";
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import CustomCalendarIcon from "../CustomCalendarIcon";
 
 const InputField = (props) => (
   <div className={props.className + " mb-3"}>
@@ -35,20 +36,30 @@ const InputField = (props) => (
     )}
     <Field name={props.name}>
       {({ field }) => (
-        <TextInput
-          class={`border-1 mt-0 h-10 w-full rounded-md bg-white disabled:border-gray-500 disabled:bg-gray-300 ${
-            props.isEmptyOrInvalid ? "border-red-800" : "border-gray-300"
-          }`}
-          id={props.name}
-          name={props.name}
-          {...field}
-          type={props.type ?? "text"}
-          placeholder={props.placeholder}
-          disabled={props.disabled}
-          maxLength={props.maxLength}
-          min={props.min}
-          max={props.max}
-        />
+        <div className="relative">
+          <TextInput
+            class={`border-1 mt-0 h-10 w-full rounded-md bg-white disabled:border-gray-500 disabled:bg-gray-300 ${
+              props.isEmptyOrInvalid ? "border-red-800" : "border-gray-300"
+            } ${(props.type === "date" || props.type === "datetime-local") ? "[&::-webkit-calendar-picker-indicator]:opacity-0 pr-10" : ""}`}
+            id={props.name}
+            name={props.name}
+            {...field}
+            type={props.type ?? "text"}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            maxLength={props.maxLength}
+            min={props.min}
+            max={props.max}
+          />
+          {(props.type === "date" || props.type === "datetime-local") && (
+            <div 
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+              onClick={() => document.getElementById(props.name)?.showPicker?.()}
+            >
+              <CustomCalendarIcon className="h-4 w-4 text-gray-500" />
+            </div>
+          )}
+        </div>
       )}
     </Field>
     <ErrorMessage
