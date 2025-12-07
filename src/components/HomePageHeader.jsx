@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "flowbite-react";
 import { HiX } from "react-icons/hi";
 import useWindowDimensions from "./GetWindowDimensions";
@@ -7,7 +7,27 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
   const [isOpen, setIsOpen] = useState(false);
   const { width } = useWindowDimensions();
 
-  return width > 850 ? (
+  // Handle escape key to close menu
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  return width > 768 ? (
     <div className="mx-6 my-4 flex flex-row justify-between self-stretch px-[6%] py-4">
       <div className="">
         <a href="/" className="flex">
@@ -40,14 +60,14 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
       <div className="flex flex-col items-end md:flex-row-reverse md:items-center">
         <Button
           onClick={goToCreateAcc}
-          className="ml-1 mr-2 flex border-0 bg-purple-700 hover:bg-purple-600"
+          className="ml-1 mr-2 flex border-0 bg-purple-800 hover:bg-purple-900"
           size="sm"
         >
-          Create Volunteer Account
+          Create Member Account
         </Button>
         <button
           onClick={goToLogin}
-          className="mr-4 text-purple-600 hover:text-purple-700 hover:underline"
+          className="mr-4 text-purple-700 hover:text-purple-800 hover:underline"
         >
           Login
         </button>
@@ -70,7 +90,9 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
         </div>
         <button
           onClick={() => setIsOpen(true)}
-          className="flex items-center justify-center rounded-md bg-purple-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-600"
+          className="flex items-center justify-center rounded-md bg-purple-800 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-purple-900"
+          aria-label="Open menu"
+          aria-expanded={isOpen}
         >
           Menu
         </button>
@@ -79,10 +101,14 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
         className={`fixed right-0 top-0 z-40 h-screen w-80 transform bg-white p-4 transition-transform dark:bg-gray-800 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Navigation menu"
       >
         <button
           onClick={() => setIsOpen(false)}
           className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-600 dark:hover:text-white"
+          aria-label="Close menu"
         >
           <HiX className="h-5 w-5" />
           <span className="sr-only">Close menu</span>
@@ -92,37 +118,40 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
           Menu
         </h5>
         <nav className="flex flex-col space-y-2">
-          <a href="/" className="py-2 text-purple-600">
+          <a href="/" className="py-2 text-purple-700 hover:text-purple-800">
             Home
           </a>
-          <a href="#product" className="py-2 text-purple-600">
+          <a
+            href="#product"
+            className="py-2 text-purple-700 hover:text-purple-800"
+          >
             Product
           </a>
           <a
             href="https://bitsofgood.org/about"
-            className="py-2 text-purple-600"
+            className="py-2 text-purple-700 hover:text-purple-800"
           >
             About
           </a>
           <a
             href="https://bitsofgood.org/contact"
-            className="py-2 text-purple-600"
+            className="py-2 text-purple-700 hover:text-purple-800"
           >
             Contact
           </a>
           <hr className="my-2" />
           <button
             onClick={goToLogin}
-            className="py-2 text-left text-purple-600 hover:underline"
+            className="py-2 text-left text-purple-700 hover:text-purple-800 hover:underline"
           >
             Login
           </button>
           <Button
             onClick={goToCreateAcc}
-            className="mt-2 w-full bg-purple-700 hover:bg-purple-600"
+            className="mt-2 w-full bg-purple-800 hover:bg-purple-900"
             size="sm"
           >
-            Create Volunteer Account
+            Create Member Account
           </Button>
         </nav>
       </div>
@@ -131,6 +160,7 @@ export default function HomePageHeader({ goToCreateAcc, goToLogin }) {
         <div
           className="fixed inset-0 z-30 bg-black bg-opacity-50"
           onClick={() => setIsOpen(false)}
+          aria-hidden="true"
         />
       )}
     </div>

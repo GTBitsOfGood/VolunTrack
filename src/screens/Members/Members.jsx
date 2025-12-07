@@ -2,12 +2,12 @@ import PropTypes from "prop-types";
 import React from "react";
 import { CSVLink } from "react-csv";
 import { deleteUser, getUsers, updateUser } from "../../queries/users";
-import VolunteerTable from "./VolunteerTable";
+import MemberTable from "./MemberTable";
 import SearchBar from "../../components/SearchBar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import BoGButton from "../../components/BoGButton";
 
-class Volunteers extends React.Component {
+class Members extends React.Component {
   state = {
     users: [],
     loadingMoreUsers: false,
@@ -69,7 +69,7 @@ class Volunteers extends React.Component {
       loadingMoreUsers: false,
     });
   };
-  filteredAndSortedVolunteers = () => {
+  filteredAndSortedMembers = () => {
     const filterArray = this.state.users.filter(
       (user) =>
         (user.firstName + " " + user.lastName)
@@ -85,7 +85,7 @@ class Volunteers extends React.Component {
       <div className="relative left-[10%] flex h-full w-full flex-col pt-[1rem]">
         <div className="flex w-[80%] flex-row justify-between">
           <div className="text-normal text-bold text-4xl">
-            Volunteers ({this.state.users.length} total)
+            Members ({this.state.users.length} total)
           </div>
         </div>
         <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
@@ -112,7 +112,7 @@ class Volunteers extends React.Component {
                 notes: user.notes,
               };
             })}
-            filename={"volunteer-list.csv"}
+            filename={"member-list.csv"}
             target="_blank"
             className="mb-3 no-underline"
           >
@@ -120,10 +120,10 @@ class Volunteers extends React.Component {
           </CSVLink>
         </div>
         <div className="w-[80%]">
-          <VolunteerTable
+          <MemberTable
             users={
               this.state.searchOn
-                ? this.filteredAndSortedVolunteers()
+                ? this.filteredAndSortedMembers()
                 : this.state.users
             }
             loading={loadingMoreUsers}
@@ -137,8 +137,8 @@ class Volunteers extends React.Component {
   }
 }
 
-export default AdminAuthWrapper(Volunteers);
+export default AdminAuthWrapper(Members);
 
-Volunteers.propTypes = {
+Members.propTypes = {
   user: PropTypes.object.isRequired,
 };
