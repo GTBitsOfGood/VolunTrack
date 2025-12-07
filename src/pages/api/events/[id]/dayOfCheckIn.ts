@@ -9,12 +9,18 @@ import Attendance, {
 import Registration, {
   registrationInputServerValidator,
 } from "../../../../../server/mongodb/models/Registration";
+import { checkEventCapacity } from "../../../../../server/actions/registrationCapacity";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
   const userInput = req.body.userInput;
-  const eventId = req.query.id;
+  const eventIdParam = req.query.id;
+  const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
   const eventName: string = req.body.eventName;
+
+  if (!eventId) {
+    return res.status(400).json({ error: "Event id is required." });
+  }
 
   const userValid = userInputServerValidator.safeParse(userInput);
   if (!userValid.success)
@@ -44,6 +50,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     registrationInputServerValidator.safeParse(registrationInput);
   if (!registrationValid.success)
     return res.status(400).json({ error: registrationValid.error });
+
+  const capacityResult = await checkEventCapacity(eventId, 1);
+  if (capacityResult.status === "not_found") {
+    return res.status(404).json({ error: "Event not found." });
+  }
+  if (capacityResult.status === "full") {
+    return res.status(400).json({
+      error:
+        capacityResult.remainingSpots <= 0
+          ? "This event has reached capacity."
+          : `Only ${capacityResult.remainingSpots} spot${
+              capacityResult.remainingSpots === 1 ? "" : "s"
+            } remain for this event.`,
+    });
+  }
 
   await Registration.create(registrationValid.data);
 
