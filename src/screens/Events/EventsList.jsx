@@ -88,7 +88,7 @@ const EventsList = ({
       });
 
       let registeredEvents = upcomingEvents.filter((event) => {
-        return idsMap.has(event._id);
+        return idsMap.has(event._id) && idsMap.get(event._id) === "approved";
       });
 
       if (user.role === "volunteer")
