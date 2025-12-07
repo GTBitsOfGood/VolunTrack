@@ -377,6 +377,7 @@ const EventRegister = () => {
             text="Complete Registration"
             onClick={onCompleteRegistrationClicked}
             className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
+            disabled={event?.eventParent?.maxVolunteers === regCount}
           />
         </div>
       )}

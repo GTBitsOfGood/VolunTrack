@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Loading from "../components/Loading";
+import SimpleSpinner from "../components/SimpleSpinner";
 import PropTypes from "prop-types";
 
 const Container = styled.div`
@@ -115,7 +115,7 @@ class RequestProvider extends React.Component {
         <Container {...this.state}>
           <div className="banner">
             {this.state.isLoading ? (
-              <Loading size="0.5rem" />
+              <SimpleSpinner size="0.5rem" />
             ) : (
               <React.Fragment>
                 <p>{this.state.text}</p>

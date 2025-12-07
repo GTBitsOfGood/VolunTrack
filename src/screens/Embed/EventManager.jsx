@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { getEvents } from "../../queries/events";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
+import LoadingScreen from "../../components/LoadingScreen";
 import dynamic from "next/dynamic";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
@@ -210,7 +211,7 @@ const EventManager = ({ organizationId }) => {
           <div className="h-16" />
           {loading === true ? (
             <div className="mt-8">
-              <Text text={"Loading..."} type="subheader" />
+              <LoadingScreen size="md" />
             </div>
           ) : (
             <div className="mt-8" />

@@ -12,7 +12,7 @@ import {
 } from "@heroicons/react/24/solid";
 import router from "next/router";
 
-class VolunteerTable extends React.Component {
+class MemberTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -64,7 +64,7 @@ class VolunteerTable extends React.Component {
         <Table striped={true}>
           <Table.Head className="dark:border-red-700">
             <Table.HeadCell className="text-primaryColor">
-              Volunteer Name
+              Member Name
             </Table.HeadCell>
             <Table.HeadCell className="text-primaryColor">
               Email Address
@@ -165,9 +165,9 @@ class VolunteerTable extends React.Component {
   }
 }
 
-export default VolunteerTable;
+export default MemberTable;
 
-VolunteerTable.propTypes = {
+MemberTable.propTypes = {
   users: PropTypes.array.isRequired,
   loading: PropTypes.bool,
   editUserCallback: PropTypes.func.isRequired,
