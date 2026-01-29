@@ -167,29 +167,31 @@ const AdminApproval = ({ user }) => {
             </div>
           )}
         </div>
-        <div className="flex flex-row items-center justify-center">
-          {isShowAllRequests ? (
-            <u
-              onClick={() => setIsShowAllRequests(false)}
-              style={{
-                fontWeight: "500",
-                cursor: "pointer",
-              }}
-            >
-              View Less Requests
-            </u>
-          ) : (
-            <u
-              onClick={() => setIsShowAllRequests(true)}
-              style={{
-                fontWeight: "500",
-                cursor: "pointer",
-              }}
-            >
-              View All Requests
-            </u>
-          )}
-        </div>
+        {pendingRegistrations.length > 3 && (
+          <div className="flex flex-row items-center justify-center">
+            {isShowAllRequests ? (
+              <u
+                onClick={() => setIsShowAllRequests(false)}
+                style={{
+                  fontWeight: "500",
+                  cursor: "pointer",
+                }}
+              >
+                View Less Requests
+              </u>
+            ) : (
+              <u
+                onClick={() => setIsShowAllRequests(true)}
+                style={{
+                  fontWeight: "500",
+                  cursor: "pointer",
+                }}
+              >
+                View All Requests
+              </u>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-col gap-10">
           <div className="font-inter text-2xl">Registration History</div>
