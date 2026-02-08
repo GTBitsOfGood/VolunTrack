@@ -111,9 +111,9 @@ const EventCard = (props) => {
             date={event.date}
             version={pastEvent(event) ? "Past" : props.version ?? "Primary"}
           />
-          <div className="flex-column flex flex-1 text-xl">
+          <div className="flex-column flex min-w-0 flex-1 text-xl">
             <div className="mb-1 flex items-center">
-              <Label class="mb-0 line-clamp-1 text-xl font-bold">
+              <Label class="mb-0 max-w-[20rem] whitespace-normal break-all text-xl font-bold">
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (

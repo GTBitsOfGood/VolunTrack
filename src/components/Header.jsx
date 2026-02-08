@@ -109,7 +109,7 @@ const Header = () => {
         {user.role === "admin" ? (
           <Navbar.Link
             href="/home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
               currPageMatches("/home") ? "text-primaryColor" : ""
             }`}
           >
@@ -118,7 +118,7 @@ const Header = () => {
         ) : (
           <Navbar.Link
             href="/home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
               currPageMatches("/home") ? "text-primaryColor" : ""
             }`}
           >
@@ -129,7 +129,7 @@ const Header = () => {
         {user.role === "admin" && (
           <Navbar.Link
             href="/members"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
               currPageMatches("/members") ? "text-primaryColor" : ""
             }`}
           >
@@ -140,7 +140,7 @@ const Header = () => {
         {user.role != "admin" && customHome && (
           <Navbar.Link
             href="/custom-home"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
               currPageMatches("/custom-home") ? "text-primaryColor" : ""
             }`}
           >
@@ -151,7 +151,7 @@ const Header = () => {
         {user.role != "admin" ? (
           <Navbar.Link
             href="/events"
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
               currPageMatches("/events") ? "text-primaryColor" : ""
             }`}
           >
@@ -159,7 +159,7 @@ const Header = () => {
           </Navbar.Link>
         ) : (
           <Navbar.Link
-            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
               currPageMatches("/events") ? "text-primaryColor" : ""
             }`}
           >
@@ -185,7 +185,8 @@ const Header = () => {
 
         {user.role === "admin" && (
           <Navbar.Link
-            className={`text-lg font-bold md:hover:text-primaryColor  ${
+            // TODO: update hover state color
+            className={`text-lg font-bold md:hover:text-secondaryColor  ${
               currPageMatches("/admins") ||
               currPageMatches("/manage-waivers") ||
               currPageMatches("/organization-settings")
@@ -222,7 +223,7 @@ const Header = () => {
                   alt="icon"
                   rounded={true}
                 />
-                <div className="ml-3 flex flex-col gap-0 text-left">
+                <div className="ml-3 flex flex-col gap-0 text-left md:hover:text-secondaryColor">
                   <p className="mb-0">{`${user.firstName} ${user.lastName}`}</p>
                   <p className="mb-0 capitalize">
                     {user.role === "volunteer" ? "member" : user.role}
@@ -234,13 +235,13 @@ const Header = () => {
             {dropdownItems}
           </Dropdown>
         </div>
-        <Navbar.Link className="block md:hidden">
+        <Navbar.Link className="block md:hidden md:hover:text-secondaryColor">
           <Dropdown
             arrowIcon={true}
             inline={true}
             label={
               <div
-                className={`text-lg font-bold ${
+                className={`text-lg font-bold  md:hover:text-secondaryColor ${
                   currPageMatches("/profile") ? "text-primaryColor" : ""
                 }`}
               >
