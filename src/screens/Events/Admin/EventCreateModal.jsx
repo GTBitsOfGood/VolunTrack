@@ -28,7 +28,13 @@ const Styled = {
   `,
 };
 
-const EventCreateModal = ({ open, toggle }) => {
+const EventCreateModal = ({
+  open,
+  toggle,
+  toggleResponseModal,
+  setResponseIsError,
+  setErrorMsg,
+}) => {
   // State for current active Tab
   const [currentActiveTab, setCurrentActiveTab] = useState("1");
 
@@ -74,6 +80,9 @@ const EventCreateModal = ({ open, toggle }) => {
       </Styled.Nav>
       <EventFormModal
         toggle={toggle}
+        toggleResponseModal={toggleResponseModal}
+        setResponseIsError={setResponseIsError}
+        setErrorMsg={setErrorMsg}
         event={null}
         isGroupEvent={currentActiveTab === "2"}
       />
