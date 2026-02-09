@@ -16,7 +16,7 @@ const RegistrationCard = (props) => {
 
   useEffect(() => {
     getUser(props.registration.userId).then((response) => {
-      if (response.data.user) {
+      if (response?.data?.user) {
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}`
         );
