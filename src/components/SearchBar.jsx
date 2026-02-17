@@ -3,12 +3,15 @@ import PropTypes from "prop-types";
 
 const SearchBar = (props) => {
   const containerClass = props.className || (props.label ? "mb-3" : "");
-  
+
   return (
     <div className={containerClass}>
       {props.label && (
         <div className="flex flex-row">
-          <Label class="mb-1 h-6 font-medium text-slate-600" htmlFor={props.name}>
+          <Label
+            class="mb-1 h-6 font-medium text-slate-600"
+            htmlFor={props.name}
+          >
             {props.label}
           </Label>
         </div>

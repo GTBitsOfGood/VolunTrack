@@ -114,7 +114,7 @@ class Members extends React.Component {
             })}
             filename={"member-list.csv"}
             target="_blank"
-            className="mb-3 no-underline"
+            className="no-underline"
           >
             <BoGButton text="Download to CSV" />
           </CSVLink>
