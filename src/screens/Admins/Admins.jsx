@@ -30,10 +30,12 @@ const PAGE_SIZE = 10;
 
 const Styled = {
   Col: styled(Col)`
-    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
   `,
   Row: styled(Row)`
     margin: 0.5rem 0.5rem 0.5rem 1rem;
+    align-items: center;
   `,
 };
 
@@ -158,14 +160,18 @@ class Admins extends React.Component {
           <div className="text-4xl font-bold not-italic text-black">Admins</div>
         </Styled.Row>
         <Styled.Row>
-          <Styled.Col>
-            <SearchBar
-              placeholder="Search by Admin Name or Email"
-              value={this.state.searchValue}
-              onChange={(e) => this.setState({ searchValue: e.target.value })}
-            />
+          <Styled.Col className="mt-2 pl-0">
+            <div className="w-full">
+              <SearchBar
+                name="adminSearch"
+                placeholder="Search by Admin Name or Email"
+                value={this.state.searchValue}
+                onChange={(e) => this.setState({ searchValue: e.target.value })}
+                className="mb-0"
+              />
+            </div>
           </Styled.Col>
-          <Styled.Col>
+          <Styled.Col className="mt-2">
             <BoGButton text="Add an Admin" onClick={this.onCreateClicked} />
           </Styled.Col>
         </Styled.Row>
