@@ -140,7 +140,7 @@ const Customization = () => {
               isCollapsed ? "max-h-0" : "max-h-screen"
             }`}
           >
-            <div className="mt-4 customization-form">
+            <div className="customization-form mt-4">
               <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="questions">
                   {(provided) => (
