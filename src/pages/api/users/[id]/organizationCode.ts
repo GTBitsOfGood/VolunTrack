@@ -24,8 +24,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       // Allow if:
       // 1. User is an admin (can update any user's org code)
       // 2. User is updating their own account AND doesn't have an org yet
-      const isOwnAccount = session?.user._id.toString() === id;
-      const hasNoOrg = !session?.user.organizationId;
+      const isOwnAccount = session?.user?._id?.toString() === id;
+      const hasNoOrg = !session?.user?.organizationId;
 
       if (!isadmin && !(isOwnAccount && hasNoOrg)) {
         return res
