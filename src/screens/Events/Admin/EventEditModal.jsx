@@ -19,6 +19,10 @@ const Styled = {
       padding-left: 3.5rem;
       border-bottom: 2px solid ${variables["dark"]};
     }
+    button.close {
+      margin-top: 0.2rem;
+      margin-right: 0.5rem;
+    }
   `,
 };
 
@@ -97,10 +101,10 @@ const EventEditModal = ({
         </div>
       )}
       {recurringEventConfirm && (
-        <div>
+        <div className="pl-4">
           <Styled.ModalHeader toggle={toggle} />
           <Text
-            className="mx-auto w-3/4 border-b-2 border-b-primaryColor text-center text-primaryColor"
+            className="w-[calc(100%-2.5rem)] border-b-2 border-b-primaryColor text-left text-primaryColor pb-3 -mt-12"
             text="Edit Event"
             type="subheader"
           />
