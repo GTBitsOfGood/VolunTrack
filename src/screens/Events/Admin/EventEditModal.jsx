@@ -104,7 +104,7 @@ const EventEditModal = ({
         <div className="pl-4">
           <Styled.ModalHeader toggle={toggle} />
           <Text
-            className="w-[calc(100%-2.5rem)] border-b-2 border-b-primaryColor text-left text-primaryColor pb-3 -mt-12"
+            className="-mt-12 w-[calc(100%-2.5rem)] border-b-2 border-b-primaryColor pb-3 text-left text-primaryColor"
             text="Edit Event"
             type="subheader"
           />
