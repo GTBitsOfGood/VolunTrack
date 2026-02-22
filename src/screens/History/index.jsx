@@ -67,12 +67,13 @@ const History = () => {
       <div className="mb-2">
         <Text text="History" type="header" />
       </div>
-
-      <SearchBar
-        placeholder="Search by Admin Name or Actions"
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-      />
+      <div className="mb-3">
+        <SearchBar
+          placeholder="Search by Admin Name or Actions"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+      </div>
       <Table style={{ width: "100%", maxWidth: "none" }} striped={true}>
         <Table.Head>
           <Table.HeadCell>Name</Table.HeadCell>
