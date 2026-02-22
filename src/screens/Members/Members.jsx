@@ -53,8 +53,12 @@ class Members extends React.Component {
 
     // this.onRefresh();
   };
-  onDeleteUser = (userId) => {
-    deleteUser(userId);
+  onDeleteUser = async (userId) => {
+    const resp = await deleteUser(userId);
+    if (resp && "error" in resp) {
+      this.setState({ loadingMoreUsers: false });
+      return false;
+    }
 
     let updatedUsers = [];
 
@@ -68,6 +72,7 @@ class Members extends React.Component {
       users: updatedUsers,
       loadingMoreUsers: false,
     });
+    return true;
   };
   filteredAndSortedMembers = () => {
     const filterArray = this.state.users.filter(
