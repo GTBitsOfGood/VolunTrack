@@ -5,7 +5,17 @@ import VolunteerLog, {
   VolunteerLogDocument,
 } from "../../../../server/mongodb/models/VolunteerLog";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+type VolunteerLogPostBody = {
+  userId?: string;
+  eventId?: string;
+  inTime?: string;
+  outTime?: string;
+};
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   await dbConnect();
 
   switch (req.method) {
@@ -31,15 +41,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ logs });
     }
     case "POST": {
-      const { userId, eventId, inTime, outTime } = req.body || {};
+      const bodyUnknown: unknown = req.body;
 
-      if (!userId || !eventId || !inTime || !outTime) {
+      if (!bodyUnknown || typeof bodyUnknown !== "object") {
         return res.status(400).json({
           error: "userId, eventId, inTime, and outTime are required fields",
         });
       }
 
-      const parseTimeOrDateTime = (value: string) => {
+      const { userId, eventId, inTime, outTime } =
+        bodyUnknown as VolunteerLogPostBody;
+
+      if (
+        typeof userId !== "string" ||
+        typeof eventId !== "string" ||
+        typeof inTime !== "string" ||
+        typeof outTime !== "string"
+      ) {
+        return res.status(400).json({
+          error: "userId, eventId, inTime, and outTime are required fields",
+        });
+      }
+
+      const parseTimeOrDateTime = (value: unknown) => {
         if (typeof value !== "string") return new Date(NaN);
 
         // Support time-only strings from <input type="time">, e.g. "10:00"
@@ -70,9 +94,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({ error: "Invalid outTime value" });
       }
       if (parsedOutTime <= parsedInTime) {
-        return res
-          .status(400)
-          .json({ error: "outTime must be after inTime" });
+        return res.status(400).json({ error: "outTime must be after inTime" });
       }
 
       // Ensure users cannot update an existing log; only one log per user/event.
@@ -99,5 +121,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(405).json({ error: "Method not allowed" });
     }
   }
-};
-
+}

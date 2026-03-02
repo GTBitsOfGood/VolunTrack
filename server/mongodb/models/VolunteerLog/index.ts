@@ -25,6 +25,4 @@ export type VolunteerLogDocument = HydratedDocument<VolunteerLogData>;
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 export default (models && "VolunteerLog" in models
   ? (models.VolunteerLog as Model<VolunteerLogData>)
-  : undefined) ??
-  model<VolunteerLogData>("VolunteerLog", volunteerLogSchema);
-
+  : undefined) ?? model<VolunteerLogData>("VolunteerLog", volunteerLogSchema);

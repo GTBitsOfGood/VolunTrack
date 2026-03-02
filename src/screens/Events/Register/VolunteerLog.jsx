@@ -70,32 +70,32 @@ const VolunteerLog = ({ eventId, user }) => {
         className="mt-3 flex flex-row items-center gap-3"
         onSubmit={handleSubmit}
       >
-          <span className="text-sm font-semibold text-slate-700">In:</span>
-          <input
+        <span className="text-sm font-semibold text-slate-700">In:</span>
+        <input
           type="time"
-            className="h-9 rounded-md border border-gray-300 px-2 text-sm"
-            value={inTime}
-            onChange={(e) => setInTime(e.target.value)}
-          />
-          <span className="text-sm font-semibold text-slate-700">Out:</span>
-          <input
+          className="h-9 rounded-md border border-gray-300 px-2 text-sm"
+          value={inTime}
+          onChange={(e) => setInTime(e.target.value)}
+        />
+        <span className="text-sm font-semibold text-slate-700">Out:</span>
+        <input
           type="time"
-            className="h-9 rounded-md border border-gray-300 px-2 text-sm"
-            value={outTime}
-            onChange={(e) => setOutTime(e.target.value)}
-          />
-          <BoGButton
-            type="submit"
-            text="Save"
+          className="h-9 rounded-md border border-gray-300 px-2 text-sm"
+          value={outTime}
+          onChange={(e) => setOutTime(e.target.value)}
+        />
+        <BoGButton
+          type="submit"
+          text="Save"
           className="ml-2 bg-primaryColor font-semibold hover:bg-hoverColor"
           disabled={isSubmitting || hasExistingLog}
+        />
+        {error && (
+          <Text
+            className="ml-3 text-sm font-semibold text-red-600"
+            text={error}
           />
-          {error && (
-            <Text
-              className="ml-3 text-sm font-semibold text-red-600"
-              text={error}
-            />
-          )}
+        )}
       </form>
 
       {hasExistingLog && logs[0] && (
@@ -132,4 +132,4 @@ VolunteerLog.propTypes = {
 };
 
 export default VolunteerLog;
-
+// End of VolunteerLog component
