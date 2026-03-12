@@ -35,7 +35,9 @@ const VolunteerTimesheets = () => {
           : "";
       const eventName = (log.eventId?.eventParent?.title ?? "").toLowerCase();
       const tasks = log.eventId?.eventParent?.tasks ?? [];
-      const tasksStr = (Array.isArray(tasks) ? tasks.join(" ") : "").toLowerCase();
+      const tasksStr = (
+        Array.isArray(tasks) ? tasks.join(" ") : ""
+      ).toLowerCase();
       return (
         contactName.includes(lower) ||
         eventName.includes(lower) ||
@@ -80,9 +82,7 @@ const VolunteerTimesheets = () => {
 
       <div className="flex flex-col gap-4">
         {filteredLogs.length > 0 ? (
-          filteredLogs.map((log) => (
-            <TimesheetCard key={log._id} log={log} />
-          ))
+          filteredLogs.map((log) => <TimesheetCard key={log._id} log={log} />)
         ) : (
           <p className="py-8 text-center text-gray-500">
             No timesheet entries found. Only shifts with both start and end time

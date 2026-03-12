@@ -39,14 +39,16 @@ export default async function handler(
           return res.status(403).json({ error: "Admin access required" });
         }
         const session = await getServerSession(req, res, authOptions);
-        const organizationId = session?.user?.organizationId;
+        const organizationId = session?.user.organizationId;
         if (!organizationId) {
           return res
             .status(400)
             .json({ error: "Organization not found for user" });
         }
         const orgObjectId = new Types.ObjectId(
-          typeof organizationId === "string" ? organizationId : String(organizationId)
+          typeof organizationId === "string"
+            ? organizationId
+            : String(organizationId)
         );
         const eventParents = await EventParent.find({
           organizationId: orgObjectId,

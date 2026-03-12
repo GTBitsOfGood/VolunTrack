@@ -164,8 +164,7 @@ const Header = () => {
         ) : (
           <Navbar.Link
             className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
-              currPageMatches("/events") ||
-              currPageMatches("/timesheets")
+              currPageMatches("/events") || currPageMatches("/timesheets")
                 ? "text-primaryColor"
                 : ""
             }`}
