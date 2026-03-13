@@ -5,7 +5,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
@@ -23,6 +23,8 @@ import EventWaiverModal from "./EventWaiverModal";
 import EventTasksContainer from "./EventTasksContainer";
 
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
+import { RequestContext } from "../../../providers/RequestProvider";
+import VolunteerLog from "./VolunteerLog";
 
 const Styled = {
   Container: styled(Container)`
@@ -104,6 +106,7 @@ const EventRegister = () => {
     data: { user },
   } = useSession();
   const router = useRouter();
+  const context = useContext(RequestContext);
 
   const { eventId } = router.query;
 
@@ -118,6 +121,7 @@ const EventRegister = () => {
   const [registrations, setRegistrations] = useState([]);
   const [regCount, setRegCount] = useState(0);
   const [showUnregisterModal, setShowUnregisterModal] = useState(false);
+  const [capacityError, setCapacityError] = useState("");
 
   useEffect(() => {
     onLoadEvent();
@@ -140,11 +144,6 @@ const EventRegister = () => {
             setHasMinor(true);
           setRegistrations(registrationsResult.data.registrations);
 
-          let count = 0;
-          registrationsResult.data.registrations.forEach((reg) => {
-            count += 1 + reg.minors.length;
-          });
-
           // get registered tasks
           const userTasks =
             registrationsResult.data.registrations[0]?.tasks || [];
@@ -154,10 +153,10 @@ const EventRegister = () => {
         return getRegistrations({ eventId });
       })
       .then((allRegistrationsResult) => {
-        let approvedCount = 0;
+        let activeCount = 0;
         allRegistrationsResult.data.registrations.forEach((reg) => {
-          if (reg.approved === "approved") {
-            approvedCount += 1 + reg.minors.length;
+          if (reg.approved !== "denied") {
+            activeCount += 1 + reg.minors.length;
           }
         });
 
@@ -171,7 +170,7 @@ const EventRegister = () => {
 
           // Avoid displaying negative slots left
           setRegCount(
-            Math.min(approvedCount, prevEvent.eventParent.maxVolunteers)
+            Math.min(activeCount, prevEvent.eventParent.maxVolunteers)
           );
 
           return prevEvent;
@@ -190,21 +189,58 @@ const EventRegister = () => {
     setShowMinorModal(true);
   };
 
-  const onRegisterAfterWaiverClicked = () => {
+  const onRegisterAfterWaiverClicked = async () => {
     toggleWaiverModal();
     setIsLoading(true);
-    registerForEvent({
-      eventId: event._id,
-      userId: user._id,
-      organizationId: user.organizationId,
-      minors,
-      approved: event.eventParent.requiresApproval ? "pending" : "approved",
-      tasks: tasks,
-    }).then(() => {
+    const remainingSlots = availableSlots;
+    const requestedGroupSize = 1 + minors.length;
+
+    if (remainingSlots <= 0 || requestedGroupSize > remainingSlots) {
+      const errorMessage =
+        remainingSlots <= 0
+          ? "This event is already at capacity."
+          : `Only ${remainingSlots} spot${
+              remainingSlots === 1 ? "" : "s"
+            } remain. Please adjust your group size.`;
+      context?.failed?.(errorMessage);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await registerForEvent({
+        eventId: event._id,
+        userId: user._id,
+        organizationId: user.organizationId,
+        minors,
+        approved: event.eventParent.requiresApproval ? "pending" : "approved",
+        tasks: tasks,
+      });
+
+      if (response?.error) {
+        context?.failed?.(
+          typeof response.error === "string"
+            ? response.error
+            : "Unable to complete registration. Please try again."
+        );
+        setIsLoading(false);
+        return;
+      }
+
+      if (!response?.data?.registration) {
+        context?.failed?.("Unable to complete registration. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
       setIsRegistered(true);
       setIsLoading(false);
       setRefreshTrigger((prev) => prev + 1);
-    });
+    } catch (error) {
+      console.error("Error completing registration:", error);
+      context?.failed?.("Unable to complete registration. Please try again.");
+      setIsLoading(false);
+    }
   };
 
   const toggleMinorModal = () => {
@@ -237,16 +273,54 @@ const EventRegister = () => {
   };
 
   const [tasks, setTasks] = useState([]);
+  const availableSlots = Math.max(
+    (event?.eventParent?.maxVolunteers ?? 0) - regCount,
+    0
+  );
+  const groupSize = minors.length + 1;
+  const isGroupTooLarge = groupSize > availableSlots && availableSlots > 0;
+  const isEventFull = availableSlots <= 0;
+  const isCapacityLocked = isEventFull || isGroupTooLarge;
+
+  useEffect(() => {
+    if (!event?.eventParent?.maxVolunteers || isRegistered) {
+      setCapacityError("");
+      return;
+    }
+
+    if (isEventFull) {
+      setCapacityError("This event is at capacity.");
+      return;
+    }
+
+    if (isGroupTooLarge) {
+      const overflow = groupSize - availableSlots;
+      setCapacityError(
+        `Only ${availableSlots} spot${
+          availableSlots === 1 ? "" : "s"
+        } remain. Remove ${overflow} participant${
+          overflow === 1 ? "" : "s"
+        } or reduce your group size.`
+      );
+      return;
+    }
+
+    setCapacityError("");
+  }, [
+    availableSlots,
+    event?.eventParent?.maxVolunteers,
+    groupSize,
+    isEventFull,
+    isGroupTooLarge,
+    isRegistered,
+  ]);
 
   return (
     <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
       <div className="flex flex-row justify-between">
         <Text type="header" text="Confirm Registration"></Text>
         <div className="flex items-end">
-          <Text
-            type="header"
-            text={event?.eventParent?.maxVolunteers - regCount}
-          ></Text>
+          <Text type="header" text={availableSlots}></Text>
           <Text
             className="min-w-max"
             type="subheader"
@@ -361,6 +435,12 @@ const EventRegister = () => {
         />
       )}
 
+      {isRegistered &&
+        (!event?.eventParent?.requiresApproval ||
+          registrations[0]?.approved === "approved") && (
+          <VolunteerLog eventId={eventId} user={user} />
+        )}
+
       {event?.eventParent?.requiresApproval && (
         <div className="mt-3 flex flex-row pl-3">
           <Text text="*" className="text-primaryColor" />
@@ -377,8 +457,15 @@ const EventRegister = () => {
             text="Complete Registration"
             onClick={onCompleteRegistrationClicked}
             className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
+            disabled={isCapacityLocked}
           />
         </div>
+      )}
+      {!isRegistered && capacityError && (
+        <Text
+          className="text-sm font-semibold text-red-600"
+          text={capacityError}
+        />
       )}
 
       {isRegistered && registrations[0]?.approved == "approved" ? (

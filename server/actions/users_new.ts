@@ -23,7 +23,10 @@ export const getUsers = async (
   users = await User.find(match);
 
   if (eventId) {
-    const registrations = await Registration.find({ eventId });
+    const registrations = await Registration.find({
+      eventId,
+      approved: "approved",
+    });
     const userIds = new Set(
       registrations.map((registration) => registration.userId.toString())
     );

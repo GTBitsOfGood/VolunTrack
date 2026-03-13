@@ -94,9 +94,7 @@ const EventMinorModal = ({ open, toggle, event, addMinor }) => {
                       }}
                     />{" "}
                   </FormGroup>
-                  <Styled.Text>
-                    This volunteer is under the age of 16
-                  </Styled.Text>
+                  <Styled.Text>This member is under the age of 16</Styled.Text>
                 </div>
               </div>
             </SForm.FormGroup>

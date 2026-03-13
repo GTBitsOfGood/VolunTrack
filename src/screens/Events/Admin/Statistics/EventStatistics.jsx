@@ -137,7 +137,7 @@ const EventStatistics = () => {
           <Styled.StatsInfoContainer>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Volunteers Attended: </strong>{" "}
+                <strong>Total Members Attended: </strong>{" "}
                 {totalVolunteers.length}
               </p>
             </Styled.StatsInfo>

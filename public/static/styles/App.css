@@ -149,3 +149,14 @@ right: 0;
   min-width: 14px !important;
   margin-right: 0 !important;
 }
+
+/* Ensure aktiv-grotesk font is applied to all text in customization form */
+.customization-form input,
+.customization-form textarea,
+.customization-form p,
+.customization-form a,
+.customization-form span,
+.customization-form input[type="text"],
+.customization-form * {
+  font-family: "aktiv-grotesk", sans-serif !important;
+}

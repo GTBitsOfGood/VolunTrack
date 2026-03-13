@@ -16,7 +16,7 @@ const RegistrationCard = (props) => {
 
   useEffect(() => {
     getUser(props.registration.userId).then((response) => {
-      if (response.data.user) {
+      if (response?.data?.user) {
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}`
         );
@@ -48,7 +48,7 @@ const RegistrationCard = (props) => {
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
       <div className="flex justify-center">
         <div className="flex flex-row items-center">
-          <div className="mr-2 font-semibold">Volunteer Name: </div>
+          <div className="mr-2 font-semibold">Member Name: </div>
           <div className={`mr-2 ${styles.title}`}>
             {name || "No Name Available"}
           </div>
@@ -120,11 +120,14 @@ const RegistrationCard = (props) => {
           <div>
             <div className="font-semibold">Date</div>
             <div className={`${styles.content}`}>
-              {new Date(props?.event?.date).toLocaleDateString("en-US", {
-                month: "2-digit",
-                day: "2-digit",
-                year: "numeric",
-              }) || "No Date Available"}
+              {props?.event?.date
+                ? new Intl.DateTimeFormat("en-US", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                    timeZone: "UTC",
+                  }).format(new Date(props.event.date))
+                : "No Date Available"}
             </div>
           </div>
         </div>
@@ -213,7 +216,7 @@ const RegistrationCard = (props) => {
               className={`font-semibold hover:bg-secondaryColor ${
                 props.registration.approved !== "approved"
                   ? "cursor-default !border-none bg-transparent !text-gray-400"
-                  : "cursor-default bg-secondaryColor !text-gray-800"
+                  : "cursor-default !border-none bg-transparent !text-primaryColor"
               }`}
             />
             <BoGButton

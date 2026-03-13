@@ -21,6 +21,7 @@ import EventsList from "./EventsList";
 import Text from "../../components/Text";
 import PaginationComp from "./EventPagination";
 import LoadingModal from "./LoadingModal";
+import EventResponseModal from "./Admin/EventResponseModal";
 
 const Styled = {
   Container: styled.div`
@@ -173,6 +174,9 @@ const EventManager = ({ isHomePage }) => {
   // const [filterOn, setFilterOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("Upcoming Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showResponseModal, setShowResponseModal] = useState(false);
+  const [responseIsError, setResponseIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
 
@@ -311,6 +315,11 @@ const EventManager = ({ isHomePage }) => {
 
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
+    onRefresh();
+  };
+
+  const toggleResponseModal = () => {
+    setShowResponseModal((prev) => !prev);
     onRefresh();
   };
   useEffect(() => {
@@ -646,6 +655,17 @@ const EventManager = ({ isHomePage }) => {
                 <EventCreateModal
                   open={showCreateModal}
                   toggle={toggleCreateModal}
+                  toggleResponseModal={toggleResponseModal}
+                  setResponseIsError={setResponseIsError}
+                  setErrorMsg={setErrorMsg}
+                />
+              )}
+              {showResponseModal && (
+                <EventResponseModal
+                  open={showResponseModal}
+                  toggle={toggleResponseModal}
+                  isError={responseIsError}
+                  errorMsg={errorMsg}
                 />
               )}
             </div>
@@ -655,7 +675,7 @@ const EventManager = ({ isHomePage }) => {
       {isHomePage && user.role === "volunteer" && (
         <Styled.HomePage>
           <h2 className="text-bold w-full text-left font-bold">
-            My Volunteering
+            My Membership
           </h2>
           <div className="flex flex-row gap-8">
             <div className="mb-4 justify-start">
@@ -705,7 +725,7 @@ const EventManager = ({ isHomePage }) => {
                 )}
               />
               <div className="w-full">
-                <Text text="Volunteer History" type="subheader" />
+                <Text text="Member History" type="subheader" />
                 <Text
                   text={`${attendances.length} events`}
                   className="my-2 text-primaryColor"

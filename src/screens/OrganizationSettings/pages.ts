@@ -95,7 +95,7 @@ export const organizationSettingsPages: Page[] = [
     key: "awards",
     icon: TrophyIcon,
     helperText:
-      "Motivate and engage volunteers by setting thresholds for different medals",
+      "Motivate and engage members by setting thresholds for different medals",
     sections: [
       {
         title: "Event Medal Thresholds",
@@ -105,7 +105,7 @@ export const organizationSettingsPages: Page[] = [
         ],
       },
       {
-        title: "Hours Volunteered Medal Thresholds",
+        title: "Hours Participated Medal Thresholds",
         fields: [
           { name: "hoursSilver", label: "Silver Medal", type: "number" },
           { name: "hoursGold", label: "Gold Medal", type: "number" },
