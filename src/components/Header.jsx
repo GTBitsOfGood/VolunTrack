@@ -49,6 +49,10 @@ const Header = () => {
     router.push("/events");
   };
 
+  const onVolunteerTimesheetsClicked = () => {
+    router.push("/timesheets");
+  };
+
   const currPageMatches = (page) => router.pathname === page;
 
   const dropdownItems = (
@@ -159,8 +163,10 @@ const Header = () => {
           </Navbar.Link>
         ) : (
           <Navbar.Link
-            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
-              currPageMatches("/events") ? "text-primaryColor" : ""
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/events") || currPageMatches("/timesheets")
+                ? "text-primaryColor"
+                : ""
             }`}
           >
             <Dropdown
@@ -178,6 +184,13 @@ const Header = () => {
 
               <Dropdown.Item href="/events" onClick={onEventsClicked}>
                 Event Calendar
+              </Dropdown.Item>
+
+              <Dropdown.Item
+                href="/timesheets"
+                onClick={onVolunteerTimesheetsClicked}
+              >
+                Volunteer Timesheets
               </Dropdown.Item>
             </Dropdown>
           </Navbar.Link>
