@@ -74,7 +74,6 @@ const QuestionCard = ({
             placeholder="Question Title"
             style={{
               color: "#637381",
-              fontFamily: "Open Sans",
               fontStyle: "normal",
               fontSize: "12px !important",
               fontWeight: "600",
@@ -97,7 +96,7 @@ const QuestionCard = ({
                           style={{ color: "black" }}
                         />
                         <span style={{ color: "black" }} className="capitalize">
-                          Mutiple Choice
+                          Multiple Choice
                         </span>
                       </>
                     )}
@@ -145,7 +144,7 @@ const QuestionCard = ({
                   <div className="flex items-center gap-2">
                     <IoRadioButtonOn />
                     <span style={{ color: "black" }} className="capitalize">
-                      Mutiple Choice
+                      Multiple Choice
                     </span>
                   </div>
                 </Dropdown.Item>
@@ -198,7 +197,6 @@ const QuestionCard = ({
                     style={{
                       backgroundColor: "white",
                       color: "#637381",
-                      fontFamily: "Open Sans",
                       fontStyle: "normal",
                       fontSize: "12px !important",
                       fontWeight: "200",
@@ -214,7 +212,6 @@ const QuestionCard = ({
                 <p
                   style={{
                     color: "#637381",
-                    fontFamily: "Open Sans",
                     fontStyle: "normal",
                     fontSize: "12px !important",
                     fontWeight: "200",
@@ -232,7 +229,6 @@ const QuestionCard = ({
               <a
                 style={{
                   color: "#637381",
-                  fontFamily: "Open Sans",
                   fontStyle: "normal",
                   fontSize: "12px !important",
                   fontWeight: "200",
@@ -262,7 +258,6 @@ const QuestionCard = ({
                     style={{
                       backgroundColor: "white",
                       color: "#637381",
-                      fontFamily: "Open Sans",
                       fontStyle: "normal",
                       fontSize: "12px !important",
                       fontWeight: "200",
@@ -297,7 +292,6 @@ const QuestionCard = ({
               <a
                 style={{
                   color: "#637381",
-                  fontFamily: "Open Sans",
                   fontStyle: "normal",
                   fontSize: "12px !important",
                   fontWeight: "200",
@@ -323,7 +317,6 @@ const QuestionCard = ({
             style={{
               backgroundColor: "white",
               color: "#637381",
-              fontFamily: "Open Sans",
               fontStyle: "normal",
               fontSize: "12px !important",
               fontWeight: "200",
@@ -334,7 +327,7 @@ const QuestionCard = ({
         </>
       )}
 
-      {question.type === "checkkbox" && (
+      {question.type === "checkboxes" && (
         <>
           {question.items.map((item, index) => (
             <div key={index} className="flex h-12 items-center gap-2">
@@ -349,7 +342,6 @@ const QuestionCard = ({
                     style={{
                       backgroundColor: "white",
                       color: "#637381",
-                      fontFamily: "Open Sans",
                       fontStyle: "normal",
                       fontSize: "12px !important",
                       fontWeight: "200",
@@ -365,7 +357,6 @@ const QuestionCard = ({
                 <p
                   style={{
                     color: "#637381",
-                    fontFamily: "Open Sans",
                     fontStyle: "normal",
                     fontSize: "12px !important",
                     fontWeight: "200",
@@ -383,7 +374,6 @@ const QuestionCard = ({
               <a
                 style={{
                   color: "#637381",
-                  fontFamily: "Open Sans",
                   fontStyle: "normal",
                   fontSize: "12px !important",
                   fontWeight: "200",
