@@ -99,6 +99,13 @@ const Customization = () => {
     };
   }, [questions]);
 
+  // Auto-expand when registration form is toggled on
+  useEffect(() => {
+    if (edit) {
+      setIsCollapsed(false);
+    }
+  }, [edit]);
+
   return (
     <div style={{ minWidth }} className="w-full rounded-sm bg-grey p-4">
       <div className="m-0 flex flex-col border-b border-gray-800">
@@ -133,7 +140,7 @@ const Customization = () => {
               isCollapsed ? "max-h-0" : "max-h-screen"
             }`}
           >
-            <div className="mt-4">
+            <div className="customization-form mt-4">
               <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="questions">
                   {(provided) => (
@@ -180,12 +187,9 @@ const Customization = () => {
               >
                 <PlusIcon className="h-6 w-6 text-primaryColor" />
                 <p
+                  className="text-lg font-bold"
                   style={{
                     color: "#637381",
-                    fontFamily: "Open Sans",
-                    fontStyle: "normal",
-                    fontSize: "20",
-                    fontWeight: "600",
                   }}
                 >
                   Add Question

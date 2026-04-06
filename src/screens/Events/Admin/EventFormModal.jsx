@@ -51,6 +51,9 @@ const Styled = {
 
 const EventFormModal = ({
   toggle,
+  toggleResponseModal,
+  setResponseIsError,
+  setErrorMsg,
   event,
   isGroupEvent,
   setEvent,
@@ -102,11 +105,19 @@ const EventFormModal = ({
     if (requiresApproval) event.eventParent.requiresApproval = true;
 
     createEvent(event)
-      .then((res) => toggle())
+      .then((res) => {
+        toggle();
+        setResponseIsError(false);
+        setErrorMsg("");
+        toggleResponseModal();
+      })
       .catch((error) => {
         if (error.response.status !== 200) {
           context.startLoading();
           context.failed(error.response.data.message);
+          setResponseIsError(true);
+          setErrorMsg("Error trying to create event!");
+          toggleResponseModal();
         }
       })
       .finally(() => setSubmitting(false));
