@@ -1,4 +1,8 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
+import { Tooltip } from "flowbite-react";
+import { TrashIcon } from "@heroicons/react/24/solid";
+import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 
 const formatDate = (date) => {
   if (!date) return "—";
@@ -17,7 +21,8 @@ const formatTime = (date) => {
   return `${h}:${m}`;
 };
 
-const TimesheetCard = ({ log }) => {
+const TimesheetCard = ({ log, onDelete, isDeleting }) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const contactName =
     log.userId?.firstName != null && log.userId?.lastName != null
       ? `${log.userId.firstName} ${log.userId.lastName}`
@@ -28,12 +33,29 @@ const TimesheetCard = ({ log }) => {
   const date = log.eventId?.date ?? log.inTime;
   const startTime = log.inTime;
   const endTime = log.outTime;
+  const toggleDeleteModal = () => setShowDeleteModal((prev) => !prev);
+  const handleDelete = async () => {
+    await onDelete(log._id);
+    setShowDeleteModal(false);
+  };
 
   return (
     <div className="rounded-lg bg-gray-100 p-4">
-      <div className="border-b border-gray-300 pb-3">
-        <span className="font-bold text-gray-800">Contact Name: </span>
-        <span className="text-gray-600">{contactName}</span>
+      <div className="flex items-start justify-between border-b border-gray-300 pb-3">
+        <div>
+          <span className="font-bold text-gray-800">Contact Name: </span>
+          <span className="text-gray-600">{contactName}</span>
+        </div>
+        <Tooltip content="Delete" style="light">
+          <button
+            type="button"
+            className="mx-1"
+            onClick={toggleDeleteModal}
+            aria-label="Delete timesheet entry"
+          >
+            <TrashIcon className="h-6 text-primaryColor" />
+          </button>
+        </Tooltip>
       </div>
       <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm">
         <div>
@@ -57,6 +79,33 @@ const TimesheetCard = ({ log }) => {
           <span className="text-gray-600">{formatTime(endTime)}</span>
         </div>
       </div>
+      <Modal
+        isOpen={showDeleteModal}
+        toggle={toggleDeleteModal}
+        backdrop="static"
+      >
+        <ModalHeader toggle={toggleDeleteModal}>Delete User?</ModalHeader>
+        <ModalBody>
+          Please confirm if you want to do this. This cannot be undone.
+        </ModalBody>
+        <ModalFooter>
+          <button
+            type="button"
+            onClick={toggleDeleteModal}
+            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Delete
+          </button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 };
@@ -76,7 +125,10 @@ TimesheetCard.propTypes = {
     }),
     inTime: PropTypes.string,
     outTime: PropTypes.string,
+    _id: PropTypes.string,
   }).isRequired,
+  onDelete: PropTypes.func.isRequired,
+  isDeleting: PropTypes.bool,
 };
 
 export default TimesheetCard;
