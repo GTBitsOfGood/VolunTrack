@@ -151,15 +151,12 @@ class MemberTable extends React.Component {
             </div>
           </Modal>
         </Table>
-        {users.length !== 0 && (
-          <Pagination
-            items={users}
-            pageSize={this.state.pageSize}
-            loading={this.props.loading}
-            currentPage={this.state.currentPage}
-            updatePageCallback={this.updatePage}
-          />
-        )}
+        <Pagination
+          items={users}
+          pageSize={this.state.pageSize}
+          currentPage={this.state.currentPage}
+          updatePageCallback={this.updatePage}
+        />
       </div>
     );
   }
