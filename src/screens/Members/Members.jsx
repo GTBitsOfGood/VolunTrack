@@ -53,8 +53,12 @@ class Members extends React.Component {
 
     // this.onRefresh();
   };
-  onDeleteUser = (userId) => {
-    deleteUser(userId);
+  onDeleteUser = async (userId) => {
+    const resp = await deleteUser(userId);
+    if (resp && "error" in resp) {
+      this.setState({ loadingMoreUsers: false });
+      return false;
+    }
 
     let updatedUsers = [];
 
@@ -68,6 +72,7 @@ class Members extends React.Component {
       users: updatedUsers,
       loadingMoreUsers: false,
     });
+    return true;
   };
   filteredAndSortedMembers = () => {
     const filterArray = this.state.users.filter(
@@ -88,7 +93,7 @@ class Members extends React.Component {
             Members ({this.state.users.length} total)
           </div>
         </div>
-        <div className="mt-[0.7rem] flex w-[80%] flex-row items-center">
+        <div className="mb-3 mt-[0.7rem] flex w-[80%] flex-row items-center">
           <SearchBar
             placeholder="Search Name"
             value={searchValue}
@@ -114,7 +119,7 @@ class Members extends React.Component {
             })}
             filename={"member-list.csv"}
             target="_blank"
-            className="mb-3 no-underline"
+            className="no-underline"
           >
             <BoGButton text="Download to CSV" />
           </CSVLink>

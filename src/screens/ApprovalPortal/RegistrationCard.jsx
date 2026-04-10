@@ -16,7 +16,7 @@ const RegistrationCard = (props) => {
 
   useEffect(() => {
     getUser(props.registration.userId).then((response) => {
-      if (response.data.user) {
+      if (response?.data?.user) {
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}`
         );
@@ -216,7 +216,7 @@ const RegistrationCard = (props) => {
               className={`font-semibold hover:bg-secondaryColor ${
                 props.registration.approved !== "approved"
                   ? "cursor-default !border-none bg-transparent !text-gray-400"
-                  : "cursor-default bg-secondaryColor !text-gray-800"
+                  : "cursor-default !border-none bg-transparent !text-primaryColor"
               }`}
             />
             <BoGButton

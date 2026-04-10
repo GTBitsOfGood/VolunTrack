@@ -21,6 +21,7 @@ import EventsList from "./EventsList";
 import Text from "../../components/Text";
 import PaginationComp from "../../components/PaginationComp";
 import LoadingModal from "./LoadingModal";
+import EventResponseModal from "./Admin/EventResponseModal";
 
 const Styled = {
   Container: styled.div`
@@ -173,6 +174,9 @@ const EventManager = ({ isHomePage }) => {
   // const [filterOn, setFilterOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("Upcoming Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showResponseModal, setShowResponseModal] = useState(false);
+  const [responseIsError, setResponseIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [markDates, setDates] = useState([]);
   const [showBack, setShowBack] = useState(false);
 
@@ -311,6 +315,11 @@ const EventManager = ({ isHomePage }) => {
 
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
+    onRefresh();
+  };
+
+  const toggleResponseModal = () => {
+    setShowResponseModal((prev) => !prev);
     onRefresh();
   };
   useEffect(() => {
@@ -646,6 +655,17 @@ const EventManager = ({ isHomePage }) => {
                 <EventCreateModal
                   open={showCreateModal}
                   toggle={toggleCreateModal}
+                  toggleResponseModal={toggleResponseModal}
+                  setResponseIsError={setResponseIsError}
+                  setErrorMsg={setErrorMsg}
+                />
+              )}
+              {showResponseModal && (
+                <EventResponseModal
+                  open={showResponseModal}
+                  toggle={toggleResponseModal}
+                  isError={responseIsError}
+                  errorMsg={errorMsg}
                 />
               )}
             </div>

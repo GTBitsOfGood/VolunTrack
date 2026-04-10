@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import router from "next/router";
 import "normalize.css";
 import { useEffect } from "react";
+import LoadingScreen from "../../components/LoadingScreen";
 
 const IndexPage = () => {
   const {
@@ -12,14 +13,7 @@ const IndexPage = () => {
     router.push("/home");
   });
 
-  return (
-    <>
-      <h1>
-        Welcome {user.firstName} {user.lastName}
-      </h1>
-      <h2>Role: {user.role}</h2>
-    </>
-  );
+  return <LoadingScreen />;
 };
 
 export default IndexPage;

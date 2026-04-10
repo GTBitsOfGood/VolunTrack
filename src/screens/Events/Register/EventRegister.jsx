@@ -24,6 +24,7 @@ import EventTasksContainer from "./EventTasksContainer";
 
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import { RequestContext } from "../../../providers/RequestProvider";
+import VolunteerLog from "./VolunteerLog";
 
 const Styled = {
   Container: styled(Container)`
@@ -433,6 +434,12 @@ const EventRegister = () => {
           tasks={tasks}
         />
       )}
+
+      {isRegistered &&
+        (!event?.eventParent?.requiresApproval ||
+          registrations[0]?.approved === "approved") && (
+          <VolunteerLog eventId={eventId} user={user} />
+        )}
 
       {event?.eventParent?.requiresApproval && (
         <div className="mt-3 flex flex-row pl-3">
