@@ -8,6 +8,7 @@ const VolunteerTimesheets = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
+  const [deletingLogId, setDeletingLogId] = useState(null);
 
   useEffect(() => {
     axios
@@ -24,6 +25,19 @@ const VolunteerTimesheets = () => {
         setLoading(false);
       });
   }, []);
+
+  const onDeleteLog = async (logId) => {
+    if (!logId) return;
+    setDeletingLogId(logId);
+    try {
+      await axios.delete("/api/volunteer-logs", {
+        params: { logId },
+      });
+      setLogs((prevLogs) => prevLogs.filter((log) => log._id !== logId));
+    } finally {
+      setDeletingLogId(null);
+    }
+  };
 
   const filteredLogs = useMemo(() => {
     if (!searchValue.trim()) return logs;
@@ -82,7 +96,14 @@ const VolunteerTimesheets = () => {
 
       <div className="flex flex-col gap-4">
         {filteredLogs.length > 0 ? (
-          filteredLogs.map((log) => <TimesheetCard key={log._id} log={log} />)
+          filteredLogs.map((log) => (
+            <TimesheetCard
+              key={log._id}
+              log={log}
+              onDelete={onDeleteLog}
+              isDeleting={deletingLogId === log._id}
+            />
+          ))
         ) : (
           <p className="py-8 text-center text-gray-500">
             No timesheet entries found. Only shifts with both start and end time

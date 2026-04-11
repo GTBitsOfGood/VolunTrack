@@ -163,6 +163,24 @@ export default async function handler(
 
       return res.status(201).json({ log });
     }
+    case "DELETE": {
+      const admin = await isAdmin(req, res);
+      if (!admin) {
+        return res.status(403).json({ error: "Admin access required" });
+      }
+
+      const logId = req.query.logId;
+      if (typeof logId !== "string" || !Types.ObjectId.isValid(logId)) {
+        return res.status(400).json({ error: "Valid logId is required" });
+      }
+
+      const deletedLog = await VolunteerLog.findByIdAndDelete(logId);
+      if (!deletedLog) {
+        return res.status(404).json({ error: "Volunteer log not found" });
+      }
+
+      return res.status(200).json({ success: true });
+    }
     default: {
       return res.status(405).json({ error: "Method not allowed" });
     }
