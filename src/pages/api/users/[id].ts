@@ -26,7 +26,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const isadmin = await isAdmin(req, res);
       const isownuser = await isOwnUser(req, res);
       const isogadmin = await isOriginalOrgAdmin(req, res);
-      if (user.role === "admin" && !isogadmin) {
+      if (user.role === "admin" && !isogadmin && !isownuser) {
         return res.status(403).json({
           error: "Only the original organization Admin can modify other admins",
         });
