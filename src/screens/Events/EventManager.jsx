@@ -19,7 +19,7 @@ import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
 import EventsList from "./EventsList";
 import Text from "../../components/Text";
-import PaginationComp from "../../components/PaginationComp";
+import PaginationComp from "./EventPagination";
 import LoadingModal from "./LoadingModal";
 import EventResponseModal from "./Admin/EventResponseModal";
 

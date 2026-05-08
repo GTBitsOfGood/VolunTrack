@@ -3,39 +3,15 @@ import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
+// const PAGE_SIZE = 1;
+
 const Styled = {
   Pagination: styled(Pagination)`
-    margin: 1rem 0 !important;
-    gap: 0.5rem !important;
-
-    .page-item {
-      &.active .page-link {
-        color: white;
-      }
-
-      &.disabled .page-link {
-        color: #94a3b8;
-      }
-    }
-
-    .page-link {
-      border: 1px solid #e2e8f0;
-      border-radius: 6px;
-      color: #64748b;
-      min-width: 40px;
-      text-align: center;
-      padding: 0.5rem 0.75rem;
-      transition: all 0.2s ease;
-      margin: 0 0.25rem;
-
-      &:hover {
-        border-color: #e2e8f0;
-      }
-
-      &:focus {
-        box-shadow: none;
-      }
-    }
+    margin: 2vw;
+  `,
+  PaginationLink: styled(PaginationLink)`
+    background-color: transparent;
+    border: none;
   `,
 };
 
@@ -59,11 +35,7 @@ class PaginationComp extends React.Component {
   };
 
   componentDidUpdate(prevProps) {
-    if (
-      this.props.items !== prevProps.items ||
-      this.props.pageSize !== prevProps.pageSize ||
-      this.props.currentPage !== prevProps.currentPage
-    ) {
+    if (this.props.items != [] && this.props.items !== prevProps.items) {
       this.setState({
         pageCount: Math.ceil(this.props.items.length / this.props.pageSize),
         currentPage: this.props.currentPage,
@@ -73,27 +45,25 @@ class PaginationComp extends React.Component {
 
   getDisplayedPages(currentPage, pageCount) {
     if (pageCount <= 1) return [0];
-    const delta = 1;
+    const delta = 2;
     const pages = [];
     const left = currentPage - delta;
     const right = currentPage + delta;
+    let previous;
 
-    for (let i = 0; i < Math.min(2, pageCount); i++) {
-      pages.push(i);
+    // Collect pages to show
+    for (let i = 0; i < pageCount; i++) {
+      if (i === 0 || i === pageCount - 1 || (i >= left && i <= right)) {
+        pages.push(i);
+      }
     }
 
-    for (let i = Math.max(2, left); i <= Math.min(pageCount - 3, right); i++) {
-      pages.push(i);
-    }
-
-    for (let i = Math.max(pageCount - 2, 0); i < pageCount; i++) {
-      pages.push(i);
-    }
-
+    // Sort and deduplicate
     const sortedPages = [...new Set(pages)].sort((a, b) => a - b);
     const result = [];
-    let previous = null;
+    previous = null;
 
+    // Insert ellipsis where there are gaps
     sortedPages.forEach((page) => {
       if (previous !== null && page - previous > 1) {
         result.push("...");
@@ -106,54 +76,81 @@ class PaginationComp extends React.Component {
   }
 
   render() {
-    const { currentPage, pageCount } = this.state;
-    const { ariaLabel = "Pagination" } = this.props;
-
     return (
-      <div className="pagination-wrapper flex items-center justify-center">
-        <Styled.Pagination aria-label={ariaLabel}>
-          <PaginationItem disabled={currentPage <= 0}>
-            <PaginationLink
-              className="text-gray-800 text-primaryColor"
-              previous
-              onClick={(e) => this.updateCurrentPage(e, currentPage - 1)}
+      <React.Fragment>
+        {
+          <div className="pagination-wrapper">
+            <Styled.Pagination
+              aria-label="Page navigation example"
+              className="pagination justify-content-center"
             >
-              &lt;
-            </PaginationLink>
-          </PaginationItem>
-
-          {this.getDisplayedPages(currentPage, pageCount).map((page, index) =>
-            page === "..." ? (
-              <PaginationItem disabled key={`ellipsis-${index}`}>
-                <PaginationLink className="opacity-50">...</PaginationLink>
-              </PaginationItem>
-            ) : (
-              <PaginationItem active={page === currentPage} key={page}>
-                <PaginationLink
-                  className={`${
-                    page === currentPage
-                      ? "!border-primaryColor bg-primaryColor text-white"
-                      : "text-gray-800, hover:text-secondaryColor"
-                  }`}
-                  onClick={(e) => this.updateCurrentPage(e, page)}
+              {/* Previous button */}
+              <PaginationItem disabled={this.state.currentPage <= 0}>
+                <Styled.PaginationLink
+                  className="text-gray-400 hover:text-primaryColor"
+                  onClick={(e) =>
+                    this.updateCurrentPage(e, this.state.currentPage - 1)
+                  }
+                  previous
                 >
-                  {page + 1}
-                </PaginationLink>
+                  Previous
+                </Styled.PaginationLink>
               </PaginationItem>
-            )
-          )}
 
-          <PaginationItem disabled={currentPage >= pageCount - 1}>
-            <PaginationLink
-              className="text-gray-800 text-primaryColor"
-              next
-              onClick={(e) => this.updateCurrentPage(e, currentPage + 1)}
-            >
-              &gt;
-            </PaginationLink>
-          </PaginationItem>
-        </Styled.Pagination>
-      </div>
+              {/* Page numbers with ellipsis */}
+              {this.getDisplayedPages(
+                this.state.currentPage,
+                this.state.pageCount
+              ).map((page, index) => {
+                if (page === "...") {
+                  return (
+                    <PaginationItem disabled key={`ellipsis-${index}`}>
+                      <Styled.PaginationLink className="text-gray-400" disabled>
+                        ...
+                      </Styled.PaginationLink>
+                    </PaginationItem>
+                  );
+                }
+                return (
+                  <PaginationItem
+                    active={page === this.state.currentPage}
+                    key={page}
+                    className={
+                      page === this.state.currentPage ? "bg-gray-400" : ""
+                    }
+                  >
+                    <Styled.PaginationLink
+                      className={`${
+                        page === this.state.currentPage
+                          ? "!border-primaryColor bg-primaryColor text-white"
+                          : "text-gray-800 hover:text-secondaryColor"
+                      } hover:text-primaryColor`}
+                      onClick={(e) => this.updateCurrentPage(e, page)}
+                    >
+                      {page + 1}
+                    </Styled.PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              {/* Next button */}
+              <PaginationItem
+                disabled={this.state.currentPage >= this.state.pageCount - 1}
+              >
+                <Styled.PaginationLink
+                  className="text-gray-400 hover:text-primaryColor"
+                  onClick={(e) =>
+                    this.updateCurrentPage(e, this.state.currentPage + 1)
+                  }
+                  next
+                >
+                  Next
+                </Styled.PaginationLink>
+              </PaginationItem>
+            </Styled.Pagination>
+          </div>
+        }
+      </React.Fragment>
     );
   }
 }
@@ -165,5 +162,4 @@ PaginationComp.propTypes = {
   pageSize: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   updatePageCallback: PropTypes.func.isRequired,
-  ariaLabel: PropTypes.string,
 };

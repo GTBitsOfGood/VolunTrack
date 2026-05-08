@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { getRegistrations } from "../../queries/registrations";
 import { getEvent } from "../../queries/events";
 import RegistrationCard from "./RegistrationCard";
-import PaginationComp from "../../components/PaginationComp";
+import EventPagination from "../Events/EventPagination"; // Import the pagination component
 import LoadingModal from "../Events/LoadingModal";
 
 const AdminApproval = ({ user }) => {
@@ -209,12 +209,14 @@ const AdminApproval = ({ user }) => {
               })}
 
               {/* Pagination Controls */}
-              <PaginationComp
-                items={historyRegistrations}
-                pageSize={pageSize}
-                currentPage={historyCurrentPage}
-                updatePageCallback={setHistoryCurrentPage}
-              />
+              {historyRegistrations.length > pageSize && (
+                <EventPagination
+                  items={historyRegistrations}
+                  pageSize={pageSize}
+                  currentPage={historyCurrentPage}
+                  updatePageCallback={setHistoryCurrentPage}
+                />
+              )}
             </>
           ) : (
             <div className="font-inter text-left">No registration history</div>
