@@ -7,7 +7,7 @@ services:
       - /app/node_modules
       - /app/.next
     ports:
-      - "3000:3000"
+      - "3001:3000"
     entrypoint: ./entrypoint.sh
     environment:
       MONGO_DB: mongodb://mongo:27017/
