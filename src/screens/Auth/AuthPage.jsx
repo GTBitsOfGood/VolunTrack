@@ -97,7 +97,7 @@ const AuthPage = (props) => {
           <div>
             {!props.createAccount && (
               <>
-                Forgot your password?
+                Forgot your Password
                 <a
                   className="ml-2 text-sm underline"
                   onClick={() => setShowModal(true)}
