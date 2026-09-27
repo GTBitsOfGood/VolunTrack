@@ -1,4 +1,4 @@
-import { isValidObjectId, Types, UpdateQuery } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import { checkEventCapacity } from "../../../../server/actions/registrationCapacity";
@@ -8,6 +8,9 @@ import Registration, {
 } from "../../../../server/mongodb/models/Registration";
 import {
   sendRegistrationConfirmationEmail,
+  sendRegistrationPendingEmail,
+  sendRegistrationApprovedEmail,
+  sendRegistrationDeniedEmail,
   sendRegistrationDeleteEmail,
 } from "../../../utils/mailersend-email.js";
 import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
@@ -77,24 +80,41 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
-      if (result.data.approved === "approved") {
-        try {
+      // Save first so failed registrations never trigger an email.
+      // Derive approval from the event so clients cannot bypass review or send
+      // a premature confirmation by omitting or overriding the status.
+      const registration = await Registration.create({
+        ...result.data,
+        approved: capacityResult.event.eventParent.requiresApproval
+          ? "pending"
+          : "approved",
+      });
+
+      try {
+        if (registration.approved === "pending") {
+          // Always notify the event contact; do not confirm with the volunteer yet.
+          await sendRegistrationPendingEmail(
+            registration.userId,
+            registration.eventId
+          );
+        } else if (registration.approved === "approved") {
+          // Ordinary confirmations retain the existing Notify Admin preference.
           await sendRegistrationConfirmationEmail(
-            result.data.userId,
-            result.data.eventId
+            registration.userId,
+            registration.eventId
           );
-        } catch (error) {
-          console.error(
-            "Failed to send registration confirmation email:",
-            error
-          );
-          // Continue with registration creation even if email fails
         }
+      } catch (error) {
+        // Signup already succeeded; an email failure must not suggest retrying it.
+        console.error("Failed to send registration notification:", {
+          registrationId: registration._id.toString(),
+          status: registration.approved,
+          error,
+        });
       }
 
-      return res.status(201).json({
-        registration: await Registration.create(result.data),
-      });
+      // Return the saved record without creating a second registration.
+      return res.status(201).json({ registration });
     }
     case "DELETE": {
       const isownuser = await isOwnUser(req, res);
@@ -141,26 +161,71 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       try {
-        type RegistrationUpdateData = Partial<RegistrationInputClient>;
-        const {
-          registrationId,
-          ...updateData
-        }: { registrationId: string; updateData: RegistrationUpdateData } =
-          req.body;
+        const { registrationId, ...updateData } = req.body as {
+          registrationId: string;
+          [key: string]: unknown;
+        };
         if (!isValidObjectId(registrationId)) {
           return res.status(400).json({
             message: `Invalid registration ID: ${registrationId}`,
           });
         }
 
-        const updatedRegistration = await Registration.findByIdAndUpdate(
-          registrationId,
-          updateData as UpdateQuery<RegistrationUpdateData>,
-          { new: true }
+        // Validate partial edits with the existing schema, including decision values.
+        // Parsing also strips unknown fields and raw MongoDB update operators.
+        const result = registrationInputServerValidator
+          .partial()
+          .safeParse(updateData);
+        if (!result.success) {
+          return res.status(400).json({ error: result.error });
+        }
+
+        const existingRegistration = await Registration.findById(
+          registrationId
+        );
+        if (!existingRegistration) {
+          return res.status(404).json({ message: "Registration not found" });
+        }
+
+        // Compare and save atomically: only one competing decision can win.
+        const updatedRegistration = await Registration.findOneAndUpdate(
+          { _id: registrationId, approved: existingRegistration.approved },
+          result.data,
+          { new: true, runValidators: true }
         );
 
         if (!updatedRegistration) {
-          return res.status(404).json({ message: "Registration not found" });
+          return res.status(409).json({
+            message:
+              "Registration changed while saving. Refresh and try again.",
+          });
+        }
+
+        // Repeated decisions and unrelated edits must not resend decision emails.
+        const statusChanged =
+          existingRegistration.approved !== updatedRegistration.approved;
+        try {
+          if (statusChanged && updatedRegistration.approved === "approved") {
+            await sendRegistrationApprovedEmail(
+              updatedRegistration.userId,
+              updatedRegistration.eventId
+            );
+          } else if (
+            statusChanged &&
+            updatedRegistration.approved === "denied"
+          ) {
+            await sendRegistrationDeniedEmail(
+              updatedRegistration.userId,
+              updatedRegistration.eventId
+            );
+          }
+        } catch (error) {
+          // The saved decision remains successful even if its notification fails.
+          console.error("Failed to send registration decision email:", {
+            registrationId: updatedRegistration._id.toString(),
+            status: updatedRegistration.approved,
+            error,
+          });
         }
 
         return res.status(200).json({ registration: updatedRegistration });
