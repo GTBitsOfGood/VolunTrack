@@ -252,7 +252,7 @@ export const sendEventReminderEmail = async (user, event, organization) => {
       },
     },
   ];
-  sendEmail(
+  await sendEmailOrThrow(
     [user],
     organization,
     personalization,
@@ -261,7 +261,7 @@ export const sendEventReminderEmail = async (user, event, organization) => {
 };
 
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
-const sendEmail = async (
+const buildAndSend = async (
   users,
   organization,
   personalization,
@@ -290,14 +290,68 @@ const sendEmail = async (
     .setTemplateId(template)
     .setPersonalization(personalization);
 
-  mailersend
-    .send(emailParams)
+  return mailersend.send(emailParams);
+};
+
+// Original behavior, unchanged: does not wait, only logs errors.
+// Used by every email except reminders.
+const sendEmail = async (
+  users,
+  organization,
+  personalization,
+  subject,
+  template = "vywj2lpov8p47oqz",
+  notifyNonprofit = true
+) => {
+  buildAndSend(
+    users,
+    organization,
+    personalization,
+    subject,
+    template,
+    notifyNonprofit
+  )
     .then((response) => {
       console.log("Full Response:", response);
       return response.json();
     })
     .then((data) => console.log("Response Body:", data))
     .catch((error) => console.error("Error:", error));
+};
+
+// Strict version: waits for MailerSend and throws if the send failed.
+// MailerSend returns a normal response (not an error) for a 401, so we
+// have to check response.ok ourselves.
+const sendEmailOrThrow = async (
+  users,
+  organization,
+  personalization,
+  subject,
+  template = "vywj2lpov8p47oqz",
+  notifyNonprofit = true
+) => {
+  const response = await buildAndSend(
+    users,
+    organization,
+    personalization,
+    subject,
+    template,
+    notifyNonprofit
+  );
+
+  if (!response.ok) {
+    let detail = "";
+    try {
+      detail = JSON.stringify(await response.json());
+    } catch (e) {
+      // body may be empty; status is enough
+    }
+    throw new Error(
+      `MailerSend responded ${response.status} ${response.statusText} ${detail}`
+    );
+  }
+
+  return response;
 };
 
 const convertTime = (time) => {
