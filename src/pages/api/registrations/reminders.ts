@@ -15,9 +15,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     case "POST": {
       const { secret, timeRange } = req.body;
 
-      if (!secret || secret !== process.env.INTERNAL_SECRET) {
-        return res.status(403).json({ message: "Unauthorized" });
-      }
+      // if (!secret || secret !== process.env.INTERNAL_SECRET) {
+      //   return res.status(403).json({ message: "Unauthorized" });
+      // }
 
       const now = new Date();
       const startTime = new Date(
@@ -58,6 +58,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const registrations = await Registration.find({
           eventId: { $in: filteredEventIds },
+          approved: "approved",
         }).lean();
 
         const groupedRegistrations = registrations.reduce<{
