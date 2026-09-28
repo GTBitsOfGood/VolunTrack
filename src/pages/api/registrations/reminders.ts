@@ -47,9 +47,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         if (filteredEvents.length === 0) {
+          // events whose eventParent is missing or wasn't populated get dropped by the above filter, so count separately
+          const eventsMissingParent = events.filter(
+            (event) =>
+              !event.eventParent || typeof event.eventParent !== "object"
+          ).length;
+
           return res.status(200).json({
             success: true,
-            message: "No events requiring reminders",
+            message:
+              events.length === 0
+                ? "No events found in the time window"
+                : "Events found in the time window, but none have reminder emails turned on",
+            eventsInWindow: events.length,
+            eventsWithReminderOn: 0,
+            eventsMissingParent,
             count: 0,
           });
         }
