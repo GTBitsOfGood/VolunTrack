@@ -324,10 +324,7 @@ export const sendEventReminderEmail = async (user, event, organization) => {
     organization,
     personalization,
     `Event Reminder: ${event.eventParent.title}`
-  ).catch((error) => {
-    // Preserve best-effort reminders while explicitly observing each failure.
-    console.error("Failed to send event reminder email:", error);
-  });
+  ); // no catch on purpose: reminders.ts counts and reports each failure
 };
 
 // templates: "vywj2lpov8p47oqz" = standard one, "x2p03479p5pgzdrn" = reset password
