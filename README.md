@@ -65,6 +65,19 @@ Note: On linux-based operating systems, if you come across an entrypoint permiss
 
 Windows Users: If you come across this error `exec ./entrypoint.sh: no such file or directory` when running the docker compose command, please follow this [Stackoverflow thread](https://stackoverflow.com/questions/40452508/docker-error-on-an-entrypoint-script-no-such-file-or-directory) to fix it.
 
+### Initialize the Database
+
+```bash
+# with the app running (docker compose up)
+docker compose exec app yarn db:seed
+```
+
+Seeded users (all use password `password123`):
+- `admin@test.com`
+- `manager@test.com`
+- `volunteer@test.com`
+- `bogadmin@test.com`
+
 ### Development
 
 To understand this code better, read the [Code Tour](/CODETOUR.md).
