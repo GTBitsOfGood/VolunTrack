@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { clearDatabase, connectToLocalDatabase, disconnect } = require("./db");
 
 async function run() {

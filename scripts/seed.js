@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const { clearDatabase, connectToLocalDatabase, disconnect } = require("./db");
