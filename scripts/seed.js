@@ -1,24 +1,13 @@
-/* eslint-disable no-console */
-/**
- * Resets the LOCAL database to a known state: one active organization, four
- * logins, one organization waiting for approval and two upcoming events. Like
- * Hope for Haiti's seed, it deletes all existing data first.
- *
- * It only ever touches a database on this machine; see db.js.
- *
- *     docker compose exec app yarn db:seed
- */
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const { clearDatabase, connectToLocalDatabase, disconnect } = require("./db");
 
-// The login form requires at least 10 characters.
 const PASSWORD = "password123";
 const baseUrl = process.env.BASE_URL ?? "http://localhost:3000";
 
 const ORGANIZATION = {
   name: "Local Test Org",
-  slug: "local-test", // the "organization code" typed during sign-up
+  slug: "local-test",
   website: "https://example.com",
   imageUrl: `${baseUrl}/images/bog_logo.png`,
   notificationEmail: "admin@test.com",
@@ -41,8 +30,6 @@ const ORGANIZATION = {
   aboutPageToggle: false,
 };
 
-// Has applied but has not been approved yet. Shows up under "New
-// Applications" in the BOG Approval Portal.
 const PENDING_ORGANIZATION = {
   name: "Pending Test Org",
   slug: "pending-test",
@@ -63,7 +50,6 @@ const PENDING_ORGANIZATION = {
   aboutPageToggle: false,
 };
 
-// Every account belongs to Local Test Org and uses PASSWORD.
 const USERS = [
   {
     email: "admin@test.com",
@@ -99,8 +85,6 @@ const USERS = [
   },
 ];
 
-// Upcoming events for Local Test Org. `daysFromNow` keeps them in the future
-// no matter when the seed runs.
 const EVENTS = [
   {
     title: "Community Food Drive",
@@ -123,10 +107,6 @@ const EVENTS = [
   },
 ];
 
-/**
- * Midnight UTC `days` days from now, the same shape the event form's date input
- * sends.
- */
 function dateInDays(days) {
   const now = new Date();
   return new Date(
@@ -147,8 +127,7 @@ async function buildSeedData() {
   const eventParents = mongoose.connection.collection("eventparents");
   const events = mongoose.connection.collection("events");
 
-  // An org whose updatedAt differs from createdAt reads as "already reviewed"
-  // in the BOG Approval Portal, which is right for an active organization.
+  // Create organizations
   const { insertedId: organizationId } = await organizations.insertOne({
     ...ORGANIZATION,
     createdAt: thirtyDaysAgo,
@@ -156,7 +135,6 @@ async function buildSeedData() {
     __v: 0,
   });
 
-  // Equal timestamps read as "new application" in the BOG Approval Portal.
   await organizations.insertOne({
     ...PENDING_ORGANIZATION,
     createdAt: now,
@@ -164,6 +142,7 @@ async function buildSeedData() {
     __v: 0,
   });
 
+  // Create users
   for (const user of USERS) {
     await users.insertOne({
       ...user,
@@ -174,7 +153,6 @@ async function buildSeedData() {
       state: "GA",
       zip: "30308",
       imageUrl: "/images/gradient-avatar.png",
-      // The app hashes email + password together; see server/actions/users_new.ts
       passwordHash: await bcrypt.hash(user.email + PASSWORD, 10),
       createdAt: now,
       updatedAt: now,
@@ -182,6 +160,7 @@ async function buildSeedData() {
     });
   }
 
+  // Create events
   for (const event of EVENTS) {
     const { daysFromNow, ...details } = event;
     const { insertedId: eventParentId } = await eventParents.insertOne({

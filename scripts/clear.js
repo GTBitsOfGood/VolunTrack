@@ -1,9 +1,3 @@
-/* eslint-disable no-console */
-/**
- * Empties every collection in the LOCAL database.
- *
- *     docker compose exec app yarn db:clear
- */
 const { clearDatabase, connectToLocalDatabase, disconnect } = require("./db");
 
 async function run() {
