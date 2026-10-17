@@ -336,6 +336,10 @@ const sendEmail = async (
   template = "vywj2lpov8p47oqz",
   notifyNonprofit = true
 ) => {
+  if (!process.env.MAILERSEND_API_KEY) {
+    throw new Error("MAILERSEND_API_KEY environment variable is not set");
+  }
+
   const mailersend = new MailerSend({
     api_key: process.env.MAILERSEND_API_KEY,
   });
