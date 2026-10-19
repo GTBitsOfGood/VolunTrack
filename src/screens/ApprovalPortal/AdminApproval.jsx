@@ -56,17 +56,24 @@ const AdminApproval = ({ user }) => {
         setPendingRegistrations(pending);
         setHistoryRegistrations(history);
 
-        const eventData = {};
-        for (const registration of registrations) {
-          try {
-            const event = await getEvent(registration.eventId);
-            eventData[registration.eventId] = event?.data?.event || null;
-          } catch (error) {
-            console.error("Error fetching event:", error);
-            eventData[registration.eventId] = null;
-          }
-        }
-        setEvents(eventData);
+        // Fetch each distinct event once, all at the same time.
+        const uniqueEventIds = [
+          ...new Set(registrations.map((reg) => reg.eventId)),
+        ];
+
+        const eventEntries = await Promise.all(
+          uniqueEventIds.map(async (eventId) => {
+            try {
+              const event = await getEvent(eventId);
+              return [eventId, event?.data?.event || null];
+            } catch (error) {
+              console.error("Error fetching event:", error);
+              return [eventId, null];
+            }
+          })
+        );
+
+        setEvents(Object.fromEntries(eventEntries));
       }
       setLoading(false);
     };
