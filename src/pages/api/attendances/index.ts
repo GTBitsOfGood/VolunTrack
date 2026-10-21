@@ -1,6 +1,11 @@
 import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
+import { createAttendanceOnce } from "../../../../server/actions/attendancePersistence";
+import {
+  AttendanceIndexUnavailableError,
+  isDuplicateAttendanceError,
+} from "../../../../server/actions/attendanceErrors";
 import Attendance, {
   AttendanceDocument,
   AttendanceInputClient,
@@ -74,9 +79,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const result = attendanceInputServerValidator.safeParse(req.body);
       if (!result.success) return res.status(400).json({ error: result.error });
 
-      return res
-        .status(201)
-        .json({ attendance: await Attendance.create(result.data) });
+      try {
+        return res
+          .status(201)
+          .json({ attendance: await createAttendanceOnce(result.data) });
+      } catch (error) {
+        if (error instanceof AttendanceIndexUnavailableError) {
+          return res.status(503).json({
+            error:
+              "Check-in is temporarily unavailable. Attendance indexes need administrator attention.",
+          });
+        }
+        if (isDuplicateAttendanceError(error)) {
+          return res.status(409).json({
+            error: "This volunteer already has attendance for this shift.",
+          });
+        }
+        return res.status(500).json({ error: "Unable to create attendance." });
+      }
     }
   }
 };

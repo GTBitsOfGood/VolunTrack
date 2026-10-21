@@ -29,10 +29,7 @@ const ProgressDisplay = ({
     outOf = medalDefaults.hoursSilver;
     for (let i = 0; i < attendance.length; i++) {
       if (attendance[i].checkoutTime != null) {
-        add += getHours(
-          attendance[i].checkinTime.slice(11, 16),
-          attendance[i].checkoutTime.slice(11, 16)
-        );
+        add += getHours(attendance[i].checkinTime, attendance[i].checkoutTime);
       }
     }
     if (add >= 15) {

@@ -24,7 +24,7 @@ import EventTasksContainer from "./EventTasksContainer";
 
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import { RequestContext } from "../../../providers/RequestProvider";
-import VolunteerLog from "./VolunteerLog";
+import VolunteerClock from "./VolunteerClock";
 
 const Styled = {
   Container: styled(Container)`
@@ -316,8 +316,11 @@ const EventRegister = () => {
   ]);
 
   return (
-    <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
-      <div className="flex flex-row justify-between">
+    <Styled.Container
+      fluid="md"
+      className="mx-auto w-full overflow-y-hidden px-4 sm:w-4/5"
+    >
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <Text type="header" text="Confirm Registration"></Text>
         <div className="flex items-end">
           <Text type="header" text={availableSlots}></Text>
@@ -436,9 +439,9 @@ const EventRegister = () => {
       )}
 
       {isRegistered &&
-        (!event?.eventParent?.requiresApproval ||
-          registrations[0]?.approved === "approved") && (
-          <VolunteerLog eventId={eventId} user={user} />
+        registrations[0]?.approved === "approved" &&
+        typeof eventId === "string" && (
+          <VolunteerClock key={`${eventId}:${user._id}`} eventId={eventId} />
         )}
 
       {event?.eventParent?.requiresApproval && (
@@ -469,7 +472,7 @@ const EventRegister = () => {
       )}
 
       {isRegistered && registrations[0]?.approved == "approved" ? (
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <BoGButton
             text={
               <>
@@ -484,11 +487,11 @@ const EventRegister = () => {
             onClick={() => {
               setShowUnregisterModal(true);
             }}
-            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+            className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
           />
         </div>
       ) : isRegistered && registrations[0]?.approved == "pending" ? (
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <BoGButton
             text={
               <>
@@ -503,7 +506,7 @@ const EventRegister = () => {
             onClick={() => {
               setShowUnregisterModal(true);
             }}
-            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
+            className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
           />
         </div>
       ) : isRegistered && registrations[0]?.approved == "denied" ? (

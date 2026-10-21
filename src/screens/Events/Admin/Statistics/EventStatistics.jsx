@@ -97,10 +97,7 @@ const EventStatistics = () => {
   let hours = 0;
   attendances.forEach((attendance) => {
     if (attendance.checkoutTime)
-      hours += getHours(
-        attendance.checkinTime.slice(11, 16),
-        attendance.checkoutTime.slice(11, 16)
-      );
+      hours += getHours(attendance.checkinTime, attendance.checkoutTime);
   });
   const totalVolunteers = [
     ...new Set(attendances.map((attendance) => attendance.userId)),
