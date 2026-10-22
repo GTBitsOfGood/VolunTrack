@@ -8,6 +8,12 @@ import {
 } from "mongoose";
 export * from "./validators";
 
+export const ATTENDANCE_UNIQUE_KEY = { userId: 1, eventId: 1 } as const;
+export const ATTENDANCE_UNIQUE_INDEX = {
+  name: "attendance_user_event_unique",
+  unique: true,
+};
+
 const attendanceSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -37,8 +43,11 @@ const attendanceSchema = new Schema(
     checkoutTime: { type: Date, default: null },
     minutes: { type: Number, required: true, default: 0 },
   },
-  { timestamps: true }
+  // Install this index explicitly, after auditing existing data. A background
+  // auto-index failure must not silently leave volunteer check-ins unprotected.
+  { timestamps: true, autoIndex: false }
 );
+attendanceSchema.index(ATTENDANCE_UNIQUE_KEY, ATTENDANCE_UNIQUE_INDEX);
 type AttendanceData = Omit<
   InferSchemaType<typeof attendanceSchema>,
   "checkinTime" | "checkoutTime"

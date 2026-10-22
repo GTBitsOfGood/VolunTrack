@@ -50,8 +50,8 @@ const AdminHomeHeader = (props) => {
     let month = parseInt(props.attendances[i].checkinTime.slice(5, 7)) - 1;
     if (props.attendances[i].checkoutTime != null) {
       let duration = getHours(
-        props.attendances[i].checkinTime.slice(11, 16),
-        props.attendances[i].checkoutTime.slice(11, 16)
+        props.attendances[i].checkinTime,
+        props.attendances[i].checkoutTime
       );
       hoursData[month] += Math.round(duration * 100) / 100;
       hoursTotal += duration;
