@@ -35,12 +35,20 @@ const EventInfo = () => {
   const [showUnregisterModal, setUnregisterModal] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
+  const [notFound, setNotFound] = useState(false);
 
   const onRefresh = () => {
+    if (!eventId) return;
     getEvent(eventId).then((result) => {
-      setEvent(result.data.event);
+      if (result?.data?.event) {
+        setEvent(result.data.event);
+        setNotFound(false);
+      } else {
+        setNotFound(true);
+      }
     });
     getRegistrations({ eventId }).then((result) => {
+      if (!result?.data?.registrations) return;
       setRegistrations(result.data.registrations);
       let count = 0;
       result.data.registrations.map((reg) => {
@@ -54,7 +62,20 @@ const EventInfo = () => {
 
   useEffect(() => {
     onRefresh();
-  }, []);
+  }, [eventId]);
+
+  if (notFound) {
+    return (
+      <div className="p-8">
+        <p className="text-lg font-semibold">
+          {"This shift couldn't be found. "}
+          <a href="/events" className="text-primaryColor underline">
+            Back to Events
+          </a>
+        </p>
+      </div>
+    );
+  }
 
   if (!event || !event.date) {
     return <div />;
