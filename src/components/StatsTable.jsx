@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { getHours } from "../screens/Stats/User/hourParsing";
 import Pagination from "./PaginationComp";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
+import { formatAtlantaDate, formatAtlantaTime } from "../../utils/dates";
 
 const Styled = {
   Container: styled.div`
@@ -13,17 +14,6 @@ const Styled = {
     margin: auto;
     margin-bottom: 70px;
   `,
-};
-
-const convertTime = (time) => {
-  let [hour, min] = time.split(":");
-  let hours = parseInt(hour);
-  let suffix = time[-2];
-  if (!(suffix in ["pm", "am", "PM", "AM"])) {
-    suffix = hours > 11 ? "pm" : "am";
-  }
-  hours = ((hours + 11) % 12) + 1;
-  return hours.toString() + ":" + min + suffix;
 };
 
 const StatsTable = ({
@@ -59,18 +49,18 @@ const StatsTable = ({
                 <Table.Row key={attendance._id}>
                   <Table.Cell>
                     <a
-                      href={`events/${attendance.eventId}`}
+                      href={`/events/${attendance.eventId}`}
                       className="text-primaryColor"
                     >
                       {attendance.eventName ?? "event"}
                     </a>
                   </Table.Cell>
-                  <Table.Cell>{attendance.checkinTime.slice(0, 10)}</Table.Cell>
+                  <Table.Cell>{formatAtlantaDate(attendance.checkinTime)}</Table.Cell>
                   <Table.Cell>
-                    {convertTime(attendance.checkinTime.slice(11, 16))} -{" "}
+                    {formatAtlantaTime(attendance.checkinTime)} -{" "}
                     {attendance.checkoutTime == null
                       ? "N/A"
-                      : convertTime(attendance.checkoutTime.slice(11, 16))}
+                      : formatAtlantaTime(attendance.checkoutTime)}
                   </Table.Cell>
                   <Table.Cell>
                     &emsp;
