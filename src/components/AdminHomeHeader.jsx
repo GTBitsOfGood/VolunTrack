@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import { getHours } from "../screens/Stats/User/hourParsing";
+import { minutesToHours } from "../../utils/hours";
 import { getAtlantaMonthIndex } from "../../utils/dates";
 
 const AdminHomeHeader = (props) => {
@@ -50,10 +50,7 @@ const AdminHomeHeader = (props) => {
   for (let i = 0; i < props.attendances.length; i++) {
     const month = getAtlantaMonthIndex(props.attendances[i].checkinTime);
     if (props.attendances[i].checkoutTime != null) {
-      let duration = getHours(
-        props.attendances[i].checkinTime,
-        props.attendances[i].checkoutTime
-      );
+      let duration = minutesToHours(props.attendances[i].minutes);
       hoursData[month] += Math.round(duration * 100) / 100;
       hoursTotal += duration;
     }

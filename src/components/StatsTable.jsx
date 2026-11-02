@@ -2,7 +2,7 @@ import { Table, Tooltip } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
-import { getHours } from "../screens/Stats/User/hourParsing";
+import { minutesToHours } from "../../utils/hours";
 import Pagination from "./PaginationComp";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { formatAtlantaDate, formatAtlantaTime } from "../../utils/dates";
@@ -66,10 +66,7 @@ const StatsTable = ({
                     &emsp;
                     {attendance.checkoutTime == null
                       ? "0 hour(s)"
-                      : getHours(
-                          attendance.checkinTime,
-                          attendance.checkoutTime
-                        ) + " hour(s)"}
+                      : minutesToHours(attendance.minutes) + " hour(s)"}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -88,10 +85,7 @@ const StatsTable = ({
                     &emsp;
                     {attendance.checkoutTime == null
                       ? "0 hour(s)"
-                      : getHours(
-                          attendance.checkinTime,
-                          attendance.checkoutTime
-                        ) + " hour(s)"}
+                      : minutesToHours(attendance.minutes) + " hour(s)"}
                   </Table.Cell>
                   <Table.Cell>
                     <div className="flex gap-1">

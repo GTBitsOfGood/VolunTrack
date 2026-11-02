@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Label, Progress } from "flowbite-react";
 import "flowbite-react";
-import { getHours } from "../screens/Stats/User/hourParsing";
+import { minutesToHours } from "../../utils/hours";
 
 const ProgressDisplay = ({
   className,
@@ -29,7 +29,7 @@ const ProgressDisplay = ({
     outOf = medalDefaults.hoursSilver;
     for (let i = 0; i < attendance.length; i++) {
       if (attendance[i].checkoutTime != null) {
-        add += getHours(attendance[i].checkinTime, attendance[i].checkoutTime);
+        add += minutesToHours(attendance[i].minutes);
       }
     }
     if (add >= 15) {
