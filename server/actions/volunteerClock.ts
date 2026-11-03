@@ -1,10 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { getShiftDateTimes } from "../../utils/dates";
-import {
-  AttendanceIndexUnavailableError,
-  isDuplicateAttendanceError,
-} from "./attendanceErrors";
+import { getShiftDateTimes, minutesBetween } from "../../utils/dates";
+import { isDuplicateAttendanceError } from "./attendanceErrors";
 
 export type ClockAction = "clock-in" | "clock-out" | "status";
 export type ClockScope = {
@@ -200,9 +197,7 @@ export const createVolunteerClockHandler =
             "Volunteer checkout closes at midnight Atlanta time on the shift day. Contact an admin.",
         });
       }
-      const minutes = Math.round(
-        (now.getTime() - attendance.checkinTime.getTime()) / (60 * 1000)
-      );
+      const minutes = minutesBetween(attendance.checkinTime, now);
       const updated = await dependencies.checkoutAttendance(
         attendance,
         now,
@@ -216,11 +211,6 @@ export const createVolunteerClockHandler =
       }
       return res.status(200).json({ attendance: updated, serverTime: now });
     } catch (error) {
-      if (error instanceof AttendanceIndexUnavailableError) {
-        return res.status(503).json({
-          error: "Check-in is temporarily unavailable. Contact an admin.",
-        });
-      }
       if (isDuplicateAttendanceError(error)) {
         return res.status(409).json({
           error: "You already have attendance for this shift.",

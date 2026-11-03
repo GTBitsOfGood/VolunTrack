@@ -5,8 +5,19 @@ export const getYesterday = () => {
   return yesterday;
 };
 
+export const ATLANTA_TIME_ZONE = "America/New_York";
+
+// Whole minutes from start to end: what a record saves at check-out.
+export const minutesBetween = (
+  start: Date | string,
+  end: Date | string
+): number => {
+  const elapsed = new Date(end).getTime() - new Date(start).getTime();
+  return Math.abs(Math.round(elapsed / (60 * 1000)));
+};
+
 const atlantaFormatter = new Intl.DateTimeFormat("en-US", {
-  timeZone: "America/New_York",
+  timeZone: ATLANTA_TIME_ZONE,
   year: "numeric",
   month: "2-digit",
   day: "2-digit",

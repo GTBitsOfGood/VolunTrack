@@ -105,7 +105,6 @@
     "zod-formik-adapter": "^1.2.0"
   },
   "devDependencies": {
-    "jsdom": "22.1.0",
     "@babel/core": "^7.21.3",
     "@babel/eslint-parser": "^7.21.3",
     "@bitwarden/cli": "^2023.9.1",

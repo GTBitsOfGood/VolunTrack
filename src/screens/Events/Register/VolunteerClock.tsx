@@ -5,10 +5,11 @@ import {
   getMyAttendance,
   VolunteerClockStatus,
 } from "../../../queries/attendances";
+import { ATLANTA_TIME_ZONE } from "../../../../utils/dates";
 
 const formatTime = (time: string) =>
   new Date(time).toLocaleString("en-US", {
-    timeZone: "America/New_York",
+    timeZone: ATLANTA_TIME_ZONE,
     month: "short",
     day: "numeric",
     hour: "numeric",
