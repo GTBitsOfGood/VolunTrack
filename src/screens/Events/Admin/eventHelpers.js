@@ -1,4 +1,5 @@
-import { date, number, object, string } from "yup";
+import { date, number, object, string, ValidationError } from "yup";
+import { validateAttendanceEditorValues } from "../../../../utils/attendanceEditor";
 
 const today = new Date();
 const yesterday = new Date(today);
@@ -77,10 +78,11 @@ export const groupEventValidator = object().shape({
   // isPrivate: boolean().optional(),
 });
 
-export const timeValidator = object().shape({
-  checkin: string().test(
-    "checkin-time-before-checkout",
-    "checkin time needs to be before checkout time",
-    (value, context) => value < context.parent.checkout
-  ),
-});
+export const attendanceTimeValidator = (editorState) =>
+  object().test("valid-attendance-times", function (values) {
+    const errors = validateAttendanceEditorValues(values ?? {}, editorState);
+    const failures = Object.entries(errors).map(
+      ([path, message]) => new ValidationError(message, values?.[path], path)
+    );
+    return failures.length ? new ValidationError(failures) : true;
+  });

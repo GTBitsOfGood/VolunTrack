@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import StatsTable from "../../../../components/StatsTable";
 import { getAttendances } from "../../../../queries/attendances";
@@ -8,7 +8,7 @@ import { getRegistrations } from "../../../../queries/registrations";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
-import { getHours } from "../../../Stats/User/hourParsing";
+import { getHours, formatHours } from "../../../Stats/User/hourParsing";
 
 const Styled = {
   Container: styled.div`
@@ -76,31 +76,46 @@ const EventStatistics = () => {
   const [event, setEvent] = useState(null);
   const [registrations, setRegistrations] = useState([]);
 
-  const onRefresh = () => {
-    getAttendances({ eventId: eventId }).then((result) => {
-      if (result.data) {
-        setAttendances(result.data.attendances);
+  const [loadError, setLoadError] = useState("");
+  const onRefresh = useCallback(async () => {
+    if (typeof eventId !== "string") return false;
+    try {
+      const [attendanceResult, eventResult, registrationResult] =
+        await Promise.all([
+          getAttendances({ eventId }),
+          getEvent(eventId),
+          getRegistrations({ eventId }),
+        ]);
+      if (
+        !attendanceResult?.data?.attendances ||
+        !eventResult?.data?.event ||
+        !registrationResult?.data?.registrations
+      ) {
+        throw new Error(
+          "Statistics could not be refreshed. Reload the page to try again."
+        );
       }
-    });
-    getEvent(eventId).then((result) => {
-      setEvent(result.data.event);
-    });
-    getRegistrations({ eventId }).then((result) => {
-      setRegistrations(result.data.registrations);
-    });
-  };
+      setAttendances(attendanceResult.data.attendances);
+      setEvent(eventResult.data.event);
+      setRegistrations(registrationResult.data.registrations);
+      setLoadError("");
+      return true;
+    } catch {
+      setLoadError(
+        "Statistics could not be refreshed. Reload the page to try again."
+      );
+      return false;
+    }
+  }, [eventId]);
 
   useEffect(() => {
-    onRefresh();
-  }, []);
+    if (router.isReady && typeof eventId === "string") onRefresh();
+  }, [router.isReady, eventId, onRefresh]);
 
   let hours = 0;
   attendances.forEach((attendance) => {
     if (attendance.checkoutTime)
-      hours += getHours(
-        attendance.checkinTime.slice(11, 16),
-        attendance.checkoutTime.slice(11, 16)
-      );
+      hours += getHours(attendance.checkinTime, attendance.checkoutTime);
   });
   const totalVolunteers = [
     ...new Set(attendances.map((attendance) => attendance.userId)),
@@ -113,9 +128,15 @@ const EventStatistics = () => {
     setShowEditModal(true);
     setCurrAttendance(event);
   };
-  const toggleEditModal = () => {
-    setShowEditModal((prev) => !prev);
-    onRefresh();
+  const toggleEditModal = () => setShowEditModal(false);
+  const onAttendanceSaved = async (savedAttendance) => {
+    setAttendances((previous) =>
+      previous.map((attendance) =>
+        attendance._id === savedAttendance._id ? savedAttendance : attendance
+      )
+    );
+    if (!(await onRefresh()))
+      throw new Error("Statistics refresh failed after saving attendance.");
   };
   const onDeleteClicked = (event) => {
     setShowDeleteModal(true);
@@ -131,6 +152,7 @@ const EventStatistics = () => {
       <Styled.HeaderRow>
         <Styled.Header>Statistics</Styled.Header>
       </Styled.HeaderRow>
+      {loadError && <p role="alert">{loadError}</p>}
       <Styled.StatsContainer>
         <Styled.StatsHeader>About this Event</Styled.StatsHeader>
         {event && (
@@ -159,7 +181,7 @@ const EventStatistics = () => {
           <Styled.StatsInfoContainer>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Hours: </strong> {hours.toString().slice(0, 5)}
+                <strong>Total Hours: </strong> {formatHours(hours)}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>
@@ -177,6 +199,8 @@ const EventStatistics = () => {
         open={showEditModal}
         toggle={toggleEditModal}
         attendance={currAttendance}
+        event={event}
+        onSaved={onAttendanceSaved}
       />
       <EventStatsDeleteModal
         open={showDeleteModal}

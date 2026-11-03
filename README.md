@@ -44,6 +44,32 @@ A running instance of MongoDB is required this project.
   3. In Security → Database Access: Add new database user
   4. In Data Storage → Clusters: Find your cluster and click `Connect` → `Connect your application` and copy the connection string, set the username and password, and set this as `MONGO_DB` in `.env`
 - Create the `nextjs` database. (or choose another name, but make sure to change it in `.env`)
+Attendance corrections save attendance and history in one transaction. MongoDB must
+be a replica set or a sharded cluster; a standalone server returns HTTP 503 for
+these writes. The Docker Compose MongoDB service initializes a single-node `rs0`
+replica set, and the app waits until it is writable. For a host-run app using that
+service, use `MONGO_DB=mongodb://localhost:27017/?replicaSet=rs0&directConnection=true`.
+Do not reinitialize an existing hosted database; confirm transaction support with
+your deployment administrator.
+
+Focused attendance checks:
+
+```sh
+npm run test:attendance
+```
+
+The database suite uses only a disposable database at `127.0.0.1:27028`, never
+`.env` or application data. Start a temporary test replica set, initialize it,
+then run the suite:
+
+```sh
+docker run --detach --rm --name voluntrack-attendance-task2 --publish 127.0.0.1:27028:27017 mongo:7 --replSet attendance-test --bind_ip_all
+docker exec voluntrack-attendance-task2 mongosh --quiet --eval 'rs.initiate({_id:"attendance-test",members:[{_id:0,host:"localhost:27017"}]})'
+# Once the replica set has elected its primary:
+npm run test:attendance:db
+docker stop voluntrack-attendance-task2
+```
+
 - It's very helpful to install MongoDB Compass to see your database contents
 
 ### Node

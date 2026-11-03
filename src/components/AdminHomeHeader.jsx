@@ -3,7 +3,11 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import { getHours } from "../screens/Stats/User/hourParsing";
+import {
+  getHours,
+  formatHours,
+  formatAttendanceDate,
+} from "../screens/Stats/User/hourParsing";
 
 const AdminHomeHeader = (props) => {
   let todaysEvents = 0;
@@ -47,23 +51,20 @@ const AdminHomeHeader = (props) => {
     eventTotal += 1;
   }
   for (let i = 0; i < props.attendances.length; i++) {
-    let month = parseInt(props.attendances[i].checkinTime.slice(5, 7)) - 1;
+    let month =
+      parseInt(
+        formatAttendanceDate(props.attendances[i].checkinTime).slice(5, 7)
+      ) - 1;
     if (props.attendances[i].checkoutTime != null) {
       let duration = getHours(
-        props.attendances[i].checkinTime.slice(11, 16),
-        props.attendances[i].checkoutTime.slice(11, 16)
+        props.attendances[i].checkinTime,
+        props.attendances[i].checkoutTime
       );
-      hoursData[month] += Math.round(duration * 100) / 100;
+      hoursData[month] += duration;
       hoursTotal += duration;
     }
     attendanceData[month] += 1;
     attendanceTotal += 1;
-
-    // rounding
-    for (let i = 0; i < hoursData.length; i++) {
-      hoursData[i] = Math.round(hoursData[i] * 100) / 100;
-    }
-    hoursTotal = Math.round(hoursTotal * 100) / 100;
   }
 
   const borderColor = "#374151";
@@ -94,6 +95,10 @@ const AdminHomeHeader = (props) => {
       enabled: false,
     },
     tooltip: {
+      y: {
+        formatter: (value, { seriesIndex }) =>
+          seriesIndex === 1 ? formatHours(value) : value,
+      },
       style: {
         fontSize: "14px",
         fontFamily: "Inter, sans-serif",
@@ -204,6 +209,7 @@ const AdminHomeHeader = (props) => {
 
   return (
     <div className="w-full flex-col md:w-auto">
+      {props.attendanceReminders}
       <p className="font-weight-bold mt-2 text-2xl">Overview</p>
       <div className="mb-2 flex flex-col md:flex-row">
         <div className="flex-column">
@@ -252,8 +258,8 @@ const AdminHomeHeader = (props) => {
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{hoursTotal}</p>
-                <p className="text-md mb-0 pl-2 text-slate-600"> Hours</p>
+                <p className="mb-0 pl-2 text-2xl">{formatHours(hoursTotal)}</p>
+                <p className="text-md mb-0 pl-2 text-slate-600"> Total time</p>
               </div>
             </div>
           </div>
@@ -276,6 +282,7 @@ const AdminHomeHeader = (props) => {
 };
 
 AdminHomeHeader.propTypes = {
+  attendanceReminders: PropTypes.node,
   events: PropTypes.array.isRequired,
   attendances: PropTypes.array.isRequired,
   registrations: PropTypes.array.isRequired,

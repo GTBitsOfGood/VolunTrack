@@ -1,123 +1,126 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import Text from "../../../components/Text";
 import BoGButton from "../../../components/BoGButton";
+import { formatAttendanceTime } from "../../Stats/User/hourParsing";
+import {
+  getMyAttendance,
+  clockInForShift,
+  clockOutForShift,
+} from "../../../queries/attendances";
 
 const VolunteerLog = ({ eventId, user }) => {
-  const [logs, setLogs] = useState([]);
-  const [inTime, setInTime] = useState("");
-  const [outTime, setOutTime] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const active = useRef(false);
+  const generation = useRef(0);
+  const saving = useRef(false);
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
+    const request = ++generation.current;
     if (!eventId || !user?._id) return;
-
-    axios
-      .get("/api/volunteer-logs", {
-        params: { eventId, userId: user._id },
-      })
-      .then((response) => {
-        if (response?.data?.logs) {
-          setLogs(response.data.logs);
-        }
-      })
-      .catch(() => {
-        // Silently ignore fetch errors; logging is best-effort.
-      });
+    setLoading(true);
+    const response = await getMyAttendance(String(eventId));
+    if (!active.current || request !== generation.current) return;
+    if (response.error || !response.data) {
+      setStatus(null);
+      setError(response.error || "Could not load attendance. Please refresh.");
+    } else {
+      setStatus(response.data);
+      setError("");
+    }
+    setLoading(false);
   }, [eventId, user?._id]);
 
-  const hasExistingLog = logs.length > 0;
+  useEffect(() => {
+    active.current = true;
+    setStatus(null);
+    refresh();
+    const onFocus = () => {
+      if (!saving.current) refresh();
+    };
+    window.addEventListener("focus", onFocus);
+    const timer = setInterval(onFocus, 30000);
+    return () => {
+      active.current = false;
+      generation.current++;
+      clearInterval(timer);
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [refresh]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const clock = async (action) => {
+    if (saving.current || loading) return;
+    saving.current = true;
+    setBusy(true);
     setError("");
-
-    if (hasExistingLog) return;
-    if (!inTime || !outTime) {
-      setError("Please provide both start and end times.");
-      return;
+    const response = await action(String(eventId));
+    if (active.current) {
+      // Always refresh after a write, including a lost response or conflict.
+      await refresh();
+      if (active.current && response.error) setError(response.error);
+      if (active.current) setBusy(false);
     }
-
-    setIsSubmitting(true);
-    try {
-      const response = await axios.post("/api/volunteer-logs", {
-        eventId,
-        userId: user._id,
-        inTime,
-        outTime,
-      });
-
-      if (response?.data?.log) {
-        setLogs([response.data.log]);
-      }
-    } catch (err) {
-      const message =
-        err?.response?.data?.error ||
-        "Unable to save your volunteer hours. Please try again.";
-      setError(message);
-    } finally {
-      setIsSubmitting(false);
-    }
+    saving.current = false;
   };
 
   return (
     <div className="mt-8">
       <Text text="Log Hours" type="subheader" />
-
-      <form
-        className="mt-3 flex flex-row items-center gap-3"
-        onSubmit={handleSubmit}
-      >
-        <span className="text-sm font-semibold text-slate-700">In:</span>
-        <input
-          type="time"
-          className="h-9 rounded-md border border-gray-300 px-2 text-sm"
-          value={inTime}
-          onChange={(e) => setInTime(e.target.value)}
-        />
-        <span className="text-sm font-semibold text-slate-700">Out:</span>
-        <input
-          type="time"
-          className="h-9 rounded-md border border-gray-300 px-2 text-sm"
-          value={outTime}
-          onChange={(e) => setOutTime(e.target.value)}
+      <div className="mt-3 flex flex-wrap items-center gap-3">
+        <BoGButton
+          type="button"
+          text="Clock In"
+          onClick={() => clock(clockInForShift)}
+          disabled={loading || busy || !status?.canClockIn}
         />
         <BoGButton
-          type="submit"
-          text="Save"
-          className="ml-2 bg-primaryColor font-semibold hover:bg-hoverColor"
-          disabled={isSubmitting || hasExistingLog}
+          type="button"
+          text="Clock Out"
+          onClick={() => clock(clockOutForShift)}
+          disabled={loading || busy || !status?.canClockOut}
         />
-        {error && (
-          <Text
-            className="ml-3 text-sm font-semibold text-red-600"
-            text={error}
-          />
-        )}
-      </form>
-
-      {hasExistingLog && logs[0] && (
-        <div className="mt-4 flex flex-col gap-2">
-          <div className="w-56 rounded-md bg-gray-200 px-4 py-2 text-sm text-black">
-            <span className="mr-2 font-semibold">Out</span>
-            <span>
-              {new Date(logs[0].outTime).toLocaleTimeString([], {
-                hour: "numeric",
-                minute: "2-digit",
-              })}
-            </span>
-          </div>
-          <div className="w-56 rounded-md bg-gray-200 px-4 py-2 text-sm text-black">
-            <span className="mr-2 font-semibold">In</span>
-            <span>
-              {new Date(logs[0].inTime).toLocaleTimeString([], {
-                hour: "numeric",
-                minute: "2-digit",
-              })}
-            </span>
-          </div>
+        <button
+          type="button"
+          className="text-primaryColor underline"
+          disabled={loading || busy}
+          onClick={refresh}
+        >
+          Refresh attendance
+        </button>
+      </div>
+      {loading && <p role="status">Loading attendance…</p>}
+      {busy && <p role="status">Saving attendance…</p>}
+      {error && (
+        <p role="alert" className="mt-2 text-red-600">
+          {error}
+        </p>
+      )}
+      {!loading && status && !status.attendance && (
+        <p className="mt-2 text-sm text-slate-600">
+          {status.isApproved
+            ? "Clock-in opens 30 minutes before the shift starts and closes when it ends. Times are recorded automatically in Atlanta time."
+            : "An approved registration is required to clock in."}
+        </p>
+      )}
+      {status?.attendance && (
+        <div className="mt-4 space-y-2 text-sm">
+          <p>
+            <strong>In:</strong>{" "}
+            {formatAttendanceTime(status.attendance.checkinTime)}
+          </p>
+          <p>
+            <strong>Out:</strong>{" "}
+            {formatAttendanceTime(status.attendance.checkoutTime)}
+          </p>
+          {!status.attendance.checkoutTime && !status.canClockOut && (
+            <p>
+              Clock-out is unavailable. Contact an admin to correct your
+              attendance.
+            </p>
+          )}
         </div>
       )}
     </div>
@@ -132,4 +135,3 @@ VolunteerLog.propTypes = {
 };
 
 export default VolunteerLog;
-// End of VolunteerLog component

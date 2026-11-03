@@ -9,6 +9,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
 import AdminHomeHeader from "../../components/AdminHomeHeader";
+import AttendanceReminders from "../../components/AttendanceReminders";
 import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import StatsTable from "../../components/StatsTable";
@@ -275,8 +276,6 @@ const EventManager = ({ isHomePage }) => {
   };
 
   const onSubmitValues = (values, setSubmitting) => {
-    let offset = new Date().getTimezoneOffset();
-
     if (!values.startDate && !values.endDate) {
       setIsEmptyDates(true);
     } else {
@@ -289,16 +288,14 @@ const EventManager = ({ isHomePage }) => {
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      start = new Date(values.startDate);
-      start.setMinutes(start.getMinutes() - offset);
+      start = values.startDate;
       setStartDate(start);
     }
 
     if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      end = new Date(values.endDate);
-      end.setMinutes(end.getMinutes() - offset);
+      end = values.endDate;
       setEndDate(end);
     }
 
@@ -703,13 +700,13 @@ const EventManager = ({ isHomePage }) => {
                 render={({ handleSubmit }) => (
                   <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
                     <InputField
-                      label="From"
+                      label="From (Atlanta time)"
                       name="startDate"
                       type="datetime-local"
                       isEmptyOrInvalid={isEmptyDates || isInvalidRange}
                     />
                     <InputField
-                      label="To"
+                      label="To (Atlanta time)"
                       name="endDate"
                       type="datetime-local"
                       isEmptyOrInvalid={isEmptyDates || isInvalidRange}
@@ -756,6 +753,13 @@ const EventManager = ({ isHomePage }) => {
       {isHomePage && user.role !== "volunteer" && (
         <Styled.HomePage>
           <AdminHomeHeader
+            attendanceReminders={
+              user.role === "admin" ? (
+                <AttendanceReminders
+                  key={`${user._id}:${user.organizationId}`}
+                />
+              ) : null
+            }
             events={events}
             attendances={attendances}
             registrations={registrations}

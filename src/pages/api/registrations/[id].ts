@@ -3,7 +3,13 @@ import dbConnect from "../../../../server/mongodb";
 import Registration from "../../../../server/mongodb/models/Registration";
 import { isAdmin } from "../../../utils/routeProtection";
 
+import { createNoShowHandler } from "../../../../server/actions/attendanceReview";
+import { noShowDependencies } from "../../../../server/actions/attendanceReviewDependencies";
+
+const markNoShow = createNoShowHandler(noShowDependencies);
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === "PATCH") return markNoShow(req, res);
   await dbConnect();
 
   const registrationId = req.query.id as string;

@@ -1,3 +1,4 @@
+import { getNoShowVolunteerIds } from "../../utils/attendance";
 import bcrypt, { hash } from "bcrypt";
 import { Types } from "mongoose";
 import dbConnect from "../mongodb/";
@@ -16,6 +17,7 @@ export const getUsers = async (
   await dbConnect();
 
   let users: UserDocument[] = [];
+  let noShowUserIds = new Set<string>();
 
   const match: Partial<UserInputClient> = {};
   if (organizationId) match.organizationId = organizationId;
@@ -26,7 +28,9 @@ export const getUsers = async (
     const registrations = await Registration.find({
       eventId,
       approved: "approved",
+      ...(organizationId ? { organizationId } : {}),
     });
+    noShowUserIds = getNoShowVolunteerIds(registrations);
     const userIds = new Set(
       registrations.map((registration) => registration.userId.toString())
     );
@@ -55,7 +59,8 @@ export const getUsers = async (
       users = users.filter(
         (user) =>
           !checkedInUserIds.has(user._id.toString()) &&
-          !checkedOutUserIds.has(user._id.toString())
+          !checkedOutUserIds.has(user._id.toString()) &&
+          !noShowUserIds.has(user._id.toString())
       );
       break;
     case "checkedIn":

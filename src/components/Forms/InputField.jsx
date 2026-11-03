@@ -48,6 +48,7 @@ const InputField = (props) => (
           maxLength={props.maxLength}
           min={props.min}
           max={props.max}
+          step={props.step}
         />
       )}
     </Field>
@@ -71,6 +72,7 @@ InputField.propTypes = {
   maxLength: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
+  step: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   isEmptyOrInvalid: PropTypes.bool,
 };
 

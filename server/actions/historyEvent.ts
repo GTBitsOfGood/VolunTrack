@@ -116,19 +116,9 @@ export const createHistoryEventInviteAdmin = (
     });
 };
 
-export const createHistoryEventAttendanceEdited = (
-  user: UserDocument,
-  attendance: AttendanceDocument
-) => {
-  if (user.organizationId)
-    return createHistoryEvent({
-      keyword: "EDITED",
-      description: `${user.firstName} ${user.lastName} edited ${attendance.volunteerName}'s attendance for event ${attendance.eventName}`,
-      userId: user._id,
-      organizationId: user.organizationId,
-      eventId: attendance.eventId,
-    });
-};
+// Correction history is built from old and saved punches and persisted in the
+// same transaction as attendance by attendanceCorrectionStore.
+export { buildAttendanceCorrectionHistory } from "./attendanceHistory";
 
 export const createHistoryEventAttendanceDeleted = (
   user: UserDocument,
