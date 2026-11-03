@@ -8,7 +8,7 @@ import { getRegistrations } from "../../../../queries/registrations";
 import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
 import EditEventStats from "./EditEventStats";
 import EventStatsDeleteModal from "./EventStatsDeleteModal";
-import { minutesToHours } from "../../../../../utils/hours";
+import { totalHours } from "../../../../../utils/hours";
 
 const Styled = {
   Container: styled.div`
@@ -94,11 +94,7 @@ const EventStatistics = () => {
     onRefresh();
   }, []);
 
-  let hours = 0;
-  attendances.forEach((attendance) => {
-    if (attendance.checkoutTime)
-      hours += minutesToHours(attendance.minutes);
-  });
+  const hours = totalHours(attendances);
   const totalVolunteers = [
     ...new Set(attendances.map((attendance) => attendance.userId)),
   ];
@@ -156,7 +152,7 @@ const EventStatistics = () => {
           <Styled.StatsInfoContainer>
             <Styled.StatsInfo>
               <p>
-                <strong>Total Hours: </strong> {hours.toString().slice(0, 5)}
+                <strong>Total Hours: </strong> {hours}
               </p>
             </Styled.StatsInfo>
           </Styled.StatsInfoContainer>

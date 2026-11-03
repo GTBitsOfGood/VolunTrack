@@ -100,7 +100,7 @@ export const getShiftDateTimes = (
 
 // Display helpers: show a saved (universal-clock) timestamp as Atlanta wall-clock text.
 const atlantaDisplayFormatter = new Intl.DateTimeFormat("en-US", {
-  timeZone: "America/New_York",
+  timeZone: ATLANTA_TIME_ZONE,
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
