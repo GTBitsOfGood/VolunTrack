@@ -1,4 +1,4 @@
-import { attendanceWallTime } from "./User/hourParsing";
+import { attendanceWallTime } from "../../../utils/dates";
 
 // Date-only bounds include the whole day; datetime bounds include that minute.
 export const filterAttendance = (allAttendance, start, end) => {

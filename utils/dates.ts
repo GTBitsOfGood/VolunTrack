@@ -5,8 +5,22 @@ export const getYesterday = () => {
   return yesterday;
 };
 
+export const ATLANTA_TIME_ZONE = "America/New_York";
+
+// Invalid or reversed punches never earn time.
+export const minutesBetween = (
+  start: Date | string | null | undefined,
+  end: Date | string | null | undefined
+): number => {
+  if (!start || !end) return 0;
+  const elapsed = new Date(end).getTime() - new Date(start).getTime();
+  return Number.isFinite(elapsed) && elapsed >= 0
+    ? Math.round(elapsed / 60000)
+    : 0;
+};
+
 const atlantaFormatter = new Intl.DateTimeFormat("en-US", {
-  timeZone: "America/New_York",
+  timeZone: ATLANTA_TIME_ZONE,
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
@@ -118,4 +132,64 @@ export const instantToAtlantaDateTime = (
       seconds === "00" ? "" : `:${seconds}`
     }`,
   };
+};
+
+// Display helpers: show a saved (universal-clock) timestamp as Atlanta wall-clock text.
+const atlantaDisplayFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: ATLANTA_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+  timeZoneName: "short",
+});
+
+const atlantaParts = (value: Date | string | null | undefined) => {
+  if (value == null) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  const parts = atlantaDisplayFormatter.formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes): string =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour: get("hour"),
+    minute: get("minute"),
+    dayPeriod: get("dayPeriod"),
+    zone: get("timeZoneName"),
+  };
+};
+
+export const formatAtlantaDate = (
+  value: Date | string | null | undefined
+): string => {
+  const p = atlantaParts(value);
+  return p ? `${p.year}-${p.month}-${p.day}` : "N/A";
+};
+
+export const formatAtlantaTime = (
+  value: Date | string | null | undefined
+): string => {
+  const p = atlantaParts(value);
+  return p ? `${p.hour}:${p.minute} ${p.dayPeriod} ${p.zone}` : "N/A";
+};
+
+export const getAtlantaMonthIndex = (
+  value: Date | string | null | undefined
+): number => {
+  const p = atlantaParts(value);
+  return p ? Number(p.month) - 1 : -1;
+};
+
+// Minute-precision Atlanta wall-clock text for the member statistics filters.
+export const attendanceWallTime = (
+  value: Date | string | null | undefined
+): string => {
+  if (!value || !Number.isFinite(new Date(value).getTime())) return "";
+  const { day, time } = instantToAtlantaDateTime(value);
+  return `${day}T${time.slice(0, 5)}`;
 };

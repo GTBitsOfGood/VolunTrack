@@ -2,12 +2,8 @@ import { Table, Tooltip } from "flowbite-react";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
-import {
-  getHours,
-  formatHours,
-  formatAttendanceDate,
-  formatAttendanceTime,
-} from "../screens/Stats/User/hourParsing";
+import { formatHours } from "../../utils/hours";
+import { formatAtlantaDate, formatAtlantaTime } from "../../utils/dates";
 import Pagination from "./PaginationComp";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
 
@@ -60,19 +56,17 @@ const StatsTable = ({
                     </a>
                   </Table.Cell>
                   <Table.Cell>
-                    {formatAttendanceDate(attendance.checkinTime)}
+                    {formatAtlantaDate(attendance.checkinTime)}
                   </Table.Cell>
                   <Table.Cell>
-                    {formatAttendanceTime(attendance.checkinTime)} -{" "}
+                    {formatAtlantaTime(attendance.checkinTime)} -{" "}
                     {attendance.checkoutTime == null
                       ? "N/A"
-                      : formatAttendanceTime(attendance.checkoutTime)}
+                      : formatAtlantaTime(attendance.checkoutTime)}
                   </Table.Cell>
                   <Table.Cell>
                     &emsp;
-                    {formatHours(
-                      getHours(attendance.checkinTime, attendance.checkoutTime)
-                    )}
+                    {formatHours(attendance)}
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -89,9 +83,7 @@ const StatsTable = ({
                   </Table.Cell>
                   <Table.Cell>
                     &emsp;
-                    {formatHours(
-                      getHours(attendance.checkinTime, attendance.checkoutTime)
-                    )}
+                    {formatHours(attendance)}
                   </Table.Cell>
                   <Table.Cell>
                     <div className="flex gap-1">

@@ -1,8 +1,5 @@
 import PropTypes from "prop-types";
-import {
-  formatAttendanceTime,
-  formatAttendanceDate,
-} from "../Stats/User/hourParsing";
+import { formatAtlantaTime, formatAtlantaDate } from "../../../utils/dates";
 import { useState } from "react";
 import { Tooltip } from "flowbite-react";
 import { TrashIcon } from "@heroicons/react/24/solid";
@@ -19,7 +16,7 @@ const TimesheetCard = ({ log, onDelete, isDeleting }) => {
   const tasksDisplay = Array.isArray(tasks) ? tasks.join(", ") : "—";
   const date = log.eventId?.date
     ? new Date(log.eventId.date).toISOString().slice(0, 10)
-    : formatAttendanceDate(log.inTime);
+    : formatAtlantaDate(log.inTime);
   const startTime = log.inTime;
   const endTime = log.outTime;
   const toggleDeleteModal = () => setShowDeleteModal((prev) => !prev);
@@ -61,13 +58,11 @@ const TimesheetCard = ({ log, onDelete, isDeleting }) => {
         </div>
         <div>
           <span className="font-bold text-gray-800">Start Time </span>
-          <span className="text-gray-600">
-            {formatAttendanceTime(startTime)}
-          </span>
+          <span className="text-gray-600">{formatAtlantaTime(startTime)}</span>
         </div>
         <div>
           <span className="font-bold text-gray-800">End Time </span>
-          <span className="text-gray-600">{formatAttendanceTime(endTime)}</span>
+          <span className="text-gray-600">{formatAtlantaTime(endTime)}</span>
         </div>
       </div>
       <Modal

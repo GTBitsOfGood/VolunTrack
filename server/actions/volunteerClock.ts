@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { getShiftDateTimes } from "../../utils/dates";
+import { getShiftDateTimes, minutesBetween } from "../../utils/dates";
 import { isDuplicateAttendanceError } from "./attendanceErrors";
 
 import { AttendanceCorrectionError } from "./attendanceCorrections";
@@ -199,9 +199,7 @@ export const createVolunteerClockHandler =
             "Volunteer checkout closes at midnight Atlanta time on the shift day. Contact an admin.",
         });
       }
-      const minutes = Math.round(
-        (now.getTime() - attendance.checkinTime.getTime()) / (60 * 1000)
-      );
+      const minutes = minutesBetween(attendance.checkinTime, now);
       const updated = await dependencies.checkoutAttendance(
         attendance,
         now,

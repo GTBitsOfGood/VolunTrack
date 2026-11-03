@@ -3,11 +3,8 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import {
-  getHours,
-  formatHours,
-  formatAttendanceDate,
-} from "../screens/Stats/User/hourParsing";
+import { attendanceHours, formatDurationHours } from "../../utils/hours";
+import { getAtlantaMonthIndex } from "../../utils/dates";
 
 const AdminHomeHeader = (props) => {
   let todaysEvents = 0;
@@ -51,18 +48,11 @@ const AdminHomeHeader = (props) => {
     eventTotal += 1;
   }
   for (let i = 0; i < props.attendances.length; i++) {
-    let month =
-      parseInt(
-        formatAttendanceDate(props.attendances[i].checkinTime).slice(5, 7)
-      ) - 1;
-    if (props.attendances[i].checkoutTime != null) {
-      let duration = getHours(
-        props.attendances[i].checkinTime,
-        props.attendances[i].checkoutTime
-      );
-      hoursData[month] += duration;
-      hoursTotal += duration;
-    }
+    const month = getAtlantaMonthIndex(props.attendances[i].checkinTime);
+    if (month < 0) continue;
+    const duration = attendanceHours(props.attendances[i]);
+    hoursData[month] += duration;
+    hoursTotal += duration;
     attendanceData[month] += 1;
     attendanceTotal += 1;
   }
@@ -97,7 +87,7 @@ const AdminHomeHeader = (props) => {
     tooltip: {
       y: {
         formatter: (value, { seriesIndex }) =>
-          seriesIndex === 1 ? formatHours(value) : value,
+          seriesIndex === 1 ? formatDurationHours(value) : value,
       },
       style: {
         fontSize: "14px",
@@ -258,7 +248,9 @@ const AdminHomeHeader = (props) => {
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{formatHours(hoursTotal)}</p>
+                <p className="mb-0 pl-2 text-2xl">
+                  {formatDurationHours(hoursTotal)}
+                </p>
                 <p className="text-md mb-0 pl-2 text-slate-600"> Total time</p>
               </div>
             </div>
