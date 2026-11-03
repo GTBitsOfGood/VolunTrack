@@ -97,3 +97,52 @@ export const getShiftDateTimes = (
     end: resolveAtlantaTime(calendarDate, endTime),
   };
 };
+
+// Display helpers: show a saved (universal-clock) timestamp as Atlanta wall-clock text.
+const atlantaDisplayFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: ATLANTA_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "numeric",
+  minute: "2-digit",
+  hour12: true,
+});
+
+const atlantaParts = (value: Date | string | null | undefined) => {
+  if (value == null) return null;
+  const date = value instanceof Date ? value : new Date(value);
+  if (!Number.isFinite(date.getTime())) return null;
+  const parts = atlantaDisplayFormatter.formatToParts(date);
+  const get = (type: Intl.DateTimeFormatPartTypes): string =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  return {
+    year: get("year"),
+    month: get("month"),
+    day: get("day"),
+    hour: get("hour"),
+    minute: get("minute"),
+    dayPeriod: get("dayPeriod"),
+  };
+};
+
+export const formatAtlantaDate = (
+  value: Date | string | null | undefined
+): string => {
+  const p = atlantaParts(value);
+  return p ? `${p.year}-${p.month}-${p.day}` : "N/A";
+};
+
+export const formatAtlantaTime = (
+  value: Date | string | null | undefined
+): string => {
+  const p = atlantaParts(value);
+  return p ? `${p.hour}:${p.minute} ${p.dayPeriod}` : "N/A";
+};
+
+export const getAtlantaMonthIndex = (
+  value: Date | string | null | undefined
+): number => {
+  const p = atlantaParts(value);
+  return p ? Number(p.month) - 1 : -1;
+};

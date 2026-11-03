@@ -3,7 +3,8 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import { getHours } from "../screens/Stats/User/hourParsing";
+import { attendanceHours } from "../../utils/hours";
+import { getAtlantaMonthIndex } from "../../utils/dates";
 
 const AdminHomeHeader = (props) => {
   let todaysEvents = 0;
@@ -47,15 +48,11 @@ const AdminHomeHeader = (props) => {
     eventTotal += 1;
   }
   for (let i = 0; i < props.attendances.length; i++) {
-    let month = parseInt(props.attendances[i].checkinTime.slice(5, 7)) - 1;
-    if (props.attendances[i].checkoutTime != null) {
-      let duration = getHours(
-        props.attendances[i].checkinTime,
-        props.attendances[i].checkoutTime
-      );
-      hoursData[month] += Math.round(duration * 100) / 100;
-      hoursTotal += duration;
-    }
+    const month = getAtlantaMonthIndex(props.attendances[i].checkinTime);
+    if (month < 0) continue; // no readable check-in date to chart
+    const duration = attendanceHours(props.attendances[i]);
+    hoursData[month] += duration;
+    hoursTotal += duration;
     attendanceData[month] += 1;
     attendanceTotal += 1;
 
