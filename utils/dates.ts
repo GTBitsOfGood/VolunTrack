@@ -52,7 +52,6 @@ const resolveAtlantaTime = (date: string, time: string): Date => {
   return new Date(matches[0]);
 };
 
-
 // Resolve a stored shift calendar date and HH:mm times in America/New_York
 export const getShiftDateTimes = (
   date: Date | string,

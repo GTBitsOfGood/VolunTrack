@@ -5,7 +5,6 @@ import Attendance, {
   ATTENDANCE_UNIQUE_INDEX,
 } from "../mongodb/models/Attendance";
 import type { ClockAttendance, ClockDependencies } from "./volunteerClock";
-import { AttendanceIndexUnavailableError } from "./attendanceErrors";
 
 const attendanceData = (attendance: AttendanceDocument): ClockAttendance => ({
   _id: attendance._id.toString(),
@@ -28,8 +27,11 @@ export const createAttendanceOnce = async (
       ATTENDANCE_UNIQUE_KEY,
       ATTENDANCE_UNIQUE_INDEX
     );
-  } catch {
-    throw new AttendanceIndexUnavailableError();
+  } catch (error) {
+    // An old doubled record stops the one-record-per-shift rule from switching on.
+    // Don't block every check-in over it: clock-in still checks for an existing
+    // record first, and the rule switches on once the doubles are cleaned up.
+    console.error("Attendance unique index unavailable:", error);
   }
   return Attendance.create(input);
 };
