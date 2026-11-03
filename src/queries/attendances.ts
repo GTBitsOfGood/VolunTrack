@@ -7,6 +7,71 @@ import {
 } from "../../server/mongodb/models/Attendance";
 import { QueryPartialMatch } from "./index";
 
+export type VolunteerAttendance = {
+  _id: string;
+  checkinTime: string | null;
+  checkoutTime: string | null;
+  minutes: number;
+};
+
+export type VolunteerClockStatus = {
+  attendance: VolunteerAttendance | null;
+  serverTime: string;
+  clockInOpensAt: string;
+  clockInClosesAt: string;
+  clockOutClosesAt: string;
+  isApproved: boolean;
+  canClockIn: boolean;
+  canClockOut: boolean;
+};
+
+const clockError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    const data: unknown = error.response?.data;
+    return {
+      error:
+        typeof data === "object" &&
+        data !== null &&
+        "error" in data &&
+        typeof data.error === "string"
+          ? data.error
+          : "Unable to reach attendance. Refresh your status and try again.",
+      status: error.response?.status,
+    };
+  }
+  return { error: "Unable to load or update attendance. Please try again." };
+};
+
+export const getMyAttendance = async (eventId: string) => {
+  try {
+    return await axios.get<VolunteerClockStatus>("/api/attendances/me", {
+      params: { eventId },
+      timeout: 10000,
+    });
+  } catch (error) {
+    return clockError(error);
+  }
+};
+
+const clockForShift = async (
+  eventId: string,
+  action: "clock-in" | "clock-out"
+) => {
+  try {
+    return await axios.post<{
+      attendance: VolunteerAttendance;
+      serverTime: string;
+    }>(`/api/attendances/${action}`, { eventId }, { timeout: 10000 });
+  } catch (error) {
+    return clockError(error);
+  }
+};
+
+export const clockInForShift = (eventId: string) =>
+  clockForShift(eventId, "clock-in");
+export const clockOutForShift = (eventId: string) =>
+  clockForShift(eventId, "clock-out");
+
 // Helper functions for checking in and out volunteers
 export const checkInVolunteer = async (
   userId: Types.ObjectId,

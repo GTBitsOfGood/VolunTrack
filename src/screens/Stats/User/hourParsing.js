@@ -1,12 +1,9 @@
 export const getHours = (startTime, endTime) => {
-  var timeStart = new Date("01/01/2007 " + startTime);
-  var timeEnd = new Date("01/01/2007 " + endTime);
+  if (startTime == null || endTime == null) return 0;
 
-  let hours = Math.abs(timeEnd - timeStart) / 36e5;
+  // Preserve the date and timezone so crossing UTC midnight keeps its duration.
+  const elapsed = new Date(endTime).getTime() - new Date(startTime).getTime();
+  if (!Number.isFinite(elapsed) || elapsed < 0) return 0;
 
-  if (hours < 0) {
-    hours = 24 + hours;
-  }
-
-  return Math.round(hours * 10) / 10.0;
+  return Math.round((elapsed / 36e5) * 10) / 10;
 };

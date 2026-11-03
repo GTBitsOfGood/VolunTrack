@@ -77,8 +77,8 @@ const StatsTable = ({
                     {attendance.checkoutTime == null
                       ? "0 hour(s)"
                       : getHours(
-                          attendance.checkinTime.slice(11, 16),
-                          attendance.checkoutTime.slice(11, 16)
+                          attendance.checkinTime,
+                          attendance.checkoutTime
                         ) + " hour(s)"}
                   </Table.Cell>
                 </Table.Row>
@@ -99,8 +99,8 @@ const StatsTable = ({
                     {attendance.checkoutTime == null
                       ? "0 hour(s)"
                       : getHours(
-                          attendance.checkinTime.slice(11, 16),
-                          attendance.checkoutTime.slice(11, 16)
+                          attendance.checkinTime,
+                          attendance.checkoutTime
                         ) + " hour(s)"}
                   </Table.Cell>
                   <Table.Cell>

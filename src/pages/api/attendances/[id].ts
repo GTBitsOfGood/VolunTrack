@@ -10,6 +10,7 @@ import {
   createHistoryEventAttendanceDeleted,
 } from "../../../../server/actions/historyEvent";
 import { isAdmin } from "../../../utils/routeProtection";
+import { minutesBetween } from "../../../../utils/dates";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
@@ -50,18 +51,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         checkIn = result.data.checkinTime;
       }
 
-      // @ts-expect-error
-      const date1 = new Date(result.data.checkoutTime).getTime();
-      // @ts-expect-error
-      const date2 = new Date(checkIn).getTime();
-      const mins = (date1 - date2) / (60 * 1000);
+      // @ts-expect-error checkoutTime can be left out of an edit, and checkIn can be null
+      const minutes = minutesBetween(checkIn, result.data.checkoutTime);
 
       await createHistoryEventAttendanceEdited(user, attendance);
       await attendance.updateOne({
         $set: {
           checkoutTime: result.data.checkoutTime,
           checkinTime: result.data.checkinTime,
-          minutes: Math.abs(Math.round(mins)),
+          minutes,
         },
         upsert: true,
         returnDocument: "after",
