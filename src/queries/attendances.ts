@@ -42,6 +42,28 @@ const clockError = (error: unknown) => {
   return { error: "Unable to load or update attendance. Please try again." };
 };
 
+export type AttendanceReviewShift = {
+  eventId: string;
+  title: string;
+  date: string;
+  missingCheckinCount: number;
+  missingCheckoutCount: number;
+};
+
+// Organization and issue classification are derived from the authenticated
+// admin session on the server; this query deliberately accepts no filters.
+export const getAttendanceNeedsReview = async () => {
+  try {
+    const response = await axios.get<{ shifts: AttendanceReviewShift[] }>(
+      "/api/attendances/needs-review",
+      { timeout: 10000 }
+    );
+    return { data: response.data, error: undefined };
+  } catch (error) {
+    return { data: undefined, ...clockError(error) };
+  }
+};
+
 export const getMyAttendance = async (eventId: string) => {
   try {
     return await axios.get<VolunteerClockStatus>("/api/attendances/me", {
@@ -103,29 +125,48 @@ export const checkInVolunteer = async (
 };
 
 export const checkOutVolunteer = async (
-  userId: Types.ObjectId,
-  eventId: Types.ObjectId
+  userId: Types.ObjectId | string,
+  eventId: Types.ObjectId | string,
+  options?: { attendanceId: Types.ObjectId | string; checkoutTime: Date }
 ) => {
-  const attendanceResponse = await getAttendances(
-    {
+  let attendanceId = options?.attendanceId;
+  if (!attendanceId) {
+    const response = await getAttendances({
       userId,
       eventId,
-    },
-    undefined,
-    undefined,
-    null,
-    null
-  );
-
-  if ("error" in attendanceResponse) {
-    console.error("Error fetching attendances:", attendanceResponse.error);
-    return;
+    } as QueryPartialMatch);
+    if ("error" in response) return response;
+    const open =
+      response.data.attendances?.filter(
+        (a) => a.checkinTime != null && a.checkoutTime == null
+      ) ?? [];
+    if (open.length !== 1)
+      return {
+        error: "Choose a specific open attendance entry and refresh.",
+        status: 409,
+      };
+    attendanceId = open[0]._id;
   }
+  return updateAttendance(attendanceId, {
+    userId,
+    eventId,
+    checkoutTime: options?.checkoutTime ?? new Date(),
+    onlyIfOpen: true,
+  });
+};
 
-  const attendanceId = attendanceResponse.data.attendances?.[0]._id;
-
-  if (!attendanceId) return;
-  return updateAttendance(attendanceId, { checkoutTime: new Date() });
+export const setEventAttendanceEnded = async (
+  eventId: string,
+  isEnded: boolean
+) => {
+  try {
+    return await axios.patch<{ event: { _id: string; isEnded: boolean } }>(
+      `/api/events/${eventId}`,
+      { isEnded }
+    );
+  } catch (error) {
+    return clockError(error);
+  }
 };
 
 export const getAttendance = async (attendanceId: Types.ObjectId) => {
@@ -190,6 +231,7 @@ export const createAttendance = async (
     if (axios.isAxiosError(error)) {
       return {
         error: error.response?.data?.error || error.message,
+        status: error.response?.status,
       };
     }
     return { error: "Error creating attendance." };
@@ -197,8 +239,19 @@ export const createAttendance = async (
 };
 
 export const updateAttendance = async (
-  attendanceId: Types.ObjectId,
-  attendanceInput: Partial<AttendanceInputClient>
+  attendanceId: Types.ObjectId | string,
+  attendanceInput: Omit<
+    Partial<AttendanceInputClient>,
+    "userId" | "eventId"
+  > & {
+    userId?: Types.ObjectId | string;
+    eventId?: Types.ObjectId | string;
+    onlyIfOpen?: boolean;
+    expectedPunches?: {
+      checkinTime: Date | string | null;
+      checkoutTime: Date | string | null;
+    };
+  }
 ) => {
   try {
     const response = await axios.put<{
@@ -210,6 +263,7 @@ export const updateAttendance = async (
     if (axios.isAxiosError(error)) {
       return {
         error: error.response?.data?.error || error.message,
+        status: error.response?.status,
       };
     }
     return { error: "Error updating attendance." };

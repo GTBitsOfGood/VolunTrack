@@ -3,20 +3,21 @@ import dbConnect from "../../../../../server/mongodb";
 import User, {
   userInputServerValidator,
 } from "../../../../../server/mongodb/models/User";
-import Attendance, {
-  attendanceInputServerValidator,
-} from "../../../../../server/mongodb/models/Attendance";
-import Registration, {
-  registrationInputServerValidator,
-} from "../../../../../server/mongodb/models/Registration";
 import { checkEventCapacity } from "../../../../../server/actions/registrationCapacity";
 
+import { createWalkInAttendance } from "../../../../../server/actions/attendancePersistence";
+import { AttendanceCorrectionError } from "../../../../../server/actions/attendanceCorrections";
+import { getClockWindow } from "../../../../../server/actions/volunteerClock";
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    return res.status(405).json({ error: "Method not allowed." });
+  }
   await dbConnect();
   const userInput = req.body.userInput;
   const eventIdParam = req.query.id;
   const eventId = Array.isArray(eventIdParam) ? eventIdParam[0] : eventIdParam;
-  const eventName: string = req.body.eventName;
 
   if (!eventId) {
     return res.status(400).json({ error: "Event id is required." });
@@ -25,31 +26,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const userValid = userInputServerValidator.safeParse(userInput);
   if (!userValid.success)
     return res.status(400).json({ error: userValid.error });
-
-  const userExists = await User.exists({ email: userValid.data.email });
-
-  const user = userExists
-    ? await User.findOne({
-        email: userValid.data.email,
-        organizationId: userValid.data.organizationId,
-      })
-    : await User.create({
-        email: userValid.data.email,
-        firstName: userValid.data.firstName,
-        lastName: userValid.data.lastName,
-        organizationId: userValid.data.organizationId,
-      });
-
-  const registrationInput = {
-    userId: user?._id.toString(),
-    eventId,
-    organizationId: user?.organizationId?.toString(),
-  };
-
-  const registrationValid =
-    registrationInputServerValidator.safeParse(registrationInput);
-  if (!registrationValid.success)
-    return res.status(400).json({ error: registrationValid.error });
 
   const capacityResult = await checkEventCapacity(eventId, 1);
   if (capacityResult.status === "not_found") {
@@ -66,24 +42,73 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  await Registration.create(registrationValid.data);
-
-  const attendanceInput = {
-    userId: user?._id.toString(),
-    eventId,
-    organizationId: user?.organizationId?.toString(),
-    eventName,
-    volunteerName: String(user?.firstName) + " " + String(user?.lastName),
-    volunteerEmail: user?.email,
-    checkinTime: new Date().toISOString(),
+  const event = capacityResult.event;
+  const parent = event.eventParent;
+  const shift = {
+    _id: event._id.toString(),
+    date: event.date,
+    organizationId: parent.organizationId.toString(),
+    title: parent.title,
+    startTime: parent.startTime,
+    endTime: parent.endTime,
   };
+  const now = new Date();
+  try {
+    const window = getClockWindow(shift);
+    if (
+      now < window.clockInOpensAt ||
+      now > window.clockInClosesAt ||
+      userValid.data.organizationId !== shift.organizationId
+    ) {
+      return res.status(403).json({
+        error:
+          "Check-in requires this organization and the shift's Atlanta check-in window.",
+      });
+    }
+  } catch {
+    return res
+      .status(422)
+      .json({ error: "Invalid or ambiguous shift times. Contact an admin." });
+  }
 
-  const attendanceValid =
-    attendanceInputServerValidator.safeParse(attendanceInput);
-  if (!attendanceValid.success)
-    return res.status(400).json({ error: attendanceValid.error });
+  const userExists = await User.exists({ email: userValid.data.email });
 
-  const attendance = await Attendance.create(attendanceValid.data);
+  const user = userExists
+    ? await User.findOne({
+        email: userValid.data.email,
+        organizationId: userValid.data.organizationId,
+      })
+    : await User.create({
+        email: userValid.data.email,
+        firstName: userValid.data.firstName,
+        lastName: userValid.data.lastName,
+        organizationId: userValid.data.organizationId,
+      });
 
-  return res.status(200).json({ attendance, createdUser: !userExists });
+  if (!user || user.organizationId?.toString() !== shift.organizationId) {
+    return res.status(403).json({
+      error: "Volunteer does not belong to the shift's organization.",
+    });
+  }
+  try {
+    const attendance = await createWalkInAttendance(
+      shift,
+      {
+        _id: user._id.toString(),
+        organizationId: user.organizationId.toString(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+      },
+      now
+    );
+    return res.status(200).json({ attendance, createdUser: !userExists });
+  } catch (error) {
+    if (error instanceof AttendanceCorrectionError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    return res
+      .status(500)
+      .json({ error: "Check-in was not saved. Please try again." });
+  }
 };

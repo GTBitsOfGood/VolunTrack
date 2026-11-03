@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import styled from "styled-components";
 import { formatHours } from "../../utils/hours";
+import { formatAtlantaDate, formatAtlantaTime } from "../../utils/dates";
 import Pagination from "./PaginationComp";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/solid";
-import { formatAtlantaDate, formatAtlantaTime } from "../../utils/dates";
 
 const Styled = {
   Container: styled.div`

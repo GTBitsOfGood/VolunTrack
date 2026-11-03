@@ -1,15 +1,21 @@
 import { Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
-import { createAttendanceOnce } from "../../../../server/actions/attendancePersistence";
-import { isDuplicateAttendanceError } from "../../../../server/actions/attendanceErrors";
 import Attendance, {
   AttendanceDocument,
   AttendanceInputClient,
-  attendanceInputServerValidator,
 } from "../../../../server/mongodb/models/Attendance";
 
+import { createAttendanceCorrectionHandler } from "../../../../server/actions/attendanceCorrections";
+import { attendanceCorrectionDependencies } from "../../../../server/actions/attendanceCorrectionDependencies";
+
+const createAttendance = createAttendanceCorrectionHandler(
+  "create",
+  attendanceCorrectionDependencies
+);
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === "POST") return createAttendance(req, res);
   await dbConnect();
 
   switch (req.method) {
@@ -72,22 +78,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
       return res.status(200).json({ attendances });
     }
-    case "POST": {
-      const result = attendanceInputServerValidator.safeParse(req.body);
-      if (!result.success) return res.status(400).json({ error: result.error });
-
-      try {
-        return res
-          .status(201)
-          .json({ attendance: await createAttendanceOnce(result.data) });
-      } catch (error) {
-        if (isDuplicateAttendanceError(error)) {
-          return res.status(409).json({
-            error: "This volunteer already has attendance for this shift.",
-          });
-        }
-        return res.status(500).json({ error: "Unable to create attendance." });
-      }
-    }
+    default:
+      res.setHeader("Allow", "GET, POST");
+      return res.status(405).json({ error: "Method not allowed." });
   }
 };

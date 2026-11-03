@@ -1,317 +1,469 @@
-import "flowbite-react";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import BoGButton from "../../../../components/BoGButton";
 import SearchBar from "../../../../components/SearchBar";
 import Text from "../../../../components/Text";
 import {
   checkInVolunteer,
   checkOutVolunteer,
+  getAttendances,
+  setEventAttendanceEnded,
 } from "../../../../queries/attendances";
-import { getEvent, updateEvent } from "../../../../queries/events";
+import { getEvent } from "../../../../queries/events";
 import { getUsers } from "../../../../queries/users";
-import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
-import AttendanceFunctionality from "./AttendanceFunctionality";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import {
   deleteRegistration,
   getRegistrations,
+  markRegistrationNoShow,
 } from "../../../../queries/registrations";
+import AdminAuthWrapper from "../../../../utils/AdminAuthWrapper";
+import EditEventStats from "../Statistics/EditEventStats";
+import AttendanceFunctionality from "./AttendanceFunctionality";
+import { getShiftDateTimes } from "../../../../../utils/dates";
+import {
+  getAttendanceManagementRows,
+  getEndEventCheckout,
+} from "../../../../../utils/attendanceManagement";
 
-const Styled = {
-  Container: styled.div`
-    width: 90vw;
-    max-width: 96rem;
-    margin: 0 auto;
-    padding: 2rem 0 0 0;
-  `,
-  Header: styled.h1`
-    margin: 0;
-    font-size: 2rem;
-    font-weight: bold;
-  `,
-  HeaderRow: styled.div`
-    margin: 0 0 1rem 0;
-
-    display: flex;
-    justify-content: space-between;
-  `,
+const requireData = (response, key) => {
+  if (response?.error || response?.data?.error || response?.data?.[key] == null)
+    throw new Error(
+      String(
+        response?.error ||
+          response?.data?.error ||
+          "The server did not confirm the change. Refresh and try again."
+      )
+    );
+  return response.data[key];
 };
-
-const EventAttendance = () => {
+const EventAttendance = ({ user }) => {
   const router = useRouter();
-  const eventId = router.query.eventId;
+  const eventId =
+    typeof router.query.eventId === "string" ? router.query.eventId : null;
+  const organizationId = String(user.organizationId ?? "");
+  const [snapshot, setSnapshot] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const operation = useRef(false);
+  const generation = useRef(0);
+  const mounted = useRef(true);
+  const [now, setNow] = useState(() => new Date());
+  const [search, setSearch] = useState("");
+  const [editor, setEditor] = useState(null);
+  const [selection, setSelection] = useState(null);
+  const [deleting, setDeleting] = useState(null);
 
-  const [event, setEvent] = useState({});
-  const [minors, setMinors] = useState({});
-  const [registrationIds, setRegistrationIds] = useState({});
-
-  const [searchValue, setSearchValue] = useState("");
-
-  const [waitingVolunteers, setWaitingVolunteers] = useState([]);
-  const [checkedInVolunteers, setCheckedInVolunteers] = useState([]);
-  const [checkedOutVolunteers, setCheckedOutVolunteers] = useState([]);
-
-  const [deleteIndex, setDeleteIndex] = useState(-1);
-  const [isDeleting, setDeleting] = useState(false);
+  const refresh = useCallback(async () => {
+    if (!router.isReady || !eventId) throw new Error("Shift ID is not ready.");
+    const request = ++generation.current;
+    setLoading(true);
+    try {
+      const event = requireData(await getEvent(eventId), "event");
+      if (
+        !organizationId ||
+        String(event.eventParent?.organizationId) !== organizationId
+      )
+        throw new Error("This shift does not belong to your organization.");
+      const [usersResponse, registrationsResponse, attendanceResponse] =
+        await Promise.all([
+          getUsers(organizationId),
+          getRegistrations({ organizationId, eventId }),
+          getAttendances({ organizationId, eventId }),
+        ]);
+      const data = {
+        event,
+        users: requireData(usersResponse, "users"),
+        registrations: requireData(registrationsResponse, "registrations"),
+        attendances: requireData(attendanceResponse, "attendances"),
+      };
+      // Validate the schedule before enabling any time mutation.
+      getShiftDateTimes(
+        event.date,
+        event.eventParent.startTime,
+        event.eventParent.endTime
+      );
+      if (mounted.current && request === generation.current) {
+        setSnapshot(data);
+        setLoadError("");
+        setNow(new Date());
+      }
+      return data;
+    } catch (error) {
+      if (mounted.current && request === generation.current)
+        setLoadError(error.message);
+      throw error;
+    } finally {
+      if (mounted.current && request === generation.current) setLoading(false);
+    }
+  }, [router.isReady, eventId, organizationId]);
 
   useEffect(() => {
-    (async () => {
-      const eventResponse = await getEvent(eventId);
-      setEvent(eventResponse.data.event);
-
-      const waitingUsers = (
-        await getUsers(
-          eventResponse.data.event.eventParent.organizationId,
-          "volunteer",
-          eventId,
-          "waiting"
-        )
-      ).data.users;
-      const checkedInUsers = (
-        await getUsers(
-          eventResponse.data.event.eventParent.organizationId,
-          "volunteer",
-          eventId,
-          "checkedIn"
-        )
-      ).data.users;
-      const checkedOutUsers = (
-        await getUsers(
-          eventResponse.data.event.eventParent.organizationId,
-          "volunteer",
-          eventId,
-          "checkedOut"
-        )
-      ).data.users;
-      const registrations = (await getRegistrations({ eventId })).data
-        .registrations;
-
-      const minors = {};
-      const registrationIds = {};
-      registrations.forEach((registration) => {
-        minors[registration.userId] = registration.minors;
-        registrationIds[registration.userId] = registration._id;
-      });
-
-      setWaitingVolunteers(waitingUsers);
-      setCheckedInVolunteers(checkedInUsers);
-      setCheckedOutVolunteers(checkedOutUsers);
-      setMinors(minors);
-      setRegistrationIds(registrationIds);
-    })();
-  }, []);
-
-  const checkIn = async (volunteer) => {
-    await checkInVolunteer(
-      volunteer._id,
-      eventId,
-      volunteer.organizationId,
-      volunteer.firstName + " " + volunteer.lastName,
-      volunteer.email,
-      event.eventParent.title
+    mounted.current = true;
+    setSnapshot(null);
+    setEditor(null);
+    setSelection(null);
+    setDeleting(null);
+    setMessage("");
+    if (router.isReady && eventId) refresh().catch(() => {});
+    return () => {
+      mounted.current = false;
+      generation.current++;
+    };
+  }, [refresh, router.isReady, eventId]);
+  useEffect(() => {
+    const focus = () => {
+      setNow(new Date());
+      if (!operation.current && router.isReady && eventId)
+        refresh().catch(() => {});
+    };
+    const visible = () => {
+      if (document.visibilityState === "visible") focus();
+    };
+    window.addEventListener("focus", focus);
+    document.addEventListener("visibilitychange", visible);
+    return () => {
+      window.removeEventListener("focus", focus);
+      document.removeEventListener("visibilitychange", visible);
+    };
+  }, [refresh, router.isReady, eventId]);
+  const timing = useMemo(() => {
+    if (!snapshot) return null;
+    return getShiftDateTimes(
+      snapshot.event.date,
+      snapshot.event.eventParent.startTime,
+      snapshot.event.eventParent.endTime
     );
+  }, [snapshot]);
+  const endMillis = timing?.end.getTime();
+  useEffect(() => {
+    if (endMillis == null) return;
+    let timer;
+    const schedule = () => {
+      const remaining = endMillis + 1 - Date.now();
+      if (remaining <= 0) {
+        setNow(new Date());
+        return;
+      }
+      timer = window.setTimeout(schedule, Math.min(remaining, 2147483647));
+    };
+    schedule();
+    return () => window.clearTimeout(timer);
+  }, [endMillis]);
+  const rows = useMemo(
+    () => (snapshot ? getAttendanceManagementRows({ ...snapshot, now }) : []),
+    [snapshot, now]
+  );
+  const pastEnd = timing ? now > timing.end : false;
+  const endLabel = timing
+    ? new Intl.DateTimeFormat("en-US", {
+        timeZone: "America/New_York",
+        hour: "numeric",
+        minute: "2-digit",
+      }).format(timing.end)
+    : "";
+  const disabled =
+    busy || loading || !!loadError || !!editor || !!selection || !!deleting;
 
-    setWaitingVolunteers(
-      waitingVolunteers.filter((v) => v._id !== volunteer._id)
-    );
-    setCheckedInVolunteers(checkedInVolunteers.concat(volunteer));
-    setCheckedOutVolunteers(
-      checkedOutVolunteers.filter((v) => v._id !== volunteer._id)
-    );
-  };
-
-  const checkOut = async (volunteer) => {
-    await checkOutVolunteer(volunteer._id, eventId);
-
-    setCheckedOutVolunteers((volunteers) => [...volunteers, volunteer]);
-    setCheckedInVolunteers((volunteers) =>
-      volunteers.filter((v) => v._id !== volunteer._id)
-    );
-  };
-
-  const endEvent = () => {
-    const newEvent = { ...event, isEnded: true };
-    setEvent(newEvent);
-    updateEvent(eventId, newEvent);
-    checkedInVolunteers.forEach((v) => {
-      checkOutVolunteer(v._id, eventId);
-    });
-    setCheckedOutVolunteers(checkedOutVolunteers.concat(checkedInVolunteers));
-    setCheckedInVolunteers([]);
-  };
-
-  const reopenEvent = () => {
-    const newEvent = { ...event, isEnded: false };
-    setEvent(newEvent);
-    updateEvent(eventId, newEvent);
-  };
-
-  const filteredAndSortedVolunteers = (volunteers) => {
-    if (volunteers?.length === 0) return [];
-    return (
-      searchValue.length > 0
-        ? volunteers.filter(
-            (v) =>
-              (v.firstName + " " + v.lastName)
-                ?.toLowerCase()
-                .includes(searchValue.toLowerCase()) ||
-              v.email?.toLowerCase().includes(searchValue.toLowerCase())
-          )
-        : volunteers
-    ).sort((a, b) =>
-      a.lastName > b.lastName ? 1 : b.lastName > a.lastName ? -1 : 0
-    );
-  };
-
-  const convertTime = (time) => {
-    if (!time) return "";
-    let [hour, min] = time.split(":");
-    let hours = parseInt(hour);
-    let suffix = time[-2];
-    if (!(suffix in ["pm", "am", "PM", "AM"])) {
-      suffix = hours > 11 ? "pm" : "am";
+  const run = async (work) => {
+    if (operation.current || loading || loadError) return;
+    operation.current = true;
+    setBusy(true);
+    setMessage("");
+    try {
+      await work();
+    } catch (error) {
+      let refreshError = "";
+      try {
+        await refresh();
+      } catch {
+        refreshError =
+          " Could not refresh saved state. Use Refresh attendance before trying again.";
+      }
+      if (mounted.current) setMessage(error.message + refreshError);
+    } finally {
+      operation.current = false;
+      if (mounted.current) setBusy(false);
     }
-    hours = ((hours + 11) % 12) + 1;
-    return hours.toString() + ":" + min + suffix;
   };
-
-  const closeDeleteModal = () => {
-    setDeleteIndex(-1);
+  const openEditor = (row) => {
+    if (row.records.length > 1) setSelection(row);
+    else setEditor({ row, attendance: row.records[0] ?? null });
   };
-
-  const deleteOnClick = (index) => {
-    setDeleteIndex(index);
+  const checkIn = (row) =>
+    run(async () => {
+      const v = row.volunteer;
+      requireData(
+        await checkInVolunteer(
+          v._id,
+          eventId,
+          organizationId,
+          `${v.firstName} ${v.lastName}`,
+          v.email,
+          snapshot.event.eventParent.title
+        ),
+        "attendance"
+      );
+      await refresh();
+      setMessage("Check-in saved.");
+    });
+  const checkOut = (row, record) =>
+    run(async () => {
+      const checkoutTime = getEndEventCheckout(snapshot.event, new Date());
+      requireData(
+        await checkOutVolunteer(row.volunteer._id, eventId, {
+          attendanceId: record._id,
+          checkoutTime,
+        }),
+        "attendance"
+      );
+      await refresh();
+      setMessage("Checkout saved.");
+    });
+  const noShow = (row) =>
+    run(async () => {
+      requireData(
+        await markRegistrationNoShow(row.registrationId),
+        "registration"
+      );
+      await refresh();
+      setMessage("Didn't come saved. No attendance hours were created.");
+    });
+  const endEvent = () => {
+    const capturedNow = new Date();
+    return run(async () => {
+      const fresh = await refresh();
+      const checkoutTime = getEndEventCheckout(fresh.event, capturedNow);
+      const open = fresh.attendances.filter(
+        (a) =>
+          String(a.eventId) === eventId &&
+          String(a.organizationId) === organizationId &&
+          a.checkinTime != null &&
+          a.checkoutTime == null
+      );
+      const results = await Promise.allSettled(
+        open.map(async (record) =>
+          requireData(
+            await checkOutVolunteer(record.userId, eventId, {
+              attendanceId: record._id,
+              checkoutTime,
+            }),
+            "attendance"
+          )
+        )
+      );
+      const failures = results.filter((result) => result.status === "rejected");
+      if (failures.length)
+        throw new Error(
+          `${open.length - failures.length} of ${
+            open.length
+          } checkouts confirmed. Event was not marked ended. ${
+            failures[0].reason.message
+          } Review refreshed attendance and retry End Event.`
+        );
+      const saved = requireData(
+        await setEventAttendanceEnded(eventId, true),
+        "event"
+      );
+      if (!saved.isEnded)
+        throw new Error("The server did not confirm End Event.");
+      await refresh();
+      setMessage("Event ended. All open checkouts were confirmed.");
+    });
   };
-
-  const deleteConfirmOnClick = async () => {
-    setDeleting(true);
-    await deleteRegistration(
-      registrationIds[waitingVolunteers[deleteIndex]._id]
-    );
-    setDeleting(false);
-    setWaitingVolunteers(
-      waitingVolunteers.filter((volunteer, index) => index !== deleteIndex)
-    );
-    closeDeleteModal();
-  };
-
+  const reopen = () =>
+    run(async () => {
+      const saved = requireData(
+        await setEventAttendanceEnded(eventId, false),
+        "event"
+      );
+      if (saved.isEnded)
+        throw new Error("The server did not confirm Reopen Event.");
+      await refresh();
+      setMessage("Event reopened.");
+    });
+  const remove = () =>
+    run(async () => {
+      const result = await deleteRegistration(deleting.registrationId);
+      if (
+        result?.error ||
+        result?.data?.error ||
+        !result?.status ||
+        result.status >= 400
+      )
+        throw new Error(
+          String(
+            result?.error ||
+              result?.data?.error ||
+              "Registration deletion was not confirmed."
+          )
+        );
+      await refresh();
+      setDeleting(null);
+      setMessage("Registration deleted.");
+    });
+  const event = snapshot?.event;
+  const shown = rows.filter((row) =>
+    `${row.volunteer.firstName ?? ""} ${row.volunteer.lastName ?? ""} ${
+      row.volunteer.email ?? ""
+    }`
+      .toLowerCase()
+      .includes(search.toLowerCase())
+  );
   return (
-    <>
-      <Styled.Container>
-        <Text className="mb-4" href={`/events`} text="← Back to home" />
-        <Styled.HeaderRow>
-          <Styled.Header>Attendance Management</Styled.Header>
-          {event.isEnded ? (
-            <BoGButton text="Reopen Event" onClick={reopenEvent} />
-          ) : (
-            <BoGButton text="End Event" onClick={endEvent} />
-          )}
-        </Styled.HeaderRow>
-
-        <div className="mx-18 mb-2 flex flex-col rounded-xl bg-grey px-6 py-3">
-          <Text
-            text={event?.eventParent?.title}
-            type="header"
-            className="mb-2 text-primaryColor"
-          />
-          <Text text="Date & Time:" className="font-bold" />
-          <Text
-            text={
-              event?.date?.substring(0, 10) +
-              ", " +
-              convertTime(event?.eventParent?.startTime) +
-              " - " +
-              convertTime(event?.eventParent?.endTime)
-            }
-            className="mb-2"
-          />
-          <Text text="Address:" className="font-bold" />
-          <Text
-            text={
-              event?.eventParent?.address +
-              ", " +
-              event?.eventParent?.city +
-              ", " +
-              event?.eventParent?.state +
-              " " +
-              event?.eventParent?.zip
-            }
-            className="mb-2"
-          />
-
-          <Text text="Description:" className="font-bold" />
-          <div
-            dangerouslySetInnerHTML={{
-              __html: event?.eventParent?.description,
-            }}
-            className="h-24 overflow-hidden"
-          />
-          <Text
-            className="mt-4"
-            href={`/events/${eventId}`}
-            text="See More Details"
-          />
-        </div>
-
-        <div className="mx-18 my-8 flex flex-col rounded-xl bg-grey px-6 py-3">
-          <SearchBar
-            placeholder="Search by Member Name or Email"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-
-          <AttendanceFunctionality
-            waitingVolunteers={filteredAndSortedVolunteers(waitingVolunteers)}
-            checkedInVolunteers={filteredAndSortedVolunteers(
-              checkedInVolunteers
-            )}
-            checkedOutVolunteers={filteredAndSortedVolunteers(
-              checkedOutVolunteers
-            )}
-            minors={minors}
-            checkIn={checkIn}
-            checkOut={checkOut}
-            isEnded={event?.isEnded}
-            deleteOnClick={deleteOnClick}
-          />
-        </div>
-
-        <Modal
-          isOpen={deleteIndex >= 0}
-          toggle={closeDeleteModal}
-          backdrop="static"
-        >
-          <ModalHeader toggle={closeDeleteModal}>
-            Delete {waitingVolunteers[deleteIndex]?.firstName}{" "}
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            {waitingVolunteers[deleteIndex]?.lastName}'s Registration
-          </ModalHeader>
-          <ModalBody>
-            Are you sure you want to delete{" "}
-            {waitingVolunteers[deleteIndex]?.firstName}{" "}
-            {/* eslint-disable-next-line react/no-unescaped-entities */}
-            {waitingVolunteers[deleteIndex]?.lastName}'s registration?{" "}
-            <span className="font-bold">This cannot be undone.</span>
-          </ModalBody>
-          <ModalFooter>
-            <BoGButton
-              text="Cancel"
-              onClick={closeDeleteModal}
-              outline={true}
+    <div className="mx-auto w-[90vw] max-w-[96rem] pt-8">
+      <Text className="mb-4" href="/events" text="← Back to home" />
+      <div className="mb-4 flex justify-between">
+        <h1 className="text-3xl font-bold">Attendance Management</h1>
+        <BoGButton
+          text={event?.isEnded ? "Reopen Event" : "End Event"}
+          disabled={disabled || !event}
+          onClick={event?.isEnded ? reopen : endEvent}
+        />
+      </div>
+      {loadError && <p role="alert">Unable to load attendance: {loadError}</p>}
+      {message && (
+        <p role="status" className="my-3">
+          {message}
+        </p>
+      )}
+      {busy && <p role="status">Saving attendance…</p>}
+      {loading && <p role="status">Loading attendance…</p>}
+      <BoGButton
+        text="Refresh attendance"
+        outline
+        disabled={
+          busy ||
+          loading ||
+          !eventId ||
+          !router.isReady ||
+          !!editor ||
+          !!selection ||
+          !!deleting
+        }
+        onClick={() => refresh().catch(() => {})}
+      />
+      {event && (
+        <>
+          <div className="my-4 rounded-xl bg-grey px-6 py-3">
+            <h2 className="text-xl font-bold">{event.eventParent.title}</h2>
+            <p>
+              {event.date.substring(0, 10)}, {event.eventParent.startTime} –{" "}
+              {event.eventParent.endTime} (Atlanta time, America/New_York)
+            </p>
+            <p>
+              {event.eventParent.address} {event.eventParent.city}{" "}
+              {event.eventParent.state} {event.eventParent.zip}
+            </p>
+            <div
+              className="h-24 overflow-hidden"
+              dangerouslySetInnerHTML={{
+                __html: event.eventParent.description ?? "",
+              }}
             />
-            <BoGButton
-              text="Delete"
-              onClick={deleteConfirmOnClick}
-              disabled={isDeleting}
+            <Text href={`/events/${eventId}`} text="See More Details" />
+          </div>
+          <div className="my-8 rounded-xl bg-grey px-6 py-3">
+            <SearchBar
+              placeholder="Search by Member Name or Email"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
-          </ModalFooter>
-        </Modal>
-      </Styled.Container>
-      {/* <Footer endEvent={endEvent} reopenEvent={reopenEvent} event={event} /> */}
-    </>
+            <AttendanceFunctionality
+              rows={shown}
+              disabled={disabled}
+              pastEnd={pastEnd}
+              endLabel={endLabel}
+              onEdit={openEditor}
+              onCheckIn={checkIn}
+              onCheckOut={checkOut}
+              onNoShow={noShow}
+              onDelete={setDeleting}
+            />
+          </div>
+        </>
+      )}
+      <EditEventStats
+        open={!!editor}
+        toggle={() => setEditor(null)}
+        attendance={editor?.attendance}
+        volunteer={editor?.row.volunteer}
+        event={event}
+        onSaved={async () => {
+          await refresh();
+          setMessage("Attendance saved.");
+        }}
+      />
+      <Modal
+        isOpen={!!selection}
+        toggle={() => setSelection(null)}
+        backdrop="static"
+      >
+        <ModalHeader toggle={() => setSelection(null)}>
+          Choose attendance entry
+        </ModalHeader>
+        <ModalBody>
+          {selection?.records.map((record, index) => (
+            <div key={record._id} className="mb-4">
+              <p>
+                Entry {index + 1}:{" "}
+                {record.checkinTime
+                  ? new Intl.DateTimeFormat("en-US", {
+                      timeZone: "America/New_York",
+                      dateStyle: "medium",
+                      timeStyle: "medium",
+                    }).format(new Date(record.checkinTime))
+                  : "Check-in not recorded"}{" "}
+                –{" "}
+                {record.checkoutTime
+                  ? new Intl.DateTimeFormat("en-US", {
+                      timeZone: "America/New_York",
+                      dateStyle: "medium",
+                      timeStyle: "medium",
+                    }).format(new Date(record.checkoutTime))
+                  : "Checkout not recorded"}{" "}
+                (Atlanta)
+              </p>
+              <BoGButton
+                text={`Edit entry ${index + 1}`}
+                onClick={() => {
+                  setEditor({ row: selection, attendance: record });
+                  setSelection(null);
+                }}
+              />
+            </div>
+          ))}
+        </ModalBody>
+      </Modal>
+      <Modal
+        isOpen={!!deleting}
+        toggle={busy ? undefined : () => setDeleting(null)}
+        backdrop="static"
+        keyboard={!busy}
+      >
+        <ModalHeader toggle={busy ? undefined : () => setDeleting(null)}>
+          Delete registration
+        </ModalHeader>
+        <ModalBody>
+          Delete {deleting?.volunteer.firstName} {deleting?.volunteer.lastName}
+          &apos;s registration? This cannot be undone.
+        </ModalBody>
+        <ModalFooter>
+          <BoGButton
+            text="Cancel"
+            disabled={busy}
+            onClick={() => setDeleting(null)}
+          />
+          <BoGButton
+            text="Delete"
+            disabled={busy || loading || !!loadError}
+            onClick={remove}
+          />
+        </ModalFooter>
+      </Modal>
+    </div>
   );
 };
-
 export default AdminAuthWrapper(EventAttendance);

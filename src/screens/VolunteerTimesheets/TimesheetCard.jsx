@@ -1,25 +1,9 @@
 import PropTypes from "prop-types";
+import { formatAtlantaTime, formatAtlantaDate } from "../../../utils/dates";
 import { useState } from "react";
 import { Tooltip } from "flowbite-react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
-
-const formatDate = (date) => {
-  if (!date) return "—";
-  const d = new Date(date);
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
-  const yyyy = d.getFullYear();
-  return `${mm} / ${dd} / ${yyyy}`;
-};
-
-const formatTime = (date) => {
-  if (!date) return "—:—";
-  const d = new Date(date);
-  const h = String(d.getHours()).padStart(2, "0");
-  const m = String(d.getMinutes()).padStart(2, "0");
-  return `${h}:${m}`;
-};
 
 const TimesheetCard = ({ log, onDelete, isDeleting }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -30,7 +14,9 @@ const TimesheetCard = ({ log, onDelete, isDeleting }) => {
   const eventName = log.eventId?.eventParent?.title ?? "—";
   const tasks = log.eventId?.eventParent?.tasks ?? [];
   const tasksDisplay = Array.isArray(tasks) ? tasks.join(", ") : "—";
-  const date = log.eventId?.date ?? log.inTime;
+  const date = log.eventId?.date
+    ? new Date(log.eventId.date).toISOString().slice(0, 10)
+    : formatAtlantaDate(log.inTime);
   const startTime = log.inTime;
   const endTime = log.outTime;
   const toggleDeleteModal = () => setShowDeleteModal((prev) => !prev);
@@ -68,15 +54,15 @@ const TimesheetCard = ({ log, onDelete, isDeleting }) => {
         </div>
         <div>
           <span className="font-bold text-gray-800">Date </span>
-          <span className="text-gray-600">{formatDate(date)}</span>
+          <span className="text-gray-600">{date}</span>
         </div>
         <div>
           <span className="font-bold text-gray-800">Start Time </span>
-          <span className="text-gray-600">{formatTime(startTime)}</span>
+          <span className="text-gray-600">{formatAtlantaTime(startTime)}</span>
         </div>
         <div>
           <span className="font-bold text-gray-800">End Time </span>
-          <span className="text-gray-600">{formatTime(endTime)}</span>
+          <span className="text-gray-600">{formatAtlantaTime(endTime)}</span>
         </div>
       </div>
       <Modal

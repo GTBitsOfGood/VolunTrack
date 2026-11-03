@@ -3,6 +3,8 @@ import { z } from "zod";
 import { getShiftDateTimes, minutesBetween } from "../../utils/dates";
 import { isDuplicateAttendanceError } from "./attendanceErrors";
 
+import { AttendanceCorrectionError } from "./attendanceCorrections";
+
 export type ClockAction = "clock-in" | "clock-out" | "status";
 export type ClockScope = {
   userId: string;
@@ -58,7 +60,7 @@ const requestValidator = z
   .object({ eventId: z.string().regex(/^[a-fA-F0-9]{24}$/) })
   .strict();
 
-const getClockWindow = (shift: ClockShift) => {
+export const getClockWindow = (shift: ClockShift) => {
   const { start, end } = getShiftDateTimes(
     shift.date,
     shift.startTime,
@@ -211,6 +213,9 @@ export const createVolunteerClockHandler =
       }
       return res.status(200).json({ attendance: updated, serverTime: now });
     } catch (error) {
+      if (error instanceof AttendanceCorrectionError) {
+        return res.status(error.status).json({ error: error.message });
+      }
       if (isDuplicateAttendanceError(error)) {
         return res.status(409).json({
           error: "You already have attendance for this shift.",

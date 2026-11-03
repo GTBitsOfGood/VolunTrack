@@ -47,7 +47,9 @@ const ProgressDisplay = ({
           alt="medal"
         />
         <div className="flex flex-nowrap items-center font-semibold">
-          <p className="pl-6 text-2xl">{num}</p>
+          <p className="pl-6 text-2xl">
+            {type === "Hours" ? Math.round(num * 100) / 100 : num}
+          </p>
           <p className="text-md pl-2 text-slate-600">/ {outOf}</p>
           <p className="text-md pl-2 text-slate-600">{type}</p>
         </div>
