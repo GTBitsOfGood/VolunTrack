@@ -322,14 +322,18 @@ const EventRegister = () => {
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <Text type="header" text="Confirm Registration"></Text>
-        <div className="flex items-end">
-          <Text type="header" text={availableSlots}></Text>
-          <Text
-            className="min-w-max"
-            type="subheader"
-            text={`/${event?.eventParent?.maxVolunteers} Spots Remaining`}
-          ></Text>
-        </div>
+        {event?.eventParent && (
+          <div className="flex items-end self-end sm:self-auto">
+            <Text type="header" text={availableSlots}></Text>
+            <Text
+              className="min-w-max"
+              type="subheader"
+              text={`/${
+                isEventFull ? "undefined" : event.eventParent.maxVolunteers
+              } spots remaining`}
+            ></Text>
+          </div>
+        )}
       </div>
       <div className="mt-8 flex flex-row items-center">
         <Text text="Event Information" type="subheader" />
