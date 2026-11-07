@@ -130,6 +130,13 @@ export const verifyUserWithCredentials = async (
   message?: string;
   status: number;
 }> => {
+  if (/[A-Z\s]/.test(email)) {
+    return {
+      status: 400,
+      message: "Email must be lowercase and contain no spaces",
+    };
+  }
+
   await dbConnect();
 
   const user = await User.findOne({ email });
