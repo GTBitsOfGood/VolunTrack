@@ -95,7 +95,8 @@ class AuthForm extends React.Component {
                 name="email"
                 label="Email Address"
                 placeholder="Your Email"
-                type="email"
+                type={this.props.createAccount ? "email" : "text"}
+                inputMode="email"
               />
               <InputField
                 name="password"
