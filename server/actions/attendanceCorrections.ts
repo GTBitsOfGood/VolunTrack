@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
+import { minutesBetween } from "../../utils/dates";
 import { buildAttendanceCorrectionHistory } from "./attendanceHistory";
 
 export type CorrectionActor = {
@@ -126,10 +127,7 @@ const calculatePunches = (
   return {
     checkinTime,
     checkoutTime,
-    minutes:
-      checkinTime && checkoutTime
-        ? Math.round((checkoutTime.getTime() - checkinTime.getTime()) / 60000)
-        : 0,
+    minutes: minutesBetween(checkinTime, checkoutTime),
   };
 };
 

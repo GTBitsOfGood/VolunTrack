@@ -7,9 +7,28 @@ import HistoryEvent from "../mongodb/models/HistoryEvent";
 import { AttendanceCorrectionError } from "./attendanceCorrections";
 import type {
   CorrectionAttendance,
-  CorrectionDependencies,
   CorrectionStore,
 } from "./attendanceCorrections";
+
+// The one lookup for a shift: its event plus the parent that holds the title,
+// times and organization. Every attendance flow uses this.
+export const findShift = async (id: string, session?: ClientSession) => {
+  const event = await Event.findById(id).session(session ?? null);
+  if (!event) return null;
+  const parent = await EventParent.findById(event.eventParent).session(
+    session ?? null
+  );
+  if (!parent) return null;
+  return {
+    _id: event._id.toString(),
+    organizationId: parent.organizationId.toString(),
+    title: parent.title,
+    date: event.date,
+    startTime: parent.startTime,
+    endTime: parent.endTime,
+    isEnded: event.isEnded,
+  };
+};
 
 export const attendanceData = (
   attendance: AttendanceDocument
@@ -29,20 +48,7 @@ export const attendanceData = (
 export const createCorrectionStore = (
   session: ClientSession
 ): CorrectionStore => ({
-  async getShift(id) {
-    const event = await Event.findById(id).session(session);
-    if (!event) return null;
-    const parent = await EventParent.findById(event.eventParent).session(
-      session
-    );
-    return parent
-      ? {
-          _id: event._id.toString(),
-          organizationId: parent.organizationId.toString(),
-          title: parent.title,
-        }
-      : null;
-  },
+  getShift: (id) => findShift(id, session),
   async getVolunteer(id) {
     const user = await User.findById(id).session(session);
     return user
@@ -138,6 +144,3 @@ export const withAttendanceTransaction = async <T>(
     await session.endSession();
   }
 };
-
-export const runAttendanceTransaction: CorrectionDependencies["transaction"] =
-  withAttendanceTransaction;

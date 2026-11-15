@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../src/pages/api/auth/[...nextauth]";
 import dbConnect from "../mongodb";
-import { runAttendanceTransaction } from "./attendanceCorrectionStore";
+import { withAttendanceTransaction } from "./attendanceCorrectionStore";
 import type { CorrectionDependencies } from "./attendanceCorrections";
 
 export const attendanceCorrectionDependencies: CorrectionDependencies = {
@@ -20,6 +20,6 @@ export const attendanceCorrectionDependencies: CorrectionDependencies = {
   },
   async transaction(work) {
     await dbConnect();
-    return runAttendanceTransaction(work);
+    return withAttendanceTransaction(work);
   },
 };

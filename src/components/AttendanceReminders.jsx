@@ -35,13 +35,11 @@ const AttendanceReminders = () => {
     const visible = () => {
       if (document.visibilityState === "visible") refresh();
     };
-    window.addEventListener("focus", refresh);
     window.addEventListener("pageshow", refresh);
     document.addEventListener("visibilitychange", visible);
     return () => {
       active.current = false;
       generation.current++;
-      window.removeEventListener("focus", refresh);
       window.removeEventListener("pageshow", refresh);
       document.removeEventListener("visibilitychange", visible);
     };

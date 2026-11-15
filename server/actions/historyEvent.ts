@@ -116,10 +116,6 @@ export const createHistoryEventInviteAdmin = (
     });
 };
 
-// Correction history is built from old and saved punches and persisted in the
-// same transaction as attendance by attendanceCorrectionStore.
-export { buildAttendanceCorrectionHistory } from "./attendanceHistory";
-
 export const createHistoryEventAttendanceDeleted = (
   user: UserDocument,
   attendance: AttendanceDocument

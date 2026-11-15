@@ -114,20 +114,15 @@ const EventAttendance = ({ user }) => {
     };
   }, [refresh, router.isReady, eventId]);
   useEffect(() => {
-    const focus = () => {
+    // Reload when the admin comes back to this tab.
+    const visible = () => {
+      if (document.visibilityState !== "visible") return;
       setNow(new Date());
       if (!operation.current && router.isReady && eventId)
         refresh().catch(() => {});
     };
-    const visible = () => {
-      if (document.visibilityState === "visible") focus();
-    };
-    window.addEventListener("focus", focus);
     document.addEventListener("visibilitychange", visible);
-    return () => {
-      window.removeEventListener("focus", focus);
-      document.removeEventListener("visibilitychange", visible);
-    };
+    return () => document.removeEventListener("visibilitychange", visible);
   }, [refresh, router.isReady, eventId]);
   const timing = useMemo(() => {
     if (!snapshot) return null;

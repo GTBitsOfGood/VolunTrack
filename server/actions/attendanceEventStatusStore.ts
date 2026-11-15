@@ -1,7 +1,9 @@
 import Event from "../mongodb/models/Event";
-import EventParent from "../mongodb/models/EventParent";
 import Attendance from "../mongodb/models/Attendance";
-import { withAttendanceTransaction } from "./attendanceCorrectionStore";
+import {
+  findShift,
+  withAttendanceTransaction,
+} from "./attendanceCorrectionStore";
 import { AttendanceCorrectionError } from "./attendanceCorrections";
 import type { EventStatusStore } from "./attendanceEventStatus";
 export const runEventStatusTransaction = <T>(
@@ -11,22 +13,7 @@ export const runEventStatusTransaction = <T>(
     work({
       lockShift: base.lockShift,
       writeHistory: base.writeHistory,
-      async getShift(id) {
-        const event = await Event.findById(id).session(session);
-        if (!event) return null;
-        const parent = await EventParent.findById(event.eventParent).session(
-          session
-        );
-        return parent
-          ? {
-              _id: String(event._id),
-              organizationId: String(parent.organizationId),
-              title: parent.title,
-              date: event.date,
-              isEnded: event.isEnded,
-            }
-          : null;
-      },
+      getShift: (id) => findShift(id, session),
       async hasOpenAttendance(eventId, organizationId) {
         return !!(await Attendance.exists({
           eventId,

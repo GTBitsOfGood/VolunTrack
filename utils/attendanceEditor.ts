@@ -2,6 +2,7 @@ import {
   atlantaDateTimeToInstant,
   getShiftDateTimes,
   instantToAtlantaDateTime,
+  minutesBetween,
 } from "./dates";
 
 type EditorContext = {
@@ -154,9 +155,7 @@ export const getAttendanceEditorPunches = (
   return {
     checkinTime,
     checkoutTime,
-    minutes: Math.round(
-      (checkoutTime.getTime() - checkinTime.getTime()) / 60000
-    ),
+    minutes: minutesBetween(checkinTime, checkoutTime),
   };
 };
 

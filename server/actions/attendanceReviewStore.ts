@@ -4,7 +4,10 @@ import Registration, {
 import Event from "../mongodb/models/Event";
 import EventParent from "../mongodb/models/EventParent";
 import Attendance from "../mongodb/models/Attendance";
-import { withAttendanceTransaction } from "./attendanceCorrectionStore";
+import {
+  findShift,
+  withAttendanceTransaction,
+} from "./attendanceCorrectionStore";
 import type {
   AttendanceReviewDependencies,
   NoShowDependencies,
@@ -38,23 +41,7 @@ export const runNoShowTransaction: NoShowDependencies["transaction"] = async (
         const registration = await Registration.findById(id).session(session);
         return registration ? registrationData(registration) : null;
       },
-      async getShift(id) {
-        const event = await Event.findById(id).session(session);
-        if (!event) return null;
-        const parent = await EventParent.findById(event.eventParent).session(
-          session
-        );
-        return parent
-          ? {
-              _id: event._id.toString(),
-              date: event.date,
-              organizationId: parent.organizationId.toString(),
-              title: parent.title,
-              startTime: parent.startTime,
-              endTime: parent.endTime,
-            }
-          : null;
-      },
+      getShift: (id) => findShift(id, session),
       async markNoShow(previous) {
         const saved = await Registration.findOneAndUpdate(
           {

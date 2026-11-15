@@ -1,11 +1,9 @@
 import Registration from "../mongodb/models/Registration";
-import { getClockWindow } from "./volunteerClock";
 import Attendance from "../mongodb/models/Attendance";
 import type { ClockDependencies } from "./volunteerClock";
 import { AttendanceCorrectionError } from "./attendanceCorrections";
 import {
   attendanceData,
-  runAttendanceTransaction,
   withAttendanceTransaction,
 } from "./attendanceCorrectionStore";
 
@@ -31,7 +29,7 @@ export const attendanceStore: Pick<
     return attendance ? attendanceData(attendance) : null;
   },
   async createAttendance(input) {
-    return runAttendanceTransaction(async (store) => {
+    return withAttendanceTransaction(async (store) => {
       await store.lockShift(input.eventId);
       if (await store.hasAttendance(input.userId, input.eventId)) {
         throw new AttendanceCorrectionError(
@@ -61,24 +59,13 @@ export const attendanceStore: Pick<
 
 // The public day-of flow remains a live punch, never a historical correction.
 // Its registration and attendance participate in the same creation lock.
+// The day-of route checks the organization and the check-in window first,
+// before it creates any account, so they are not repeated here.
 export const createWalkInAttendance = async (
   shift: import("./volunteerClock").ClockShift,
   user: import("./volunteerClock").ClockUser,
   now: Date
 ) => {
-  if (user.organizationId !== shift.organizationId) {
-    throw new AttendanceCorrectionError(
-      403,
-      "Volunteer and shift must belong to the same organization."
-    );
-  }
-  const window = getClockWindow(shift);
-  if (now < window.clockInOpensAt || now > window.clockInClosesAt) {
-    throw new AttendanceCorrectionError(
-      403,
-      "Day-of check-in is available only during the shift's Atlanta check-in window."
-    );
-  }
   const scope = {
     userId: user._id,
     eventId: shift._id,
