@@ -9,17 +9,29 @@ import {
   UserInputClient,
   userInputServerValidator,
 } from "../../../../server/mongodb/models/User";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
+import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
   switch (req.method) {
     case "GET": {
-      if (
-        req.query.organizationId &&
-        !isValidObjectId(req.query.organizationId as string)
-      )
-        return res.status(400).json({ message: "Invalid organization id" });
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user)
+        return res.status(401).json({ message: "Unauthorized" });
+      if (!(await isAdmin(req, res)))
+        return res.status(403).json({ message: "Forbidden" });
+
+      // Org comes from the login, never from the URL
+      const sessionOrgId = (
+        session.user as { organizationId?: string | Types.ObjectId }
+      ).organizationId;
+      if (!sessionOrgId || !isValidObjectId(String(sessionOrgId)))
+        return res.status(403).json({ message: "Forbidden" });
+      const organizationId = new Types.ObjectId(String(sessionOrgId));
+
       if (
         req.query.role &&
         !["admin", "volunteer", "manager"].includes(req.query.role as string)
@@ -28,9 +40,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (req.query.eventId && !isValidObjectId(req.query.eventId as string))
         return res.status(400).json({ message: "Invalid event id" });
 
-      const organizationId = req.query.organizationId
-        ? new Types.ObjectId(req.query.organizationId as string)
-        : undefined;
       const role = req.query.role
         ? (req.query.role as "admin" | "volunteer" | "manager")
         : undefined;

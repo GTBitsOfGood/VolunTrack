@@ -20,7 +20,7 @@ export const getUsers = async (
   const match: Partial<UserInputClient> = {};
   if (organizationId) match.organizationId = organizationId;
   if (role) match.role = role;
-  users = await User.find(match);
+  users = await User.find(match).select("-passwordHash");
 
   if (eventId) {
     const registrations = await Registration.find({
