@@ -84,12 +84,28 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   await dbConnect();
 
   const userId = req.query.id as string;
-  const user = await User.findById(userId);
+  // Responses go to the browser, so the password hash is never loaded here.
+  const user = await User.findById(userId).select("-passwordHash");
   if (!user)
     return res.status(404).json({ error: `User with id ${userId} not found` });
 
   switch (req.method) {
     case "GET": {
+      // Personal details: only the person, an admin of their organization,
+      // or a Bits of Good admin may read them.
+      const session = await getServerSession(req, res, authOptions);
+      if (!session?.user)
+        return res.status(401).json({ error: "Please sign in to continue." });
+      const viewer = session.user;
+      const isSelf = viewer._id.toString() === user._id.toString();
+      const isOrgAdmin =
+        viewer.role === "admin" &&
+        String(viewer.organizationId) === String(user.organizationId);
+      if (!isSelf && !isOrgAdmin && !viewer.isBitsOfGoodAdmin) {
+        return res
+          .status(403)
+          .json({ error: "You can only view your own account." });
+      }
       return res.status(200).json({ user });
     }
     case "PUT": {

@@ -9,6 +9,7 @@ import { Button, Label } from "flowbite-react";
 import Text from "../../components/Text";
 import { FormGroup, Input } from "reactstrap";
 import { sendResetPasswordEmail } from "../../queries/users";
+import { hasWaiverText } from "../../utils/waivers";
 
 const DayOfCheckin = () => {
   const router = useRouter();
@@ -23,9 +24,8 @@ const DayOfCheckin = () => {
     if (!shift) return;
     setEvent(shift);
     const waivers = await getWaivers("adult", shift.organizationId);
-    if (waivers?.data?.waivers?.length > 0) {
-      setAdultWaiver(waivers.data.waivers[0]?.text);
-    }
+    const waiverText = waivers?.data?.waivers?.[0]?.text;
+    if (hasWaiverText(waiverText)) setAdultWaiver(waiverText);
   };
 
   useEffect(() => {
@@ -109,7 +109,11 @@ const DayOfCheckin = () => {
                     dangerouslySetInnerHTML={{ __html: adultWaiver }}
                   />
                   <FormGroup className="ml-4 mt-2">
-                    <Input type="checkbox" onChange={changeAgreement} />
+                    <Input
+                      type="checkbox"
+                      aria-label="I agree to the above waiver"
+                      onChange={changeAgreement}
+                    />
                     <Text text="I agree to the above waiver" />
                   </FormGroup>
                 </div>
@@ -118,7 +122,9 @@ const DayOfCheckin = () => {
             <Button
               type="submit"
               onClick={handleSubmit}
-              disabled={!isValid || isSubmitting || !didAgree}
+              disabled={
+                !isValid || isSubmitting || (Boolean(adultWaiver) && !didAgree)
+              }
               className="bg-purple-700 align-middle hover:bg-purple-600"
               size="sm"
             >

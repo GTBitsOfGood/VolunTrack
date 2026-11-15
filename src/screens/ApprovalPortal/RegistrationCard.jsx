@@ -13,6 +13,10 @@ const RegistrationCard = (props) => {
   const [regCount, setRegCount] = useState(0);
   const [name, setName] = useState(null);
   const [email, setEmail] = useState(null);
+  const [phone, setPhone] = useState(null);
+  // "approved" or "denied" while that decision is saving.
+  const [saving, setSaving] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     getUser(props.registration.userId).then((response) => {
@@ -21,28 +25,29 @@ const RegistrationCard = (props) => {
           `${response.data.user.firstName} ${response.data.user.lastName}`
         );
         setEmail(`${response.data.user.email}`);
+        setPhone(response.data.user.phone || null);
       }
     });
     setRegCount(props.regCount);
   }, [props.regCount]);
 
-  const handleApprove = async () => {
+  const decide = async (status, onSaved) => {
+    setSaving(status);
+    setError("");
     try {
-      await editRegistration(props.registration._id, { approved: "approved" });
-      props.onApprove();
+      await editRegistration(props.registration._id, { approved: status });
     } catch (error) {
-      console.error("Error approving registration:", error);
+      console.error(`Error saving registration decision (${status}):`, error);
+      setError("This decision wasn't saved. Refresh the page and try again.");
+      setSaving(null);
+      return;
     }
+    onSaved();
   };
 
-  const handleDeny = async () => {
-    try {
-      await editRegistration(props.registration._id, { approved: "denied" });
-      props.onDeny();
-    } catch (error) {
-      console.error("Error denying registration:", error);
-    }
-  };
+  const handleApprove = () => decide("approved", props.onApprove);
+
+  const handleDeny = () => decide("denied", props.onDeny);
 
   return (
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
@@ -113,8 +118,7 @@ const RegistrationCard = (props) => {
           <div>
             <div className="font-semibold">Phone</div>
             <div className={`${styles.content}`}>
-              {props?.event?.eventParent?.eventContactPhone ||
-                "No Phone Number Available"}
+              {phone || "No Phone Number Available"}
             </div>
           </div>
           <div>
@@ -194,15 +198,25 @@ const RegistrationCard = (props) => {
         {props.registration.approved == "pending" ? (
           <div className="flex flex-row gap-2">
             <BoGButton
-              text={"Approve"}
+              text={saving === "approved" ? "Approving…" : "Approve"}
               className="bg-primaryColor font-semibold hover:bg-secondaryColor"
               onClick={handleApprove}
+              disabled={saving !== null}
             />
             <BoGButton
-              text={"Deny"}
+              text={saving === "denied" ? "Denying…" : "Deny"}
               className="!border-none bg-transparent font-semibold !text-red-600 hover:bg-transparent hover:text-red-700"
               onClick={handleDeny}
+              disabled={saving !== null}
             />
+            {error && (
+              <p
+                role="alert"
+                className="mb-0 self-center text-sm font-semibold text-red-600"
+              >
+                {error}
+              </p>
+            )}
           </div>
         ) : (
           <div className="flex flex-row gap-2">

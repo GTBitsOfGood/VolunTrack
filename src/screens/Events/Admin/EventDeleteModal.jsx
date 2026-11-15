@@ -29,8 +29,9 @@ const EventDeleteModal = ({ open, toggle, event, onEventDelete }) => {
 
   const handleSubmit = () => {
     setDeleting(true);
-    onEventDelete(event._id, recurringEvent);
     deleteEvent(event._id, recurringEvent).then(() => {
+      // After the server deleted it, so the list and week box reload the truth.
+      onEventDelete(event._id, recurringEvent);
       toggle();
       setDeleting(false);
     });

@@ -16,6 +16,7 @@ import BoGButton from "../../../components/BoGButton";
 import Text from "../../../components/Text";
 import variables from "../../../design-tokens/_variables.module.scss";
 import { getWaivers } from "../../../queries/waivers";
+import { hasWaiverText } from "../../../utils/waivers";
 
 const Styled = {
   ModalHeader: styled(ModalHeader)`
@@ -77,16 +78,18 @@ const EventWaiverModal = ({
 
   const loadWaivers = async () => {
     const adultWaiverResponse = await getWaivers("adult", user.organizationId);
-    if (adultWaiverResponse.data.waivers.length > 0) {
-      setAdultContent(adultWaiverResponse.data.waivers[0].text);
+    const adultText = adultWaiverResponse.data.waivers[0]?.text;
+    if (hasWaiverText(adultText)) {
+      setAdultContent(adultText);
     } else {
       setAdultContent(null);
       setWaiverCheckboxSelected(true);
     }
 
     const minorWaiverResponse = await getWaivers("minor", user.organizationId);
-    if (minorWaiverResponse.data.waivers.length > 0) {
-      setMinorContent(minorWaiverResponse.data.waivers[0].text);
+    const minorText = minorWaiverResponse.data.waivers[0]?.text;
+    if (hasWaiverText(minorText)) {
+      setMinorContent(minorText);
     } else {
       setMinorContent(null);
       setMinorWaiverCheckboxSelected(true);
@@ -138,6 +141,7 @@ const EventWaiverModal = ({
                   <FormGroup check>
                     <Input
                       type="checkbox"
+                      aria-label="I have read the waiver and agree to its terms and conditions"
                       onChange={onWaiverCheckboxClicked}
                       checked={waiverCheckboxSelected}
                     />{" "}
@@ -164,6 +168,7 @@ const EventWaiverModal = ({
                   <FormGroup check>
                     <Input
                       type="checkbox"
+                      aria-label="I have read the waiver and agree to its terms and conditions"
                       onChange={onWaiverMinorCheckboxClicked}
                       checked={waiverMinorCheckboxSelected}
                     />{" "}
@@ -207,6 +212,7 @@ const EventWaiverModal = ({
               <FormGroup check>
                 <Input
                   type="checkbox"
+                  aria-label="I have read the waiver and agree to its terms and conditions"
                   onChange={onWaiverCheckboxClicked}
                   checked={waiverCheckboxSelected}
                 />{" "}

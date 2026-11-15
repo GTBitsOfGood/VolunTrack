@@ -187,6 +187,9 @@ const EventManager = ({ isHomePage }) => {
   const [showBack, setShowBack] = useState(false);
 
   const [events, setEvents] = useState([]);
+  // Bumped after a create, edit or delete so the week box reloads too.
+  const [weekBoxVersion, setWeekBoxVersion] = useState(0);
+  const refreshWeekBox = () => setWeekBoxVersion((version) => version + 1);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const [attendances, setAttendances] = useState([]);
@@ -318,11 +321,13 @@ const EventManager = ({ isHomePage }) => {
   const toggleCreateModal = () => {
     setShowCreateModal((prev) => !prev);
     onRefresh();
+    refreshWeekBox();
   };
 
   const toggleResponseModal = () => {
     setShowResponseModal((prev) => !prev);
     onRefresh();
+    refreshWeekBox();
   };
   useEffect(() => {
     onRefresh();
@@ -480,6 +485,7 @@ const EventManager = ({ isHomePage }) => {
   };
 
   const onEventDelete = (id, recurringEvent) => {
+    refreshWeekBox();
     if (recurringEvent) {
       const eventParentId = events.find((event) => event._id === id).eventParent
         ._id;
@@ -503,6 +509,7 @@ const EventManager = ({ isHomePage }) => {
   };
 
   const onEventEdit = (id, eventParentId, recurringEvent) => {
+    refreshWeekBox();
     if (recurringEvent) {
       const eventDate = events.find((event) => event._id === id).date;
       setEvents(
@@ -557,7 +564,10 @@ const EventManager = ({ isHomePage }) => {
               />
             </div>
             {user.role === "admin" && (
-              <ShiftWeekPanel selectedDate={selectedDate} />
+              <ShiftWeekPanel
+                selectedDate={selectedDate}
+                refreshKey={weekBoxVersion}
+              />
             )}
           </div>
           <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">

@@ -144,13 +144,18 @@ const EventCard = (props) => {
                   <button
                     className="mx-1 cursor-not-allowed text-gray-400"
                     disabled
+                    aria-label="Edit event"
                   >
                     <PencilIcon className="h-4 md:h-8" />
                   </button>
                 </div>
               ) : (
                 <Tooltip content="Edit" style="light">
-                  <button className="mx-1" onClick={editOnClick}>
+                  <button
+                    className="mx-1"
+                    onClick={editOnClick}
+                    aria-label="Edit event"
+                  >
                     <PencilIcon className="h-4 text-primaryColor md:h-8" />
                   </button>
                 </Tooltip>
@@ -160,24 +165,33 @@ const EventCard = (props) => {
                   <button
                     className="mx-1 cursor-not-allowed text-gray-400"
                     disabled
+                    aria-label="Delete event"
                   >
                     <TrashIcon className="h-4 md:h-8" />
                   </button>
                 </div>
               ) : (
                 <Tooltip content="Delete" style="light">
-                  <button className="mx-1" onClick={deleteOnClick}>
+                  <button
+                    className="mx-1"
+                    onClick={deleteOnClick}
+                    aria-label="Delete event"
+                  >
                     <TrashIcon className="h-4 text-primaryColor md:h-8" />
                   </button>
                 </Tooltip>
               )}
               <Tooltip content="Manage Attendance" style="light">
-                <button className="mx-1" onClick={manageAttendanceOnClick}>
+                <button
+                  className="mx-1"
+                  onClick={manageAttendanceOnClick}
+                  aria-label="Manage attendance"
+                >
                   <UsersIcon className="h-4 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <div className="w-fits">
-                <button className="mx-1" onClick={open}>
+                <button className="mx-1" onClick={open} aria-label="Open event">
                   <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor md:h-8" />
                 </button>
               </div>
