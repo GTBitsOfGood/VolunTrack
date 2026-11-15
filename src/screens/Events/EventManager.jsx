@@ -23,6 +23,7 @@ import Text from "../../components/Text";
 import PaginationComp from "../../components/PaginationComp";
 import LoadingModal from "./LoadingModal";
 import EventResponseModal from "./Admin/EventResponseModal";
+import ShiftWeekPanel from "../ShiftCalendar/ShiftWeekPanel";
 
 const Styled = {
   Container: styled.div`
@@ -50,7 +51,11 @@ const Styled = {
     }
   `,
   Calendar: styled(Calendar)`
-    max-width: 22vw;
+    /* Phones: use the full column. Laptops (768px and up): unchanged. */
+    max-width: 100%;
+    @media (min-width: 768px) {
+      max-width: 22vw;
+    }
     border: none;
     .react-calendar__navigation {
       border-bottom: none;
@@ -551,6 +556,9 @@ const EventManager = ({ isHomePage }) => {
                 locale="en-US"
               />
             </div>
+            {user.role === "admin" && (
+              <ShiftWeekPanel selectedDate={selectedDate} />
+            )}
           </div>
           <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
             <div className="flex flex-col lg:w-5/6">
