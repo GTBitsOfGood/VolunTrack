@@ -27,14 +27,7 @@ export const changePasswordValidator = object().shape({
 });
 
 export const loginValidator = object().shape({
-  email: string()
-    .required("Email is required")
-    .test(
-      "lowercase-no-spaces",
-      "Email must be lowercase and contain no spaces",
-      (value) => !value || !/[A-Z\s]/.test(value)
-    )
-    .email("Invalid email"),
+  email: string().trim().required("Email is required").email("Invalid email"),
   password: string()
     .required("No password provided.")
     .min(10, "Password is too short - should be 10 chars minimum."),

@@ -27,21 +27,17 @@ const StatDisplay = ({ userId }) => {
   let user = session.user;
 
   const onSubmitValues = (values, setSubmitting) => {
-    let offset = new Date().getTimezoneOffset();
-
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      let start = new Date(values.startDate);
-      start.setMinutes(start.getMinutes() - offset);
+      let start = values.startDate;
       setStartDate(start);
     }
 
     if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      let end = new Date(values.endDate);
-      end.setMinutes(end.getMinutes() - offset);
+      let end = values.endDate;
       setEndDate(end);
     }
   };
@@ -101,8 +97,16 @@ const StatDisplay = ({ userId }) => {
           }}
           render={({ handleSubmit }) => (
             <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
-              <InputField label="From" name="startDate" type="datetime-local" />
-              <InputField label="To" name="endDate" type="datetime-local" />
+              <InputField
+                label="From (Atlanta time)"
+                name="startDate"
+                type="datetime-local"
+              />
+              <InputField
+                label="To (Atlanta time)"
+                name="endDate"
+                type="datetime-local"
+              />
               <BoGButton
                 className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
                 text="Search"

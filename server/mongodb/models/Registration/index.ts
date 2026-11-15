@@ -25,6 +25,7 @@ const registrationSchema = new Schema(
       default: "approved",
     },
     tasks: { type: [String], default: [] },
+    noShow: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

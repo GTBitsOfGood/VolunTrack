@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import { attendanceHours } from "../../utils/hours";
+import { attendanceHours, formatDurationHours } from "../../utils/hours";
 import { getAtlantaMonthIndex } from "../../utils/dates";
 
 const AdminHomeHeader = (props) => {
@@ -49,18 +49,12 @@ const AdminHomeHeader = (props) => {
   }
   for (let i = 0; i < props.attendances.length; i++) {
     const month = getAtlantaMonthIndex(props.attendances[i].checkinTime);
-    if (month < 0) continue; // no readable check-in date to chart
+    if (month < 0) continue;
     const duration = attendanceHours(props.attendances[i]);
     hoursData[month] += duration;
     hoursTotal += duration;
     attendanceData[month] += 1;
     attendanceTotal += 1;
-
-    // rounding
-    for (let i = 0; i < hoursData.length; i++) {
-      hoursData[i] = Math.round(hoursData[i] * 100) / 100;
-    }
-    hoursTotal = Math.round(hoursTotal * 100) / 100;
   }
 
   const borderColor = "#374151";
@@ -91,6 +85,10 @@ const AdminHomeHeader = (props) => {
       enabled: false,
     },
     tooltip: {
+      y: {
+        formatter: (value, { seriesIndex }) =>
+          seriesIndex === 1 ? formatDurationHours(value) : value,
+      },
       style: {
         fontSize: "14px",
         fontFamily: "Inter, sans-serif",
@@ -201,6 +199,7 @@ const AdminHomeHeader = (props) => {
 
   return (
     <div className="w-full flex-col md:w-auto">
+      {props.attendanceReminders}
       <p className="font-weight-bold mt-2 text-2xl">Overview</p>
       <div className="mb-2 flex flex-col md:flex-row">
         <div className="flex-column">
@@ -249,8 +248,10 @@ const AdminHomeHeader = (props) => {
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{hoursTotal}</p>
-                <p className="text-md mb-0 pl-2 text-slate-600"> Hours</p>
+                <p className="mb-0 pl-2 text-2xl">
+                  {formatDurationHours(hoursTotal)}
+                </p>
+                <p className="text-md mb-0 pl-2 text-slate-600"> Total time</p>
               </div>
             </div>
           </div>
@@ -273,6 +274,7 @@ const AdminHomeHeader = (props) => {
 };
 
 AdminHomeHeader.propTypes = {
+  attendanceReminders: PropTypes.node,
   events: PropTypes.array.isRequired,
   attendances: PropTypes.array.isRequired,
   registrations: PropTypes.array.isRequired,

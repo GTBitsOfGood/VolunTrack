@@ -1,3 +1,6 @@
+import { createAttendanceEventStatusHandler } from "../../../../server/actions/attendanceEventStatus";
+import { runEventStatusTransaction } from "../../../../server/actions/attendanceEventStatusStore";
+import { attendanceCorrectionDependencies } from "../../../../server/actions/attendanceCorrectionDependencies";
 import { getServerSession } from "next-auth/next";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import {
@@ -18,6 +21,14 @@ import { authOptions } from "../auth/[...nextauth]";
 import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  if (req.method === "PATCH")
+    return createAttendanceEventStatusHandler({
+      getUser: attendanceCorrectionDependencies.getUser,
+      async transaction(work) {
+        await dbConnect();
+        return runEventStatusTransaction(work);
+      },
+    })(req, res);
   await dbConnect();
   const eventId = req.query.id as string;
 

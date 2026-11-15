@@ -43,12 +43,12 @@ const InputField = (props) => (
           name={props.name}
           {...field}
           type={props.type ?? "text"}
-          inputMode={props.inputMode}
           placeholder={props.placeholder}
           disabled={props.disabled}
           maxLength={props.maxLength}
           min={props.min}
           max={props.max}
+          step={props.step}
         />
       )}
     </Field>
@@ -67,12 +67,12 @@ InputField.propTypes = {
   isRequired: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.string,
-  inputMode: PropTypes.string,
   className: PropTypes.string,
   tooltip: PropTypes.string,
   maxLength: PropTypes.number,
   min: PropTypes.number,
   max: PropTypes.number,
+  step: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   isEmptyOrInvalid: PropTypes.bool,
 };
 

@@ -40,3 +40,10 @@ export type RegistrationInputClient = z.infer<
 export type RegistrationInputServer = z.infer<
   typeof registrationInputServerValidator
 >;
+
+// Keep this decision separate from public signup and generic registration edits.
+export const registrationNoShowServerValidator = z
+  .object({
+    noShow: z.literal(true),
+  })
+  .strict();
