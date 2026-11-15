@@ -18,22 +18,22 @@ const DayOfCheckin = () => {
   let [adultWaiver, setAdultWaiver] = useState();
 
   const onRefresh = async () => {
-    await getEvent(eventId).then(async (result) => {
-      setEvent(result.data.event.eventParent);
-      await getWaivers(
-        "adult",
-        result.data.event.eventParent.organizationId
-      ).then((result) => {
-        if (result.data.waivers.length > 0) {
-          setAdultWaiver(result.data.waivers[0]?.text);
-        }
-      });
-    });
+    const result = await getEvent(eventId);
+    const shift = result?.data?.event?.eventParent;
+    if (!shift) return;
+    setEvent(shift);
+    const waivers = await getWaivers("adult", shift.organizationId);
+    if (waivers?.data?.waivers?.length > 0) {
+      setAdultWaiver(waivers.data.waivers[0]?.text);
+    }
   };
 
   useEffect(() => {
+    // The shift id comes from the web address, which is still empty on the
+    // first render of a direct visit (every QR scan). Load once it is known.
+    if (!eventId) return;
     onRefresh();
-  }, []);
+  }, [eventId]);
 
   const checkIn = async (values) => {
     const createUserVals = {

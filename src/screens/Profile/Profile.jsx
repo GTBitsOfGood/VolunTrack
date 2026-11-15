@@ -15,9 +15,17 @@ const Profile = () => {
   const [profileValues, setProfileValues] = useState(user);
 
   const handleSubmit = async (values) => {
-    await updateUser(user._id, values);
+    const result = await updateUser(user._id, values);
 
     context.startLoading();
+    if (result?.error) {
+      context.failed(
+        typeof result.error === "string"
+          ? result.error
+          : "Your profile could not be saved. Please try again."
+      );
+      return;
+    }
     context.success("Profile successfully updated!");
     router.reload();
   };

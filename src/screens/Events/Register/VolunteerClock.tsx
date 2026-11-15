@@ -17,7 +17,13 @@ const formatTime = (time: string) =>
     timeZoneName: "short",
   });
 
-const VolunteerClock = ({ eventId }: { eventId: string }) => {
+const VolunteerClock = ({
+  eventId,
+  onStatusChange,
+}: {
+  eventId: string;
+  onStatusChange?: (status: VolunteerClockStatus | null) => void;
+}) => {
   const [status, setStatus] = useState<VolunteerClockStatus | null>(null);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(true);
@@ -25,6 +31,11 @@ const VolunteerClock = ({ eventId }: { eventId: string }) => {
   const mounted = useRef(false);
   const busy = useRef(false);
   const requestVersion = useRef(0);
+
+  // Lets the page react to a clock record (it hides Cancel Registration).
+  useEffect(() => {
+    onStatusChange?.(status);
+  }, [status, onStatusChange]);
 
   const refresh = useCallback(
     async (clearError = true) => {

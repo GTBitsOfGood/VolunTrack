@@ -1,30 +1,84 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { useEffect, useMemo, useState } from "react";
+import { getAttendances } from "../../queries/attendances";
+import { getRegistrations } from "../../queries/registrations";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
+import { formatAtlantaDate } from "../../../utils/dates";
 import TimesheetCard from "./TimesheetCard";
 
-const VolunteerTimesheets = () => {
-  const [logs, setLogs] = useState([]);
+// Hours typed into the old "Log Hours" form (before clock in and out).
+const fromTypedLog = (log) => ({
+  id: log._id,
+  kind: "typed",
+  name:
+    log.userId?.firstName != null && log.userId?.lastName != null
+      ? `${log.userId.firstName} ${log.userId.lastName}`
+      : "—",
+  eventName: log.eventId?.eventParent?.title ?? "—",
+  tasks: log.eventId?.eventParent?.tasks ?? [],
+  date: log.eventId?.date
+    ? new Date(log.eventId.date).toISOString().slice(0, 10)
+    : formatAtlantaDate(log.inTime),
+  start: log.inTime,
+  end: log.outTime,
+});
+
+// A finished Clock In / Clock Out record, with the tasks chosen at sign-up.
+const fromClockRecord = (attendance, tasksBySignUp) => ({
+  id: attendance._id,
+  kind: "clock",
+  name: attendance.volunteerName || "—",
+  eventName: attendance.eventName || "—",
+  tasks: tasksBySignUp.get(`${attendance.userId}:${attendance.eventId}`) ?? [],
+  date: formatAtlantaDate(attendance.checkinTime),
+  start: attendance.checkinTime,
+  end: attendance.checkoutTime,
+});
+
+const VolunteerTimesheets = ({ user }) => {
+  const [entries, setEntries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [deletingLogId, setDeletingLogId] = useState(null);
 
   useEffect(() => {
-    axios
-      .get("/api/volunteer-logs")
-      .then((response) => {
-        if (response?.data?.logs) {
-          setLogs(response.data.logs);
-        }
-      })
-      .catch(() => {
-        setLogs([]);
+    const organizationId = user.organizationId;
+    Promise.all([
+      axios
+        .get("/api/volunteer-logs")
+        .then((response) => response?.data?.logs ?? [])
+        .catch(() => []),
+      getAttendances({ organizationId }).then(
+        (response) => response?.data?.attendances ?? []
+      ),
+      getRegistrations({ organizationId }).then(
+        (response) => response?.data?.registrations ?? []
+      ),
+    ])
+      .then(([logs, attendances, registrations]) => {
+        const tasksBySignUp = new Map(
+          registrations.map((registration) => [
+            `${registration.userId}:${registration.eventId}`,
+            registration.tasks ?? [],
+          ])
+        );
+        const clockEntries = attendances
+          .filter(
+            (attendance) => attendance.checkinTime && attendance.checkoutTime
+          )
+          .map((attendance) => fromClockRecord(attendance, tasksBySignUp));
+        setEntries(
+          [...logs.map(fromTypedLog), ...clockEntries].sort(
+            (a, b) => new Date(b.start) - new Date(a.start)
+          )
+        );
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [user.organizationId]);
 
   const onDeleteLog = async (logId) => {
     if (!logId) return;
@@ -33,32 +87,22 @@ const VolunteerTimesheets = () => {
       await axios.delete("/api/volunteer-logs", {
         params: { logId },
       });
-      setLogs((prevLogs) => prevLogs.filter((log) => log._id !== logId));
+      setEntries((prev) => prev.filter((entry) => entry.id !== logId));
     } finally {
       setDeletingLogId(null);
     }
   };
 
-  const filteredLogs = useMemo(() => {
-    if (!searchValue.trim()) return logs;
+  const filteredEntries = useMemo(() => {
+    if (!searchValue.trim()) return entries;
     const lower = searchValue.toLowerCase().trim();
-    return logs.filter((log) => {
-      const contactName =
-        log.userId?.firstName != null && log.userId?.lastName != null
-          ? `${log.userId.firstName} ${log.userId.lastName}`.toLowerCase()
-          : "";
-      const eventName = (log.eventId?.eventParent?.title ?? "").toLowerCase();
-      const tasks = log.eventId?.eventParent?.tasks ?? [];
-      const tasksStr = (
-        Array.isArray(tasks) ? tasks.join(" ") : ""
-      ).toLowerCase();
-      return (
-        contactName.includes(lower) ||
-        eventName.includes(lower) ||
-        tasksStr.includes(lower)
-      );
-    });
-  }, [logs, searchValue]);
+    return entries.filter(
+      (entry) =>
+        entry.name.toLowerCase().includes(lower) ||
+        entry.eventName.toLowerCase().includes(lower) ||
+        entry.tasks.join(" ").toLowerCase().includes(lower)
+    );
+  }, [entries, searchValue]);
 
   if (loading) {
     return (
@@ -76,7 +120,7 @@ const VolunteerTimesheets = () => {
 
       <div className="flex flex-row items-center justify-between gap-4">
         <span className="text-base font-bold text-gray-600">
-          Timesheet History ({filteredLogs.length})
+          Timesheet History ({filteredEntries.length})
         </span>
         <div className="relative">
           <MagnifyingGlassIcon
@@ -95,13 +139,13 @@ const VolunteerTimesheets = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        {filteredLogs.length > 0 ? (
-          filteredLogs.map((log) => (
+        {filteredEntries.length > 0 ? (
+          filteredEntries.map((entry) => (
             <TimesheetCard
-              key={log._id}
-              log={log}
-              onDelete={onDeleteLog}
-              isDeleting={deletingLogId === log._id}
+              key={`${entry.kind}:${entry.id}`}
+              entry={entry}
+              onDelete={entry.kind === "typed" ? onDeleteLog : undefined}
+              isDeleting={deletingLogId === entry.id}
             />
           ))
         ) : (
@@ -113,6 +157,10 @@ const VolunteerTimesheets = () => {
       </div>
     </div>
   );
+};
+
+VolunteerTimesheets.propTypes = {
+  user: PropTypes.object.isRequired,
 };
 
 export default AdminAuthWrapper(VolunteerTimesheets);

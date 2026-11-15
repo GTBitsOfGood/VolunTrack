@@ -152,6 +152,23 @@ const EventAttendance = ({ user }) => {
     [snapshot, now]
   );
   const pastEnd = timing ? now > timing.end : false;
+  // Check In opens 30 minutes before the shift, the same as a volunteer's
+  // Clock In, so an early click can't add hours nobody worked.
+  const checkInOpensMillis = timing
+    ? timing.start.getTime() - 30 * 60 * 1000
+    : null;
+  useEffect(() => {
+    if (checkInOpensMillis == null) return;
+    const remaining = checkInOpensMillis + 1 - Date.now();
+    if (remaining <= 0) return;
+    const timer = window.setTimeout(
+      () => setNow(new Date()),
+      Math.min(remaining, 2147483647)
+    );
+    return () => window.clearTimeout(timer);
+  }, [checkInOpensMillis]);
+  const checkInNotOpen =
+    checkInOpensMillis != null && now.getTime() < checkInOpensMillis;
   const clockLabel = (value) =>
     new Intl.DateTimeFormat("en-US", {
       timeZone: "America/New_York",
@@ -160,6 +177,8 @@ const EventAttendance = ({ user }) => {
     }).format(value);
   const startLabel = timing ? clockLabel(timing.start) : "";
   const endLabel = timing ? clockLabel(timing.end) : "";
+  const checkInOpensLabel =
+    checkInOpensMillis != null ? clockLabel(new Date(checkInOpensMillis)) : "";
   const disabled =
     busy || loading || !!loadError || !!editor || !!selection || !!deleting;
 
@@ -372,6 +391,8 @@ const EventAttendance = ({ user }) => {
               disabled={disabled}
               pastEnd={pastEnd}
               endLabel={endLabel}
+              checkInNotOpen={checkInNotOpen}
+              checkInOpensLabel={checkInOpensLabel}
               onEdit={openEditor}
               onCheckIn={checkIn}
               onCheckOut={checkOut}
