@@ -7,6 +7,7 @@ import {
 } from "../../utils/attendance";
 import { registrationNoShowServerValidator } from "../mongodb/models/Registration/validators";
 import { AttendanceCorrectionError } from "./attendanceCorrections";
+import { formatHistoryRange } from "./attendanceHistory";
 import type {
   CorrectionDependencies,
   CorrectionHistory,
@@ -145,19 +146,24 @@ const noShowHistory = (
   previous: ReviewRegistration,
   shift: ReviewShift,
   volunteerName: string
-): CorrectionHistory => ({
-  keyword: "EDITED",
-  userId: actor._id,
-  organizationId: previous.organizationId,
-  eventId: previous.eventId,
-  description: `${actor.firstName} ${actor.lastName} (${
-    actor._id
-  }) marked "Didn't come" for ${volunteerName} (${previous.userId}) at ${
-    shift.title
-  } (${shift._id}), ${occurrenceDate(shift.date)} ${shift.startTime}–${
+): CorrectionHistory => {
+  const { start, end } = getShiftDateTimes(
+    shift.date,
+    shift.startTime,
     shift.endTime
-  } America/New_York; registration ${previous._id}`,
-});
+  );
+  return {
+    keyword: "EDITED",
+    userId: actor._id,
+    organizationId: previous.organizationId,
+    eventId: previous.eventId,
+    description: `${actor.firstName} ${
+      actor.lastName
+    } marked ${volunteerName} as "Didn't come" for ${
+      shift.title
+    } (${formatHistoryRange(start, end)})`,
+  };
+};
 
 const respondToError = (
   res: NextApiResponse,

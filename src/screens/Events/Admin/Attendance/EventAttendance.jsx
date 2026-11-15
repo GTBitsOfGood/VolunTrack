@@ -157,13 +157,14 @@ const EventAttendance = ({ user }) => {
     [snapshot, now]
   );
   const pastEnd = timing ? now > timing.end : false;
-  const endLabel = timing
-    ? new Intl.DateTimeFormat("en-US", {
-        timeZone: "America/New_York",
-        hour: "numeric",
-        minute: "2-digit",
-      }).format(timing.end)
-    : "";
+  const clockLabel = (value) =>
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(value);
+  const startLabel = timing ? clockLabel(timing.start) : "";
+  const endLabel = timing ? clockLabel(timing.end) : "";
   const disabled =
     busy || loading || !!loadError || !!editor || !!selection || !!deleting;
 
@@ -350,8 +351,8 @@ const EventAttendance = ({ user }) => {
           <div className="my-4 rounded-xl bg-grey px-6 py-3">
             <h2 className="text-xl font-bold">{event.eventParent.title}</h2>
             <p>
-              {event.date.substring(0, 10)}, {event.eventParent.startTime} –{" "}
-              {event.eventParent.endTime} (Atlanta time, America/New_York)
+              {event.date.substring(0, 10)}, {startLabel} - {endLabel} (Atlanta
+              time)
             </p>
             <p>
               {event.eventParent.address} {event.eventParent.city}{" "}

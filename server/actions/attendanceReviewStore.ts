@@ -11,6 +11,11 @@ import type {
   ReviewRegistration,
 } from "./attendanceReview";
 
+// The home-page reminder only looks back this far. Older shifts predate
+// "Didn't come", so every old no-show would otherwise count as missing.
+const REVIEW_WINDOW_DAYS = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 const registrationData = (
   registration: RegistrationDocument
 ): ReviewRegistration => ({
@@ -82,9 +87,11 @@ export const loadAttendanceReview: AttendanceReviewDependencies["loadReview"] =
     // the shared Atlanta helper, not this coarse query, determines scheduled end.
     const dateCutoff = new Date(now.getTime());
     dateCutoff.setUTCHours(23, 59, 59, 999);
+    const windowStart = new Date(now.getTime() - REVIEW_WINDOW_DAYS * DAY_MS);
+    windowStart.setUTCHours(0, 0, 0, 0);
     const events = await Event.find({
       eventParent: { $in: parents.map((parent) => parent._id) },
-      date: { $lte: dateCutoff },
+      date: { $gte: windowStart, $lte: dateCutoff },
     })
       .select("date eventParent")
       .lean();
