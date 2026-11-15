@@ -124,8 +124,11 @@ const EventRegister = () => {
   const [capacityError, setCapacityError] = useState("");
 
   useEffect(() => {
+    // The event ID comes from the web address and can arrive after the page
+    // first renders. Load once it is known, and again after each sign-up.
+    if (!eventId) return;
     onLoadEvent();
-  }, [refreshTrigger]);
+  }, [eventId, refreshTrigger]);
 
   const onLoadEvent = () => {
     getEvent(eventId)
@@ -328,9 +331,7 @@ const EventRegister = () => {
             <Text
               className="min-w-max"
               type="subheader"
-              text={`/${
-                isEventFull ? "undefined" : event.eventParent.maxVolunteers
-              } spots remaining`}
+              text={`/${event.eventParent.maxVolunteers} spots remaining`}
             ></Text>
           </div>
         )}
