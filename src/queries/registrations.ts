@@ -105,3 +105,29 @@ export const editRegistration = async (
     throw error;
   }
 };
+
+export const markRegistrationNoShow = async (
+  registrationId: Types.ObjectId | string
+) => {
+  try {
+    return await axios.patch<{
+      registration?: RegistrationDocument;
+      error?: string;
+    }>(`/api/registrations/${registrationId.toString()}`, { noShow: true });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const data: unknown = error.response?.data;
+      return {
+        error:
+          typeof data === "object" &&
+          data !== null &&
+          "error" in data &&
+          typeof data.error === "string"
+            ? data.error
+            : "No-show decision was not saved. Refresh and try again.",
+        status: error.response?.status,
+      };
+    }
+    return { error: "No-show decision was not saved. Refresh and try again." };
+  }
+};

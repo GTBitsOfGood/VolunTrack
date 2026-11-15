@@ -1,26 +1,43 @@
-// Saved minutes -> hours with one decimal (e.g. 3 -> 0.1). Missing/invalid -> 0.
-// Dividing by 6 turns minutes into tenths of an hour.
-export const minutesToHours = (minutes: number | null | undefined): number => {
-  const value = Number(minutes);
-  if (!Number.isFinite(value) || value <= 0) return 0;
-  return Math.round(value / 6) / 10;
-};
+import { minutesBetween } from "./dates";
 
 type SavedShift = {
-  checkoutTime?: string | Date | null;
+  checkinTime?: Date | string | null;
+  checkoutTime?: Date | string | null;
   minutes?: number | null;
 };
 
-// One shift's hours. A shift with no clock-out counts as 0.
-export const attendanceHours = (shift: SavedShift): number =>
-  shift.checkoutTime ? minutesToHours(shift.minutes) : 0;
+export const minutesToHours = (minutes: number | null | undefined): number =>
+  typeof minutes === "number" && Number.isFinite(minutes) && minutes > 0
+    ? minutes / 60
+    : 0;
 
-// All shifts added up, kept to one decimal.
-export const totalHours = (shifts: SavedShift[]): number => {
-  const sum = shifts.reduce((acc, shift) => acc + attendanceHours(shift), 0);
-  return Math.round(sum * 10) / 10;
+// Saved minutes are authoritative. Older records without minutes use punches.
+const attendanceMinutes = (shift: SavedShift): number => {
+  if (!shift.checkinTime || !shift.checkoutTime) return 0;
+  const duration =
+    new Date(shift.checkoutTime).getTime() -
+    new Date(shift.checkinTime).getTime();
+  if (!Number.isFinite(duration) || duration < 0) return 0;
+  return shift.minutes == null
+    ? minutesBetween(shift.checkinTime, shift.checkoutTime)
+    : typeof shift.minutes === "number" &&
+      Number.isFinite(shift.minutes) &&
+      shift.minutes > 0
+    ? shift.minutes
+    : 0;
 };
 
-// What the tables show, like "2.5 hour(s)".
+export const attendanceHours = (shift: SavedShift): number =>
+  minutesToHours(attendanceMinutes(shift));
+
+// Sum whole saved minutes before converting to avoid per-record rounding.
+export const totalHours = (shifts: SavedShift[]): number =>
+  shifts.reduce((sum, shift) => sum + attendanceMinutes(shift), 0) / 60;
+
+export const formatDurationHours = (hours: number): string => {
+  const minutes =
+    Number.isFinite(hours) && hours > 0 ? Math.round(hours * 60) : 0;
+  return `${Math.floor(minutes / 60)} hr ${minutes % 60} min`;
+};
 export const formatHours = (shift: SavedShift): string =>
-  `${attendanceHours(shift)} hour(s)`;
+  formatDurationHours(attendanceHours(shift));
