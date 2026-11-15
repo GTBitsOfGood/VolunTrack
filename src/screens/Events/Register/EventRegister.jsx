@@ -124,8 +124,11 @@ const EventRegister = () => {
   const [capacityError, setCapacityError] = useState("");
 
   useEffect(() => {
+    // The event ID comes from the web address and can arrive after the page
+    // first renders. Load once it is known, and again after each sign-up.
+    if (!eventId) return;
     onLoadEvent();
-  }, [refreshTrigger]);
+  }, [eventId, refreshTrigger]);
 
   const onLoadEvent = () => {
     getEvent(eventId)
@@ -322,14 +325,16 @@ const EventRegister = () => {
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <Text type="header" text="Confirm Registration"></Text>
-        <div className="flex items-end">
-          <Text type="header" text={availableSlots}></Text>
-          <Text
-            className="min-w-max"
-            type="subheader"
-            text={`/${event?.eventParent?.maxVolunteers} Spots Remaining`}
-          ></Text>
-        </div>
+        {event?.eventParent && (
+          <div className="flex items-end self-end sm:self-auto">
+            <Text type="header" text={availableSlots}></Text>
+            <Text
+              className="min-w-max"
+              type="subheader"
+              text={`/${event.eventParent.maxVolunteers} spots remaining`}
+            ></Text>
+          </div>
+        )}
       </div>
       <div className="mt-8 flex flex-row items-center">
         <Text text="Event Information" type="subheader" />

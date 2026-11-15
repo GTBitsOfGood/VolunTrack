@@ -116,20 +116,6 @@ export const createHistoryEventInviteAdmin = (
     });
 };
 
-export const createHistoryEventAttendanceEdited = (
-  user: UserDocument,
-  attendance: AttendanceDocument
-) => {
-  if (user.organizationId)
-    return createHistoryEvent({
-      keyword: "EDITED",
-      description: `${user.firstName} ${user.lastName} edited ${attendance.volunteerName}'s attendance for event ${attendance.eventName}`,
-      userId: user._id,
-      organizationId: user.organizationId,
-      eventId: attendance.eventId,
-    });
-};
-
 export const createHistoryEventAttendanceDeleted = (
   user: UserDocument,
   attendance: AttendanceDocument

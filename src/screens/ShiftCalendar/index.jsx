@@ -4,37 +4,16 @@ import BoGButton from "../../components/BoGButton";
 import Text from "../../components/Text";
 import { getShiftCalendar } from "../../queries/shiftCalendar";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-// Dates are handled as "YYYY-MM-DD" strings in UTC, matching how Event.date is stored.
-const toDay = (ms) => new Date(ms).toISOString().slice(0, 10);
-const fromDay = (day) => new Date(`${day}T00:00:00.000Z`).getTime();
-
-// "Today" in Atlanta, so an admin at 9 PM isn't moved to tomorrow's week
-const atlantaToday = () =>
-  new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(
-    new Date()
-  );
-
-const sundayOnOrBefore = (day) => {
-  const ms = fromDay(day);
-  return toDay(ms - new Date(ms).getUTCDay() * DAY_MS);
-};
-
-const formatDay = (day) =>
-  new Date(`${day}T00:00:00.000Z`).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
-  });
-
-const formatTime = (time) => {
-  const [hour, min] = time.split(":");
-  const hours = parseInt(hour, 10);
-  return `${((hours + 11) % 12) + 1}:${min}${hours > 11 ? "pm" : "am"}`;
-};
+import {
+  DAY_MS,
+  addWeeks,
+  atlantaToday,
+  formatDay,
+  formatTime,
+  fromDay,
+  sundayOnOrBefore,
+  toDay,
+} from "./weekDates";
 
 const ShiftCalendar = () => {
   const [weekStart, setWeekStart] = useState(() =>
@@ -67,7 +46,7 @@ const ShiftCalendar = () => {
   }, [weekStart]);
 
   const shiftWeek = (weeks) =>
-    setWeekStart((current) => toDay(fromDay(current) + weeks * 7 * DAY_MS));
+    setWeekStart((current) => addWeeks(current, weeks));
   const goToThisWeek = () => setWeekStart(sundayOnOrBefore(atlantaToday()));
 
   const downloadImage = async () => {

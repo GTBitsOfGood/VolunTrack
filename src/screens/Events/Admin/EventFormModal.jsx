@@ -64,13 +64,13 @@ const EventFormModal = ({
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
   const [isNotifyAdmin, setisNotifyAdmin] = useState(
-    event?.eventParent?.isNotifyAdmin ?? false
+    event?.eventParent?.isNotifyAdmin ?? !event
   );
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.eventParent?.isValidForCourtHours ?? false
   );
   const [sendReminderEmail, setSendReminderEmail] = useState(
-    event?.eventParent?.sendReminderEmail ?? false
+    event?.eventParent?.sendReminderEmail ?? !event
   );
   const [requiresApproval, setRequiresApproval] = useState(
     event?.eventParent?.requiresApproval ?? false
@@ -100,8 +100,8 @@ const EventFormModal = ({
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
-    if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
-    if (sendReminderEmail) event.eventParent.sendReminderEmail = true;
+    event.eventParent.isNotifyAdmin = isNotifyAdmin;
+    event.eventParent.sendReminderEmail = sendReminderEmail;
     if (requiresApproval) event.eventParent.requiresApproval = true;
 
     createEvent(event)
@@ -457,8 +457,8 @@ const EventFormModal = ({
           isPrivate: event?.eventParent?.isPrivate ?? isGroupEvent,
           isValidForCourtHours:
             event?.eventParent?.isValidForCourtHours ?? false,
-          isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
-          sendReminderEmail: event?.eventParent?.sendReminderEmail ?? false,
+          isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? !event,
+          sendReminderEmail: event?.eventParent?.sendReminderEmail ?? !event,
           requiresApproval: event?.eventParent?.requiresApproval ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
