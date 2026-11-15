@@ -22,6 +22,7 @@ import Text from "../../components/Text";
 import PaginationComp from "../../components/PaginationComp";
 import LoadingModal from "./LoadingModal";
 import EventResponseModal from "./Admin/EventResponseModal";
+import { useRouter } from "next/router";
 
 const Styled = {
   Container: styled.div`
@@ -169,6 +170,7 @@ const Styled = {
 const EventManager = ({ isHomePage }) => {
   const { data: session } = useSession();
   const user = session.user;
+  const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   // const [filterOn, setFilterOn] = useState(false);
@@ -604,7 +606,14 @@ const EventManager = ({ isHomePage }) => {
                   )}
                 </Dropdown>
                 {user.role === "admin" && (
-                  <BoGButton text="Create event" onClick={onCreateClicked} />
+                  <div className="flex items-center gap-2">
+                    <BoGButton
+                      text="Shift Calendar"
+                      outline={true}
+                      onClick={() => router.push("/shift-calendar")}
+                    />
+                    <BoGButton text="Create event" onClick={onCreateClicked} />
+                  </div>
                 )}
               </div>
               <div className="mt-8">
