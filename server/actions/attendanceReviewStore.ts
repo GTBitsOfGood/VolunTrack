@@ -38,7 +38,9 @@ export const runNoShowTransaction: NoShowDependencies["transaction"] = async (
     work({
       ...shared,
       async getRegistration(id) {
-        const registration = await Registration.findById(id).session(session);
+        const registration = await Registration.findById(id).session(
+          session ?? null
+        );
         return registration ? registrationData(registration) : null;
       },
       getShift: (id) => findShift(id, session),

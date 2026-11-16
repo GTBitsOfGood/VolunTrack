@@ -1,21 +1,54 @@
+import type { ClientSession } from "mongoose";
 import Registration from "../mongodb/models/Registration";
-import Attendance from "../mongodb/models/Attendance";
-import type { ClockDependencies } from "./volunteerClock";
+import Attendance, { AttendanceDocument } from "../mongodb/models/Attendance";
+import type { ClockDependencies, ClockScope } from "./volunteerClock";
 import { AttendanceCorrectionError } from "./attendanceCorrections";
+import { isDuplicateAttendanceError as isDuplicateKey } from "./attendanceErrors";
 import {
   attendanceData,
+  volunteerShiftId,
   withAttendanceTransaction,
 } from "./attendanceCorrectionStore";
+
+// Newest check-in first, then newest record: the order that sorting by
+// { checkinTime: -1, _id: -1 } gives. A record with no check-in comes last.
+const newestFirst = (a: AttendanceDocument, b: AttendanceDocument) => {
+  const [aTime, bTime] = [a, b].map(
+    (attendance) => attendance.checkinTime?.getTime() ?? -Infinity
+  );
+  if (aTime !== bTime) return aTime < bTime ? 1 : -1;
+  return a._id.toString() < b._id.toString() ? 1 : -1;
+};
+
+// Without a transaction (Azure Cosmos DB), two quick scans could both add a
+// sign-up. The fixed _id lets only one in; the other finds it already there
+// and carries on to the attendance record.
+const createWalkInRegistration = async (
+  scope: ClockScope,
+  session?: ClientSession
+) => {
+  if (session) {
+    await Registration.create([scope], { session });
+    return;
+  }
+  try {
+    await Registration.create([
+      { ...scope, _id: volunteerShiftId(scope.userId, scope.eventId) },
+    ]);
+  } catch (error) {
+    if (!isDuplicateKey(error)) throw error;
+  }
+};
 
 export const attendanceStore: Pick<
   ClockDependencies,
   "getAttendance" | "createAttendance" | "checkoutAttendance"
 > = {
   async getAttendance(scope) {
-    const attendances = await Attendance.find(scope).sort({
-      checkinTime: -1,
-      _id: -1,
-    });
+    // Sorted here, not by the database: Azure Cosmos DB (the live site)
+    // refuses a two-field sort that has no matching index. One volunteer has
+    // very few records for one shift.
+    const attendances = (await Attendance.find(scope)).sort(newestFirst);
     const open = attendances.filter(
       (attendance) => attendance.checkinTime && !attendance.checkoutTime
     );
@@ -79,14 +112,16 @@ export const createWalkInAttendance = async (
         "Attendance already exists for this volunteer and shift."
       );
     }
-    const registration = await Registration.findOne(scope).session(session);
+    const registration = await Registration.findOne(scope).session(
+      session ?? null
+    );
     if (registration && registration.approved !== "approved") {
       throw new AttendanceCorrectionError(
         403,
         "An approved registration is required to check in."
       );
     }
-    if (!registration) await Registration.create([scope], { session });
+    if (!registration) await createWalkInRegistration(scope, session);
     return store.create({
       ...scope,
       eventName: shift.title,

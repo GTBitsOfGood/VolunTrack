@@ -46,6 +46,16 @@ A running instance of MongoDB is required this project.
 - Create the `nextjs` database. (or choose another name, but make sure to change it in `.env`)
 - It's very helpful to install MongoDB Compass to see your database contents
 
+### The live database is Azure Cosmos DB
+
+The live site's database is Azure Cosmos DB for MongoDB. Development and deploy previews use MongoDB, and Cosmos DB lacks some MongoDB features, so a query can work in development and still fail on the live site. Three places are written to work on both:
+
+- Attendance saves (`server/actions/attendanceCorrectionStore.ts`) run in one transaction on MongoDB. On Cosmos DB they run one save at a time, and a fixed `_id` for each volunteer and shift stops a double check-in.
+- New sorts are done in the app, not in the query (`server/actions/attendancePersistence.ts`, `src/pages/api/volunteer-logs/index.ts`). On Cosmos DB a query can only sort on a field that has an index, and a sort on two fields needs an index on both together.
+- A lookup that ignores capitals uses a regular expression, not a collation.
+
+To try the Cosmos DB path on any database, set `ATTENDANCE_TRANSACTIONS=off`.
+
 ### Node
 Make sure you use Node 16. You can check your node version by running `node -v`.
 

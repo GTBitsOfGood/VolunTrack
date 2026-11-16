@@ -20,7 +20,7 @@ export const runEventStatusTransaction = <T>(
           organizationId,
           checkinTime: { $ne: null },
           checkoutTime: null,
-        }).session(session));
+        }).session(session ?? null));
       },
       async setEnded(id, isEnded) {
         const event = await Event.findByIdAndUpdate(
