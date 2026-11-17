@@ -188,7 +188,7 @@ const EventManager = ({ organizationId }) => {
 
   return (
     <Styled.Container>
-      <div className="m-4 hidden w-2/6 flex-col md:flex lg:pl-16">
+      <div className="m-4 hidden w-2/6 flex-col lg:flex lg:pl-16">
         <div className="my-1 ml-2 flex flex-col items-start">
           <Text text="Events" type="header" />
         </div>
@@ -206,7 +206,7 @@ const EventManager = ({ organizationId }) => {
         <Text text="How to read the calendar?" type="subheader" />
         <img className="h-48" src="/images/Calendar Legend.svg" alt="legend" />
       </div>
-      <div className="m-4 flex w-full flex-col md:w-4/6 md:px-16">
+      <div className="m-4 flex w-full min-w-0 flex-col lg:w-4/6 lg:px-16">
         <div className="flex flex-col lg:w-5/6">
           <div className="h-16" />
           {loading === true ? (

@@ -1,173 +1,86 @@
 import { useSession } from "next-auth/react";
 import Error from "next/error";
-import { useEffect, useState, useMemo } from "react";
-import { getRegistrations } from "../../queries/registrations";
-import { getEvent } from "../../queries/events";
+import { useEffect, useState } from "react";
+import { getApprovals } from "../../queries/registrations";
 import RegistrationCard from "./RegistrationCard";
 import PaginationComp from "../../components/PaginationComp";
 import LoadingModal from "../Events/LoadingModal";
 
+// One request per screen (GET /api/registrations/approvals): the new requests
+// and one page of history, each with its shift and the person's details. The
+// page used to load every sign-up ever and then ask for each shift separately.
 const AdminApproval = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [pendingRegistrations, setPendingRegistrations] = useState([]);
   const [historyRegistrations, setHistoryRegistrations] = useState([]);
-  const [events, setEvents] = useState({});
+  const [historyTotal, setHistoryTotal] = useState(0);
   const [regCounts, setRegCounts] = useState({});
   const [isShowAllRequests, setIsShowAllRequests] = useState(false);
   const [historyCurrentPage, setHistoryCurrentPage] = useState(0);
+  const [loadError, setLoadError] = useState("");
   const pageSize = 3; // Number of items per page
 
-  // Filter historyRegistrations when events are updated
-  useEffect(() => {
-    setPendingRegistrations((curr) =>
-      curr.filter((registration) => events[registration.eventId])
-    );
-    setHistoryRegistrations((prevHistory) =>
-      prevHistory.filter((registration) => events[registration.eventId])
-    );
-  }, [events]);
-
-  const currentHistoryItems = useMemo(() => {
-    const startIndex = historyCurrentPage * pageSize;
-    const endIndex = Math.min(
-      startIndex + pageSize,
-      historyRegistrations.length
-    );
-    return historyRegistrations.slice(startIndex, endIndex);
-  }, [historyRegistrations, historyCurrentPage, pageSize]);
-
-  useEffect(() => {
-    const fetchRegistrations = async () => {
-      setLoading(true);
-      const result = await getRegistrations({
-        organizationId: user.organizationId,
+  // quiet: keep the current cards on screen while the next ones load.
+  const load = (page, { quiet = false } = {}) => {
+    if (!quiet) setLoading(true);
+    return getApprovals(page, pageSize)
+      .then((result) => {
+        if (result?.data) {
+          setPendingRegistrations(result.data.pending);
+          setHistoryRegistrations(result.data.history);
+          setHistoryTotal(result.data.historyTotal);
+          setHistoryCurrentPage(result.data.page);
+          setRegCounts(result.data.regCounts);
+          setLoadError("");
+        } else {
+          setLoadError(
+            "The requests didn't load. Refresh the page to try again."
+          );
+          console.error("Error getting approval requests:", result?.error);
+        }
+      })
+      .finally(() => {
+        if (!quiet) setLoading(false);
       });
-      if (result) {
-        const registrations = result.data.registrations;
-        updateRegCounts(result.data.registrations);
+  };
 
-        const pending = registrations.filter(
-          (reg) => reg.approved === "pending"
-        );
-        const history = registrations
-          .filter((reg) => reg.approved !== "pending")
-          .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-
-        setPendingRegistrations(pending);
-        setHistoryRegistrations(history);
-
-        // Fetch each distinct event once, all at the same time.
-        const uniqueEventIds = [
-          ...new Set(registrations.map((reg) => reg.eventId)),
-        ];
-
-        const eventEntries = await Promise.all(
-          uniqueEventIds.map(async (eventId) => {
-            try {
-              const event = await getEvent(eventId);
-              return [eventId, event?.data?.event || null];
-            } catch (error) {
-              console.error("Error fetching event:", error);
-              return [eventId, null];
-            }
-          })
-        );
-
-        setEvents(Object.fromEntries(eventEntries));
-      }
-      setLoading(false);
-    };
-
-    fetchRegistrations();
+  useEffect(() => {
+    load(0);
   }, [user.organizationId]);
 
-  const updateRegCounts = (registrations) => {
-    const counts = {};
-    registrations.forEach((reg) => {
-      const eventId = reg.eventId;
-      if (!counts[eventId]) {
-        counts[eventId] = 0;
-      }
-      if (reg.approved === "approved") {
-        counts[eventId] += 1 + (reg.minors?.length || 0); // Count the main registration + minors
-      }
-    });
-    setRegCounts(counts);
-  };
-
-  const moveToHistory = (registrationId, status) => {
-    setPendingRegistrations((prevPending) => {
-      const registration = prevPending.find(
-        (reg) => reg._id === registrationId
-      );
-      if (registration) {
-        const updatedRegistration = { ...registration, approved: status };
-
-        setRegCounts((prevRegCounts) => {
-          const eventId = registration.eventId;
-          const currentCount = prevRegCounts[eventId] || 0;
-
-          if (status === "approved") {
-            const newCount =
-              currentCount + 1 + (registration.minors?.length || 0);
-            return { ...prevRegCounts, [eventId]: newCount };
-          } else if (status === "denied") {
-            if (registration.approved === "approved") {
-              const newCount =
-                currentCount - 1 - (registration.minors?.length || 0);
-              return { ...prevRegCounts, [eventId]: newCount };
-            }
-          }
-
-          return prevRegCounts;
-        });
-
-        setHistoryRegistrations((prevHistory) => {
-          const updatedHistory = [...prevHistory, updatedRegistration];
-          return updatedHistory.sort(
-            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-          );
-        });
-
-        return prevPending.filter((reg) => reg._id !== registrationId);
-      }
-      return prevPending;
-    });
-  };
+  // After Approve or Deny: reload, so the card moves into the history with its
+  // new date and the spot counts are up to date.
+  const reloadAfterDecision = () => load(historyCurrentPage, { quiet: true });
 
   return loading ? (
     <div className="flex justify-center pt-8">
       <LoadingModal isOpen={loading} />
     </div>
   ) : (
-    <div className="mx-auto my-2 w-3/4 space-y-8">
-      <h1 className="top-34 left-20 my-4 text-3xl font-semibold">
-        Event Approval Portal
-      </h1>
-      <div className="top-54 left-20 mx-auto flex flex-col gap-[100px]">
+    <div className="mx-auto my-2 w-11/12 max-w-6xl space-y-8 md:w-3/4">
+      <h1 className="my-4 text-3xl font-semibold">Event Approval Portal</h1>
+      {loadError && (
+        <p role="alert" className="font-semibold text-red-600">
+          {loadError}
+        </p>
+      )}
+      <div className="mx-auto flex flex-col gap-16 md:gap-[100px]">
         <div className="flex flex-col gap-10">
           <div className="font-inter text-2xl">New Requests</div>
           {pendingRegistrations?.length > 0 ? (
             pendingRegistrations
               .slice(0, isShowAllRequests ? pendingRegistrations.length : 3)
-              .map((registration, index) => {
-                if (!events[registration.eventId]) {
-                  return null;
-                }
-
-                return (
-                  <RegistrationCard
-                    key={index}
-                    registration={registration}
-                    event={events[registration.eventId]}
-                    regCount={regCounts[registration.eventId] || 0}
-                    onApprove={() =>
-                      moveToHistory(registration._id, "approved")
-                    }
-                    onDeny={() => moveToHistory(registration._id, "denied")}
-                  />
-                );
-              })
+              .map((registration) => (
+                <RegistrationCard
+                  key={registration._id}
+                  registration={registration}
+                  event={registration.event}
+                  person={registration.user}
+                  regCount={regCounts[registration.eventId] || 0}
+                  onApprove={reloadAfterDecision}
+                  onDeny={reloadAfterDecision}
+                />
+              ))
           ) : (
             <div className="font-inter text-left text-[#0183A1]">
               No new event approval requests!
@@ -204,23 +117,23 @@ const AdminApproval = ({ user }) => {
           <div className="font-inter text-2xl">Registration History</div>
           {historyRegistrations.length > 0 ? (
             <>
-              {currentHistoryItems.map((registration) => {
-                return (
-                  <RegistrationCard
-                    key={registration._id}
-                    registration={registration}
-                    event={events[registration.eventId]}
-                    regCount={regCounts[registration.eventId] || 0}
-                  />
-                );
-              })}
+              {historyRegistrations.map((registration) => (
+                <RegistrationCard
+                  key={registration._id}
+                  registration={registration}
+                  event={registration.event}
+                  person={registration.user}
+                  regCount={regCounts[registration.eventId] || 0}
+                />
+              ))}
 
               {/* Pagination Controls */}
               <PaginationComp
                 items={historyRegistrations}
+                totalItems={historyTotal}
                 pageSize={pageSize}
                 currentPage={historyCurrentPage}
-                updatePageCallback={setHistoryCurrentPage}
+                updatePageCallback={(page) => load(page, { quiet: true })}
               />
             </>
           ) : (

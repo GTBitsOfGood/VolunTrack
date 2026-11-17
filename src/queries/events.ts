@@ -56,6 +56,81 @@ export const getEvents = async (
   }
 };
 
+/**
+ * The browser's wall clock as "YYYY-MM-DDTHH:mm" (what "upcoming" is judged
+ * by).
+ */
+export const localWallClock = (date = new Date()) => {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate()
+  )}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
+export type EventFeedQuery = {
+  view: "upcoming" | "month" | "all" | "public" | "private" | "day" | "home";
+  page?: number;
+  pageSize?: number;
+  day?: string;
+  month?: string;
+  dates?: boolean;
+};
+
+/** One page of shifts for the Events and Home pages, plus calendar days. */
+export const getEventFeed = async (query: EventFeedQuery) => {
+  try {
+    const response = await axios.get<{
+      events?: EventPopulatedDocument[];
+      total?: number;
+      dates?: string[];
+      error?: string;
+    }>("/api/events/feed", {
+      params: {
+        ...query,
+        dates: query.dates ? "1" : undefined,
+        now: localWallClock(),
+      },
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error fetching events." };
+  }
+};
+
+export type HomeSummary = {
+  firstDate: string;
+  todaysEvents: number;
+  todaysRegistrations: number;
+  eventTotal: number;
+  attendanceTotal: number;
+  hoursTotal: number;
+  eventData: number[];
+  hoursData: number[];
+  attendanceData: number[];
+};
+
+/** The Overview numbers and charts on the admin Home page. */
+export const getHomeSummary = async () => {
+  try {
+    const response = await axios.get<HomeSummary>("/api/events/home-summary", {
+      params: { today: localWallClock().slice(0, 10) },
+    });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error fetching the overview." };
+  }
+};
+
 /** Creates a new event with it's own event parent */
 export const createEvent = async (
   eventPopulatedInput: EventPopulatedInputClient

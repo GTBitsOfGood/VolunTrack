@@ -103,7 +103,7 @@ const Header = () => {
     <Navbar
       fluid={true}
       rounded={true}
-      className="my-custom-navbar !mx-6 items-center justify-between !px-0 !py-4 md:!mx-16"
+      className="my-custom-navbar !mx-6 items-center justify-between !px-0 !py-4 md:!mx-8 lg:!mx-16"
     >
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
@@ -230,8 +230,9 @@ const Header = () => {
             arrowIcon={true}
             inline={true}
             label={
-              <div className="flex">
+              <div className="flex items-center">
                 <Avatar
+                  className="shrink-0"
                   img={user.imageUrl ?? "/images/gradient-avatar.png"}
                   alt="icon"
                   rounded={true}

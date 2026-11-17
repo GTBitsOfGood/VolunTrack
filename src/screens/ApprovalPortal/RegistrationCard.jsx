@@ -19,17 +19,20 @@ const RegistrationCard = (props) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getUser(props.registration.userId).then((response) => {
-      if (response?.data?.user) {
-        setName(
-          `${response.data.user.firstName} ${response.data.user.lastName}`
-        );
-        setEmail(`${response.data.user.email}`);
-        setPhone(response.data.user.phone || null);
-      }
-    });
+    // The Approval Portal sends the person's details with each request, so
+    // the card no longer asks the server for them one card at a time.
+    const show = (person) => {
+      setName(`${person.firstName} ${person.lastName}`.trim() || null);
+      setEmail(person.email || null);
+      setPhone(person.phone || null);
+    };
+    if (props.person) show(props.person);
+    else
+      getUser(props.registration.userId).then((response) => {
+        if (response?.data?.user) show(response.data.user);
+      });
     setRegCount(props.regCount);
-  }, [props.regCount]);
+  }, [props.regCount, props.person, props.registration.userId]);
 
   const decide = async (status, onSaved) => {
     setSaving(status);
@@ -51,15 +54,15 @@ const RegistrationCard = (props) => {
 
   return (
     <Card className="w-full !border-none !bg-[#F9F9F9] !shadow-none">
-      <div className="flex justify-center">
-        <div className="flex flex-row items-center">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <div className="flex min-w-0 flex-row items-center">
           <div className="mr-2 font-semibold">Member Name: </div>
           <div className={`mr-2 ${styles.title}`}>
             {name || "No Name Available"}
           </div>
         </div>
 
-        <div className="grow" />
+        <div className="hidden grow sm:block" />
         <div className="flex-rows flex items-center">
           <div className="mr-2 font-semibold" style={{ fontSize: "14px" }}>
             Requested Date
@@ -76,8 +79,8 @@ const RegistrationCard = (props) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-row items-center gap-4">
-        <div className="flex flex-row items-center">
+      <div className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1">
+        <div className="flex min-w-0 flex-row items-center">
           <div className="mr-2 font-semibold">Event: </div>
           <div className={`mr-2 ${styles.title}`}>
             {props?.event?.eventParent?.title || "Event Name"}
@@ -96,11 +99,11 @@ const RegistrationCard = (props) => {
         </Link>
       </div>
       <hr className="my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-      <div className="flex w-11/12 justify-between">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:flex lg:w-11/12 lg:justify-between">
         <div className="flex flex-col gap-6">
           <div>
             <div className="font-semibold">Email</div>
-            <div className={`${styles.content}`}>
+            <div className={`break-all ${styles.content}`}>
               {email || "No Email Available"}
             </div>
           </div>
@@ -253,6 +256,14 @@ const RegistrationCard = (props) => {
 };
 
 RegistrationCard.propTypes = {
+  person: PropTypes.shape({
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
+    email: PropTypes.string,
+    phone: PropTypes.string,
+  }),
+  onApprove: PropTypes.func,
+  onDeny: PropTypes.func,
   registration: PropTypes.object,
   regCount: PropTypes.number,
   event: PropTypes.object,

@@ -4,6 +4,7 @@ import dbConnect from "../../../../server/mongodb";
 import Attendance, {
   AttendanceInputClient,
 } from "../../../../server/mongodb/models/Attendance";
+import Event from "../../../../server/mongodb/models/Event";
 import { isAdmin } from "../../../utils/routeProtection";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -57,6 +58,41 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       //     unit: "minute",
       //   },
       // },
+
+      // withEvents=1 adds each shift's name, date and times, so the Events
+      // summary page no longer downloads every shift to look them up.
+      if (req.query.withEvents === "1") {
+        const shiftIds = (statistics as { _id: Types.ObjectId | null }[])
+          .map((stat) => stat._id)
+          .filter((id): id is Types.ObjectId => !!id);
+        const shifts = shiftIds.length
+          ? await Event.find(
+              { _id: { $in: shiftIds } },
+              { date: 1, eventParent: 1 }
+            )
+              .populate("eventParent", "title startTime endTime")
+              .lean()
+          : [];
+        const events: Record<
+          string,
+          { title: string; date: Date; startTime: string; endTime: string }
+        > = {};
+        for (const shift of shifts) {
+          const parent = shift.eventParent as unknown as {
+            title?: string;
+            startTime?: string;
+            endTime?: string;
+          } | null;
+          if (!parent) continue;
+          events[String(shift._id)] = {
+            title: parent.title ?? "",
+            date: shift.date,
+            startTime: parent.startTime ?? "",
+            endTime: parent.endTime ?? "",
+          };
+        }
+        return res.status(200).json({ statistics, events });
+      }
 
       return res.status(200).json({ statistics });
     }

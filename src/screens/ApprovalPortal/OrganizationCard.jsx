@@ -9,7 +9,7 @@ const OrganizationCard = (props) => {
 
   return (
     <Card className="w-full border shadow-md">
-      <div className="flex justify-center">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
         <div className="flex">
           <div className="mr-2 font-semibold">Status:</div>
           <ToggleSwitch
@@ -25,7 +25,7 @@ const OrganizationCard = (props) => {
         </div>
       </div>
       <hr className="my-2 h-px border-0 bg-gray-200 dark:bg-gray-700" />
-      <div className="flex justify-between">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:flex lg:justify-between [&>div]:min-w-0 [&>div]:break-words">
         <div className="flex flex-col">
           <div className="font-semibold">Non-Profit Name</div>
           <div>{props.org.name}</div>

@@ -25,6 +25,11 @@ const EventCard = (props) => {
   const onEventEdit = props.onEventEdit;
 
   useEffect(() => {
+    // Lists from /api/events/feed send the count with each shift.
+    if (typeof event.spotsTaken === "number") {
+      setRegCount(event.spotsTaken);
+      return;
+    }
     getRegistrations({ eventId: event._id }).then((res) => {
       let count = 0;
       res.data.registrations.map((reg) => {
@@ -104,7 +109,7 @@ const EventCard = (props) => {
         if (!showEditModal) open();
       }}
     >
-      <div className="flex w-full items-center justify-between gap-10">
+      <div className="flex w-full items-center justify-between gap-3 sm:gap-10">
         <div className="flex items-center justify-start">
           <DateDisplayComponent
             key={event.date}
@@ -113,7 +118,7 @@ const EventCard = (props) => {
           />
           <div className="flex-column flex min-w-0 flex-1 text-xl">
             <div className="mb-1 flex items-center">
-              <Label class="mb-0 max-w-[20rem] whitespace-normal break-all text-xl font-bold">
+              <Label class="mb-0 max-w-[20rem] whitespace-normal break-words text-xl font-bold">
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (

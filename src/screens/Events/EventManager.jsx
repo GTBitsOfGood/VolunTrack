@@ -14,7 +14,11 @@ import BoGButton from "../../components/BoGButton";
 import ProgressDisplay from "../../components/ProgressDisplay";
 import StatsTable from "../../components/StatsTable";
 import { getAttendances } from "../../queries/attendances";
-import { getEvents } from "../../queries/events";
+import {
+  getEventFeed,
+  getHomeSummary,
+  localWallClock,
+} from "../../queries/events";
 import { getRegistrations } from "../../queries/registrations";
 import { filterAttendance } from "../Stats/helper";
 import EventCreateModal from "./Admin/EventCreateModal";
@@ -45,16 +49,20 @@ const Styled = {
     row-gap: 10px;
 
     @media (max-width: 768px) {
-      width: 100%;
+      flex: 1 1 auto;
+      min-width: 0;
+      width: auto;
+      align-items: stretch;
       margin-left: 1rem;
       margin-right: 1rem;
     }
   `,
   Calendar: styled(Calendar)`
-    /* Phones: use the full column. Laptops (768px and up): unchanged. */
+    /* Phones and tablets: the full column. Laptops (1024px and up): beside
+       the list, never narrower than 280px so the weekday names fit. */
     max-width: 100%;
-    @media (min-width: 768px) {
-      max-width: 22vw;
+    @media (min-width: 1024px) {
+      max-width: max(22vw, 280px);
     }
     border: none;
     .react-calendar__navigation {
@@ -177,22 +185,27 @@ const EventManager = ({ isHomePage }) => {
   const user = session.user;
 
   const [loading, setLoading] = useState(true);
-  // const [filterOn, setFilterOn] = useState(false);
   const [dropdownVal, setDropdownVal] = useState("Upcoming Events");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showResponseModal, setShowResponseModal] = useState(false);
   const [responseIsError, setResponseIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [markDates, setDates] = useState([]);
+  // Days that have shifts ("YYYY-MM-DD"), for the calendar dots.
+  const [calendarDays, setCalendarDays] = useState(new Set());
   const [showBack, setShowBack] = useState(false);
 
+  // Only the shifts on screen: one page of the Events list, or the Home lists.
+  // (The page used to download every shift, sign-up and attendance record.)
   const [events, setEvents] = useState([]);
+  const [totalEvents, setTotalEvents] = useState(0);
+  const [listQuery, setListQuery] = useState({ view: "upcoming" });
+  const [homeSummary, setHomeSummary] = useState(null);
   // Bumped after a create, edit or delete so the week box reloads too.
   const [weekBoxVersion, setWeekBoxVersion] = useState(0);
   const refreshWeekBox = () => setWeekBoxVersion((version) => version + 1);
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  // The signed-in person's own sign-ups and attendance records.
   const [registrations, setRegistrations] = useState([]);
-  const [attendances, setAttendances] = useState([]);
+  const [myAttendances, setMyAttendances] = useState([]);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -204,78 +217,92 @@ const EventManager = ({ isHomePage }) => {
   const [currentPage, setCurrentPage] = useState(0); // Current page for pagination
   const pageSize = 3; // Number of events per page
 
-  const onRefresh = () => {
-    setLoading(true);
-    const eventsPromise = getEvents(user.organizationId)
+  // Member History on the volunteer Home page, narrowed by the From/To search.
+  const attendances = useMemo(
+    () => filterAttendance(myAttendances, startDate, endDate),
+    [myAttendances, startDate, endDate]
+  );
+
+  // Loads one page of the Events list. quiet keeps the current list on screen
+  // while it loads (after an edit, so its "saved" message stays visible).
+  const loadList = (query, page, { quiet = false, withDates = false } = {}) => {
+    if (!quiet) setLoading(true);
+    return getEventFeed({ ...query, page, pageSize, dates: withDates })
       .then((result) => {
         if (result?.data?.events) {
-          const fetchedEvents = result.data.events;
+          const total = result.data.total ?? 0;
+          const lastPage = Math.max(0, Math.ceil(total / pageSize) - 1);
+          if (page > lastPage)
+            return loadList(query, lastPage, { quiet: true, withDates });
           setEvents(result.data.events);
-          setFilteredEvents(
-            fetchedEvents.filter((event) => {
-              let currentDate = new Date();
-              let utcNow = new Date(
-                Date.UTC(
-                  currentDate.getFullYear(),
-                  currentDate.getMonth(),
-                  currentDate.getDate(),
-                  currentDate.getHours(),
-                  currentDate.getMinutes()
-                )
-              );
-              let eventDate = new Date(event.date);
-              const [hours, minutes] = event.eventParent.endTime
-                .split(":")
-                .map(Number);
-              eventDate.setUTCHours(hours, minutes);
-
-              return eventDate >= utcNow;
-            })
-          );
-          setDates(result.data.events);
-          setDropdownVal("Upcoming Events");
+          setTotalEvents(total);
+          setCurrentPage(page);
+          if (result.data.dates) setCalendarDays(new Set(result.data.dates));
         } else if (result?.error) {
           console.error("Error getting events:", result.error);
         }
       })
       .catch((error) => {
         console.error("An interval server error occured", error);
+      })
+      .finally(() => {
+        if (!quiet) setLoading(false);
       });
+  };
 
-    let filter = { organizationId: user.organizationId };
-    if (user.role === "volunteer")
-      filter = { organizationId: user.organizationId, userId: user._id };
+  const loadHome = () =>
+    Promise.all([
+      getEventFeed({ view: "home" }).then((result) => {
+        if (result?.data?.events) setEvents(result.data.events);
+        else if (result?.error)
+          console.error("Error getting events:", result.error);
+      }),
+      user.role !== "volunteer" &&
+        getHomeSummary().then((result) => {
+          if (result?.data && !result.error) setHomeSummary(result.data);
+          else if (result?.error)
+            console.error("Error getting the overview:", result.error);
+        }),
+    ]);
 
-    const registrationsPromise = getRegistrations(filter).then((result) => {
-      if (result?.data?.registrations) {
-        const registrations = result.data.registrations;
-        setRegistrations(registrations);
-      }
-    });
-
-    let query = { organizationId: user.organizationId };
-    if (user.role === "volunteer") query.userId = user._id;
-
-    const attendancePromise = getAttendances(query).then((result) => {
-      if (result?.data?.attendances) {
-        const filteredAttendance = filterAttendance(
-          result.data.attendances,
-          startDate,
-          endDate
-        );
-        setAttendances(filteredAttendance);
-      }
-    });
-
-    Promise.all([eventsPromise, registrationsPromise, attendancePromise])
-      .then(() => {})
+  const onRefresh = () => {
+    setLoading(true);
+    const work = [];
+    if (isHomePage) {
+      work.push(loadHome());
+    } else {
+      const upcoming = { view: "upcoming" };
+      setDropdownVal("Upcoming Events");
+      setListQuery(upcoming);
+      work.push(loadList(upcoming, 0, { quiet: true, withDates: true }));
+    }
+    if (user.role !== "admin")
+      work.push(
+        getRegistrations({
+          organizationId: user.organizationId,
+          userId: user._id,
+        }).then((result) => {
+          if (result?.data?.registrations)
+            setRegistrations(result.data.registrations);
+        })
+      );
+    if (isHomePage && user.role === "volunteer")
+      work.push(
+        getAttendances({
+          organizationId: user.organizationId,
+          userId: user._id,
+        }).then((result) => {
+          if (result?.data?.attendances)
+            setMyAttendances(result.data.attendances);
+        })
+      );
+    Promise.all(work)
       .catch((error) => {
         console.error("Error fetching data:", error);
       })
       .finally(() => {
         setLoading(false);
       });
-    setCurrentPage(0); // Reset to the first page when events are fetched
   };
 
   const onCreateClicked = () => {
@@ -333,45 +360,10 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   }, []);
 
-  const paginatedEvents = useMemo(() => {
-    const startIndex = currentPage * pageSize;
-    const endIndex = startIndex + pageSize;
-    return filteredEvents.slice(startIndex, endIndex);
-  }, [filteredEvents, currentPage, pageSize]);
-
   let splitDate = selectedDate.toDateString().split(" ");
   const [dateString, setDateString] = useState(
     splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]
   );
-
-  const onChange = (value) => {
-    if (Date.now() !== value) setShowBack(true);
-    setSelectedDate(value);
-    let datestr = value.toString();
-    let splitDate = value.toDateString().split(" ");
-    let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
-    setDateString(date);
-    let selectDate = new Date(datestr).toISOString().split("T")[0];
-
-    setLoading(true);
-    getEvents(user.organizationId, selectDate, selectDate)
-      .then((result) => {
-        if (result && result.data && result.data.events) {
-          // setEvents(result.data.events);
-          setFilteredEvents(result.data.events);
-          // setDropdownVal("All Events");
-        } else if (result?.error) {
-          console.error("Error getting events:", result.error);
-        }
-      })
-      .catch((error) => {
-        console.error("An interval server error occured", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    setCurrentPage(0); // Reset to the first page when date changes
-  };
 
   const formatJsDate = (jsDate, separator = "/") => {
     return [
@@ -381,21 +373,21 @@ const EventManager = ({ isHomePage }) => {
     ].join(separator);
   };
 
-  // eslint-disable-next-line no-unused-vars
-  const setMarkDates = ({ date, view }, markDates) => {
-    const fDate = formatJsDate(date, "-");
-    let tileClassName = "";
-    let dates = [];
-    for (let i = 0; i < markDates.length; i++) {
-      if (user.role === "admin") {
-        dates.push(markDates[i].date.slice(0, 10));
-      } else if (!markDates[i].eventParent.isPrivate) {
-        dates.push(markDates[i].date.slice(0, 10));
-      }
-    }
-    if (dates.includes(fDate)) {
-      tileClassName = "marked";
-    }
+  // A calendar day: the shifts on that day, one page at a time.
+  const onChange = (value) => {
+    setShowBack(true);
+    setSelectedDate(value);
+    let splitDate = value.toDateString().split(" ");
+    setDateString(splitDate[1] + " " + splitDate[2] + ", " + splitDate[3]);
+    const query = { view: "day", day: formatJsDate(value, "-") };
+    setListQuery(query);
+    loadList(query, 0);
+  };
+
+  const setMarkDates = ({ date }) => {
+    let tileClassName = calendarDays.has(formatJsDate(date, "-"))
+      ? "marked"
+      : "";
     // Check if the date is a weekend (Saturday = 6, Sunday = 0)
     const isWeekend = date.getDay() === 0 || date.getDay() === 6;
     if (isWeekend) {
@@ -408,7 +400,6 @@ const EventManager = ({ isHomePage }) => {
 
   const setDateBack = () => {
     const currentDate = new Date();
-    setDates(currentDate);
     setSelectedDate(currentDate);
     let splitDate = currentDate.toDateString().split(" ");
     let date = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
@@ -417,144 +408,49 @@ const EventManager = ({ isHomePage }) => {
     onRefresh();
   };
 
-  const filterEventsForVolunteers = (events, user) => {
-    let arr = [];
-    for (let i = 0; i < events.length; i++) {
-      if (
-        // hide private events they are not registered for
-        // new Date(events[i].date) >= new Date(Date.now() - 2 * 86400000) &&
-        !events[i].eventParent.isPrivate ||
-        registrations.filter(
-          (r) => r.eventId === events[i]._id && r.userId === user._id
-        ).length > 0
-      ) {
-        arr.push(events[i]);
-      }
-    }
-    return arr;
+  const VIEW_FOR_LABEL = {
+    "This Month": "month",
+    "Upcoming Events": "upcoming",
+    "All Events": "all",
+    "Public Events": "public",
+    "Private Group Events": "private",
   };
 
   const changeValue = (label) => {
     setDropdownVal(label);
-    const value = label;
-    if (value === "Public Events") {
-      setFilteredEvents(events.filter((event) => !event.eventParent.isPrivate));
-    } else if (value === "Private Group Events") {
-      setFilteredEvents(events.filter((event) => event.eventParent.isPrivate));
-    } else if (value === "All Events") {
-      setFilteredEvents(
-        events.filter(
-          (event) => !event.eventParent.isPrivate || event.eventParent.isPrivate
-        )
-      );
-    } else if (value === "This Month") {
-      setFilteredEvents(
-        events.filter((event) => {
-          let eventDate = new Date(event.date);
-          let currentDate = new Date(Date.now());
-          return (
-            eventDate.getMonth() == currentDate.getMonth() &&
-            eventDate.getFullYear() == currentDate.getFullYear()
-          );
-        })
-      );
-    } else if (value === "Upcoming Events") {
-      setFilteredEvents(
-        events.filter((event) => {
-          let currentDate = new Date();
-          let utcNow = new Date(
-            Date.UTC(
-              currentDate.getFullYear(),
-              currentDate.getMonth(),
-              currentDate.getDate(),
-              currentDate.getHours(),
-              currentDate.getMinutes()
-            )
-          );
-          let eventDate = new Date(event.date);
-          const [hours, minutes] = event.eventParent.endTime
-            .split(":")
-            .map(Number);
-          eventDate.setUTCHours(hours, minutes);
-
-          return eventDate >= utcNow;
-        })
-      );
-    }
-    setCurrentPage(0); // Reset to the first page when filter changes
+    const query = {
+      view: VIEW_FOR_LABEL[label] ?? "upcoming",
+      ...(label === "This Month"
+        ? { month: localWallClock().slice(0, 7) }
+        : {}),
+    };
+    setListQuery(query);
+    loadList(query, 0);
   };
 
-  const onEventDelete = (id, recurringEvent) => {
+  // After a shift is edited or deleted, reload what is on screen from the server.
+  const reloadAfterChange = () => {
     refreshWeekBox();
-    if (recurringEvent) {
-      const eventParentId = events.find((event) => event._id === id).eventParent
-        ._id;
-      const eventDate = events.find((event) => event._id === id).date;
-      setEvents(
-        events.filter(
-          (event) =>
-            event.eventParent._id !== eventParentId || event.date < eventDate
-        )
-      );
-      setFilteredEvents(
-        filteredEvents.filter(
-          (event) =>
-            event.eventParent._id !== eventParentId || event.date < eventDate
-        )
-      );
-    } else {
-      setEvents(events.filter((event) => event._id !== id));
-      setFilteredEvents(filteredEvents.filter((event) => event._id !== id));
-    }
+    if (isHomePage) loadHome();
+    else loadList(listQuery, currentPage, { quiet: true, withDates: true });
   };
-
-  const onEventEdit = (id, eventParentId, recurringEvent) => {
-    refreshWeekBox();
-    if (recurringEvent) {
-      const eventDate = events.find((event) => event._id === id).date;
-      setEvents(
-        events.map((event) => {
-          if (
-            event.eventParent._id === eventParentId &&
-            event.date >= eventDate
-          ) {
-            event.eventParent = events.find(
-              (event) => event._id === id
-            ).eventParent;
-          }
-          return event;
-        })
-      );
-    } else {
-      events.find((event) => event._id === id).recurringEvents = 0;
-    }
-
-    // Update recurring event counts
-    let parentIdFilteredEvents = events.filter(
-      (event) => event.eventParent._id === eventParentId
-    );
-    let recurringEventCount = 0;
-    // This works without updating the original events because the obejcts are passed by reference... :)
-    for (let i = parentIdFilteredEvents.length - 1; i >= 0; --i)
-      parentIdFilteredEvents[i].recurringEvents = recurringEventCount++;
-  };
+  const onEventDelete = () => reloadAfterChange();
+  const onEventEdit = () => reloadAfterChange();
 
   return (
     <Styled.Container>
       {!isHomePage && (
-        <div className="flex w-full max-md:flex-wrap">
-          <div className="m-4 flex-col max-md:w-[80vw] md:flex md:w-2/6 lg:pl-16">
+        <div className="flex w-full max-lg:flex-wrap">
+          <div className="m-4 flex-col max-lg:w-[calc(100%-2rem)] lg:flex lg:w-2/6 lg:pl-16">
             <div className="my-1 ml-2 flex flex-col items-start">
               <Text text="Events" type="header" />
             </div>
-            <div className="flex justify-center rounded-md p-2 max-md:w-[85vw] md:w-fit">
+            <div className="flex justify-center rounded-md p-2 max-lg:mx-auto max-lg:w-full max-lg:max-w-md lg:w-fit">
               <Styled.Calendar
                 className="bg-white"
                 onChange={onChange}
                 value={selectedDate}
-                tileClassName={({ date, view }) =>
-                  setMarkDates({ date, view }, markDates)
-                }
+                tileClassName={({ date }) => setMarkDates({ date })}
                 navigationLabel={({ date }) => {
                   return new Intl.DateTimeFormat("en-US", {
                     month: "long",
@@ -570,7 +466,7 @@ const EventManager = ({ isHomePage }) => {
               />
             )}
           </div>
-          <div className="m-4 flex flex-col overflow-hidden max-md:w-[90vw] md:w-4/6 md:w-full md:px-16">
+          <div className="m-4 flex min-w-0 flex-col overflow-hidden max-lg:w-[calc(100%-2rem)] lg:w-4/6 lg:px-16">
             <div className="flex flex-col lg:w-5/6">
               <div className="flex w-full items-center justify-between ">
                 <Dropdown
@@ -628,7 +524,7 @@ const EventManager = ({ isHomePage }) => {
                     <LoadingModal isOpen={loading} />
                   </div>
                 )}
-                {!loading && paginatedEvents.length === 0 && (
+                {!loading && events.length === 0 && (
                   <div>
                     <Text
                       text="No Events Scheduled for Filter"
@@ -644,14 +540,10 @@ const EventManager = ({ isHomePage }) => {
                     )}
                   </div>
                 )}
-                {!loading && paginatedEvents.length > 0 && (
+                {!loading && events.length > 0 && (
                   <EventsList
                     dateString={dateString}
-                    events={
-                      user.role === "admin"
-                        ? paginatedEvents
-                        : filterEventsForVolunteers(paginatedEvents, user)
-                    }
+                    events={events}
                     registrations={registrations}
                     user={user}
                     isHomePage={isHomePage}
@@ -660,10 +552,11 @@ const EventManager = ({ isHomePage }) => {
                   />
                 )}
                 <PaginationComp
-                  items={filteredEvents}
+                  items={events}
+                  totalItems={totalEvents}
                   pageSize={pageSize}
                   currentPage={currentPage}
-                  updatePageCallback={setCurrentPage}
+                  updatePageCallback={(page) => loadList(listQuery, page)}
                 />
               </div>
               {showCreateModal && (
@@ -692,8 +585,8 @@ const EventManager = ({ isHomePage }) => {
           <h2 className="text-bold w-full text-left font-bold">
             My Membership
           </h2>
-          <div className="flex flex-row gap-8">
-            <div className="mb-4 justify-start">
+          <div className="flex w-full flex-col gap-8 lg:flex-row">
+            <div className="mb-4 min-w-0 justify-start">
               <div className="mx-auto flex flex-wrap gap-3">
                 <ProgressDisplay
                   type="Events"
@@ -753,11 +646,7 @@ const EventManager = ({ isHomePage }) => {
             </div>
             <EventsList
               dateString={dateString}
-              events={
-                user.role === "admin"
-                  ? filteredEvents
-                  : filterEventsForVolunteers(events, user)
-              }
+              events={events}
               user={user}
               registrations={registrations}
               isHomePage={isHomePage}
@@ -778,18 +667,11 @@ const EventManager = ({ isHomePage }) => {
                 />
               ) : null
             }
-            events={events}
-            attendances={attendances}
-            registrations={registrations}
-            dateString={dateString}
+            summary={homeSummary}
           />
           <EventsList
             dateString={dateString}
-            events={
-              user.role === "admin"
-                ? events
-                : filterEventsForVolunteers(events, user)
-            }
+            events={events}
             user={user}
             isHomePage={isHomePage}
             registrations={registrations}

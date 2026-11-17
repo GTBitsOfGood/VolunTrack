@@ -205,7 +205,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (!isValidObjectId(organizationId))
           return res.status(400).json({ error: "Invalid organizationId" });
 
-        const events = await getEvents(new Types.ObjectId(organizationId));
         return res.status(200).json({
           events: await getEvents(
             new Types.ObjectId(organizationId),

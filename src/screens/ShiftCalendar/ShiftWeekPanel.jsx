@@ -76,7 +76,7 @@ const ShiftWeekPanel = ({ selectedDate, refreshKey }) => {
   return (
     <section
       aria-label="Shifts by week"
-      className="mt-4 w-full rounded-xl bg-grey p-3 md:max-w-[22vw]"
+      className="mt-4 w-full rounded-xl bg-grey p-3 lg:max-w-[max(22vw,280px)]"
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <button

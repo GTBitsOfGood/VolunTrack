@@ -137,13 +137,13 @@ const EventInfo = () => {
           onClick={() => goBackToCal()}
           text="← Back to home"
         />
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col lg:flex-row">
           <div className="ml-4 mr-4 flex-1">
-            <div className="flex flex-col md:ml-12 md:mr-4">
+            <div className="flex flex-col lg:ml-12 lg:mr-4">
               <h1 className="mb-1 text-4xl font-bold text-black">
                 {event.eventParent.title}
               </h1>
-              <div className="flex flex-col md:flex-row">
+              <div className="flex flex-col lg:flex-row">
                 <p className="mb-0 font-semibold md:mb-4 md:mr-3">
                   {" "}
                   {event.eventParent.maxVolunteers - regCount} Slots Remaining
@@ -153,7 +153,7 @@ const EventInfo = () => {
             </div>
           </div>
           <div className="ml-4 mr-4 flex-1">
-            <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col lg:flex-row">
               {user.role === "admin" && (
                 <>
                   <BoGButton
@@ -200,9 +200,9 @@ const EventInfo = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col md:flex-row">
+        <div className="flex flex-col lg:flex-row">
           <div className="mb-4 ml-4 mr-4 flex-1">
-            <div className="flex flex-col md:ml-12 md:mr-4">
+            <div className="flex flex-col lg:ml-12 lg:mr-4">
               <div className="text-lg">
                 {event.eventParent.isValidForCourtHours && (
                   <span className="font-bold">
@@ -220,11 +220,11 @@ const EventInfo = () => {
               </div>
             </div>
           </div>
-          <div className="ml-4 mr-4 flex-1 md:-mt-4">
-            <div className="mb-12 flex w-full flex-col md:mr-auto">
+          <div className="ml-4 mr-4 flex-1 lg:-mt-4">
+            <div className="mb-12 flex w-full flex-col lg:mr-auto">
               <h1 className="text-2xl font-bold">Event Information</h1>
-              <div className="flex flex-col md:flex-row">
-                <div className="flex flex-col bg-grey md:w-80">
+              <div className="flex flex-col lg:flex-row">
+                <div className="flex flex-col bg-grey lg:w-80">
                   <p className="m-4 text-base">
                     <b>Date:</b>
                     <br></br>
@@ -238,7 +238,7 @@ const EventInfo = () => {
                     {event.eventParent.eventContactEmail}
                   </p>
                 </div>
-                <div className="flex w-full flex-col bg-grey md:w-64">
+                <div className="flex w-full flex-col bg-grey lg:w-64">
                   <p className="m-4 text-base">
                     <b>Time:</b>
                     <br></br>
@@ -286,10 +286,10 @@ const EventInfo = () => {
               )}
             </div>
             {event.eventParent.orgName !== "" && (
-              <div className="flex w-full flex-col md:mr-auto">
+              <div className="flex w-full flex-col lg:mr-auto">
                 <h1 className="text-2xl font-bold">Organization</h1>
-                <div className="mb-4 flex flex-col md:flex-row">
-                  <div className="flex flex-col bg-grey md:w-80">
+                <div className="mb-4 flex flex-col lg:flex-row">
+                  <div className="flex flex-col bg-grey lg:w-80">
                     <p className="m-4 text-base">
                       <b>Point of Contact Name</b>
                       <br></br>
@@ -306,7 +306,7 @@ const EventInfo = () => {
                       {event.eventParent.pocPhone}
                     </p>
                   </div>
-                  <div className="flex flex-col bg-grey md:w-64">
+                  <div className="flex flex-col bg-grey lg:w-64">
                     <p className="font-base m-4">
                       <b>Organization Name</b>
                       <br></br>
@@ -324,7 +324,7 @@ const EventInfo = () => {
                   </div>
                 </div>
                 {user.role === "admin" && (
-                  <div className="flex flex-col bg-white pb-6 md:w-64">
+                  <div className="flex flex-col bg-white pb-6 lg:w-64">
                     <BoGButton
                       text="Share Private Event Link"
                       onClick={copyPrivateLink}

@@ -3,59 +3,23 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import { attendanceHours, formatDurationHours } from "../../utils/hours";
-import { getAtlantaMonthIndex } from "../../utils/dates";
+import { formatDurationHours } from "../../utils/hours";
 
+const EMPTY_MONTHS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+// The numbers come worked out from the server (GET /api/events/home-summary),
+// so the Home page no longer downloads every event and attendance record.
 const AdminHomeHeader = (props) => {
-  let todaysEvents = 0;
-  let todaysRegistrations = 0;
-  let firstDate = "";
-
-  let eventData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let hoursData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let attendanceData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  let eventTotal = 0;
-  let hoursTotal = 0;
-  let attendanceTotal = 0;
-
-  if (props.events.length > 0) {
-    let split = props.events[0].date;
-    firstDate =
-      split.substring(5, 7) +
-      "/" +
-      split.substring(8, 10) +
-      "/" +
-      split.substring(0, 4);
-  }
-
-  for (let i = 0; i < props.events.length; i++) {
-    let date = new Date(props.events[i].date);
-    let splitDate = new Date(
-      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-    )
-      .toDateString()
-      .split(" ");
-    let final = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
-    if (final === props.dateString) {
-      todaysEvents++;
-      todaysRegistrations += props.registrations.filter(
-        (r) => r.eventId === props.events[i]._id
-      ).length;
-    }
-    let month = parseInt(props.events[i].date.slice(5, 7)) - 1;
-    eventData[month] += 1;
-    eventTotal += 1;
-  }
-  for (let i = 0; i < props.attendances.length; i++) {
-    const month = getAtlantaMonthIndex(props.attendances[i].checkinTime);
-    if (month < 0) continue;
-    const duration = attendanceHours(props.attendances[i]);
-    hoursData[month] += duration;
-    hoursTotal += duration;
-    attendanceData[month] += 1;
-    attendanceTotal += 1;
-  }
+  const summary = props.summary ?? {};
+  const todaysEvents = summary.todaysEvents ?? 0;
+  const todaysRegistrations = summary.todaysRegistrations ?? 0;
+  const firstDate = summary.firstDate ?? "";
+  const eventData = summary.eventData ?? EMPTY_MONTHS;
+  const hoursData = summary.hoursData ?? EMPTY_MONTHS;
+  const attendanceData = summary.attendanceData ?? EMPTY_MONTHS;
+  const eventTotal = summary.eventTotal ?? 0;
+  const hoursTotal = summary.hoursTotal ?? 0;
+  const attendanceTotal = summary.attendanceTotal ?? 0;
 
   const borderColor = "#374151";
   const labelColor = "#93ACAF";
@@ -275,10 +239,17 @@ const AdminHomeHeader = (props) => {
 
 AdminHomeHeader.propTypes = {
   attendanceReminders: PropTypes.node,
-  events: PropTypes.array.isRequired,
-  attendances: PropTypes.array.isRequired,
-  registrations: PropTypes.array.isRequired,
-  dateString: PropTypes.string.isRequired,
+  summary: PropTypes.shape({
+    firstDate: PropTypes.string,
+    todaysEvents: PropTypes.number,
+    todaysRegistrations: PropTypes.number,
+    eventTotal: PropTypes.number,
+    attendanceTotal: PropTypes.number,
+    hoursTotal: PropTypes.number,
+    eventData: PropTypes.arrayOf(PropTypes.number),
+    hoursData: PropTypes.arrayOf(PropTypes.number),
+    attendanceData: PropTypes.arrayOf(PropTypes.number),
+  }),
 };
 
 export default AdminHomeHeader;

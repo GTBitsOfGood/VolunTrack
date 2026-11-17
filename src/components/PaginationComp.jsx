@@ -45,15 +45,23 @@ class PaginationComp extends React.Component {
     this.state = { pageCount: 0, currentPage: 0 };
   }
 
+  // totalItems: the full count when the server sends one page at a time.
+  itemCount() {
+    return typeof this.props.totalItems === "number"
+      ? this.props.totalItems
+      : this.props.items.length;
+  }
+
   updateCurrentPage(e, index) {
     e.preventDefault();
+    if (index < 0 || index >= this.state.pageCount) return;
     this.setState({ currentPage: index });
     this.props.updatePageCallback(index);
   }
 
   componentDidMount = () => {
     this.setState({
-      pageCount: Math.ceil(this.props.items.length / this.props.pageSize),
+      pageCount: Math.ceil(this.itemCount() / this.props.pageSize),
       currentPage: this.props.currentPage,
     });
   };
@@ -61,11 +69,12 @@ class PaginationComp extends React.Component {
   componentDidUpdate(prevProps) {
     if (
       this.props.items !== prevProps.items ||
+      this.props.totalItems !== prevProps.totalItems ||
       this.props.pageSize !== prevProps.pageSize ||
       this.props.currentPage !== prevProps.currentPage
     ) {
       this.setState({
-        pageCount: Math.ceil(this.props.items.length / this.props.pageSize),
+        pageCount: Math.ceil(this.itemCount() / this.props.pageSize),
         currentPage: this.props.currentPage,
       });
     }
@@ -162,6 +171,7 @@ export default PaginationComp;
 
 PaginationComp.propTypes = {
   items: PropTypes.array.isRequired,
+  totalItems: PropTypes.number,
   pageSize: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   updatePageCallback: PropTypes.func.isRequired,
