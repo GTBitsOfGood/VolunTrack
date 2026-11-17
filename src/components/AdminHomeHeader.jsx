@@ -9,6 +9,13 @@ const EMPTY_MONTHS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // The numbers come worked out from the server (GET /api/events/home-summary),
 // so the Home page no longer downloads every event and attendance record.
+// Today's calendar day as midnight UTC, the form DateDisplay expects (it was
+// given the current moment, which showed tomorrow's date after 7 PM Atlanta).
+const todayAsCalendarDay = () => {
+  const now = new Date();
+  return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+};
+
 const AdminHomeHeader = (props) => {
   const summary = props.summary ?? {};
   const todaysEvents = summary.todaysEvents ?? 0;
@@ -115,6 +122,8 @@ const AdminHomeHeader = (props) => {
     },
     yaxis: {
       labels: {
+        // Whole numbers where possible, never "400.00000000000000".
+        formatter: (value) => String(Math.round(value * 10) / 10),
         style: {
           colors: [labelColor],
           fontSize: "14px",
@@ -173,7 +182,10 @@ const AdminHomeHeader = (props) => {
             </h3>
             <div className="flex">
               <div>
-                <DateDisplayComponent date={Date.now()} version={"Primary"} />
+                <DateDisplayComponent
+                  date={todayAsCalendarDay()}
+                  version={"Primary"}
+                />
               </div>
               <div className="flex-column flex">
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">

@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { getAttendanceNeedsReview } from "../queries/attendances";
+import PaginationComp from "./PaginationComp";
+
+// 5 shifts at a time, newest first, so the box stays the same size however
+// many shifts need a look.
+const PAGE_SIZE = 5;
 
 // Mounted only in the admin home header. This data never comes from the
 // calendar's filtered event list; the server scopes it to the current session.
 const AttendanceReminders = () => {
   const [shifts, setShifts] = useState([]);
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const generation = useRef(0);
@@ -45,12 +51,25 @@ const AttendanceReminders = () => {
     };
   }, [refresh]);
   if (!loading && !error && shifts.length === 0) return null;
+  // Newest first: recent shifts are the ones an admin can still fix.
+  const newestFirst = [...shifts].sort(
+    (a, b) => b.date.localeCompare(a.date) || b.eventId.localeCompare(a.eventId)
+  );
+  const lastPage = Math.max(0, Math.ceil(newestFirst.length / PAGE_SIZE) - 1);
+  const current = Math.min(page, lastPage);
+  const shown = newestFirst.slice(
+    current * PAGE_SIZE,
+    (current + 1) * PAGE_SIZE
+  );
   return (
     <section
       aria-label="Attendance reminders"
       className="my-4 rounded-lg border border-primaryColor p-4"
     >
-      <h2 className="text-lg font-semibold">Attendance needs review</h2>
+      <h2 className="text-lg font-semibold">
+        Attendance needs review
+        {shifts.length > 0 ? ` (${shifts.length})` : ""}
+      </h2>
       {loading && <p role="status">Loading attendance reminders…</p>}
       {error ? (
         <div role="alert">
@@ -65,8 +84,8 @@ const AttendanceReminders = () => {
           </button>
         </div>
       ) : (
-        <ul className="space-y-3">
-          {shifts.map((shift) => {
+        <ul className="mb-0 mt-2">
+          {shown.map((shift) => {
             const total =
               shift.missingCheckinCount + shift.missingCheckoutCount;
             const counts = [
@@ -82,25 +101,27 @@ const AttendanceReminders = () => {
             return (
               <li
                 key={shift.eventId}
+                className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-gray-200 py-2 last:border-b-0"
                 aria-label={`${shift.title}, ${shift.date}: ${total} volunteer${
                   total === 1 ? " needs" : "s need"
                 } attendance review.`}
               >
-                <p>
-                  {shift.title} needs a look: {counts}.
+                <p className="mb-0">
+                  <time dateTime={shift.date} className="font-semibold">
+                    {new Intl.DateTimeFormat("en-US", {
+                      timeZone: "UTC",
+                      month: "short",
+                      day: "numeric",
+                    }).format(new Date(`${shift.date}T12:00:00Z`))}
+                  </time>
+                  {" · "}
+                  {shift.title}
+                  {" · "}
+                  <span className="text-red-700">{counts}</span>
                 </p>
-                <time dateTime={shift.date}>
-                  {new Intl.DateTimeFormat("en-US", {
-                    timeZone: "UTC",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }).format(new Date(`${shift.date}T12:00:00Z`))}
-                </time>
-                {" · "}
                 <Link href={`/events/${shift.eventId}/attendance`}>
                   <a
-                    className="text-primaryColor underline"
+                    className="whitespace-nowrap text-primaryColor underline"
                     aria-label={`Review attendance for ${shift.title} on ${shift.date}`}
                   >
                     Review attendance
@@ -110,6 +131,15 @@ const AttendanceReminders = () => {
             );
           })}
         </ul>
+      )}
+      {!error && newestFirst.length > PAGE_SIZE && (
+        <PaginationComp
+          items={newestFirst}
+          pageSize={PAGE_SIZE}
+          currentPage={current}
+          updatePageCallback={setPage}
+          ariaLabel="Attendance review pages"
+        />
       )}
     </section>
   );
