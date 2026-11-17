@@ -40,23 +40,33 @@ const getRegistrationEmailData = ({ user, event, organization }) => ({
 });
 
 // Send one message using the existing MailerSend template and BCC behavior.
+// The template greets the reader with {{volunteerName}}.
 const sendRegistrationEmail = async (
   context,
   recipient,
-  { header, introLine, subject }
+  { header, introLine, subject },
+  { notifyNonprofit = true } = {}
 ) => {
   const personalization = [
     {
       email: recipient.email,
       data: {
         ...getRegistrationEmailData(context),
+        volunteerName: recipient.firstName || "there",
         header,
         introLine,
       },
     },
   ];
 
-  await sendEmail([recipient], context.organization, personalization, subject);
+  await sendEmail(
+    [recipient],
+    context.organization,
+    personalization,
+    subject,
+    undefined,
+    notifyNonprofit
+  );
 };
 
 // The event contact is the admin recipient used by the existing flow.
@@ -117,17 +127,22 @@ export const sendRegistrationPendingEmail = async (userId, eventId) => {
   });
 };
 
-// Notify the volunteer of approval, retaining the existing nonprofit BCC.
-// avoid sending another new registration notification to the event contact.
+// Notify the volunteer of approval. No copy to the organization: they asked
+// not to receive copies of approval and denial emails (AARF, Nov 2026).
 export const sendRegistrationApprovedEmail = async (userId, eventId) => {
   const context = await getRegistrationEmailContext(userId, eventId);
   const title = context.event.eventParent.title;
 
-  await sendRegistrationEmail(context, context.user, {
-    header: "Your registration has been approved for",
-    introLine: `Your request to register for ${title} has been approved! Your spot is confirmed. Please review the event details below.`,
-    subject: `Registration Approved for ${title}`,
-  });
+  await sendRegistrationEmail(
+    context,
+    context.user,
+    {
+      header: "Your registration has been approved for",
+      introLine: `Your request to register for ${title} has been approved! Your spot is confirmed. Please review the event details below.`,
+      subject: `Registration Approved for ${title}`,
+    },
+    { notifyNonprofit: false }
+  );
 };
 
 // Explain the denial and provide a contact without inventing a decision reason.
@@ -136,11 +151,16 @@ export const sendRegistrationDeniedEmail = async (userId, eventId) => {
   const title = context.event.eventParent.title;
   const contactEmail = context.event.eventParent.eventContactEmail;
 
-  await sendRegistrationEmail(context, context.user, {
-    header: "Your registration request was denied for",
-    introLine: `Your request to register for ${title} was denied. If you have questions, please contact ${contactEmail}.`,
-    subject: `Registration Request Denied for ${title}`,
-  });
+  await sendRegistrationEmail(
+    context,
+    context.user,
+    {
+      header: "Your registration request was denied for",
+      introLine: `Your request to register for ${title} was denied. If you have questions, please contact ${contactEmail}.`,
+      subject: `Registration Request Denied for ${title}`,
+    },
+    { notifyNonprofit: false }
+  );
 };
 
 export const sendRegistrationDeleteEmail = async (userId, eventId) => {
@@ -158,8 +178,9 @@ export const sendRegistrationDeleteEmail = async (userId, eventId) => {
       email: adminUser.email,
       data: {
         header: `Event Cancellation Notification`,
-        introLine: `Event Cancellation from ${user.name} for ${event.eventParent.title}. View Event Details below.`,
+        introLine: `Event Cancellation from ${user.firstName} ${user.lastName} for ${event.eventParent.title}. View Event Details below.`,
         eventTitle: event.eventParent.title,
+        volunteerName: adminUser.firstName || "there",
         memberName: user.firstName,
         eventDate: event.date?.toISOString().slice(0, 10),
         eventStartTime: convertTime(event.eventParent.startTime),
@@ -319,11 +340,15 @@ export const sendEventReminderEmail = async (user, event, organization) => {
       },
     },
   ];
+  // No copy to the organization: one per volunteer per shift every day would
+  // flood its inbox (AARF, Nov 2026).
   await sendEmail(
     [user],
     organization,
     personalization,
-    `Event Reminder: ${event.eventParent.title}`
+    `Event Reminder: ${event.eventParent.title}`,
+    undefined,
+    false
   ); // no catch on purpose: reminders.ts counts and reports each failure
 };
 
