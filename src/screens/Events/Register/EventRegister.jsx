@@ -5,7 +5,13 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
@@ -24,7 +30,8 @@ import EventTasksContainer from "./EventTasksContainer";
 
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import { RequestContext } from "../../../providers/RequestProvider";
-import VolunteerLog from "./VolunteerLog";
+import VolunteerClock from "./VolunteerClock";
+import { getShiftDateTimes } from "../../../../utils/dates";
 
 const Styled = {
   Container: styled(Container)`
@@ -122,10 +129,18 @@ const EventRegister = () => {
   const [regCount, setRegCount] = useState(0);
   const [showUnregisterModal, setShowUnregisterModal] = useState(false);
   const [capacityError, setCapacityError] = useState("");
+  const [hasClockRecord, setHasClockRecord] = useState(false);
+  const onClockStatus = useCallback(
+    (status) => setHasClockRecord(Boolean(status?.attendance)),
+    []
+  );
 
   useEffect(() => {
+    // The event ID comes from the web address and can arrive after the page
+    // first renders. Load once it is known, and again after each sign-up.
+    if (!eventId) return;
     onLoadEvent();
-  }, [refreshTrigger]);
+  }, [eventId, refreshTrigger]);
 
   const onLoadEvent = () => {
     getEvent(eventId)
@@ -281,6 +296,28 @@ const EventRegister = () => {
   const isGroupTooLarge = groupSize > availableSlots && availableSlots > 0;
   const isEventFull = availableSlots <= 0;
   const isCapacityLocked = isEventFull || isGroupTooLarge;
+  // A sign-up can't be cancelled once the volunteer clocked in or the shift
+  // is over (the server refuses too).
+  const shiftEnded = useMemo(() => {
+    const parent = event?.eventParent;
+    if (!event?.date || !parent) return false;
+    try {
+      const { end } = getShiftDateTimes(
+        event.date,
+        parent.startTime,
+        parent.endTime
+      );
+      return Date.now() > end.getTime();
+    } catch {
+      return false;
+    }
+  }, [event]);
+  const canCancel = !hasClockRecord && !shiftEnded;
+  // Tasks are required when the shift has any (marked with * above them).
+  const needsTask =
+    !isRegistered &&
+    (event?.eventParent?.tasks?.length ?? 0) > 0 &&
+    tasks.length === 0;
 
   useEffect(() => {
     if (!event?.eventParent?.maxVolunteers || isRegistered) {
@@ -316,17 +353,22 @@ const EventRegister = () => {
   ]);
 
   return (
-    <Styled.Container fluid="md" className="mx-20 w-4/5 overflow-y-hidden">
-      <div className="flex flex-row justify-between">
+    <Styled.Container
+      fluid="md"
+      className="mx-auto w-full overflow-y-hidden px-4 sm:w-4/5"
+    >
+      <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
         <Text type="header" text="Confirm Registration"></Text>
-        <div className="flex items-end">
-          <Text type="header" text={availableSlots}></Text>
-          <Text
-            className="min-w-max"
-            type="subheader"
-            text={`/${event?.eventParent?.maxVolunteers} Spots Remaining`}
-          ></Text>
-        </div>
+        {event?.eventParent && (
+          <div className="flex items-end self-end sm:self-auto">
+            <Text type="header" text={availableSlots}></Text>
+            <Text
+              className="min-w-max"
+              type="subheader"
+              text={`/${event.eventParent.maxVolunteers} spots remaining`}
+            ></Text>
+          </div>
+        )}
       </div>
       <div className="mt-8 flex flex-row items-center">
         <Text text="Event Information" type="subheader" />
@@ -436,9 +478,13 @@ const EventRegister = () => {
       )}
 
       {isRegistered &&
-        (!event?.eventParent?.requiresApproval ||
-          registrations[0]?.approved === "approved") && (
-          <VolunteerLog eventId={eventId} user={user} />
+        registrations[0]?.approved === "approved" &&
+        typeof eventId === "string" && (
+          <VolunteerClock
+            key={`${eventId}:${user._id}`}
+            eventId={eventId}
+            onStatusChange={onClockStatus}
+          />
         )}
 
       {event?.eventParent?.requiresApproval && (
@@ -457,7 +503,7 @@ const EventRegister = () => {
             text="Complete Registration"
             onClick={onCompleteRegistrationClicked}
             className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
-            disabled={isCapacityLocked}
+            disabled={isCapacityLocked || needsTask}
           />
         </div>
       )}
@@ -467,9 +513,15 @@ const EventRegister = () => {
           text={capacityError}
         />
       )}
+      {needsTask && !capacityError && (
+        <Text
+          className="text-sm font-semibold text-red-600"
+          text="Choose at least one task above to finish registering."
+        />
+      )}
 
       {isRegistered && registrations[0]?.approved == "approved" ? (
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <BoGButton
             text={
               <>
@@ -479,16 +531,18 @@ const EventRegister = () => {
             }
             className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
-          <BoGButton
-            text="Cancel Registration"
-            onClick={() => {
-              setShowUnregisterModal(true);
-            }}
-            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
-          />
+          {canCancel && (
+            <BoGButton
+              text="Cancel Registration"
+              onClick={() => {
+                setShowUnregisterModal(true);
+              }}
+              className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
+            />
+          )}
         </div>
       ) : isRegistered && registrations[0]?.approved == "pending" ? (
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <BoGButton
             text={
               <>
@@ -498,13 +552,15 @@ const EventRegister = () => {
             }
             className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
-          <BoGButton
-            text="Cancel Registration"
-            onClick={() => {
-              setShowUnregisterModal(true);
-            }}
-            className="w-48 flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
-          />
+          {canCancel && (
+            <BoGButton
+              text="Cancel Registration"
+              onClick={() => {
+                setShowUnregisterModal(true);
+              }}
+              className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
+            />
+          )}
         </div>
       ) : isRegistered && registrations[0]?.approved == "denied" ? (
         <div className="my-3">

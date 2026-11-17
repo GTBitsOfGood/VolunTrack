@@ -1,13 +1,21 @@
-import { isValidObjectId, Types, UpdateQuery } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import { checkEventCapacity } from "../../../../server/actions/registrationCapacity";
+import Attendance from "../../../../server/mongodb/models/Attendance";
+import Event, {
+  EventPopulatedDocument,
+} from "../../../../server/mongodb/models/Event";
+import { getShiftDateTimes } from "../../../../utils/dates";
 import Registration, {
   RegistrationInputClient,
   registrationInputServerValidator,
 } from "../../../../server/mongodb/models/Registration";
 import {
   sendRegistrationConfirmationEmail,
+  sendRegistrationPendingEmail,
+  sendRegistrationApprovedEmail,
+  sendRegistrationDeniedEmail,
   sendRegistrationDeleteEmail,
 } from "../../../utils/mailersend-email.js";
 import { isAdmin, isOwnUser } from "../../../utils/routeProtection";
@@ -77,24 +85,59 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
-      if (result.data.approved === "approved") {
-        try {
-          await sendRegistrationConfirmationEmail(
-            result.data.userId,
-            result.data.eventId
-          );
-        } catch (error) {
-          console.error(
-            "Failed to send registration confirmation email:",
-            error
-          );
-          // Continue with registration creation even if email fails
+      // A shift with tasks needs at least one, chosen from its own list.
+      // (.lean() skips schema defaults, so older shifts may have no tasks field.)
+      const savedTasks: unknown = capacityResult.event.eventParent.tasks;
+      const shiftTasks = Array.isArray(savedTasks)
+        ? savedTasks.filter((task): task is string => typeof task === "string")
+        : [];
+      if (shiftTasks.length > 0) {
+        const chosenTasks = result.data.tasks ?? [];
+        if (
+          chosenTasks.length === 0 ||
+          chosenTasks.some((task) => !shiftTasks.includes(task))
+        ) {
+          return res
+            .status(400)
+            .json({ error: "Choose at least one task for this shift." });
         }
       }
 
-      return res.status(201).json({
-        registration: await Registration.create(result.data),
+      // Save first so failed registrations never trigger an email.
+      // Derive approval from the event so clients cannot bypass review or send
+      // a premature confirmation by omitting or overriding the status.
+      const registration = await Registration.create({
+        ...result.data,
+        approved: capacityResult.event.eventParent.requiresApproval
+          ? "pending"
+          : "approved",
       });
+
+      try {
+        if (registration.approved === "pending") {
+          // Always notify the event contact; do not confirm with the volunteer yet.
+          await sendRegistrationPendingEmail(
+            registration.userId,
+            registration.eventId
+          );
+        } else if (registration.approved === "approved") {
+          // Ordinary confirmations retain the existing Notify Admin preference.
+          await sendRegistrationConfirmationEmail(
+            registration.userId,
+            registration.eventId
+          );
+        }
+      } catch (error) {
+        // Signup already succeeded; an email failure must not suggest retrying it.
+        console.error("Failed to send registration notification:", {
+          registrationId: registration._id.toString(),
+          status: registration.approved,
+          error,
+        });
+      }
+
+      // Return the saved record without creating a second registration.
+      return res.status(201).json({ registration });
     }
     case "DELETE": {
       const isownuser = await isOwnUser(req, res);
@@ -126,6 +169,35 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       if (userId) match.userId = userId;
       else return res.status(500);
 
+      // Once the volunteer has clocked in, or the shift is over, the sign-up
+      // stays, because the hours and the roster depend on it.
+      if (await Attendance.exists({ eventId, userId })) {
+        return res.status(409).json({
+          error:
+            "You've already clocked in for this shift, so it can't be cancelled.",
+        });
+      }
+      const shift = await Event.findById(eventId)
+        .populate("eventParent")
+        .lean<EventPopulatedDocument | null>();
+      if (shift?.eventParent) {
+        let shiftEnd: Date | null = null;
+        try {
+          shiftEnd = getShiftDateTimes(
+            shift.date,
+            shift.eventParent.startTime,
+            shift.eventParent.endTime
+          ).end;
+        } catch {
+          // A shift with unreadable times can still be cancelled.
+        }
+        if (shiftEnd && Date.now() > shiftEnd.getTime()) {
+          return res.status(409).json({
+            error: "This shift has already ended, so it can't be cancelled.",
+          });
+        }
+      }
+
       await sendRegistrationDeleteEmail(req.query.userId, req.query.eventId);
 
       return res.status(200).json({
@@ -141,26 +213,71 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       try {
-        type RegistrationUpdateData = Partial<RegistrationInputClient>;
-        const {
-          registrationId,
-          ...updateData
-        }: { registrationId: string; updateData: RegistrationUpdateData } =
-          req.body;
+        const { registrationId, ...updateData } = req.body as {
+          registrationId: string;
+          [key: string]: unknown;
+        };
         if (!isValidObjectId(registrationId)) {
           return res.status(400).json({
             message: `Invalid registration ID: ${registrationId}`,
           });
         }
 
-        const updatedRegistration = await Registration.findByIdAndUpdate(
-          registrationId,
-          updateData as UpdateQuery<RegistrationUpdateData>,
-          { new: true }
+        // Validate partial edits with the existing schema, including decision values.
+        // Parsing also strips unknown fields and raw MongoDB update operators.
+        const result = registrationInputServerValidator
+          .partial()
+          .safeParse(updateData);
+        if (!result.success) {
+          return res.status(400).json({ error: result.error });
+        }
+
+        const existingRegistration = await Registration.findById(
+          registrationId
+        );
+        if (!existingRegistration) {
+          return res.status(404).json({ message: "Registration not found" });
+        }
+
+        // Compare and save atomically: only one competing decision can win.
+        const updatedRegistration = await Registration.findOneAndUpdate(
+          { _id: registrationId, approved: existingRegistration.approved },
+          result.data,
+          { new: true, runValidators: true }
         );
 
         if (!updatedRegistration) {
-          return res.status(404).json({ message: "Registration not found" });
+          return res.status(409).json({
+            message:
+              "Registration changed while saving. Refresh and try again.",
+          });
+        }
+
+        // Repeated decisions and unrelated edits must not resend decision emails.
+        const statusChanged =
+          existingRegistration.approved !== updatedRegistration.approved;
+        try {
+          if (statusChanged && updatedRegistration.approved === "approved") {
+            await sendRegistrationApprovedEmail(
+              updatedRegistration.userId,
+              updatedRegistration.eventId
+            );
+          } else if (
+            statusChanged &&
+            updatedRegistration.approved === "denied"
+          ) {
+            await sendRegistrationDeniedEmail(
+              updatedRegistration.userId,
+              updatedRegistration.eventId
+            );
+          }
+        } catch (error) {
+          // The saved decision remains successful even if its notification fails.
+          console.error("Failed to send registration decision email:", {
+            registrationId: updatedRegistration._id.toString(),
+            status: updatedRegistration.approved,
+            error,
+          });
         }
 
         return res.status(200).json({ registration: updatedRegistration });

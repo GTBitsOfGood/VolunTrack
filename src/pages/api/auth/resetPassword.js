@@ -3,6 +3,7 @@ import {
   uploadResetCode,
   getUserIdFromCode,
   deleteResetCode,
+  setPasswordFromResetCode,
 } from "../../../../server/actions/passwordreset";
 import { sendResetCodeEmail } from "../../../utils/mailersend-email";
 
@@ -39,6 +40,30 @@ export default async function handler(req, res) {
     await deleteResetCode(userId, code);
 
     return res.status(204).end();
+  } else if (req.method === "PUT") {
+    // A person resetting a password isn't signed in, so the reset code is what
+    // proves which account this is. Same rules as the reset form.
+    const { code, password } = req.body ?? {};
+    if (
+      typeof code !== "string" ||
+      typeof password !== "string" ||
+      password.length < 10 ||
+      !/[a-zA-Z]/.test(password)
+    ) {
+      return res.status(400).json({
+        error:
+          "Enter a password of at least 10 characters with at least 1 letter.",
+      });
+    }
+
+    const resetCode = await getUserIdFromCode(code);
+    if (!resetCode || !(await setPasswordFromResetCode(resetCode, password))) {
+      return res.status(400).json({
+        error: "This reset link is not valid. Please request a new one.",
+      });
+    }
+
+    return res.status(200).json({ message: "Password updated" });
   } else {
     res.status(404).json({ message: "Invalid Request Method" });
   }

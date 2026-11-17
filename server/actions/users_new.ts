@@ -20,7 +20,7 @@ export const getUsers = async (
   const match: Partial<UserInputClient> = {};
   if (organizationId) match.organizationId = organizationId;
   if (role) match.role = role;
-  users = await User.find(match);
+  users = await User.find(match).select("-passwordHash");
 
   if (eventId) {
     const registrations = await Registration.find({
@@ -132,7 +132,18 @@ export const verifyUserWithCredentials = async (
 }> => {
   await dbConnect();
 
-  const user = await User.findOne({ email });
+  // Accept the email however it was typed: ignore outer spaces and capitals.
+  // An exact match wins, so accounts that differ only by case stay separate.
+  // Capitals are ignored with a regular expression, not a collation: Azure
+  // Cosmos DB (the live site) does not support collations.
+  const typedEmail = email.trim();
+  const anyCapitals = {
+    $regex: `^${typedEmail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+    $options: "i",
+  };
+  const user =
+    (await User.findOne({ email: typedEmail })) ??
+    (await User.findOne({ email: anyCapitals }));
 
   if (!user) {
     return {
@@ -147,7 +158,9 @@ export const verifyUserWithCredentials = async (
       message: "Please sign in with Google",
     };
   }
-  const match = await bcrypt.compare(email + password, user.passwordHash);
+  // The password was saved together with the email exactly as it was at
+  // sign-up, so check it against the saved email, not the typed one.
+  const match = await bcrypt.compare(user.email + password, user.passwordHash);
 
   if (match) {
     return {

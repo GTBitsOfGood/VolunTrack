@@ -8,7 +8,6 @@ import Loading from "../../../components/Loading";
 import { getAttendanceStatistics } from "../../../queries/attendances";
 import AdminAuthWrapper from "../../../utils/AdminAuthWrapper";
 import Text from "../../../components/Text";
-import { getEvents } from "../../../queries/events";
 import EventStatsTable from "../../../components/EventStatsTable";
 
 const OverallAttendanceSummary = () => {
@@ -19,7 +18,6 @@ const OverallAttendanceSummary = () => {
   const [numEvents, setNumEvents] = useState(0);
   const [attend, setAttend] = useState(0);
   const [hours, setHours] = useState(0);
-  const [events, setEvents] = useState([]);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -29,50 +27,46 @@ const OverallAttendanceSummary = () => {
     onRefresh();
   }, []);
 
+  // The statistics come with each shift's name and times (withEvents), so the
+  // page no longer downloads every shift to look them up.
   const onRefresh = async () => {
-    // grab the events
     setLoading(true);
+    try {
+      const result = await getAttendanceStatistics(
+        user.organizationId,
+        startDate,
+        endDate,
+        true
+      );
+      const stats = result?.data?.statistics ?? [];
+      const events = result?.data?.events ?? {};
+      const computedStats = [];
+      setNumEvents(stats.length);
 
-    await getEvents(user.organizationId)
-      .then((result) => {
-        if (result?.data?.events) {
-          setEvents(result.data.events);
+      let mins = 0;
+      let volunteers = 0;
+      stats.forEach((stat) => {
+        mins += stat.minutes;
+        volunteers += stat.users.length;
+        const event = events[stat._id];
+        if (event) {
+          computedStats.push({
+            _id: stat._id,
+            title: event.title,
+            date: event.date,
+            startTime: event.startTime,
+            endTime: event.endTime,
+            attendance: stat.users.length,
+            hours: Math.round((stat.minutes / 60.0) * 100) / 100,
+          });
         }
-      })
-      .then(() => {
-        getAttendanceStatistics(user.organizationId, startDate, endDate).then(
-          (result) => {
-            let stats = result.data.statistics;
-            let computedStats = [];
-            setNumEvents(stats.length);
-
-            let mins = 0;
-            let volunteers = 0;
-            stats.forEach((stat) => {
-              mins += stat.minutes;
-              volunteers += stat.users.length;
-              let event = events.filter((event) => stat._id === event._id);
-              if (event && event[0]) {
-                computedStats.push({
-                  _id: stat._id,
-                  title: event[0].eventParent.title,
-                  date: event[0].date,
-                  startTime: event[0].eventParent.startTime,
-                  endTime: event[0].eventParent.endTime,
-                  attendance: stat.users.length,
-                  hours: Math.round((stat.minutes / 60.0) * 100) / 100,
-                });
-              }
-            });
-            setAttend(volunteers);
-            setHours(Math.round((mins / 60) * 100) / 100);
-            setComputedStats(computedStats);
-          }
-        );
-      })
-      .finally(() => {
-        setLoading(false);
       });
+      setAttend(volunteers);
+      setHours(Math.round((mins / 60) * 100) / 100);
+      setComputedStats(computedStats);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onSubmitValues = (values, setSubmitting) => {

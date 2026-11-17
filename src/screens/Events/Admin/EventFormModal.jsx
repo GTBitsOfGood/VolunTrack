@@ -23,6 +23,7 @@ import DOMPurify from "dompurify";
 
 import theme from "tailwind.config.js"; // ********ASDLHSLDFHLJKSDHFLJKSHDLKFJHSDLKJFHLKJSDFHLJKSDHF
 import { is } from "date-fns/locale";
+import useQuillToolbarLabels from "../../../utils/useQuillToolbarLabels";
 
 const Styled = {
   Form: styled(FForm)``,
@@ -61,16 +62,17 @@ const EventFormModal = ({
   setEventEdit,
   editRecurringEvent = false,
 }) => {
+  useQuillToolbarLabels();
   const [sendConfirmationEmail, setSendConfirmationEmail] = useState(false);
   const [organization, setOrganization] = useState({});
   const [isNotifyAdmin, setisNotifyAdmin] = useState(
-    event?.eventParent?.isNotifyAdmin ?? false
+    event?.eventParent?.isNotifyAdmin ?? !event
   );
   const [isValidForCourtHours, setIsValidForCourtHours] = useState(
     event?.eventParent?.isValidForCourtHours ?? false
   );
   const [sendReminderEmail, setSendReminderEmail] = useState(
-    event?.eventParent?.sendReminderEmail ?? false
+    event?.eventParent?.sendReminderEmail ?? !event
   );
   const [requiresApproval, setRequiresApproval] = useState(
     event?.eventParent?.requiresApproval ?? false
@@ -100,8 +102,8 @@ const EventFormModal = ({
     setSubmitting(true);
     if (isGroupEvent) event.eventParent.isPrivate = true;
     if (isValidForCourtHours) event.eventParent.isValidForCourtHours = true;
-    if (isNotifyAdmin) event.eventParent.isNotifyAdmin = true;
-    if (sendReminderEmail) event.eventParent.sendReminderEmail = true;
+    event.eventParent.isNotifyAdmin = isNotifyAdmin;
+    event.eventParent.sendReminderEmail = sendReminderEmail;
     if (requiresApproval) event.eventParent.requiresApproval = true;
 
     createEvent(event)
@@ -141,7 +143,14 @@ const EventFormModal = ({
       sendConfirmationEmail,
       editRecurringEvent
     )
-      .then(() => {
+      .then((result) => {
+        // Update the card (and the week box) only once the server saved it.
+        if (setEvent && !result?.error) {
+          const eventParentId = event.eventParent._id;
+          event.date = values.date;
+          event.eventParent = values.eventParent;
+          setEvent(event, event._id, eventParentId, editRecurringEvent);
+        }
         if (previousRequiresApproval === true && requiresApproval === false) {
           getRegistrations({ eventId: event._id })
             .then((response) => {
@@ -162,15 +171,9 @@ const EventFormModal = ({
       .catch((error) => console.error("Error updating event:", error))
       .finally(() => setSubmitting(false));
 
-    if (setEvent) {
-      const eventParentId = event.eventParent._id;
-      event.date = values.date;
-      event.eventParent = values.eventParent;
-      setEvent(event, event._id, eventParentId, editRecurringEvent);
-    }
-    if (sendConfirmationEmail && setEventEdit && event?.eventParent?.title) {
+    if (sendConfirmationEmail && setEventEdit && values.eventParent?.title) {
       setEventEdit(
-        `Registered members have been successfully notified about your edit to the ${event?.eventParent?.title} event!`
+        `Registered members have been successfully notified about your edit to the ${values.eventParent.title} event!`
       );
     } else if (sendConfirmationEmail && setEventEdit) {
       setEventEdit(
@@ -457,8 +460,8 @@ const EventFormModal = ({
           isPrivate: event?.eventParent?.isPrivate ?? isGroupEvent,
           isValidForCourtHours:
             event?.eventParent?.isValidForCourtHours ?? false,
-          isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? false,
-          sendReminderEmail: event?.eventParent?.sendReminderEmail ?? false,
+          isNotifyAdmin: event?.eventParent?.isNotifyAdmin ?? !event,
+          sendReminderEmail: event?.eventParent?.sendReminderEmail ?? !event,
           requiresApproval: event?.eventParent?.requiresApproval ?? false,
           organizationId:
             event?.eventParent?.organizationId ?? user.organizationId,
@@ -536,7 +539,11 @@ const EventFormModal = ({
                             </Label>
                             <div>
                               <div className="inline-flex items-center">
-                                <div
+                                <button
+                                  type="button"
+                                  role="switch"
+                                  aria-checked={requiresApproval}
+                                  aria-label="Requires Approval"
                                   className={
                                     "relative h-6 w-11 cursor-pointer rounded-full bg-gray-200 " +
                                     (requiresApproval ? "bg-primaryColor" : "")
@@ -547,7 +554,7 @@ const EventFormModal = ({
                                     );
                                   }}
                                 >
-                                  <div
+                                  <span
                                     className={
                                       "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
                                       (requiresApproval
@@ -555,7 +562,7 @@ const EventFormModal = ({
                                         : "")
                                     }
                                   />
-                                </div>
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -790,14 +797,6 @@ const EventFormModal = ({
                                         </div>
                                       </div>
                                     </div>
-                                  )}
-
-                                  {/* Click-outside handler */}
-                                  {isOpen && (
-                                    <div
-                                      className="fixed inset-0 z-0 bg-transparent"
-                                      onClick={() => setIsOpen(false)}
-                                    />
                                   )}
                                 </div>
                               </div>
@@ -1057,14 +1056,18 @@ const EventFormModal = ({
                     <Label>Notify admins upon registration </Label>
                     <div>
                       <div className="inline-flex cursor-pointer items-center">
-                        <div
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={isNotifyAdmin}
+                          aria-label="Notify admins upon registration"
                           className={
                             "relative h-6 w-11 rounded-full bg-gray-200 " +
                             (isNotifyAdmin ? "bg-primaryColor" : "")
                           }
                           onClick={() => onNotifyAdminCheckbox()}
                         >
-                          <div
+                          <span
                             className={
                               "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
                               (isNotifyAdmin
@@ -1072,7 +1075,7 @@ const EventFormModal = ({
                                 : "")
                             }
                           />
-                        </div>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1082,14 +1085,18 @@ const EventFormModal = ({
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
-                        <div
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={sendReminderEmail}
+                          aria-label="Send reminder emails 48 hours before the event"
                           className={
                             "relative h-6 w-11 rounded-full bg-gray-200 " +
                             (sendReminderEmail ? "bg-primaryColor" : "")
                           }
                           onClick={() => onSendReminderEmailbox()}
                         >
-                          <div
+                          <span
                             className={
                               "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
                               (sendReminderEmail
@@ -1097,7 +1104,7 @@ const EventFormModal = ({
                                 : "")
                             }
                           />
-                        </div>
+                        </button>
                       </label>
                     </div>
                   </div>
@@ -1107,14 +1114,18 @@ const EventFormModal = ({
                     </Label>
                     <div>
                       <label className="inline-flex cursor-pointer items-center">
-                        <div
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={isValidForCourtHours}
+                          aria-label="Event can count towards member's court required hours"
                           className={
                             "relative h-6 w-11 rounded-full bg-gray-200 " +
                             (isValidForCourtHours ? "bg-primaryColor" : "")
                           }
                           onClick={() => onCourtRequiredHoursCheckbox()}
                         >
-                          <div
+                          <span
                             className={
                               "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
                               (isValidForCourtHours
@@ -1122,7 +1133,7 @@ const EventFormModal = ({
                                 : "")
                             }
                           />
-                        </div>
+                        </button>
                       </label>
                     </div>
                   </div>
@@ -1134,14 +1145,18 @@ const EventFormModal = ({
                       </Label>
                       <div>
                         <label className="inline-flex cursor-pointer items-center">
-                          <div
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked={sendConfirmationEmail}
+                            aria-label="I would like to send an email to members with updated information"
                             className={
                               "relative h-6 w-11 rounded-full bg-gray-200 " +
                               (sendConfirmationEmail ? "bg-primaryColor" : "")
                             }
                             onClick={() => onSendConfirmationEmailCheckbox()}
                           >
-                            <div
+                            <span
                               className={
                                 "absolute start-[2px] top-[2px] h-5 w-5 rounded-full bg-white transition-all content-[''] " +
                                 (sendConfirmationEmail
@@ -1149,7 +1164,7 @@ const EventFormModal = ({
                                   : "")
                               }
                             />
-                          </div>
+                          </button>
                         </label>
                       </div>
                     </div>

@@ -19,36 +19,33 @@ const StatDisplay = ({ userId }) => {
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
 
-  if (!userId) {
-    const { data: session } = useSession();
-    userId = session.user._id;
-  }
   const { data: session } = useSession();
   let user = session.user;
+  // With no userId (the /stats page), show the signed-in person's own stats.
+  const statsUserId = userId ?? user._id;
 
   const onSubmitValues = (values, setSubmitting) => {
-    let offset = new Date().getTimezoneOffset();
-
     if (!values.startDate) {
       setStartDate("undefined");
     } else {
-      let start = new Date(values.startDate);
-      start.setMinutes(start.getMinutes() - offset);
+      let start = values.startDate;
       setStartDate(start);
     }
 
     if (!values.endDate) {
       setEndDate("undefined");
     } else {
-      let end = new Date(values.endDate);
-      end.setMinutes(end.getMinutes() - offset);
+      let end = values.endDate;
       setEndDate(end);
     }
   };
 
   useEffect(() => {
     setLoading(true);
-    getAttendances({ userId, organizationId: user.organizationId })
+    getAttendances({
+      userId: statsUserId,
+      organizationId: user.organizationId,
+    })
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
@@ -63,13 +60,13 @@ const StatDisplay = ({ userId }) => {
         setLoading(false);
       });
 
-    getUser(userId).then((response) => {
+    getUser(statsUserId).then((response) => {
       if (response.data.user)
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}'s`
         );
     });
-  }, [startDate, endDate]);
+  }, [startDate, endDate, statsUserId]);
 
   return (
     <React.Fragment>
@@ -101,8 +98,16 @@ const StatDisplay = ({ userId }) => {
           }}
           render={({ handleSubmit }) => (
             <div className="my-2 flex w-full flex-col py-4 md:w-auto md:flex-row md:items-end md:space-x-4">
-              <InputField label="From" name="startDate" type="datetime-local" />
-              <InputField label="To" name="endDate" type="datetime-local" />
+              <InputField
+                label="From (Atlanta time)"
+                name="startDate"
+                type="datetime-local"
+              />
+              <InputField
+                label="To (Atlanta time)"
+                name="endDate"
+                type="datetime-local"
+              />
               <BoGButton
                 className="my-3 w-full bg-primaryColor hover:bg-hoverColor"
                 text="Search"

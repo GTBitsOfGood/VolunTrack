@@ -47,9 +47,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
 
         if (filteredEvents.length === 0) {
+          // events whose eventParent is missing or wasn't populated get dropped by the above filter, so count separately
+          const eventsMissingParent = events.filter(
+            (event) =>
+              !event.eventParent || typeof event.eventParent !== "object"
+          ).length;
+
           return res.status(200).json({
             success: true,
-            message: "No events requiring reminders",
+            message:
+              events.length === 0
+                ? "No events found in the time window"
+                : "Events found in the time window, but none have reminder emails turned on",
+            eventsInWindow: events.length,
+            eventsWithReminderOn: 0,
+            eventsMissingParent,
             count: 0,
           });
         }
@@ -58,6 +70,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const registrations = await Registration.find({
           eventId: { $in: filteredEventIds },
+          approved: "approved",
         }).lean();
 
         const groupedRegistrations = registrations.reduce<{
@@ -83,6 +96,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           return acc;
         }, {});
 
+        const errors: string[] = [];
+        let sent = 0;
+
         await Promise.all(
           Object.values(groupedRegistrations).map(
             async ({ eventId, organizationId, userIds }) => {
@@ -94,10 +110,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               ).lean();
 
               if (!event || !organization) {
-                return {
-                  status: 404,
-                  message: `Event or organization not found for eventId: ${eventId}, organizationId: ${organizationId}`,
-                };
+                errors.push(
+                  `Event or organization not found for eventId: ${eventId}, organizationId: ${organizationId}`
+                );
+                return;
               }
 
               const users = await User.find(
@@ -106,26 +122,43 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
               ).lean();
 
               if (!users || users.length === 0) {
-                return {
-                  status: 404,
-                  message: `No users registered under event: ${eventId}`,
-                };
+                errors.push(`No users registered under event: ${eventId}`);
+                return;
               }
 
-              await Promise.all(
+              const results = await Promise.allSettled(
                 users.map((user) =>
                   sendEventReminderEmail(user, event, organization)
                 )
               );
+
+              results.forEach((result, i) => {
+                if (result.status === "fulfilled") {
+                  sent++;
+                } else {
+                  // use the user id, not the email, so the response doesn't leak addresses
+                  errors.push(
+                    `user ${String(users[i]._id)} (event ${eventId}): ${String(
+                      result.reason
+                    )}`
+                  );
+                }
+              });
             }
           )
         );
 
-        return res.status(200).json({
-          success: true,
-          message: "successfully sent reminders",
+        return res.status(errors.length > 0 ? 500 : 200).json({
+          success: errors.length === 0,
+          message:
+            errors.length === 0
+              ? "successfully sent reminders"
+              : "some reminders failed to send",
           eventCount: filteredEvents.length,
           registrationCount: registrations.length,
+          sent,
+          failed: errors.length,
+          errors,
         });
       } catch (error) {
         return res.status(500).json({

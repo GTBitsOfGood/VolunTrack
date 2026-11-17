@@ -158,6 +158,30 @@ export const deleteResetCode = async (code: string, userId: string) => {
   }
 };
 
+// Sets a new password from a reset link (the person is signed out).
+export const resetPasswordWithCode = async (code: string, password: string) => {
+  try {
+    return await axios.put<{ message?: string; error?: string }>(
+      "/api/auth/resetPassword",
+      { code, password }
+    );
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const data: unknown = error.response?.data;
+      return {
+        error:
+          typeof data === "object" &&
+          data !== null &&
+          "error" in data &&
+          typeof data.error === "string"
+            ? data.error
+            : "Your password could not be changed. Please try again.",
+      };
+    }
+    return { error: "Your password could not be changed. Please try again." };
+  }
+};
+
 export const getUserIdFromCode = async (code: string) => {
   try {
     const response = await axios.get(`/api/auth/resetPassword?code=` + code);

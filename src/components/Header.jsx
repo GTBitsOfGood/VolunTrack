@@ -49,6 +49,10 @@ const Header = () => {
     router.push("/events");
   };
 
+  const onVolunteerTimesheetsClicked = () => {
+    router.push("/timesheets");
+  };
+
   const currPageMatches = (page) => router.pathname === page;
 
   const dropdownItems = (
@@ -99,7 +103,7 @@ const Header = () => {
     <Navbar
       fluid={true}
       rounded={true}
-      className="my-custom-navbar !mx-6 items-center justify-between !px-0 !py-4 md:!mx-16"
+      className="my-custom-navbar !mx-6 items-center justify-between !px-0 !py-4 md:!mx-8 lg:!mx-16"
     >
       <Navbar.Brand tag={(props) => <Link {...props} />} href="/home">
         <img src={imageURL} alt="org logo" className="h-10" />
@@ -159,8 +163,10 @@ const Header = () => {
           </Navbar.Link>
         ) : (
           <Navbar.Link
-            className={`text-lg font-bold hover:no-underline md:hover:text-secondaryColor ${
-              currPageMatches("/events") ? "text-primaryColor" : ""
+            className={`text-lg font-bold hover:no-underline md:hover:text-primaryColor ${
+              currPageMatches("/events") || currPageMatches("/timesheets")
+                ? "text-primaryColor"
+                : ""
             }`}
           >
             <Dropdown
@@ -178,6 +184,13 @@ const Header = () => {
 
               <Dropdown.Item href="/events" onClick={onEventsClicked}>
                 Event Calendar
+              </Dropdown.Item>
+
+              <Dropdown.Item
+                href="/timesheets"
+                onClick={onVolunteerTimesheetsClicked}
+              >
+                Volunteer Timesheets
               </Dropdown.Item>
             </Dropdown>
           </Navbar.Link>
@@ -217,8 +230,9 @@ const Header = () => {
             arrowIcon={true}
             inline={true}
             label={
-              <div className="flex">
+              <div className="flex items-center">
                 <Avatar
+                  className="shrink-0"
                   img={user.imageUrl ?? "/images/gradient-avatar.png"}
                   alt="icon"
                   rounded={true}

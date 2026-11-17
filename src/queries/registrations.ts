@@ -7,6 +7,38 @@ import {
 } from "../../server/mongodb/models/Registration";
 import { QueryPartialMatch } from "./index";
 
+/** The Approval Portal in one request: new requests and one page of history. */
+export const getApprovals = async (page: number, pageSize: number) => {
+  try {
+    const response = await axios.get<{
+      pending: (RegistrationDocument & ApprovalDetails)[];
+      history: (RegistrationDocument & ApprovalDetails)[];
+      historyTotal: number;
+      page: number;
+      pageSize: number;
+      regCounts: Record<string, number>;
+    }>("/api/registrations/approvals", { params: { page, pageSize } });
+    return response;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      return {
+        error: error.response?.data?.error || error.message,
+      };
+    }
+    return { error: "Error getting approval requests." };
+  }
+};
+
+type ApprovalDetails = {
+  event: unknown;
+  user: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  } | null;
+};
+
 export const getRegistrations = async (query: QueryPartialMatch) => {
   try {
     const response = await axios.get<{
@@ -103,5 +135,31 @@ export const editRegistration = async (
   } catch (error) {
     console.error("Error updating registration:", error);
     throw error;
+  }
+};
+
+export const markRegistrationNoShow = async (
+  registrationId: Types.ObjectId | string
+) => {
+  try {
+    return await axios.patch<{
+      registration?: RegistrationDocument;
+      error?: string;
+    }>(`/api/registrations/${registrationId.toString()}`, { noShow: true });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const data: unknown = error.response?.data;
+      return {
+        error:
+          typeof data === "object" &&
+          data !== null &&
+          "error" in data &&
+          typeof data.error === "string"
+            ? data.error
+            : "No-show decision was not saved. Refresh and try again.",
+        status: error.response?.status,
+      };
+    }
+    return { error: "No-show decision was not saved. Refresh and try again." };
   }
 };

@@ -45,7 +45,7 @@ const BogApproval = () => {
       <Spinner />
     </div>
   ) : (
-    <div className="mx-auto my-2 w-3/4 space-y-8">
+    <div className="mx-auto my-2 w-11/12 space-y-8 md:w-3/4">
       <h1 className="my-4 text-3xl font-semibold">
         Bits of Good Nonprofit Approval Portal
       </h1>

@@ -5,40 +5,43 @@ import { changePasswordValidator } from "../../../screens/Auth/helpers";
 import { Formik } from "formik";
 import InputField from "../../../components/Forms/InputField";
 import {
-  updateUser,
-  deleteResetCode,
   getUserIdFromCode,
+  resetPasswordWithCode,
 } from "../../../queries/users";
 
 const ResetPage = () => {
   const router = useRouter();
   const { resetCode } = router.query;
   const [isValidCode, setIsValidCode] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const [isChecking, setIsChecking] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const checkIfValidCode = async () => {
-    // check if code is valid
     const response = await getUserIdFromCode(resetCode);
-
-    if (response.data.userId) {
-      setUserId(response.data.userId.userId);
-      setIsValidCode(true);
-    }
+    if (response?.data?.userId) setIsValidCode(true);
+    setIsChecking(false);
   };
 
   useEffect(() => {
+    // The code comes from the web address, which is still empty on the first
+    // render of the link from the email. Check it once it is known.
+    if (!resetCode) return;
     checkIfValidCode();
-  }, []);
+  }, [resetCode]);
 
   const handleSubmit = async (values) => {
-    await updateUser(userId, {
-      password: values.password,
-    });
-
-    // delete the code from the ResetCode model
-    await deleteResetCode(resetCode, userId);
-
+    setSubmitError("");
+    // The server checks the code, saves the new password and retires the code.
+    const result = await resetPasswordWithCode(resetCode, values.password);
+    if (result?.error) {
+      setSubmitError(
+        typeof result.error === "string"
+          ? result.error
+          : "Your password could not be changed. Please try again."
+      );
+      return;
+    }
     setIsSubmitted(true);
   };
 
@@ -87,10 +90,20 @@ const ResetPage = () => {
                           text={"Submit"}
                           className="w-full bg-blue-500 hover:bg-blue-400"
                         />
+                        {submitError && (
+                          <p
+                            role="alert"
+                            className="text-sm font-semibold text-red-600"
+                          >
+                            {submitError}
+                          </p>
+                        )}
                       </form>
                     )}
                   </Formik>
                 </>
+              ) : isChecking ? (
+                <div>Checking your link…</div>
               ) : (
                 <div>
                   Code is not valid. It may have expired or been used already.

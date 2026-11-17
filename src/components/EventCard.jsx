@@ -25,6 +25,11 @@ const EventCard = (props) => {
   const onEventEdit = props.onEventEdit;
 
   useEffect(() => {
+    // Lists from /api/events/feed send the count with each shift.
+    if (typeof event.spotsTaken === "number") {
+      setRegCount(event.spotsTaken);
+      return;
+    }
     getRegistrations({ eventId: event._id }).then((res) => {
       let count = 0;
       res.data.registrations.map((reg) => {
@@ -104,7 +109,7 @@ const EventCard = (props) => {
         if (!showEditModal) open();
       }}
     >
-      <div className="flex w-full items-center justify-between gap-10">
+      <div className="flex w-full items-center justify-between gap-3 sm:gap-10">
         <div className="flex items-center justify-start">
           <DateDisplayComponent
             key={event.date}
@@ -113,7 +118,7 @@ const EventCard = (props) => {
           />
           <div className="flex-column flex min-w-0 flex-1 text-xl">
             <div className="mb-1 flex items-center">
-              <Label class="mb-0 max-w-[20rem] whitespace-normal break-all text-xl font-bold">
+              <Label class="mb-0 max-w-[20rem] whitespace-normal break-words text-xl font-bold">
                 {event.eventParent.title}
               </Label>
               {event.eventParent.isPrivate && (
@@ -144,13 +149,18 @@ const EventCard = (props) => {
                   <button
                     className="mx-1 cursor-not-allowed text-gray-400"
                     disabled
+                    aria-label="Edit event"
                   >
                     <PencilIcon className="h-4 md:h-8" />
                   </button>
                 </div>
               ) : (
                 <Tooltip content="Edit" style="light">
-                  <button className="mx-1" onClick={editOnClick}>
+                  <button
+                    className="mx-1"
+                    onClick={editOnClick}
+                    aria-label="Edit event"
+                  >
                     <PencilIcon className="h-4 text-primaryColor md:h-8" />
                   </button>
                 </Tooltip>
@@ -160,24 +170,33 @@ const EventCard = (props) => {
                   <button
                     className="mx-1 cursor-not-allowed text-gray-400"
                     disabled
+                    aria-label="Delete event"
                   >
                     <TrashIcon className="h-4 md:h-8" />
                   </button>
                 </div>
               ) : (
                 <Tooltip content="Delete" style="light">
-                  <button className="mx-1" onClick={deleteOnClick}>
+                  <button
+                    className="mx-1"
+                    onClick={deleteOnClick}
+                    aria-label="Delete event"
+                  >
                     <TrashIcon className="h-4 text-primaryColor md:h-8" />
                   </button>
                 </Tooltip>
               )}
               <Tooltip content="Manage Attendance" style="light">
-                <button className="mx-1" onClick={manageAttendanceOnClick}>
+                <button
+                  className="mx-1"
+                  onClick={manageAttendanceOnClick}
+                  aria-label="Manage attendance"
+                >
                   <UsersIcon className="h-4 text-primaryColor md:h-8" />
                 </button>
               </Tooltip>
               <div className="w-fits">
-                <button className="mx-1" onClick={open}>
+                <button className="mx-1" onClick={open} aria-label="Open event">
                   <OutlineChevronRightIcon className="h-5 w-5 text-primaryColor md:h-8" />
                 </button>
               </div>

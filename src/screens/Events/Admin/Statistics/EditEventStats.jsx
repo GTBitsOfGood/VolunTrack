@@ -1,45 +1,59 @@
-import { Modal, ModalHeader } from "reactstrap";
-import styled from "styled-components";
-
+import { useRef, useState } from "react";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import PropTypes from "prop-types";
-import variables from "../../../../design-tokens/_variables.module.scss";
 import EditEventStatsForm from "./EditEventStatsForm";
 
-const Styled = {
-  ModalHeader: styled(ModalHeader)`
-    border-color: transparent;
-    p {
-      color: ${variables["dark"]};
-      font-weight: 700;
-      margin-top: 2rem;
-      margin-left: 4.5rem;
-      padding-right: 3.5rem;
-      padding-left: 3.5rem;
-      border-bottom: 2px solid ${variables["dark"]};
-    }
-  `,
-  HeaderText: styled.p`
-    color: ${variables["dark"]};
-    font-weight: 900;
-    font-size: 1.2em;
-    border-bottom: 2px solid ${variables["dark"]};
-    padding-right: 3.5rem;
-    padding-left: 2rem;
-    margin-left: 5rem;
-    margin-right: 5rem;
-    text-align: center;
-    display: inline;
-  `,
-};
-
-const EditEventStats = ({ open, toggle, attendance }) => {
+const EditEventStats = ({
+  open,
+  toggle,
+  attendance,
+  event,
+  volunteer,
+  onSaved,
+}) => {
+  const [isSaving, setSaving] = useState(false);
+  const saving = useRef(false);
+  const close = () => {
+    if (!saving.current) toggle();
+  };
+  const saved = async (savedAttendance) => {
+    await onSaved(savedAttendance);
+    toggle();
+  };
+  const savingChanged = (value) => {
+    saving.current = value;
+    setSaving(value);
+  };
   return (
-    <Modal isOpen={open} toggle={toggle} size="xl">
-      <Styled.ModalHeader toggle={toggle} />
-      <Styled.HeaderText>
-        <p>Edit Entry</p>
-      </Styled.HeaderText>
-      <EditEventStatsForm toggle={toggle} stat={attendance} />
+    <Modal
+      isOpen={open}
+      toggle={close}
+      size="xl"
+      backdrop="static"
+      keyboard={!isSaving}
+    >
+      <ModalHeader toggle={isSaving ? undefined : close}>
+        {attendance ? "Edit times" : "Add hours"}
+      </ModalHeader>
+      {open &&
+        (event ? (
+          <EditEventStatsForm
+            key={`${event._id}:${attendance?._id ?? volunteer?._id ?? "new"}`}
+            toggle={close}
+            stat={attendance}
+            event={event}
+            volunteer={volunteer}
+            onSaved={saved}
+            onSavingChange={savingChanged}
+          />
+        ) : (
+          <ModalBody>
+            <p role="alert">
+              Shift details are not available yet. Close and reload the page
+              before editing.
+            </p>
+          </ModalBody>
+        ))}
     </Modal>
   );
 };
@@ -47,6 +61,8 @@ EditEventStats.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
   attendance: PropTypes.object,
+  event: PropTypes.object,
+  volunteer: PropTypes.object,
+  onSaved: PropTypes.func.isRequired,
 };
-
 export default EditEventStats;

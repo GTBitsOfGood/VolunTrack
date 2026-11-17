@@ -18,6 +18,8 @@ const eventSchema = new Schema(
       required: true,
     },
     isEnded: { type: Boolean, default: false },
+    // Serializes attendance creation without restricting existing multi-record shifts.
+    attendanceWriteVersion: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

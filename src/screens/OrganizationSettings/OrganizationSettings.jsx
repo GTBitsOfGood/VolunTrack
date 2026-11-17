@@ -115,7 +115,7 @@ const OrganizationSettings = () => {
               </div>
             </div>
             <div className="container flex flex-col flex-wrap items-center justify-between md:flex-row">
-              <div className="flex flex-row justify-start">
+              <div className="flex w-full flex-col justify-start lg:w-auto lg:flex-row">
                 <Sidebar className="h-full">
                   <Sidebar.Items>
                     <Sidebar.ItemGroup className="!mt-0 !pt-0">
@@ -135,7 +135,7 @@ const OrganizationSettings = () => {
                   </Sidebar.Items>
                 </Sidebar>
 
-                <div className="flex-column flex min-w-[90%] p-4">
+                <div className="flex-column flex min-w-0 p-4 lg:min-w-[90%]">
                   {saved && (
                     <div className="pb-3">
                       <Toast>

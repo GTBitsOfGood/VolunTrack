@@ -22,7 +22,7 @@ const normalizeEventId = (eventId: string | Types.ObjectId) =>
 
 const countRegistrationSpots = (registrations: RegistrationDocument[]) =>
   registrations.reduce(
-    (total, registration) => total + 1 + (registration.minors?.length ?? 0),
+    (total, registration) => total + 1 + (registration.minors.length ?? 0),
     0
   );
 
@@ -35,7 +35,7 @@ export const checkEventCapacity = async (
     .populate("eventParent")
     .lean<EventPopulatedDocument | null>();
 
-  if (!event?.eventParent?.maxVolunteers) {
+  if (!event?.eventParent.maxVolunteers) {
     return { status: "not_found" };
   }
 

@@ -1,66 +1,46 @@
 import { Table } from "flowbite-react";
 import { useSession } from "next-auth/react";
 import PropTypes from "prop-types";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../../components/SearchBar";
 import Text from "../../components/Text";
-import { getHistoryEvents } from "../../queries/historyEvents";
-import { getUsers } from "../../queries/users";
+import { getHistoryPage } from "../../queries/historyEvents";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import Pagination from "../../components/PaginationComp";
 
+const PAGE_SIZE = 20;
+
+// The server searches the history and sends one page at a time
+// (GET /api/historyEvents?page=...). The page used to download every line.
 const History = () => {
   const {
     data: { user },
   } = useSession();
 
   const [searchValue, setSearchValue] = useState("");
+  const [search, setSearch] = useState("");
   const [historyEvents, setHistoryEvents] = useState([]);
+  const [total, setTotal] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
 
-  const pageSize = 20;
+  const load = (page, nextSearch) =>
+    getHistoryPage(page, PAGE_SIZE, nextSearch).then((result) => {
+      if (result?.data) {
+        setHistoryEvents(result.data.historyEvents ?? []);
+        setTotal(result.data.total ?? 0);
+        setCurrentPage(result.data.page ?? 0);
+      } else console.error("Error getting history:", result?.error);
+    });
+
+  // Search after typing stops for a moment, from the first page.
+  useEffect(() => {
+    const timer = setTimeout(() => setSearch(searchValue), 300);
+    return () => clearTimeout(timer);
+  }, [searchValue]);
 
   useEffect(() => {
-    (async () => {
-      const fetchedHistoryEvents = (
-        await getHistoryEvents({ organizationId: user.organizationId })
-      ).data.historyEvents;
-      const admins = (await getUsers(user.organizationId, "admin")).data.users;
-      const mappedHistoryEvents = await Promise.all(
-        fetchedHistoryEvents.map(async (event) => {
-          const matchedAdmin = admins.find(
-            (element) => element._id === event.userId
-          );
-          return {
-            ...event,
-            firstName: matchedAdmin?.firstName ?? "Unknown",
-            lastName: matchedAdmin?.lastName ?? "Admin",
-          };
-        })
-      );
-      setHistoryEvents(mappedHistoryEvents);
-    })();
-  }, []);
-
-  const filteredAndSortedHistoryEvents = useCallback(() => {
-    return (
-      searchValue.length > 0
-        ? historyEvents.filter(
-            (h) =>
-              h.firstName?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              h.lastName?.toLowerCase().includes(searchValue.toLowerCase()) ||
-              (h.firstName + " " + h.lastName)
-                ?.toLowerCase()
-                .trim()
-                .includes(searchValue.toLowerCase().trim()) ||
-              h.description
-                ?.toLowerCase()
-                .trim()
-                .includes(searchValue.toLowerCase().trim())
-          )
-        : historyEvents
-    ).sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  }, [historyEvents, searchValue]);
+    load(0, search);
+  }, [user.organizationId, search]);
 
   return (
     <div className="relative left-[10%] left-[10%] w-[80%] max-w-[96rem] py-3">
@@ -81,27 +61,26 @@ const History = () => {
           <Table.HeadCell>Time</Table.HeadCell>
         </Table.Head>
         <Table.Body>
-          {filteredAndSortedHistoryEvents()
-            .slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-            .map((event, index) => (
-              <Table.Row key={index} evenIndex={index % 2 === 0}>
-                <Table.Cell>
-                  {event.firstName} {event.lastName}
-                </Table.Cell>
-                <Table.Cell>{event.description}</Table.Cell>
-                <Table.Cell>
-                  {new Date(event.createdAt).toLocaleString()}
-                </Table.Cell>
-              </Table.Row>
-            ))}
+          {historyEvents.map((event, index) => (
+            <Table.Row key={index} evenIndex={index % 2 === 0}>
+              <Table.Cell>
+                {event.firstName} {event.lastName}
+              </Table.Cell>
+              <Table.Cell>{event.description}</Table.Cell>
+              <Table.Cell>
+                {new Date(event.createdAt).toLocaleString()}
+              </Table.Cell>
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
-      {filteredAndSortedHistoryEvents().length !== 0 && (
+      {total !== 0 && (
         <Pagination
-          items={filteredAndSortedHistoryEvents()}
-          pageSize={pageSize}
+          items={historyEvents}
+          totalItems={total}
+          pageSize={PAGE_SIZE}
           currentPage={currentPage}
-          updatePageCallback={setCurrentPage}
+          updatePageCallback={(page) => load(page, search)}
         />
       )}
     </div>

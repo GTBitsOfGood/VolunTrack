@@ -3,68 +3,30 @@ import dynamic from "next/dynamic";
 const ApexCharts = dynamic(() => import("apexcharts"), { ssr: false });
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 import DateDisplayComponent from "./DateDisplay";
-import { getHours } from "../screens/Stats/User/hourParsing";
+import { formatDurationHours } from "../../utils/hours";
+
+const EMPTY_MONTHS = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+// The numbers come worked out from the server (GET /api/events/home-summary),
+// so the Home page no longer downloads every event and attendance record.
+// Today's calendar day as midnight UTC, the form DateDisplay expects (it was
+// given the current moment, which showed tomorrow's date after 7 PM Atlanta).
+const todayAsCalendarDay = () => {
+  const now = new Date();
+  return Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+};
 
 const AdminHomeHeader = (props) => {
-  let todaysEvents = 0;
-  let todaysRegistrations = 0;
-  let firstDate = "";
-
-  let eventData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let hoursData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let attendanceData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-  let eventTotal = 0;
-  let hoursTotal = 0;
-  let attendanceTotal = 0;
-
-  if (props.events.length > 0) {
-    let split = props.events[0].date;
-    firstDate =
-      split.substring(5, 7) +
-      "/" +
-      split.substring(8, 10) +
-      "/" +
-      split.substring(0, 4);
-  }
-
-  for (let i = 0; i < props.events.length; i++) {
-    let date = new Date(props.events[i].date);
-    let splitDate = new Date(
-      date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
-    )
-      .toDateString()
-      .split(" ");
-    let final = splitDate[1] + " " + splitDate[2] + ", " + splitDate[3];
-    if (final === props.dateString) {
-      todaysEvents++;
-      todaysRegistrations += props.registrations.filter(
-        (r) => r.eventId === props.events[i]._id
-      ).length;
-    }
-    let month = parseInt(props.events[i].date.slice(5, 7)) - 1;
-    eventData[month] += 1;
-    eventTotal += 1;
-  }
-  for (let i = 0; i < props.attendances.length; i++) {
-    let month = parseInt(props.attendances[i].checkinTime.slice(5, 7)) - 1;
-    if (props.attendances[i].checkoutTime != null) {
-      let duration = getHours(
-        props.attendances[i].checkinTime.slice(11, 16),
-        props.attendances[i].checkoutTime.slice(11, 16)
-      );
-      hoursData[month] += Math.round(duration * 100) / 100;
-      hoursTotal += duration;
-    }
-    attendanceData[month] += 1;
-    attendanceTotal += 1;
-
-    // rounding
-    for (let i = 0; i < hoursData.length; i++) {
-      hoursData[i] = Math.round(hoursData[i] * 100) / 100;
-    }
-    hoursTotal = Math.round(hoursTotal * 100) / 100;
-  }
+  const summary = props.summary ?? {};
+  const todaysEvents = summary.todaysEvents ?? 0;
+  const todaysRegistrations = summary.todaysRegistrations ?? 0;
+  const firstDate = summary.firstDate ?? "";
+  const eventData = summary.eventData ?? EMPTY_MONTHS;
+  const hoursData = summary.hoursData ?? EMPTY_MONTHS;
+  const attendanceData = summary.attendanceData ?? EMPTY_MONTHS;
+  const eventTotal = summary.eventTotal ?? 0;
+  const hoursTotal = summary.hoursTotal ?? 0;
+  const attendanceTotal = summary.attendanceTotal ?? 0;
 
   const borderColor = "#374151";
   const labelColor = "#93ACAF";
@@ -94,6 +56,10 @@ const AdminHomeHeader = (props) => {
       enabled: false,
     },
     tooltip: {
+      y: {
+        formatter: (value, { seriesIndex }) =>
+          seriesIndex === 1 ? formatDurationHours(value) : value,
+      },
       style: {
         fontSize: "14px",
         fontFamily: "Inter, sans-serif",
@@ -156,6 +122,8 @@ const AdminHomeHeader = (props) => {
     },
     yaxis: {
       labels: {
+        // Whole numbers where possible, never "400.00000000000000".
+        formatter: (value) => String(Math.round(value * 10) / 10),
         style: {
           colors: [labelColor],
           fontSize: "14px",
@@ -204,6 +172,7 @@ const AdminHomeHeader = (props) => {
 
   return (
     <div className="w-full flex-col md:w-auto">
+      {props.attendanceReminders}
       <p className="font-weight-bold mt-2 text-2xl">Overview</p>
       <div className="mb-2 flex flex-col md:flex-row">
         <div className="flex-column">
@@ -213,7 +182,10 @@ const AdminHomeHeader = (props) => {
             </h3>
             <div className="flex">
               <div>
-                <DateDisplayComponent date={Date.now()} version={"Primary"} />
+                <DateDisplayComponent
+                  date={todayAsCalendarDay()}
+                  version={"Primary"}
+                />
               </div>
               <div className="flex-column flex">
                 <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
@@ -252,8 +224,10 @@ const AdminHomeHeader = (props) => {
               </div>
               <hr className="mx-2 my-1 h-px border-0 bg-gray-200 dark:bg-gray-700" />
               <div className="flex flex-nowrap items-center font-semibold text-primaryColor">
-                <p className="mb-0 pl-2 text-2xl">{hoursTotal}</p>
-                <p className="text-md mb-0 pl-2 text-slate-600"> Hours</p>
+                <p className="mb-0 pl-2 text-2xl">
+                  {formatDurationHours(hoursTotal)}
+                </p>
+                <p className="text-md mb-0 pl-2 text-slate-600"> Total time</p>
               </div>
             </div>
           </div>
@@ -276,10 +250,18 @@ const AdminHomeHeader = (props) => {
 };
 
 AdminHomeHeader.propTypes = {
-  events: PropTypes.array.isRequired,
-  attendances: PropTypes.array.isRequired,
-  registrations: PropTypes.array.isRequired,
-  dateString: PropTypes.string.isRequired,
+  attendanceReminders: PropTypes.node,
+  summary: PropTypes.shape({
+    firstDate: PropTypes.string,
+    todaysEvents: PropTypes.number,
+    todaysRegistrations: PropTypes.number,
+    eventTotal: PropTypes.number,
+    attendanceTotal: PropTypes.number,
+    hoursTotal: PropTypes.number,
+    eventData: PropTypes.arrayOf(PropTypes.number),
+    hoursData: PropTypes.arrayOf(PropTypes.number),
+    attendanceData: PropTypes.arrayOf(PropTypes.number),
+  }),
 };
 
 export default AdminHomeHeader;
