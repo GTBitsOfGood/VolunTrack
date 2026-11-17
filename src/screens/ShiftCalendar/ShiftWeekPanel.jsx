@@ -17,7 +17,7 @@ import {
 
 // One week of shifts, shown under the month calendar on the Events page.
 // It uses the same data as the full Shift Calendar page.
-const ShiftWeekPanel = ({ selectedDate }) => {
+const ShiftWeekPanel = ({ selectedDate, refreshKey }) => {
   const [weekStart, setWeekStart] = useState(() =>
     sundayOnOrBefore(selectedDate ? localDay(selectedDate) : atlantaToday())
   );
@@ -48,7 +48,8 @@ const ShiftWeekPanel = ({ selectedDate }) => {
     return () => {
       cancelled = true;
     };
-  }, [weekStart]);
+    // refreshKey changes after a shift is created, edited or deleted.
+  }, [weekStart, refreshKey]);
 
   const downloadImage = async () => {
     if (!exportRef.current) return;
@@ -75,7 +76,7 @@ const ShiftWeekPanel = ({ selectedDate }) => {
   return (
     <section
       aria-label="Shifts by week"
-      className="mt-4 w-full rounded-xl bg-grey p-3 md:max-w-[22vw]"
+      className="mt-4 w-full rounded-xl bg-grey p-3 lg:max-w-[max(22vw,280px)]"
     >
       <div className="mb-2 flex items-center justify-between gap-2">
         <button
@@ -159,6 +160,7 @@ const ShiftWeekPanel = ({ selectedDate }) => {
 
 ShiftWeekPanel.propTypes = {
   selectedDate: PropTypes.instanceOf(Date),
+  refreshKey: PropTypes.number,
 };
 
 export default ShiftWeekPanel;

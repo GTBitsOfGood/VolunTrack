@@ -7,8 +7,10 @@ import { getWaivers, updateWaiver } from "../../queries/waivers";
 import AdminAuthWrapper from "../../utils/AdminAuthWrapper";
 import { Toast } from "flowbite-react";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import useQuillToolbarLabels from "../../utils/useQuillToolbarLabels";
 
 const WaiverManager = () => {
+  useQuillToolbarLabels();
   let ReactQuill;
   // patch for build failure
   if (typeof window !== "undefined") {

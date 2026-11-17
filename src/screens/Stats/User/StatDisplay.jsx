@@ -19,12 +19,10 @@ const StatDisplay = ({ userId }) => {
   const [startDate, setStartDate] = useState("undefined");
   const [endDate, setEndDate] = useState("undefined");
 
-  if (!userId) {
-    const { data: session } = useSession();
-    userId = session.user._id;
-  }
   const { data: session } = useSession();
   let user = session.user;
+  // With no userId (the /stats page), show the signed-in person's own stats.
+  const statsUserId = userId ?? user._id;
 
   const onSubmitValues = (values, setSubmitting) => {
     if (!values.startDate) {
@@ -44,7 +42,10 @@ const StatDisplay = ({ userId }) => {
 
   useEffect(() => {
     setLoading(true);
-    getAttendances({ userId, organizationId: user.organizationId })
+    getAttendances({
+      userId: statsUserId,
+      organizationId: user.organizationId,
+    })
       .then((result) => {
         if (result?.data?.attendances) {
           const filteredAttendance = filterAttendance(
@@ -59,13 +60,13 @@ const StatDisplay = ({ userId }) => {
         setLoading(false);
       });
 
-    getUser(userId).then((response) => {
+    getUser(statsUserId).then((response) => {
       if (response.data.user)
         setName(
           `${response.data.user.firstName} ${response.data.user.lastName}'s`
         );
     });
-  }, [startDate, endDate]);
+  }, [startDate, endDate, statsUserId]);
 
   return (
     <React.Fragment>

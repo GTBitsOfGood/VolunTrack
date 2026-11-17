@@ -9,6 +9,7 @@ import { Button, Label } from "flowbite-react";
 import Text from "../../components/Text";
 import { FormGroup, Input } from "reactstrap";
 import { sendResetPasswordEmail } from "../../queries/users";
+import { hasWaiverText } from "../../utils/waivers";
 
 const DayOfCheckin = () => {
   const router = useRouter();
@@ -18,22 +19,21 @@ const DayOfCheckin = () => {
   let [adultWaiver, setAdultWaiver] = useState();
 
   const onRefresh = async () => {
-    await getEvent(eventId).then(async (result) => {
-      setEvent(result.data.event.eventParent);
-      await getWaivers(
-        "adult",
-        result.data.event.eventParent.organizationId
-      ).then((result) => {
-        if (result.data.waivers.length > 0) {
-          setAdultWaiver(result.data.waivers[0]?.text);
-        }
-      });
-    });
+    const result = await getEvent(eventId);
+    const shift = result?.data?.event?.eventParent;
+    if (!shift) return;
+    setEvent(shift);
+    const waivers = await getWaivers("adult", shift.organizationId);
+    const waiverText = waivers?.data?.waivers?.[0]?.text;
+    if (hasWaiverText(waiverText)) setAdultWaiver(waiverText);
   };
 
   useEffect(() => {
+    // The shift id comes from the web address, which is still empty on the
+    // first render of a direct visit (every QR scan). Load once it is known.
+    if (!eventId) return;
     onRefresh();
-  }, []);
+  }, [eventId]);
 
   const checkIn = async (values) => {
     const createUserVals = {
@@ -109,7 +109,11 @@ const DayOfCheckin = () => {
                     dangerouslySetInnerHTML={{ __html: adultWaiver }}
                   />
                   <FormGroup className="ml-4 mt-2">
-                    <Input type="checkbox" onChange={changeAgreement} />
+                    <Input
+                      type="checkbox"
+                      aria-label="I agree to the above waiver"
+                      onChange={changeAgreement}
+                    />
                     <Text text="I agree to the above waiver" />
                   </FormGroup>
                 </div>
@@ -118,7 +122,9 @@ const DayOfCheckin = () => {
             <Button
               type="submit"
               onClick={handleSubmit}
-              disabled={!isValid || isSubmitting || !didAgree}
+              disabled={
+                !isValid || isSubmitting || (Boolean(adultWaiver) && !didAgree)
+              }
               className="bg-purple-700 align-middle hover:bg-purple-600"
               size="sm"
             >

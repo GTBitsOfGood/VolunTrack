@@ -134,13 +134,16 @@ export const verifyUserWithCredentials = async (
 
   // Accept the email however it was typed: ignore outer spaces and capitals.
   // An exact match wins, so accounts that differ only by case stay separate.
+  // Capitals are ignored with a regular expression, not a collation: Azure
+  // Cosmos DB (the live site) does not support collations.
   const typedEmail = email.trim();
+  const anyCapitals = {
+    $regex: `^${typedEmail.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}$`,
+    $options: "i",
+  };
   const user =
     (await User.findOne({ email: typedEmail })) ??
-    (await User.findOne({ email: typedEmail }).collation({
-      locale: "en",
-      strength: 2,
-    }));
+    (await User.findOne({ email: anyCapitals }));
 
   if (!user) {
     return {

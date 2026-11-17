@@ -5,6 +5,14 @@ import {
   CorrectionDependencies,
   CorrectionHistory,
 } from "./attendanceCorrections";
+// Change History reads like "Sat, Nov 14", the same as the other attendance
+// lines. A shift's date is stored as midnight UTC of its day, so format in UTC.
+const shiftDay = new Intl.DateTimeFormat("en-US", {
+  timeZone: "UTC",
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+});
 export type EventStatusShift = {
   _id: string;
   organizationId: string;
@@ -78,9 +86,7 @@ export const createAttendanceEventStatusHandler =
           eventId: shift._id,
           description: `${actor.firstName} ${actor.lastName} ${
             saved.isEnded ? "ended" : "reopened"
-          } ${shift.title} (${new Date(shift.date)
-            .toISOString()
-            .slice(0, 10)}, America/New_York).`,
+          } ${shift.title} (${shiftDay.format(new Date(shift.date))}).`,
         });
         return saved;
       });

@@ -6,6 +6,8 @@ const Volunteer = ({
   disabled,
   pastEnd,
   endLabel,
+  checkInNotOpen,
+  checkInOpensLabel,
   onEdit,
   onCheckIn,
   onCheckOut,
@@ -53,13 +55,20 @@ const Volunteer = ({
               />
             </>
           )}
-          {status === "waiting" && !pastEnd && records.length === 0 && (
-            <BoGButton
-              text="Check In"
-              disabled={disabled}
-              onClick={() => onCheckIn(row)}
-            />
-          )}
+          {status === "waiting" &&
+            !pastEnd &&
+            records.length === 0 &&
+            (checkInNotOpen ? (
+              <span className="self-center text-sm text-gray-600">
+                Check-in opens at {checkInOpensLabel}
+              </span>
+            ) : (
+              <BoGButton
+                text="Check In"
+                disabled={disabled}
+                onClick={() => onCheckIn(row)}
+              />
+            ))}
           {openRecords.map((record) => (
             <div key={record._id}>
               {records.length > 1 && (

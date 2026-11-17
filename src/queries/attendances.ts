@@ -289,7 +289,8 @@ export const deleteAttendance = async (attendanceId: Types.ObjectId) => {
 export const getAttendanceStatistics = async (
   organizationId?: Types.ObjectId,
   startDate?: Date,
-  endDate?: Date
+  endDate?: Date,
+  withEvents = false
 ) => {
   try {
     const response = await axios.get<
@@ -302,7 +303,12 @@ export const getAttendanceStatistics = async (
         };
       }[]
     >("/api/attendances/statistics", {
-      params: { organizationId, startDate, endDate },
+      params: {
+        organizationId,
+        startDate,
+        endDate,
+        withEvents: withEvents ? "1" : undefined,
+      },
     });
     return response;
   } catch (error) {

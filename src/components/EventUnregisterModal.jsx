@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { unregisterForEvent } from "../queries/registrations";
 import { updateEvent } from "../screens/Events/eventHelpers";
@@ -11,10 +12,28 @@ const EventUnregisterModal = ({
   userId,
   callback,
 }) => {
-  const handleSubmit = () => {
-    unregisterForEvent(eventData._id, userId);
+  const [error, setError] = useState("");
+
+  // Wait for the server: it refuses once the volunteer has clocked in or the
+  // shift is over, and that refusal has to stay on screen.
+  const handleSubmit = async () => {
+    const result = await unregisterForEvent(eventData._id, userId);
+    if (result?.error) {
+      setError(
+        typeof result.error === "string"
+          ? result.error
+          : "Your registration could not be cancelled. Please try again."
+      );
+      return;
+    }
+    setError("");
     toggle();
     if (callback) callback();
+  };
+
+  const close = () => {
+    setError("");
+    toggle();
   };
 
   const onUnregisterClicked = async (event) => {
@@ -27,13 +46,18 @@ const EventUnregisterModal = ({
   };
 
   return (
-    <Modal isOpen={open} toggle={toggle} backdrop="static">
-      <ModalHeader toggle={toggle} />
+    <Modal isOpen={open} toggle={close} backdrop="static">
+      <ModalHeader toggle={close} />
       <ModalBody>
         Are you sure you want to cancel your registration for this event?
+        {error && (
+          <p role="alert" className="mt-3 text-sm font-semibold text-red-600">
+            {error}
+          </p>
+        )}
       </ModalBody>
       <ModalFooter>
-        <BoGButton text="No, keep it" onClick={toggle} outline={true} />
+        <BoGButton text="No, keep it" onClick={close} outline={true} />
         <BoGButton text="Yes, cancel it" onClick={handleSubmit} />
       </ModalFooter>
     </Modal>

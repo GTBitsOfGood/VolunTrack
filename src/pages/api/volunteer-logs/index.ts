@@ -69,8 +69,10 @@ export default async function handler(
             path: "eventId",
             populate: { path: "eventParent", select: "title tasks" },
           })
-          .sort({ inTime: -1 })
           .lean();
+        // Newest first. Sorted here, not by the database: Azure Cosmos DB (the
+        // live site) refuses to sort on a field that has no index.
+        logs.sort((a, b) => b.inTime.getTime() - a.inTime.getTime());
         return res.status(200).json({ logs });
       }
 

@@ -2,6 +2,11 @@ import { isValidObjectId, Types } from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next/types";
 import dbConnect from "../../../../server/mongodb";
 import { checkEventCapacity } from "../../../../server/actions/registrationCapacity";
+import Attendance from "../../../../server/mongodb/models/Attendance";
+import Event, {
+  EventPopulatedDocument,
+} from "../../../../server/mongodb/models/Event";
+import { getShiftDateTimes } from "../../../../utils/dates";
 import Registration, {
   RegistrationInputClient,
   registrationInputServerValidator,
@@ -80,6 +85,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         });
       }
 
+      // A shift with tasks needs at least one, chosen from its own list.
+      // (.lean() skips schema defaults, so older shifts may have no tasks field.)
+      const savedTasks: unknown = capacityResult.event.eventParent.tasks;
+      const shiftTasks = Array.isArray(savedTasks)
+        ? savedTasks.filter((task): task is string => typeof task === "string")
+        : [];
+      if (shiftTasks.length > 0) {
+        const chosenTasks = result.data.tasks ?? [];
+        if (
+          chosenTasks.length === 0 ||
+          chosenTasks.some((task) => !shiftTasks.includes(task))
+        ) {
+          return res
+            .status(400)
+            .json({ error: "Choose at least one task for this shift." });
+        }
+      }
+
       // Save first so failed registrations never trigger an email.
       // Derive approval from the event so clients cannot bypass review or send
       // a premature confirmation by omitting or overriding the status.
@@ -145,6 +168,35 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       else return res.status(500);
       if (userId) match.userId = userId;
       else return res.status(500);
+
+      // Once the volunteer has clocked in, or the shift is over, the sign-up
+      // stays, because the hours and the roster depend on it.
+      if (await Attendance.exists({ eventId, userId })) {
+        return res.status(409).json({
+          error:
+            "You've already clocked in for this shift, so it can't be cancelled.",
+        });
+      }
+      const shift = await Event.findById(eventId)
+        .populate("eventParent")
+        .lean<EventPopulatedDocument | null>();
+      if (shift?.eventParent) {
+        let shiftEnd: Date | null = null;
+        try {
+          shiftEnd = getShiftDateTimes(
+            shift.date,
+            shift.eventParent.startTime,
+            shift.eventParent.endTime
+          ).end;
+        } catch {
+          // A shift with unreadable times can still be cancelled.
+        }
+        if (shiftEnd && Date.now() > shiftEnd.getTime()) {
+          return res.status(409).json({
+            error: "This shift has already ended, so it can't be cancelled.",
+          });
+        }
+      }
 
       await sendRegistrationDeleteEmail(req.query.userId, req.query.eventId);
 

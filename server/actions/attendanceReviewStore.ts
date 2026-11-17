@@ -17,6 +17,10 @@ import type {
 // The home-page reminder only looks back this far. Older shifts predate
 // "Didn't come", so every old no-show would otherwise count as missing.
 const REVIEW_WINDOW_DAYS = 30;
+// The first full day volunteers could clock in themselves (the day after the
+// release that added Clock In). Earlier shifts are never flagged: nobody could
+// clock in then. If the release moves, move this date with it.
+const CLOCK_IN_START = new Date("2026-11-18T00:00:00.000Z");
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 const registrationData = (
@@ -38,7 +42,9 @@ export const runNoShowTransaction: NoShowDependencies["transaction"] = async (
     work({
       ...shared,
       async getRegistration(id) {
-        const registration = await Registration.findById(id).session(session);
+        const registration = await Registration.findById(id).session(
+          session ?? null
+        );
         return registration ? registrationData(registration) : null;
       },
       getShift: (id) => findShift(id, session),
@@ -76,6 +82,8 @@ export const loadAttendanceReview: AttendanceReviewDependencies["loadReview"] =
     dateCutoff.setUTCHours(23, 59, 59, 999);
     const windowStart = new Date(now.getTime() - REVIEW_WINDOW_DAYS * DAY_MS);
     windowStart.setUTCHours(0, 0, 0, 0);
+    if (windowStart < CLOCK_IN_START)
+      windowStart.setTime(CLOCK_IN_START.getTime());
     const events = await Event.find({
       eventParent: { $in: parents.map((parent) => parent._id) },
       date: { $gte: windowStart, $lte: dateCutoff },

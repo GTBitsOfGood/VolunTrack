@@ -15,10 +15,12 @@ import {
 import PreviewModel from "./PreviewModel";
 import dynamic from "next/dynamic";
 import DOMPurify from "dompurify";
+import useQuillToolbarLabels from "../../utils/useQuillToolbarLabels";
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 const VolunterHome = () => {
+  useQuillToolbarLabels();
   const quillRef = useRef(null);
   const [quill, setQuillModules] = useState({});
 

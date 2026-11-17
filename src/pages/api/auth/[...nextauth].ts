@@ -121,7 +121,8 @@ export const authOptions: AuthOptions = {
       await dbConnect();
 
       const id = new ObjectId(token.id);
-      const user = await User.findById(id);
+      // The session reaches the browser, so it never carries the password hash.
+      const user = await User.findById(id).select("-passwordHash");
 
       if (!user?.organizationId) {
         return {

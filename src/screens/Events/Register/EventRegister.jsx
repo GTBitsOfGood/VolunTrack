@@ -5,7 +5,13 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import PropTypes from "prop-types";
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Col, Container, ModalFooter, Row } from "reactstrap";
 import styled from "styled-components";
 import BoGButton from "../../../components/BoGButton";
@@ -25,6 +31,7 @@ import EventTasksContainer from "./EventTasksContainer";
 import EventUnregisterModal from "../../../components/EventUnregisterModal";
 import { RequestContext } from "../../../providers/RequestProvider";
 import VolunteerClock from "./VolunteerClock";
+import { getShiftDateTimes } from "../../../../utils/dates";
 
 const Styled = {
   Container: styled(Container)`
@@ -122,6 +129,11 @@ const EventRegister = () => {
   const [regCount, setRegCount] = useState(0);
   const [showUnregisterModal, setShowUnregisterModal] = useState(false);
   const [capacityError, setCapacityError] = useState("");
+  const [hasClockRecord, setHasClockRecord] = useState(false);
+  const onClockStatus = useCallback(
+    (status) => setHasClockRecord(Boolean(status?.attendance)),
+    []
+  );
 
   useEffect(() => {
     // The event ID comes from the web address and can arrive after the page
@@ -284,6 +296,28 @@ const EventRegister = () => {
   const isGroupTooLarge = groupSize > availableSlots && availableSlots > 0;
   const isEventFull = availableSlots <= 0;
   const isCapacityLocked = isEventFull || isGroupTooLarge;
+  // A sign-up can't be cancelled once the volunteer clocked in or the shift
+  // is over (the server refuses too).
+  const shiftEnded = useMemo(() => {
+    const parent = event?.eventParent;
+    if (!event?.date || !parent) return false;
+    try {
+      const { end } = getShiftDateTimes(
+        event.date,
+        parent.startTime,
+        parent.endTime
+      );
+      return Date.now() > end.getTime();
+    } catch {
+      return false;
+    }
+  }, [event]);
+  const canCancel = !hasClockRecord && !shiftEnded;
+  // Tasks are required when the shift has any (marked with * above them).
+  const needsTask =
+    !isRegistered &&
+    (event?.eventParent?.tasks?.length ?? 0) > 0 &&
+    tasks.length === 0;
 
   useEffect(() => {
     if (!event?.eventParent?.maxVolunteers || isRegistered) {
@@ -446,7 +480,11 @@ const EventRegister = () => {
       {isRegistered &&
         registrations[0]?.approved === "approved" &&
         typeof eventId === "string" && (
-          <VolunteerClock key={`${eventId}:${user._id}`} eventId={eventId} />
+          <VolunteerClock
+            key={`${eventId}:${user._id}`}
+            eventId={eventId}
+            onStatusChange={onClockStatus}
+          />
         )}
 
       {event?.eventParent?.requiresApproval && (
@@ -465,7 +503,7 @@ const EventRegister = () => {
             text="Complete Registration"
             onClick={onCompleteRegistrationClicked}
             className="w-full bg-primaryColor font-semibold hover:bg-hoverColor"
-            disabled={isCapacityLocked}
+            disabled={isCapacityLocked || needsTask}
           />
         </div>
       )}
@@ -473,6 +511,12 @@ const EventRegister = () => {
         <Text
           className="text-sm font-semibold text-red-600"
           text={capacityError}
+        />
+      )}
+      {needsTask && !capacityError && (
+        <Text
+          className="text-sm font-semibold text-red-600"
+          text="Choose at least one task above to finish registering."
         />
       )}
 
@@ -487,13 +531,15 @@ const EventRegister = () => {
             }
             className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
-          <BoGButton
-            text="Cancel Registration"
-            onClick={() => {
-              setShowUnregisterModal(true);
-            }}
-            className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
-          />
+          {canCancel && (
+            <BoGButton
+              text="Cancel Registration"
+              onClick={() => {
+                setShowUnregisterModal(true);
+              }}
+              className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
+            />
+          )}
         </div>
       ) : isRegistered && registrations[0]?.approved == "pending" ? (
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -506,13 +552,15 @@ const EventRegister = () => {
             }
             className="flex-1 bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor"
           />
-          <BoGButton
-            text="Cancel Registration"
-            onClick={() => {
-              setShowUnregisterModal(true);
-            }}
-            className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
-          />
+          {canCancel && (
+            <BoGButton
+              text="Cancel Registration"
+              onClick={() => {
+                setShowUnregisterModal(true);
+              }}
+              className="w-full flex-none bg-secondaryColor font-semibold !text-black hover:bg-secondaryColor sm:w-48"
+            />
+          )}
         </div>
       ) : isRegistered && registrations[0]?.approved == "denied" ? (
         <div className="my-3">
